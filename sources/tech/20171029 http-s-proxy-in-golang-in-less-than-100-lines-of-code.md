@@ -216,3 +216,13 @@ In our server HTTP/2 support has been deliberately removed because then hijackin
 
 
 Click ❤ below to help others discover this story. Please follow me if you want to get updates about new posts or boost work on future stories.
+
+----------------
+
+via: https://medium.com/@mlowicki/http-s-proxy-in-golang-in-less-than-100-lines-of-code-6a51c2f2c38c
+
+作者：[Michał Łowicki](https://medium.com/@mlowicki)
+译者：[译者ID](https://github.com/译者ID)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
