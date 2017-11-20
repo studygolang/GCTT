@@ -1,3 +1,4 @@
+【pbix2020翻译中】
 ## Memory Management
 
 Before we dive into the techniques and tools available for profiling Go applications, we should first understand a little bit about its memory model as this can help us to understand what it is we’re seeing in relation to memory consumption.
