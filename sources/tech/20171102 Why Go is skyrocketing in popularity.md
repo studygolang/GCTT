@@ -1,3 +1,5 @@
+[翻译中] by mosliu
+
 #### In only two years, Golang leaped from the 65th most popular programming language to #17\. Here's what's behind its rapid growth.
 
 ![](https://opensource.com/sites/default/files/styles/image-full-size/public/lead-images/build_structure_tech_program_code_construction.png?itok=nVsiLuag)  
