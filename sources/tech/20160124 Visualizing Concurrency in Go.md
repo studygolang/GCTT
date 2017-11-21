@@ -1,3 +1,4 @@
+[翻译中] by QueShengyao
 _If you prefer video over blog posts, here is my talk on this at GopherCon 2016:_ [https://www.youtube.com/watch?v=KyuFeiG3Y60](https://www.youtube.com/watch?v=KyuFeiG3Y60)
 
 One of the strongest sides of Go programming language is a built-in concurrency based on [Tony Hoare’s CSP](https://en.wikipedia.org/wiki/Communicating_sequential_processes) paper. Go is designed with concurrency in mind and allows us to build complex concurrent pipelines. But have you ever wondered - how various concurrency patterns look like?
