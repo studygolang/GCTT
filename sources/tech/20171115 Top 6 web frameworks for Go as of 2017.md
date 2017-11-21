@@ -1,3 +1,4 @@
+【rxcai翻译中】
 ![](https://raw.githubusercontent.com/studygolang/GCTT/master/sources/1_9P9_09xfijv7RRlA6C21eQ.jpeg)
 https://twitter.com/ThePracticalDev/status/930878898245722112
 
