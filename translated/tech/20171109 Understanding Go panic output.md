@@ -49,7 +49,7 @@ The thing that catches my eye in this goroutine backtrace are the arguments to t
 func UpdateResponse(c Client, id string, version int, resp *Response, data []byte) error
 func PrefetchLoop(ctx context.Context, interval time.Duration, c Client)    
 ```      
-`UpdateResponse` 带有 5 个参数，但是 panic 显示它携带超过 10 个参数。 `PrefetchLoop` 带有3个参数，但 panic 显示它带有 5 个参数。这样会发生什么呢？    
+`UpdateResponse` 带有 5 个参数，但是 panic 显示它携带超过 10 个参数。 `PrefetchLoop` 带有 3 个参数，但 panic 显示它带有 5 个参数。这样会发生什么呢？    
 为了理解参数值，我们必须要了解一些关于 Go 底层类型的数据结构。RussCox 有两篇很棒的博客贴在这里，一个关于[基本类型，结构体与指针，字符串和切片](https://research.swtch.com/godata)，另一个关于[接口](https://research.swtch.com/godata)，它描述了这些是怎样在内存中分布的。对于 Go 程序员，这两篇文章是必备读物，但是概括起来：    
 
 - 字符串有两个域 (一个指向字符串数据的指针和一个长度)    
