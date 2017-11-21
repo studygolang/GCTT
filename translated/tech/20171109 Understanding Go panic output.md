@@ -50,11 +50,12 @@ func UpdateResponse(c Client, id string, version int, resp *Response, data []byt
 func PrefetchLoop(ctx context.Context, interval time.Duration, c Client)    
 ```      
 `UpdateResponse` 带有 5 个参数，但是 panic 显示它携带超过 10 个参数。 `PrefetchLoop` 带有 3 个参数，但 panic 显示它带有 5 个参数。这样会发生什么呢？    
-为了理解参数值，我们必须要了解一些关于 Go 底层类型的数据结构。RussCox 有两篇很棒的博客贴在这里，一个关于[基本类型，结构体与指针，字符串和切片](https://research.swtch.com/godata)，另一个关于[接口](https://research.swtch.com/godata)，它描述了这些是怎样在内存中分布的。对于 Go 程序员，这两篇文章是必备读物，但是概括起来：    
+为了理解参数值，我们必须要了解一些关于 Go 底层类型的数据结构。RussCox 有两篇很棒的博客贴在这里，一个关于[基本类型，结构体与指针，字符串和切片](https://research.swtch.com/godata)，另一个关于[接口](https://research.swtch.com/godata)，它描述了这些是怎样在内存中分布的。对于 Go 程序员，这两篇文章是必备读物，但是概括起来：       
 
 - 字符串有两个域 (一个指向字符串数据的指针和一个长度)    
 - 切片有三个域 (一个指向支持数组的指针，一个长度，一个容量)    
-- 接口有两个域 (一个指向类型的指针和一个指向值的指针)    
+- 接口有两个域 (一个指向类型的指针和一个指向值的指针)           
+
 当 panic 发生时，我们看到在输出中的参数值包括字符串，切片和接口的超出值。另外，函数的返回值被添加到参数列表的末尾。     
 回到我们的 `UpdateResponse` 函数，`Client` 类型是一个接口，它带有 2 个值。 `id` 是一个字符串，它有 2 个值(共 4 个)。`version` 是一个整型，带有 1 个值(共 5 个值)。`resp` 是一个指针，带有 1 个值(共 6 个)。`data` 是一个切片，带有 3 个值(共 9 个值)。`error` 返回值是一个接口，所以又多 2 个值，从而总数到达 11 个。panic 输出数目限制为 10 个， 所以最后一个值从输出中被截断。    
 这是一个带有注释的 `UpdateResponse`栈帧：   
