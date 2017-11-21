@@ -1,4 +1,5 @@
-﻿我的代码有一个 bug    
+﻿# 理解 Go 语言中的 panic 输出      
+我的代码有一个 bug    
 ```
 panic: runtime error: invalid memory address or nil pointer dereference
 [signal SIGSEGV: segmentation violation code=0x1 addr=0x30 pc=0x751ba4]
