@@ -1,3 +1,4 @@
+[翻译中] by j.zhongming
 # Debugging Go core dumps
 
 Debugging is highly useful to examine the execution flow and to understand the current state of a program.
