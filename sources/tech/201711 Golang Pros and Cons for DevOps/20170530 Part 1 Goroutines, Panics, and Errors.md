@@ -1,3 +1,4 @@
+【翻译中】 by liuxinyu123
 # Golang Pros and Cons for DevOps (Part 1 of 6): Goroutines, Panics, and Errors
 
 ![Golang Pros and Cons for DevOps (Part 1 of 6): Goroutines, Panics, and Errors](https://blog.bluematador.com/hubfs/Blue_Matador_Inc_October2017/Images/golang-pros-cons-for-devops-part-1-goroutines-panics-errors.png?t=1511282519832)
