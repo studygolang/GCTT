@@ -9,7 +9,7 @@
 
 via: https://blog.bluematador.com/posts/golang-pros-cons-for-devops-part-2/
 
-作者：[rakyll](https://rakyll.org/about/)
+作者：[Matthew Barlocker](https://github.com/mbarlocker)
 译者：[译者ID](https://github.com/译者ID)
 校对：[校对者ID](https://github.com/校对者ID)
 
