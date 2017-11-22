@@ -1,6 +1,8 @@
 
 # Part 5: Constants
 
+[guoxiaopang翻译中]
+
 原文链接：https://golangbot.com/constants/
 
 译者自己根据原文翻译，译文保存为 markdown 格式，并附上尾部的签名。
