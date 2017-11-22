@@ -1,4 +1,4 @@
-
+【翻译中】 by Dingo1991
 # How Go solves so many problems for web developers
 
 原文链接：https://ewanvalentine.io/why-go-solves-so-many-problems-for-web-developers/
