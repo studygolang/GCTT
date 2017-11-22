@@ -3,7 +3,7 @@
 
 原文链接：https://ewanvalentine.io/why-go-solves-so-many-problems-for-web-developers/
 
-译者自己根据原文翻译，译文保存为 markdown 格式，并附上尾部的签名。
+
 
 ----------------
 
