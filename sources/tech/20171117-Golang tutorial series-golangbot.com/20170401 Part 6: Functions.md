@@ -1,5 +1,6 @@
 
 # Part 6: Functions
+[junedayday翻译中]
 
 原文链接：https://golangbot.com/functions/
 
