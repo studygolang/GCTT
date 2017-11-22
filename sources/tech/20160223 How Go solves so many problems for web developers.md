@@ -102,7 +102,6 @@ func main() {
  SyntaxGo's syntax isn't beautiful like Ruby or as simple as Javascript's. But it's succinct, it feels low level, but at the same time it feels powerful, and expressive. We've all looked at legacy PHP codebases, and felt physically ill. In comparison Go is so easy to follow. Another fantastic benefit of Go, is that there's already a well established 'best practices' when it comes to how you write Go. Sure, PHP has PSR standards etc, but they're fairly new and developers have been slow to adopt them. Whereas Go's language designers have been explicit from the outset. Formatting tools are also built into the languages ecosystem, and can be ran using go fmt.So that's my two cents on why I'm totally obsessed with Go, and can now never go back to PHP now I've 'seen the light'.
 
 
-
 ----------------
 
 via: https://ewanvalentine.io/why-go-solves-so-many-problems-for-web-developers/
