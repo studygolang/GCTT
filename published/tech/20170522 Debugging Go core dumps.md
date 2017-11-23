@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/11718
+
 # Go 语言核心文件调试
 
 程序调试对于检查和理解程序运行过程和状态是非常有用的。
