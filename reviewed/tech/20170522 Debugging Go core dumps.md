@@ -15,22 +15,23 @@
 然后，确定你的机器上已经安装了 [delve](https://github.com/derekparker/delve) 。
 
 这是一个 `main.go` 文件，包含一个HTTP启动服务和一个处理函数。
+
 ``` go
-    $ cat main.go
-    package main
+$ cat main.go
+package main
 
-    import (
-    	"fmt"
-    	"log"
-    	"net/http"
-    )
+import (
+    "fmt"
+    "log"
+    "net/http"
+)
 
-    func main() {
-    	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-    		fmt.Fprint(w, "hello world\n")
-    	})
-    	log.Fatal(http.ListenAndServe("localhost:7777", nil))
-    }
+func main() {
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        fmt.Fprint(w, "hello world\n")
+    })
+    log.Fatal(http.ListenAndServe("localhost:7777", nil))
+}
 ```
 我们把它编译成二进制文件。
 
@@ -102,6 +103,6 @@ via: https://rakyll.org/coredumps/
 
 作者：[rakyll](https://rakyll.org/about/)
 译者：[j.zhongming](https://github.com/jzhongming)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[Unknwon](https://github.com/Unknwon)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
