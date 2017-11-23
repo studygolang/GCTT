@@ -1,3 +1,4 @@
+【ictar翻译中】
 # The complete guide to Go net/http timeouts
 
 原文链接：https://blog.cloudflare.com/the-complete-guide-to-golang-net-http-timeouts/
