@@ -1,3 +1,7 @@
+已发布：https://studygolang.com/articles/11731
+
+# 为何 Go 的人气正在飞涨
+
 #### 仅仅两年时间，在最流行的编程语言中，Go 语言从第 65 名飙升至第 17 名。以下是其快速增长的原因。
 
 ![](https://opensource.com/sites/default/files/styles/image-full-size/public/lead-images/build_structure_tech_program_code_construction.png?itok=nVsiLuag)  
@@ -7,7 +11,7 @@
 
 作为一种工程语言（而不是随着时间的推移而演变的东西），Go 以多种方式使开发人员受益，其中包括垃圾收集，原生并发以及许多其他原生功能，这些功能可减少开发人员编写代码以处理内存泄漏或网络应用程序的需求。 Go 还提供了很多更适合微服务架构和数据科学的其他特性。
 
-正因为如此，Go 才被很多感兴趣的公司和项目所采用。 最近新添加的[Tensorflow](https://www.tensorflow.org/) 的 API ，以及像 [Pachyderm](http://www.pachyderm.io/)（下一代数据处理、版本控制和存储）都正在使用 Go 构建。 Heroku 的 [Force.com](https://github.com/heroku/force) 和 [Cloud Foundry](https://www.cloudfoundry.org/) 的部分内容也是使用 Go 进行编写的。 而这个名单也正日益添加更多的名字。
+正因为如此，Go 才被很多感兴趣的公司和项目所采用。 最近新添加的 [Tensorflow](https://www.tensorflow.org/) 的 API ，以及像 [Pachyderm](http://www.pachyderm.io/)（下一代数据处理、版本控制和存储）都正在使用 Go 构建。 Heroku 的 [Force.com](https://github.com/heroku/force) 和 [Cloud Foundry](https://www.cloudfoundry.org/) 的部分内容也是使用 Go 进行编写的。 而这个名单也正日益添加更多的名字。
 
 ## 增长的人气和应用
 
@@ -55,7 +59,7 @@ Go 是一个工程的编程语言，专门为这些新的需求而设计。 由�
 
 ----------------
 
-来源：https://opensource.com/article/17/11/why-go-grows
+via：https://opensource.com/article/17/11/why-go-grows
 
 作者：[Jeff Rouse](https://opensource.com/users/jeffr)
 译者：[mosliu](https://github.com/mosliu)
