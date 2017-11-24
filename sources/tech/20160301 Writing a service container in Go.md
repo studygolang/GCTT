@@ -1,4 +1,4 @@
-
+[翻译中]  by j.zhongming
 # Writing a service container in Go
 
 原文链接：https://ewanvalentine.io/writing-a-service-container-in-go/
