@@ -195,7 +195,7 @@ Go 的语法不像 Ruby 那样漂亮，或者像 JavaScript 一样简单。 但�
 via: https://ewanvalentine.io/why-go-solves-so-many-problems-for-web-developers/
 
 作者：[Ewan Valentine](https://ewanvalentine.io/author/ewan/)
-译者：[译者ID](https://github.com/Dingo1991)
+译者：[Dingo991](https://github.com/Dingo1991)
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推
