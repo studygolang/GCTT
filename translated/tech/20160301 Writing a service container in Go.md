@@ -44,7 +44,7 @@ func (userHandler *UserHandler) FindAll(c *gin.Context) {
 ```
 这些代码工作的很好，但是，你会发现 main.go 中，我只是写了很少的启动过程，仅仅包含一个处理函数和一个持久化数据（ repository ）。（译注：用这种方式写代码比较麻烦且臃肿）。  
 
-于是我想用 GO 写一个容器。我找不到一个喜欢的第三方库来解决这个事情。所以，想出了下面这个代码片段。
+于是我想用 GO 写一个容器。我找不到一个喜欢的第三方库来解决这个事情。所以，想出了下面这个代码片段。
 ```go
 import(  
     "sync"
@@ -90,6 +90,7 @@ func GetContainer() Container {
     return c 
 }
 ```
+
 现在的 main.go
 ```go
 func main() {  
