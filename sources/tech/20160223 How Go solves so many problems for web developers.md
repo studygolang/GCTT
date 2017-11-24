@@ -1,13 +1,11 @@
-[翻译中]  by j.zhongming
-# Writing a service container in Go
+【翻译中】 by Dingo1991
+# How Go solves so many problems for web developers
 
-原文链接：https://ewanvalentine.io/writing-a-service-container-in-go/
-
-译者自己根据原文翻译，译文保存为 markdown 格式，并附上尾部的签名。
+原文链接：https://ewanvalentine.io/why-go-solves-so-many-problems-for-web-developers/
 
 ----------------
 
-via: https://ewanvalentine.io/writing-a-service-container-in-go/
+via: https://ewanvalentine.io/why-go-solves-so-many-problems-for-web-developers/
 
 作者：[Ewan Valentine](https://ewanvalentine.io/author/ewan/)
 译者：[译者ID](https://github.com/译者ID)

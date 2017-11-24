@@ -14,3 +14,4 @@
 .glide/
 .DS_Store
 rebasefork.sh
+*.md
