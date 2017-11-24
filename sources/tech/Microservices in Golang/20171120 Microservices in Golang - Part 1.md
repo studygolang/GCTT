@@ -1,5 +1,7 @@
 # Microservices in Golang - Part 1
 
+[Junedayday翻译中]
+
 原文链接：https://ewanvalentine.io/microservices-in-golang-part-1/
 
 译者自己根据原文翻译，译文保存为 markdown 格式，并附上尾部的签名。
