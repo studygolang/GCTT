@@ -36,7 +36,7 @@ func calculateBill(price int, no int) int {
 ```
 上述函数有两个整数型的输入`price`和`no`，返回值`totalPrice`为`price`和`no`的乘积，也是整数类型。
 
-**如果有连续若干个参数，它们的类型移植，那么我们无须一一罗列，只需在最后一个参数后添加该类型。** 例如，`price int,no int`可以简写为`price,no int`，所以示例函数也可写成
+**如果有连续若干个参数，它们的类型一致，那么我们无须一一罗列，只需在最后一个参数后添加该类型。** 例如，`price int,no int`可以简写为`price,no int`，所以示例函数也可写成
 
 ```go
 func calculateBill(price, no int) int {  
@@ -75,7 +75,9 @@ func main() {
 
 该程序在控制台上打印的打印结果为
 
-`Total price is 540`
+```
+Total price is 540
+```
 
 ## 多返回值
 Go 语言支持一个函数可以有多个返回值的特性。我们来写个以矩形的长和宽为输入参数，计算并返回矩形面积和周长的函数。
@@ -109,7 +111,9 @@ func main() {
 
 如果一个函数有多个返回值，那么这些返回值必须用`(`和`)`括起来。`func rectProps(length, width float64)(float64, float64)`示例函数有两个 float64 类型的输入参数`length`和`width`，返回值也是两个 float64 的类型。该程序在控制台上打印结果为
 
-`Area 60.480000 Perimeter 32.800000`
+```
+Area 60.480000 Perimeter 32.800000
+```
 
 ## 命名返回参数
 函数中的返回参数支持自定义的命名。一旦命名了返回的参数，可以认为这些参数在函数第一行就被定义了。
@@ -147,8 +151,8 @@ func rectProps(length, width float64) (float64, float64) {
     return area, perimeter
 }
 func main() {  
-    area, _ := rectProps(10.8, 5.6) // 返回值周长被跳过
-    fmt.Printf("Area %f ", area)
+    area, _ := rectProps(10.8, 5.6) // 返回值周长被丢弃
+    fmt.Printf("Area %f ", area)
 }
 ```
 
