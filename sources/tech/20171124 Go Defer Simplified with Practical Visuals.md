@@ -1,3 +1,4 @@
+【翻译中】by shockw4ver
 # Go Defer Simplified with Practical Visuals
 
 原文链接：https://blog.learngoprogramming.com/golang-defer-simplified-77d3b2b817ff
