@@ -1,3 +1,4 @@
+【翻译中】 by shockw4ver
 # The Zoo of Go Functions
 
 原文链接：https://blog.learngoprogramming.com/go-functions-overview-anonymous-closures-higher-order-deferred-concurrent-6799008dde7b
