@@ -1,13 +1,13 @@
-【翻译中】 by Dingo1991
-# Part 8: if else statement
 
-原文链接：https://golangbot.com/packages/
+# Part 10: Switch Statement
+
+原文链接：https://golangbot.com/switch/
 
 译者自己根据原文翻译，译文保存为 markdown 格式，并附上尾部的签名。
 
 ----------------
 
-via: https://golangbot.com/if-statement/
+via: https://golangbot.com/switch/
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[译者ID](https://github.com/译者ID)
