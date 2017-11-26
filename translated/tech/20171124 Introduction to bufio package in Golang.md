@@ -696,17 +696,105 @@ Token (ReadLine): 	"aaaaaaaaaaaaaaaa"
 Token (ReadBytes): 	"aaaaaaaaaaaaaaaaaaaa\n"
 Token (Scanner): 	"aaaaaaaaaaaaaaaaaaaa"
 ```
+为了取回流中剩余的数据, *ReadLine* 需要被调用两次. 被 Scanner 处理的最大 token 长度为 64*1024. 如果传入更长的 token, scanner 将无法工作. 当 *ReadLine* 被多次调用时可以处理任何长度的 token. 由于函数返回是否在缓存数据中找到分隔符的标志, 但是这需要调用者进行处理. *ReadBytes* 则没有任何限制:
+```go
+s := strings.NewReader(strings.Repeat("a", 64*1024) + "\n")
+r := bufio.NewReader(s)
+token, _, err := r.ReadLine()
+fmt.Printf("Token (ReadLine): %d\n", len(token))
+fmt.Printf("Error (ReadLine): %v\n", err)
+s.Seek(0, io.SeekStart)
+r.Reset(s)
+token, err = r.ReadBytes('\n')
+fmt.Printf("Token (ReadBytes): %d\n", len(token))
+fmt.Printf("Error (ReadBytes): %v\n", err)
+s.Seek(0, io.SeekStart)
+scanner := bufio.NewScanner(s)
+scanner.Scan()
+fmt.Printf("Token (Scanner): %d\n", len(scanner.Text()))
+fmt.Printf("Error (Scanner): %v\n", scanner.Err())
+Token (ReadLine): 4096
+Error (ReadLine): <nil>
+Token (ReadBytes): 65537
+Error (ReadBytes): <nil>
+Token (Scanner): 0
+Error (Scanner): bufio.Scanner: token too long
+```
+3. 就像上面那样, *Scanner* 具有非常简单的 API, 对于普通的例子, 它还提供了友好的抽象概念.
 
+## bufio.ReadWriter
+Go 的结构体中可以使用一种叫做内嵌的类型. 和常规的具有类型和名字的字段不同, 我们可以仅仅使用类型(匿名字段). 内嵌类型的方法或者字段如果不和其他的冲突的话, 则可以使用一个简短的选择器来引用:
+```go
+type T1 struct {
+    t1 string
+}
+func (t *T1) f1() {
+    fmt.Println("T1.f1")
+}
+type T2 struct {
+    t2 string
+}
+func (t *T2) f2() {
+    fmt.Println("T1.f2")
+}
+type U struct {
+    *T1
+    *T2
+}
+func main() {
+    u := U{T1: &T1{"foo"}, T2: &T2{"bar"}}
+    u.f1()
+    u.f2()
+    fmt.Println(u.t1)
+    fmt.Println(u.t2)
+}
+T1.f1
+T1.f2
+foo
+bar
+```
+我们可以简单的使用 `u.t1` 来代替 `u.T1.t1`. 包 `bufio` 使用内嵌的方式来定义 *ReadWriter*. 它由 *Reader* 和 *Writer* 构成:
+```go
+type ReadWriter struct {
+  	*Reader
+  	*Writer
+  }
+```
+让我们来看看它是如何使用的:
+```go
+s := strings.NewReader("abcd")
+br := bufio.NewReader(s)
+w := new(bytes.Buffer)
+bw := bufio.NewWriter(w)
+rw := bufio.NewReadWriter(br, bw)
+buf := make([]byte, 2)
+_, err := rw.Read(buf)
+if err != nil {
+    panic(err)
+}
+fmt.Printf("%q\n", buf)
+buf = []byte("efgh")
+_, err = rw.Write(buf)
+if err != nil {
+    panic(err)
+}
+err = rw.Flush()
+if err != nil {
+   panic(err)
+}
+fmt.Println(w.String())
+"ab"
+efgh
+```
+由于 reader 和 writer 都具有方法 *Buffered*, 所以若想获取缓存数据的量, `rw.Buffered()` 将无法工作, 编译器会报错: `ambiguous selector rw.Buffered`. 但是类似 `rw.Reader.Buffered()` 的方式是可以的.
 
-
-
-
-
-
-
-
-
-
+## bufio + standard library
+*bufio* 包被广泛使用在 I/O出现的标准库中, 例如:
+* archive/zip
+* compress/*
+* encoding/*
+* image/*
+* 类似于 net/http 的TCP连接包装. 它还结合一些类似于 sync.Pool 的缓存框架来减少垃圾回收的压力
 
 ----------------
 
