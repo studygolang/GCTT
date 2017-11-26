@@ -65,7 +65,7 @@ Buffered I/O
 
 > `bufio.Writer` 默认使用 4096 长度字节的缓存, 可以使用 `NewWriterSize` 方法来设定该值
 
-##实现
+## 实现
 实现十分简单:
 ```go
 type Writer struct {
