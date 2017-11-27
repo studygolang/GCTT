@@ -20,7 +20,7 @@ A named func has a name and declared at the package-level—*outside of the body
 
 
 
-**👉 I already have explained them fully in my another post, **[**here**](https://blog.learngoprogramming.com/golang-funcs-params-named-result-values-types-pass-by-value-67f4374d9c0a)**.**
+***👉 I already have explained them fully in my another post, **[**here**](https://blog.learngoprogramming.com/golang-funcs-params-named-result-values-types-pass-by-value-67f4374d9c0a)**.***
 
 ![named Func](http://www.z4a.net/images/2017/11/26/named_funcs.png)
 
@@ -34,7 +34,7 @@ Variadic funcs can accept an optional number of input parameters
 
 
 
-**👉 To learn more about them check out my other post, **[**here**](https://blog.learngoprogramming.com/golang-variadic-funcs-how-to-patterns-369408f19085)**.**
+***👉 To learn more about them check out my other post, **[**here**](https://blog.learngoprogramming.com/golang-variadic-funcs-how-to-patterns-369408f19085)**.***
 
 ![Variadic Funcs](http://www.z4a.net/images/2017/11/27/variadic_funcs.png)
 
@@ -369,7 +369,7 @@ dog
 
 A deferred func is only executed after its parent func returns. Multiple defers can be used as well, they run as a [stack](https://en.wikipedia.org/wiki/Stack_%28abstract_data_type%29), one by one.
 
-**👉 To learn more about them check out my post about Go defers, **[**here**](https://blog.learngoprogramming.com/golang-defer-simplified-77d3b2b817ff)**.**
+***👉 To learn more about them check out my post about Go defers, **[**here**](https://blog.learngoprogramming.com/golang-defer-simplified-77d3b2b817ff)**.***
 
 ![defer func](http://www.z4a.net/images/2017/11/27/defer_funcs.png)
 
