@@ -1,4 +1,4 @@
-【rxcai翻译中】
+【翻译中】by guoxiaopang
 # Microservices in Golang - part 2 - Docker and go-micro
 
 原文链接：https://ewanvalentine.io/microservices-in-golang-part-2/
