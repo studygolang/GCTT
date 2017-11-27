@@ -93,7 +93,7 @@ func main() {
 Write: "abc"
 boom!
 ```
-这里我们可以看到 `Flush` 没有第二此调用消费者的 `write` 方法. 如果发生了 error, 使用了缓存的 writer 不会尝试再次执行写操作.
+这里我们可以看到 `Flush` 没有第二次调用消费者的 `write` 方法. 如果发生了 error, 使用了缓存的 writer 不会尝试再次执行写操作.
 
 字段 `n` 标识缓存内部当前操作的位置. `Buffered` 方法返回 `n` 的值:
 ```go
@@ -209,7 +209,7 @@ fmt.Println(bw.Buffered())
 ```
 
 ## ReadFrom
-io 包中定义了 `io.ReaderFrom` 接口. 该接口通常被 writer 实现, 用于从指定的 reader 中读取所有数据(知道 EOF)并对读到的数据进行底层处理:
+io 包中定义了 `io.ReaderFrom` 接口. 该接口通常被 writer 实现, 用于从指定的 reader 中读取所有数据(直到 EOF)并对读到的数据进行底层处理:
 ```go
 type ReaderFrom interface {
         ReadFrom(r Reader) (n int64, err error)
