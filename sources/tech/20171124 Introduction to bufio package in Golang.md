@@ -1,3 +1,5 @@
+[翻译中 translating] by jliu666
+
 # Introduction to bufio package in Golang
 
 原文链接：https://medium.com/golangspec/introduction-to-bufio-package-in-golang-ad7d1877f762
