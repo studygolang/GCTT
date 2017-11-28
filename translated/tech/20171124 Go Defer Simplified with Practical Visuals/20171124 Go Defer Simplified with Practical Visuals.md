@@ -4,7 +4,7 @@
 
 ## 什么是 defer ？
 
-通过使用 `defer` 修饰一个函数，使其在外部函数返回后才被执行，即便外部的函数返回的是 `panic` 异常，这类函数被称作 `延迟调用函数`
+通过使用 `defer` 修饰一个函数，使其在外部函数 ["返回后"](https://medium.com/@inanc/yeah-semantically-after-is-the-right-word-fad1d5181891) 才被执行，即便外部的函数返回的是 [panic 异常](https://golang.org/ref/spec#Handling_panics)，这类函数被称作 `延迟调用函数`
 
 ![](what_is_defer.png)
 
@@ -14,11 +14,17 @@
 
 * `defer` 语句与 `finally` 类似，但两者的不同是 `finally` 的作用域在其**异常块**中，而 `defer` 的作用域则限于包围它的那个函数
 
+----------------
+
+**更多关于defer：** 如果你好奇 `defer` 的内部机制是如何工作的，请查看 [我的评论](https://medium.com/@inanc/yeah-semantically-after-is-the-right-word-fad1d5181891) 。虽然它在 [官方文档](https://blog.golang.org/defer-panic-and-recover) 中总是被描述为 “在外部函数返回后执行”，但其中还有些不为人知的细节未被解释清楚
+
+----------------
+
 ## defer 的常见用途
 
 ### 释放已取得的资源
 
-使用 `defer` 的延迟调用函数经常被用于释放在函数体内请求后使用过的资源
+使用 `defer` 的延迟调用函数经常被用于在函数体内释放已用过的资源
 
 ![](releasing_acquired_resources.png)
 
@@ -30,7 +36,7 @@
 
 ![](save_us_from_panic.png)
 
-其中的 `recover()` 函数能够返回 `panic()` 函数的参数，这就使得我们能自行处理 **panic异常** ，同时你也可以向 `panic` 中传入错误类型或其他类型的值来判断引发 **panic异常** 的究竟是哪一个值
+其中的 `recover()` 函数能够返回 `panic()` 函数的参数，这就使得我们能自行处理 **panic异常** ，同时你也可以向 `panic` 中传入错误类型或其他类型的值来判断引发 **panic异常** 的究竟是哪一个值。 [更多详情](https://blog.golang.org/defer-panic-and-recover)
 
 ### 延迟闭包
 
@@ -72,7 +78,7 @@ count(10)
 
 ![](params_evaluation.png)
 
-*译者注：* 可以发现传入的延迟函数的 `i` 变量在 `count()` 返回之前就已经被运行时记录了其拷贝值（也就是 10 ），即便在 `count()` 返回后闭包内使用的 `i` 变量依然是之前的拷贝值。
+*译者注： 可以发现传入的延迟函数的 `i` 变量在 `count()` 返回之前就已经被运行时记录了其拷贝值（也就是 10 ），即便在 `count()` 返回后闭包内使用的 `i` 变量依然是之前的拷贝值。*
 
 上述的例子表明，通过指定返回值变量名，**defer** 还能够帮助我们在函数返回之前改变返回值的结果
 
@@ -154,11 +160,11 @@ Chevrolet Impala
 
 ----------------
 
-via: https://ewanvalentine.io/microservices-in-golang-part-2/
+via: https://blog.learngoprogramming.com/golang-defer-simplified-77d3b2b817ff
 
 作者：[Inanc Gumus](https://blog.learngoprogramming.com/@inanc?source=post_header_lockup)
 译者：[yujiahaol68](https://github.com/yujiahaol68)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
