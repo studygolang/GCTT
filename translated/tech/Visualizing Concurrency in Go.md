@@ -490,3 +490,33 @@ func main() {
 这个算法的模拟动画也同样很优雅形象，能帮助我们理解这个算法。算法中的 generate 这个函数发送从2开始的所有的整形数，传递给 filter 所在的 goroutine, 每个质数都会生成一个 filter 的 goroutine。 如果你在动画链接中从上往下看，你会发现所有传给 main 函数的数都是质数。最后总要的还是，这个算法在3D模拟中特别优美。
 
 ## GOMAXPROCS
+现在，让我们回到上文的工作者模式上。还记得我提到过这个例子是在 `GOMAXPROCS = 4` 的条件下运行的吗？这是因为所有的动画效果都不是艺术品，它们都是用实际运行状态模拟而得的。
+
+让我们看看 `GOMAXPROCS` 的定义：
+```
+GOMAXPROCS sets the maximum number of CPUs that can be executing simultaneously.
+```
+定义中的 CPU 指的是逻辑 CPU。我之前稍微修改了一下工作者的例子让每个 goroutine 都做一点会占用 CPU 时间的事情，然后我设置了不同的 `GOMAXPROCS` 值，重复运行这个例子，运行环境是一个 2 CPU, 共 24 核的机器，系统是 Linux。
+一下两个图中，第一张是运行在 1 个核上时的动画效果，第二章是运行在24核上时的动画效果。
+[WebGL 动画界面 1核](http://divan.github.io/demos/gomaxprocs1/)
+[WebGL 动画界面 24核](http://divan.github.io/demos/gomaxprocs24/)
+
+![1Core-Worker](http://divan.github.io/demos/gifs/gomaxprocs1.gif)
+![24Core-Worker](http://divan.github.io/demos/gifs/gomaxprocs24.gif)
+
+显而易见，这些动画模拟花费的时间是不同的。当 `GOMAXPROCS` 是 1 的时候，只有一个工作者结束了自己的任务以后，下一个工作者才会开始执行。而在 `GOMAXPROCS` 是 24 的情况下，整个程序的执行速度变化非常明显，相比之下，一些多路复用的开销变得微不足道了。
+
+尽管如此，我们也要知道，增大 `GOMAXPROCS` 的并不总是能够提高性能，在有些情况下它甚至会使程序的性能变差。
+
+## Goroutines leak
+Go 并发中还有什么使我们能可视化的呢？ goroutine 泄露是我能想到的一个场景。当你启动一个 goroutine 但是它在你的代码外陷入了错误状态，或者是你启动了很多带有死循环的 goroutine 时，goroutine 泄露就发生了。
+
+我仍然记得我第一次遇到 goroutine 泄露时，我脑子里想象的可怕场景。紧接着的周末，我就写了 expvarmon (一个 Go 应用的资源监控工具)。现在，我可以用 WebGL 来描绘当时在我脑海中的景象了。
+
+[WebGL 动画界面](http://divan.github.io/demos/leak/)
+
+![Goroutines leak](http://divan.github.io/demos/gifs/leak.gif)
+
+这个图中所有的蓝线都是浪费的系统资源，并且会成为你的应用的“定时炸弹”。
+
+## Parallelism is not Concurrency（并行不是并发）
