@@ -287,6 +287,206 @@ func main() {
 
 当然，我们可以将工作者的数量或子工作者的数量设得更高，但是在这里我们试着不让动画效果变得太复杂。
 
-Go中还存咋你这更酷的扇出模式，比如动态工作者/子工作者数量，使用channel来传输channel，但是现在的动画模拟应该已经可以解释扇出模型的含义了。
+Go 中还存咋你这更酷的扇出模式，比如动态工作者/子工作者数量，使用 channel 来传输channel，但是现在的动画模拟应该已经可以解释扇出模型的含义了。
 
 ## Servers
+下一个要说的常用模式和扇出相似，但是它会在短时间内生成多个 goroutine 来完成某些任务。这个模式常被用来实现服务器 -- 创建一个监听器，在循环中运行 accept() 并针对每个接受的连接启动 goroutine 来完成指定任务。这个模式很形象并且它能尽可能地简化服务器 handler 的实现。让我们来看一个简单的例子：
+```
+package main
+
+import "net"
+
+func handler(c net.Conn) {
+    c.Write([]byte("ok"))
+    c.Close()
+}
+
+func main() {
+    l, err := net.Listen("tcp", ":5000")
+    if err != nil {
+        panic(err)
+    }
+    for {
+        c, err := l.Accept()
+        if err != nil {
+            continue
+        }
+        go handler(c)
+    }
+}
+```
+[WebGL 动画界面](http://divan.github.io/demos/servers/)
+
+![Server](http://divan.github.io/demos/gifs/servers.gif)
+
+从并发的角度看好像什么事情都没有发生。当然，表面平静，内在其实风起云涌，完成了一系列复杂的操作，只是复杂性都被隐藏了，毕竟 [Simplicity is complicated.](https://www.youtube.com/watch?v=rFejpH_tAHM)
+
+但是让我们回归到并发的角度，给我们的服务器添加一些交互功能。比如说，我们定义一个 logger 以独立的 goroutine 的形式来记日志，每个 handler 想要异步地通过这个 logger 去写数据。
+```
+package main
+
+import (
+    "fmt"
+    "net"
+    "time"
+)
+
+func handler(c net.Conn, ch chan string) {
+    ch <- c.RemoteAddr().String()
+    c.Write([]byte("ok"))
+    c.Close()
+}
+
+func logger(ch chan string) {
+    for {
+        fmt.Println(<-ch)
+    }
+}
+
+func server(l net.Listener, ch chan string) {
+    for {
+        c, err := l.Accept()
+        if err != nil {
+            continue
+        }
+        go handler(c, ch)
+    }
+}
+
+func main() {
+    l, err := net.Listen("tcp", ":5000")
+    if err != nil {
+        panic(err)
+    }
+    ch := make(chan string)
+    go logger(ch)
+    go server(l, ch)
+    time.Sleep(10 * time.Second)
+}
+```
+[WebGL 动画界面](http://divan.github.io/demos/servers2/)
+
+![Server2](http://divan.github.io/demos/gifs/servers2.gif)
+
+这个例子就很形象地展示了服务器处理请求的过程。我们容易发现 logger 在存在大量连接的情况下会成为性能瓶颈，因为它需要对每个连接发送的数据进行接收，编码等耗时的操作。我们可以用上文提到的扇出模式来改进这个服务器模型。
+
+让我们来看看代码和动画效果：
+```
+package main
+
+import (
+    "net"
+    "time"
+)
+
+func handler(c net.Conn, ch chan string) {
+    addr := c.RemoteAddr().String()
+    ch <- addr
+    time.Sleep(100 * time.Millisecond)
+    c.Write([]byte("ok"))
+    c.Close()
+}
+
+func logger(wch chan int, results chan int) {
+    for {
+        data := <-wch
+        data++
+        results <- data
+    }
+}
+
+func parse(results chan int) {
+    for {
+        <-results
+    }
+}
+
+func pool(ch chan string, n int) {
+    wch := make(chan int)
+    results := make(chan int)
+    for i := 0; i < n; i++ {
+        go logger(wch, results)
+    }
+    go parse(results)
+    for {
+        addr := <-ch
+        l := len(addr)
+        wch <- l
+    }
+}
+
+func server(l net.Listener, ch chan string) {
+    for {
+        c, err := l.Accept()
+        if err != nil {
+            continue
+        }
+        go handler(c, ch)
+    }
+}
+
+func main() {
+    l, err := net.Listen("tcp", ":5000")
+    if err != nil {
+        panic(err)
+    }
+    ch := make(chan string)
+    go pool(ch, 4)
+    go server(l, ch)
+    time.Sleep(10 * time.Second)
+}
+```
+[WebGL 动画界面](http://divan.github.io/demos/servers3/)
+
+![Server3](http://divan.github.io/demos/gifs/servers3.gif)
+
+在这个例子中，我们把记日志的任务分布到了 4 个 goroutine 中，有效地改善了 logger 模块的吞吐量。但是从动画中仍然可以看出，logger 仍然是系统中最容易出现性能问题的地方。如果上千个连接同时调用 logger 记日志， 现在的 logger 模块仍然可能会出现性能瓶颈。当然，相比于之前的实现，它的阈值已经高了很多。
+
+## Concurrent Prime Sieve
+看够了扇入/扇出模型，我们现在来看看具体的并行算法。让我们来讲讲我最喜欢的并行算法之一：并行质数筛选法。这个算法是我从 [Go Concurrency Patterns](https://talks.golang.org/2012/concurrency.slide) 这个演讲中看到的。 质数筛选法（埃拉托斯特尼筛法）是在一个寻找给定范围内最大质数的古老算法。它通过一定的顺序筛掉多个质数的乘积，最终得到想要的最大质数。但是其原始的算法在多核机器上并不高效。
+
+这个算法的并行版本定义了多个 goroutine，每个 goroutine 代表一个已经找到的质数，同时有多个 channel 用来从 generator 传输数据到 filter。每当找到质数时，这个质数就会被一层层 channel 送到 main 函数来输出。当然，这个算法也不够高效，尤其是当你需要寻找一个很大的质数或者在寻找时间复杂度最低的算法时，但它的思想很优雅。
+```
+// A concurrent prime sieve
+package main
+
+import "fmt"
+
+// Send the sequence 2, 3, 4, ... to channel 'ch'.
+func Generate(ch chan<- int) {
+    for i := 2; ; i++ {
+        ch <- i // Send 'i' to channel 'ch'.
+    }
+}
+
+// Copy the values from channel 'in' to channel 'out',
+// removing those divisible by 'prime'.
+func Filter(in <-chan int, out chan<- int, prime int) {
+    for {
+        i := <-in // Receive value from 'in'.
+        if i%prime != 0 {
+            out <- i // Send 'i' to 'out'.
+        }
+    }
+}
+
+// The prime sieve: Daisy-chain Filter processes.
+func main() {
+    ch := make(chan int) // Create a new channel.
+    go Generate(ch)      // Launch Generate goroutine.
+    for i := 0; i < 10; i++ {
+        prime := <-ch
+        fmt.Println(prime)
+        ch1 := make(chan int)
+        go Filter(ch, ch1, prime)
+        ch = ch1
+    }
+}
+```
+[WebGL 动画界面](http://divan.github.io/demos/primesieve/)
+
+![Prime](http://divan.github.io/demos/gifs/primesieve.gif)
+
+这个算法的模拟动画也同样很优雅形象，能帮助我们理解这个算法。算法中的 generate 这个函数发送从2开始的所有的整形数，传递给 filter 所在的 goroutine, 每个质数都会生成一个 filter 的 goroutine。 如果你在动画链接中从上往下看，你会发现所有传给 main 函数的数都是质数。最后总要的还是，这个算法在3D模拟中特别优美。
+
+## GOMAXPROCS
