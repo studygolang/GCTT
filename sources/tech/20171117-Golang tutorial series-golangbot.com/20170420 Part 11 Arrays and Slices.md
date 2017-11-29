@@ -1,4 +1,4 @@
-
+【翻译中】 by Dingo1991
 # Part 11: Arrays and Slices
 
 原文链接：https://golangbot.com/arrays-and-slices/
