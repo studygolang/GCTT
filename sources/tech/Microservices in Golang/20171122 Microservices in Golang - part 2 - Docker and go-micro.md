@@ -15,6 +15,39 @@
 针对虚拟机的配置，伴随着像 [vagrant](https://www.vagrantup.com/) 这样的工具越来越常使用。但是运行一个虚拟机任然是一个相当大的操作。你的应用、内核和所有都运行在一个完整的操作系统、主机中。在资源方面，这是相当昂贵的。所以当微服务出现时，在自己的环境中运行这么多独立的代码库变得不可行。
 
 ## 随着容器的到来
+[容器](https://en.wikipedia.org/wiki/Operating-system-level_virtualization)减少了操作系统的版本。容器不包含内核、用户操作系统或通常构成操作系统的较低级别组件。
+
+容器只包含顶层库及其运行组件。内核在主机上共享。所以注意运行一个 `Unix` 内核，然后由 `n` 个容器共享，运行非常不同的运行时集合。
+
+在引擎下，容器使用各种内核工具。以便跨容器空间共享资源和网络功能。
+
+[进一步阅读](https://www.redhat.com/en/topics/containers/whats-a-linux-container)
+
+这意味着您可以运行代码所需的运行时和依赖关系，无需启动几个完整的操作系统。这是一个改变游戏的规划，因为一个容器和虚拟机比较体积是比较小的。例如 `Ubuntu`，它通常小于 `1GB` 大小，而 `Docker` 镜像只有 `188M`。
+
+你会注意到我在这个介绍中更广泛的谈到容器，而不是 `Docker` 容器。通常认为 [Docker](https://www.docker.com/) 和容器是一回事。但是，容器在Linux中更多是一个概念或一组功能。
+[Docker](https://www.docker.com/)只是其中的一种，只是因为好用而变得流行，还有其他的。因为在我看来，`Docker` 是最好的支持者，对于新手来说也是最简单的。
+
+所以希望你看到容器的价值。我们开始使用 `Docker` 来运行我们的第一个服务。我们来创建一个`DockerFile`。（备注: Docker容器的创建一般都使用DockerFile，容器会根据这个文件创建相对应的运行环境）
+
+```
+touch consignment-service/Dockerfile
+```
+
+在该文件中添加以下内容:
+
+```
+FROM alpine:latest
+
+RUN mkdir /app  
+WORKDIR /app  
+ADD consignment-service /app/consignment-service
+
+CMD ["./consignment-service"]  
+```
+
+如果你在 Linux 上运行，你可能会遇到使用 Alpine 的问题。所以，如果你在 Linux 机器上关注这篇文章，只需用 debian 替换 alpine 即可，你应该能够正常运行。 稍后我们将会介绍一个更好的方法来构建我们的二进制文件。
+
 
 ----------------
 
