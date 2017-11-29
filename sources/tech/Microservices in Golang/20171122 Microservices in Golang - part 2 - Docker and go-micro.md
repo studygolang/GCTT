@@ -46,7 +46,20 @@ ADD consignment-service /app/consignment-service
 CMD ["./consignment-service"]  
 ```
 
-如果你在 Linux 上运行，你可能会遇到使用 Alpine 的问题。所以，如果你在 Linux 机器上关注这篇文章，只需用 debian 替换 alpine 即可，你应该能够正常运行。 稍后我们将会介绍一个更好的方法来构建我们的二进制文件。
+如果你在 Linux 上运行，你可能会遇到使用 Alpine 的问题。所以，如果你在 Linux 机器上关注这篇文章，只需用 `debian` 替换 `alpine` 即可，你应该能够正常运行。 稍后我们将会介绍一个更好的方法来构建我们的二进制文件。
+
+首先，我们拉去最新的 [Linux Alpine](https://alpinelinux.org/) 镜像。[Linux Alpine](https://alpinelinux.org/) 是一个轻量级Linux发行版，为运行Dockerised Web应用程序而开发和优化。换一种说法，[Linux Alpine](https://alpinelinux.org/) 具有足够的依赖性和运行时功能来运行大多数应用程序。这意味着它的镜像大小只有 8M 左右。与之相比，大约 1GB 的 Ubuntu 虚拟机，你可以开始看到为什么 Docker 镜像更适合微服务和云计算。
+
+接下来我们创建一个新的目录来存放我们的应用程序，并将上下文目录设置到我们的新目录中。 这是我们的应用程序目录是默认的目录。 然后，我们将编译后的二进制文件添加到我们的Docker容器中，并运行它。
+
+现在我们来更新`MakeFile`文件来构建我们的 Docker镜像。
+
+```
+build:  
+    ... 
+    GOOS=linux GOARCH=amd64 go build
+    docker build -t consignment-service .
+```
 
 
 ----------------
