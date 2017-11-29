@@ -1,24 +1,24 @@
 # Go 语言如何去解决 Web 开发人员面临的众多问题？
 
 
-坦白的说,我的团队非常厌恶我对 GO 语言的解答问题的方式,每当我们团队的代码库出现问题时,他们希望我用一种更委婉的方式提出.
+坦白的说,我的团队非常厌恶我对 GO 语言传道的方式,每当我们团队的代码库出现问题时,他们希望我用一种更委婉的方式提出.
 
 
 ![](https://ewanvalentine.io/content/images/2016/01/Screen-Shot-2016-01-29-at-11-57-56.png) 
 
-我的第一个编程语言是 PHP，这是个优秀的语言，我可以用它很快地构建 Web 应用程序，他们也会这么做。但是我注意到，为了使其可用，我会花费大量的时间来关注缓存。
+我学会的第一种编程语言是 PHP，这是个优秀的语言，我可以用它很快地构建 Web 应用程序，这些应用程序也能够达到预期的效果。但是我注意到，为了使其可用，我会花费大量的时间来关注缓存。
 
-我也发现自己依靠很多第三方供应商来做一些更复杂的任务，比如队列，Web Sockets 等等。我发现自己使用了 Pusher，RabbitMQ，Beanstalkd 等等。
+我也发现自己依靠很多第三方库来做一些更复杂的任务，比如队列，Web Sockets 等等。我发现自己使用了 Pusher，RabbitMQ，Beanstalkd 等等。
 
-这让人感觉有点不好。在使用 Ruby，Node 和 Python 的时候，会出现类似的问题。在并发性， WebSockets 和性能方面，这些插件会让人感觉到代码的不完整。
+这让人感觉有点不好。在使用 Ruby，Node 和 Python 的时候，会出现类似的问题。在并发性， WebSockets 和性能方面，这些语言会让人感觉到它们是不完整。
 
-坦率地说我需要完全依赖框架和大量文档，“语法糖”，DSL，同时很多博客上也会出现第三方插件的文章。
+我需要完全依赖框架和大量文档，“语法糖”，DSL，坦率地说，它们经常会带来很多非常占用空间的东西。
 
 我开始把目光转向 GO 语言。 
 
-首先 Go 是一种的静态类型语言，我一直都喜欢这种方式。 所以我学的非常快。Go 语言入门非常的低，你发现自己会担心 GO 语言的指针和内存引用等。
+首先 Go 是一种的静态类型语言，我一直都喜欢这种方式。 所以我学的非常快。Go 是一种偏底层的语言，你会遇到指针和内存引用等问题。
 
-我之前曾经涉足 C 语言，而 Go 感觉和 C 很像，但是随 Go 提供的标准库非常强大且易于使用，所以我非常注意 Go 的语法要点。
+我之前曾经涉足 C 语言，而 Go 感觉和 C 很像，但是 Go 提供的标准库非常强大且易于使用，所以我对 Go 语法的精炼扼要感到震惊。
 
 在深入研究之后，我决定研究Go是如何解决PHP编写Web应用/ API等出现的一些问题。
 
@@ -74,7 +74,7 @@ func wshandler(w http.ResponseWriter, r *http.Request) {
 
 ###并发
 
-在 PHP 中，我不得不使用一些线程执行 hack ，使用 `shell_exec()` 将一个任务委托给一个新的线程，或者使用一个单独的服务，比如 Beanstalkd 或者 RabbitMQ。
+在 PHP 中，我不得不要么使用一些黑客手法运行线程，比如使用 `shell_exec()` 将一个任务委托给一个新的线程，或者使用一个单独的服务，比如 Beanstalkd 或者 RabbitMQ。
 
 不过，你只要在需要并发功能的函数前加 `go` 的关键字就可实现。 例如...
 
@@ -136,7 +136,7 @@ func TestSup(t *testing.T) {
         t.Fatalf("Expected %s, got %s", expected, outcome)
     }
 }
-```
+```Go 还有一个非常稳固的内置 Http 服务器
 
 我现在把所有的通过 `go test` 进行测试，结果是... 
 
@@ -146,21 +146,21 @@ func TestSup(t *testing.T) {
 
 ###运行速度
 
-我有相当多的经验，在使用在 PHP 编写 RESTful API 的过程中使用 Symfony2 和 Laravel 等框架。
+在用 PHP 写 RESTful API 时，我有非常多的 Symfony2 和 Laravel 等框架的使用经验。
 
 没有预先着重考虑几个级别的缓存; 如在内存缓存，操作缓存，全页缓存等。代码响应时间就会是一个蜗牛的步伐。Ruby 如此的声名狼藉就是由于缓慢。
 
 由于 Go 的静态类型，编译性质以及对并发的原生支持。 Go 运行起来特别快。
 
-看看[框架基准](https://www.techempower.com/benchmarks/) ，实践是最好的证明。 Go 最受欢迎的框架是 Gin 和 Revel，它们在大多数测试中的排名要高于 PHP 或者 Ruby。
+看看[框架基准测试](https://www.techempower.com/benchmarks/) ，实践是最好的证明。 Go 最受欢迎的框架是 Gin 和 Revel，它们在大多数测试中的排名要高于 PHP 或者 Ruby。
 
 ###DevOps
 
-关于 Go 我还注意到一些，这让我非常震惊，不需要部署成千上万的文件，或者配置 Web 服务器或者 Php-fpm 等。甚至不需要在你的服务器上安装 Go。
+关于 Go 我还注意到一些，这让我非常震惊，不需要部署成千上万的文件，或者配置 Web 服务器或者 php-fpm 等。甚至不需要在你的服务器上安装 Go。
 
-一旦 Go 应用程序被编译（ `go build` ），你只剩下一个小小的二进制文件。你只要去运行 一个单独的文件。
+一旦 Go 应用程序被编译（ `go build` ），你只剩下一个小小的二进制文件。你只要去运行一个单独的文件。
 
-Go 还有一个非常稳固的 Http 服务内置... 
+... 
 
 ```golang
 package main
@@ -182,7 +182,7 @@ func main() {
 
 ###语法
 
-Go 的语法不像 Ruby 那样漂亮，或者像 JavaScript 一样简单。 但是它很简洁，入门简单，但 Go 让人感觉强大，表现力强。 我们都在看传统的 PHP 代码库，并感到身体不适。 相比之下，Go 非常容易去学习。
+Go 的语法不像 Ruby 那样漂亮，或者像 JavaScript 一样简单。 但是它很简洁，它让人觉得便底层，但 Go 让人感觉强大，表现力强。 我们都在看传统的 PHP 代码库，并感到身体不适。 相比之下，Go 非常容易去阅读。
 
 当然，PHP 有 PSR 标准等，但是它们相当新，开发人员采用它们的速度很慢。 而 Go 的语言设计者从一开始就是明确的。
  
@@ -196,6 +196,7 @@ via: https://ewanvalentine.io/why-go-solves-so-many-problems-for-web-developers/
 
 作者：[Ewan Valentine](https://ewanvalentine.io/author/ewan/)
 译者：[Dingo1991](https://github.com/Dingo1991)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
+
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推
