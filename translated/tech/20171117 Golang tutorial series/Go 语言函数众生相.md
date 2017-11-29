@@ -140,7 +140,7 @@ onApiHit(&dummyCounter)
 
 ![interface methods](http://www.z4a.net/images/2017/11/27/interface_funcs.png)
 
-我们在 Count 类型上定义了一个``Incr() int``方法，因此``onApiHit()``方法可以通过它来增长 counter ——我将 dummyCounter 的指针传入了 onApiHit，否则这个计数器不会因而增长
+我们在 Count 类型上定义了一个``Incr() int``方法，因此``onApiHit()``方法可以通过它来增长 counter —— 我将 dummyCounter 的指针传入了 onApiHit，否则这个计数器不会因而增长
 
 [![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
 
@@ -156,15 +156,15 @@ onApiHit(&dummyCounter)
 
 ![first-class funcs](http://www.z4a.net/images/2017/11/27/first-class_funcs.png)
 
-<p align="center">函数可以作为其他类型的值来使用，反之亦然</p>
+<p align="center">函数可以作为一种值类型和其他的类型配合使用，反之亦然</p>
 
 #### 示例
 
 以下程序通过 Crunchers 切片将一个数值序列作为参数传递到一个叫”crunch“的函数中去。
 
-声明一个”用户自定义类型“，它需要接收一个 int 类型的值来返回一个 int 类型的值。
+声明一个”用户自定义函数类型“，它需要接收一个 int 类型的值来返回一个 int 类型的值。
 
-这意味着任何使用这种类型的代码都要接受一个以如下形式定义的函数：
+这意味着任何使用这种类型的代码都可以接受一个以如下形式签名的函数：
 
 ```go
 type Cruncher func(int) int
@@ -229,7 +229,7 @@ crunch(nums, mul, add, sub)
 
 ![annoymous funcs](http://www.z4a.net/images/2017/11/27/Anonymous_funcs.png)
 
-#### 形式
+#### 函数签名
 
 命名函数：
 
@@ -243,7 +243,7 @@ func Bang(energy int) time.Duration
 func(energy int) time.Duration
 ```
 
-它们有相同的定义形式，所以它们可以互换着使用：
+它们有相同的函数签名形式，所以它们可以互换着使用：
 
 ```go
 func(int) time.Duration
@@ -452,7 +452,7 @@ Go 语言的连接器会在运行时将函数置于可执行环境以方便后�
 
 #### 外部函数
 
-如果你省略掉函数体，仅仅声明其形式，连接器会尝试在任何可能的地方找到这个外部函数。例如：Atan Func在[*这里只进行了声明*](https://github.com/golang/go/blob/dd8dc6f0595ffc2c4951c0ce8ff6b63228effd97/src/pkg/math/atan.go#L54)，而后在[*这里进行了实现*](https://github.com/golang/go/blob/dd8dc6f0595ffc2c4951c0ce8ff6b63228effd97/src/pkg/math/atan_386.s)。
+如果你省略掉函数体，仅仅进行函数声明，连接器会尝试在任何可能的地方找到这个外部函数。例如：Atan Func在[*这里只进行了声明*](https://github.com/golang/go/blob/dd8dc6f0595ffc2c4951c0ce8ff6b63228effd97/src/pkg/math/atan.go#L54)，而后在[*这里进行了实现*](https://github.com/golang/go/blob/dd8dc6f0595ffc2c4951c0ce8ff6b63228effd97/src/pkg/math/atan_386.s)。
 
 ---
 
