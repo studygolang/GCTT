@@ -1,3 +1,4 @@
+[翻译中 By Hackandquan]
 # Error handling in Go
 
 原文链接：https://scene-si.org/2017/11/13/error-handling-in-go/
