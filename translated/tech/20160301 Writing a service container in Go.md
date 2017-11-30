@@ -1,4 +1,4 @@
-#用 GO 写一个 service 容器
+#用 GO 写一个服务容器（ Service Container ）
 
 我最近一直在做一个相当大 API 项目，里面包括很多路由规则（ routes ），服务接口（ services ），和处理函数（ handlers ）等。首先，我注意到 `main.go` 文件的启动过程开始越来越臃肿。
 
@@ -108,9 +108,9 @@ func main() {
     )
 }
 ```
-_Props to /u/itsmontoya for the sync stuff_
+_同步方面的代码参考自 itsmontoya ，向他致敬_
 
-现在我已经将启动过程很何洁地封装成了包。我觉得一个有 PHP 语言背景的人在考虑这段语法实现时候会参考 [pimple](http://pimple.sensiolabs.org/) 框架。
+现在我已经将启动过程很简洁地封装成了包。我觉得一个有 PHP 语言背景的人在考虑这段语法实现时候会参考 [pimple](http://pimple.sensiolabs.org/) 框架。
 
 我已经把这个抽象成了自己的库，实现在[这里](https://github.com/EwanValentine/Vertebrae) 。
 
@@ -120,6 +120,6 @@ via: https://ewanvalentine.io/writing-a-service-container-in-go/
 
 作者：[Ewan Valentine](https://ewanvalentine.io/author/ewan/)
 译者：[j.zhongming](https://github.com/j.zhongming)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推
