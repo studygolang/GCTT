@@ -72,7 +72,7 @@ func wshandler(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-###并发
+### 并发
 
 在 PHP 中，我不得不要么使用一些黑客手法运行线程，比如使用 `shell_exec()` 将一个任务委托给一个新的线程，或者使用一个单独的服务，比如 Beanstalkd 或者 RabbitMQ。
 
@@ -102,7 +102,7 @@ func main() {
 
 我将之前一个上传图片到 s3 的耗时任务放到 goroutine 中去实现接近即时的上传效果，没有第三方服务，完全本地。 对于大多数开发人员来说不那么令人印象深刻，但是对于 PHP 背景的开发人员来说，我对 Go 的易用性和性能提升感到震惊。
 
-###测试
+### 测试
 
 单元测试在 PHP 或 Javascript 中可能会有点痛苦。 有无数不同的测试框架，但没有一个能够像 go built 命令去如此简单自然的进行测试。
 
@@ -136,7 +136,7 @@ func TestSup(t *testing.T) {
         t.Fatalf("Expected %s, got %s", expected, outcome)
     }
 }
-```Go 还有一个非常稳固的内置 Http 服务器
+```
 
 我现在把所有的通过 `go test` 进行测试，结果是... 
 
@@ -144,7 +144,7 @@ func TestSup(t *testing.T) {
 
 是不是非常的简单？
 
-###运行速度
+### 运行速度
 
 在用 PHP 写 RESTful API 时，我有非常多的 Symfony2 和 Laravel 等框架的使用经验。
 
@@ -154,13 +154,13 @@ func TestSup(t *testing.T) {
 
 看看[框架基准测试](https://www.techempower.com/benchmarks/) ，实践是最好的证明。 Go 最受欢迎的框架是 Gin 和 Revel，它们在大多数测试中的排名要高于 PHP 或者 Ruby。
 
-###DevOps有了
+### DevOps有了
 
 关于 Go 我还注意到一些，这让我非常震惊，不需要部署成千上万的文件，或者配置 Web 服务器或者 php-fpm 等。甚至不需要在你的服务器上安装 Go。
 
 一旦 Go 应用程序被编译（ `go build` ），你只剩下一个小小的二进制文件。你只要去运行一个单独的文件。
 
-... 
+Go 还有一个非常稳固的内置 Http 服务器... 
 
 ```golang
 package main
@@ -180,7 +180,7 @@ func main() {
 }
 ```
 
-###语法
+### 语法
 
 Go 的语法不像 Ruby 那样漂亮，或者像 JavaScript 一样简单。 但是它很简洁，它让人觉得便底层，但 Go 让人感觉强大，表现力强。 我们都在看传统的 PHP 代码库，并感到身体不适。 相比之下，Go 非常容易去阅读。
 
