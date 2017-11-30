@@ -1,18 +1,18 @@
 # Go语言并发可视化
 
-本文作者提供了其在2016的GopherCon上的关于Go并发可视化的[主题演讲](https://www.youtube.com/watch?v=KyuFeiG3Y60)。
+本文作者提供了在 2016 的 GopherCon 上的关于 Go 并发可视化的[主题演讲视频](https://www.youtube.com/watch?v=KyuFeiG3Y60)。
 
-Go语言一个鲜明的优点就是内置的基于[CSP](https://en.wikipedia.org/wiki/Communicating_sequential_processes)的并发实现。Go可以说是一个为了并发而设计的语言，允许我们使用它构建复杂的并发流水线。但是开发者是否在脑海中想象过不同的并发模式呢，它们在你的大脑中是怎样的形状？
+Go语言一个鲜明的优点就是内置的基于 [CSP](https://en.wikipedia.org/wiki/Communicating_sequential_processes) 的并发实现。Go 可以说是一个为了并发而设计的语言，允许我们使用它构建复杂的并发流水线。但是开发者是否在脑海中想象过不同的并发模式呢，它们在你的大脑中是怎样的形状？
 
-你肯定想过这些！我们都会靠多种多样的想象来思考。如果我让你想象一下1-100的数字，你会下意识地在脑海中闪过这些数字的图像。比如说我会把它想象成一条从我出发的直线，到20时它会右转90度并且一直延伸到1000。这是因为我上幼儿园的时候，卫生间墙上写满了数字，20正好在角落上。你们脑中肯定有自己想象的数字形象。另一个常见的例子就是一年四季的可视化，有些人把它想象成一个盒子，另外一些人把它想象成是圆圈。
+你肯定想过这些！我们都会靠多种多样的想象来思考。如果我让你想象一下 1-100 的数字，你会下意识地在脑海中闪过这些数字的图像。比如说我会把它想象成一条从我出发的直线，到 20 时它会右转 90 度并且一直延伸到 1000。这是因为我上幼儿园的时候，卫生间墙上写满了数字，20 正好在角落上。你们脑中肯定有自己想象的数字形象。另一个常见的例子就是一年四季的可视化，有些人把它想象成一个盒子，另外一些人把它想象成是圆圈。
 
-无论如何，我想要用Go和WebGL分享我想象的一些常用并行模式的可视化。这些可视化或多或少地代表了我头脑中的并行编程方法。如果能知道我们之间对并行可视化想象的差异，肯定是一件很有趣的事情。我尤其想要知道Rob Pike和Sameer Ajmani是怎么想象并行的，那一定很有意思。
+无论如何，我想要用 Go 和 WebGL 分享我想象的一些常用并发模式的可视化。这些可视化或多或少地代表了我头脑中的并发编程方法。如果能知道我们之间对并发可视化想象的差异，肯定是一件很有趣的事情。我尤其想要知道 Rob Pike 和 Sameer Ajmani 是怎么想象并发的，那一定很有意思。
 
-现在，我们就从最简单的“Hello, Concurrent World”开始，来了解我脑海中的并行世界吧。
+现在，我们就从最简单的 “Hello, Concurrent World” 开始，来了解我脑海中的并行世界吧。
 
 ## Hello, Concurrent World
 
-这个例子的代码很简单，只包含一个channel，一个goroutine，一个读操作和一个写操作。
+这个例子的代码很简单，只包含一个 channel，一个 goroutine，一个读操作和一个写操作。
 ```
 package main
 
@@ -33,10 +33,10 @@ func main() {
 
 ![hello](http://divan.github.io/demos/gifs/hello.gif)
 
-在这张图中，蓝色的线代表goroutines的时间轴。连接`main`和`go#19`的蓝线是用来标记goroutine的起始和终止并且表示父子关系的。红色的箭头代表的是send/recv操作。尽管send/recv操作是两个独立的操作，但是我试着将它们表示成一个操作`从A发送到B`。右边蓝线上的`#19`是该goroutine的内部ID，可以通过Scott Mansfield在[Goroutine IDs](http://blog.sgmansfield.com/2015/12/goroutine-ids/)一文中提到的技巧获取。
+在这张图中，蓝色的线代表 goroutine 的时间轴。连接 `main` 和 `go#19` 的蓝线是用来标记 goroutine 的起始和终止并且表示父子关系的。红色的箭头代表的是 send/recv 操作。尽管 send/recv 操作是两个独立的操作，但是我试着将它们表示成一个操作 `从A发送到B`。右边蓝线上的 `#19` 是该 goroutine 的内部 ID，可以通过 Scott Mansfield 在 [Goroutine IDs](http://blog.sgmansfield.com/2015/12/goroutine-ids/)一文中提到的技巧获取。
 
-## Timers
-事实上，我们可以通过简单的几个步骤编写一个计时器：创建一个channel，启动一个goroutine以给定间隔往channel中写数据，将这个chennel返回给调用者。调用者阻塞地从channel中读，就会得到一个精准的时钟。让我们来试试调用这个程序24次并且将过程可视化。
+## 计时器（Timers）
+事实上，我们可以通过简单的几个步骤编写一个计时器：创建一个 channel，启动一个 goroutine 以给定间隔往 channel 中写数据，将这个 chennel 返回给调用者。调用者阻塞地从 channel 中读，就会得到一个精准的时钟。让我们来试试调用这个程序24次并且将过程可视化。
 ```
 package main
 
@@ -64,10 +64,10 @@ func main() {
 
 这个效果是不是很有条理？
 
-## Ping-pong
-这个例子是我从Google员工Sameer Ajmani的一次演讲["Advanced Go Concurrency Patterns"](https://talks.golang.org/2013/advconc.slide#1)中找到的。当然，这并不是一个很高阶的并发模型，但是对于Go语言并发的新手来说是很有趣的。
+## 乒乓球（Ping-pong）
+这个例子是我从 Google 员工 Sameer Ajmani 的一次演讲["Advanced Go Concurrency Patterns"](https://talks.golang.org/2013/advconc.slide#1)中找到的。当然，这并不是一个很高阶的并发模型，但是对于Go语言并发的新手来说是很有趣的。
 
-在这个例子中，我们定义了一个channel来作为“乒乓桌”。乒乓球是一个整形变量，代码中有两个goroutine“玩家”通过增加乒乓球的counter在“打球”。
+在这个例子中，我们定义了一个 channel 来作为“乒乓桌”。乒乓球是一个整形变量，代码中有两个 goroutine “玩家”通过增加乒乓球的 counter 在“打球”。
 ```
 package main
 
@@ -97,7 +97,7 @@ func player(table chan int) {
 
 ![Ping-pong](http://divan.github.io/demos/gifs/pingpong.gif)
 
-我建议你点击“WebGL 动画界面”链接，从不同角度看看这个模型，并且试试它减速，加速的效果。
+我建议你点击 “WebGL 动画界面” 链接，从不同角度看看这个模型，并且试试它减速，加速的效果。
 
 现在，我们给这个模型添加一个玩家（goroutine）。
 ```
@@ -109,9 +109,9 @@ func player(table chan int) {
 
 ![Ping-pong2](http://divan.github.io/demos/gifs/pingpong3.gif)
 
-我们可以看到每个goroutine都有序地“打到球”，你可能会好奇这个行为的原因。那么，为什么这三个goroutine始终按照一定顺序接收到ball呢？
+我们可以看到每个 goroutine 都有序地“打到球”，你可能会好奇这个行为的原因。那么，为什么这三个 goroutine 始终按照一定顺序接收到ball呢？
 
-答案很简单，Go运行时会对每个channel的所有接收者维护一个FIFO队列。在我们的例子中，每个goroutine会在它将b让我们来all传给channel的之后就开始等待channel，所以它们在队列里的顺序总是一定的。让我们增加goroutine的数量，看看顺序是否仍然保持一致。
+答案很简单，Go运行时会对每个 channel 的所有接收者维护一个 FIFO 队列。在我们的例子中，每个 goroutine 会在它将 ball 传给 channel 之后就开始等待 channel，所以它们在队列里的顺序总是一定的。让我们增加 goroutine 的数量，看看顺序是否仍然保持一致。
 ```
 for i := 0; i < 100; i++ {
     go player(table)
@@ -121,10 +121,10 @@ for i := 0; i < 100; i++ {
 
 ![Ping-pong100](http://divan.github.io/demos/gifs/pingpong100.gif)
 
-很明显，它们的顺序仍然是一定的。我们可以创建一百万个goroutine去尝试，但是上面的实验已经足够让我们得出结论了。接下来，让我们来看看一些不一样的东西，比如说通用的消息模型。
+很明显，它们的顺序仍然是一定的。我们可以创建一百万个 goroutine 去尝试，但是上面的实验已经足够让我们得出结论了。接下来，让我们来看看一些不一样的东西，比如说通用的消息模型。
 
-## Fan-In
-扇入（fan-in）模式在并发世界中广泛使用。扇出（fan-out）与其相反，我们会在下面介绍。简单来说，扇入模式就是一个函数从多个输入源读取数据并且复用到单个channel中。比如说：
+## 扇入（Fan-In）
+扇入（fan-in）模式在并发世界中广泛使用。扇出（fan-out）与其相反，我们会在下面介绍。简单来说，扇入模式就是一个函数从多个输入源读取数据并且复用到单个 channel 中。比如说：
 ```
 package main
 
@@ -163,10 +163,10 @@ func main() {
 
 ![Fan-In](http://divan.github.io/demos/gifs/fanin.gif)
 
-我们能看到，第一个`producer`每隔一百毫秒生成一个值，第二个`producer`每隔250毫秒生成一个值，但是`reader`会立即接收它们的值。main函数中的for循环高效地接收了channel发送的所有信息。
+我们能看到，第一个 `producer` 每隔一百毫秒生成一个值，第二个 `producer` 每隔 250 毫秒生成一个值，但是 `reader` 会立即接收它们的值。main 函数中的 for 循环高效地接收了 channel 发送的所有信息。
 
-## Workers
-与扇入模式相反的模式叫做扇出（fan-out）或者工作者（workers）模式。多个goroutine可以从相同的channel中读数据，利用多核并发完成自身的工作，这就是工作者（workers）的由来。在Go中，这个模式很容易实现，只需要启动多个以channel作为参数的goroutine，主函数传数据给这个channel，数据分发和复用会由Go运行环境自动完成。
+## 工作者（Workers）
+与扇入模式相反的模式叫做扇出（fan-out）或者工作者（workers）模式。多个 goroutine 可以从相同的 channel 中读数据，利用多核并发完成自身的工作，这就是工作者（workers）的由来。在 Go 中，这个模式很容易实现，只需要启动多个以 channel 作为参数的 goroutine，主函数传数据给这个 channel，数据分发和复用会由 Go 运行环境自动完成。
 ```
 package main
 
@@ -214,7 +214,7 @@ func main() {
 
 ![Workers](http://divan.github.io/demos/gifs/workers.gif)
 
-在这里需要提一下并行结构（parallelism）。我们可以看到，动图中所有的goroutine都是平行“延伸”，等待channel给它们发数据来运行的。我们还可以注意到两个goroutine接收数据之间几乎是没有停顿的。不巧的是，这个动画并没有用颜色区分一个goroutine是在等数据还是在执行工作，这个动画是在 `GOMAXPROCS=4` 的情况下录制的，所以只有4个goroutine能够同时运行。我们将会在下文汇总讨论这个主题。
+在这里需要提一下并行结构（parallelism）。我们可以看到，动图中所有的 goroutine 都是平行“延伸”，等待 channel 给它们发数据来运行的。我们还可以注意到两个 goroutine 接收数据之间几乎是没有停顿的。不幸的是，这个动画并没有用颜色区分一个 goroutine 是在等数据还是在执行工作，这个动画是在 `GOMAXPROCS=4` 的情况下录制的，所以只有 4 个 goroutine 能够同时运行。我们将会在下文汇总讨论这个主题。
 
 现在，我们来写更复杂一点的代码，启动带有子工作者的工作者（subworkers）：
 ```
@@ -287,9 +287,9 @@ func main() {
 
 当然，我们可以将工作者的数量或子工作者的数量设得更高，但是在这里我们试着不让动画效果变得太复杂。
 
-Go 中还存咋你这更酷的扇出模式，比如动态工作者/子工作者数量，使用 channel 来传输channel，但是现在的动画模拟应该已经可以解释扇出模型的含义了。
+Go 中还存在比这更酷的扇出模式，比如动态工作者/子工作者数量，使用 channel 来传输 channel，但是现在的动画模拟应该已经可以解释扇出模型的含义了。
 
-## Servers
+## 服务器（Servers）
 下一个要说的常用模式和扇出相似，但是它会在短时间内生成多个 goroutine 来完成某些任务。这个模式常被用来实现服务器 -- 创建一个监听器，在循环中运行 accept() 并针对每个接受的连接启动 goroutine 来完成指定任务。这个模式很形象并且它能尽可能地简化服务器 handler 的实现。让我们来看一个简单的例子：
 ```
 package main
@@ -442,7 +442,7 @@ func main() {
 
 在这个例子中，我们把记日志的任务分布到了 4 个 goroutine 中，有效地改善了 logger 模块的吞吐量。但是从动画中仍然可以看出，logger 仍然是系统中最容易出现性能问题的地方。如果上千个连接同时调用 logger 记日志， 现在的 logger 模块仍然可能会出现性能瓶颈。当然，相比于之前的实现，它的阈值已经高了很多。
 
-## Concurrent Prime Sieve
+## 并发质数筛选法（Concurrent Prime Sieve）
 看够了扇入/扇出模型，我们现在来看看具体的并行算法。让我们来讲讲我最喜欢的并行算法之一：并行质数筛选法。这个算法是我从 [Go Concurrency Patterns](https://talks.golang.org/2012/concurrency.slide) 这个演讲中看到的。 质数筛选法（埃拉托斯特尼筛法）是在一个寻找给定范围内最大质数的古老算法。它通过一定的顺序筛掉多个质数的乘积，最终得到想要的最大质数。但是其原始的算法在多核机器上并不高效。
 
 这个算法的并行版本定义了多个 goroutine，每个 goroutine 代表一个已经找到的质数，同时有多个 channel 用来从 generator 传输数据到 filter。每当找到质数时，这个质数就会被一层层 channel 送到 main 函数来输出。当然，这个算法也不够高效，尤其是当你需要寻找一个很大的质数或者在寻找时间复杂度最低的算法时，但它的思想很优雅。
@@ -498,6 +498,7 @@ GOMAXPROCS sets the maximum number of CPUs that can be executing simultaneously.
 ```
 定义中的 CPU 指的是逻辑 CPU。我之前稍微修改了一下工作者的例子让每个 goroutine 都做一点会占用 CPU 时间的事情，然后我设置了不同的 `GOMAXPROCS` 值，重复运行这个例子，运行环境是一个 2 CPU, 共 24 核的机器，系统是 Linux。
 一下两个图中，第一张是运行在 1 个核上时的动画效果，第二章是运行在24核上时的动画效果。
+
 [WebGL 动画界面 1核](http://divan.github.io/demos/gomaxprocs1/)
 [WebGL 动画界面 24核](http://divan.github.io/demos/gomaxprocs24/)
 
@@ -508,7 +509,7 @@ GOMAXPROCS sets the maximum number of CPUs that can be executing simultaneously.
 
 尽管如此，我们也要知道，增大 `GOMAXPROCS` 的并不总是能够提高性能，在有些情况下它甚至会使程序的性能变差。
 
-## Goroutines leak
+## Goroutine 泄露（Goroutines leak）
 Go 并发中还有什么使我们能可视化的呢？ goroutine 泄露是我能想到的一个场景。当你启动一个 goroutine 但是它在你的代码外陷入了错误状态，或者是你启动了很多带有死循环的 goroutine 时，goroutine 泄露就发生了。
 
 我仍然记得我第一次遇到 goroutine 泄露时，我脑子里想象的可怕场景。紧接着的周末，我就写了 expvarmon (一个 Go 应用的资源监控工具)。现在，我可以用 WebGL 来描绘当时在我脑海中的景象了。
@@ -519,7 +520,7 @@ Go 并发中还有什么使我们能可视化的呢？ goroutine 泄露是我能
 
 这个图中所有的蓝线都是浪费的系统资源，并且会成为你的应用的“定时炸弹”。
 
-## Parallelism is not Concurrency（并行不是并发）
+## 并行不是并发（Parallelism is not Concurrency）
 最后，我想谈一下并行和并发的区别。这个主题已经在[Parallelism Is Not Concurrency](https://existentialtype.wordpress.com/2011/03/17/parallelism-is-not-concurrency/) 和 [Parallelism /= Concurrency
 ](https://ghcmutterings.wordpress.com/2009/10/06/parallelism-concurrency/) 中探讨过了，Rob Pike在一篇[演讲](https://www.youtube.com/watch?v=cN_DpYBzKso)中提到了这个问题，这是我认为必看的主题演讲之一。
 
@@ -539,13 +540,16 @@ Go 并发中还有什么使我们能可视化的呢？ goroutine 泄露是我能
 
 ![Parallelism2](http://divan.github.io/demos/gifs/parallelism2.gif)
 
-并且它同时也是并发的。
+但是这个是并发：
+
+![Server](http://divan.github.io/demos/gifs/primesieve.gif)
 
 这个也是并行(嵌套的工作者)：
 
 ![Workers2](http://divan.github.io/demos/gifs/workers2.gif)
 
 这个也是并发的：
+
 ![pingpong100](http://divan.github.io/demos/gifs/pingpong100.gif)
 
 # 如何生成这些动画
@@ -563,6 +567,8 @@ JSON 文件的样例如下：
 
 这种方法的使用场景非常有限。我必须精准地选择例子，重命名 channel 和 goroutine 来输出一个正确的 trace。这个方法也无法关联两个 goroutine 中的相同但不同名的 channel，更不用说识别通过 channel 传送的 channel 了。这个方法生成的时间戳也会出现问题，有时候输出信息到标准输出会比传值花费更多的时间，所以我为了得到正确的动画不得不在某些情况下让 goroutine 等待一些时间。
 
-这就是我并没有将这份代码开源的原因。我正在尝试使用 Dmitry Vyukov 的 [execution tracer](https://golang.org/cmd/trace/),它看起来能提供足够多的信息，但并包含 channel 传输的值。也许有更好的方法来实现我的目标。如果你有什么想法，可以通过 twitter 或者在本文下方评论来联系我。如果我们能够把它做成一个帮助开发者调试和记录 Go 程序运行情况的工具的话就更好了。
+这就是我并没有将这份代码开源的原因。我正在尝试使用 Dmitry Vyukov 的 [execution tracer](https://golang.org/cmd/trace/),它看起来能提供足够多的信息，但并不包含 channel 传输的值。也许有更好的方法来实现我的目标。如果你有什么想法，可以通过 twitter 或者在本文下方评论来联系我。如果我们能够把它做成一个帮助开发者调试和记录 Go 程序运行情况的工具的话就更好了。
 
-如果你想用我的工具看一些算法的动画效果，可以在下方留言，我很乐意帮助你们。
+如果你想用我的工具看一些算法的动画效果，可以在下方留言，我很乐意提供帮助。
+
+Happy coding！
