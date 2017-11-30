@@ -1,3 +1,5 @@
+【thinkerchi翻译中】
+
 这是 Russ Cox 的经典好文，但不知道是否有其他网站翻译
 
 # Go Data Structures: Interfaces
