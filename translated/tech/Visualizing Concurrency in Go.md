@@ -573,8 +573,10 @@ JSON 文件的样例如下：
 
 Happy coding！
 
-via：http://divan.github.io/posts/go_concurrency_visualize/
+via: https://divan.github.io/posts/go_concurrency_visualize/
 
-作者：作者名 译者：译者ID 校对：校对者ID
+作者：[Ivan Daniluk](https://github.com/divan)
+译者：[QueShengyao](https://github.com/QueShengyao)
+校对：[校对者ID](https://github.com/校对者ID)
 
-本文由 GCTT 原创编译， Go中文网 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
