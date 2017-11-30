@@ -154,7 +154,7 @@ func TestSup(t *testing.T) {
 
 看看[框架基准测试](https://www.techempower.com/benchmarks/) ，实践是最好的证明。 Go 最受欢迎的框架是 Gin 和 Revel，它们在大多数测试中的排名要高于 PHP 或者 Ruby。
 
-### DevOps有了
+### DevOps
 
 关于 Go 我还注意到一些，这让我非常震惊，不需要部署成千上万的文件，或者配置 Web 服务器或者 php-fpm 等。甚至不需要在你的服务器上安装 Go。
 
