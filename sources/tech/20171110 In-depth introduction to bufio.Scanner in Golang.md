@@ -1,3 +1,5 @@
+【翻译中】by yujiahaol68
+
 # In-depth introduction to bufio.Scanner in Golang
 
 原文链接：https://medium.com/golangspec/in-depth-introduction-to-bufio-scanner-in-golang-55483bb689b4
