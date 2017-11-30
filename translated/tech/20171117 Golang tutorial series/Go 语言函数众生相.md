@@ -459,7 +459,7 @@ Go 语言的连接器会在运行时将函数置于可执行环境以方便后�
 via: https://blog.learngoprogramming.com/go-functions-overview-anonymous-closures-higher-order-deferred-concurrent-6799008dde7b
 
 作者：[Inanc Gumus](https://blog.learngoprogramming.com/@inanc)
-译者：[译者ID](https://github.com/译者ID)
-校对：[校对者ID](https://github.com/校对者ID)
+译者：[shockw4ver](https://github.com/shockw4ver)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
