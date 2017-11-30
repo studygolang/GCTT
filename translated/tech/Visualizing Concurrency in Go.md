@@ -13,7 +13,7 @@ Go语言一个鲜明的优点就是内置的基于 [CSP](https://en.wikipedia.or
 ## Hello, Concurrent World
 
 这个例子的代码很简单，只包含一个 channel，一个 goroutine，一个读操作和一个写操作。
-```
+```go
 package main
 
 func main() {
@@ -36,8 +36,8 @@ func main() {
 在这张图中，蓝色的线代表 goroutine 的时间轴。连接 `main` 和 `go#19` 的蓝线是用来标记 goroutine 的起始和终止并且表示父子关系的。红色的箭头代表的是 send/recv 操作。尽管 send/recv 操作是两个独立的操作，但是我试着将它们表示成一个操作 `从A发送到B`。右边蓝线上的 `#19` 是该 goroutine 的内部 ID，可以通过 Scott Mansfield 在 [Goroutine IDs](http://blog.sgmansfield.com/2015/12/goroutine-ids/)一文中提到的技巧获取。
 
 ## 计时器（Timers）
-事实上，我们可以通过简单的几个步骤编写一个计时器：创建一个 channel，启动一个 goroutine 以给定间隔往 channel 中写数据，将这个 chennel 返回给调用者。调用者阻塞地从 channel 中读，就会得到一个精准的时钟。让我们来试试调用这个程序24次并且将过程可视化。
-```
+事实上，我们可以通过简单的几个步骤编写一个计时器：创建一个 channel，启动一个 goroutine 以给定间隔往 channel 中写数据，将这个 chennel 返回给调用者。调用者阻塞地从 channel 中读，就会得到一个精准的时钟。让我们来试试调用这个程序 24 次并且将过程可视化。
+```go
 package main
 
 import "time"
@@ -68,7 +68,7 @@ func main() {
 这个例子是我从 Google 员工 Sameer Ajmani 的一次演讲["Advanced Go Concurrency Patterns"](https://talks.golang.org/2013/advconc.slide#1)中找到的。当然，这并不是一个很高阶的并发模型，但是对于Go语言并发的新手来说是很有趣的。
 
 在这个例子中，我们定义了一个 channel 来作为“乒乓桌”。乒乓球是一个整形变量，代码中有两个 goroutine “玩家”通过增加乒乓球的 counter 在“打球”。
-```
+```go
 package main
 
 import "time"
@@ -100,7 +100,7 @@ func player(table chan int) {
 我建议你点击 “WebGL 动画界面” 链接，从不同角度看看这个模型，并且试试它减速，加速的效果。
 
 现在，我们给这个模型添加一个玩家（goroutine）。
-```
+```go
  go player(table)
  go player(table)
  go player(table)
@@ -112,7 +112,7 @@ func player(table chan int) {
 我们可以看到每个 goroutine 都有序地“打到球”，你可能会好奇这个行为的原因。那么，为什么这三个 goroutine 始终按照一定顺序接收到ball呢？
 
 答案很简单，Go运行时会对每个 channel 的所有接收者维护一个 FIFO 队列。在我们的例子中，每个 goroutine 会在它将 ball 传给 channel 之后就开始等待 channel，所以它们在队列里的顺序总是一定的。让我们增加 goroutine 的数量，看看顺序是否仍然保持一致。
-```
+```go
 for i := 0; i < 100; i++ {
     go player(table)
 }
@@ -125,7 +125,7 @@ for i := 0; i < 100; i++ {
 
 ## 扇入（Fan-In）
 扇入（fan-in）模式在并发世界中广泛使用。扇出（fan-out）与其相反，我们会在下面介绍。简单来说，扇入模式就是一个函数从多个输入源读取数据并且复用到单个 channel 中。比如说：
-```
+```go
 package main
 
 import (
@@ -167,7 +167,7 @@ func main() {
 
 ## 工作者（Workers）
 与扇入模式相反的模式叫做扇出（fan-out）或者工作者（workers）模式。多个 goroutine 可以从相同的 channel 中读数据，利用多核并发完成自身的工作，这就是工作者（workers）的由来。在 Go 中，这个模式很容易实现，只需要启动多个以 channel 作为参数的 goroutine，主函数传数据给这个 channel，数据分发和复用会由 Go 运行环境自动完成。
-```
+```go
 package main
 
 import (
@@ -217,7 +217,7 @@ func main() {
 在这里需要提一下并行结构（parallelism）。我们可以看到，动图中所有的 goroutine 都是平行“延伸”，等待 channel 给它们发数据来运行的。我们还可以注意到两个 goroutine 接收数据之间几乎是没有停顿的。不幸的是，这个动画并没有用颜色区分一个 goroutine 是在等数据还是在执行工作，这个动画是在 `GOMAXPROCS=4` 的情况下录制的，所以只有 4 个 goroutine 能够同时运行。我们将会在下文汇总讨论这个主题。
 
 现在，我们来写更复杂一点的代码，启动带有子工作者的工作者（subworkers）：
-```
+```go
 package main
 
 import (
@@ -291,7 +291,7 @@ Go 中还存在比这更酷的扇出模式，比如动态工作者/子工作者�
 
 ## 服务器（Servers）
 下一个要说的常用模式和扇出相似，但是它会在短时间内生成多个 goroutine 来完成某些任务。这个模式常被用来实现服务器 -- 创建一个监听器，在循环中运行 accept() 并针对每个接受的连接启动 goroutine 来完成指定任务。这个模式很形象并且它能尽可能地简化服务器 handler 的实现。让我们来看一个简单的例子：
-```
+```go
 package main
 
 import "net"
@@ -322,7 +322,7 @@ func main() {
 从并发的角度看好像什么事情都没有发生。当然，表面平静，内在其实风起云涌，完成了一系列复杂的操作，只是复杂性都被隐藏了，毕竟 [Simplicity is complicated.](https://www.youtube.com/watch?v=rFejpH_tAHM)
 
 但是让我们回归到并发的角度，给我们的服务器添加一些交互功能。比如说，我们定义一个 logger 以独立的 goroutine 的形式来记日志，每个 handler 想要异步地通过这个 logger 去写数据。
-```
+```go
 package main
 
 import (
@@ -371,7 +371,7 @@ func main() {
 这个例子就很形象地展示了服务器处理请求的过程。我们容易发现 logger 在存在大量连接的情况下会成为性能瓶颈，因为它需要对每个连接发送的数据进行接收，编码等耗时的操作。我们可以用上文提到的扇出模式来改进这个服务器模型。
 
 让我们来看看代码和动画效果：
-```
+```go
 package main
 
 import (
@@ -446,7 +446,7 @@ func main() {
 看够了扇入/扇出模型，我们现在来看看具体的并行算法。让我们来讲讲我最喜欢的并行算法之一：并行质数筛选法。这个算法是我从 [Go Concurrency Patterns](https://talks.golang.org/2012/concurrency.slide) 这个演讲中看到的。 质数筛选法（埃拉托斯特尼筛法）是在一个寻找给定范围内最大质数的古老算法。它通过一定的顺序筛掉多个质数的乘积，最终得到想要的最大质数。但是其原始的算法在多核机器上并不高效。
 
 这个算法的并行版本定义了多个 goroutine，每个 goroutine 代表一个已经找到的质数，同时有多个 channel 用来从 generator 传输数据到 filter。每当找到质数时，这个质数就会被一层层 channel 送到 main 函数来输出。当然，这个算法也不够高效，尤其是当你需要寻找一个很大的质数或者在寻找时间复杂度最低的算法时，但它的思想很优雅。
-```
+```go
 // A concurrent prime sieve
 package main
 
