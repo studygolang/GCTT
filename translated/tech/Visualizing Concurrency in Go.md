@@ -573,6 +573,8 @@ JSON 文件的样例如下：
 
 Happy coding！
 
+----------------
+
 via: https://divan.github.io/posts/go_concurrency_visualize/
 
 作者：[Ivan Daniluk](https://github.com/divan)
