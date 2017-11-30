@@ -61,6 +61,19 @@ build:
     docker build -t consignment-service .
 ```
 
+我们在这里增加了两个步骤，我想详细解释一下。首先，我们正在构建我们的二进制文件。你会注意到在运行命令 `$ go build` 之前，正在设置两个环境变量。GOOS 和 GOARCH 允许您为另一个操作系统交叉编译您的二进制文件，由于我在 Macbook上开发，所以无法编译二进制文件，然后在 Docker 容器中运行它，该容器使用 Linux。二进制在你的 Docker 容器中将是完全没有意义的，它会抛出一个错误。第二步是添加 Docker 构建过程。这将读取你的 Dockerfile文件，并通过一个名称 `consignment-service` 构建镜像。句号表示一个目录路径，所以在这里我们只是希望构建过程在当前目录中查找。
+
+我将在我们的Makefile中添加一个新条目：
+
+```
+run:  
+    docker run -p 50051:50051 consignment-service
+```
+
+在这里，我们运行 `consignment-service` Docker镜像，并暴露 50051 端口。由于Docker在单独的网络层上运行，因此您需要将Docker容器中使用的端口转发给主机。您可以通过更改第一个段将内部端口转发到主机上的新端口。例如，如果要在端口 8080 上运行此服务，则需要将-p参数更改为 `8080：50051`。您也可以通过包含 `-d` 标志在后台运行容器。例如，`docker run -d -p 50051:50051 consignment-service`。
+
+[您可以阅读更多关于Docker网络如何工作的信息](https://docs.docker.com/engine/userguide/networking/)
+
 
 ----------------
 
