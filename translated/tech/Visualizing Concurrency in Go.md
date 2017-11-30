@@ -572,3 +572,9 @@ JSON 文件的样例如下：
 如果你想用我的工具看一些算法的动画效果，可以在下方留言，我很乐意提供帮助。
 
 Happy coding！
+
+via：http://divan.github.io/posts/go_concurrency_visualize/
+
+作者：作者名 译者：译者ID 校对：校对者ID
+
+本文由 GCTT 原创编译， Go中文网 荣誉推出
