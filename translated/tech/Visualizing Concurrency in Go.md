@@ -520,3 +520,49 @@ Go 并发中还有什么使我们能可视化的呢？ goroutine 泄露是我能
 这个图中所有的蓝线都是浪费的系统资源，并且会成为你的应用的“定时炸弹”。
 
 ## Parallelism is not Concurrency（并行不是并发）
+最后，我想谈一下并行和并发的区别。这个主题已经在[Parallelism Is Not Concurrency](https://existentialtype.wordpress.com/2011/03/17/parallelism-is-not-concurrency/) 和 [Parallelism /= Concurrency
+](https://ghcmutterings.wordpress.com/2009/10/06/parallelism-concurrency/) 中探讨过了，Rob Pike在一篇[演讲](https://www.youtube.com/watch?v=cN_DpYBzKso)中提到了这个问题，这是我认为必看的主题演讲之一。
+
+简单来说，**并行是指同时运行多个任务，而并发是一种程序架构的方法。**
+
+因此，带有并发的程序并不一定是并行的，这两个概念在一定程度上是互不相关的。我们在关于 `GOMAXPROCS` 的论述中就提到了这一点。 
+
+在这里我不想重复上面的链接中的语言。我相信，有图有真相。我会通过动画模拟来告诉你它们之间的不同。下面这张描述的是并行————许多任务同时运行：
+
+[WebGL 动画界面](http://divan.github.io/demos/parallelism1/)
+
+![Parallelism1](http://divan.github.io/demos/gifs/parallelism1.gif)
+
+这个也是并行：
+
+[WebGL 动画界面](http://divan.github.io/demos/parallelism2/)
+
+![Parallelism2](http://divan.github.io/demos/gifs/parallelism2.gif)
+
+并且它同时也是并发的。
+
+这个也是并行(嵌套的工作者)：
+
+![Workers2](http://divan.github.io/demos/gifs/workers2.gif)
+
+这个也是并发的：
+![pingpong100](http://divan.github.io/demos/gifs/pingpong100.gif)
+
+# 如何生成这些动画
+为了生成这些动画，我写了两个程序：gotracer 和 gothree.js 库。首先，gotracer 会做这样的事情：
+
+    1. 解析 Go 程序中的 AST 树并且从中插入输出并行相关信息的代码，比如启动/结束 goroutine, 创建一个 channel，发送、接收数据。
+    1. 运行生成的程序。
+    1. 分析这些输出并且生成描述这些事件的 JSON 文件。
+
+JSON 文件的样例如下：
+
+![JSON](http://divan.github.io/images/sshot_json.png)
+
+接下来，gothree.js 使用 [Three.js](http://threejs.org/) 这个能够用 WebGL 生成 3D 图像的的库来绘制动画。
+
+这种方法的使用场景非常有限。我必须精准地选择例子，重命名 channel 和 goroutine 来输出一个正确的 trace。这个方法也无法关联两个 goroutine 中的相同但不同名的 channel，更不用说识别通过 channel 传送的 channel 了。这个方法生成的时间戳也会出现问题，有时候输出信息到标准输出会比传值花费更多的时间，所以我为了得到正确的动画不得不在某些情况下让 goroutine 等待一些时间。
+
+这就是我并没有将这份代码开源的原因。我正在尝试使用 Dmitry Vyukov 的 [execution tracer](https://golang.org/cmd/trace/),它看起来能提供足够多的信息，但并包含 channel 传输的值。也许有更好的方法来实现我的目标。如果你有什么想法，可以通过 twitter 或者在本文下方评论来联系我。如果我们能够把它做成一个帮助开发者调试和记录 Go 程序运行情况的工具的话就更好了。
+
+如果你想用我的工具看一些算法的动画效果，可以在下方留言，我很乐意帮助你们。
