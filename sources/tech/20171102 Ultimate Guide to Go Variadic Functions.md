@@ -1,3 +1,5 @@
+【翻译中】by shockw4ver
+
 # Ultimate Guide to Go Variadic Functions
 
 原文链接：https://blog.learngoprogramming.com/golang-variadic-funcs-how-to-patterns-369408f19085
