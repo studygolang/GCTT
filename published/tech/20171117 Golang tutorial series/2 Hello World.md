@@ -26,7 +26,8 @@ go
 ```
 
 在我们刚刚创建的 hello 目录下，在 **helloworld.go** 文件里保存下面的程序。
-```golang
+
+```go
 package main
 
 import "fmt"
@@ -36,6 +37,7 @@ func main() {
 }
 ```
 创建该程序之后，其目录结构如下：
+
 ```
 go
   src
@@ -44,6 +46,7 @@ go
 ```
 ## 运行 Go 程序
 运行 Go 程序有多种方式，我们下面依次介绍。
+
 1. 使用 **go run** 命令 - 在命令提示符旁，输入 `go run workspacepath/src/hello/helloworld.go`。
 
 上述命令中的 **workspacepath** 应该替换为你自己的工作区路径（Windows 下的 **C:/Users/YourName/go**，Linux 或 Mac 下的 **$HOME/go**）。
@@ -65,9 +68,12 @@ go
 ```
 3. 第 3 种运行程序的好方法是使用 go playground。尽管它有自身的限制，但该方法对于运行简单的程序非常方便。我已经在 playground 上创建了一个 hello world 程序。[点击这里](https://play.golang.org/p/VtXafkQHYe) 在线运行程序。
 你可以使用 [go playground](https://play.golang.org) 与其他人分享你的源代码。
+
 ### 简述 hello world 程序
+
 下面就是我们刚写下的 hello world 程序。
-```golang
+
+```go
 package main //1
 
 import "fmt" //2
