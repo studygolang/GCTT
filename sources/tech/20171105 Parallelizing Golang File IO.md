@@ -1,3 +1,4 @@
+【翻译中】
 # Parallelizing Golang File IO
 
 原文链接：https://timhigins.ml/benchmarking-golang-file-io/
