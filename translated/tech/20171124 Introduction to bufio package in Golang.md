@@ -800,6 +800,6 @@ via: https://medium.com/golangspec/introduction-to-bufio-package-in-golang-ad7d1
 
 作者：[Michał Łowicki](https://medium.com/@mlowicki?source=post_header_lockup)
 译者：[jliu666](https://github.com/jliu666)
-校对：[校对者ID](https://github.com/rxcia)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
