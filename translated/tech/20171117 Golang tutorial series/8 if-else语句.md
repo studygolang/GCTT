@@ -1,8 +1,8 @@
-#第8部分：if-else语句
+#第8部分：if-else 语句
 
-这是我们[Golang系列教程](https://golangbot.com/learn-golang-series/)的第八篇。
+这是我们[ Golang 系列教程](https://golangbot.com/learn-golang-series/)的第八篇。
 
-if是条件语句。if语句的语法是
+if 是条件语句。if 语句的语法是
 
 ```golang
 if condition {  
@@ -22,7 +22,7 @@ if condition {
 }
 ```
 
-if-else 语句之间可以有任意数量的 `else if`。 条件判断顺序是从上到下。 如果 `if` 或 `else if` 条件判断的结果为真，则执行相应的代码块。 如果没有条件为真，则 `else` 代码块被执行。
+if-else 语句之间可以有任意数量的 `else if`。条件判断顺序是从上到下。如果 `if` 或 `else if` 条件判断的结果为真，则执行相应的代码块。 如果没有条件为真，则 `else` 代码块被执行。
 
 让我们编写一个简单的程序来检测一个数字是奇数还是偶数。
 
@@ -44,7 +44,7 @@ func main() {
 ```
 [在线运行程序](https://play.golang.org/p/vWfN8UqZUr)
 
-`if num％2 == 0` 语句检测 num 取 2 的余数是否为零。 如果是为零则打印输出 "the number is even"，如果不为零则打印输出 "the number is odd"。在上面的这个程序中，打印输出的是 `the number is even`。
+`if num％2 == 0` 语句检测 num 取 2 的余数是否为零。 如果是为零则打印输出"the number is even"，如果不为零则打印输出"the number is odd"。在上面的这个程序中，打印输出的是 `the number is even`。
 
 `if` 还有另外一种形式，它包含一个 `statement` 可选语句组件，该组件在条件判断之前运行。它的语法是
 
@@ -101,9 +101,9 @@ func main() {
 
 [获取免费的 Golang 工具](https://app.mailerlite.com/webforms/popup/p8t5t8)
 
-###重点
+### 重点
 
-`else` 语句应该在 `if` 语句的大括号 `}` 之后的同一行中。 如果不是，编译器会不通过。
+`else` 语句应该在 `if` 语句的大括号 `}` 之后的同一行中。如果不是，编译器会不通过。
 
 让我们通过以下程序来理解它。
 
@@ -132,7 +132,7 @@ func main() {
 main.go:12:5: syntax error: unexpected else, expecting }
 ```
 
-出错的原因是Go语言的分号是自动插入。你可以在这里阅读分号插入规则 [https://golang.org/ref/spec#Semicolons](https://golang.org/ref/spec#Semicolons)。
+出错的原因是 Go 语言的分号是自动插入。你可以在这里阅读分号插入规则 [https://golang.org/ref/spec#Semicolons](https://golang.org/ref/spec#Semicolons)。
 
 在Go语言规则中，它指定在 `}` 之后插入一个分号，如果这是该行的最终标记。因此，在if语句后面的 `}` 会自动插入一个分号。
 
@@ -175,7 +175,7 @@ func main() {
 
 本章教程到此告一段落了，感谢您的阅读，欢迎您的任何评论和反馈。
 
-###下一个教程 - [循环](https://golangbot.com/loops/)
+### 下一个教程 - [循环](https://golangbot.com/loops/)
 
 ----------------
 
@@ -185,4 +185,4 @@ via: https://golangbot.com/if-statement/
 译者：[Dingo1991](https://github.com/Dingo1991)
 校对：[校对者ID](https://github.com/校对者ID)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
