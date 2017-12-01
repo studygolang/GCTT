@@ -1,6 +1,6 @@
-#第8部分：if-else 语句
+# 第8部分：if-else 语句
 
-这是我们[ Golang 系列教程](https://golangbot.com/learn-golang-series/)的第八篇。
+这是我们[Golang 系列教程](https://golangbot.com/learn-golang-series/)的第八篇。
 
 if 是条件语句。if 语句的语法是
 
