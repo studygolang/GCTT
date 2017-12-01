@@ -11,7 +11,7 @@ https://twitter.com/ThePracticalDev/status/930878898245722112
 
 ### 介绍
 
-[Go](https://golang.org) 是一种正在快速增长的编程语言，专为构建简单、快速且可靠的软件而设计。 点击 [此处](https://github.com/golang/go/wiki/GoUsers) 查看有哪些优秀的公司正在使用 Go 语言来驱动他们的业务。
+[Go](https://golang.org) 是一门正在快速增长的编程语言，专为构建简单、快速且可靠的软件而设计。 点击 [此处](https://github.com/golang/go/wiki/GoUsers) 查看有哪些优秀的公司正在使用 Go 语言来驱动他们的业务。
 
 本文将会提供一切必要的信息来帮助开发人员了解更多关于使用 Go 语言来开发 Web 应用程序的最佳选择。
 
@@ -86,7 +86,7 @@ https://twitter.com/ThePracticalDev/status/930878898245722112
 "/user/{username}" 匹配 "/user/me"，"/user/speedwheel" 等等
 ```
 
-上面路径参数 `username` 的值分别是 `"/me"` 和 `"speedwheel"`。
+上面路径参数 `username` 的值分别是 `"me"` 和 `"speedwheel"`。
 
 通配符的例子：
 
@@ -165,11 +165,11 @@ OnErrorCode(404, myNotFoundHandler)
 
 #### 中间件生态系统
 
-框架会为你提供一个全面的引擎来定义流程，全局及单个或整组路径的处理，而不需要你自己用不同的中间件来封装每一部分的处理。框架会提供比如 `Use（中间件）`，`Done（中间件）` 等中间件。
+框架会为你提供一个完整的引擎来定义流程、全局、单个或一组路由，而不需要你自己用不同的中间件来封装每一部分的处理器。框架会提供比如 Use（中间件）、Done（中间件） 等函数。
 
 #### 类 Sinatra 的 API 设计（译者注：[Sinatra](http://sinatrarb.com) 是一门基于 Ruby 的[领域专属语言](https://en.wikipedia.org/wiki/Domain-specific_language)）
 
-可以在运行时中注入代码来处理特定的 Http 方法 （以及路径参数)。
+可以在运行时中注入代码来处理特定的 HTTP 方法 （以及路径参数)。
 
 例如:
 
@@ -179,15 +179,15 @@ OnErrorCode(404, myNotFoundHandler)
 .Put or PUT("/path", putHandler) and etc.
 ```
 
-#### 服务器：默认启用 HTTPS
+#### 服务器程序：默认启用 HTTPS
 
-框架的服务器支持注册及自动更新 SSL 证书来管理 SSL/TLS 的传入连接（https）。 最著名的默认启用 https 的供应商是 [letsencrypt](https://letsencrypt.org/)。
+框架的服务器支持注册及自动更新 SSL 证书来管理新传入的 SSL/TLS 连接 (https)。 最著名的默认启用 https 的供应商是 [letsencrypt](https://letsencrypt.org/)。
 
-#### 服务器：优雅关机（Gracefully Shutdown）
+#### 服务器程序：平滑关闭（Gracefully Shutdown）
 
 当按下 `CTRL + C` 关闭你的终端应用程序时，服务器将等待 (一定的等待时间)其他的连接完成相关任务或触发一个自定义事件来做清理工作（比如：关闭数据库），最后平滑地停止服务。
 
-#### 服务器：多重监听
+#### 服务器程序：多重监听
 
 框架的服务器支持自定义的 `net.Listener` 或可以启动一个有多个 http 服务和地址的 Web 应用。
 
@@ -232,13 +232,13 @@ Wiki: [https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#HTTP_session](h
 
 框架支持 websocket 通信协议。不同的框架对于这点有各自不同的实现方式。
 
-你应该通过它们的例子来看看那个适合你。我的一个同事，在试过了上述所有框架中的 websocket 功能之后告诉我：**Iris** 实现了最全的 websocket 功能支持，并且提供的 API 相比其他的相对容易使用。
+你应该通过它们的例子来看看哪个适合你。我的一个同事，在试过了上述所有框架中的 websocket 功能之后告诉我：**Iris** 实现了最多的 websocket 特性，并且提供了相对更容易使用的 API 。
 
 Wiki: [https://en.wikipedia.org/wiki/WebSocket](https://en.wikipedia.org/wiki/WebSocket)
 
 #### 程序内嵌对视图（又名模版）的支持
 
-通常情况下，你必须根据 Web 应用的可执行文件一一对应地转换模版文件。内嵌到应用中意味着这个框架集成了 [go-bindata](https://github.com/jteeuwen/go-bindata) ，因此在模版可以以 `[]byte` 的形式被包含到最终的可执行文件中。
+通常情况下，你必须根据 Web 应用的可执行文件一一对应地转换模版文件。内嵌到应用中意味着这个框架集成了 [go-bindata](https://github.com/jteeuwen/go-bindata) ，因此在最终的可执行文件中可以以 `[]byte` 的形式将模版包含进来。
 
 ##### 什么是视图引擎
 
@@ -270,7 +270,7 @@ Wiki: [https://en.wikipedia.org/wiki/WebSocket](https://en.wikipedia.org/wiki/We
 
 #### MVC
 
-Model–view–controller (MVC) 模型是一种用于在计算机上实现用户界面的软件架构模式，它将一个应用程序分为互相关联的三部分。这样做的目的是为了：将信息的内部处理逻辑和将信息呈现给用户及从用户获取信息中分离出来。MVC 设计模式将这三个组件解耦合，从而实现高效的代码复用和并行开发。
+Model–view–controller (MVC) 模型是一种用于在计算机上实现用户界面的软件架构模式，它将一个应用程序分为互相关联的三部分。这样做的目的是为了：将信息的内部处理逻辑、信息呈现给用户以及从用户获取信息三者分离。MVC 设计模式将这三个组件解耦合，从而实现高效的代码复用和并行开发。
 
 *   **Iris** 支持完备的 MVC 功能, 可以在运行时中注入。
 *   **Beego** 仅支持方法和数据模型的匹配，可以在运行时中注入。
@@ -294,7 +294,7 @@ Wiki: [https://en.wikipedia.org/wiki/Web_cache](https://en.wikipedia.org/wiki/We
 
 #### 响应可以在发送前的生命周期中被多次修改
 
-目前只有 **Iris** 通过 http_context 中内建的的响应编写器（response writer）支持这个功能。
+目前只有 **Iris** 通过 http_context 中内建的的响应写入器（response writer）支持这个功能。
 
 当框架支持此功能时，你可以在返回给客户端之前检索、重置或修改状态码、正文（body）及头部（headers）。默认情况下，在基于 `net/http` 的 Web 框架中这是不可能的，因为正文和状态码一经写定就不能被检索或修改。
 
