@@ -88,6 +88,260 @@ Dockerfile 中的每个声明在第一次构建时都被缓存。 这样可以�
 
 通常情况下，解决这个问题的方法有很多，但是像编程中的大多数情况一样，如果已经有人解决了这个问题，那么重新发明轮子就没有意义了。 [Go-micro](https://github.com/micro/go-micro) 的创始人是 @chuhnk（Asim Aslam），他以一种非常清晰和易用的方式解决了这些问题。
 
+### Go-micro
+Go-micro 是一个用 Go 编写的强大的微服务框架，大部分用于 Go。但是，您也可以使用 [Sidecar](https://github.com/micro/micro/tree/master/car) 以便与其他语言进行交互。
+
+Go-micro 有一些有用的功能，可以用来制作微型服务。但是，我们将从可能解决的最常见问题开始，那就是服务发现。
+
+我们需要对我们的服务进行一些更新，以便与 go-micro 工作。Go-micro 作为 protoc 插件集成，在这种情况下，替换我们当前使用的标准 gRPC 插件。所以让我们开始在我们的 Makefile 中替换它。
+
+确保安装go-micro依赖:
+
+```
+go get -u github.com/micro/protobuf/{proto,protoc-gen-go}  
+```
+
+```
+build:  
+    protoc -I. --go_out=plugins=micro:$(GOPATH)/src/github.com/EwanValentine/shippy/consignment-service \
+        proto/consignment/consignment.proto
+    ...
+
+...
+```
+
+我们已经更新了我们的 Makefile 来使用 go-micro 插件，而不是 gRPC 插件。现在我们需要更新我们的 `consignment-service/main.go` 文件来使用 go-micro。这将抽象我们以前的 gRPC 代码，它将处理注册和轻松启动我们的服务
+
+```
+// consignment-service/main.go
+package main
+
+import (
+
+    // Import the generated protobuf code
+    "fmt"
+
+    pb "github.com/EwanValentine/shippy/consignment-service/proto/consignment"
+    micro "github.com/micro/go-micro"
+    "golang.org/x/net/context"
+)
+
+type IRepository interface {  
+    Create(*pb.Consignment) (*pb.Consignment, error)
+    GetAll() []*pb.Consignment
+}
+
+// Repository - Dummy repository, this simulates the use of a datastore
+// of some kind. We'll replace this with a real implementation later on.
+type Repository struct {  
+    consignments []*pb.Consignment
+}
+
+func (repo *Repository) Create(consignment *pb.Consignment) (*pb.Consignment, error) {  
+    updated := append(repo.consignments, consignment)
+    repo.consignments = updated
+    return consignment, nil
+}
+
+func (repo *Repository) GetAll() []*pb.Consignment {  
+    return repo.consignments
+}
+
+// Service should implement all of the methods to satisfy the service
+// we defined in our protobuf definition. You can check the interface
+// in the generated code itself for the exact method signatures etc
+// to give you a better idea.
+type service struct {  
+    repo IRepository
+}
+
+// CreateConsignment - we created just one method on our service,
+// which is a create method, which takes a context and a request as an
+// argument, these are handled by the gRPC server.
+func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) error {
+
+    // Save our consignment
+    consignment, err := s.repo.Create(req)
+    if err != nil {
+        return err
+    }
+
+    // Return matching the `Response` message we created in our
+    // protobuf definition.
+    res.Created = true
+    res.Consignment = consignment
+    return nil
+}
+
+func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest, res *pb.Response) error {  
+    consignments := s.repo.GetAll()
+    res.Consignments = consignments
+    return nil
+}
+
+func main() {
+
+    repo := &Repository{}
+
+    // Create a new service. Optionally include some options here.
+    srv := micro.NewService(
+
+        // This name must match the package name given in your protobuf definition
+        micro.Name("go.micro.srv.consignment"),
+        micro.Version("latest"),
+    )
+
+    // Init will parse the command line flags.
+    srv.Init()
+
+    // Register handler
+    pb.RegisterShippingServiceHandler(srv.Server(), &service{repo})
+
+    // Run the server
+    if err := srv.Run(); err != nil {
+        fmt.Println(err)
+    }
+}
+```
+
+这里的主要变化是我们实例化我们的 gRPC 服务器的方式，它处理注册我们的服务，已经被整齐地抽象到一个 `mico.NewService()`。最后，处理连接本身的 `service.Run()` 函数。 和以前一样，我们注册了我们的实现，但这次使用了一个稍微不同的方法。第二个最大的变化是服务方法本身，参数和响应类型略有变化，把请求和响应结构作为参数，现在只返回一个错误.在我们的方法中，我们设置了由 `go-micro` 处理的响应。
+
+最后，我们不再对端口进行硬编码。 Go-micro 应该使用环境变量或命令行参数进行配置。设置地址, 使用 `MICRO_SERVER_ADDRESS=:50051`。我们还需要告诉我们的服务使用 [mdns](https://en.wikipedia.org/wiki/Multicast_DNS)（多播DNS）作为我们本地使用的服务代理。
+您通常不会在生产环境中使用[mdns](https://en.wikipedia.org/wiki/Multicast_DNS)进行服务发现，但我们希望避免在本地运行诸如 Consul 或 etcd 这样的测试。更多我们将在后面介绍。
+
+让我们更新我们的Makefile来实现这一点。
+
+```
+run:  
+    docker run -p 50051:50051 \
+        -e MICRO_SERVER_ADDRESS=:50051 \
+        -e MICRO_REGISTRY=mdns consignment-service
+```
+
+`-e` 是一个环境变量标志，它允许你将环境变量传递到你的 Docker 容器中。
+每个变量必须有一个标志，例如 `-e ENV = staging -e DB_HOST = localhost` 等。
+
+先做如果你运行 `make run`，您将拥有一个 Dockerised 服务，并具有服务发现功能。所以让我们更新我们的 cli 工具来利用这个。
+
+```
+import (  
+    ...
+    "github.com/micro/go-micro/cmd"
+    microclient "github.com/micro/go-micro/client"
+
+)
+
+func main() {  
+    cmd.Init()
+
+    // Create new greeter client
+    client := pb.NewShippingServiceClient("go.micro.srv.consignment", microclient.DefaultClient)
+    ...
+}
+```
+
+[完整文件看这里](https://github.com/EwanValentine/shippy/blob/tutorial-2/consignment-cli/cli.go)
+
+在这里，我们导入了用于创建客户端的 go-micro 库，并用 go-micro 客户端代码取代了现有的连接代码，该客户端代码使用服务解析而不是直接连接到地址。
+
+但是，如果你运行这个，这是行不通的。这是因为我们现在正在Docker容器中运行我们的服务，它有自己的 [mdns](https://en.wikipedia.org/wiki/Multicast_DNS)，与我们当前使用的主机 [mdns](https://en.wikipedia.org/wiki/Multicast_DNS) 分开。解决这个问题的最简单的方法是确保服务和客户端都在 “dockerland” 中运行，以便它们都在相同的主机上运行，并使用相同的网络层。让我们创建一个Makefile `consignment-cli/Makefile`，并创建一些条目。
+
+```
+build:  
+    GOOS=linux GOARCH=amd64 go build
+    docker build -t consignment-cli .
+
+run:  
+    docker run -e MICRO_REGISTRY=mdns consignment-cli
+```
+
+与之前类似，我们要为 Linux 构建我们的二进制文件。 当我们运行我们的 docker 镜像时，我们想传递一个环境变量来指示 go-micro 使用 mdns。
+
+现在让我们为我们的 CLI工 具创建一个 Dockerfile ：
+
+```
+FROM alpine:latest
+
+RUN mkdir -p /app  
+WORKDIR /app
+
+ADD consignment.json /app/consignment.json  
+ADD consignment-cli /app/consignment-cli
+
+CMD ["./consignment-cli"]  
+```
+
+除了它引入了我们的json数据文件，这与我们的Dockerfile服务非常相似。如果你在你的 `consignment-cli`目录，运行 `$ make run` 命令，你应该和以前一样，看见`Created: true`。
+
+之前，我提到那些使用 Linux 的人应该切换到使用 Debian 基本映像。现在看起来是一个很好的时机来看看 Docker 的一个新功能：多阶段构建。这使我们可以在一个 Dockerfile 中使用多个 Docker 镜像。
+
+这在我们的例子中尤其有用，因为我们可以使用一个镜像来构建我们的二进制文件，具有所有正确的依赖关系等，然后使用第二个镜像来运行它。让我们试试看，我会在代码中留下详细的评论：
+
+```
+# consignment-service/Dockerfile
+
+# We use the official golang image, which contains all the 
+# correct build tools and libraries. Notice `as builder`,
+# this gives this container a name that we can reference later on. 
+FROM golang:1.9.0 as builder
+
+# Set our workdir to our current service in the gopath
+WORKDIR /go/src/github.com/EwanValentine/shippy/consignment-service
+
+# Copy the current code into our workdir
+COPY . .
+
+# Here we're pulling in godep, which is a dependency manager tool,
+# we're going to use dep instead of go get, to get around a few
+# quirks in how go get works with sub-packages.
+RUN go get -u github.com/golang/dep/cmd/dep
+
+# Create a dep project, and run `ensure`, which will pull in all 
+# of the dependencies within this directory.
+RUN dep init && dep ensure
+
+# Build the binary, with a few flags which will allow
+# us to run this binary in Alpine. 
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .
+
+# Here we're using a second FROM statement, which is strange,
+# but this tells Docker to start a new build process with this
+# image.
+FROM alpine:latest
+
+# Security related package, good to have.
+RUN apk --no-cache add ca-certificates
+
+# Same as before, create a directory for our app.
+RUN mkdir /app  
+WORKDIR /app
+
+# Here, instead of copying the binary from our host machine,
+# we pull the binary from the container named `builder`, within
+# this build context. This reaches into our previous image, finds
+# the binary we built, and pulls it into this container. Amazing!
+COPY --from=builder /go/src/github.com/EwanValentine/shippy/consignment-service/consignment-service .
+
+# Run the binary as per usual! This time with a binary build in a
+# separate container, with all of the correct dependencies and
+# run time libraries.
+CMD ["./consignment-service"]  
+```
+
+这种方法的唯一问题，我想回来，并在某些时候改善这一点，是Docker不能从父目录中读取文件.它只能读取Dockerfile所在目录或子目录中的文件。
+
+这意味着为了运行 `$ dep ensure` 或 `$ go get`，你需要确保你的代码被推到 Git上，这样它就可以提取 vessel-service。就像其他 Go 包一样。 不理想，但现在足够好。
+
+现在我将通过其他Docker文件并应用这种新方法。
+
+噢，记住要记得从Makefiles中删除 `$ go build`。
+
+[更多的在这里多阶段建设](https://docs.docker.com/engine/userguide/eng-image/multistage-build/#name-your-build-stages)
+
+### Vessel 服务
+
+
+
 ----------------
 
 via: https://ewanvalentine.io/microservices-in-golang-part-2/
