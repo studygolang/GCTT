@@ -1,13 +1,13 @@
 ## 6款最棒的 Go 语言 Web 框架简介
 
-![](https://raw.githubusercontent.com/studygolang/GCTT/master/sources/1_9P9_09xfijv7RRlA6C21eQ.jpeg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/top-6-web-frameworks-for-go-as-of-2017/twitter_status.jpg)
 https://twitter.com/ThePracticalDev/status/930878898245722112
 
-如果你只是想写一个自己用的小网站，或许你不需要框架，但如果你是要开发一个投入生产运营的网站，那么你肯定会需要一个框架，而且是需要一个好的 Web 框架。
+如果你只是想写一个自己用的小网站，或许你不需要框架，但如果你是要开发一个投入生产运营的网站，那么你肯定会需要一个框架，而且是需要一个好的 Web 框架。
 
-如果你已经掌握所有必要的知识和经验，你会冒险自己去重新开发所有的功能么？你有时间去找满足生产级别要求的库来用于开发么？另外，你确定这个库可以满足你后续所有的要求？
+如果你已经掌握所有必要的知识和经验，你会冒险自己去重新开发所有的功能么？你有时间去找满足生产级别要求的库来用于开发么？另外，你确定这个库可以满足你后续所有的要求？
 
-这些都是促使我们去使用框架的原因，哪怕是那些最牛的开发者也不会一直想要重新造轮子，我们可以站在前人的肩膀上，走得更快更好。
+这些都是促使我们去使用框架的原因，哪怕是那些最牛的开发者也不会一直想要重新造轮子，我们可以站在前人的肩膀上，走得更快更好。
 
 ### 介绍
 
@@ -49,34 +49,35 @@ https://twitter.com/ThePracticalDev/status/930878898245722112
 
 ### 流行度
 
-> 按照流行度排行（根据 GitHub Star 数量）
+> 按照流行度排行（根据 GitHub Star 数量）
 
-[![](https://res.cloudinary.com/practicaldev/image/fetch/s--Byfs16_R--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://thepracticaldev.s3.amazonaws.com/i/jofn8buzhvkot1xkpvq5.JPG)](https://res.cloudinary.com/practicaldev/image/fetch/s--Byfs16_R--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://thepracticaldev.s3.amazonaws.com/i/jofn8buzhvkot1xkpvq5.JPG)  
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/top-6-web-frameworks-for-go-as-of-2017/github_star.jpg)
 [https://github.com/speedwheel/awesome-go-web-frameworks/blob/master/README.md#popularity](https://github.com/speedwheel/awesome-go-web-frameworks/blob/master/README.md#popularity)
 
 ### 学习曲线
 
-[![](https://res.cloudinary.com/practicaldev/image/fetch/s--kFMwgWhT--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://thepracticaldev.s3.amazonaws.com/i/d5mwhbuiruymgip00quf.JPG)](https://res.cloudinary.com/practicaldev/image/fetch/s--kFMwgWhT--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://thepracticaldev.s3.amazonaws.com/i/d5mwhbuiruymgip00quf.JPG)  
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/top-6-web-frameworks-for-go-as-of-2017/learn.jpg)
 [https://github.com/speedwheel/awesome-go-web-frameworks/blob/master/README.md#learning-curve](https://github.com/speedwheel/awesome-go-web-frameworks/blob/master/README.md#learning-curve)
 
-*astaxie* 和 *kataras* 分别为 **Beego** 和 **Iris** 做了超棒的工作，希望其他的框架也能迎头赶上，为开发者提供更多的例子。至少对于我来说，如果我要切换到一个新的框架，那些例子就是最丰富的资源，来获取尽可能多的有用信息。一个实例胜千言啊。
+*astaxie* 和 *kataras* 分别为 **Beego** 和 **Iris** 做了超棒的工作，希望其他的框架也能迎头赶上，为开发者提供更多的例子。至少对于我来说，如果我要切换到一个新的框架，那些例子就是最丰富的资源，来获取尽可能多的有用信息。一个实例胜千言啊。
 
 ### 核心功能
 
 > 根据功能支持的多寡排行
 
-[![](https://res.cloudinary.com/practicaldev/image/fetch/s--xkdFnwCV--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://thepracticaldev.s3.amazonaws.com/i/rhyou3q14z1cjhjimq59.JPG)](https://res.cloudinary.com/practicaldev/image/fetch/s--xkdFnwCV--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://thepracticaldev.s3.amazonaws.com/i/rhyou3q14z1cjhjimq59.JPG)  
-[![](https://res.cloudinary.com/practicaldev/image/fetch/s--09mT2BhX--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://thepracticaldev.s3.amazonaws.com/i/kt35hh9t6cy98dbyf6k1.JPG)](https://res.cloudinary.com/practicaldev/image/fetch/s--09mT2BhX--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://thepracticaldev.s3.amazonaws.com/i/kt35hh9t6cy98dbyf6k1.JPG)  
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/top-6-web-frameworks-for-go-as-of-2017/core_feature.jpg)
+
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/top-6-web-frameworks-for-go-as-of-2017/core_feature2.jpg)
 [https://github.com/speedwheel/awesome-go-web-frameworks/blob/master/README.md#core-features](https://github.com/speedwheel/awesome-go-web-frameworks/blob/master/README.md#core-features)
 
 > 几个知名的 Go 语言 Web 框架并不是真正意义上的框架，也就是说：
-**Echo**，**Gin** 和 **Buffalo** 并不是真正意义上的 Web 框架（因为没有完备支持所有功能）但是大部分的 Go 社区认为它们是的，因此这些框架也可以和 **Iris**，**Beego** 或 **Revel** 做比较。所以，我们有义务将这几个框架（**Echo**，**Gin** 和 **Buffalo**）也列在这个表中。
+**Echo**，**Gin** 和 **Buffalo** 并不是真正意义上的 Web 框架（因为没有完备支持所有功能）但是大部分的 Go 社区认为它们是的，因此这些框架也可以和 **Iris**，**Beego** 或 **Revel** 做比较。所以，我们有义务将这几个框架（**Echo**，**Gin** 和 **Buffalo**）也列在这个表中。
 >
-> 以上所有这些框架，除了 **Beego** 和 **Revel** 之外，都可以适配任意 `net/http` 中间件。其中一部分框架可以轻松地做适配，另外一些可能就需要额外的努力 [即使这里的痛苦不是一定的]。
+> 以上所有这些框架，除了 **Beego** 和 **Revel** 之外，都可以适配任意 `net/http` 中间件。其中一部分框架可以轻松地做适配，另外一些可能就需要额外的努力 [即使这里的痛苦不是一定的]。
 
 ### 技术性词汇
 
-#### 路由：命名的路径参数和通配符
+#### 路由：命名的路径参数和通配符
 
 可以处理动态的路径。
 
@@ -86,7 +87,7 @@ https://twitter.com/ThePracticalDev/status/930878898245722112
 "/user/{username}" 匹配 "/user/me"，"/user/speedwheel" 等等
 ```
 
-上面路径参数 `username` 的值分别是 `"me"` 和 `"speedwheel"`。
+上面路径参数 `username` 的值分别是 `"me"` 和 `"speedwheel"`。
 
 通配符的例子：
 
@@ -114,7 +115,7 @@ https://twitter.com/ThePracticalDev/status/930878898245722112
 
 #### 路由：分组
 
-通过共用逻辑或中间件来处理有共同前缀的路径组。
+通过共用逻辑或中间件来处理有共同前缀的路径组。
 
 例如:
 
@@ -140,13 +141,13 @@ myGroup.Handle("GET', "/{id}", getMessageByID)
 
 #### 路由：上述所有规则相结合而没有冲突
 
-这是一个高级且有用的的功能，我们许多人都希望路由模块或 Web 框架能支持这点，但目前，在 Go 语言框架方面，只有 **Iris** 能支持这一功能。
+这是一个高级且有用的的功能，我们许多人都希望路由模块或 Web 框架能支持这点，但目前，在 Go 语言框架方面，只有 **Iris** 能支持这一功能。
 
-这意味着类似如 `/{path *wildcard}` ， `/user/{username}` 和 `/user/static` 以及 `/user/{path *wildcard}` 等路径都可以在同一个路由中通过静态路径（`/user/static`）或通配符（`/{path *wildcard}`）来正确匹配。
+这意味着类似如 `/{path *wildcard}` ， `/user/{username}` 和 `/user/static` 以及 `/user/{path *wildcard}` 等路径都可以在同一个路由中通过静态路径（`/user/static`）或通配符（`/{path *wildcard}`）来正确匹配。
 
 #### 路由：自定义 HTTP 错误
 
-指可以自行处理请求错误的情况。 Http 的错误状态码均 `>=400` ，比如 `NotFound 404`，请求的资源不存在。
+指可以自行处理请求错误的情况。 Http 的错误状态码均 `>=400` ，比如 `NotFound 404`，请求的资源不存在。
 
 例如：
 
@@ -154,7 +155,7 @@ myGroup.Handle("GET', "/{id}", getMessageByID)
 OnErrorCode(404, myNotFoundHandler)
 ```
 
-上述的大多数 Web 框架只支持 `404`，`405` 及 `500` 错误状态的处理，但是例如 `Iris，Beego 和 Revel` 等框架，它们完备支持 HTTP 错误状态码，甚至支持 `any error` 任意错误。（ `any error` -- 任意错误，只有 **Iris** 能够支持）。
+上述的大多数 Web 框架只支持 `404`，`405` 及 `500` 错误状态的处理，但是例如 `Iris，Beego 和 Revel` 等框架，它们完备支持 HTTP 错误状态码，甚至支持 `any error` 任意错误。（ `any error` -- 任意错误，只有 **Iris** 能够支持）。
 
 #### 100% 兼容 net/http
 
@@ -185,7 +186,7 @@ OnErrorCode(404, myNotFoundHandler)
 
 #### 服务器程序：平滑关闭（Gracefully Shutdown）
 
-当按下 `CTRL + C` 关闭你的终端应用程序时，服务器将等待 (一定的等待时间)其他的连接完成相关任务或触发一个自定义事件来做清理工作（比如：关闭数据库），最后平滑地停止服务。
+当按下 `CTRL + C` 关闭你的终端应用程序时，服务器将等待 (一定的等待时间)其他的连接完成相关任务或触发一个自定义事件来做清理工作（比如：关闭数据库），最后平滑地停止服务。
 
 #### 服务器程序：多重监听
 
@@ -199,13 +200,13 @@ OnErrorCode(404, myNotFoundHandler)
 
 你可以直接在你的 Web 应用中注入子域名的路径。
 
-`辅助功能（secondary）` 意味着这个功能并不被这个框架原生支持，但是你仍旧可以通过启用多个 http 服务器来实现。这样做的缺点在于：主程序和子域名程序之间并不是连通的，默认情况下，它们不能共享逻辑。
+`辅助功能（secondary）` 意味着这个功能并不被这个框架原生支持，但是你仍旧可以通过启用多个 http 服务器来实现。这样做的缺点在于：主程序和子域名程序之间并不是连通的，默认情况下，它们不能共享逻辑。
 
 #### 会话（Sessions）
 
 支持 http sessions，且可以在自定义的处理程序中使用 sessions。
 
-*   有一些 Web 框架支持后台数据库来储存 sessions，以便在服务器重启之后仍旧能获得持久的 sessions。
+*   有一些 Web 框架支持后台数据库来储存 sessions，以便在服务器重启之后仍旧能获得持久的 sessions。
 *   **Buffalo** 使用 [gorilla 的 sessions 库](https://github.com/gorilla/sessions)，它比其他框架的实现略微慢了一点。
 
 例如:
@@ -238,7 +239,7 @@ Wiki: [https://en.wikipedia.org/wiki/WebSocket](https://en.wikipedia.org/wiki/We
 
 #### 程序内嵌对视图（又名模版）的支持
 
-通常情况下，你必须根据 Web 应用的可执行文件一一对应地转换模版文件。内嵌到应用中意味着这个框架集成了 [go-bindata](https://github.com/jteeuwen/go-bindata) ，因此在最终的可执行文件中可以以 `[]byte` 的形式将模版包含进来。
+通常情况下，你必须根据 Web 应用的可执行文件一一对应地转换模版文件。内嵌到应用中意味着这个框架集成了 [go-bindata](https://github.com/jteeuwen/go-bindata) ，因此在最终的可执行文件中可以以 `[]byte` 的形式将模版包含进来。
 
 ##### 什么是视图引擎
 
@@ -273,20 +274,20 @@ Wiki: [https://en.wikipedia.org/wiki/WebSocket](https://en.wikipedia.org/wiki/We
 Model–view–controller (MVC) 模型是一种用于在计算机上实现用户界面的软件架构模式，它将一个应用程序分为互相关联的三部分。这样做的目的是为了：将信息的内部处理逻辑、信息呈现给用户以及从用户获取信息三者分离。MVC 设计模式将这三个组件解耦合，从而实现高效的代码复用和并行开发。
 
 *   **Iris** 支持完备的 MVC 功能, 可以在运行时中注入。
-*   **Beego** 仅支持方法和数据模型的匹配，可以在运行时中注入。
-*   **Revel** 支持方法，路径和数据模型的匹配，只可以通过生成器注入（生成器是另外一个不同的软件用于构建你的 Web 应用）。
+*   **Beego** 仅支持方法和数据模型的匹配，可以在运行时中注入。
+*   **Revel** 支持方法，路径和数据模型的匹配，只可以通过生成器注入（生成器是另外一个不同的软件用于构建你的 Web 应用）。
 
 Wiki: [https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
 
 #### 缓存
 
-Web 缓存（或 http 缓存）是一种用于临时存储（缓存）网页文档，如 HTML 页面和图像，来减缓服务器延时。一个 Web 缓存系统缓存网页文档，使得后续的请求如果满足特定条件就可以直接得到缓存的文档。Web 缓存系统既可以指设备，也可以指软件程序。
+Web 缓存（或 http 缓存）是一种用于临时存储（缓存）网页文档，如 HTML 页面和图像，来减缓服务器延时。一个 Web 缓存系统缓存网页文档，使得后续的请求如果满足特定条件就可以直接得到缓存的文档。Web 缓存系统既可以指设备，也可以指软件程序。
 
 Wiki: [https://en.wikipedia.org/wiki/Web_cache](https://en.wikipedia.org/wiki/Web_cache)
 
 #### 文件服务器
 
-可以注册一个（物理的）目录到一个路径，使得这个路径下的文件可以自动地提供给客户端。
+可以注册一个（物理的）目录到一个路径，使得这个路径下的文件可以自动地提供给客户端。
 
 #### 文件服务器：内嵌入应用
 
@@ -296,11 +297,11 @@ Wiki: [https://en.wikipedia.org/wiki/Web_cache](https://en.wikipedia.org/wiki/We
 
 目前只有 **Iris** 通过 http_context 中内建的的响应写入器（response writer）支持这个功能。
 
-当框架支持此功能时，你可以在返回给客户端之前检索、重置或修改状态码、正文（body）及头部（headers）。默认情况下，在基于 `net/http` 的 Web 框架中这是不可能的，因为正文和状态码一经写定就不能被检索或修改。
+当框架支持此功能时，你可以在返回给客户端之前检索、重置或修改状态码、正文（body）及头部（headers）。默认情况下，在基于 `net/http` 的 Web 框架中这是不可能的，因为正文和状态码一经写定就不能被检索或修改。
 
 #### Gzip
 
-当你在一个路由的处理程序中，并且你可以改变响应写入器（response writer）来发送一个用 gzip 压缩的响应时，框架会负责响应的头部。如果发生任何错误，框架应该把响应重置为正常，框架也应该能够检查客户端是否支持 gzip 压缩。
+当你在一个路由的处理程序中，并且你可以改变响应写入器（response writer）来发送一个用 gzip 压缩的响应时，框架会负责响应的头部。如果发生任何错误，框架应该把响应重置为正常，框架也应该能够检查客户端是否支持 gzip 压缩。
 
 > gzip 是用于压缩和解压缩的文件格式和软件程序。
 
@@ -331,11 +332,11 @@ TypeScript 的目标是成为 ES6 的超集。除了标准定义的所有新特�
 
 #### 在线编辑器
 
-在在线编辑器的帮助下，你可以快速轻松地在线编译和运行代码。
+在在线编辑器的帮助下，你可以快速轻松地在线编译和运行代码。
 
 #### 日志系统
 
-自定义日志系统通过提供有用的功能，如彩色日志输出、格式化、日志级别分离及不同的日志记录后端等，来扩展原生日志包。
+自定义日志系统通过提供有用的功能，如彩色日志输出、格式化、日志级别分离及不同的日志记录后端等，来扩展原生日志包。
 
 #### 维护和自动更新
 
@@ -343,7 +344,7 @@ TypeScript 的目标是成为 ES6 的超集。除了标准定义的所有新特�
 
 ## 再见！
 
-谢谢你的阅读，如果你喜欢这篇文章，请用表情符号和我互动哦 ;)
+谢谢你的阅读，如果你喜欢这篇文章，请用表情符号和我互动哦 :)
 
 ----------------
 
@@ -353,4 +354,4 @@ via: https://dev.to/speedwheel/top-6-web-frameworks-for-go-as-of-2017-34i
 译者：[rxcai](https://github.com/rxcai)
 校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
