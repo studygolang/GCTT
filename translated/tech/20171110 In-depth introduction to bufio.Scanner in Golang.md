@@ -1,6 +1,6 @@
 # 深入理解 Golang 标准库之 bufio.Scanner
 
-众所周知，[带缓冲的IO标准库](https://golang.org/pkg/bufio/) 一直是 Go 中优化读写操作的利器。对于写操作来说，在被发送到 `socket` 或硬盘之前，`IO缓冲区` 提供了一个临时存储区来存放数据，缓冲区存储的数据达到一定容量后才会被"释放"出来进行下一步存储，这种方式大大减少了写操作或是最终的系统调用被触发的次数，这无疑会在频繁使用系统资源的时候节省下巨大的系统开销。而对于读操作来说， `缓冲IO` 意味着每次操作能够检索出更多的数据，同样也能够减少系统调用的次数且更有效率地与底层存储交互，例如读取硬盘块中的数据。本文会更加侧重于讲解 [bufio](https://golang.org/pkg/bufio/) 包中的 [Scanner](https://golang.org/pkg/bufio/#Scanner) 扫描器模块，它主要通过将数据流分割成一个个标记并除去它们之间的空格
+众所周知，[带缓冲的IO标准库](https://golang.org/pkg/bufio/) 一直是 Go 中优化读写操作的利器。对于写操作来说，在被发送到 `socket` 或硬盘之前，`IO缓冲区` 提供了一个临时存储区来存放数据，缓冲区存储的数据达到一定容量后才会被"释放"出来进行下一步存储，这种方式大大减少了写操作或是最终的系统调用被触发的次数，这无疑会在频繁使用系统资源的时候节省下巨大的系统开销。而对于读操作来说， `缓冲IO` 意味着每次操作能够读取更多的数据，既减少了系统调用的次数，又通过以块为单位读取硬盘数据来更高效地使用底层硬件。本文会更加侧重于讲解 [bufio](https://golang.org/pkg/bufio/) 包中的 [Scanner](https://golang.org/pkg/bufio/#Scanner) 扫描器模块，它主要通过将数据流分割成一个个标记并除去它们之间的空格
 
 ```
 "foo  bar   baz"
@@ -35,15 +35,15 @@ bar
 baz
 ```
 
-`Scanner` 扫描器读取数据流的时候会使用带缓冲区的IO，并携有 `io.Reader` 作为参数
+`Scanner` 扫描器读取数据流的时候会使用带缓冲区的IO，并接受 `io.Reader` 作为参数
 
 
 
 如果你需要在内存中处理字符串或者是 bytes 切片，可以首先考虑使用 [bytes.Split](https://golang.org/pkg/bytes/#Split) 或是 [strings.Split](https://golang.org/pkg/strings/#Split) 这样的工具集，当处理这些流数据时，`bytes` 或是 `strings` 标准库中的方法可能是最简单可靠的
 
-在底层，扫描器使用缓冲不断存储数据，当缓冲区非空或者是快要爆满时 `split` 会被调用，目前我们介绍了一个预定义好的 `split` 函数，但根据下面的函数签名来看，它的用途可能更加广泛
+在底层，扫描器使用缓冲不断存储数据，当缓冲区非空或者是读到文件的末尾时 （EOF）  `split` 会被调用，目前我们介绍了一个预定义好的 `split` 函数，但根据下面的函数签名来看，它的用途可能更加广泛
 
-```
+```go
 func(data []byte, atEOF bool) (advance int, token []byte, err error)
 ```
 
@@ -88,7 +88,7 @@ false	12	abcdefghijkl
 true	12	abcdefghijkl
 ```
 
-上例中的 `split` 函数可以说是简单且及其贪婪的 -- 总是请求更多的数据， `Scanner` 尝试读取更多的数据的同时会保证缓冲区拥有足够的空间来存放这些数据。在上面的例子中，我们将缓冲区的大小设置为 2
+上例中的 `split` 函数可以说是简单且极其贪婪的 -- 总是请求更多的数据， `Scanner` 尝试读取更多的数据的同时会保证缓冲区拥有足够的空间来存放这些数据。在上面的例子中，我们将缓冲区的大小设置为 2
 
 ```go
 buf := make([]byte, 2)
@@ -97,9 +97,9 @@ scanner.Buffer(buf, bufio.MaxScanTokenSize)
 
 在 `split` 函数第一次被调用后，`scanner` 会倍增缓冲区的容量，读取更多的数据，然后再次调用 `split` 函数。在第二次调用之后增长倍数仍然保持不变，通过观察输出结果可以发现第一次调用 `split` 得到大小为 2 的切片，然后是 4, 8, 最后到 12 因为没有更多的数据了
 
-*缓冲区的默认大小是 [4096](https://github.com/golang/go/blob/13cfb15cb18a8c0c31212c302175a4cb4c050155/src/bufio/scan.go#L76)*
+*缓冲区的默认大小是 [4096](https://github.com/golang/go/blob/13cfb15cb18a8c0c31212c302175a4cb4c050155/src/bufio/scan.go#L76) 个字节*
 
-在这我们值得来讨论一下 `atEOF` 这个参数，通过这个参数我们能够在 `split` 函数中判断是否还有数据可供使用，它能够在达到数据末尾或者是读取出错的时候触发为真，一旦任何上述情况发生， `scanner` 将拒绝读取任何东西，像这样的 `flag` 标志可以使用 `f.ex` 来抛出异常（因其不完整的字符标记），最终会导致 `scanner.Split()` 在调用的时候返回 `false` 并终止整个进程。异常可以通过 `Err` 方法来取得
+在这我们值得来讨论一下 `atEOF` 这个参数，通过这个参数我们能够在 `split` 函数中判断是否还有数据可供使用，它能够在达到数据末尾 （EOF） 或者是读取出错的时候触发为真，一旦任何上述情况发生， `scanner` 将拒绝读取任何东西，像这样的 `flag` 标志可被用来抛出异常（因其不完整的字符标记），最终会导致 `scanner.Split()` 在调用的时候返回 `false` 并终止整个进程。异常可以通过 `Err` 方法来取得
 
 ```go
 package main
@@ -280,7 +280,38 @@ func (s *Scanner) Scan() bool {
     ...
 ```
 
-在提议 [#11836](https://github.com/golang/go/issues/11836) 中提供了一种方法使得当发现特殊标记时也能够立即停止扫描， [查看源码](https://play.golang.org/p/ArL-k-i2OV)
+在 Go 语言官方 [issue #11836](https://github.com/golang/go/issues/11836) 中提供了一种方法使得当发现特殊标记时也能够立即停止扫描， [查看源码](https://play.golang.org/p/ArL-k-i2OV)
+
+```go
+package main
+
+import (
+    "bufio"
+    "bytes"
+    "fmt"
+    "strings"
+)
+
+func split(data []byte, atEOF bool) (advance int, token []byte, err error) {
+    advance, token, err = bufio.ScanWords(data, atEOF)
+    if err == nil && token != nil && bytes.Equal(token, []byte{'e', 'n', 'd'}) {
+        return 0, []byte{'E', 'N', 'D'}, bufio.ErrFinalToken
+    }
+    return
+}
+
+func main() {
+    input := "foo end bar"
+    scanner := bufio.NewScanner(strings.NewReader(input))
+    scanner.Split(split)
+    for scanner.Scan() {
+        fmt.Println(scanner.Text())
+    }
+    if scanner.Err() != nil {
+        fmt.Printf("Error: %s\n", scanner.Err())
+    }
+}
+```
 
 输出结果：
 
@@ -316,16 +347,18 @@ func main() {
 }
 ```
 
-上面的程序会打印出 `bufio.Scanner: token too long` ，我们可以通过 [Buffer](https://golang.org/pkg/bufio/#Scanner.Buffer) 方法来自定义缓冲区的长度，在第一部分的时候这个方法有出现过，但我们这次会举一个更切题的例子， [查看源码](https://play.golang.org/p/ZsgJzuIy4r)
+上面的程序会打印出 `bufio.Scanner: token too long` ，我们可以通过 [Buffer](https://golang.org/pkg/bufio/#Scanner.Buffer) 方法来自定义缓冲区的长度，在上文第一小节中这个方法有出现过，但我们这次会举一个更切题的例子， [查看源码](https://play.golang.org/p/ZsgJzuIy4r)
 
 ```go
 buf := make([]byte, 10)
 input := strings.Repeat("x", 20)
 scanner := bufio.NewScanner(strings.NewReader(input))
 scanner.Buffer(buf, 20)
+
 for scanner.Scan() {
     fmt.Println(scanner.Text())
 }
+
 if scanner.Err() != nil {
     fmt.Println(scanner.Err())
 }
@@ -339,7 +372,7 @@ bufio.Scanner: token too long
 
 ## 防止死循环
 
-几年前 [#8672](https://github.com/golang/go/issues/8672) 被提出，解决方案是加多一段代码，通过判断 `atEOF` 为真且缓冲区为空来确定 `split` 函数可以被调用，而现有的代码可能会进入死循环
+几年前 [issue #8672](https://github.com/golang/go/issues/8672) 被提出，解决方案是加多一段代码，通过判断 `atEOF` 为真且缓冲区为空来确定 `split` 函数可以被调用，而现有的代码可能会进入死循环
 
 ```go
 package main
@@ -390,6 +423,6 @@ via: https://medium.com/golangspec/in-depth-introduction-to-bufio-scanner-in-gol
 
 作者：[Michał Łowicki](https://medium.com/@mlowicki)
 译者：[yujiahaol68](https://github.com/yujiahaol68)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出 
