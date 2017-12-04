@@ -1,6 +1,6 @@
 # 深入理解 Golang 标准库之 bufio.Scanner
 
-众所周知，[带缓冲的IO标准库](https://golang.org/pkg/bufio/) 一直是 Go 中优化读写操作的利器。对于写操作来说，在被发送到 `socket` 或硬盘之前，`IO缓冲区` 提供了一个临时存储区来存放数据，缓冲区存储的数据达到一定容量后才会被"释放"出来进行下一步存储，这种方式大大减少了写操作或是最终的系统调用被触发的次数，这无疑会在频繁使用系统资源的时候节省下巨大的系统开销。而对于读操作来说， `缓冲IO` 意味着每次操作能够读取更多的数据，既减少了系统调用的次数，又通过以块为单位读取硬盘数据来更高效地使用底层硬件。本文会更加侧重于讲解 [bufio](https://golang.org/pkg/bufio/) 包中的 [Scanner](https://golang.org/pkg/bufio/#Scanner) 扫描器模块，它主要通过将数据流分割成一个个标记并除去它们之间的空格
+众所周知，[带缓冲的IO标准库](https://golang.org/pkg/bufio/) 一直是 Go 中优化读写操作的利器。对于写操作来说，在被发送到 `socket` 或硬盘之前，`IO缓冲区` 提供了一个临时存储区来存放数据，缓冲区存储的数据达到一定容量后才会被"释放"出来进行下一步存储，这种方式大大减少了写操作或是最终的系统调用被触发的次数，这无疑会在频繁使用系统资源的时候节省下巨大的系统开销。而对于读操作来说， `缓冲IO` 意味着每次操作能够读取更多的数据，既减少了系统调用的次数，又通过以块为单位读取硬盘数据来更高效地使用底层硬件。本文会更加侧重于讲解 [bufio](https://golang.org/pkg/bufio/) 包中的 [Scanner](https://golang.org/pkg/bufio/#Scanner) 扫描器模块，它的主要作用是把数据流分割成一个个标记并除去它们之间的空格
 
 ```
 "foo  bar   baz"
@@ -41,7 +41,7 @@ baz
 
 如果你需要在内存中处理字符串或者是 bytes 切片，可以首先考虑使用 [bytes.Split](https://golang.org/pkg/bytes/#Split) 或是 [strings.Split](https://golang.org/pkg/strings/#Split) 这样的工具集，当处理这些流数据时，`bytes` 或是 `strings` 标准库中的方法可能是最简单可靠的
 
-在底层，扫描器使用缓冲不断存储数据，当缓冲区非空或者是读到文件的末尾时 （EOF）  `split` 会被调用，目前我们介绍了一个预定义好的 `split` 函数，但根据下面的函数签名来看，它的用途可能更加广泛
+在底层，扫描器使用缓冲不断存储数据，当缓冲区非空或者是读到文件的末尾时 （EOF）  `split` 函数会被调用，目前我们介绍了一个预定义好的 `split` 函数，但根据下面的函数签名来看，它的用途可能更加广泛
 
 ```go
 func(data []byte, atEOF bool) (advance int, token []byte, err error)
@@ -163,7 +163,7 @@ import (
 func main() {
     input := "foo\nbar\nbaz"
     scanner := bufio.NewScanner(strings.NewReader(input))
-    // Not actually needed since it’s a default split function.
+    // 事实上这里并不需要传入 ScanLines 因为这原本就是标准库默认的 split 函数
     scanner.Split(bufio.ScanLines)
     for scanner.Scan() {
         fmt.Println(scanner.Text())
@@ -181,7 +181,7 @@ baz
 
 ## 2. 已找到字符标记
 
-当 `split` 函数检测到一个字符标记时，它会返回字符的个数以便在缓冲区和标记移动。返回两个值的原因在于标记向前移动的距离不总是等同于字节数。假设输入为 "foo foo foo" ，当我们的目标只是找到其中的单词 [扫描单词](https://golang.org/pkg/bufio/#ScanWords) 时，`split` 函数会跳过它们之间的空格
+当 `split` 函数检测到一个字符标记时，它会返回字符的个数以便在缓冲区和标记移动。返回两个值的原因在于标记向前移动的距离不总是等于字节个数。假设输入为 "foo foo foo" ，当我们的目标只是找到其中的单词 ( [扫描单词](https://golang.org/pkg/bufio/#ScanWords) ) 时，`split` 函数会跳过它们之间的空格
 
 ```
 (4, "foo")
@@ -405,7 +405,7 @@ func main() {
 }
 ```
 
-`split` 函数假设当 `atEOF` 为真就能够安全地使用剩余的缓冲作为标记，这引发了 [issue #8672](https://github.com/golang/go/issues/8672) 被修复之后的另一个问题，缓冲区可以为空因此当返回 `(0, [], nil)` 时 `split` 函数并不能增加缓冲区的大小， [issue #9020](https://github.com/golang/go/issues/9020) 发现了此种情况下的 `panic异常` ，[查看源码](https://play.golang.org/p/HUbd-ZInAQ)
+`split` 函数假设当 `atEOF` 为真就能够安全地使用剩余的缓冲作为标记，这引发了 [issue #8672](https://github.com/golang/go/issues/8672) 被修复之后的另一个问题： 因为缓冲区可以为空，所以当返回 `(0, [], nil)` 时 `split` 函数并不能增加缓冲区的大小， [issue #9020](https://github.com/golang/go/issues/9020) 发现了此种情况下的 `panic异常` ，[查看源码](https://play.golang.org/p/HUbd-ZInAQ)
 
 
 ```
