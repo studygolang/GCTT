@@ -1,13 +1,14 @@
-【翻译中】 by shockw4ver
-# The Zoo of Go Functions
+【翻译中】by shockw4ver
 
-原文链接：https://blog.learngoprogramming.com/go-functions-overview-anonymous-closures-higher-order-deferred-concurrent-6799008dde7b
+# Ultimate Guide to Go Variadic Functions
+
+原文链接：https://blog.learngoprogramming.com/golang-variadic-funcs-how-to-patterns-369408f19085
 
 译者自己根据原文翻译，译文保存为 markdown 格式，并附上尾部的签名。
 
 ----------------
 
-via: https://blog.learngoprogramming.com/go-functions-overview-anonymous-closures-higher-order-deferred-concurrent-6799008dde7b
+via: https://blog.learngoprogramming.com/golang-variadic-funcs-how-to-patterns-369408f19085
 
 作者：[Inanc Gumus](https://blog.learngoprogramming.com/@inanc)
 译者：[译者ID](https://github.com/译者ID)
