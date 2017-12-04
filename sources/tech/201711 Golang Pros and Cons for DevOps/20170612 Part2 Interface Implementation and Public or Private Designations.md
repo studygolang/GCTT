@@ -1,3 +1,4 @@
+【翻译中】by liuxinyu123     
 
 # Golang Pros and Cons for DevOps (Part 2 of 6): Interface Implementation and Public/Private Designations
 
