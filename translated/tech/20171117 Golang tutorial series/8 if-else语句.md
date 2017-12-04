@@ -46,7 +46,7 @@ func main() {
 
 `if num％2 == 0` 语句检测 num 取 2 的余数是否为零。 如果是为零则打印输出"the number is even"，如果不为零则打印输出"the number is odd"。在上面的这个程序中，打印输出的是 `the number is even`。
 
-`if` 还有另外一种形式，它包含一个 `statement` 可选语句组件，该组件在条件判断之前运行。它的语法是
+`if` 还有另外一种形式，它包含一个 `statement` 可选语句部分，该组件在条件判断之前运行。它的语法是
 
 ```go
 if statement; condition {  
