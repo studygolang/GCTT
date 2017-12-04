@@ -1,3 +1,5 @@
+【翻译中】 by chenbrooks
+
 # Discover GoLand
 
 原文链接：https://www.jetbrains.com/help/go/discover-goland.html
