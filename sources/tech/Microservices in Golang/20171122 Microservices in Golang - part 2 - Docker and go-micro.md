@@ -340,7 +340,301 @@ CMD ["./consignment-service"]
 
 ### Vessel 服务
 
+让我们创建第二个服务。我们有一个代销服务，这将处理将一批货物与一批最适合该批货物的 vessel 进行匹配。为了配合我们的货物，我们需要将集装箱的重量和数量发送到我们的新vessel服务，然后将找到一个能够处理该货物的船只。
 
+创建一个新的目录在你的根目录 `$ mkdir vessel-service`。现在为我们的新服务 [protobuf](https://github.com/google/protobuf) 定义创建了一个子目录， `$ mkdir -p vessel-service/proto/vessel`。现在让我们来创建新的 `protobuf ` 文件， `$ touch vessel-service/proto/vessel/vessel.proto`。
+
+由于 protobuf 的定义确实是我们领域设计的核心，所以我们从这里开始。
+
+```
+// vessel-service/proto/vessel/vessel.proto
+syntax = "proto3";
+
+package go.micro.srv.vessel;
+
+service VesselService {  
+  rpc FindAvailable(Specification) returns (Response) {}
+}
+
+message Vessel {  
+  string id = 1;
+  int32 capacity = 2;
+  int32 max_weight = 3;
+  string name = 4;
+  bool available = 5;
+  string owner_id = 6;
+}
+
+message Specification {  
+  int32 capacity = 1;
+  int32 max_weight = 2;
+}
+
+message Response {  
+  Vessel vessel = 1;
+  repeated Vessel vessels = 2;
+}
+```
+
+正如你所看到的，这和我们的第一个服务非常相似。我们创建了一个服务，用一个称为 FindAvailable 的 rpc 方法。这需要一个 Specification 类型并返回一个 Response 类型。Response 类型使用重复字段返回 Vessel 类型或多个 Vesse。
+
+现在我们需要创建一个 Makefile 来处理我们的构建逻辑和运行脚本。 `$ touch vessel-service/Makefile`。打开该文件并添加以下内容：
+
+```
+// vessel-service/Makefile
+build:  
+    protoc -I. --go_out=plugins=micro:$(GOPATH)/src/github.com/EwanValentine/shippy/vessel-service \
+    proto/vessel/vessel.proto
+    docker build -t vessel-service .
+
+run:  
+    docker run -p 50052:50051 -e MICRO_SERVER_ADDRESS=:50051 -e MICRO_REGISTRY=mdns vessel-service
+```
+
+这与我们为托管服务创建的第一个 Makefile 几乎相同，但注意服务名称和端口已经改变了一点。我们不能在同一个端口上运行两个 Docker 容器，所以我们在这里利用 Docker 端口转发来确保这个服务在主机网络上转发 50051 到 50052。
+
+现在我们需要一个 Dockerfile，使用我们新的多阶段格式：
+
+```
+# vessel-service/Dockerfile
+FROM golang:1.9.0 as builder
+
+WORKDIR /go/src/github.com/EwanValentine/shippy/vessel-service
+
+COPY . .
+
+RUN go get -u github.com/golang/dep/cmd/dep  
+RUN dep init && dep ensure  
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .
+
+
+FROM alpine:latest
+
+RUN apk --no-cache add ca-certificates
+
+RUN mkdir /app  
+WORKDIR /app  
+COPY --from=builder /go/src/github.com/EwanValentine/shippy/vessel-service/vessel-service .
+
+CMD ["./vessel-service"]
+```
+
+最后，我们可以开始我们的实现。
+
+```
+// vessel-service/main.go
+package main
+
+import (  
+    "context"
+    "errors"
+    "fmt"
+
+    pb "github.com/EwanValentine/shippy/vessel-service/proto/vessel"
+    "github.com/micro/go-micro"
+)
+
+type Repository interface {  
+    FindAvailable(*pb.Specification) (*pb.Vessel, error)
+}
+
+type VesselRepository struct {  
+    vessels []*pb.Vessel
+}
+
+// FindAvailable - checks a specification against a map of vessels,
+// if capacity and max weight are below a vessels capacity and max weight,
+// then return that vessel.
+func (repo *VesselRepository) FindAvailable(spec *pb.Specification) (*pb.Vessel, error) {  
+    for _, vessel := range repo.vessels {
+        if spec.Capacity <= vessel.Capacity && spec.MaxWeight <= vessel.MaxWeight {
+            return vessel, nil
+        }
+    }
+    return nil, errors.New("No vessel found by that spec")
+}
+
+// Our grpc service handler
+type service struct {  
+    repo Repository
+}
+
+func (s *service) FindAvailable(ctx context.Context, req *pb.Specification, res *pb.Response) error {
+
+    // Find the next available vessel
+    vessel, err := s.repo.FindAvailable(req)
+    if err != nil {
+        return err
+    }
+
+    // Set the vessel as part of the response message type
+    res.Vessel = vessel
+    return nil
+}
+
+func main() {  
+    vessels := []*pb.Vessel{
+        &pb.Vessel{Id: "vessel001", Name: "Kane's Salty Secret", MaxWeight: 200000, Capacity: 500},
+    }
+    repo := &VesselRepository{vessels}
+
+    srv := micro.NewService(
+        micro.Name("go.micro.srv.vessel"),
+        micro.Version("latest"),
+    )
+
+    srv.Init()
+
+    // Register our implementation with 
+    pb.RegisterVesselServiceHandler(srv.Server(), &service{repo})
+
+    if err := srv.Run(); err != nil {
+        fmt.Println(err)
+    }
+}
+```
+
+我留下了一些评论，但是非常简单。另外，我想指出，一个 Reddit 用户 /r/jerky_lodash46 指出，我曾经使用 IRepository 作为我的接口名称。我想在这里纠正一下，在我的接口名前面加上 Java 和 C＃ 等语言的约定，但 Go 并没有真正鼓励这一点，因为 Go 把接口当作一等公民。所以我把 IRepository 更名为 Repository ，并且把我的具体结构重命名为 ConsignmentRepository。
+
+这个系列中，我会留下任何错误，并在以后的文章中予以纠正，以便我能够解释这些改进。我们可以更多地学习。
+
+现在让我们来看看有趣的部分。当我们创建一个托运货物时，我们需要改变我们的托运服务来呼叫我们的新 vessel 服务，找到一艘船，并更新创建的托运中的 vessel_id：
+
+```
+// consignment-service/main.go
+package main
+
+import (
+
+    // Import the generated protobuf code
+    "fmt"
+    "log"
+
+    pb "github.com/EwanValentine/shippy/consignment-service/proto/consignment"
+    vesselProto "github.com/EwanValentine/shippy/vessel-service/proto/vessel"
+    micro "github.com/micro/go-micro"
+    "golang.org/x/net/context"
+)
+
+type Repository interface {  
+    Create(*pb.Consignment) (*pb.Consignment, error)
+    GetAll() []*pb.Consignment
+}
+
+// Repository - Dummy repository, this simulates the use of a datastore
+// of some kind. We'll replace this with a real implementation later on.
+type ConsignmentRepository struct {  
+    consignments []*pb.Consignment
+}
+
+func (repo *ConsignmentRepository) Create(consignment *pb.Consignment) (*pb.Consignment, error) {  
+    updated := append(repo.consignments, consignment)
+    repo.consignments = updated
+    return consignment, nil
+}
+
+func (repo *ConsignmentRepository) GetAll() []*pb.Consignment {  
+    return repo.consignments
+}
+
+// Service should implement all of the methods to satisfy the service
+// we defined in our protobuf definition. You can check the interface
+// in the generated code itself for the exact method signatures etc
+// to give you a better idea.
+type service struct {  
+    repo Repository
+    vesselClient vesselProto.VesselServiceClient
+}
+
+// CreateConsignment - we created just one method on our service,
+// which is a create method, which takes a context and a request as an
+// argument, these are handled by the gRPC server.
+func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, res *pb.Response) error {
+
+    // Here we call a client instance of our vessel service with our consignment weight,
+    // and the amount of containers as the capacity value
+    vesselResponse, err := s.vesselClient.FindAvailable(context.Background(), &vesselProto.Specification{
+        MaxWeight: req.Weight,
+        Capacity: int32(len(req.Containers)),
+    })
+    log.Printf("Found vessel: %s \n", vesselResponse.Vessel.Name)
+    if err != nil {
+        return err
+    }
+
+    // We set the VesselId as the vessel we got back from our
+    // vessel service
+    req.VesselId = vesselResponse.Vessel.Id
+
+    // Save our consignment
+    consignment, err := s.repo.Create(req)
+    if err != nil {
+        return err
+    }
+
+    // Return matching the `Response` message we created in our
+    // protobuf definition.
+    res.Created = true
+    res.Consignment = consignment
+    return nil
+}
+
+func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest, res *pb.Response) error {  
+    consignments := s.repo.GetAll()
+    res.Consignments = consignments
+    return nil
+}
+
+func main() {
+
+    repo := &ConsignmentRepository{}
+
+    // Create a new service. Optionally include some options here.
+    srv := micro.NewService(
+
+        // This name must match the package name given in your protobuf definition
+        micro.Name("go.micro.srv.consignment"),
+        micro.Version("latest"),
+    )
+
+    vesselClient := vesselProto.NewVesselServiceClient("go.micro.srv.vessel", srv.Client())
+
+    // Init will parse the command line flags.
+    srv.Init()
+
+    // Register handler
+    pb.RegisterShippingServiceHandler(srv.Server(), &service{repo, vesselClient})
+
+    // Run the server
+    if err := srv.Run(); err != nil {
+        fmt.Println(err)
+    }
+}
+```
+
+在这里，我们为我们的 vessel 服务创建了一个客户端实例，这允许我们使用服务名称，即 go.micro.srv.vessel 将船舶服务作为客户端调用，并与其方法交互。在这种情况下，只有一个方法(`FindAvailable `)。我们把我们的寄售重量，以及我们想要作为规格的集装箱的数量发送到 vessel 服务。然后返回一个适当的 vessel。
+
+更新 `consignment-cli / consignment.json`文件，删除硬编码的 vessel_id ，我们要确认我们自己正在工作。让我们再添加一些容器，增加权重。例如
+
+```
+{
+  "description": "This is a test consignment",
+  "weight": 55000,
+  "containers": [
+    { "customer_id": "cust001", "user_id": "user001", "origin": "Manchester, United Kingdom" },
+    { "customer_id": "cust002", "user_id": "user001", "origin": "Derby, United Kingdom" },
+    { "customer_id": "cust005", "user_id": "user001", "origin": "Sheffield, United Kingdom" }
+  ]
+}
+```
+
+现在运行 `$ make build && make`在`consignment-cli`中运行。您应该看到一个回复​​，并创建货物清单。在您的货物中，您现在应该看到 vessel_id 已经设置好了。所以我们有它，两个互联的微服务和一个命令行界面！在这个系列的下一部分，我们将看看使用 [MongoDB](https://www.mongodb.com/what-is-mongodb) 来保存这些数据。我们还将添加第三个服务，并使用 `docker-compose` 来管理我们在本地不断增长的容器生态系统
+
+查看完整示例的回购。如有任何[反馈](https://github.com/EwanValentine/shippy/tree/tutorial-2)，请将其发送至（mailto：ewan.valentine89@gmail.com）。非常感激
+
+如果你发现这个系列很有用，而且你使用了一个广告拦截器（谁可以责怪你）。请考虑一下我的时间和精力。干杯! [https://monzo.me/ewanvalentine](https://monzo.me/ewanvalentine)
+
+Docker简报（2017年11月22日）
 
 ----------------
 
