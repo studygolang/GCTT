@@ -209,7 +209,7 @@ Switch 和 case 的表达式不需要一定是常量。它们也可以在运行�
 via: https://golangbot.com/switch/
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
-译者：[译者ID](https://github.com/vicever)
+译者：[vicever](https://github.com/vicever)
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推
