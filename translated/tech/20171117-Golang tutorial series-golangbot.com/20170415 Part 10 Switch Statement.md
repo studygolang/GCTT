@@ -1,4 +1,4 @@
-# 教程10： Switch 状态判断
+# 教程10： Switch 条件判断
 
 这是[Golang教程系列](https://golangbot.com/learn-golang-series/)中的第10篇教程。
 
