@@ -1,6 +1,6 @@
 # 并行化 Golang 文件 IO
 
-在这篇文章中，我们会使用一些 Go 的著名并行范例（Goroutine 和 WaitGroup），高效地遍历大目录。所有代码都可以在 Github [这里](https://github.com/Tim15/golang-parallel-io)找到。
+在这篇文章中，我们会使用一些 Go 的著名并行范例（Goroutine 和 WaitGroup），高效地遍历有大量文件的目录。所有代码都可以在 Github [这里](https://github.com/Tim15/golang-parallel-io)找到。
 
 我正在开发一个项目，编写程序来将一个目录打包成一个文件。然后，我开始看 Go 的文件 IO 系统。其中貌似有几种遍历目录的方法。你可以使用 `filepath.Walk()`，或者你可以自己写一个。[有些人指出](https://github.com/golang/go/issues/16399)，与 `find` 相比，`filepath.Walk()` 真的很慢，所以我想知道，我能否写出更快的方法。我会告诉你我是怎么使用 Go 的一些很棒的功能来实现的。你可以可以将它们应用到其他问题上。
 
@@ -21,7 +21,7 @@ func lsFiles(dir string) {
     
 ```
 
-然后，获取这个子文件的一个切片（Slice，也就是其他语言中的列表或数组）。
+然后，获取这个文件中的子文件切片（Slice，也就是其他语言中的列表或数组）。
 
 ```go
 
@@ -52,7 +52,7 @@ func lsFiles(dir string) {
 
 现在，让我们来测试一下。在一个带 SSD 的 MacBook Pro 上，使用 `time`，我获得以下结果：
 
-```go
+```
 
     $ find /Users/alexkreidler
       274165
@@ -254,6 +254,6 @@ via: https://timhigins.ml/benchmarking-golang-file-io/
 
 作者：[Timothy Higinbottom](https://timhigins.ml/about/)
 译者：[ictar](https://github.com/ictar)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
