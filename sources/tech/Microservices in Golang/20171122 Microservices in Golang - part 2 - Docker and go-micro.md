@@ -641,7 +641,7 @@ Docker简报（2017年11月22日）
 via: https://ewanvalentine.io/microservices-in-golang-part-2/
 
 作者：[Ewan Valentine](http://ewanvalentine.io/author/ewan)
-译者：[译者ID](https://github.com/guoxiaopang)
+译者：[guoxiaopang](https://github.com/guoxiaopang)
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
