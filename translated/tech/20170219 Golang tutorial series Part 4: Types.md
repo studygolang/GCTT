@@ -83,7 +83,7 @@ func main() {
 
 上面程序会输出 `value of a is 89 and b is 95`。
 
-在上述程序中，a 是 int 类型，而 b 的类型通过赋值（85）推断得出。上面我们提到，int 类型的大小在 32 位系统下是 32 位，而在 64 位系统下是 64 位。接下来我们会证实这种说法。
+在上述程序中，a 是 int 类型，而 b 的类型通过赋值（95）推断得出。上面我们提到，int 类型的大小在 32 位系统下是 32 位，而在 64 位系统下是 64 位。接下来我们会证实这种说法。
 
 在 Printf 方法中，使用 **%T** 格式说明符（Format Specifier），可以打印出变量的类型。Go 的 [unsafe](https://golang.org/pkg/unsafe/) 包提供了一个 [Sizeof](https://golang.org/pkg/unsafe/#Sizeof) 函数，该函数接收变量并返回它的字节大小。*unsafe* 包应该小心使用，因为使用 unsafe 包可能会带来可移植性问题。不过出于本教程的目的，我们是可以使用的。
 
@@ -100,8 +100,8 @@ func main() {
     var a int = 89
     b := 95
     fmt.Println("value of a is", a, "and b is", b)
-    fmt.Printf("type of a is %T, size of a is %d", a, unsafe.Sizeof(a)) // a的类型和大小
-    fmt.Printf("\ntype of b is %T, size of b is %d", b, unsafe.Sizeof(b)) // b的类型和大小
+    fmt.Printf("type of a is %T, size of a is %d", a, unsafe.Sizeof(a)) // a 的类型和大小
+    fmt.Printf("\ntype of b is %T, size of b is %d", b, unsafe.Sizeof(b)) // b 的类型和大小
 }
 ```
 [在线运行程序](https://play.golang.org/p/mFsmjVk5oc)
