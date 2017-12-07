@@ -573,7 +573,7 @@ JSON 文件的样例如下：
 
 Happy coding！
 
-更新： 文中提到的工具可以在[这里](github.com/divan/gotrace](https://github.com/divan/gotrace)下载。目前它使用了 Go Execution Tracer 和打包的 runtime 来生成 trace。
+更新： 文中提到的工具可以在[这里](https://github.com/divan/gotrace)下载。目前它使用了 Go Execution Tracer 和打包的 runtime 来生成 trace。
 
 ----------------
 
