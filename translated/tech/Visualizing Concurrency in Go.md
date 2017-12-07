@@ -1,4 +1,4 @@
-# Go语言并发可视化
+# 可视化 Go 语言中的并发
 
 本文作者提供了在 2016 的 GopherCon 上的关于 Go 并发可视化的[主题演讲视频](https://www.youtube.com/watch?v=KyuFeiG3Y60)。
 
@@ -65,7 +65,7 @@ func main() {
 这个效果是不是很有条理？
 
 ## 乒乓球（Ping-pong）
-这个例子是我从 Google 员工 Sameer Ajmani 的一次演讲["Advanced Go Concurrency Patterns"](https://talks.golang.org/2013/advconc.slide#1)中找到的。当然，这并不是一个很高阶的并发模型，但是对于Go语言并发的新手来说是很有趣的。
+这个例子是我从 Google 员工 Sameer Ajmani 的一次演讲[ "Advanced Go Concurrency Patterns" ](https://talks.golang.org/2013/advconc.slide#1)中找到的。当然，这并不是一个很高阶的并发模型，但是对于Go语言并发的新手来说是很有趣的。
 
 在这个例子中，我们定义了一个 channel 来作为“乒乓桌”。乒乓球是一个整形变量，代码中有两个 goroutine “玩家”通过增加乒乓球的 counter 在“打球”。
 ```go
@@ -109,9 +109,9 @@ func player(table chan int) {
 
 ![Ping-pong2](http://divan.github.io/demos/gifs/pingpong3.gif)
 
-我们可以看到每个 goroutine 都有序地“打到球”，你可能会好奇这个行为的原因。那么，为什么这三个 goroutine 始终按照一定顺序接收到ball呢？
+我们可以看到每个 goroutine 都有序地“打到球”，你可能会好奇这个行为的原因。那么，为什么这三个 goroutine 始终按照一定顺序接收到 ball 呢？
 
-答案很简单，Go运行时会对每个 channel 的所有接收者维护一个 FIFO 队列。在我们的例子中，每个 goroutine 会在它将 ball 传给 channel 之后就开始等待 channel，所以它们在队列里的顺序总是一定的。让我们增加 goroutine 的数量，看看顺序是否仍然保持一致。
+答案很简单，Go 运行时会对每个 channel 的所有接收者维护一个 [FIFO 队列 ](https://github.com/golang/go/blob/master/src/runtime/chan.go#L34)。在我们的例子中，每个 goroutine 会在它将 ball 传给 channel 之后就开始等待 channel，所以它们在队列里的顺序总是一定的。让我们增加 goroutine 的数量，看看顺序是否仍然保持一致。
 ```go
 for i := 0; i < 100; i++ {
     go player(table)
@@ -123,8 +123,8 @@ for i := 0; i < 100; i++ {
 
 很明显，它们的顺序仍然是一定的。我们可以创建一百万个 goroutine 去尝试，但是上面的实验已经足够让我们得出结论了。接下来，让我们来看看一些不一样的东西，比如说通用的消息模型。
 
-## 扇入（Fan-In）
-扇入（fan-in）模式在并发世界中广泛使用。扇出（fan-out）与其相反，我们会在下面介绍。简单来说，扇入模式就是一个函数从多个输入源读取数据并且复用到单个 channel 中。比如说：
+## 扇入模式（Fan-In）
+扇入（fan-in）模式在并发世界中广泛使用。扇出（fan-out）模式与其相反，我们会在下面介绍。简单来说，扇入模式就是一个函数从多个输入源读取数据并且复用到单个 channel 中。比如说：
 ```go
 package main
 
@@ -165,8 +165,8 @@ func main() {
 
 我们能看到，第一个 `producer` 每隔一百毫秒生成一个值，第二个 `producer` 每隔 250 毫秒生成一个值，但是 `reader` 会立即接收它们的值。main 函数中的 for 循环高效地接收了 channel 发送的所有信息。
 
-## 工作者（Workers）
-与扇入模式相反的模式叫做扇出（fan-out）或者工作者（workers）模式。多个 goroutine 可以从相同的 channel 中读数据，利用多核并发完成自身的工作，这就是工作者（workers）的由来。在 Go 中，这个模式很容易实现，只需要启动多个以 channel 作为参数的 goroutine，主函数传数据给这个 channel，数据分发和复用会由 Go 运行环境自动完成。
+## 工作者模式（Workers）
+与扇入模式相反的模式叫做扇出（fan-out）或者工作者（workers）模式。多个 goroutine 可以从相同的 channel 中读数据，利用多核并发完成自身的工作，这就是工作者（workers）模式的由来。在 Go 中，这个模式很容易实现，只需要启动多个以 channel 作为参数的 goroutine，主函数传数据给这个 channel，数据分发和复用会由 Go 运行环境自动完成。
 ```go
 package main
 
@@ -573,12 +573,14 @@ JSON 文件的样例如下：
 
 Happy coding！
 
+更新： 文中提到的工具可以在[这里](github.com/divan/gotrace](https://github.com/divan/gotrace)下载。目前它使用了 Go Execution Tracer 和打包的 runtime 来生成 trace。
+
 ----------------
 
 via: https://divan.github.io/posts/go_concurrency_visualize/
 
 作者：[Ivan Daniluk](https://github.com/divan)
 译者：[QueShengyao](https://github.com/QueShengyao)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
