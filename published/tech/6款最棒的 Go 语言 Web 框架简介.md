@@ -1,4 +1,6 @@
-## 6款最棒的 Go 语言 Web 框架简介
+已发布：https://studygolang.com/articles/11897
+
+## 6 款最棒的 Go 语言 Web 框架简介
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/top-6-web-frameworks-for-go-as-of-2017/twitter_status.jpg)
 https://twitter.com/ThePracticalDev/status/930878898245722112
