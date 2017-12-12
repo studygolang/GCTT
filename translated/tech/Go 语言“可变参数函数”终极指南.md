@@ -647,6 +647,6 @@ via: https://blog.learngoprogramming.com/golang-variadic-funcs-how-to-patterns-3
 
 作者：[Inanc Gumus](https://blog.learngoprogramming.com/@inanc)
 译者：[shockw4ver](https://github.com/shockw4ver)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
