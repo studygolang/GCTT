@@ -1,10 +1,11 @@
-#用 GO 写一个服务容器（ Service Container ）
+# 用 Go 写一个服务容器（ Service Container ）
 
-我最近一直在做一个相当大 API 项目，里面包括很多路由规则（ routes ），服务接口（ services ），和处理函数（ handlers ）等。首先，我注意到 `main.go` 文件的启动过程开始越来越臃肿。
+我最近一直在做一个相当大的 API 项目，里面包括很多路由规则（ routes ）、服务接口（ services ）和处理函数（ handlers ）等。首先，我注意到 `main.go` 文件的启动过程开始越来越臃肿。
 
 为了避免设置全局的服务接口，我使用共享结构体（ struct ）将服务接口与处理函数绑定在一起。举个例子：  
 
- main.go
+main.go
+
 ```go
 package main
 
@@ -20,7 +21,9 @@ func main() {
     r.Run(":8080")
 }
 ```
+
 user_handler.go
+
 ```go
 type UserHandler struct {  
     userRepo *models.UserRepo
@@ -44,7 +47,8 @@ func (userHandler *UserHandler) FindAll(c *gin.Context) {
 ```
 这些代码工作的很好，但是，你会发现 main.go 中，我只是写了很少的启动过程，仅仅包含一个处理函数和一个持久化数据（ repository ）。（译注：用这种方式写代码比较麻烦且臃肿）。  
 
-于是我想用 GO 写一个容器。我找不到一个喜欢的第三方库来解决这个事情。所以，想出了下面这段代码。
+于是我想用 Go 写一个容器。我找不到一个喜欢的第三方库来解决这个事情。所以，想出了下面这段代码。
+
 ```go
 import(  
     "sync"
@@ -83,6 +87,7 @@ func (c *Container) Get(name string) (object interface{}, bool) {
 注意这段代码的每个方法都用了 `mutex lock` 来避免容器的并发问题。
 
 现在代码可以这样写。。。
+
 ```go
 func GetContainer() Container {  
     c := new(container.Container)
@@ -92,6 +97,7 @@ func GetContainer() Container {
 ```
 
 现在的 main.go
+
 ```go
 func main() {  
     container := container.GetContainer()
@@ -122,4 +128,4 @@ via: https://ewanvalentine.io/writing-a-service-container-in-go/
 译者：[j.zhongming](https://github.com/j.zhongming)
 校对：[rxcai](https://github.com/rxcai)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推
