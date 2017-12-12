@@ -34,7 +34,7 @@ func main() {
 
 在上述程序中，`switch finger` 将 `finger` 的值与每个 `case` 语句进行比较。通过从上到下对每一个值进行对比，并执行与选项值匹配的第一个逻辑。在上述样例中， `finger` 值为4，因此打印的结果是 `Ring` 。
 
-在选项列表中，case 不允许出现重复项 。如果您尝试运行下面的程序，编译器会报这样的错误: `main.go：18：2：在tmp / sandbox887814166 / main.go：16：7`  
+在选项列表中，case 不允许出现重复项。如果您尝试运行下面的程序，编译器会报这样的错误: `main.go：18：2：在tmp / sandbox887814166 / main.go：16：7`  
 
 ``` go   
 package main
@@ -94,7 +94,7 @@ func main() {
 ```
 [在线运行程序](https://play.golang.org/p/Fq7U7SkHe1)  
 
-在以上程序中 `finger` 的值是8，它不符合其中任何情况，因此会打印 `incorrect finger number` 。default 不一定只能出现在 switch 语句的最后，它可以放在 switch 语句的任何地方。
+在上述程序中 `finger` 的值是8，它不符合其中任何情况，因此会打印 `incorrect finger number`。default 不一定只能出现在 switch 语句的最后，它可以放在 switch 语句的任何地方。
 
 您可能也注意到我们稍微改变了 `finger` 变量的声明方式。`finger` 声明在了 switch 语句内。在表达式求值之前，switch 可以选择先执行一个语句。在这行 `switch finger：= 8; finger` 中， 先声明了`finger` 变量，随即在表达式中使用了它。在这里，`finger` 变量的作用域仅限于这个 switch 内。
 
@@ -122,7 +122,7 @@ func main() {
 
 [在线运行程序](https://play.golang.org/p/Zs9Ek5SInh)  
 
-在`case "a","e","i","o","u":`这一行中，列举了所有的元音。只要匹配该项，则将输出 `vowel` 。
+在`case "a","e","i","o","u":`这一行中，列举了所有的元音。只要匹配该项，则将输出 `vowel`。
 
 ## 无表达式的 switch
 
@@ -151,14 +151,14 @@ func main() {
  
 [在线运行程序](https://play.golang.org/p/mMJ8EryKbN)  
 
-在以上代码中，switch 中缺少表达式，因此默认它为 True，True 会和每一个 case 的求值结果进行匹配。 `case num> = 51 && <= 100：` 为True，所以程序输出 `num is greater than 51 and less than 100`。这种类型的 switch 语句可以替代多个 `if else` 子句。
+在上述代码中，switch 中缺少表达式，因此默认它为 True，True 会和每一个 case 的求值结果进行匹配。`case num> = 51 && <= 100：` 为True，所以程序输出 `num is greater than 51 and less than 100`。这种类型的 switch 语句可以替代多个 `if else` 子句。
 
 
-## Fallthrough语句
+## Fallthrough 语句
 
 在Go中，每执行完一个 case 后，是会从 switch 语句中跳出来，不再做后续 case 的判断和执行。使用 `fallthrough` 语句可以在已经执行完成的 case 之后，把控制权转移到下一个 case 的执行代码中。
 
-让我们写一个程序来理解 fallthrough。我们的程序将检查输入的数字是否小于50，100或200。例如，如果我们输入75，程序将输出`75 is lesser than 100` 和 `75 is lesser than 200` 。我们用 fallthrough 来实现了这个功能。
+让我们写一个程序来理解 fallthrough。我们的程序将检查输入的数字是否小于50，100或200。例如我们输入75，程序将输出`75 is lesser than 100` 和 `75 is lesser than 200`。我们用 fallthrough 来实现了这个功能。
 
 ``` go   
 package main
@@ -189,14 +189,14 @@ func main() {
 ```
 [在线运行程序](https://play.golang.org/p/svGJAiswQj)
 
-switch 和 case 的表达式不一定是常量。它们也可以在运行过程中通过计算得到。在上面的程序中，num 被初始化为函数 `number()` 的返回值。程序运行到 switch 中时，会计算出 case 的值。`case num < 100：`的结果为 True，所以程序输出 `75 is lesser than 100`。当执行到下一句的 `fallthrough` 时，程序控制直接跳转到下一个 case 的第一个执行逻辑中，所以打印出 `75 is lesser than 200`。最后这个程序的输出是
+switch 和 case 的表达式不一定是常量。它们也可以在运行过程中通过计算得到。在上面的程序中，num 被初始化为函数 `number()` 的返回值。程序运行到 switch 中时，会计算出 case 的值。`case num < 100：`的结果为 True，所以程序输出 `75 is lesser than 100`。当执行到下一句的 `fallthrough` 时，程序控制直接跳转到下一个 case 的第一个执行逻辑中，所以打印出 `75 is lesser than 200`。最后这个程序的输出会是
 
 ```
 75 is lesser than 100  
 75 is lesser than 200 
 ```
 
-**`fallthrough` 语句应该是 case 中放到最后去的执行语句。如果它出现在了 case 语句的中间，编译器将报错：`fallthrough statement out of place`**  
+**`fallthrough` 语句应该是放到 case 中最后去的执行语句。如果它出现在了 case 语句的中间，编译器将会报错：`fallthrough statement out of place`**  
 
 
 这也是我们本教程的最后内容。还有一种 switch 类型称为 **type switch** 。我们会在学习接口的时候再研究这个。
