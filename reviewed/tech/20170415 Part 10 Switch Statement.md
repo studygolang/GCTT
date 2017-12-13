@@ -151,7 +151,7 @@ func main() {
  
 [在线运行程序](https://play.golang.org/p/mMJ8EryKbN)  
 
-在上述代码中，switch 中缺少表达式，因此默认它为 true，true 值会和每一个 case 的求值结果进行匹配。`case num> = 51 && <= 100：` 为 true，所以程序输出 `num is greater than 51 and less than 100`。这种类型的 switch 语句可以替代多个 `if else` 子句。
+在上述代码中，switch 中缺少表达式，因此默认它为 true，true 值会和每一个 case 的求值结果进行匹配。`case num >= 51 && <= 100:` 为 true，所以程序输出 `num is greater than 51 and less than 100`。这种类型的 switch 语句可以替代多个 `if else` 子句。
 
 
 ## Fallthrough 语句
@@ -189,7 +189,7 @@ func main() {
 ```
 [在线运行程序](https://play.golang.org/p/svGJAiswQj)
 
-switch 和 case 的表达式不一定是常量。它们也可以在运行过程中通过计算得到。在上面的程序中，num 被初始化为函数 `number()` 的返回值。程序运行到 switch 中时，会计算出 case 的值。`case num < 100：` 的结果为 True，所以程序输出 `75 is lesser than 100`。当执行到下一句的 `fallthrough` 时，程序控制直接跳转到下一个 case 的第一个执行逻辑中，所以打印出 `75 is lesser than 200`。最后这个程序的输出会是
+switch 和 case 的表达式不一定是常量。它们也可以在运行过程中通过计算得到。在上面的程序中，num 被初始化为函数 `number()` 的返回值。程序运行到 switch 中时，会计算出 case 的值。`case num < 100：` 的结果为 true，所以程序输出 `75 is lesser than 100`。当执行到下一句的 `fallthrough` 时，程序控制直接跳转到下一个 case 的第一个执行逻辑中，所以打印出 `75 is lesser than 200`。最后这个程序的输出会是
 
 ```
 75 is lesser than 100  
@@ -212,4 +212,4 @@ via: https://golangbot.com/switch/
 译者：[vicever](https://github.com/vicever)
 校对：[Noluye](https://github.com/Noluye)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
