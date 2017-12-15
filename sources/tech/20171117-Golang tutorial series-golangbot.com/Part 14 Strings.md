@@ -1,14 +1,14 @@
-## 第14部分：Strings
+## 第14部分：字符串
 ---
 
 
-欢迎阅读 Go 语言辅导系列教程的第 14 部分。
+欢迎阅读 Golang 系列教程第 14 部分。
 
 由于和其他语言相比，字符串在 Go 语言中有着自己特殊的实现，因此在这里需要被特别提出来。
 
 ## 什么是字符串？
-Go 语言中的字符串是一个字节切片。我们可以用 `""` 来创建一个空字符串。让我们来看一个创建并打印字符串的简单示例。
-```java
+Go 语言中的字符串是一个字节切片。把内容放在双引号""之间，我们可以创建一个字符串。。让我们来看一个创建并打印字符串的简单示例。
+```go
 package main
 
 import (  
@@ -20,7 +20,7 @@ func main() {
     fmt.Println(name)
 }
 ```
-[运行](https://play.golang.org/p/o9OVDgEMU0)
+[在线运行程序](https://play.golang.org/p/o9OVDgEMU0)
 
 上面的程序将会输出 `Hello World`
 
@@ -46,9 +46,9 @@ func main() {
     printBytes(name)
 }
 ```
-[运行](https://play.golang.org/p/XbJO2b0ZDW)
+[在线运行程序](https://play.golang.org/p/XbJO2b0ZDW)
 
-上面程序的第8行，`len(s)` 返回字符串中字节的数量，然后我们用了一个 for 循环以 16 进制的形式打印出来。`%x` 格式限定符用于指定16进制编码。上面程序的输出是这样的 `48 65 6c 6c 6f 20 57 6f 72 6c 64`. 这些打印出来的字符是 "Hello World" 以 Unicode UTF-8 编码的结果。为了更好的理解go 中的字符串，需要对 Unicode 和 UTF-8 有基础的理解。我推荐阅读一下[https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/](https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/)来理解一下什么是 Unicode和UTF-8。
+上面程序的第 8 行，**`len(s)` 返回字符串中字节的数量**，然后我们用了一个 for 循环以 16 进制的形式打印这些字节。`%x` 格式限定符用于指定16进制编码。上面的程序输出 `48 65 6c 6c 6f 20 57 6f 72 6c 64`. 这些打印出来的字符是 "Hello World" [以 Unicode UTF-8 编码](https://mothereff.in/utf-8#Hello%20World)的结果。为了更好的理解go 中的字符串，需要对 Unicode 和 UTF-8 有基础的理解。我推荐阅读一下[https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/](https://naveenr.net/unicode-character-set-and-utf-8-utf-16-utf-32-encoding/)来理解一下什么是 Unicode和UTF-8。
 
 让我们稍微修改一下上面的程序，让它打印字符串的每一个字符。
 ```go
@@ -78,14 +78,14 @@ func main() {
     printChars(name)
 }
 ```
-[运行](https://play.golang.org/p/Jss0HG1q80)
+[在线运行程序](https://play.golang.org/p/Jss0HG1q80)
 
 在 `printChars` 方法(第 16行中)中，`%c` 格式限定符用于打印字符串的字符。这个程序输出结果是：
 ```
 48 65 6c 6c 6f 20 57 6f 72 6c 64  
 H e l l o   W o r l d  
 ```
-尽管上面的程序用来获取字符串的每一个字符看上去是一种合理的方式，它也有很严重的 bug。让我拆解这个代码来看看我们做错了什么。
+上面的程序获取字符串的每一个字符，虽然看起来是合法的，但却有一个严重的 bug。让我拆解这个代码来看看我们做错了什么。
 
 ```go
 package main
@@ -118,7 +118,7 @@ func main() {
     printChars(name)
 }
 ```
-[运行](https://play.golang.org/p/UQOVvRVaFH)
+[在线运行程序](https://play.golang.org/p/UQOVvRVaFH)
 
 上面代码输出的结果是：
 ```
@@ -128,10 +128,10 @@ H e l l o   W o r l d
 S e Ã ± o r  
 ```
 
-在上面的成程序的第28行，我们尝试输出 `Señor `的字符，但输出了错误的 S e Ã ± o r . 为什么程序分割 `Hello World` 时表现完美，但分割 `Señor` 就出现了错误呢？这是因为 `ñ` 的Unicode码是 `U+00F1`. 它的 UTF-8 编码占用了两个字节 c3 和 b1。我们打印字符时假定一个一个字符的编码只有一个字节长是错误的。在UTF-8中一个编码可以占用超过一个字节的空间。那么我们如何解决这个问题呢？这就是 `rune` 拯救我们的地方。
+在上面程序的第 28 行，我们尝试输出 **Señor** 的字符，但却输出了错误的 **S e Ã ± o r**。 为什么程序分割 `Hello World` 时表现完美，但分割 `Señor` 就出现了错误呢？这是因为 `ñ` 的 Unicode 代码点（Code Point）是 `U+00F1`。它的 [UTF-8 编码](https://mothereff.in/utf-8#%C3%B1)占用了 c3 和 b1 两个字节。 它的 UTF-8 编码占用了两个字节 c3 和 b1。而我们打印字符时，却假定每个字符的编码只会占用一个字节，这是错误的。在 UTF-8 编码中，一个代码点可能会占用超过一个字节的空间。那么我们该怎么办呢？rune 能帮我们解决这个难题。
 
 ## rune
-rune 是Go 语言的内建类型，它也是int32的别称。在Go语言中，rune相当于一个Unicode编码的值。无论一个字节编码值占用几个字节，都可以用一个rune来表达。让我们修改一下上面的程序，用rune来打印字符。
+rune 是Go 语言的内建类型，它也是int32的别称。在 Go 语言中，rune 表示一个代码点。代码点无论占用多少个字节，都可以用一个 rune 来表示。让我们修改一下上面的程序，用rune来打印字符。
 ```go
 package main
 
@@ -164,7 +164,7 @@ func main() {
     printChars(name)
 }
 ```
-[运行](https://play.golang.org/p/t4z-f8I-ih)
+[在线运行程序](https://play.golang.org/p/t4z-f8I-ih)
 
 在上面代码的第14行，字符串被转化为一个rune切片。然后我们循环打印字符。程序的输出结果是
 ```
@@ -177,7 +177,7 @@ S e ñ o r
 上面的输出结果非常完美，就是我们想要的结果:)。
 
 ## 字符串的 for range 循环
-上面的程序是遍历字符串的非常完美的方式了。但是Go给我们提供了一种用 `for range` 循环的更简单的方法。
+上面的程序是一种遍历字符串的好方法，但是 Go 给我们提供了一种更简单的方法来做到这一点：使用 **for range** 循环。
 ```go
 package main
 
@@ -196,9 +196,9 @@ func main() {
     printCharsAndBytes(name)
 }
 ```
-[运行](https://play.golang.org/p/BPpQ0dZr8W)
+[在线运行程序](https://play.golang.org/p/BPpQ0dZr8W)
 
-在上面程序中的第8行，使用 `for range` 循环遍历了字符串。循环返回的字节位置是当前rune的起始位置。程序的输出结果为：
+在上面程序中的第8行，使用 `for range` 循环遍历了字符串。循环返回的是是当前 rune 的字节位置。程序的输出结果为：
 ```
 S starts at byte 0  
 e starts at byte 1  
@@ -222,11 +222,11 @@ func main() {
     fmt.Println(str)
 }
 ```
-[运行](https://play.golang.org/p/Vr9pf8X8xO)
+[在线运行程序](https://play.golang.org/p/Vr9pf8X8xO)
 
 上面的程序中 `byteSlice` 包含字符串 `Café` 用UTF-8编码后的16进制字节。程序输出结果是`Café`。
 
-那么如果我们有16进制对应的10进制的值。上面的程序还能工作吗？让我们来试一试：
+如果我们把 16 进制换成对应的 10 进制值会怎么样呢？上面的程序还能工作吗？让我们来试一试：
 ```go
 package main
 
@@ -240,11 +240,11 @@ func main() {
     fmt.Println(str)
 }
 ```
-[运行](https://play.golang.org/p/jgsRowW6XN)
+[在线运行程序](https://play.golang.org/p/jgsRowW6XN)
 
 上面程序的输出结果也是`Café`
 
-## 使用 rune 切片构建字符串
+## 用 rune 切片构造字符串
 ```go
 package main
 
@@ -260,7 +260,7 @@ func main() {
 ```
 [运行](https://play.golang.org/p/m8wTMOpYJP)
 
-在上面的程序中 `runeSlice` 包含字符串`Señor`的16进制的Unicode编码值。这个程序将会输出`Señor`。
+在上面的程序中 `runeSlice` 包含字符串`Señor`的16进制的 Unicode 代码点。这个程序将会输出`Señor`。
 
 `字符串的长度`
 [utf8 package](https://golang.org/pkg/unicode/utf8/#RuneCountInString) 包中的 `func RuneCountInString(s string) (n int)` 方法用来获取字符串的长度。这个方法传入一个字符串参数然后返回字符串中的rune的数量。
@@ -285,7 +285,7 @@ func main() {
     length(word2)
 }
 ```
-[运行](https://play.golang.org/p/QGYlHmF7tn)
+[在线运行程序](https://play.golang.org/p/QGYlHmF7tn)
 
 上面程序的输出结果是：
 ```
@@ -310,17 +310,17 @@ func main() {
     fmt.Println(mutate(h))
 }
 ```
-[运行](https://play.golang.org/p/bv4SlSd_hp)
+[在线运行程序](https://play.golang.org/p/bv4SlSd_hp)
 
-在上面程序中的第8行，我们尝试修改这个字符串中的第一个字符为 `'a'`，由于字符串是不可变的，因此这个操作是不被允许的。所以这个程序抛出了一个错误 *main.go:8: cannot assign to s[0]*
+在上面程序中的第 8 行，我们试图把这个字符串中的第一个字符修改为 'a'。由于字符串是不可变的，因此这个操作是非法的。所以程序抛出了一个错误 **main.go:8: cannot assign to s[0]**。
 
-为了变通字符串的不可变性，字符串可以转化为一个rune切片。然后这个切片可以进行任何想要的改变，然后再转化为一个字符串。
-[运行](https://play.golang.org/p/GL1cm17IP1)
+为了修改字符串，可以把字符串转化为一个 rune 切片。然后这个切片可以进行任何想要的改变，然后再转化为一个字符串。
+[在线运行程序](https://play.golang.org/p/GL1cm17IP1)
 
-在上面程序的第7行，`mutate` 方法接收一个 rune 切片参数，然后它将切片的第一个元素修改为 `'a'`，然后将rune切片转化为字符串并返回。这个方法在程序的第13行被调用。`h` 被转化为一个字符串切片然后传递给 `mutate`。这个程序输出 `aello`。
+在上面程序的第 7 行，`mutate` 函数接收一个 rune 切片参数，它将切片的第一个元素修改为 `'a'`，然后将 rune 切片转化为字符串，并返回该字符串。程序的第 13 行调用了该函数。我们把 `h` 转化为一个 rune 切片，并传递给了 `mutate`。这个程序输出 `aello`。
 
-我已经在github上创建了一个程序包含了我们讨论的所有东西。你可以在这[下载](https://github.com/golangbot/stringsexplained)它。
-这就是关于字符串的东西。祝你愉快。
+我已经在 github 上创建了一个程序，里面包含所有我们讨论过的内容。你可以在这[下载](https://github.com/golangbot/stringsexplained)它。
+关于字符串的介绍到此为止。祝你愉快。
 
 ----------------
 
