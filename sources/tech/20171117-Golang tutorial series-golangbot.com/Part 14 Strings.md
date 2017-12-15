@@ -328,6 +328,6 @@ via: https://golangbot.com/strings/
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[译者ID](https://github.com/jliu666)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者ID](https://github.com/Noluye)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
