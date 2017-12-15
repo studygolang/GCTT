@@ -73,7 +73,7 @@ Go 的运行时会在延迟调用函数声明时保存任何传递到延迟调�
 ```go
 func count(i int) (n int) {
 
-  defer func() {
+  defer func(i int) {
     n = n + i
   }(i)
 
