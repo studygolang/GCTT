@@ -2,13 +2,13 @@
 
 你好，今天我想分享一下，在``GO``语言中串联HTTP处理器。
 
-在使用 GO 之前, 我使用 Nodejs + [ExpressJS](http://expressjs.com/en/4x/api.html) 去编写HTTP服务器应用。 这个框架提供了很简单的方法去使用中间件和串联很多路由节点，因此,不必指定完整的路由路径来为其添加处理程序。
+在使用 GO 之前, 我使用 Nodejs + [ExpressJS](http://expressjs.com/en/4x/api.html) 去编写HTTP服务器应用。 这个框架提供了很简单的方法去使用中间件和串联很多路由节点，因此，不必指定完整的路由路径来为其添加处理程序。
 
 ![图1](https://cdn-images-1.medium.com/max/1600/1*HCztzuqe1E0yZN6_UqVb4A.png)
 
-这个想法是通过分割你的路由和处理每一个部分，串联到处理器,每个处理程序只负责一部分。 它理解起来非常简单且非常容易使用和维护,所以首先我尝试在 GO 中做一些类似的事情。
+这个想法是通过分割你的路由和处理每一个部分，串联到处理器，每个处理程序只负责一部分。 它理解起来非常简单且非常容易使用和维护，所以首先我尝试在 GO 中做一些类似的事情。
 
-开箱既用, GO 提供了一个很棒的 [http](https://golang.org/pkg/net/http) 包，它包含了很多不同的工具，当然, 还有 [``ListenAndServe``](https://golang.org/pkg/net/http/#ListenAndServe) 方法，它在给定的端口上启动一个 HTTP 服务器并且通过 [``Handler``](https://golang.org/pkg/net/http/#Handler) 处理它，所以,这个 [``Handler``](https://golang.org/pkg/net/http/#Handler) 是什么？
+开箱既用, GO 提供了一个很棒的 [http](https://golang.org/pkg/net/http) 包，它包含了很多不同的工具，当然, 还有 [``ListenAndServe``](https://golang.org/pkg/net/http/#ListenAndServe) 方法，它在给定的端口上启动一个 HTTP 服务器并且通过 [``Handler``](https://golang.org/pkg/net/http/#Handler) 处理它，所以，这个 [``Handler``](https://golang.org/pkg/net/http/#Handler) 是什么？
 
 ```go
 type Handler interface {
@@ -20,7 +20,7 @@ type Handler interface {
 
 但是，如果我们想为每一个根路由定义一个处理程序，例如 /api/，/home，/about 等，要怎么做？
 
-[``ServeMux``](https://golang.org/pkg/net/http/#ServeMux) - HTTP请求复用器，可以帮助你处理这一点. 使用 [``ServeMux``](https://golang.org/pkg/net/http/#ServeMux),我们可以指定处理器方法来服务任何给定的路由, 但问题是我们不能做任何嵌套的 [``ServeMux``](https://golang.org/pkg/net/http/#ServeMux)。
+[``ServeMux``](https://golang.org/pkg/net/http/#ServeMux) - HTTP请求复用器，可以帮助你处理这一点. 使用 [``ServeMux``](https://golang.org/pkg/net/http/#ServeMux)，我们可以指定处理器方法来服务任何给定的路由，但问题是我们不能做任何嵌套的 [``ServeMux``](https://golang.org/pkg/net/http/#ServeMux)。
 
 文档中的例子:
 
@@ -38,9 +38,9 @@ mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 })
 ```
 
-我们可以看到，在这个例子中为 ``/api/`` 路由自定义了一个处理器并且定义了一个处理方法给根路由。因此任何以 ``/api/*`` 开头的路由都将使用 apiHandler 处理器方法。 但是如果我们需要串联一个 usersHandler 到 apiHandler，不通过任何的头脑风暴和编码,我们无法做到这点。
+我们可以看到，在这个例子中为 ``/api/`` 路由自定义了一个处理器并且定义了一个处理方法给根路由。因此任何以 ``/api/*`` 开头的路由都将使用 apiHandler 处理器方法。 但是如果我们需要串联一个 usersHandler 到 apiHandler，不通过任何的头脑风暴和编码，我们无法做到这点。
 
-为此我写了一个小库 - [gosplitter](https://github.com/goncharovnikita/gosplitter), 它只提供一个公共方法 ``Match(url string, mux *http.ServeMux, http.Handler|http.HandlerFunc|interface{})`` - 他匹配给定的路由部分 和处理器,处理方法或你给定的任何结构！
+为此我写了一个小库 - [gosplitter](https://github.com/goncharovnikita/gosplitter)，它只提供一个公共方法 ``Match(url string, mux *http.ServeMux, http.Handler|http.HandlerFunc|interface{})`` - 他匹配给定的路由部分和处理器、处理方法或你给定的任何结构！
 
 让我们来看一个例子:
 
@@ -185,7 +185,7 @@ func main() {
 
 <!-- Thanks for reading! Any suggestions and critiques are welcome! -->
 
-感谢阅读, 欢迎提出任何建议和批评!
+感谢阅读，欢迎提出任何建议和批评!
 
 
 
