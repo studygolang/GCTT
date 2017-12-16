@@ -1,6 +1,8 @@
+已发布：https://studygolang.com/articles/11967
+
 # 用不到 100 行的 Golang 代码实现 HTTP(S) 代理
 
-![](header.jpeg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/http-s-proxy/header.jpeg)
 
 我们的目标是实现一个能处理 HTTP 和 HTTPS 的[代理服务器](https://en.wikipedia.org/wiki/Proxy_server)。代理 HTTP 请求的过程其实就是一个解析请求、将该请求转发到目的服务器、读取目的服务器响应并将其传回原客户端的过程。这个过程只需要内置的 HTTP 服务器和客户端（[net/http](https://golang.org/pkg/net/http/)）就能实现。HTTPS 的不同之处在于使用了名为 “HTTP CONNECT 隧道”的技术。首先，客户端用 HTTP CONNECT 方法发送请求以建立到目的服务器的隧道。当这个由两个 TCP 连接组成的隧道就绪，客户端就开始与目的服务器的定期握手以建立安全的连接，之后就是发送请求与接收响应。
 
@@ -8,7 +10,7 @@
 
 我们的代理是一个 HTTPS 服务器（当使用 `--proto https` 参数），因而需要证书和私钥。我们使用自签名证书。用如下脚本生成：
 
-```console
+```bash
 #!/usr/bin/env bash
 case `uname -s` in
     Linux*)     sslConfig=/etc/ssl/openssl.cnf;;
@@ -30,13 +32,13 @@ openssl req \
     -days 3650
 ```
 
-需要让你的操作系统信任该证书。OS X 系统可以用 Keychain Access 来处理，参见 [https://tosbourn.com/getting-os-x-to-trust-self-signed-ssl-certificates/](https://tosbourn.com/getting-os-x-to-trust-self-signed-ssl-certificates/)。
+需要让你的操作系统信任该证书。OS X 系统可以用 Keychain Access 来处理，参见  https://tosbourn.com/getting-os-x-to-trust-self-signed-ssl-certificates
 
 ## HTTP
 
 我们用[内置的 HTTP 服务器和客户端](https://golang.org/pkg/net/http/)实现对 HTTP 的支持。“代理”在其中的角色是处理 HTTP 请求、转发该请求到目的服务器并将响应返回到原客户端。
 
-![](./http_proxy.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/http-s-proxy/http_proxy.png)
 
 ## HTTP CONNECT 隧道
 
@@ -44,7 +46,7 @@ openssl req \
 
 HTTP CONNECT 方法告知代理服务器与目的服务器建立 TCP 连接，并在连接成功建立后代理起止于客户端的 TCP 流。这种方式，代理服务器不会终止 SSL 连接，而是简单地在客户端和目的服务器之间传递数据。所以客户端和目的服务器之间的连接是安全的。
 
-![](./http_connect_tunneling.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/http-s-proxy/http_connect_tunneling.png)
 
 ## 实现
 
@@ -132,7 +134,7 @@ func main() {
 }
 ```
 
-> 以上展示的代码并非生产级别的解决方案。缺少对 [hop-by-hop 头信息](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#hbh)的处理，在两个连接或由 `net/http` 暴露的服务端口之间复制数据的过程中没有设置过期时间（更多信息见：["The complete guide to Go net/http timeouts"](https://blog.cloudflare.com/the-complete-guide-to-golang-net-http-timeouts/))。
+> 以上展示的代码并非生产级别的解决方案。缺少对 [hop-by-hop 头信息](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#hbh)的处理，在两个连接或由 `net/http` 暴露的服务端口之间复制数据的过程中没有设置过期时间（更多信息见：["The complete guide to Go net/http timeouts"](https://blog.cloudflare.com/the-complete-guide-to-golang-net-http-timeouts/))（译注：中译文[ Go net/http 超时机制完全手册](https://studygolang.com/articles/9339))。
 
 我们的服务器在接收请求的时候，会在处理 HTTP 请求和 HTTP CONNECT 隧道请求之间二选一，通过如下代码实现：
 
@@ -210,4 +212,4 @@ via: https://medium.com/@mlowicki/http-s-proxy-in-golang-in-less-than-100-lines-
 译者：[dongkui0712](https://github.com/dongkui0712)
 校对：[rxcai](https://github.com/rxcai)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
