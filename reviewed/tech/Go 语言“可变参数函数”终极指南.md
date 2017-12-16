@@ -1,17 +1,18 @@
+已发布：https://studygolang.com/articles/11965
+
 # Go 语言“可变参数函数”终极指南
 
-![Variadic Funcs](http://www.z4a.net/images/2017/12/03/title.png)
-
-
+![Variadic Funcs](https://raw.githubusercontent.com/studygolang/gctt-images/master/variadic-func/title.png)
 
 ### 什么是可变参数函数？
 
 可变参数函数即其参数数量是可变的 —— 0 个或多个。声明可变参数函数的方式是在其参数类型前带上省略符（三个点）前缀。
+
 >译者注：“可变参数函数”在一些翻译中也称“变长函数”，本篇译文中采用“可变参数函数“
 
-![what is variadic func](http://www.z4a.net/images/2017/12/03/what_is_variadic_func.png)
+![what is variadic func](https://raw.githubusercontent.com/studygolang/gctt-images/master/variadic-func/what_is_variadic_func.png)
 
-<p align="center">该语句声明了一个可变参数函数及其以“names”命名的字符串类型可变参数</p>
+<p align="center">该语句声明了一个可变参数函数及其以 “names” 命名的字符串类型可变参数</p>
 
 ---
 
@@ -40,22 +41,19 @@ toFullname()
 
 // output: ""
 ```
-
-[![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
-
-[run the code]:https://play.golang.org/p/qqnQkBvQBP
+[在线运行代码](https://play.golang.org/p/qqnQkBvQBP)
 
 ---
 
 #### 可变参数的使用场景
 
-* 避免创建为了仅作传入参数用的临时切片
-* 参数数量未知
+* 避免创建仅作传入参数用的临时切片
+* 当参数数量未知
 * 传达你希望增加可读性的意图
 
 #### 示例
 
-从 Go 语言标准库中的 ``fmt.Println`` 函数来理解其易用性的实现。
+从 Go 语言标准库中的 `fmt.Println` 函数来理解其易用性的实现。
 
 它通过可变参数函数来接收非固定数量的参数。
 
@@ -83,29 +81,23 @@ fmt.Println("hello")
 fmt.Println()
 ```
 
-
-
 > 之后，我们将更详细的讨论可变参数函数及演示一些常见的实际使用方式和场景
-
-
 
 ### ✪ 切片和可变参数函数
 
 可变参数函数会在其内部创建一个”新的切片”。事实上，可变参数是一个简化了切片类型参数传入的[*语法糖*](https://en.wikipedia.org/wiki/Syntactic_sugar)。
 
-![slices and the variadic funcs](http://www.z4a.net/images/2017/12/03/slices_and_variadic_funcs.png)
+![slices and the variadic funcs](https://raw.githubusercontent.com/studygolang/gctt-images/master/variadic-func/slices_and_variadic_funcs.png)
 
-[![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
-
-[run the code]: https://play.golang.org/p/bBaWFVBsWT
+[在线运行代码](https://play.golang.org/p/bBaWFVBsWT)
 
 ---
 
 #### 不传参数
 
-当你不传入参数的时候，可变参数会成为一个空值切片（ ``nil`` )。
+当你不传入参数的时候，可变参数会成为一个空值切片（ `nil` )。
 
-![using without params](http://www.z4a.net/images/2017/12/03/using_without_params.png)
+![using without params](https://raw.githubusercontent.com/studygolang/gctt-images/master/variadic-func/using_without_params.png)
 
 所有的非空切片都有内建的数组，而空值切片则没有。
 
@@ -119,9 +111,9 @@ func toFullname(names ...string) []string {
 
 然而，当你向空值切片添加元素时，它会自动内建一个包含该元素的数组。这个切片也就再也不是一个空值切片了。
 
-Go 语言的内置函数“ ``append`` ”用于向一个已有的切片追加元素，并返回更新后的切片。
+Go 语言的内置函数 “`append`” 用于向一个已有的切片追加元素，并返回更新后的切片。
 
-``append`` 本身也是一个可变参数函数：
+`append` 本身也是一个可变参数函数：
 
 ```go
 func toFullname(names ...string) []string {
@@ -132,16 +124,13 @@ toFullname()
 
 // output: [hey what's up?]
 ```
-
-[![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
-
-[run the code]: https://play.golang.org/p/0RRDuGQWs_
+[在线运行代码](https://play.golang.org/p/0RRDuGQWs_)
 
 ---
 
 #### 传入已有的切片
 
-你可以通过向一个已有的切片添加可变参数运算符” … “后缀的方式将其传入可变参数函数。
+你可以通过向一个已有的切片添加可变参数运算符 ”…“ 后缀的方式将其传入可变参数函数。
 
 ```go
 names := []string{"carl", "sagan"}
@@ -159,7 +148,7 @@ toFullname("carl", "sagan")
 
 **不过，这里还是有一点差异：**函数会在内部直接使用这个传入的切片，并不会创建一个的新的。更多详见下方。
 
-![no new slice](http://www.z4a.net/images/2017/12/03/how_to_pass_an_exsiting_slice.png)
+![no new slice](https://raw.githubusercontent.com/studygolang/gctt-images/master/variadic-func/how_to_pass_an_exsiting_slice.png)
 
 你也可以像下面这样将数组转化成切片后传入可变参数函数：
 
@@ -170,8 +159,6 @@ toFullname(names[:]...)
 ```
 
 ---
-
-
 
 ### 一些切片传入后的特异表现
 
@@ -204,27 +191,25 @@ func toFullname(names ...string) string {
 []string{"dennis", "ritchie"}
 ```
 
-这是因为，传入的切片和函数内部使用的切片共享同一个内建数组，因此在函数内部改变这个数组的值同样会影响到传入的切片：
+这是因为，传入的切片和函数内部使用的切片共享同一个底层数组，因此在函数内部改变这个数组的值同样会影响到传入的切片：
 
-![spooky action](http://www.z4a.net/images/2017/12/03/passed_slice_spooky_action_in_distance.png)
+![spooky action](https://raw.githubusercontent.com/studygolang/gctt-images/master/variadic-func/passed_slice_spooky_action_in_distance.png)
 
 如果你直接传入参数（不使用切片），自然就不会产生这个现象了。
 
-[![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
-
-[run the code]: https://play.golang.org/p/_-kaUnLlT0
+[在线运行代码](https://play.golang.org/p/_-kaUnLlT0)
 
 ---
 
 #### 多切片动态传入
 
-假设我们想在传参的同时在切片前端加上“ mr. ”，然后再被函数使用。
+假设我们想在传参的同时在切片前端加上 “mr.”，然后再被函数使用。
 
 ```go
 names := []string{"carl", "sagan"}
 ```
 
-于是我们先将这个切片展开，并通过 ``append`` 函数追加到 ``[]string{"mr.")``，然后将扩展后的切片展开供 ``toFullname`` 可变参数函数使用：
+于是我们先将这个切片展开，并通过 `append` 函数追加到 `[]string{"mr.")`，然后将扩展后的切片展开供 `toFullname` 可变参数函数使用：
 
 ```go
 toFullname(append([]string{"mr."}, names...)...)
@@ -247,10 +232,7 @@ toFullname([]string{"mr.", "carl", "sagan"}...)
 
 toFullname("mr.", "carl", "sagan")
 ```
-
-[![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
-
-[run the code]: https://play.golang.org/p/iTtz0SG_m5
+[在线运行代码](https://play.golang.org/p/iTtz0SG_m5)
 
 ---
 
@@ -265,29 +247,24 @@ func f(nums ...int) []int {
 }
 ```
 
-当你向 ``f`` 函数传入一个切片，它将返回一个新的切片。而传入的切片和返回的切片便产生了关联。对它们其中的的任何一方进行的所有操作都会影响到另一方（如前文所述）。
+当你向 `f` 函数传入一个切片，它将返回一个新的切片。而传入的切片和返回的切片便产生了关联。对它们其中的的任何一方进行的所有操作都会影响到另一方（如前文所述）。
 
 ```go
 nums  := []int{23, 45, 67}
 nums2 := f(nums...)
 ```
 
-这里，``nums`` 和 ``nums2`` 拥有相同的元素。因为它们指向同一个内建数组。
+这里，`nums` 和 `nums2` 拥有相同的元素。因为它们指向同一个底层数组。
 
 ```go
 nums  = []int{10, 45, 67}
 nums2 = []int{10, 45, 67}
 ```
-
-[![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
-
-[run the code]: https://play.golang.org/p/Jun14DYWvq
-
-<p align="center">👉 包含对内建数组的详细阐述</p>
+[在线运行代码](https://play.golang.org/p/Jun14DYWvq) 👉 包含对底层数组的详细阐述
 
 ---
 
-#### 扩展符使用的反模式
+#### 扩展操作符的反例
 
 如果你的某些函数只期望接收数量可变的参数，那么请使用可变参数函数而不是声明一个接收切片的普通函数。
 
@@ -298,10 +275,7 @@ toFullname([]string{"rob", "pike"}...)
 // 正例
 toFullname("rob", "pike")
 ```
-
-[![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
-
-[run the code]: https://play.golang.org/p/oKQjwotLC_
+[在线运行代码](https://play.golang.org/p/oKQjwotLC_)
 
 ---
 
@@ -310,33 +284,29 @@ toFullname("rob", "pike")
 你可以通过使用可变参数的长度来调整函数的行为。
 
 ```go
-                             func ToIP(parts ...byte) string {
+func ToIP(parts ...byte) string {
   parts = append(parts, make([]byte, 4-len(parts))...)
-  
-  return fmt.Sprintf("%d.%d.%d.%d",
-                    parts[0], parts[1], parts[2], parts[3])
+  return fmt.Sprintf("%d.%d.%d.%d", 
+    parts[0], parts[1], parts[2], parts[3])
 }
 ```
 
-``ToIP`` 函数接收可变参数 ``parts``，然后根据 ``parts`` 的长度返回一个字符串类型的 IP 地址，并且具有缺省值—— 0。
+`ToIP` 函数接收可变参数 `parts`，然后根据 `parts` 的长度返回一个字符串类型的 IP 地址，并且具有缺省值 —— 0。
 
 ```go
 ToIP(255) // 255.0.0.0
 ToIP(10, 1) // 10.1.0.0
 ToIP(127, 0, 0, 1) //127.0.0.1
 ```
-
-[![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
-
-[run the code]: https://play.golang.org/p/j9RcLvbs3K
+[在线运行代码](https://play.golang.org/p/j9RcLvbs3K)
 
 ---
 
 ### ✪ 可变参数函数的函数签名
 
-虽然可变参数函数只是一种语法糖，但由它的函数签名——[函数类型推断（ type identity ）]()—— 与以切片作为参数的普通函数并不相同。
+虽然可变参数函数只是一种语法糖，但由它的函数签名——[函数类型推断（ type identity ）](https://golang.org/ref/spec#Type_identity)—— 与以切片作为参数的普通函数并不相同。
 
-举个例子，``[]string`` 和 ``…string`` 有什么区别呢？
+举个例子，`[]string` 和 `…string` 有什么区别呢？
 
 #### 可变参数函数的签名：
 
@@ -373,10 +343,7 @@ slicey = variadic
 
 // error: type mismatch
 ```
-
-[![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
-
-[run the code]: https://play.golang.org/p/fsZYGgTyvF
+[在线运行代码](https://play.golang.org/p/fsZYGgTyvF)
 
 ---
 
@@ -401,14 +368,11 @@ func toFullname(id int, names ...string, age int) string {}
 
 // error
 ```
-
-[![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
-
-[run the code]: https://play.golang.org/p/TlbDYapOCD
+[在线运行代码](https://play.golang.org/p/TlbDYapOCD)
 
 #### 接受多类型参数
 
-举例来说，Go 语言标准库中的 ``Printf`` 可变参数函数可以接受任何类型的参数，其实现是通过将类型声明为一个空的接口类型（ interface type ）。如此你便可以使用空接口类型让你的函数接受类型和数量都不确定的参数。
+举例来说，Go 语言标准库中的 `Printf` 可变参数函数可以接受任何类型的参数，其实现是通过将类型声明为一个空的接口类型（ interface type ）。如此你便可以使用空接口类型让你的函数接受类型和数量都不确定的参数。
 
 ```go
 func Printf(format string, a ...interface{}) (n int, err error) {
@@ -430,21 +394,21 @@ fmt.Printf("%d %s %f", 1, "string", 3.14)
 func Printf(format string , a ...interface{})
 ```
 
-**这是因为 format 是一个必要的参数**。``Printf`` 强制要求提供这个参数，否则会编译失败。
+**这是因为 format 是一个必要的参数**。`Printf` 强制要求提供这个参数，否则会编译失败。
 
-如果它将所有参数都通过一个可变参数来获取，那么可能导致调用者可能并没有提供必要的 format 参数，其可读性也不如一目了然的传参方式。这种签名清晰地告知了 ``Printf`` 所需要的一切。
+如果它将所有参数都通过一个可变参数来获取，那么可能导致调用者可能并没有提供必要的 format 参数，其可读性也不如一目了然的传参方式。这种签名清晰地告知了 `Printf` 所需要的一切。
 
-同时，当调用者没有传入 a 参数的时候，其函数内部会避免创建一个不必要的切片 —— 而是向我们之前看到的一样，传入一个空值切片（ nil ）。这样可能对 ``Printf`` 来说并没有太多益处，但这对你的代码可以非常有用。
+同时，当调用者没有传入 a 参数的时候，其函数内部会避免创建一个不必要的切片 —— 而是向我们之前看到的一样，传入一个空值切片（ nil ）。这样可能对 `Printf` 来说并没有太多益处，但这对你的代码可以非常有用。
 
 你也能将这个规则实践于你的代码。
 
 #### 小心空接口类型
 
-`` interface{}`` 同时被叫做*空接口类型*，意义在于其语义本身能绕过 Go 语言的静态类型检查。但在不必要的情况下使用它会使你得不偿失。
+`interface{}` 同时被叫做*空接口类型*，意义在于其语义本身能绕过 Go 语言的静态类型检查。但在不必要的情况下使用它会使你得不偿失。
 
 譬如，它可能强制让你使用[*反射*](https://blog.golang.org/laws-of-reflection)，而这是一个运行时特性（而非安全且快速度的编译时）。你可能需要自行检查类型错误，而不是让编译器来为你寻找他们。
 
-> *使用空接口前务必三思。基于清晰的类型或接口之上来集成你所需的函数行为会更好。*
+> *使用空接口前务必三思。基于清晰的类型或接口之上来实现你所需的函数行为会更好。*
 
 #### 通过空接口的方式向可变参数传递切片
 
@@ -479,10 +443,7 @@ fmt.Printf(ihellos...)
 
 // output: [hi hello merhaba]
 ```
-
-[![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
-
-[run the code]: https://play.golang.org/p/8uRHsHFKSx
+[在线运行代码](https://play.golang.org/p/8uRHsHFKSx)
 
 ---
 
@@ -509,18 +470,13 @@ format(" alan turing ", trim, last, strings.ToUpper)
 
 // output: TURING
 ```
+[在线运行代码](https://play.golang.org/p/kCOP6_5h-t) 在线源码包含以上代码的运行原理。
 
-[![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
-
-[run the code]: https://play.golang.org/p/kCOP6_5h-t
-
-<p align="center">包含以上代码的运行原理</p>
-
-当然，你也可以使用 channel，struct 等方式实现，而非函数式的链式调用规则。在[这里](https://golang.org/pkg/io/#MultiReader)和[这里](https://golang.org/src/text/template/parse/parse.go?s=1642:1753#L41)查看示例。
+当然，你也可以使用 channel、struct 等方式实现，而非函数式的链式调用规则。在[这里](https://golang.org/pkg/io/#MultiReader)和[这里](https://golang.org/src/text/template/parse/parse.go?s=1642:1753#L41)查看示例。
 
 ---
 
-使用切片类型的函数返回值作为可变参数
+使用切片类型的函数返回值作为可变参数。
 
 我们重用上面的 “format func” 来创建一个可重用的格式化管道构建器：
 
@@ -545,18 +501,13 @@ format(" alan string ", build("lastUpper")...)
 
 // output: TURING
 ```
-
-[![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
-
-[run the code]: https://play.golang.org/p/0peZRSOVWh
-
-<p align="center">查看以上代码片段的详细实现</p>
+[在线运行代码](https://play.golang.org/p/0peZRSOVWh) 包含以上代码片段的详细实现
 
 ---
 
 #### 可变配置模式
 
-你也许在其他面对对象编程语言中已经熟悉此设计模式，而它于2014年在 Go 语言中被 [Rob Pike](https://commandcenter.blogspot.com.tr/2014/01/self-referential-functions-and-design.html) 再次推广。它与[访问者模式](https://en.wikipedia.org/wiki/Visitor_pattern)有些相似。
+你也许在其他面向对象编程语言中已经熟悉此设计模式，而它于 2014 年在 Go 语言中被 [Rob Pike](https://commandcenter.blogspot.com.tr/2014/01/self-referential-functions-and-design.html) 再次推广。它与[访问者模式](https://en.wikipedia.org/wiki/Visitor_pattern)有些相似。
 
 该示例也许有些超前。有任何不清楚的地方可以提问。
 
@@ -621,23 +572,16 @@ logger.Info("1 second passed")
 
 // [ZOMBIE CONTROL] INFO: 1 second passed
 ```
-
-[![run the code]](http://www.z4a.net/images/2017/11/27/run_the_code.png)
-
-[run the code]: https://play.golang.org/p/X2XHSdYgdq
-
-<p align="center">查看以上代码片段的详细实现</p>
+[在线运行代码](https://play.golang.org/p/X2XHSdYgdq) 包含以上代码片段的详细实现
 
 ---
 
 ### ✪ 无穷无尽的精神食粮！
 
-* 在 Go 语言 2 中，有一些改变可变参数函数表现的计划，看[这里](https://github.com/golang/go/issues/15209)，[这里](https://github.com/golang/go/issues/18605)，还有[这里](https://github.com/golang/go/issues/19218)。
+* 在 Go 2 中，有一些改变可变参数函数表现的计划，看[这里](https://github.com/golang/go/issues/15209)，[这里](https://github.com/golang/go/issues/18605)，还有[这里](https://github.com/golang/go/issues/19218)。
 * 你可以在 Go 语言标准文档里找到更正式的可变参数函数指南，看[这里](https://golang.org/ref/spec#Passing_arguments_to_..._parameters)，[这里](https://golang.org/ref/spec#Appending_and_copying_slices)，[这里](https://golang.org/ref/spec#Appending_and_copying_slices)，还有[这里](https://golang.org/ref/spec#Type_identity)。
 * [通过 C 语言使用可变参数函数](https://sunzenshen.github.io/tutorials/2015/05/09/cgotchas-intro.html)
 * 你能在[这里](https://rosettacode.org/wiki/Variadic_function)看找到多种语言的可变参数函数声明。尽情享用吧！
-
-
 
 我们下个教程见！
 
@@ -647,6 +591,6 @@ via: https://blog.learngoprogramming.com/golang-variadic-funcs-how-to-patterns-3
 
 作者：[Inanc Gumus](https://blog.learngoprogramming.com/@inanc)
 译者：[shockw4ver](https://github.com/shockw4ver)
-校对：[rxcai](https://github.com/rxcai)
+校对：[rxcai](https://github.com/rxcai) [polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
