@@ -250,6 +250,6 @@ via: https://blog.learngoprogramming.com/gotchas-of-defer-in-go-1-8d070894cb01
 
 作者：[Inanc Gumus](https://blog.learngoprogramming.com/@inanc)
 译者：[yujiahaol68](https://github.com/yujiahaol68)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
