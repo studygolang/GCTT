@@ -174,4 +174,4 @@ via: https://golangbot.com/functions/
 译者：[Junedayday](https://github.com/Junedayday)
 校对：[Unknwon](https://github.com/Unknwon)、[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
