@@ -442,7 +442,8 @@ web 服务器也可以产生30s 的CPU性能分析文件，访问地址[http://l
 
 在访问`/debug/pprof/`时，看不到 CPU 性能分析的链接。因为做 CPU 性能分析需要调用特殊的 API（也就是，`StartCPUProfile` 和 `StopCPUProfile` 函数），只有调用后才产生输出流，最终下载到你的文件系统。
 
-web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060/debug/pprof/trace?seconds=5](http://localhost:6060/debug/pprof/trace?seconds=5)（与 CPU 性能分析一样的原因，都没有列出来，调用后才产生输出数据，然后下载到你的文件系统）
+web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060/debug/pprof/trace?seconds=5](http://localhost:6060/debug/pprof/trace?seconds=5)（与 CPU 性能分析一样的原因，都没有列出来，调用后才产生输出数据，然后下载到你的文件系统）。这个“追踪”文件需要用 go tool trace 进行解析（后面的章节会讲解 go tool trace ）。
+
 
 > 注意：pprof的选项信息可以参考：[golang.org/pkg/net/http/pprof/](https://golang.org/pkg/net/http/pprof/)
 
