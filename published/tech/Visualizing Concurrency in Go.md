@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/11908
+
 # 可视化 Go 语言中的并发
 
 本文作者提供了在 2016 的 GopherCon 上的关于 Go 并发可视化的[主题演讲视频](https://www.youtube.com/watch?v=KyuFeiG3Y60)。
