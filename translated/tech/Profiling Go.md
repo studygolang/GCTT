@@ -585,11 +585,11 @@ web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060
 
 更多信息请参考[this post](https://rakyll.org/pprof-ui/)
 
-简言之，你可以从  GitHub 获取最新的 pprof 工具，使用的时候加入`-http`标签（例如，`-http=:8080`）
+简言之，你可以从 GitHub 获取最新的 pprof 工具，使用的时候加入`-http`标签（例如，`-http=:8080`）
 
 ## Trace跟踪
 
-[Trace](https://golang.org/cmd/trace/) 是一款可视化的工具，用于分析跟踪（trace）数据。它在时间维度上分析程序的行为。
+[Trace](https://golang.org/cmd/trace/) 是一款可视化的工具，用于分析跟踪（trace）数据。它适用于分析程序在各时点的行为,而不是提供一个总体信息。
 
 > 注意：如果要追查执行慢的函数或者占用CPU时间最多的代码，你还是要用 `go tool pprof` 命令。 
 
