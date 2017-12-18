@@ -31,7 +31,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 
 <tr>
 
-<td>[ReadMemStats]</td>
+<td>ReadMemStats</td>
 
 <td>- 简单、快速、易用。<br/> 
 - 仅描述内存使用情况。</td>
@@ -42,10 +42,10 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 
 <tr>
 
-<td>[pprof]</td>
+<td>pprof</td>
 
 <td>- 详述CPU和内存使用情况。<br/>
-- 可以远程分析。<br/>  
+- 可以远程分析。<br/>
 - 可以生成图像。</td>
 
 <td>- 需要改代码。<br/>  
@@ -55,14 +55,14 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 
 <tr>
 
-<td>[trace]</td>
+<td>trace</td>
 
-<td>- 帮助分析过程数据。<br/>  
-- 强大的调试界面。<br/>  
+<td>- 帮助分析过程数据。<br/>
+- 强大的调试界面。<br/>
 - 易实现问题区域的可视化。</td>
 
-<td>- 需要改代码。<br/>  
-- UI界面复杂。<br/>  
+<td>- 需要改代码。<br/>
+- UI界面复杂。<br/>
 - 理解需要一点时间。</td>
 
 </tr>
@@ -175,6 +175,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 [Pprof](https://github.com/google/pprof)是一款可视化的性能分析工具。用于确定应用程序运行过程中的 CPU 和内存使用情况。
 
 可以通过下面的方式安装：
+
 `go get github.com/google/pprof`
 
 我们先理解性能概要（profile）的定义：
@@ -190,7 +191,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 
 ### 在开发时生成 .profile 
 
-在这一段，我们研究一下性能分析，涵盖CPU和内存的分配情况。从 CPU 性能分析开始。
+在这一段，我们研究一下性能分析，涵盖 CPU 和内存的分配情况。从 CPU 性能分析开始。
 
 #### CPU 分析
 
@@ -224,9 +225,13 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 ```
 > 注意：为了简单明了，我们使用了 `os.Stdout` （不在程序中创建文件）而是利用 shell 重定向输出，用于创建性能概要文件。
   
-然后编译、运行，将性能数据保存到文件:  `go build -o app && time ./app > cpu.profile`
+然后编译、运行，将性能数据保存到文件:  
 
-最后，使用go tool命令，以交互的方式检查数据：`go tool pprof cpu.profile`
+`go build -o app && time ./app > cpu.profile`
+
+最后，使用go tool命令，以交互的方式检查数据：
+
+`go tool pprof cpu.profile`
 
 可以看到交互提示符 (pprof)，执行 `top` 命令，输出如下信息：
 ```
@@ -314,9 +319,13 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
     	pprof.WriteHeapProfile(os.Stdout)
     }
 ```
-再一次，我们编译、执行程序，并重定向 stdout 到文件（为简单起见），如果你愿意，也可以在程序中动态创建一个文件： `go build -o app && time ./app > memory.profile`
+再一次，我们编译、执行程序，并重定向 stdout 到文件（为简单起见），如果你愿意，也可以在程序中动态创建一个文件： 
 
-现在我们就可以运行 pprof ，以交互的方式查看内存分析数据:  `go tool pprof memory.profile`
+`go build -o app && time ./app > memory.profile`
+
+现在我们就可以运行 pprof ，以交互的方式查看内存分析数据:  
+
+`go tool pprof memory.profile`
 
 运行 top 命令，可以看到下面的输出：
 ```
@@ -402,7 +411,9 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
     	wg.Wait() // 为了 pprof 分析的正常运行，阻止`main`函数退出
     }
 ```
-编译、运行这个程序，通过路径 `/debug/pprof/` 可以访问性能分析数据，完整路径：`http://localhost:6060/debug/pprof/`
+编译、运行这个程序，通过路径 `/debug/pprof/` 可以访问性能分析数据，完整路径：
+
+`http://localhost:6060/debug/pprof/`
 
 你应该可以看到类似下面的内容：
 ```
@@ -468,9 +479,13 @@ web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060
 ```
 理论上，你需要在命令行使用`go tool pprof`。这样以交互的方式，更容易解释和查询数据。
 
-为了这样做，先要运行二进制文件，然后在 shell 中执行：`go tool pprof http://localhost:6060/debug/pprof/<.profile>`
+为了这样做，先要运行二进制文件，然后在 shell 中执行：
 
-例如，我们要看一下堆内存分析数据：`go tool pprof http://localhost:6060/debug/pprof/heap`
+`go tool pprof http://localhost:6060/debug/pprof/<.profile>`
+
+例如，我们要看一下堆内存分析数据：
+
+`go tool pprof http://localhost:6060/debug/pprof/heap`
 
 在这你可以看到交互提示符：
 ```
@@ -625,7 +640,7 @@ web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060
 ```
 默认的浏览器会自动打开下面的地址：[http://127.0.0.1:60331](http://127.0.0.1:60331/)
 
-> 注意：最好用 Chrome 浏览器，因为 `go tool trace` 设计上基于 Chrome，兼容性最好。
+> 注意：最好用 Chrome 浏览器，因为兼容性最好。
 
 浏览器的页面上会有如下的链接：
 
@@ -660,19 +675,19 @@ web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060
 
 ### 堆
 
-随着程序继续运行，我们最终会看到一些有冲突的地方，整体的内存分配会变成200mb，然后反复在100mb和200mb之间变化（因为 GC 并不是一直在运行）。当运行到程序的结尾时，我们看到500mb的分配尖峰，整体内存分配量达到600mb。
+随着程序继续运行，我们最终会看到一些有冲突的地方，整体的内存分配会变成 200mb ，然后反复在 100mb 和 200mb 之间变化（因为 GC 并不是一直在运行）。当运行到程序的结尾时，我们看到 500mb 的分配尖峰，整体内存分配量达到 600mb 。
 
-但是在这一点时，如果点击堆内存尖峰，在下方的预览窗口，我们可以看到“NextGC”在运行，表明全部内存分配会被清零（因为已经运行到程序的结尾了）。
+但是在这一点时，如果点击堆内存尖峰，在下方的预览窗口，我们可以看到 “NextGC” 在运行，表明全部内存分配会被清零（因为已经运行到程序的结尾了）。
 
 ### 进程 
 
-在界面中“procs”部分，可以看到，在分配500mb内存时，Proc 3（进程3）上有一个新的 go 协程在运行`main.main.func1`函数（在我们的程序中，这个函数负责内存分配工作）
+在界面中 “procs” 部分，可以看到，在分配500mb内存时，Proc 3（进程3）上有一个新的 go 协程在运行 `main.main.func1` 函数（在我们的程序中，这个函数负责内存分配工作）
 
-如果在“View Options”（查看选项）中选择“Flow events”（流事件），你可以看到一个箭头从`main.main`函数指向`main.main.func1`函数，`main.main.func1`是运行在一个独立的进程/线程上。（箭头不容易看到，但确实有）
+如果在 “View Options”（查看选项）中选择 “Flow events”（流事件），你可以看到一个箭头从 `main.main` 函数指向 `main.main.func1` 函数，`main.main.func1` 是运行在一个独立的进程/线程上。（箭头不容易看到，但确实有）
 
 [![](http://www.integralist.co.uk/images/profiling_go_3.png)](http://www.integralist.co.uk/images/profiling_go_3.png)
 
-通过图形界面，不但可直观的见到`main.main.func1`协程运行与内存分配的对应关系，而且能够看到程序的因果关系（也就是，_什么_ 触发了新的 go 协程的运行）
+通过图形界面，不但可直观的见到 `main.main.func1` 协程运行与内存分配的对应关系，而且能够看到程序的因果关系（也就是，_什么_ 触发了新的 go 协程的运行）
 
 ## 结尾
 
