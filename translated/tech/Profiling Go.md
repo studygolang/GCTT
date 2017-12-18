@@ -33,10 +33,10 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 
 <td>[ReadMemStats]</td>
 
-<td>- 简单、快速、易用.  
-- 仅描述内存使用情况.</td>
+<td>- 简单、快速、易用。<br/> 
+- 仅描述内存使用情况。</td>
 
-<td>- 需要改代码.</td>
+<td>- 需要改代码。</td>
 
 </tr>
 
@@ -44,11 +44,11 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 
 <td>[pprof]</td>
 
-<td>- 详述CPU和内存使用情况。
-- 可以远程分析。  
+<td>- 详述CPU和内存使用情况。<br/>
+- 可以远程分析。<br/>  
 - 可以生成图像。</td>
 
-<td>- 需要改代码。  
+<td>- 需要改代码。<br/>  
 - 需调用API。</td>
 
 </tr>
@@ -57,12 +57,12 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 
 <td>[trace]</td>
 
-<td>- 帮助分析过程数据。  
-- 强大的调试界面.  
+<td>- 帮助分析过程数据。<br/>  
+- 强大的调试界面。<br/>  
 - 易实现问题区域的可视化。</td>
 
-<td>- 需要改代码。  
-- UI界面复杂。  
+<td>- 需要改代码。<br/>  
+- UI界面复杂。<br/>  
 - 理解需要一点时间。</td>
 
 </tr>
@@ -120,7 +120,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 关于内存分配的情况，最简单的方式是利用 runtime 包的 MemStats 功能。
 
 在下面的代码片段中，我们调整了 main 函数，打印出详细的内存统计信息。
-
+```go
     func main() {
         var mem runtime.MemStats
 
@@ -147,9 +147,9 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
         log.Println(mem.HeapAlloc)
         log.Println(mem.HeapSys)
     }
-
+```
 运行程序，可以看到下面的结果：
-
+```
     memory baseline…
 
     2017/10/29 08:51:56 56480
@@ -163,7 +163,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
     2017/10/29 08:51:56 1000144520
     2017/10/29 08:51:56 200074312
     2017/10/29 08:51:56 200704000
-
+```
 这样我们可以看到，程序在启动时和在结束时（也就是通过`bigBytes`函数分配了大量内存后），内存分配上的差异。`TotalAlloc` 和 `HeapAlloc`是我们最关心的两项。
 
 总体内存分配（total allocations）指的是累计的内存分配总量（这个值在内存释放后 _不会_ 变小）。堆内存分配（heap allocations）指的是在观测时，实时的内存分配情况，包括可达和不可达的对象（例如，垃圾回收器还没有释放的对象）。要意识到，观测后实际在用内存（in use）可能会更少。
@@ -190,12 +190,12 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 
 ### 在开发时生成 .profile 
 
-在这一段，我们研究一下性能分析，涵盖CPU和内存的分配情况。从CPU性能分析开始。
+在这一段，我们研究一下性能分析，涵盖CPU和内存的分配情况。从 CPU 性能分析开始。
 
 #### CPU 分析
 
 在下面的例子中，我们导入了 `"runtime/pprof"` 包，并增加了相关的 API 调用，目的是记录 CPU 的数据：
-
+```go
     package main
 
     import (
@@ -221,7 +221,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
     		}
     	}
     }
-
+```
 > 注意：为了简单明了，我们使用了 `os.Stdout` （不在程序中创建文件）而是利用 shell 重定向输出，用于创建性能概要文件。
   
 然后编译、运行，将性能数据保存到文件:  `go build -o app && time ./app > cpu.profile`
@@ -229,7 +229,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 最后，使用go tool命令，以交互的方式检查数据：`go tool pprof cpu.profile`
 
 可以看到交互提示符 (pprof)，执行 `top` 命令，输出如下信息：
-
+```
     (pprof) top
     Showing nodes accounting for 180ms, 100% of 180ms total
           flat  flat%   sum%        cum   cum%
@@ -243,15 +243,15 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
              0     0%   100%      180ms   100%  runtime.mallocgc /.../src/runtime/malloc.go
              0     0%   100%      180ms   100%  runtime.mallocgc.func1 /.../src/runtime/malloc.go
              0     0%   100%      180ms   100%  runtime.systemstack /.../src/runtime/asm_amd64.s
-
-这表示`runtime.memclrNoHeapPointers`占用了最多的CPU时间.
+```
+这表示`runtime.memclrNoHeapPointers`占用了最多的CPU时间。
 
 我们一行一行的分解程序，可以更准确地观察CPU的使用情况。
 
 使用 `list <function regex>`命令，通过 `main.main`可以看到主函数 main 。
 
 让我们列出 `main` 名称空间下的所有函数：
-
+```
     (pprof) list main\.
     Total: 180ms
     ROUTINE ======================== main.bigBytes in /.../go/profiling/main.go
@@ -280,7 +280,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
              .          .     23:           }
              .          .     24:   }
              .          .     25:}
-
+```
 好了，我们可以看到180ms都花费在 `bigBytes` 函数。在 `bigBytes` 函数中，绝大部分时间花费在分配内存命令上`make([]byte, 100000000)`。
 
 #### 内存分析
@@ -288,7 +288,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 在进入后面的主题前，我们看一下如何收集内存使用信息。
 
 我们要稍微调整一下程序，把`StartCPUProfile`替换为`WriteHeapProfile`（并把这个调用移到`main`函数的底部，如果在`main`函数的顶部调用，内存分配还没有开始），并且删掉`StopCPUProfile`调用。（通过快照的方式记录堆的使用情况，而不是像CPU性能分析那样，是一个持续运行的过程）：
-
+```go
     package main
 
     import (
@@ -313,24 +313,24 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 
     	pprof.WriteHeapProfile(os.Stdout)
     }
-
+```
 再一次，我们编译、执行程序，并重定向 stdout 到文件（为简单起见），如果你愿意，也可以在程序中动态创建一个文件： `go build -o app && time ./app > memory.profile`
 
 现在我们就可以运行 pprof ，以交互的方式查看内存分析数据:  `go tool pprof memory.profile`
 
 运行 top 命令，可以看到下面的输出：
-
+```
     (pprof) top
     Showing nodes accounting for 95.38MB, 100% of 95.38MB total
           flat  flat%   sum%        cum   cum%
        95.38MB   100%   100%    95.38MB   100%  main.bigBytes /...ain.go (inline)
              0     0%   100%    95.38MB   100%  main.main /.../profiling/main.go
              0     0%   100%    95.38MB   100%  runtime.main /.../runtime/proc.go
-
+```
 因为是个简单的示例程序，可以很清晰地看出主要的内存分配发生在`main.bigBytes`函数中。
 
 如果想看一些更详细的数据，可以执行`list main.`：
-
+```
     (pprof) list main.
     Total: 95.38MB
     ROUTINE ======================== main.bigBytes in /.../go/profiling/main.go
@@ -359,7 +359,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
              .          .     20:           }
              .          .     21:   }
              .          .     22:
-
+```
 逐行指出内存的分配情况。
 
 ### 通过 Web 服务器远程分析
@@ -367,7 +367,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 在下面的例子中修改了代码，我们建立了一个 Web 服务，并导入`"net/http/pprof"` 包 (https://golang.org/pkg/net/http/pprof/)，以实现自动分析。
 
 > 注意：如果你的程序已经使用了 Web 服务器，你不必再新建一个。pprof 包会挂载到 web 服务的多路复用器（multiplexer）。
-
+```go
     package main
 
     import (
@@ -401,11 +401,11 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
     	wg.Add(1)
     	wg.Wait() // 为了 pprof 分析的正常运行，阻止`main`函数退出
     }
-
+```
 编译、运行这个程序，通过路径 `/debug/pprof/` 可以访问性能分析数据，完整路径：`http://localhost:6060/debug/pprof/`
 
 你应该可以看到类似下面的内容：
-
+```
     profiles:
     0	block
     4	goroutine
@@ -416,7 +416,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
     full goroutine stack dump
 
     /debug/pprof/
-
+```
 这里的block，goroutine，heap，mutex，threadcreate都链接到相应的数据，这些链接对应不同的`.profile`文件。处理`.profile`文件还需要其他工具。
 
 首先，先认识一下这五个分析文件的含义：
@@ -439,7 +439,7 @@ web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060
 * * *
 
 如果使用了定制的 URL 路由，你需要注册单独的 `pprof` 端点（endpoint）：
-
+```go
     package main
 
     import (
@@ -465,7 +465,7 @@ web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060
     }
 
 * * *
-
+```
 理论上，你需要在命令行使用`go tool pprof`。这样以交互的方式，更容易解释和查询数据。
 
 为了这样做，先要运行二进制文件，然后在 shell 中执行：`go tool pprof http://localhost:6060/debug/pprof/<.profile>`
@@ -473,14 +473,14 @@ web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060
 例如，我们要看一下堆内存分析数据：`go tool pprof http://localhost:6060/debug/pprof/heap`
 
 在这你可以看到交互提示符：
-
+```
     Fetching profile over HTTP from http://localhost:6060/debug/pprof/heap
     Saved profile in /.../pprof.alloc_objects.alloc_space.inuse_objects.inuse_space.005.pb.gz
     Type: inuse_space
     Time: Oct 27, 2017 at 10:01am (BST)
     Entering interactive mode (type "help" for commands, "o" for options)
     (pprof)
-
+```
 > 注意：“type”设定为`inuse_space`（表示在用的内存数量）
 
 你可以输入`help` 或者 `o`查看可用的操作，如上所示。
@@ -492,17 +492,17 @@ web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060
 *   `list <function regex>`: 以文本形式输出记录
 
 例如，执行`top`后，可以看到下面的输出：
-
+```
     Showing nodes accounting for 95.38MB, 100% of 95.38MB total
           flat  flat%   sum%        cum   cum%
        95.38MB   100%   100%    95.38MB   100%  main.bigBytes /...ain.go (inline)
              0     0%   100%    95.38MB   100%  main.main /.../profiling/main.go
              0     0%   100%    95.38MB   100%  runtime.main /.../runtime/proc.go
-
+```
 对于一个简单的应用程序，可以很好指出哪个函数最耗内存（在本例中，`main.bigBytes`函数分配内存最多）
 
 如果做更精确的分析，可以用  `list main.main`：
-
+```
     Total: 95.38MB
     ROUTINE ======================== main.main in /.../profiling/main.go
        95.38MB    95.38MB (flat, cum)   100% of Total
@@ -517,7 +517,7 @@ web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060
              .          .     16:
              .          .     17:func main() {
              .          .     18:   fmt.Println("starting...")
-
+```
 这样可以“逐行”指出内存使用情况。
 
 前面有提到，堆内存分析的默认“类型”是“在用内存”。还有一种“类型”，表示程序在整个生命周期分配的内存总量，可以使用`-alloc_space`标识切换到这种模式：
@@ -525,7 +525,7 @@ web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060
     go tool pprof -alloc_space http://localhost:6060/debug/pprof/heap
 
 执行`list`命令，我们看一下区别：
-
+```
     (pprof) list main.bigBytes
 
     Total: 954.63MB
@@ -542,7 +542,7 @@ web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060
              .          .     15:
              .          .     16:func main() {
              .          .     17:   var wg sync.WaitGroup
-
+```
 > 注意：如果指明要查看“在用内存”，可以采用如下命令：
 > `go tool pprof -inuse_space http://localhost:6060/debug/pprof/heap`
 
@@ -578,7 +578,7 @@ web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060
 > 注意：如果要追查执行慢的函数或者占用CPU时间最多的代码，你还是要用 `go tool pprof` 命令。 
 
 要使用 Trace ，先要对程序进行调整：
-
+```go
     func main() {
     	trace.Start(os.Stdout)
     	defer trace.Stop()
@@ -603,26 +603,26 @@ web 服务器可以产生“追踪”文件，访问地址[http://localhost:6060
     	wg.Wait()
     	log.Printf("%T", result)
     }
-
+```
 要用 trace 追踪功能，你只要导入`"runtime/trace"`，然后调用 `trace.Start` 和 `trace.Stop`函数。（为了追踪程序的所有内容，在`trace.Stop`函数前加入`defer`）
 
 此外，我们创建了一个 go 协程，在其中创建了一个500MB的切片。等待 go 协程执行完成，然后记录 result 的类型。这样做可以看到更多的直观数据。
 
 现在重新编译程序，用 trace 打开产生的追踪数据：
-
+```
     $ go build -o app
     $ time ./app > app.trace
     $ go tool trace app.trace
-
+```
 > 注意：使用 `-pprof` 标签，可以生成 pprof 兼容的文件（比如要动态地检查数据时）。更多信息请参考[go documentation](https://golang.org/cmd/trace/)。
  
 这里是执行`go tool trace app.trace`的输出内容：
-
+```
     2017/10/29 09:30:40 Parsing trace...
     2017/10/29 09:30:40 Serializing trace...
     2017/10/29 09:30:40 Splitting trace...
     2017/10/29 09:30:40 Opening browser
-
+```
 默认的浏览器会自动打开下面的地址：[http://127.0.0.1:60331](http://127.0.0.1:60331/)
 
 > 注意：最好用 Chrome 浏览器，因为 `go tool trace` 设计上基于 Chrome，兼容性最好。
