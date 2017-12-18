@@ -19,9 +19,9 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 
 <tr>
 <th></th>
-<th>Pros</th>
+<th>优点</th>
 
-<th>Cons</th>
+<th>缺点</th>
 
 </tr>
 
@@ -31,7 +31,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 
 <tr>
 
-<td>[ReadMemStats](#5)</td>
+<td>[ReadMemStats]</td>
 
 <td>- 简单、快速、易用.  
 - 仅描述内存使用情况.</td>
@@ -42,7 +42,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 
 <tr>
 
-<td>[pprof](#6)</td>
+<td>[pprof]</td>
 
 <td>- 详述CPU和内存使用情况。
 - 可以远程分析。  
@@ -75,17 +75,13 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
 
 无论你用哪一种分析工具，有一个通用的原则：
 
-Think about more performant algorithms or data structures.  
-There may also be simpler solutions.  
-Take a pragmatic look at your code.
-
 1.  **识别更高层面的瓶颈**
     *   例如，你可能发现了一个长时间运行的函数。
 2.  **减少操作量**
     *   找出可替换的方法，减少时间消耗, 或者调用次数。
     *   找出可替换的方法，减少内存分配量。
 3.  **向下挖掘数据**
-    *   使用一个工具，能够提供更低层、更细节的数据。
+    *   使用工具，找出更低层、更细节的数据。
 
   
 思考性能更好的算法或者数据结构；找到更简单的处理方式； 从实效角度审视你的代码。 
@@ -117,7 +113,7 @@ Take a pragmatic look at your code.
 
 执行这个程序大概用了0.2s。
 
-这个程序运行的不算慢，我们仅仅用它来测量内存使用情况。
+这个程序运行的不算慢，我们仅仅用它来衡量内存使用情况。
 
 ## ReadMemStats
 
@@ -688,6 +684,6 @@ via: http://www.integralist.co.uk/posts/profiling-go/
 
 作者：[Mark McDonnell](http://www.integralist.co.uk/resume/)
 译者：[pbix2020](https://github.com/pbix2020)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
