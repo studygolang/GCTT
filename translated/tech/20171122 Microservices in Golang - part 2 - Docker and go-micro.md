@@ -204,7 +204,7 @@ func main() {
 }
 ```
 
-这里的主要变化是我们实例化我们的 gRPC 服务器的方式，它处理注册我们的服务，已经被整齐地抽象到一个 `mico.NewService()`。最后，处理连接本身的 `service.Run()` 函数。 和以前一样，我们注册了我们的实现，但这次使用了一个稍微不同的方法。第二个最大的变化是服务方法本身，参数和响应类型略有变化，把请求和响应结构作为参数，现在只返回一个错误.在我们的方法中，我们设置了由 `go-micro` 处理的响应。
+这里的主要变化是我们实例化我们的 gRPC 服务器的方式，它处理注册我们的服务，已经被整齐地抽象到一个 `mico.NewService()`。最后，处理连接本身的 `service.Run()` 函数。 和以前一样，我们注册了我们的实现，但这次使用了一个稍微不同的方法。第二个最大的变化是服务方法本身，参数和响应类型略有变化，把请求和响应结构作为参数，现在只返回一个错误。在我们的方法中，我们设置了由 `go-micro` 处理的响应。
 
 最后，我们不再对端口进行硬编码。 Go-micro 应该使用环境变量或命令行参数进行配置。设置地址, 使用 `MICRO_SERVER_ADDRESS=:50051`。我们还需要告诉我们的服务使用 [mdns](https://en.wikipedia.org/wiki/Multicast_DNS)（多播DNS）作为我们本地使用的服务代理。
 您通常不会在生产环境中使用[mdns](https://en.wikipedia.org/wiki/Multicast_DNS)进行服务发现，但我们希望避免在本地运行诸如 Consul 或 etcd 这样的测试。更多我们将在后面介绍。
@@ -221,7 +221,7 @@ run:
 `-e` 是一个环境变量标志，它允许你将环境变量传递到你的 Docker 容器中。
 每个变量必须有一个标志，例如 `-e ENV = staging -e DB_HOST = localhost` 等。
 
-先做如果你运行 `make run`，您将拥有一个 Dockerised 服务，并具有服务发现功能。所以让我们更新我们的 cli 工具来利用这个。
+现在如果你运行 `make run`，您将拥有一个 Dockerised 服务，并具有服务发现功能。所以让我们更新我们的 cli 工具来利用这个。
 
 ```
 import (  
@@ -244,7 +244,7 @@ func main() {
 
 在这里，我们导入了用于创建客户端的 go-micro 库，并用 go-micro 客户端代码取代了现有的连接代码，该客户端代码使用服务解析而不是直接连接到地址。
 
-但是，如果你运行这个，这是行不通的。这是因为我们现在正在Docker容器中运行我们的服务，它有自己的 [mdns](https://en.wikipedia.org/wiki/Multicast_DNS)，与我们当前使用的主机 [mdns](https://en.wikipedia.org/wiki/Multicast_DNS) 分开。解决这个问题的最简单的方法是确保服务和客户端都在 “dockerland” 中运行，以便它们都在相同的主机上运行，并使用相同的网络层。让我们创建一个Makefile `consignment-cli/Makefile`，并创建一些条目。
+但是，如果你运行这个，这是行不通的。这是因为我们现在正在Docker容器中运行我们的服务，它有自己的 [mdns](https://en.wikipedia.org/wiki/Multicast_DNS)，独立于我们使用中的主机 [mdns](https://en.wikipedia.org/wiki/Multicast_DNS) 。解决这个问题的最简单的方法是确保服务和客户端都在 “dockerland” 中运行，以便它们都在相同的主机上运行，并使用相同的网络层。让我们创建一个Makefile `consignment-cli/Makefile`，并创建一些条目。
 
 ```
 build:  
@@ -257,7 +257,7 @@ run:
 
 与之前类似，我们要为 Linux 构建我们的二进制文件。 当我们运行我们的 docker 镜像时，我们想传递一个环境变量来指示 go-micro 使用 mdns。
 
-现在让我们为我们的 CLI工 具创建一个 Dockerfile ：
+现在让我们为我们的 `CLI` 工具创建一个 Dockerfile ：
 
 ```
 FROM alpine:latest
@@ -271,7 +271,7 @@ ADD consignment-cli /app/consignment-cli
 CMD ["./consignment-cli"]  
 ```
 
-除了它引入了我们的json数据文件，这与我们的Dockerfile服务非常相似。如果你在你的 `consignment-cli`目录，运行 `$ make run` 命令，你应该和以前一样，看见`Created: true`。
+它除了引入了我们的json数据文件，并且与我们的Dockerfile服务非常相似。如果你在你的 `consignment-cli`目录，运行 `$ make run` 命令，你应该和以前一样，看见`Created: true`。
 
 之前，我提到那些使用 Linux 的人应该切换到使用 Debian 基本映像。现在看起来是一个很好的时机来看看 Docker 的一个新功能：多阶段构建。这使我们可以在一个 Dockerfile 中使用多个 Docker 镜像。
 
@@ -328,21 +328,21 @@ COPY --from=builder /go/src/github.com/EwanValentine/shippy/consignment-service/
 CMD ["./consignment-service"]  
 ```
 
-这种方法的唯一问题，我想回来，并在某些时候改善这一点，是Docker不能从父目录中读取文件.它只能读取Dockerfile所在目录或子目录中的文件。
+这种方法的唯一问题，我想回来，并在某些时候改善这一点，是Docker不能从父目录中读取文件.它只能读取 Dockerfile 所在目录或子目录中的文件。
 
-这意味着为了运行 `$ dep ensure` 或 `$ go get`，你需要确保你的代码被推到 Git上，这样它就可以提取 vessel-service。就像其他 Go 包一样。 不理想，但现在足够好。
+这意味着为了运行 `$ dep ensure` 或 `$ go get`，你需要确保你的代码被推到 Git上，这样它就可以提取 vessel-service。就像其他 Go 包一样。这种方法不理想，但足够满足我们现在的需求。
 
-现在我将通过其他Docker文件并应用这种新方法。
+现在我将会在其他Docker文件中应用这种新方法。
 
 噢，记住要记得从Makefiles中删除 `$ go build`。
 
-[更多的在这里多阶段建设](https://docs.docker.com/engine/userguide/eng-image/multistage-build/#name-your-build-stages)
+[更多的多阶段编译在这里](https://docs.docker.com/engine/userguide/eng-image/multistage-build/#name-your-build-stages)
 
 ### Vessel 服务
 
 让我们创建第二个服务。我们有一个代销服务，这将处理将一批货物与一批最适合该批货物的 vessel 进行匹配。为了配合我们的货物，我们需要将集装箱的重量和数量发送到我们的新vessel服务，然后将找到一个能够处理该货物的船只。
 
-创建一个新的目录在你的根目录 `$ mkdir vessel-service`。现在为我们的新服务 [protobuf](https://github.com/google/protobuf) 定义创建了一个子目录， `$ mkdir -p vessel-service/proto/vessel`。现在让我们来创建新的 `protobuf ` 文件， `$ touch vessel-service/proto/vessel/vessel.proto`。
+在你的根目录创建一个新的目录 `$ mkdir vessel-service`。现在为我们的新服务 [protobuf](https://github.com/google/protobuf) 定义创建了一个子目录， `$ mkdir -p vessel-service/proto/vessel`。现在让我们来创建新的 `protobuf ` 文件， `$ touch vessel-service/proto/vessel/vessel.proto`。
 
 由于 protobuf 的定义确实是我们领域设计的核心，所以我们从这里开始。
 
@@ -376,7 +376,7 @@ message Response {
 }
 ```
 
-正如你所看到的，这和我们的第一个服务非常相似。我们创建了一个服务，用一个称为 FindAvailable 的 rpc 方法。这需要一个 Specification 类型并返回一个 Response 类型。Response 类型使用重复字段返回 Vessel 类型或多个 Vesse。
+正如你所看到的，这和我们的第一个服务非常相似。我们用一个 `rpc` 方法 `FindAvailable` 创建了一个服务。。这需要一个 Specification 类型并返回一个 Response 类型。Response 类型使用重复字段返回 Vessel 类型或多个 Vesse。
 
 现在我们需要创建一个 Makefile 来处理我们的构建逻辑和运行脚本。 `$ touch vessel-service/Makefile`。打开该文件并添加以下内容：
 
@@ -391,7 +391,7 @@ run:
     docker run -p 50052:50051 -e MICRO_SERVER_ADDRESS=:50051 -e MICRO_REGISTRY=mdns vessel-service
 ```
 
-这与我们为托管服务创建的第一个 Makefile 几乎相同，但注意服务名称和端口已经改变了一点。我们不能在同一个端口上运行两个 Docker 容器，所以我们在这里利用 Docker 端口转发来确保这个服务在主机网络上转发 50051 到 50052。
+这与我们为托管服务创建的第一个 Makefile 几乎相同，但注意服务名称和端口已经改变了一点。我们不能在同一个端口上运行两个 Docker 容器，所以我们在这里利用 Docker 端口转发来确保服务上的50051端口映射到主机网络上的50052端口。
 
 现在我们需要一个 Dockerfile，使用我们新的多阶段格式：
 
@@ -628,7 +628,7 @@ func main() {
 }
 ```
 
-现在运行 `$ make build && make`在`consignment-cli`中运行。您应该看到一个回复​​，并创建货物清单。在您的货物中，您现在应该看到 vessel_id 已经设置好了。所以我们有它，两个互联的微服务和一个命令行界面！在这个系列的下一部分，我们将看看使用 [MongoDB](https://www.mongodb.com/what-is-mongodb) 来保存这些数据。我们还将添加第三个服务，并使用 `docker-compose` 来管理我们在本地不断增长的容器生态系统
+现在运行 `$ make build && make`在`consignment-cli`中运行。您应该看到一个回复​​，并创建货物清单。在您的货物中，您现在应该看到 vessel_id 已经设置好了。所以现在有了我们两个互联的微服务和一个命令行界面！在这个系列的下一部分，我们将看看使用 [MongoDB](https://www.mongodb.com/what-is-mongodb) 来保存这些数据。我们还将添加第三个服务，并使用 `docker-compose` 来管理我们在本地不断增长的容器生态系统
 
 查看完整示例的回购。如有任何[反馈](https://github.com/EwanValentine/shippy/tree/tutorial-2)，请将其发送至（mailto：ewan.valentine89@gmail.com）。非常感激
 
@@ -642,6 +642,6 @@ via: https://ewanvalentine.io/microservices-in-golang-part-2/
 
 作者：[Ewan Valentine](http://ewanvalentine.io/author/ewan)
 译者：[guoxiaopang](https://github.com/guoxiaopang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者ID](https://github.com/QueShengyao)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
