@@ -642,6 +642,6 @@ via: https://ewanvalentine.io/microservices-in-golang-part-2/
 
 作者：[Ewan Valentine](http://ewanvalentine.io/author/ewan)
 译者：[guoxiaopang](https://github.com/guoxiaopang)
-校对：[校对者ID](https://github.com/QueShengyao)
+校对：[QueShengyao](https://github.com/QueShengyao)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
