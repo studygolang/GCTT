@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/11910
+
 # 用 Go 写一个服务容器（ Service Container ）
 
 我最近一直在做一个相当大的 API 项目，里面包括很多路由规则（ routes ）、服务接口（ services ）和处理函数（ handlers ）等。首先，我注意到 `main.go` 文件的启动过程开始越来越臃肿。
@@ -54,30 +56,30 @@ import(
     "sync"
 ) 
 
-type Container struct{  
+type Container struct{
     mux sync.RWMutex
     m map[string]interface{}
 }
 
 // Add service
-func (c *Container) Add(name string, object interface{}) {  
+func (c *Container) Add(name string, object interface{}) {
+    c.mux.Lock()
     if c.m == nil {
         c.m = make(map[string]interface{})
-    }    
-    c.mux.Lock()
+    }
     c.m[name] = object
     c.mux.Unlock()
 }
 
 // Remove service
-func (c *Container) Remove(name string) Container {  
+func (c *Container) Remove(name string) Container {
     c.mux.Lock()
     delete(c.m, name)
     c.mux.Unlock()
 }
 
 // Get a service
-func (c *Container) Get(name string) (object interface{}, bool) {  
+func (c *Container) Get(name string) (object interface{}, bool) {
     c.mux.RLock()
     object, ok = c.m[name]
     c.mux.RUnlock()
@@ -99,7 +101,7 @@ func GetContainer() Container {
 现在的 main.go
 
 ```go
-func main() {  
+func main() {
     container := container.GetContainer()
 
     userHandler, ok := container.Get("user.handler")
