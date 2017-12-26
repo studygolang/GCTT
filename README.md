@@ -10,13 +10,13 @@ GCTT (Go Chinese Translation Team) 是 Go中文网（https://studygolang.com) �
 GCTT 的组成
 -------------------------------
 
-**选题**，负责选择合适的内容，~~并将原文转换为 markdown 格式（可以使用 https://domchristie.github.io/to-markdown/ 做转换）~~ （为了减轻选题的工作，经大家讨论，转 markdown 的工作取消，文件中只保留标题和原文链接。）提交到 [GCTT](https://github.com/studygolang/gctt) 库中。
+**选题**，负责选择合适的内容，在 [GCTT](https://github.com/studygolang/gctt) 库中提 issue，并打上 「待认领」 标签。
 
 **译者**，负责从选题中选择内容进行翻译。
 
 **校对**，负责将初译的文章进行文字润色、技术校对等工作。
 
-**发布**，负责将校对后的文章，排版发布到 Go中文网 的文章中。
+**发布**，负责将校对后的文章，排版发布到 Go 中文网 的文章中。
 
 加入我们
 -------------------------------

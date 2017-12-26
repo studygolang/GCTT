@@ -1,10 +1,12 @@
-# Golang 中 defer 的五个坑 - 第一部分
+已发布：https://studygolang.com/articles/12061
+
+# Go 中 defer 的 5 个坑 - 第一部分
 
 > 通过本节的学习以避免掉入基础的 defer 陷阱中
 
 本文只适合想要进阶学习 Golang 的新手阅读，大牛请绕道。
 
-## #1 -- 延迟 nil 函数
+## #1 -- defer nil 函数
 
 如果一个延迟函数被赋值为 `nil` ， 运行时的 [`panic`](https://golang.org/ref/spec#Handling_panics) 异常会发生在外围函数执行结束后而不是 `defer` 的函数被调用的时候。
 
@@ -29,17 +31,17 @@ runs
 
 ### 发生了什么？
 
-名为 func 的函数一直运行至结束，然后 `defer` 函数会被执行且会因为值为 `nil` 而产生 `panic` 异常。然而值得注意的是， `run()` 的声明是没有问题，因为在外围函数运行完成后它才会被调用
+名为 func 的函数一直运行至结束，然后 `defer` 函数会被执行且会因为值为 `nil` 而产生 `panic` 异常。然而值得注意的是，`run()` 的声明是没有问题，因为在外围函数运行完成后它才会被调用。
 
 上面只是一个简单的案例，但同样的案例也可能发生在真实世界中，所以如果你遇上的话，可以想想是不是掉进了这个坑里。
 
 ## #2 -- 在循环中使用 defer
 
-切忌在循环中使用 `defer` 除非你清楚自己在做什么，因为它们的执行结果常常会出人意料。
+切忌在循环中使用 `defer`，除非你清楚自己在做什么，因为它们的执行结果常常会出人意料。
 
 但是，在某些情况下，在循环中使用 `defer` 会相当方便，例如将函数中的递归转交给 `defer`，但这显然已经不是本文应该讲解的内容。
 
-![](defer_inside_a_loop.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/5-gotchas-defer-1/defer_inside_a_loop.png)
 
 在上面的例子中，`defer row.Close()` 在循环中的延迟函数会在函数结束过后运行，而不是每次 for 循环结束之后。这些延迟函数会不停地堆积到延迟调用栈中，最终可能会导致一些不可预知的问题。
 
@@ -47,17 +49,17 @@ runs
 
 不使用 `defer` ，直接在末尾调用。
 
-![](solution_1.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/5-gotchas-defer-1/solution_1.png)
 
 ### 解决方案 #2:
 
 将任务转交给另一个函数然后在里面使用 `defer`，在下面这种情况下，延迟函数会在每次匿名函数执行结束后执行。
 
-![](solution_2.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/5-gotchas-defer-1/solution_2.png)
 
 ### 进行基准测试
 
-![](benchmark.jpg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/5-gotchas-defer-1/benchmark.jpg)
 
 [查看代码](https://play.golang.org/p/GJ7oOMdBwJ)
 
@@ -234,7 +236,7 @@ Chevrolet Impala
 
 ### 为什么会这样？
 
-![](what_is_going_on.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/5-gotchas-defer-1/what_is_going_on.png)
 
 我们需要记住的是，当外围函数还没有返回的时候，Go 的运行时就会立刻将传递给延迟函数的参数保存起来。
 
