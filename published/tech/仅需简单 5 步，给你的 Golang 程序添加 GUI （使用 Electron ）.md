@@ -1,22 +1,24 @@
-﻿# 仅需简单 5 步，给你的 Golang 程序添加 GUI （使用 Electron ）
+﻿已发布：https://studygolang.com/articles/12065 
+
+# 仅需简单 5 步，给你的 Golang 程序添加 GUI （使用 Electron ）
 
 ------
 
 创建一个 Golang app 是一件简单又轻松的事情，但是有时候你想给你的应用锦上添花：创建一个 GUI！
 
 在本篇文章中，我将通过使用 astilectron 工具中的 bootstrap 以及 bundler 给一个简单的 Golang 程序添加 GUI。
+
 我们的带有 GUI 的 Golang app 能够打开一个文件夹并且展示其中的内容。
 
 你可以在这里找到完成后的 [代码](https://github.com/asticode/go-astilectron-demo) ：
 
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-gui-electron/0.png)
 
-![](http://p0kkk2bd3.bkt.clouddn.com/0.png)
+## 第一步：组织项目结构
 
-
-##第一步：组织项目结构
 文件夹结构如下：
 
-```![此处输入图片的描述][1]
+```
 |--+ resources
    |--+ app
       |--+ static
@@ -34,12 +36,10 @@
 |--+ main.go
 |--+ message.go
 ```
-你将看到，我们需要3种不同格式的图标以完成不同平台的编译：
-`.icns` 用于  `darwin` 平台
-`.ico` 用于  `windows` 平台
-`.png` 用于  `linux` 平台
 
-我们将使用以下CSS/JS库
+你将看到，我们需要 3 种不同格式的图标以完成不同平台的编译：`.icns` 用于  `darwin` 平台、`.ico` 用于  `windows` 平台、`.png` 用于  `linux` 平台。
+
+我们将使用以下 CSS/JS 库：
 
 - [ astiloader ](https://github.com/asticode/js-toolbox)
 - [astimodaler](https://github.com/asticode/js-toolbox)
@@ -47,9 +47,11 @@
 - [chartjs](http://www.chartjs.org/)
 - [fontAwesome](http://fontawesome.io/)
 
-##第二步：搭建基础架构
-##Go
-首先我们需要在 `main.go` 中导入[ astilectron ](https://github.com/asticode/go-astilectron)的 bootstrap 源码包 :
+## 第二步：搭建基础架构
+
+### Go
+
+首先我们需要在 `main.go` 中导入 [astilectron](https://github.com/asticode/go-astilectron) 的 bootstrap 源码包 :
 
 ```go
 package main
@@ -107,21 +109,20 @@ func main() {
 		astilog.Fatal(errors.Wrap(err, "running bootstrap failed"))
 	}
 }
-
 ```
-2个全局变量 `AppName` 和 `BuiltAt` 将会通过[ bundler ](https://github.com/asticode/go-astilectron-bundler)打包自动添加进去。
 
-随后我们将发现我们的主页变成了 `index.html` ，我们将有一个含有2个项目( `about` 和 `close` )的菜单并且会出现一个 `700x700` , `中心对齐的` ， `#333` 背景色的窗口。
+2 个全局变量 `AppName` 和 `BuiltAt` 将会通过 [bundler](https://github.com/asticode/go-astilectron-bundler) 打包自动添加进去。
+
+随后我们将发现我们的主页变成了 `index.html` ，我们将有一个含有 2 个项目( `about` 和 `close` )的菜单并且会出现一个 `700x700` , `中心对齐的` ， `#333` 背景色的窗口。
 
 我们要在 go 上添加 `debug` 选项，因为我们需要使用 HTML/JS/CSS 调试工具。
 
-
-
 最后我们将指向 `astilectron.Window` 的指针存入全局变量 `w`，以备后续在使用 `OnWait` 选项时，它包含一个在窗口、菜单及其他所有对象被创建时立即执行的回调函数。
 
+### HTML
 
-##HTML
 现在我们需要在 `resources/app/index.html` 中创建我们的 HTML 主页：
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -154,15 +155,15 @@ func main() {
     </script>
 </body>
 </html>
-
 ```
-这里没什么特殊的地方，我们声明我们的 `css` 和 `js` 文件，我们设置html文件结构并且我们需要确保我们的 `js` 脚本通过 `index.init()` 进行了初始化
 
-##CSS
+这里没什么特殊的地方，我们声明我们的 `css` 和 `js` 文件，我们设置 html 文件结构并且需要确保我们的 `js` 脚本通过 `index.init()` 进行了初始化
 
-现在我们需要在 `resources/app/static/css/base.css` 文件中创建我们的 CSS：
+### CSS
+
+现在需要在 `resources/app/static/css/base.css` 文件中创建我们的 CSS：
+
 ```css
-
 * {
     box-sizing:  border-box;
 }
@@ -225,8 +226,11 @@ html, body {
     margin-bottom: 5px;
 }
 ```
-##JS
+
+### JS
+
 然后我们在 `resources/app/static/js/index.js` 中创建 JS ：
+
 ```javascript
 let index = {
     init: function() {
@@ -237,23 +241,29 @@ let index = {
     }
 };
 ```
-通过 `init` 方法正确的将库初始化
 
-## 第三步：建立起 GO 与 Javascript 间的通信
-万事俱备，只欠东风：我们需要将 GO 与 Javascript 建立起通信
+通过 `init` 方法正确的将库初始化。
 
-###Javascript 通信 GO
-为了让 Javascript 与 Go 进行通信，首先从 Javascript 向 GO 发送一条消息，并且在 GO 接受到消息后执行回调函数：
+## 第三步：建立起 Go 与 Javascript 间的通信
+
+万事俱备，只欠东风：我们需要将 Go 与 Javascript 建立起通信。
+
+### Javascript 通信 Go
+
+为了让 Javascript 与 Go 进行通信，首先从 Javascript 向 Go 发送一条消息，并且在 GO 接受到消息后执行回调函数：
+
 ```javascript
 // This will wait for the astilectron namespace to be ready
 document.addEventListener('astilectron-ready', function() {
-    // This will send a message to GO
+    // This will send a message to Go
     astilectron.sendMessage({name: "event.name", payload: "hello"}, function(message) {
         console.log("received " + message.payload)
     });
 })
 ```
-同时我们在 GO 中监听来自 Javascript 的消息，并且通过 bootstrap 的 `MessageHandler` 给 Javascript 发送消息：
+
+同时我们在 Go 中监听来自 Javascript 的消息，并且通过 bootstrap 的 `MessageHandler` 给 Javascript 发送消息：
+
 ```go
 func main() {
 	bootstrap.Run(bootstrap.Options{
@@ -276,13 +286,14 @@ func handleMessages(_ *astilectron.Window, m bootstrap.MessageIn) (payload inter
 	return
 }
 ```
-这是一个简单的例子将在js的输出中打印出 `received hello world` 。
+
+这是一个简单的例子，将在 js 的输出中打印出 `received hello world` 。
 
 在这种情形中，我们需要更多的逻辑因为我们想要允许打开一个文件夹并且展示其中的内容。
 
 因此我们将下面的代码加入到 `resources/app/static/js/index.js` 中：
-```javascript
 
+```javascript
 let index = {
     addFolder(name, path) {
         let div = document.createElement("div");
@@ -342,9 +353,11 @@ let index = {
     }
 };
 ```
-一旦 Javascript 的 `astilectron` 命名空间准备好，它执行新的 `explore` 方法，该方法会给 GO 发送一条消息，接收返回的信息，并且更新相应的 HTML 。
+
+一旦 Javascript 的 `astilectron` 命名空间准备好，它执行新的 `explore` 方法，该方法会给 Go 发送一条消息，接收返回的信息，并且更新相应的 HTML 。
 
 然后我们将下面代码加入到 `message.go` 中：
+
 ```go
 package main
 
@@ -506,10 +519,11 @@ func explore(path string) (e Exploration, err error) {
 
 在接收到正确的信息时，它将执行新的 `explore` 方法，并返回关于目录的有价值的信息。
 
-###建立从 Go 向 Javascript 通信
+### 建立从 Go 向 Javascript 通信
 
-为了建立从 GO 向 Javascript 的通信，我们首先需要从 GO 中向 Javascript 发送一条消息并且在 Javascript 收到消息后执行回调。
-```javascript
+为了建立从 Go 向 Javascript 的通信，我们首先需要从 Go 中向 Javascript 发送一条消息并且在 Javascript 收到消息后执行回调。
+
+```go
 // This will send a message and execute a callback
 // Callbacks are optional
 bootstrap.SendMessage(w, "event.name", "hello", func(m *bootstrap.MessageIn) {
@@ -522,10 +536,9 @@ bootstrap.SendMessage(w, "event.name", "hello", func(m *bootstrap.MessageIn) {
 })
 ```
 
+同时我们在 Javascript 中监听来自 Go 的消息并发送一个选项消息给 Go：
 
-同时我们在 Javascript 中监听来自 GO 的消息并发送一个选项消息给 GO：
-
-```
+```javascript
 // This will wait for the astilectron namespace to be ready
 document.addEventListener('astilectron-ready', function() {
     // This will listen to messages sent by GO
@@ -538,9 +551,9 @@ document.addEventListener('astilectron-ready', function() {
 })
 ```
 
+这个简单的例子将在 Go 的输出中打印 `received hello world` 。在我们的项目里，我们先将下面的代码加入到 `main.go` 中：
 
-这个简单的例子将在 GO 的输出中打印 `received hello world` 。在我们的项目里，我们先将下面的代码加入到 `main.go` 中：
-```
+```go
 func main() {
 	bootstrap.Run(bootstrap.Options{
 		MenuOptions: []*astilectron.MenuItemOptions{{
@@ -578,12 +591,13 @@ func main() {
 		},
 	})
 }
-
 ```
 
-它使得关于选项变成可点击的，并且渲染出一个有合适内容的模态框，在 GO app 完成初始化 5s 后它会显示一个提示框。
+它使得 关于 选项变成可点击的，并且渲染出一个有合适内容的模态框，在 Go app 完成初始化 5s 后它会显示一个提示框。
+
 最后我们将下面的代码加入到 `resources/app/static/js/index.js` 中：
-```
+
+```javascript
 let index = {
     about: function(html) {
         let c = document.createElement("div");
@@ -612,29 +626,29 @@ let index = {
         });
     }
 };
-
 ```
 
-它将监听 GO 发送过来的消息并做出相应的反应。
+它将监听 Go 发送过来的消息并做出相应的反应。
 
-#第四步: 打包到 app
+## 第四步: 打包到 app
 
-现在代码已经完成，我们需要确保我们能够以最好的方式把我们的 Golang GUI app 呈现给我们的用户：
+现在代码已经完成，我们需要确保我们能够以最好的方式把 Golang GUI app 呈现给我们的用户：
 
  - 一个 MacOSX app 给 `darwin` 用户
  - 一个含有好看图标的 `.exe` 给 `windows` 用户
  - 一个简单的源码文件给 `linux` 用户
 
-
 幸运的是，我们可以通过 astilectron 的 bundler 来进行操作。
+
 首先我们通过下面命令进行安装：
+
 ```
 $ go get -u github.com/asticode/go-astilectron-bundler/...
 ```
 
-
 然后我们在 `main.go` 中给 bootstrap 添加配置项：
-```
+
+```go
 func main() {
 	bootstrap.Run(bootstrap.Options{
 		Asset: Asset,
@@ -643,8 +657,9 @@ func main() {
 }
 ```
 
-然后我们创建配置文件，命名为 `bundler.json ` ：
-```
+然后我们创建配置文件，命名为 `bundler.json` ：
+
+```json
 {
   "app_name": "Astilectron demo",
   "icon_path_darwin": "resources/icon.icns",
@@ -654,24 +669,31 @@ func main() {
 }
 ```
 
-
 最后我们在项目文件夹下运行下面的命令（确保 `$GOPATH/bin` 在你的 `$PATH` 中）
+
 ```
 $ astilectron-bundler -v
 ```
-#第五步： 实际效果
+
+## 第五步： 实际效果
+
 啊哈！结果在 `output/<os>-<arch>` 文件夹下，快来去试一试 :)
-![](http://p0kkk2bd3.bkt.clouddn.com/0.png)
-你当然可以打包你的 Golang GUI app 给其他环境，在 bundler 打包文档中查看如何将程序打包到其他环境
-#结论
-感谢 astilectron 的 bootstrap 和 bundler ，通过一点对组织结构变动工作，给你的 Golang 程序添加 GUI 从未如此简单。
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-gui-electron/0.png)
+
+你当然可以打包你的 Golang GUI app 给其他环境，在 bundler 打包文档中查看如何将程序打包到其他环境。
+
+## 结论
+
+感谢 astilectron 的 bootstrap 和 bundler ，有了一点点的组织和结构，给你的 Golang 程序添加 GUI 从未如此简单。
+
 需要指出的是这种方法有 2 个主要的缺点：
+
 - 代码包的大小至少有 50 MB，第一次执行后，文件大小至少将有 200 MB
 - 内存的消耗有些疯狂，因为 Electron 并不擅长对内存的管理
 
-
 但是如果你准备掌握它，那么你在给你的程序添加 GUI 时将非常便利！
-GUI 编码愉快！
+
+享受 GUI 编码的快乐吧！
 
 ----------------
 
@@ -679,9 +701,6 @@ via: https://medium.com/@social_57971/how-to-add-a-gui-to-your-golang-app-in-5-e
 
 作者：[Asticode](https://medium.com/@social_57971)
 译者：[fengchunsgit](https://github.com/fengchunsgit)
-校对：[rxcai](https://github.com/rxcai)
+校对：[rxcai](https://github.com/rxcai),[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
-
-  [1]: http://p0khjtoyx.bkt.clouddn.com/0.png?e=1512614718&token=U9_WlpL9xDhIuC0OvwzgYz5OmwFSaT0mRch0uuLm:El4EfsIVIW0SLlHyFWyp0NGX_34
