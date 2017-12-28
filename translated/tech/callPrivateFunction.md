@@ -1,5 +1,5 @@
 
-##在golang中如何调用私有函数(绑定隐藏的标识符)
+## 在golang中如何调用私有函数(绑定隐藏的标识符)
 
 2016年4月28日
 
@@ -14,7 +14,8 @@
    - 现行的方式-go编译器通过go:linkname支持名称重定向,引用于11.11.14[ dev.cc code review 169360043: cmd/gc: changes for removing runtime C code (issue 169360043 by r…@golang.org)](https://groups.google.com/forum/#!topic/golang-codereviews/5Ps_El_RpNE) ,在github.com的issue上有可以找到[ cmd/compile: “missing function body” error when using the //go:linkname compiler directive #15006](https://github.com/golang/go/issues/15006) .
 
 用这些技巧我曾设法绑定golang运行时调度器相关的函数用以减少过度使用go的协程和内部锁机制导致的gc停顿.
-##使用assembly stubs(不知如何译)
+
+## 使用assembly stubs(不知如何译)
    
    想法很简单-为需要的标识符提供直接跳转汇编指令stubs(不知如何译).链接器并不知道标识符是否已导出.
    详见旧版的代码src/os/signal/sig.s:
@@ -63,7 +64,7 @@
 	func signal_ignore(uint32)
 	func signal_recv() uint32
 ```
-##使用go:linkname
+## 使用go:linkname
    
 为了使用这种方法,代码中必须引入_"unsafe"包.为了解决go编译器完全编译参数的限制,一种可能的方法是在main包目录加一个空的汇编stub文件以禁用编译器的检查.
 详见 os/signal/sig.s:
@@ -76,7 +77,7 @@
 
 这个指令的格式是//go:linkname localname linkname.使用这种方法可以将新的标识符链接(导出)或绑定到已存在的标识符(导入).
 
-##用go:linkname导出
+## 用go:linkname导出
 在runtime/proc.go中一个函数的实现
 ```
 	...
@@ -97,7 +98,7 @@
 	// runtime_doSpin does active spinning.
 	func runtime_doSpin()
 ```
-##用go:linkname导入
+## 用go:linkname导入
 在 net/parse.go中有一个很好的例子:
 ```
 	package net
@@ -118,9 +119,11 @@
 使用这种技巧的方法:
 	1. 导入_"unsafe"包.
 	2. 提供一个没有函数体的函数,比如:func byteIndex(s string, c byte) int
-	3.  在定义函数前把//go:linkname指令放在编译器的右边,例如//go:linkname byteIndex strings.IndexByte,byteIndex是本地名称,strings.IndexByte是远程名称.
-        4. 提供.s文件stub ,以便忽略编译器对部分函数的完全编译.
-##例子goparkunlock
+	3.  在定义函数前把//go:linkname指令放在编译器的右边,例如//go:linkname byteIndex
+strings.IndexByte,byteIndex是本地名称,strings.IndexByte是远程名称.
+ 	4. 提供.s文件stub ,以便忽略编译器对部分函数的完全编译.
+ 
+## 例子goparkunlock
 ```
 	package main
 
@@ -165,9 +168,11 @@
 	    }
 	}
 ```
-##源码
+## 源码
+
 可在这里获取[https://github.com/sitano/gsysint](https://github.com/sitano/gsysint) .
-##相关帖子
+
+## 相关帖子
 
 - [Docker Windows install instructions on the state of 4 August 2016 04 Aug 2016](https://sitano.github.io/2016/08/04/docker-win/) 
 
