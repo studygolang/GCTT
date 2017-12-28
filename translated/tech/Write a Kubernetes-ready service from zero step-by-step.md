@@ -1,8 +1,8 @@
-# go零基础step-by-step写一个运行在kubernetes的服务
+# Go零基础step-by-step写一个运行在kubernetes的服务
 
 ------
 
-如果你用go写过程序，就会发现用go来写服务是很简单的事。比如说，只要几行代码就可以跑起来一个http服务。但是如果想让服务在生产环境能运行起来我们需要额外加一些东西。本文讨论服务如何能够在kubernets上运行起来。
+如果你用Go写过程序，就会发现用Go来写服务是很简单的事。比如说，只要几行代码就可以跑起来一个HTTP服务。但是如果想让服务在生产环境能运行起来，我们需要额外加一些东西。本文讨论服务如何能够在kubernets上运行起来。
 
 文中所有的例子可以在[这里（按标签分类）](https://github.com/rumyantseva/advent-2017/tree/all-steps)，或者[这里（按commit分类）](https://github.com/rumyantseva/advent-2017/commits/master)找到。
 
@@ -27,13 +27,13 @@ func main() {
 	http.ListenAndServe(":8000", nil)
 }
 ```
-执行`go run main.go`即可运行程序。用curl命令`curl -i http://127.0.0.1:8000/home`可以看到程序是如何运行的。不过目前在终端并没有多少**状态信息**。
+执行`go run main.go`即可运行程序。用curl命令`curl -i http://127.0.0.1:8000/home`可以看到程序返回值。不过目前在终端并没有多少**状态信息**。
 
 ## 第二步 添加日志
 
-首先，我们添加一个logger便于查看执行到哪一行、记录错误以及其他重要状态。本例中简便起见，会使用Go标准库中的log，线上生产环境请使用更强大的日志系统，例如：[glog](https://github.com/golang/glog)或者[logrus](https://github.com/sirupsen/logrus)。
+添加一个logger便于查看执行到哪一行、记录错误信息以及其他重要状态。本例中简便起见，会使用Go标准库中的log，线上生产环境请使用更强大的日志系统，例如：[glog](https://github.com/golang/glog)或者[logrus](https://github.com/sirupsen/logrus)。
 
-有三个地方需要添加日志：服务开始时候、服务准备好可以接受请求时以及当`http.ListenAndServe`返回错误时。具体代码如下：
+代码中有三个地方需要添加日志：服务开始时候、服务准备好可以接受请求时以及当`http.ListenAndServe`返回错误时。具体代码如下：
 
 ```go
 func main() {
@@ -48,13 +48,13 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }
 ```
-是不是离完美更近了点？
+一步步趋向完美。
 
 ## 第三步 添加路由器
 
-为了让应用更加可用，现在，需要添加一个路由器（router），路由器能够以一种简单的方式处理各种不同的URI和HTTP方法，以及匹配一些其他的规则。Go标准库中没有包含路由器（router），本文使用[gorilla/mux](https://github.com/gorilla/mux)库，该路由器能够很好地和标准库`net\http`兼容。
+为了让应用更加可用，需要添加一个路由器（router），路由器能够以一种简单的方式处理各种不同的URI和HTTP方法，以及匹配一些其他的规则。Go标准库中没有包含路由器（router），本文使用[gorilla/mux](https://github.com/gorilla/mux)库，该库提供的路由器能够很好地和标准库`net\http`兼容。
 
-服务中如果包含了一定数量的不同路由规则，那么最好是把路由相关的东西单独封装到几个独立的function或者是一个package中。本文中，会把规则定义和初始化路由器的代码放到`handlers`package中（[这里](https://github.com/rumyantseva/advent-2017/commit/1a61e7952e227e33eaab81404d7bff9278244080)可以看到完整的改动）。
+服务中如果包含了一定数量的不同路由规则，那么最好是把路由相关的代码单独封装到几个独立的function或者是一个package中。本文中，会把规则定义和初始化路由器的代码放到`handlers`package中（[这里](https://github.com/rumyantseva/advent-2017/commit/1a61e7952e227e33eaab81404d7bff9278244080)可以看到完整的改动）。
 
 我们添加一个`Router`方法，该方法返回一个配置好的路由器变量，其中`home`方法处理`/home`路径的请求。个人建议处理方法和路由分开写：
 
@@ -158,7 +158,7 @@ func TestRouter(t *testing.T) {
 }
 ```
 
-这里我们检查`GET`请求`/home`路径是否返回`200`，`POST`请求该路径应该要返回`405`。请求不存在的路由期望返回`404`。实际上，这样子测有点太冗余了，`gorilla/mux`中已经包含类似的测试，所以测试代码可以简化下。
+检查了`GET`请求`/home`路径是否返回`200`，而`POST`请求该路径应该要返回`405`。请求不存在的路由期望返回`404`。实际上，这样子测有点太冗余了，`gorilla/mux`中已经包含类似的测试，所以测试代码可以简化下。
 
 对于`home`来说，检查其返回得code和body值即可。
 
@@ -209,7 +209,7 @@ ok      github.com/rumyantseva/advent-2017/handlers     0.018s
 
 ## 第五步 添加配置
 
-服务需要能够可配置。前面代码，写死监听`8000`端口，后面需要改成可配置。[The Twelve-Factor App manifesto](https://12factor.net/)，这篇文章详尽阐述了如何写好服务，其中提倡在环境变量中存放配置。后面代码展示如何利用环境变量：
+服务需要能够可配置。前面代码，写死监听`8000`端口，后面需要改成可配置。[The Twelve-Factor App manifesto](https://12factor.net/)，这篇文章详尽阐述了如何写好服务，文中提倡在环境变量中存放配置。后面代码展示如何利用环境变量：
 
 `main.go`
 
@@ -239,7 +239,7 @@ func main() {
 }
 ```
 
-上例中，若没有设置port值，会返回错误。如果配置错误的话，没有必要继续执行后面、
+上例中，若没有设置port值，会返回错误。如果配置错误的话，没有必要继续执行后面代码。
 
 ## 第六步 添加Makefile
 
@@ -266,9 +266,9 @@ test:
 
 上例中把二进制文件名单独放到变量`APP`中，减少重复定义名称次数。
 
-本文中，运行程序前，先删除旧的二进制文件（存在的话），然后编译代码、设置正确的环境变量并运行新生成的二进制文件，这些操作可以通过执行`make run`命令实现。
+运行程序前，先删除旧的二进制文件（存在的话），然后编译代码、设置正确的环境变量并运行新生成的二进制文件，这些操作可以通过执行`make run`命令完成。
 
-## 添加版本控制
+## 第七步 添加版本控制
 
 这一步要添加到服务中的是版本控制功能。某些场景下，知道生产环境中所使用的具体是哪个构建和commit以及什么时间构建的是非常有用的。
 
@@ -340,9 +340,9 @@ func home(w http.ResponseWriter, _ *http.Request) {
 }
 ```
 
-本文通过Go链接器在编译时设置`BuildTime`，`Commit`以及`Release`变量。
+通过Go链接器在编译时设置`BuildTime`，`Commit`以及`Release`变量。
 
-我们先在Makefile中添加新变量：
+先在Makefile中添加新变量：
 
 `Makefile`
 
@@ -374,11 +374,11 @@ build: clean
 PROJECT?=github.com/rumyantseva/advent-2017
 ```
 
-本步所有代码变更记录可以在[这里](https://github.com/rumyantseva/advent-2017/commit/eaa4ff224b32fb343f5eac2a1204cc3806a22efd)找到。多动手尝试运行下`make run`命令看看具体是怎么工作的。
+本步所有代码变更记录可以在[这里](https://github.com/rumyantseva/advent-2017/commit/eaa4ff224b32fb343f5eac2a1204cc3806a22efd)找到。可以多动手尝试运行下`make run`命令，看看具体是怎么工作的。
 
 ## 第八步 减少依赖
 
-之前代码有个不尽如人意的点：`handler`包依赖`version`包。做个简单的改动，让`home`处理器变成可配置的：
+之前代码有个不尽如人意的点：`handler`包依赖`version`包。做个简单的改动，让`home`处理器变成可配置的，减少依赖：
 
 `handlers/home.go`
 
@@ -394,7 +394,7 @@ func home(buildTime, commit, release string) http.HandlerFunc {
 
 ## 第九步 添加“健康”检查功能（health checks）
 
-某些情况下，假如想在kubernetes上跑服务，需要添加“健康”检查功能: [liveness和readiness检测](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/)。liveness检测目的是测试程序是否还在跑。如果liveness检测失败，服务会被重启。readiness检测目的是测试程序是否准备好可以接受请求。如果readiness检测失败，该容器会从服务负载均衡器中移除。
+某些情况下，想在kubernetes上跑服务，需要添加“健康”检查功能: [liveness和readiness检测](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/)。liveness检测目的是测试程序是否还在跑。如果liveness检测失败，服务会被重启。readiness检测目的是测试程序是否准备好可以接受请求。如果readiness检测失败，该容器会从服务负载均衡器中移除。
 
 实现liveness检测的方式，可以简单写一个handler返回`200`:
 
@@ -407,7 +407,7 @@ func healthz(w http.ResponseWriter, _ *http.Request) {
 }
 ```
 
-readiness检测实现方式类似，不同的就是有时候要等待某事件完成（例如：数据库已起来）：
+readiness检测实现方式类似，不同的就是可能要等待某事件完成（例如：数据库已起来）：
 
 `handlers/readyz.go`
 
@@ -454,7 +454,7 @@ func Router(buildTime, commit, release string) *mux.Router {
 
 代码改动[GitHub](https://github.com/rumyantseva/advent-2017/commit/e73b996f8522b736c150e53db059cf041c7c3e64)上可以找到。
 
-注意：如果流量过大，服务节点的响应会不稳定。例如，liveness检测会因为超时失败。这就是为什么一些工程师不用liveness检测的原因。个人认为，当发现请求越来越多时候，最好是去扩容；例如可以用[scale pods with HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)。
+注意：如果流量过大，服务节点的响应会不稳定。例如，liveness检测会因为超时失败。这就是为什么一些工程师不用liveness检测的原因。个人认为，当发现请求越来越多时候，最好是去扩容；例如可以参考[scale pods with HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)。
 
 ## 第十步 添加平滑关闭功能
 
@@ -494,11 +494,11 @@ func main() {
 ```
 收到`SIGINT`或`SIGTERM`任意一个系统信号，服务平滑关闭。
 
-注意：之前写这段代码，尝试catch `SIGKILL`信号。之前在不同的库中有看到过，我（作者）就确认这样是行的通的。但是后来Sandor Szücs[指出](https://twitter.com/sszuecs/status/941582509565005824)，不可能获取到`SIGKILL`信号。发出`SIGKILL`信号，程序直接结束。
+注意：这段代码的旧版本，尝试去捕获`SIGKILL`信号。之前在不同的库中有看到过这种用法，我（作者）确认这样是行的通的。但是后来Sandor Szücs[指出](https://twitter.com/sszuecs/status/941582509565005824)，不可能获取到`SIGKILL`信号。发出`SIGKILL`信号后，程序会直接结束。
 
 ## 第十一步 添加Dockerfile
 
-程序基本上可以在Kubernetes上跑了。这一步docker化。
+程序基本上可以在Kubernetes上跑了。这一步进行docker化。
 
 先添加一个简单的`Dockerfile`，如下：
 
@@ -516,7 +516,7 @@ CMD ["/advent"]
 
 创建了一个最小的容器，复制二进制到容器内然后运行（别忘了`PORT`配置变量）。
 
-更新`Makefile`，使其能够构建镜像以及运行容器。添加`GOOS`和`GOARCH`变量，`build`目标中交叉编译要用到。
+扩展`Makefile`，使其能够构建镜像以及运行容器。同时添加`GOOS`和`GOARCH`变量，在`build`goal中交叉编译要用到。
 
 `Makefile`
 
@@ -546,7 +546,7 @@ run: container
 ...
 ```
 
-同时添加了`container`和`run`goal，前者构建镜像，后者从容器启动程序。所有改动[这里](https://github.com/rumyantseva/advent-2017/commit/909fef6d585c85c5e16b5b0e4fdbdf080893b679)可以找到。
+添加了`container`和`run`goal，前者构建镜像，后者从容器启动程序。所有改动[这里](https://github.com/rumyantseva/advent-2017/commit/909fef6d585c85c5e16b5b0e4fdbdf080893b679)可以找到。
 
 请尝试运行`make run`命令，检查所有过程是否正确。
 
@@ -565,7 +565,7 @@ $ dep init
 
 ## 第十三步 Kubernetes
 
-[最后一步](https://github.com/rumyantseva/advent-2017/commit/27b256191dc8d4530c895091c49b8a9293932e0f)，将程序运行到Kubernets上。本地运行最简单方式就是安装、配置[minikube](https://github.com/kubernetes/minikube)。
+[最后一步](https://github.com/rumyantseva/advent-2017/commit/27b256191dc8d4530c895091c49b8a9293932e0f)，将程序部署到Kubernets上运行。本地环境最简单方式就是安装、配置[minikube](https://github.com/kubernetes/minikube)。
 
 Kubernetes从Docker registry拉取镜像。本文中，使用公共Docker registry--[Docker Hub](https://hub.docker.com/)。`Makefile`中还要添加一个变量和命令：
 
@@ -603,7 +603,7 @@ ee1f0f98199f: Pushed
 
 成功了~！然后可以在[这里找到镜像](https://hub.docker.com/r/webdeva/advent/tags/)。
 
-接下来，定义必要的Kubernetes配置（manifest）。通常，一个最简单的服务至少需要设置deployment、service和ingress配置。默认情况，manifest都是静态的，即其中不能使用任何变量。不过可以通过[helm工具](https://github.com/kubernetes/helm)创建更灵活的配置。
+接下来，定义必要的Kubernetes配置（manifest）。通常，一个服务至少需要设置deployment、service和ingress配置。默认情况，manifest都是静态的，即其中不能使用任何变量。不过可以通过[helm工具](https://github.com/kubernetes/helm)创建更灵活的配置。
 
 本文中，没有用`helm`，定义了两个变量：`ServiceName`和`Release`，灵活性更高些。后面通过`sed`命令替换“变量”为实际值。
 
@@ -728,7 +728,7 @@ minikube: push
     done > tmp.yaml
 	kubectl apply -f tmp.yaml
 ```
-上面命令“编译”所有`\*.yaml`配置到一个文件。用实际值替换`Release`和`ServiceName`变量（注意，这里用了`gsed`而非标准`sed`）,最后运行`kubectl apply`命令安装应用到Kubernetes上。
+上面命令“编译”所有`*.yaml`配置到一个文件。用实际值替换`Release`和`ServiceName`变量（注意，这里用了`gsed`而非标准`sed`）,最后运行`kubectl apply`命令安装应用到Kubernetes上。
 
 验证配置是否正确：
 ```
