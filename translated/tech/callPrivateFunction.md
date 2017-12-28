@@ -177,7 +177,7 @@
 
 
 
-via: https://golangbot.com/arrays-and-slices/
+via: https://sitano.github.io/2016/04/28/golang-private/
  
  作者：[JohnKoepi](https://twitter.com/JohnKoepi)
  译者：[kekemuyu](https://github.com/kekemuyu)
