@@ -1,6 +1,8 @@
+已发布：https://studygolang.com/articles/11902
+
 # 第 8 章：if-else 语句
 
-这是我们[Golang 系列教程](https://golangbot.com/learn-golang-series/)的第八篇。
+这是我们 [Golang 系列教程](https://golangbot.com/learn-golang-series/)的第 8 篇。
 
 if 是条件语句。if 语句的语法是
 
@@ -11,7 +13,7 @@ if condition {
 
 如果 `condition` 为真，则执行 `{` 和 `}` 之间的代码。
 
-不同于其他语言，例如C语言，Go 语言里的 `{  }` 是必要的，即使在 `{  }` 之间只有一条语句。
+不同于其他语言，例如 C 语言，Go 语言里的 `{  }` 是必要的，即使在 `{  }` 之间只有一条语句。
 
 if 语句还有可选的 `else if` 和 `else` 部分。
 
@@ -44,7 +46,7 @@ func main() {
 ```
 [在线运行程序](https://play.golang.org/p/vWfN8UqZUr)
 
-`if num％2 == 0` 语句检测 num 取 2 的余数是否为零。 如果是为零则打印输出"the number is even"，如果不为零则打印输出"the number is odd"。在上面的这个程序中，打印输出的是 `the number is even`。
+`if num％2 == 0` 语句检测 num 取 2 的余数是否为零。 如果是为零则打印输出 "the number is even"，如果不为零则打印输出 "the number is odd"。在上面的这个程序中，打印输出的是 `the number is even`。
 
 `if` 还有另外一种形式，它包含一个 `statement` 可选语句部分，该组件在条件判断之前运行。它的语法是
 
@@ -72,7 +74,7 @@ func main() {
 ```
 [在线运行程序](https://play.golang.org/p/_X9q4MWr4s)
 
-在上面的程序中，`num` 在 `if` 语句中进行初始化，`num` 只能从 `if` 和 `else` 中访问。也就是说 `num` 的范围仅限于 `if`  `else` 代码块。如果我们试图从其他外部的 `if` 或者 `else` 访问 `num`,编译器会不通过。
+在上面的程序中，`num` 在 `if` 语句中进行初始化，`num` 只能从 `if` 和 `else` 中访问。也就是说 `num` 的范围仅限于 `if` `else` 代码块。如果我们试图从其他外部的 `if` 或者 `else` 访问 `num`,编译器会不通过。
 
 让我们再写一个使用 `else if` 的程序。
 
@@ -128,13 +130,13 @@ func main() {
 
 在上面的程序中，`else` 语句不是从 `if` 语句结束后的 `}` 同一行开始。而是从下一行开始。这是不允许的。如果运行这个程序，编译器会输出错误，
 
-```go
+```
 main.go:12:5: syntax error: unexpected else, expecting }
 ```
 
 出错的原因是 Go 语言的分号是自动插入。你可以在这里阅读分号插入规则 [https://golang.org/ref/spec#Semicolons](https://golang.org/ref/spec#Semicolons)。
 
-在Go语言规则中，它指定在 `}` 之后插入一个分号，如果这是该行的最终标记。因此，在if语句后面的 `}` 会自动插入一个分号。
+在 Go 语言规则中，它指定在 `}` 之后插入一个分号，如果这是该行的最终标记。因此，在if语句后面的 `}` 会自动插入一个分号。
 
 实际上我们的程序变成了
 
@@ -175,7 +177,7 @@ func main() {
 
 本章教程到此告一段落了，感谢您的阅读，欢迎您的任何评论和反馈。
 
-### 下一个教程 - [循环](https://golangbot.com/loops/)
+**下一个教程 - 循环**
 
 ----------------
 
