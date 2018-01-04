@@ -765,6 +765,10 @@ Vary: Accept-Encoding
 ```
 成功~！
 
+所有步骤的代码在[这里](https://github.com/rumyantseva/advent-2017)，两个版本：[按commit划分](https://github.com/rumyantseva/advent-2017/commits/master)以及[按步骤划分](https://github.com/rumyantseva/advent-2017/tree/all-steps)。如有任何疑问，请[提issue](https://github.com/rumyantseva/advent-2017/issues/new)，或者tweet[@webdeva](https://twitter.com/webdeva)，或者在评论区留评论。
+
+真实生产环境上的服务其实有更大的灵活性，想知道是代码“长”啥样的么^_^？可以参考[takama/k8sapp](https://github.com/takama/k8sapp)，是一个Go应用模板，满足了Kubernetes需求。
+
 ----------------
 
 via: https://blog.gopheracademy.com/advent-2017/kubernetes-ready-service/
