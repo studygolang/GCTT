@@ -73,8 +73,8 @@ package id
 func Id() int64
 ```
 
-##我该怎么做？
-远离 Goroutine ID 吧，并忘记它们的存在。从 GO 语言设计的角度来看，使用它们是危险的。因为几乎所有使用的目的都是去做一些和 goroutine-local 相关的事情。
+## 我该怎么做？
+远离 goroutine id 吧，并忘记它们的存在。从 GO 语言设计的角度来看，使用它们是危险的。因为几乎所有使用的目的都是去做一些和 goroutine-local 相关的事情。
 而这违反了 Go 语言编程的“[Share Memory By Communicating](https://blog.golang.org/share-memory-by-communicating)”原则。
 
 ----------------
@@ -83,6 +83,6 @@ via: http://blog.sgmansfield.com/2015/12/goroutine-ids/
 
 作者：[Scott Mansfield](http://blog.sgmansfield.com/)
 译者：[MaleicAcid](https://github.com/MaleicAcid)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
