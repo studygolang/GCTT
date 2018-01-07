@@ -1,5 +1,8 @@
+已发布：https://studygolang.com/articles/12122
+
 # 两个随机数函数的故事
-2017年12月5日 作者：内尔·卡彭铁尔
+
+2017 年 12 月 5 日 作者：内尔·卡彭铁尔
 
 我经常有一些困惑，`crypto/rand` 包和 `math/rand` 包是如何关联的，或者它们是如何按照预期的方式（一起）工作的？这是其他人已经思考过的问题，还是仅仅我个人的突发奇想呢？终于有一天，我决定攻克这个问题，这篇博客就是这次努力的结果。
 
@@ -83,8 +86,8 @@ func BenchmarkGlobal(b *testing.B) {
 
 还不错！在我的笔记本上大约 38 ns/op。
 
-```go
-BenchmarkGlobal-4         	50000000	        37.7 ns/op
+```
+BenchmarkGlobal-4         50000000        37.7 ns/op
 ```
 
 如果创建一个以当前时间作为种子的 `rand.Rand` 实例，情况会如何呢？
@@ -100,8 +103,8 @@ func BenchmarkNative(b *testing.B) {
 
 大约 23 ns/op，相当不错！
 
-```go
-BenchmarkNative-4         	100000000	        22.7 ns/op
+```
+BenchmarkNative-4         100000000        22.7 ns/op
 ```
 
 现在，让我们测试一下我们写的新种子方案。
@@ -117,8 +120,8 @@ func BenchmarkCrypto(b *testing.B) {
 
 哎呀，大约 900 ns/op，这个代价太昂贵了。是不是什么地方我们搞错了？或者这就是使用 `crypto/rand` 包需要付出的代价？
 
-```go
-BenchmarkCrypto-4     	 2000000	       867 ns/op
+```
+BenchmarkCrypto-4      2000000       867 ns/op
 ```
 
 让我们测试一下单独读取 `crypto/rand` 需要多长时间。
@@ -134,8 +137,8 @@ func BenchmarkCryptoRead(b *testing.B) {
 
 好，结果显示，我们新的解决方案中绝大部分时间花在了与 `crypto/rand` 包的交互上面。
 
-```go
-BenchmarkCryptoRead-4     	 2000000	       735 ns/op
+```
+BenchmarkCryptoRead-4      2000000       735 ns/op
 ```
 
 我不知道如何做才能进一步提高性能。而且，或许对于你的使用场景来说，花费大约1毫秒来获取非特定随机数不是一个问题。这个需要你自己去评估了。
@@ -169,8 +172,8 @@ func BenchmarkSead(b *testing.B) {
 
 现在，我们证实了我们的假设是正确的。
 
-```go
-BenchmarkSeed-4           	50000000	        23.9 ns/op
+```
+BenchmarkSeed-4           50000000        23.9 ns/op
 ```
 
 ## 关于作者
