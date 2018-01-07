@@ -1,27 +1,27 @@
-#获取 Goroutine ID
+# 获取 Goroutine ID
 ---
-##Goroutine ID 真实存在吗？
+## Goroutine ID 真实存在吗？
 当然存在。
-Go Runtime 必须有一些方式去追踪 Goroutine ID。
+Go 运行时一定有某种方式来跟踪 goroutine ID。
 
-##那我该使用它们吗？
+## 那我该使用它们吗？
 不该。
 原因一：https://groups.google.com/forum/#!topic/golang-nuts/Nt0hVV_nqHE
 原因二：https://groups.google.com/forum/#!topic/golang-nuts/0HGyCOrhuuI
 原因三：http://stackoverflow.com/questions/19115273/looking-for-a-call-or-thread-id-to-use-for-logging
 
-##有没有哪些包是我可以使用的？
+## 有没有哪些包是我可以使用的？
 已有的来自 Go Team 成员的包，被评价为“[用此包者，将入地狱。](https://godoc.org/github.com/davecheney/junk/id)” 
 
-也有一些包基于 Goroutine ID 来建立 Goroutine Local Storage，如：
+也有一些包基于 goroutine id 来建立 goroutine local storage，如：
  - [github.com/jtolds/gls](https://github.com/jtolds/gls)
  - [github.com/tylerb/gls](https://github.com/tylerb/gls)
 但都有悖于 GO 语言的设计原则。
 
-##最简代码
-如果读到这里，你仍“执迷不悟”，那么下面就将展示如何获取当前的 Goroutine ID ：
+## 最简代码
+如果读到这里，你仍“执迷不悟”，那么下面就将展示如何获取当前的 goroutine id ：
 
-###Go源码中的骇客代码
+### Go 源码中的骇客（Hacky）代码
 下列代码源于 Brad Fitzpatrick 的 [`http/2`](https://github.com/golang/net/blob/master/http2/gotrack.go) 库。它被整合进了 Go 1.6 中，仅仅被用于调试而非常规开发。
 ```go
 package main
