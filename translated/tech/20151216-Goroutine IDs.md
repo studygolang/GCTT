@@ -7,9 +7,9 @@ Go 运行时一定有某种方式来跟踪 goroutine ID。
 ## 那我该使用它们吗？
 不该。
 
-原因一：https://groups.google.com/forum/#!topic/golang-nuts/Nt0hVV_nqHE
-原因二：https://groups.google.com/forum/#!topic/golang-nuts/0HGyCOrhuuI
-原因三：http://stackoverflow.com/questions/19115273/looking-for-a-call-or-thread-id-to-use-for-logging
+ - 原因一：https://groups.google.com/forum/#!topic/golang-nuts/Nt0hVV_nqHE
+ - 原因二：https://groups.google.com/forum/#!topic/golang-nuts/0HGyCOrhuuI
+ - 原因三：http://stackoverflow.com/questions/19115273/looking-for-a-call-or-thread-id-to-use-for-logging
 
 ## 有没有哪些包是我可以使用的？
 已有的来自 Go Team 成员的包，被评价为“[用此包者，将入地狱。](https://godoc.org/github.com/davecheney/junk/id)” 
