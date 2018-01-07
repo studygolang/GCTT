@@ -2,13 +2,13 @@
 
 本文承接第一部分的内容继续讲解 defer 的一些常见陷阱
 
-## 1——倒序
+## 1——Z 到 A（译注：倒序）
 
 当你第一次学习 Go 的时候可能会中招。
 
 例子
 
-```golang
+```go
 func main() {
   for i := 0; i < 4; i++ {
     defer fmt.Print(i)
@@ -18,7 +18,7 @@ func main() {
 
 输出
 
-Go 的运行时会将延迟执行的函数保存至一个栈中，意味着它们会按照出栈的顺序倒序执行。想了解更多，请阅读这篇 [文章](https://blog.learngoprogramming.com/golang-defer-simplified-77d3b2b817ff#702e) 。
+Go 的运行时会将延迟执行的函数保存至一个栈中（译注：意味着它们会按照入栈的顺序倒序执行）。想了解更多，请阅读这篇 [文章](https://blog.learngoprogramming.com/golang-defer-simplified-77d3b2b817ff#702e) 。
 
 ```
 3
@@ -41,7 +41,7 @@ Go 的运行时会将延迟执行的函数保存至一个栈中，意味着它�
 
 ### 接着创建一个 reader 类型的结构体使得调用 Close 的时候返回一个 error
 
-```golang
+```go
 type reader struct{}
 
 func (r reader) Close() error {
@@ -51,7 +51,7 @@ func (r reader) Close() error {
 
 当 `reader` 调用 `Close()` 的时候总会返回一个 error ，`release` 会在 **defer** 内部调用。
 
-```golang
+```go
 r := reader{}
 
 err := release(r)
@@ -69,7 +69,7 @@ nil
 
 ### 为什么会这样？
 
-延迟函数内的赋值语句在延迟函数的 `if` 块中因此在块中的 `err` 变量赋值会创建一个全新的变量，块级变量 `err` 的作用域会屏蔽返回变量 `err` ，因此， `release()` 还是返回 `err` 的原始值。
+延迟函数内的赋值语句在延迟函数的 `if` 块中，因此在块中的 `err` 变量赋值会创建一个全新的变量，块级变量 `err` 的作用域会屏蔽返回变量 `err` ，因此， `release()` 还是返回 `err` 的原始值。
 
 ### 解决方案
 
@@ -85,7 +85,7 @@ nil
 
 例子
 
-```golang
+```go
 type message struct {
   content string
 }
@@ -101,7 +101,7 @@ func (p *message) print() string {
 
 试着运行一下上面的代码
 
-```golang
+```go
 func() {
   m := &message{content: "Hello"}
 
@@ -135,7 +135,7 @@ func() {
 
 我们在循环里定义了一个闭包函数。
 
-```golang
+```go
 for i := 0; i < 3; i++ {
   defer func() {
    fmt.Println(i)
@@ -163,7 +163,7 @@ for i := 0; i < 3; i++ {
 
 直接向延迟函数传参数。
 
-```golang
+```go
 for i := 0; i < 3; i++ {
   defer func(i int) {
    fmt.Println(i)
@@ -185,7 +185,7 @@ for i := 0; i < 3; i++ {
 
 在这里，我们故意使用一个新的 `i` 块级变量来屏蔽循环中的 `i` ，说实话我不太喜欢这种风格，所以我把这种方式放到了 [Hacker News](https://news.ycombinator.com/item?id=15979751) 上供大家讨论。
 
-```golang
+```go
 for i := 0; i < 3; i++ {
   i := i
   defer func() {
@@ -198,7 +198,7 @@ for i := 0; i < 3; i++ {
 
 如果一次延迟调用一个函数，你可以直接对这个函数使用 **defer** 。
 
-```golang
+```go
 for i := 0; i < 3; i++ {
   defer fmt.Println(i)
 }
@@ -210,7 +210,7 @@ for i := 0; i < 3; i++ {
 
 例子
 
-```golang
+```go
 func release() error {
   defer func() error {
     return errors.New("error")
@@ -228,7 +228,7 @@ nil
 
 ### 解决方案
 
-```golang
+```go
 func release() (err error) {
   defer func() {
     err = errors.New("error")
@@ -260,6 +260,6 @@ via: https://blog.learngoprogramming.com/5-gotchas-of-defer-in-go-golang-part-ii
 
 作者：[Inanc Gumus](https://blog.learngoprogramming.com/@inanc)
 译者：[yujiahaol68](https://github.com/yujiahaol68)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
