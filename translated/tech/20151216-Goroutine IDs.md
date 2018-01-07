@@ -6,6 +6,7 @@ Go 运行时一定有某种方式来跟踪 goroutine ID。
 
 ## 那我该使用它们吗？
 不该。
+
 原因一：https://groups.google.com/forum/#!topic/golang-nuts/Nt0hVV_nqHE
 原因二：https://groups.google.com/forum/#!topic/golang-nuts/0HGyCOrhuuI
 原因三：http://stackoverflow.com/questions/19115273/looking-for-a-call-or-thread-id-to-use-for-logging
