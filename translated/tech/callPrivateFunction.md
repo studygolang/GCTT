@@ -11,9 +11,9 @@
 
    - 旧的方式，现在已经不再使用 - 汇编级隐式连接到所需符号，称为 assembly stubs ，详见 [go runtime, os/signal: use //go:linkname instead of assembly stubs to get access to runtime functions](https://groups.google.com/forum/#!topic/golang-codereviews/J0HK9GLc76M) 。
    
-   - 现行的方式 - go 编译器通过 go:linkname 支持名称重定向,引用于 11.11.14[ dev.cc code review 169360043: cmd/gc: changes for removing runtime C code (issue 169360043 by r…@golang.org)](https://groups.google.com/forum/#!topic/golang-codereviews/5Ps_El_RpNE) ，在 github.com 的 issue 上有可以找到 [ cmd/compile: “missing function body” error when using the //go:linkname compiler directive #15006](https://github.com/golang/go/issues/15006) 。
+   - 现行的方式 - go 编译器通过 go:linkname 支持名称重定向,引用于 11.11.14 [ dev.cc code review 169360043: cmd/gc: changes for removing runtime C code (issue 169360043 by r…@golang.org)](https://groups.google.com/forum/#!topic/golang-codereviews/5Ps_El_RpNE) ，在 github.com 的 issue 上有可以找到 [ cmd/compile: “missing function body” error when using the //go:linkname compiler directive #15006](https://github.com/golang/go/issues/15006) 。
 
-用这些技巧我曾设法绑定 golang 运行时调度器相关的函数用以减少过度使用go的协程和内部锁机制导致的 gc 停顿。
+用这些技巧我曾设法绑定 golang 运行时调度器相关的函数用以减少过度使用 go 的协程和内部锁机制导致的 gc 停顿。
 
 ### 使用 assembly stubs
    
