@@ -47,18 +47,19 @@ func getGID() uint64 {
 }
 ```
 
-####工作原理解释
-通过解析调试信息来获取 Goroutine ID 是可行的. `http/2` 库就使用调试性的代码来对连接进行追踪查看。但仅仅是将 Goroutine ID 用于调试而已。
+#### 工作原理解释
+
+通过解析调试信息来获取 goroutine id 是可行的. `http/2` 库就使用调试性的代码来对连接进行追踪查看。但仅仅是将 goroutine id 用于调试而已。
 
 调试信息可以通过调用 [`runtime.Stack(buf []byte, all bool) int`](https://golang.org/pkg/runtime/#Stack)来获取，它会以文本形式打印堆栈信息到缓冲区中。堆栈信息的第一行会是如下文本： “goroutine #### […” 
-这里的 #### 就是真实的 Goroutine ID. 剩余代码不过是进行一些文本操作来提取和解析堆栈信息中的数字。
+这里的 #### 就是真实的 goroutine id. 剩余代码不过是进行一些文本操作来提取和解析堆栈信息中的数字。
 
-###CGo 版本对应的合法代码
+### CGo 版本对应的合法代码
 C 版本的代码来自 github.com/davecheney/junk/id （译者注：源链接失效，请访问[github.com/davecheney/junk/tree/master/id](https://github.com/davecheney/junk/tree/master/id)）。代码中直接获取了当前 goroutine 的 goid 属性并返回它的值。
 
 文件名： `id.c`
 
-```go
+```c
 #include "runtime.h"
 
 int64 ·Id(void) {
