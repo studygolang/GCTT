@@ -186,6 +186,6 @@ via: https://sitano.github.io/2016/04/28/golang-private/
  
  作者：[JohnKoepi](https://twitter.com/JohnKoepi)
  译者：[kekemuyu](https://github.com/kekemuyu)
- 校对：[校对者ID](https://github.com/校对者ID)
+ 校对：[校对者ID](https://github.com/polaris1119)
  
  本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
