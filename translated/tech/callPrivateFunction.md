@@ -66,7 +66,7 @@ func signal_recv() uint32
 ```
 ### 使用 go:linkname
    
-为了使用这种方法,代码中必须 import_"unsafe" 包。为了解决 go 编译器 -complete 参数的限制，一种可能的方法是在 main 包目录加一个空的汇编 stub 文件以禁用编译器的检查。
+为了使用这种方法，代码中必须 import_"unsafe" 包。为了解决 go 编译器 -complete 参数的限制，一种可能的方法是在 main 包目录加一个空的汇编 stub 文件以禁用编译器的检查。
 详见 os/signal/sig.s ：
 ```go
 // The runtime package uses //go:linkname to push a few functions into this
@@ -117,11 +117,11 @@ import (
 func byteIndex(s string, c byte) int
 ```
 使用这种技巧的方法：
-	1. import_"unsafe" 包。
-	2. 提供一个没有函数体的函数，比如： func byteIndex(s string, c byte) int
-	3. 在定义函数前，正确的放上 //go:linkname 指令，例如 //go:linkname byteIndex
+1. import_"unsafe" 包。
+2. 提供一个没有函数体的函数，比如： func byteIndex(s string, c byte) int
+3. 在定义函数前，正确的放上 //go:linkname 指令，例如 //go:linkname byteIndex
 strings.IndexByte,byteIndex 是本地名称，strings.IndexByte 是远程名称。
- 	4. 提供 .s 后缀的 stub 文件，以便编译器绕过 -complete 的检查，允许不完整的函数定义（译注：指没有函数体）。
+4. 提供 .s 后缀的 stub 文件，以便编译器绕过 -complete 的检查，允许不完整的函数定义（译注：指没有函数体）。
  
 ### 例子 goparkunlock
 ```go
