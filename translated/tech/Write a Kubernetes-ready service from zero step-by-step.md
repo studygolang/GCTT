@@ -1,8 +1,8 @@
-# Go零基础step-by-step写一个运行在kubernetes的服务
+# Go 从零开始构建运行在 Kubernetes 上的服务
 
 ------
 
-如果你用Go写过程序，就会发现用Go来写服务是很简单的事。比如说，只要几行代码就可以跑起来一个HTTP服务。但是如果想让服务在生产环境能运行起来，我们需要额外加一些东西。本文讨论服务如何能够在kubernets上运行起来。
+如果你用 Go 写过程序，就会发现用 Go 来写服务是很简单的事。比如说，只要几行代码就可以跑起来一个HTTP服务。但是如果我们想让服务在生产环境运行，我们还需要添加什么呢？本文将通过写一个能在 Kubernetes 上运行的服务的例子，来讨论上述问题。
 
 文中所有的例子可以在[这里（按标签分类）](https://github.com/rumyantseva/advent-2017/tree/all-steps)，或者[这里（按commit分类）](https://github.com/rumyantseva/advent-2017/commits/master)找到。
 
@@ -27,13 +27,13 @@ func main() {
 	http.ListenAndServe(":8000", nil)
 }
 ```
-执行`go run main.go`即可运行程序。用curl命令`curl -i http://127.0.0.1:8000/home`可以看到程序返回值。不过目前在终端并没有多少**状态信息**。
+执行 `go run main.go` 即可运行程序。用 curl 命令 `curl -i http://127.0.0.1:8000/home` 可以看到程序返回值。不过目前在终端并没有多少**状态信息**。
 
 ## 第二步 添加日志
 
-添加一个logger便于查看执行到哪一行、记录错误信息以及其他重要状态。本例中简便起见，会使用Go标准库中的log，线上生产环境请使用更强大的日志系统，例如：[glog](https://github.com/golang/glog)或者[logrus](https://github.com/sirupsen/logrus)。
+添加一个logger便于查看执行到哪一行、记录错误信息以及其他重要状态。本例中简便起见，会使用Go标准库中的log，而线上生产环境你或许会使用到更强大的日志系统，例如： [glog](https://github.com/golang/glog) 或者 [logrus](https://github.com/sirupsen/logrus) 。
 
-代码中有三个地方需要添加日志：服务开始时候、服务准备好可以接受请求时以及当`http.ListenAndServe`返回错误时。具体代码如下：
+代码中有三个地方需要添加日志：服务开始时候、服务准备好可以接受请求时以及当 `http.ListenAndServe` 返回错误时。具体代码如下：
 
 ```go
 func main() {
@@ -114,7 +114,7 @@ func main() {
 
 ## 第四步 添加测试
 
-这一步要开始加点测试了。我们用到了`httptest`包。`Router`方法的测试代码如下：
+这一步要开始加点测试了。我们用到了 `httptest` 包。`Router` 方法的测试代码如下：
 
 `handlers/handlers_test.go`：
 
@@ -209,7 +209,7 @@ ok      github.com/rumyantseva/advent-2017/handlers     0.018s
 
 ## 第五步 添加配置
 
-服务需要能够可配置。前面代码，写死监听`8000`端口，后面需要改成可配置。[The Twelve-Factor App manifesto](https://12factor.net/)，这篇文章详尽阐述了如何写好服务，文中提倡在环境变量中存放配置。后面代码展示如何利用环境变量：
+下一个比较重要的问题是：服务需要能够是可配置的。目前的代码中，写死了监听 `8000` 端口，可能把端口值改成可配置的，会更有用一些。[The Twelve-Factor App manifesto](https://12factor.net/)，这篇文章详尽阐述了如何去写好服务，文中提倡在环境变量中存放配置。后面代码展示本例如何利用上环境变量：
 
 `main.go`
 
@@ -239,11 +239,11 @@ func main() {
 }
 ```
 
-上例中，若没有设置port值，会返回错误。如果配置错误的话，没有必要继续执行后面代码。
+上例中，若没有设置 port 值，会返回错误。如果配置错误的话，没有必要继续执行后面代码。
 
-## 第六步 添加Makefile
+## 第六步 添加 Makefile
 
-前几天看过一篇关于`make`的[文章](https://blog.gopheracademy.com/advent-2017/make/)，如果想要把一些重复性高的常用的东西做成自动化，推荐看看该文。让我们看下怎么用上`make`，目前有两个操作：运行测试、编译并运行服务，把这两个操作加到Makefile文件中。这里我们用到`go build`命令，后面会运行编译好的二进制文件，这种方式更符合"适配生产环境"的目标，所以就不会用到`go run`命令了。
+前几天看过一篇关于 `make` 的 [文章](https://blog.gopheracademy.com/advent-2017/make/)，如果想要把一些重复性高的常用的东西做成自动化，推荐看看该文。让我们看下怎么用上 `make` ，目前有两个操作：运行测试、编译并运行服务，把这两个操作加到 Makefile 文件中。这里我们用到 `go build` 命令，后面会运行编译好的二进制文件，这种方式更符合"在生产环境上运行"的目标，所以就不会用到 `go run` 命令了。
 
 `Makefile`
 
@@ -264,15 +264,15 @@ test:
 	go test -v -race ./...
 ```
 
-上例中把二进制文件名单独放到变量`APP`中，减少重复定义名称次数。
+上例中把二进制文件名单独放到变量 `APP` 中，减少重复定义名称次数。
 
-运行程序前，先删除旧的二进制文件（存在的话），然后编译代码、设置正确的环境变量并运行新生成的二进制文件，这些操作可以通过执行`make run`命令完成。
+运行程序前，先删除旧的二进制文件（存在的话），然后编译代码、设置正确的环境变量并运行新生成的二进制文件，这些操作可以通过执行 `make run` 命令完成。
 
 ## 第七步 添加版本控制
 
-这一步要添加到服务中的是版本控制功能。某些场景下，知道生产环境中所使用的具体是哪个构建和commit以及什么时间构建的是非常有用的。
+这一步要添加到服务中的技巧是版本控制功能。某些场景下，知道生产环境中所使用的具体是哪个构建和 commit 以及什么时间构建的这类信息是非常有用的。
 
-添加一个新的包`version`来保存这些信息。
+添加一个新的包 `version` 来保存这些信息。
 
 `version/version.go`
 
@@ -304,7 +304,7 @@ func main() {
 }
 ```
 
-也可以把这些信息添加到`home`handler中（别忘了更新对应的测试方法）：
+也可以把这些信息添加到 `home` handler 中（别忘了更新对应的测试方法）：
 
 `handlers/home.go`
 
@@ -340,9 +340,9 @@ func home(w http.ResponseWriter, _ *http.Request) {
 }
 ```
 
-通过Go链接器在编译时设置`BuildTime`，`Commit`以及`Release`变量。
+通过 Go 链接器在编译时设置 `BuildTime` ，`Commit` 以及 `Release` 变量。
 
-先在Makefile中添加新变量：
+先在 Makefile 中添加新变量：
 
 `Makefile`
 
@@ -352,9 +352,9 @@ COMMIT?=$(shell git rev-parse --short HEAD)
 BUILD_TIME?=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
 ```
 
-`COMMIT`和`BUILD_TIME`（译者注：原文这里写`RELEASE`，可能有误）通过已有的命令获取，`RELEASE`的赋值按照[语义化版本控制规范](https://dave.cheney.net/2016/06/24/gophers-please-tag-your-releases)来。
+`COMMIT` 和 `BUILD_TIME`（译者注：原文这里写 `RELEASE` ，可能有误）通过已有的命令获取，`RELEASE` 的赋值按照 [语义化版本控制规范](https://dave.cheney.net/2016/06/24/gophers-please-tag-your-releases) 来。
 
-好，现在重写Makefile的`build`目标，用上上面定义的变量：
+好，现在重写 Makefile 的 `build` 目标，用上上面定义的变量：
 
 `Makefile`
 
@@ -374,7 +374,7 @@ build: clean
 PROJECT?=github.com/rumyantseva/advent-2017
 ```
 
-本步所有代码变更记录可以在[这里](https://github.com/rumyantseva/advent-2017/commit/eaa4ff224b32fb343f5eac2a1204cc3806a22efd)找到。可以多动手尝试运行下`make run`命令，看看具体是怎么工作的。
+本步所有代码变更记录可以在 [这里](https://github.com/rumyantseva/advent-2017/commit/eaa4ff224b32fb343f5eac2a1204cc3806a22efd) 找到。可以多动手尝试运行下 `make run` 命令，看看具体是怎么工作的。
 
 ## 第八步 减少依赖
 
