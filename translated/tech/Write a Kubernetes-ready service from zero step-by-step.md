@@ -450,7 +450,7 @@ func Router(buildTime, commit, release string) *mux.Router {
 }
 ```
 
-设置等待 10s 后服务可以处理请求。当然，实际业务代码不会有空等 10s 的情况，这里是模拟 cache warming（如果有用 cache）或者其他情况。
+设置等待 10 s 后服务可以处理请求。当然，实际业务代码不会有空等 10 s 的情况，这里是模拟 cache warming（如果有用 cache）或者其他情况。
 
 代码改动 [GitHub](https://github.com/rumyantseva/advent-2017/commit/e73b996f8522b736c150e53db059cf041c7c3e64) 上可以找到。
 
