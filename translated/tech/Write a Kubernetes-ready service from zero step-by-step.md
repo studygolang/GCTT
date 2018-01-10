@@ -4,7 +4,7 @@
 
 如果你用 Go 写过程序，就会发现用 Go 来写服务是很简单的事。比如说，只要几行代码就可以跑起来一个 HTTP 服务。但是如果我们想让服务在生产环境运行，我们还需要添加什么呢？本文将通过写一个能在 Kubernetes 上运行的服务的例子，来讨论上述问题。
 
-文中所有的例子可以在[这里（按标签分类）](https://github.com/rumyantseva/advent-2017/tree/all-steps)，或者[这里（按 commit 分类）](https://github.com/rumyantseva/advent-2017/commits/master) 找到。
+文中所有的例子可以在 [这里（按标签分类）](https://github.com/rumyantseva/advent-2017/tree/all-steps) ，或者 [这里（按 commit 分类）](https://github.com/rumyantseva/advent-2017/commits/master) 找到。
 
 ## 第一步 最简单的服务
 
@@ -390,7 +390,7 @@ func home(buildTime, commit, release string) http.HandlerFunc {
 	}
 }
 ```
-同样，别忘了[改](https://github.com/rumyantseva/advent-2017/commit/e73b996f8522b736c150e53db059cf041c7c3e64) 测试代码。
+同样，别忘了 [改](https://github.com/rumyantseva/advent-2017/commit/e73b996f8522b736c150e53db059cf041c7c3e64) 测试代码。
 
 ## 第九步 添加“健康”检查功能（health checks）
 
@@ -765,9 +765,9 @@ Vary: Accept-Encoding
 ```
 成功~！
 
-所有步骤的代码在[这里](https://github.com/rumyantseva/advent-2017)，两个版本：[按 commit 划分](https://github.com/rumyantseva/advent-2017/commits/master) 以及[按步骤划分](https://github.com/rumyantseva/advent-2017/tree/all-steps)。如有任何疑问，请[提 issue](https://github.com/rumyantseva/advent-2017/issues/new)，或者 tweet[@webdeva](https://twitter.com/webdeva)，或者在评论区留评论。
+所有步骤的代码在 [这里](https://github.com/rumyantseva/advent-2017) ，两个版本：[按 commit 划分](https://github.com/rumyantseva/advent-2017/commits/master) 以及 [按步骤划分](https://github.com/rumyantseva/advent-2017/tree/all-steps) 。如有任何疑问，请 [提 issue](https://github.com/rumyantseva/advent-2017/issues/new) ，或者 tweet[@webdeva](https://twitter.com/webdeva) ，或者在评论区留评论。
 
-真实生产环境上的服务其实有更大的灵活性，想知道是代码“长”啥样的么 ^_^？可以参考 [takama/k8sapp](https://github.com/takama/k8sapp)，是一个 Go 应用模板，满足了 Kubernetes 需求。
+真实生产环境上的服务其实有更大的灵活性，想知道是代码“长”啥样的么 ^_^？可以参考 [takama/k8sapp](https://github.com/takama/k8sapp) ，是一个 Go 应用模板，满足了 Kubernetes 需求。
 
 ----------------
 
