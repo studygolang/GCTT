@@ -775,6 +775,6 @@ via: https://blog.gopheracademy.com/advent-2017/kubernetes-ready-service/
 
 作者：[Elena Grahovac](https://github.com/jeffallen)
 译者：[dongfengkuayue](https://github.com/dongfengkuayue)
-校对：[校对者 ID](https://github.com/rxcai)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
