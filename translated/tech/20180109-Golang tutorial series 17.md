@@ -1,5 +1,5 @@
 # 第17部分：方法
-欢迎来到 Golang 系列教程的第 17 个教程。
+欢迎来到 [Golang 系列教程](https://golangbot.com/learn-golang-series/) 的第 17 个教程。
 
 ### 什么是方法？
 
@@ -95,7 +95,7 @@ func main() {
 
 既然我们可以使用函数写出相同的程序，那么为什么我们需要方法？这有着几个原因，让我们一个个的看看。
 
-- [Go不是纯粹的面向对象编程语言](https://golang.org/doc/faq#Is_Go_an_object-oriented_language),而且Go不支持类。因此，基于类型的方法是一种实现和类相似行为的途径。
+- [Go不是纯粹的面向对象编程语言](https://golang.org/doc/faq#Is_Go_an_object-oriented_language)，而且Go不支持类。因此，基于类型的方法是一种实现和类相似行为的途径。
 
 - 相同的名字的方法可以定义在不同的类型上，而相同名字的函数是不被允许的。假设我们有一个 `Square` 和 `Circle` 结构体。可以在 `Square` 和 `Circle` 上分别定义一个 `Area` 方法。见下面的程序。
 
@@ -365,7 +365,7 @@ func main() {
 
 在第 28 行，我们创建了一个指向 `r` 的指针 `p`。如果我们试图把这个指针传递到只能接受一个值参数的函数 area，编译器将会报错。所以我把代码的第 33 行注释了。如果你把这行的代码注释去掉，编译器将会抛出错误 `compilation error, cannot use p (type *rectangle) as type rectangle in argument to area.`。这将会按预期抛出错误。
 
-现在到了棘手的部分了，在第35行的代码 `p.area()` 使用指针接收器 `p` 调用了只接受一个值接收器的方法 `area`。这是完全有效的。原因是当 `area` 有一个值接收器时,为了方便Go语言把 `p.area()` 解释为 `(*p).area()`。
+现在到了棘手的部分了，在第35行的代码 `p.area()` 使用指针接收器 `p` 调用了只接受一个值接收器的方法 `area`。这是完全有效的。原因是当 `area` 有一个值接收器时，为了方便Go语言把 `p.area()` 解释为 `(*p).area()`。
 
 该程序将会输出：
 
@@ -493,6 +493,6 @@ via: https://golangbot.com/methods/
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[MDGSF](https://github.com/MDGSF)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
