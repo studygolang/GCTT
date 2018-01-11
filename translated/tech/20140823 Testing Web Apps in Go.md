@@ -3,7 +3,7 @@
 ![image](http://markjberger.com/assets/img/2014-08-23/cover.jpg)
 
 
-我利用闲暇的时间尝试着用 Go 来写一个网站小应用。在 Go 标准库中有一些非常棒的包可以在 Web 应用开发中使用并且我非常喜欢使用他们。实际上，在 Go 官方的 wiki 中有一个编写 web 应用的小教程。但是，却没有提及如何用标准库去测试 web 应用，而且也没有搜索到比较好的一个方案。
+我利用闲暇的时间尝试着用 Go 来写一个网站小应用。在 Go 标准库中有一些非常棒的包可以在 Web 应用开发中使用并且我非常喜欢使用它们。实际上，在 Go 官方的 wiki 中有一个编写 Web 应用的小教程。但是，却没有提及如何用标准库去测试 Web 应用，而且也没有搜索到比较好的一个方案。
 
 
 本着试一试的心态在我自己的项目中做了一些尝试，我发现了测试 Go 语言中 Web 应用的关键，就是通过使用高级的函数来实现依赖注入。
@@ -60,7 +60,7 @@ func main() {
 }
 ```
 
-这样是非常好的，因为这样我们就不再需要全局变量了。而且这样能非常轻松的 mocking （用一个虚拟的对象来创建以便测试的测试方法）。我们只需要实现 `GetBacon` 这个方法,就能简单地创建一个数据库 mock 来满足接口的数据需求。
+这样是非常好的，因为这样我们就不再需要全局变量了。而且这样能非常轻松的 mocking （译者注：用一个虚拟的对象来创建以便测试的测试方法）。我们只需要实现 `GetBacon` 这个方法,就能简单地创建一个数据库 mock 来满足接口的数据需求。
 
 ## 测试
 
@@ -166,6 +166,6 @@ via: http://markjberger.com/testing-web-apps-in-golang/
 
 作者：[ALI M.MIRZAEE](http://alimrz.com/about/)
 译者：[zhuCheer](https://github.com/zhuCheer)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
