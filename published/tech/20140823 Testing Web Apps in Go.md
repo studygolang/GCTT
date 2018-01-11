@@ -165,7 +165,7 @@ function TestHome(t *testing.T) {
 
 via: http://markjberger.com/testing-web-apps-in-golang/
 
-作者：[ALI M.MIRZAEE](http://alimrz.com/about/)
+作者：[Mark J. Berger](http://markjberger.com/menu/about/)
 译者：[zhuCheer](https://github.com/zhuCheer)
 校对：[polaris1119](https://github.com/polaris1119)
 
