@@ -1,6 +1,6 @@
 # Go 佳库面面观
 
-从一个好的 Go 库里，我希望得到的东西的一个简短清单（排名不分先后）。这是[高效 Go（effective go）](https://golang.org/doc/effective_go.html)列表、[Go 代码评审意见](https://github.com/golang/go/wiki/CodeReviewComments)列表和[Go 箴言](https://go-proverbs.github.io/)列表伴侣。
+本文将列出从一个好的 Go 库里，我希望得到的东西的一个简短清单（排名不分先后）。这是对[高效 Go（effective go）](https://golang.org/doc/effective_go.html)列表、[Go 代码评审意见](https://github.com/golang/go/wiki/CodeReviewComments)列表和[Go 箴言](https://go-proverbs.github.io/)列表的补充。
 
 一般来说，当做某事有两种合理的方式的时候，选择不违反这些规则的那一项。只有在有非常强力的理由时才违反这些规则。
 
@@ -8,7 +8,7 @@
 
 #### 加标签的库版本
 
-使用 git 标签来管理你的库版本。语义版本化是一个合理的系统。如果你对语义版本化的[反对在意](https://news.ycombinator.com/item?id=13378637)，那么，你就不是这的目标用户 :)
+使用 git 标签来管理你的库版本。语义版本化是一个合理的系统。如果你对语义版本化的[反对在意](https://news.ycombinator.com/item?id=13378637)，那么，你就不是本文的目标读者 :)
 
 #### 没有非标准库依赖
 
@@ -170,11 +170,11 @@ Context 是让你的库用户控制何时应该中断操作的标准方式。
 
 #### 轻松可定制的日志器
 
-没有广泛接受的 Go 日志库。公开一个日志接口，从而不强制我导入你最爱的日志库。
+没有被广泛接受的 Go 日志库。公开一个日志接口，从而不强制我导入你最爱的日志库。
 
-### 清洁度
+### 代码的整洁
 
-#### 通过 gometalinter 检查的一个合理子集
+#### 通过一个合理的 gometalinter 检查子集
 
 Go 简单的语法和优秀的标准库函数允许广泛的静态代码检查器，这些检查器汇总在 [gometalinter](https://github.com/alecthomas/gometalinter) 中。你的默认状态，特别是当你是 Go 的小萌新的时候，应该只是通过所有这些检查器。只有在你能够提供原因的时候才违反它们，然后提供两种合理的实现，并且选择那个通过 linter 的那个实现。
 
@@ -200,7 +200,7 @@ Go 简单的语法和优秀的标准库函数允许广泛的静态代码检查�
     ...
 ```
 
-### 存储库布局
+### 存储布局
 
 #### 避免将一个结构的函数拆分到多个文件中
 
@@ -216,6 +216,6 @@ via: https://medium.com/@cep21/aspects-of-a-good-go-library-7082beabb403
 
 作者：[Jack Lindamood](https://medium.com/@cep21)
 译者：[ictar](https://github.com/ictar)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
