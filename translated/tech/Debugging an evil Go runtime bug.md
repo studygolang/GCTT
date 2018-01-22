@@ -390,3 +390,13 @@ TEXT runtime·walltime(SB),NOSPLIT,$16
 我们的发现完美地解释了所有的现象。栈嗅探是一个 `orq` 指令（与 0 的逻辑或）。这是一个空指令, 但是能够有效地秀谈到目标地址（如果地址不存在，就会出现段错误）。但是我们并没有在 `vDSO` 代码中看到段错误，所以为什么它会导致 `Go` 程序崩溃呢？原因是，与 0 的逻辑与并不真的是一个空指令。因为 `orq` 不是一个原子操作。所以真实情况是 `CPU` 读了内存地址又把它写了回来。这导致了一个竞争的状况。如果有其他线程在其他核上运行，`orq` 可能会撤销一次同时发生的内存写操作。因为这个写操作超出了栈的边界，它可能是写在了其他线程的栈上或者是随机数据上，然后又撤销了一次写操作。这也是为什么 `GOMAXPROCS=1` 的时候不会发生崩溃，在这种情况下不会有同时运行的 `Go` 语言代码。
 
 那怎么修复这个问题呢？我把它留给了 `Go` 的开发者。他们最终的解决方案是在调用 `vDSO` 函数时 [分配更大的栈空间](https://github.com/golang/go/commit/a158382b1c9c0b95a7d41865a405736be6bc585f)。这会导致一个细微的纳秒级的速度损失，但这是可接受的。在用修复过的 `Go` 编译 `node_exporter` 之后，一切恢复了正常。
+
+----------------
+
+via: https://marcan.st/2017/12/debugging-an-evil-go-runtime-bug/
+
+作者：[Hector Martin](https://marcan.st/about/)
+译者：[QueShengyao](https://github.com/QueShengyao)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
