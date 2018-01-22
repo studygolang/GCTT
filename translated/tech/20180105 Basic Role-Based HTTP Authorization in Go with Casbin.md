@@ -1,13 +1,14 @@
-#在 Go 语言中使用 casbin 实现基于角色的HTTP权限控制
+# 在 Go 语言中使用 casbin 实现基于角色的 HTTP 权限控制
+
 身份认证和授权对 web 应用的安全至关重要。最近，我用 Go 完成了我的第一个正式的 web 应用，这篇文章是在这个过程中我所学到的部分内容。
 
-本文中，我们的关注点在于如何在 web 应用中使用开源的 casbin 库进行HTTP权限控制。同时，在示例代码中我们使用了 scs 库进行 session 管理。
+本文中，我们的关注点在于如何在 web 应用中使用开源的 casbin 库进行 HTTP 权限控制。同时，在示例代码中我们使用了 scs 库进行 session 管理。
 
 下面的例子十分基础，希望它尽可能的展示了如何在 Go web 应用中实现权限控制。为了更侧重于展示 casbin 的使用，我们尽量简化业务逻辑（例如：不需密码的登陆操作）。我们一起来看一下！
 
 注意：请不要在生产环境中使用所示的用例代码，该例子侧重于描述清晰，而不是安全性。
 
-##建立
+## 建立
 
 首先，首先我们创建一个 User 模型，并实现了相应方法：
 ```	go
@@ -62,7 +63,7 @@ p, member, /member/*, *
 这个配置文件十分简单。在这个例子中，我们简单的定义了 admin 角色可以访问所有内容，member 角色可以访问以 /member/ 开头的路径和 logout 路径，未认证用户可以登陆。
 这种形式的好处在于即使应用具有许多规则和用户角色，它仍然是可维护的。
 
-##执行
+## 执行
 
 让我们从 main 函数开始，将所有的东西都配置好，并启动 http 服务器：
 ```go
@@ -233,7 +234,7 @@ return func(next http.Handler) http.Handler {
 我们可以通过登陆不同的用户，用 curl 或 postman 访问上述的处理函数来测试效果。
 
 
-##结论
+## 结论
 
 我已经在一个中型 web 应用生产环境中使用了 casbin，并且对它的可维护性和稳定性感到十分满意。可以看看它的文档，casbin 是一个非常强大的鉴权工具，以声明的方式提供了大量的访问控制模型。
 
@@ -253,6 +254,6 @@ via: https://zupzup.org/casbin-http-role-auth/
 
 作者：[Mat Ryer](https://blog.machinebox.io/@matryer)
 译者：[linyy1992](https://github.com/linyy1992)
-校对：[校对者ID](https://github.com/rxcai)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
