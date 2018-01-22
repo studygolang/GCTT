@@ -1,6 +1,8 @@
+已发布：https://studygolang.com/articles/12265
+
 # Go 佳库面面观
 
-本文将列出从一个好的 Go 库里，我希望得到的东西的一个简短清单（排名不分先后）。这是对[高效 Go（effective go）](https://golang.org/doc/effective_go.html)列表、[Go 代码评审意见](https://github.com/golang/go/wiki/CodeReviewComments)列表和[Go 箴言](https://go-proverbs.github.io/)列表的补充。
+本文将列出从一个好的 Go 库里，我希望得到的东西的一个简短清单（排名不分先后）。这是对[高效 Go（effective go）](https://golang.org/doc/effective_go.html)列表、[Go 代码评审意见](https://github.com/golang/go/wiki/CodeReviewComments)列表和 [Go 箴言](https://go-proverbs.github.io/)列表的补充。
 
 一般来说，当做某事有两种合理的方式的时候，选择不违反这些规则的那一项。只有在有非常强力的理由时才违反这些规则。
 
@@ -74,16 +76,14 @@
 你的库很棒，但是终有一天我会想要将其淘汰出去。Go 的类型系统[有时会造成阻碍](https://medium.com/statuscode/go-experience-report-gos-type-system-c4d4dfcc964c)。然而，总的来说，隐式接口胜于过于强大的静态类型。如果有可能的话，最好将标准库类型作为函数参数类型和返回值类型，这样，用户就可以根据你的结构创建接口，以便于后面进行库替换。
 
 ```go
-
-    type AvoidThis struct {}  
-    type Key string  
-    func (a *AvoidThis) Convert(k Key) {... }
+type AvoidThis struct {}  
+type Key string  
+func (a *AvoidThis) Convert(k Key) {... }
 ```
 
 ```go
-
-    type PreferThis struct {}  
-    func (p *PreferThis) Convert(k string) { ... }
+type PreferThis struct {}  
+func (p *PreferThis) Convert(k string) { ... }
 ```
 
 #### API 调用时创建最小的对象（GC）
@@ -91,15 +91,13 @@
 CPU 通常是避无可避的，但是，重新考虑你的 API 会使得最小化 API 调用期间的垃圾回收成为可能。例如，创建不强制垃圾回收的 API。**事后优化实现很容易，但是事后优化 API 则几乎不可能**。
 
 ```go
-
-    type AvoidThis struct {}  
-    func (a *AvoidThis) Bytes() []byte { ... }
+type AvoidThis struct {}  
+func (a *AvoidThis) Bytes() []byte { ... }
 ```
 
 ```go
-
-    type PreferThis struct {}  
-    func (p *PreferThis) WriteTo(w Writer) (n int64, err error) { ... }
+type PreferThis struct {}  
+func (p *PreferThis) WriteTo(w Writer) (n int64, err error) { ... }
 ```
 
 #### 无副作用导入
@@ -182,21 +180,19 @@ Go 简单的语法和优秀的标准库函数允许广泛的静态代码检查�
 
 100% 测试覆盖率是极端的，而 0% 测试覆盖率几乎不是什么好事。这是一项难以量化的规则，所以我已经决定“没有任何函数应该具备 0% 的测试覆盖率”是最低限度了。你可以使用 Go 的 cover 工具获取每个函数测试覆盖率。
 
-```go
-
-    # go test -coverprofile=cover.out context  
-    ok   context 2.651s coverage: 97.0% of statements
+```console
+# go test -coverprofile=cover.out context  
+ok   context 2.651s coverage: 97.0% of statements
 ```
 
-```go
-
-    # go tool cover -func=cover.out  
-    context/context.go:162: Error  100.0%  
-    context/context.go:163: Timeout  100.0%  
-    context/context.go:164: Temporary 100.0%  
-    context/context.go:170: Deadline 100.0%  
-    context/context.go:174: Done  100.0%  
-    context/context.go:178: Err  100.0%  
+```console
+# go tool cover -func=cover.out  
+context/context.go:162: Error  100.0%  
+context/context.go:163: Timeout  100.0%  
+context/context.go:164: Temporary 100.0%  
+context/context.go:170: Deadline 100.0%  
+context/context.go:174: Done  100.0%  
+context/context.go:178: Err  100.0%  
     ...
 ```
 
