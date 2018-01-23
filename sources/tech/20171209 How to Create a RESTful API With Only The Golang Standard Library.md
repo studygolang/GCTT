@@ -3,7 +3,7 @@
 
 Go 是一门相当新的语言，并且在最近几年得到了越来越多的关注。它的功能非常强大，而且拥有出色的工具来设计快速高效的 API 接口。虽然已经有很多库可以创建一个 API 接口，像 [Go Buffalo](https://gobuffalo.io/) 和 [Goa](https://goa.design/) 之类；但是，如果能够做到除了数据库和缓存连接器之外，仅仅使用标准库来创建，无疑将非常有趣。
 
-在这篇博客中，我将分析如何使用 Go 语言标准库来创建一个端点。包括多个端点的完整 API 代码在 GitHub 中我的  [golang-standard-lib-rest-api](https://github.com/rymccue/golang-standard-lib-rest-api) 库中。
+在这篇博客中，我将分析如何使用 Go 语言标准库来创建一个端点（Endpoint）。整个 API（包括多个端点（Endpoint））代码在我的 GitHub  [golang-standard-lib-rest-api](https://github.com/rymccue/golang-standard-lib-rest-api) 库中。
 
 ## 入门指南
 
@@ -25,8 +25,8 @@ utils
 
 我们需要 main.go 文件做以下的事情：
 
-1. 创建数据库链接
-2. 创建认证专用的缓存链接
+1. 创建数据库连接
+2. 创建认证专用的缓存连接
 3. 创建一个 mux
 4. 加载所有的控制器
 5. 使用 mux 和控制器创建路由
@@ -52,13 +52,13 @@ utils
 	}
 ```
 
-我们希望代码看起来像上面的一样，创建了数据库和缓存链接、加载了控制器、将控制器连接到了路由，最终启动了服务器。现在，我们拥有了规划好的主入口文件，我们来创建需要使用的库。
+我们希望代码看起来像上面的一样，创建了数据库和缓存连接、加载了控制器、将控制器连接到了路由，最终启动了服务器。现在，我们拥有了规划好的主入口文件，我们来创建需要使用的库。
 
-## 链接工具
+## 连接工具
 
 让我们从相对简单的数据库和缓存工具开始。
 
-**database.go** 文件简单的创建了连接字符串，并且打开了一个链接。
+**database.go** 文件简单的创建了连接字符串，并且打开了一个连接。
 
 **utils/database/database.go**
 ``` go
@@ -82,7 +82,7 @@ type Cache interface {
 }
 ```
 
-现在创建一个结构来实现这个接口：
+现在创建一个结构体来实现这个接口：
 
 ``` go
 type Redis struct {
@@ -112,7 +112,7 @@ func Connect(addr, password string, db int) *redis.Client {
 
 ## User 控制器
 
-很好，缓存和数据库工具已经完成。现在开始做一些有趣的开发，先定义需要的路由。我们需要两个控制器，一个用户和一个工作控制器，每一个控制器都有一些端点。在真正编写控制器之前，让我们把这些想法和设计落到纸面。
+很好，缓存和数据库工具已经完成。现在开始做一些有趣的开发，先定义需要的路由。我们需要两个控制器，一个用户和一个工作控制器，每一个控制器都有一些端点（Endpoint）。在真正编写控制器之前，让我们把这些想法和设计落到纸面。
 
 ```
 User Controller
@@ -131,11 +131,11 @@ POST /job
 GET /feed
 ```
 
-做好这些，我们现在就知道需要哪些端点了。让我们来创建用户控制器和注册端点。
+做好这些，我们现在就知道需要哪些端点（Endpoint）了。让我们来创建用户控制器和注册端点（Endpoint）。
 
-如果你查看 **main.go**，你回发现有一个叫 **NewUserController** 的方法，让我们从那里开始起步。我们要在用户控制器中有能力访问缓存和数据库，所以需要将这两个对象传递给该函数。
+如果你查看 **main.go**，你会发现有一个叫 **NewUserController** 的方法，让我们从那里开始起步。我们要在用户控制器中有能力访问缓存和数据库，所以需要将这两个对象传递给该函数。
 
-结构定义需要先下面一样，就可以在每个控制器方法中如 **userController.DB** 和 **userController.Cache** 一样调用数据库和缓存。需要注意的是，Cache 是一个接口，所以我们可以在任何时候更换它的实现。
+该结构体需要像这样，所以我们在控制器方法内可以调用数据库和缓存，如 **userController.DB** 和 **userController.Cache**。注意缓存是一个接口, 因此我们可以随时替换它的实现。
 
 ``` go
 type UserController struct {
@@ -144,7 +144,7 @@ type UserController struct {
  }
 ```
 
-**NewUserController** 函数应该简单的返回带有数据库和缓存对象的 **UserController** 结构。
+**NewUserController** 函数应该简单的返回带有数据库和缓存对象的 **UserController** 结构体。
 
 ``` go
 func NewUserController(db *sql.DB, c caching.Cache) *UserController {
@@ -155,11 +155,11 @@ func NewUserController(db *sql.DB, c caching.Cache) *UserController {
 }
 ```
 
-## 注册端点
+## 注册端点（Endpoint）
 
 很棒，我们拥有了用户控制器，现在来增加一个方法。注册是一个很基本的功能，所以让我们来实现它。我们来一步一步地实现。
 
-首先，我们只需要这个端点的 POST 请求，所以首先检查是否是 POST (HTTP)方法，如果不是的话，返回一个 not found 状态给客户端。
+首先，我们只需要这个端点（Endpoint）的 POST 请求，所以首先检查是否是 POST (HTTP)方法，如果不是的话，返回一个 not found 状态给客户端。
 
 ``` go
  func (jc *UserController) Register(w http.ResponseWriter, r *http.Request) {
@@ -169,7 +169,7 @@ func NewUserController(db *sql.DB, c caching.Cache) *UserController {
    }
 ```
 
-检查通过后，需要解码请求的数据体来获取请求数据。如果数据体有问题，发送 bad request 状态到客户端。结构定义将在本文的后面定义。
+检查通过后，需要解码请求的数据体来获取请求数据。如果数据体有问题，发送 bad request 状态到客户端。结构体定义将在本文的后面给出。
 
 ``` go
    decoder := json.NewDecoder(r.Body)
@@ -181,7 +181,7 @@ func NewUserController(db *sql.DB, c caching.Cache) *UserController {
    }
 ```
 
-现在我们已经拥有一个含有请求数据的结构，可以用来创建用户了。因此，把该数据传递到存储库中，它会创建用户并返回 ID。如果这个阶段发生了错误，将返回一个 internal server 的错误。
+现在我们已经拥有一个含有请求数据的结构体，可以用来创建用户了。因此，把该数据传递到存储库中，它会创建用户并返回 ID。如果这个阶段发生了错误，将返回一个 internal server 的错误。
 
 ``` go
    id, err := repositories.CreateUser(jc.DB, rr.Email, rr.Name, rr.Password)
@@ -223,7 +223,7 @@ func NewUserController(db *sql.DB, c caching.Cache) *UserController {
 
 ## 最后一些事项
 
-现在，控制器和端点都完成了，但是你会注意到有一些事项被遗漏了。首选，我们需要一个请求对象来承载请求数据。
+现在，控制器和端点（Endpoint）都完成了，但是你会注意到有一些事项被遗漏了。首先，我们需要一个请求对象来承载请求数据。
 
 ``` go
 type RegisterRequest struct {
@@ -270,7 +270,7 @@ via: https://ryanmccue.ca/how-to-create-restful-api-golang-standard-library/
 
 作者：[Ryan McCue](https://ryanmccue.ca/author/ryan/)
 译者：[arthurlee](https://github.com/arthurlee)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
