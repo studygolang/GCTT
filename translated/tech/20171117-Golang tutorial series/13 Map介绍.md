@@ -7,19 +7,19 @@
 
 什么是 map？
 ---------------------
-map 是 Go 语言一个内置类型，关联一个 value 和一个 key。通过相应的 key 可以获取到 value。
+map 是 Go 语言一个内置类型，关联一个键 (key) 和一个值 (value)。通过键 (key) 可以获取到相应的值 (value)。
    
 如何创建map?
 ---------------------
-map 可以通过使用 `make` 方法传入 key 和 value 创建。 `make(map[type of key]type of value)` 是创建 map 的语法。
+通过向 `make` 函数传入 key 和 value ，可以创建 map。 `make(map[type of key]type of value)` 是创建 map 的语法。
 
 ```go
 personSalary := make(map[string]int)
 ```
 
-上面的代码创建了一个名为 `personSalary` 的 map，有一个 string 类型的 key 和 一个 int 类型的 value。
+上面的代码创建了一个名为 `personSalary` 的 map，key 是 string 类型，value 是 int 类型。
 
-map 的零值是 `nil`。如果你想添加元素到空的（`nil`） map 中，会发生运行时错误。因此 map 必须使用 `make` 方法初始化。
+map 的零值是 `nil`。如果你想添加元素到空的（`nil`） map 中，会发生运行时错误。因此 map 必须使用 `make` 函数初始化。
 
 ```go
 package main
@@ -35,17 +35,15 @@ personSalary = make(map[string]int)
 
 [在线运行程序](https://play.golang.org/p/IwJnXMGc1M)
 
-上面的程序中，personSalary 是 nil，因此需要使用 make 方法初始化，程序将输出
+上面的程序中，personSalary 是 nil，因此需要使用 make 函数初始化，程序将输出
 
-```go
-map is nil. Going to make one.
-```
+`map is nil. Going to make one.`
 
 
 给 map 添加元素
 ---------------------
 
-添加 map 元素的语法和 array 相同。下面的程序在 map `personSalary` 中添加了几个新元素。
+给 map 添加新元素的语法和数组是一样的。下面的程序在 map `personSalary` 中添加了几个新元素。
 
 ```go
 package main
@@ -81,17 +79,17 @@ fmt.Println("personSalary map contents:", personSalary)
 
 [在线运行程序](https://play.golang.org/p/nlH_ADhO9f)
 
-上面的程序声明了 personSalary 并在声明同时添加两个元素。之后又添加了 key `mike` 。程序输出，
+上面的程序声明了 personSalary ，并在声明同时添加了两个元素。之后又添加了 key `mike` 。程序输出，
 
 `personSalary map contents: map[steve:12000 jamie:15000 mike:9000]`
 
-key 不一定只能是 string 类型。所有可比较的类型如 boolean，interger，float，complex，string 等都可以做 key。如果你想了解更多可比较的类型，请访问 [http://golang.org/ref/spec#Comparison_operators](http://golang.org/ref/spec#Comparison_operators)。
+key 不一定只能是 string 类型。所有可比较的类型，如 boolean，interger，float，complex，string 等，都可以作为 key。关于可比较的类型，如果你想了解更多，请访问 [http://golang.org/ref/spec#Comparison_operators](http://golang.org/ref/spec#Comparison_operators)。
 
 
 获取 map 中的元素
 ---------------------
 
-现在我们已经添加了几元素到 map，现在学习下如何获取。获取 map 元素的语法是 `map[key]` 。
+目前我们已经给 map 添加了几个元素，现在学习下如何获取它们。获取 map 元素的语法是 `map[key]` 。
 
 ```go
 package main
@@ -111,7 +109,7 @@ fmt.Println("Salary of", employee, "is", personSalary[employee])}
 
 上面的程序很简单。获取并打印 employee `jamie` 的 salary。 程序输出 `Salary of jamie is 15000`.
 
-如果一个元素的不存在怎么办呢？map 会返回该元素类型的零值。在 `personSalary` 这个 map 里，如果我们获取一个不存在的元素，会返回 `int` 类型的零值 `0` 。
+如果获取一个不存在的元素，会发生什么情况呢？ map 会返回该元素类型的零值。 在 `personSalary` 这个 map 里，如果我们获取一个不存在的元素，会返回 `int` 类型的零值 `0` 。
 
 ```go   
 package main
@@ -139,7 +137,7 @@ Salary of joe is 0
 
 上面程序返回 `joe` 的 salary 是 0。`personSalary` 中不包含 `joe` 的情况下我们不会获取到任何运行时错误。
 
-如果我们想知道 map 中到底是不是存在这个 `key` 怎么办呢？
+如果我们想知道 map 中到底是不是存在这个 `key` 怎么做呢？
 ```go
 value, ok := map[key]
 ```
@@ -174,7 +172,7 @@ fmt.Println(newEmp,"not found")
 joe not found
 ```
 
-遍历 map 中所有的元素需要用 `for range` 循环。
+遍历 map 中所有的元素要使用 `for range` 循环。
 
 ```go
 package main
@@ -210,7 +208,7 @@ __有一点很重要，当使用 `for range` 遍历 map 时，不保证每次执
 删除 map 中的元素
 ---------------------
 
-删除 `map` 中 `key` 的语法是 _delete(map, key)_。这个方法没有返回值。
+删除 `map` 中 `key` 的语法是 _delete(map, key)_。这个函数没有返回值。
 
 ```go
 package main
@@ -240,7 +238,7 @@ map after deletion map[mike:9000 jamie:15000]
 获取 map 的长度
 ---------------------
 
-获取 map 的长度使用 [len](https://golang.org/pkg/builtin/#len) 方法。
+获取 map 的长度使用 [len](https://golang.org/pkg/builtin/#len) 函数。
 
 ```go
 package main
@@ -258,12 +256,12 @@ fmt.Println("length is", len(personSalary))
 
 [在线运行程序](https://play.golang.org/p/8O1WnKUuDP)
 
-上述程序中的 _len(personSalary)_ 方法表示 map 的长度。程序输出 `length is 3`。
+上述程序中的 _len(personSalary)_ 函数表示 map 的长度。程序输出 `length is 3`。
 
 Map是引用类型
 ---------------------
 
-和 [slices](https://golangbot.com/arrays-and-slices/) 类似，map 也是引用类型。当 map 被赋值为一个新变量的时候，它们指向同一个内部数据结构。因此一个变量中的内容改变也会导致另一个变量的内容修改。
+和 [slices](https://golangbot.com/arrays-and-slices/) 类似，map 也是引用类型。当 map 被赋值为一个新变量的时候，它们指向同一个内部数据结构。因此，修改一个变量，就会影响到另一个变量。
 
 ```go
 package main
@@ -291,7 +289,7 @@ Original person salary map[steve:12000 jamie:15000 mike:9000]
 Person salary changed map[steve:12000 jamie:15000 mike:18000]
 ```
 
-当 map 作为函数参数传递时也会发生同样情况。函数中对 map 的任何修改，对调用者来说是可见的。
+当 map 作为函数参数传递时也会发生同样情况。函数中对 map 的任何修改，对于外部的调用都是可见的。
 
 
 Map 相等判断
@@ -320,7 +318,7 @@ map1 := map[string]int{
 判断两个 map 是否相等的方法是遍历比较两个 map 中的每个元素。我建议你写一段这样的程序实现这个功能 :)。
 
 
-我在一个程序里实现了我们讨论过的所有概念。你可以从 [github](https://github.com/golangbot/maps) 下载代码。
+我写了一个程序，里面实现了我们讨论过的所有概念。你可以从 [github](https://github.com/golangbot/maps) 下载代码。
 
 这就是 map 。谢谢你的阅读。祝好。
 
