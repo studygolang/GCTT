@@ -11,12 +11,12 @@
 - 你可以在一些情况下，加快您的登录系统的速度。
 - 你可以减少你系统中的欺诈与模仿登录。
 
-![vefiry](https://github.com/studygolang/gctt-images/tree/master/Web Face ID/verify.png)
+![vefiry](https://cdn-images-1.medium.com/max/1600/1*rLAflz5Xr4XpSwsSdmC3PQ.png)
 通过 Machinebox 使用 Web Face ID 来验证自己
 
 ## 如何使用标准来实现它
 
-作为一个通用的方法，我们将会使用 HTML5 元素来捕捉用户的网络摄像头，用 Javascript 发送一张照片到服务器端。一旦照片到了服务器上，我们将使用 Go 解码照片并使用 Facebox 进行检查，以便能够发出响应。
+作为一个通用的方法，我们将会使用 HTML5 通过网络摄像头来获取用户头像，用 Javascript 发送一张照片到服务器端。一旦照片到了服务器上，我们将使用 Go 解码照片并使用 Facebox 进行检查，以便能够发出响应。
 
 我们把整个过程分成以下几个步骤。
 
@@ -26,7 +26,7 @@
 
 ## 使用 HTML5 和 Javascript 捕捉摄像头
 
-对于网站，我们可以利用 HTML5 的 video 元素和 canvas 元素。
+对于网站，我们可以利用 HTML5 的 video 标签和 canvas 标签。
 
 ```
 <div class='options'>
@@ -37,7 +37,7 @@
 <canvas id="canvas" width="400" height="225" style="display:none;"></canvas>
 ```
 
-我们将使用 video 元素去捕捉摄像头，并使用 canvas 元素拍摄照片，然后发送到服务器端，下面是 Javascript 代码
+我们将使用 video 标签去捕捉摄像头，并使用 canvas 标签拍摄照片，然后发送到服务器端，下面是 Javascript 代码
 
 ```
 var video = document.getElementById('video');
@@ -113,7 +113,7 @@ func (s *Server) handlewebFaceID(w http.ResponseWriter, r *http.Request) {
 
 另外请记住，恶意攻击者可以拍下你的照片，并用你的照片来仿照你的身份。
 
-> 重点提示：Facebox 经过优化，可以在任何类型的场景下识别任何照片中的人物，但是终点 `/check` 具有可以调整的可选参数 `tolerance`。如果您的脸部验证的条件不会改变（例如相同的位置，相同的环境照明），您可以减小容差，使得验证时系统更加严格。
+> 重点提示：Facebox 经过优化，可以在任何类型的场景下识别任何照片中的人物，但是端点 `/check` 具有可以调整的可选参数 `tolerance`。如果您的脸部验证的条件不会改变（例如相同的位置，相同的环境照明），您可以减小容差，使得验证时系统更加严格。
 
 如果你想看看整个代码，[请访问 Github 上的 Web Face ID](https://github.com/machinebox/webFaceID)。它是开源的。
 
@@ -127,6 +127,6 @@ via: https://blog.machinebox.io/introducing-web-face-id-how-to-use-html5-go-and-
 
 作者：[David Hernandez](https://blog.machinebox.io/@dahernan)
 译者：[Titanssword](https://github.com/Titanssword)
-校对：[](https://github.com/)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
