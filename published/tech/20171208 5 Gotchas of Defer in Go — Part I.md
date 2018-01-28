@@ -14,10 +14,10 @@
 
 ```go
 func() {
-  var run func() = nil
-  defer run()
+	var run func() = nil
+	defer run()
 
-  fmt.Println("runs")
+	fmt.Println("runs")
 }
 ```
 
@@ -73,11 +73,11 @@ runs
 type database struct{}
 
 func (db *database) connect() (disconnect func()) {
-  fmt.Println("connect")
+	fmt.Println("connect")
 
-  return func() {
-    fmt.Println("disconnect")
-  }
+	return func() {
+		fmt.Println("disconnect")
+	}
 }
 ```
 
@@ -105,11 +105,11 @@ connect
 
 ```go
 func() {
-  db := &database{}
-  close := db.connect()
-  defer close()
+	db := &database{}
+	close := db.connect()
+	defer close()
  
-  fmt.Println("query db...")
+	fmt.Println("query db...")
 }
 ```
 
@@ -129,10 +129,10 @@ disconnect
 
 ```go
 func() {
-  db := &database{}
-  defer db.connect()()
+	db := &database{}
+	defer db.connect()()
 
-  ..
+	..
 }
 ```
 
@@ -150,15 +150,15 @@ func() {
 
 ```go
 func main() {
-  {
-    defer func() {
-      fmt.Println("block: defer runs")
-    }()
+	{
+		defer func() {
+			fmt.Println("block: defer runs")
+		}()
 
-    fmt.Println("block: ends")
-  }
+		fmt.Println("block: ends")
+	}
 
-  fmt.Println("main: ends")
+	fmt.Println("main: ends")
 }
 ```
 
@@ -178,15 +178,15 @@ block: defer runs
 
 ```go
 func main() {
-  func() {
-    defer func() {
-      fmt.Println("func: defer runs")
-    }()
+	func() {
+		defer func() {
+			fmt.Println("func: defer runs")
+		}()
 
-    fmt.Println("func: ends")
-  }()
+		fmt.Println("func: ends")
+	}()
 
-  fmt.Println("main: ends")
+	fmt.Println("main: ends")
 }
 ```
 
@@ -198,19 +198,19 @@ func main() {
 
 ```go
 type Car struct {
-  model string
+	model string
 }
 
 func (c Car) PrintModel() {
-  fmt.Println(c.model)
+	fmt.Println(c.model)
 }
 
 func main() {
-  c := Car{model: "DeLorean DMC-12"}
+	c := Car{model: "DeLorean DMC-12"}
 
-  defer c.PrintModel()
+	defer c.PrintModel()
 
-  c.model = "Chevrolet Impala"
+	c.model = "Chevrolet Impala"
 }
 ```
 
@@ -224,7 +224,7 @@ DeLorean DMC-12
 
 ```go
 func (c *Car) PrintModel() {
-  fmt.Println(c.model)
+	fmt.Println(c.model)
 }
 ```
 
