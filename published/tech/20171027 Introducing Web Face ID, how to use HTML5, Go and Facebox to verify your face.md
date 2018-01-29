@@ -11,8 +11,8 @@
 - 你可以在一些情况下，加快您的登录系统的速度。
 - 你可以减少你系统中的欺诈与模仿登录。
 
-![vefiry](https://cdn-images-1.medium.com/max/1600/1*rLAflz5Xr4XpSwsSdmC3PQ.png)
-通过 Machinebox 使用 Web Face ID 来验证自己
+![verify](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-facebox/1.png)
+通过 Machinebox 使用 Web Face ID 来验证自己。
 
 ## 如何使用标准来实现它
 
@@ -28,7 +28,7 @@
 
 对于网站，我们可以利用 HTML5 的 video 标签和 canvas 标签。
 
-```
+```html
 <div class='options'>
    <button id="snap">
    <i class='camera icon'></i>
@@ -39,7 +39,7 @@
 
 我们将使用 video 标签去捕捉摄像头，并使用 canvas 标签拍摄照片，然后发送到服务器端，下面是 Javascript 代码
 
-```
+```javascript
 var video = document.getElementById('video');
 if (navigator.mediaDevices &&
           navigator.mediaDevices.getUserMedia){
@@ -67,43 +67,43 @@ button.click(function(){
    })
 })
 ```
-上面的代码基本上实现了这样的过程，当你单击该按钮时，将摄像头的照片信息捕获到 canvas 中，并将照片发送到服务器端的终点 / webFaceID。这张照片将是一个以 base64 编码的 PNG。
+上面的代码基本上实现了这样的过程，当你单击该按钮时，将摄像头的照片信息捕获到 canvas 中，并将照片发送到服务器端的断点（endpoint) /webFaceID。这张照片将是一个以 base64 编码的 PNG。
 
 ## 使用 Go 处理服务器端的人脸验证
 
 现在我们在服务器端有了你的脸部图像，我们只需要解码图像，将解码后的数据发送给 [Facebox with the SDK](https://github.com/machinebox/sdk-go) 完成后面复杂的工作，然后将处理后的结果返回给前端.
 这里我们可以写一个 Go http handler 来做这个工作。
-```
-func (s *Server) handlewebFaceID(w http.ResponseWriter, r *http.Request) {
- img := r.FormValue("imgBase64")
- // remove the Data URI before decode
- b64data := img[strings.IndexByte(img, ',')+1:]
- imgDec, err := base64.StdEncoding.DecodeString(b64data)
- if err != nil {
-    // omitted error handling
- }
- // validate the face on facebox
- faces, err := s.facebox.Check(bytes.NewReader(imgDec))
- if err != nil {
-   // omitted error handling
- }
- var response struct {
-    FaceLen int    `json:"faces_len"`
-    Matched bool   `json:"matched"`
-    Name    string `json:"name"`
- }
- response.FaceLen = len(faces)
- if len(faces) == 1 {
-    response.Matched = faces[0].Matched
-    response.Name = faces[0].Name
- }
- w.Header().Set("Content-Type", "application/json")
- if err := json.NewEncoder(w).Encode(response); err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
-    return
- }
-}
 
+```go
+func (s *Server) handlewebFaceID(w http.ResponseWriter, r *http.Request) {
+    img := r.FormValue("imgBase64")
+    // remove the Data URI before decode
+    b64data := img[strings.IndexByte(img, ',')+1:]
+    imgDec, err := base64.StdEncoding.DecodeString(b64data)
+    if err != nil {
+        // omitted error handling
+    }
+    // validate the face on facebox
+    faces, err := s.facebox.Check(bytes.NewReader(imgDec))
+    if err != nil {
+        // omitted error handling
+    }
+    var response struct {
+        FaceLen int    `json:"faces_len"`
+        Matched bool   `json:"matched"`
+        Name    string `json:"name"`
+    }
+    response.FaceLen = len(faces)
+    if len(faces) == 1 {
+        response.Matched = faces[0].Matched
+        response.Name = faces[0].Name
+    }
+    w.Header().Set("Content-Type", "application/json")
+    if err := json.NewEncoder(w).Encode(response); err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+}
 ```
 通过这几行代码，我们可以在任何网站上使用人脸验证。
 
