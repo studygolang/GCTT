@@ -12,7 +12,8 @@
 
 
 
-让我们来看下 Go 语言中如何解决在这种在 web 开发中随处可见的问题。
+
+让我们来看下 Go 语言中是如何解决这种在 web 开发中随处可见的问题的。
 
 ## 代码示例
 
@@ -41,7 +42,7 @@ func main() {
 
 现在我们只需要实现 `uploadFileHandler`。
 
-这个处理程序将包含一下功能：
+这个处理程序将包含以下功能：
 
 - 验证文件最大值
 - 从请求验证文件和POST参数
@@ -119,7 +120,7 @@ func uploadFileHandler() http.HandlerFunc {
 ```
 
 
-马上就大功告成了，只剩下一个关键步骤-写文件。如上文所提到的，我们只需要复制读取的二进制文件到一个新创建的名为 `newFile` 文件处理程序里。
+马上就大功告成了，只剩下一个关键步骤-写文件。如上文所提到的，我们只需要复制读取的二进制文件到一个新创建的名为 `newFile` 的文件处理程序里。
 
 如果所有部分都没问题，我们给用户返回一个 `SUCCESS` 信息。
 ```go
@@ -165,6 +166,6 @@ via: https://zupzup.org/go-http-file-upload-download/
 
 译者：[fengchunsgit](https://github.com/fengchunsgit)
 
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
