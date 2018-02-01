@@ -1,11 +1,16 @@
-# 一次 Go 运行时 Debug 记录
+已发布：https://studygolang.com/articles/12334
+
+# 调试一个邪恶的 Go 运行时 bug
+
 ## 序言
+
 我是 `Prometheus` 和 `Grafana` 的忠实粉丝。作为一个前 `Google` 公司 SRE, 我一直以来都知道良好的监控的重要性， `Prometheus` 和 `Grafana` 的组合是我多年的最爱。我用他们来监控我的个人服务器(黑盒和白盒都有)， `Euskal Encounter` 内外部事件以及我服务的专业客户。`Prometheusa` 让编写定制的数据导出器变得非常简单， 而且你能够找到很多现成的满足你要求的导出器。比如说，我们使用 `sql_exporter` 来为 `Encounter` 会议的与会者数据做了一个监控面板。
-![Event dashboard for Euskal Encounter (fake staging data)](https://marcan.st/posts/go_debug/euskalstats.png)
+![Event dashboard for Euskal Encounter (fake staging data)](https://raw.githubusercontent.com/studygolang/gctt-images/master/debug-runtime-bug/euskalstats.png)
 
 既然我们能够很容易地把 `node_exporter` 部署到任意的机器上并且用 `Prometheus` 实例去读取机器的基础数据维度（CPU，内存，网络，磁盘，文件系统使用等), 那我为什么不同时监控我的笔记本呢？我有一个蓝天"游戏"本充当我的主工作站，主要在家里被当做台式机使用，同时也会被我带去参加一个大型活动比如 `Chaos Communication Congress`。由于我已经在这台笔记本和一台部署了 `Prometheus` 的服务器之间有一个 VPN 通道了，我可以使用 `emerge prometheus-node_exporter` 命令来启动服务，让我的 `Prometheus` 实例指向这个服务。这个命令会为这台笔记本自动设置警报，每当我打开了太多 `Chrome` 页面用完了 32G 内存的时候，我的手机就会发出很大的声音来提醒我。完美！
 
 ## 问题浮现
+
 这一切看起来很完美，但是，在我完成这些设置后仅仅一小时，我的手机接收到一条信息： 我新添加的目标不可访问。但是，我能够通过 SSH 连到我的笔记本，所以它肯定是启动了的，只是 `node_exporter` 崩溃了。
 ```
 fatal error: unexpected signal during runtime execution
@@ -100,8 +105,9 @@ github.com/prometheus/node_exporter/vendor/github.com/prometheus/client_golang/p
 又是一个完全不同的崩溃。这时我认为 `node_exporter` 或者它的依赖出问题的可能性变大了，因此我在 `Github` 上提了一个 issue。也许开发者以前见过这个情况？无论如何，问一下他们是否有解决方案是没错的。
 
 ## 不简短的硬件排查
+
 不出所料， 开发者首先想到的是硬件问题。这是合理的，毕竟我只在一台机器上碰到这个问题。我的所有其他机器上的 `node_exporter` 都运行得很好。尽管我没有任何有关硬件不稳定的证据，我也没有任何关于为什么 `node_exporter` 会只在那台机器上崩溃的解释。我尝试使用 `Memtest86+` 看一下内存使用情况，出现了下面的情况：
-![Memtest86](https://marcan.st/posts/go_debug/memtest.png)
+![Memtest86](https://raw.githubusercontent.com/studygolang/gctt-images/master/debug-runtime-bug/memtest.png)
 
 损坏的内存！更具体的说，一比特损坏的内存。完整地跑了一遍测试之后，我只发现了这一个坏掉的比特，和一些误报的内存损坏。
 
@@ -115,8 +121,8 @@ github.com/prometheus/node_exporter/vendor/github.com/prometheus/client_golang/p
 
 但是，我还可以做另外一件事。既然这个问题会因为温度变高而更严重。那如果我加热内存的话会发生什么呢？
 
-![Memtest86+](https://marcan.st/posts/go_debug/badram_s.jpg)
-![A cozy 100℃](https://marcan.st/posts/go_debug/badram_s.jpg)
+![Memtest86+](https://raw.githubusercontent.com/studygolang/gctt-images/master/debug-runtime-bug/badram.jpg)
+![A cozy 100℃](https://raw.githubusercontent.com/studygolang/gctt-images/master/debug-runtime-bug/badram_t.jpg)
 
 我用一个温度为 130℃ 的加热枪同时加热了两个内存模块（我的笔记本一共有四个 `SODIMM` 插槽，另外两个在背壳后面）。我按照模块顺序来检查，陆续发现了另外三个只能在高温环境下才能检测到的坏比特，它们分布在三个笔记本的三个内存条上。
 
@@ -135,17 +141,19 @@ GRUB_BADRAM="0x36a700000,0xfffffffffff00000,0x460e00000,0xfffffffffff00000,0x4ea
 当然，`node_exporter` 仍然会崩溃，我们也明白这不是真正的问题所在。
 
 ## 深度挖掘
+
 这类 bug 最让人恼火的就是，我们可以肯定它是某一部分内存损坏导致的。这让它很难被调试，因为我们无法预测哪部分代码会遇上这个问题，所以我们无法直接定位到问题根源。
 
 首先我对可以找到的 `node_exporter` 版本做了一个基本的二分排查，分别启动/关闭不同的收集器，但是这并没有凑效。我还试了在 `strace` 下运行一个实例。这看起来解决了崩溃的问题，但是它又引发了一个条件竞争的问题。`strace` 通常会通过拦截所有线程上的的系统调用在一定程度上包装应用的序列执行。我之后同样发现了 `strace` 也崩溃了，但是这花了很长时间。因为这看起来像是一个多线程的问题，我尝试着设置 `GOMAXPROCS=1`, 这会让 `Go` 单线程地执行程序代码。这同样解决了崩溃的问题，所以这又暗示了这是一个多线程的问题。
 
 现在为止，我已经收集了相当多的崩溃日志，我也从中发现了一些规律。尽管每次发生的崩溃的地点和原因都不一样，但是最终这些错误信息都可以被分类到不同类型中去并且其中一些错误出现了不止一次。所以我开始在网上搜索这些错误，然后我就发现了 [Go issue #20427](https://github.com/golang/go/issues/20427)。这是一个在 `Go` 语言中看起来无关的部分的问题，但是引起了相同的段错误和随机的崩溃。这个 issue 在 `Go 1.9` 上无法重现，被关闭了。没有人知道引起这个 issue 的根本原因是什么。
 
-我从那个 issue 中下载了 [重现代码](https://github.com/golang/go/issues/20427#issuecomment-306346724) 在我的电脑上运行。果然，它很快就崩溃了，我们有了一个很快的重新方法。
+我从那个 issue 中下载了 [重现代码](https://github.com/golang/go/issues/20427#issuecomment-306346724) 在我的电脑上运行。果然，它很快就崩溃了，我们有了一个很快的重现方法。
 
 但是这并没有能够帮我从 `Go` 语言中找到解决这个问题的方法，只是给了我们一个更快的重现方式。我们现在尝试换一个角度。
 
 ## 二分机器调试
+
 我知道这个问题会发生在我的笔记本上，但是不会发生在我的其他机器上。我试着在所有机器上跑上文中下载的重现代码，也没有重现崩溃的错误。这告诉我是笔记本上的特殊环境导致了这个错误。因为 `Go` 静态链接二进制文件，所以用户空间不会导致什么问题。我们就能把范围缩小到以下两个方面：硬件和内核。
 
 我没有条件在不同的硬件上测试我的代码，但是我可以把关注点放在内核上。首先我们想知道的是：`node_exporter` 是否会在虚拟机上崩溃呢？
@@ -186,11 +194,12 @@ scripts/gen_initramfs_list.sh -o initramfs.gz list.txt
 ```
 qemu-system-x86_64 -kernel /boot/vmlinuz-4.13.9-gentoo -initrd initramfs.gz -append 'console=ttyS0' -smp 8 -nographic -serial mon:stdio -cpu host -enable-kvm
 ```
-执行以后发现 `console` 上面没有输出。然后我意识到我根本把没有 8250 串端口支持编译进我笔记本的内核。虚拟机没有物理串端口，所以我重新变异了带串端口支持的内核，这次我终于可以运行我的重现代码了。
+执行以后发现 `console` 上面没有输出。然后我意识到我根本没有把 8250 串端口支持编译进我笔记本的内核。虚拟机没有物理串端口，所以我重新变异了带串端口支持的内核，这次我终于可以运行我的重现代码了。
 
 它崩溃了吗？是的，这意味着这个问题在我的笔记本的虚拟机上也能运行。我试着在我的另外一台机器上运行同样内核的虚拟机并且运行重现代码，崩溃又发生了。这表明，这是一个内核问题，而不是一个硬件问题。
 
 ## 内核调试
+
 这时，我知道我将要编译很多内核来尝试找出问题根源了。所以，我换了一台性能更好的电脑：一台古老的 12 核，24 线程的 `XEON`。我把已知会发生崩溃的内核代码放到那台机器上编译并且运行，但是它并没有发生崩溃。
 
 经过一些思考之后，我确认最早的二进制版本会崩溃。所以这是一个硬件问题？我编译的机器会不会对结果产生影响？我试着在我的家庭服务器上编译这个内核，这个内核很快就发生了重现代码崩溃。在两台机器上编译相同的内核导致了崩溃，在第三台机器上却没有。它们有什么区别？
@@ -237,6 +246,7 @@ qemu-system-x86_64 -kernel /boot/vmlinuz-4.13.9-gentoo -initrd initramfs.gz -app
 那么接下来呢？我们知道 `CONFIG_OPTIMIZE_INLINING` 会引发问题，但是这个选项会改变内核中所有的内联函数的行为。如何才能精确定位问题所在呢？
 
 ## Hash-based 差异编译
+
 现在我们要把内核分开，一部分在打开 `CONFIG_OPTIMIZE_INLINING` 选项时编译，另一部分在这个选项关闭的时候编译。 通过测试编译完的内核是否会崩溃，我们可以进一步缩小可能出错的 object 文件的范围。
 
 为了避免遍历所有的 object 文件并且做一些二分查找，我决定使用一个基于哈希的算法。我用这个算法写了一个脚本：
@@ -273,13 +283,15 @@ fi
 exec gcc $extra "${args[@]}"
 ```
 这个脚本使用 `SHA-1` 算法计算每个 object 文件的哈希值，然后在前 32 位比特中任取一位，如果这个比特是 0， 就关闭 `CONFIG_OPTIMIZE_INLINING` 来编译。如果这个比特是 1，就打开`CONFIG_OPTIMIZE_INLINING` 来编译。我观察到现在的内核大概有 685 个 object 文件（我之前的最小化内核工作取得了成效），这写文件可能需要十个比特位来编号。这个方法还有一个好处是：我只需要关注会崩溃的内核，这可比证明一个内核不会崩溃简单多了。
-我以 `SHA-1` 哈希串前缀的中的每一个比特位为标志位，花29分钟编译了 32 个内核。然后我开始测试他们是否会崩溃，每次我测试出一个会崩溃的内核，我就用一个正则表达式来表达可能的 `SHA-1` 值（在指定位数是 0 的值）。经过八次崩溃之后，我已经能锁定到 4 个 object 文件了。当我测试到第十次崩溃时，就只有一个匹配的 object 文件了。
+
+我以 `SHA-1` 哈希串前缀中的每一个比特位为标志位，花29分钟编译了 32 个内核。然后我开始测试他们是否会崩溃，每次我测试出一个会崩溃的内核，我就用一个正则表达式来表达可能的 `SHA-1` 值（在指定位数是 0 的值）。经过八次崩溃之后，我已经能锁定到 4 个 object 文件了。当我测试到第十次崩溃时，就只有一个匹配的 object 文件了。
 ```
 $ grep '^[0246][012389ab][0189][014589cd][028a][012389ab][014589cd]' objs_0.txt
 6b9cab4f arch/x86/entry/vdso/vclock_gettime.o
 ```
 
 ## vDSO
+
 这个内核的 `vDSO` 并不是真正的内核代码。它是内核放在每个进程地址空间的小共享库，能够允许应用在不离开用户态的情况下进行一些系统调用。这样做不仅能显著地提高性能，还可以允许内核在需要时改变一些系统调用的实现。
 
 换句话说， `vDSO` 是 `GCC` 在编译内核时编译的代码，和所有的用户态应用链接，是用户态的代码。这解释了为什么内核和内核的编译器会影响这个 bug：因为根源是一个内核提供的共享库，而不是内核本身。`Go` 出于性能考虑使用了 `vDSO` 库。`Go` 恰好还有一个重写标准库的策略，所以它不会用任何 Linux 官方的 glibc 代码来调用 `vDSO`，而是会使用自己的代码。
@@ -387,7 +399,8 @@ TEXT runtime·walltime(SB),NOSPLIT,$16
 值得注意的是， `vDSO` 文档中并没有指明最大栈空间的保证，所以这很明显是 `Go` 做了一个错误的假设。
 
 ## 结论
-我们的发现完美地解释了所有的现象。栈嗅探是一个 `orq` 指令（与 0 的逻辑或）。这是一个空指令, 但是能够有效地秀谈到目标地址（如果地址不存在，就会出现段错误）。但是我们并没有在 `vDSO` 代码中看到段错误，所以为什么它会导致 `Go` 程序崩溃呢？原因是，与 0 的逻辑与并不真的是一个空指令。因为 `orq` 不是一个原子操作。所以真实情况是 `CPU` 读了内存地址又把它写了回来。这导致了一个竞争的状况。如果有其他线程在其他核上运行，`orq` 可能会撤销一次同时发生的内存写操作。因为这个写操作超出了栈的边界，它可能是写在了其他线程的栈上或者是随机数据上，然后又撤销了一次写操作。这也是为什么 `GOMAXPROCS=1` 的时候不会发生崩溃，在这种情况下不会有同时运行的 `Go` 语言代码。
+
+我们的发现完美地解释了所有的现象。栈嗅探是一个 `orq` 指令（与 0 的逻辑或）。这是一个空指令, 但是能够有效地嗅探到目标地址（如果地址不存在，就会出现段错误）。但是我们并没有在 `vDSO` 代码中看到段错误，所以为什么它会导致 `Go` 程序崩溃呢？原因是，与 0 的逻辑与并不真的是一个空指令。因为 `orq` 不是一个原子操作。所以真实情况是 `CPU` 读了内存地址又把它写了回来。这导致了一个竞争的状况。如果有其他线程在其他核上运行，`orq` 可能会撤销一次同时发生的内存写操作。因为这个写操作超出了栈的边界，它可能是写在了其他线程的栈上或者是随机数据上，然后又撤销了一次写操作。这也是为什么 `GOMAXPROCS=1` 的时候不会发生崩溃，在这种情况下不会有同时运行的 `Go` 语言代码。
 
 那怎么修复这个问题呢？我把它留给了 `Go` 的开发者。他们最终的解决方案是在调用 `vDSO` 函数时 [分配更大的栈空间](https://github.com/golang/go/commit/a158382b1c9c0b95a7d41865a405736be6bc585f)。这会导致一个细微的纳秒级的速度损失，但这是可接受的。在用修复过的 `Go` 编译 `node_exporter` 之后，一切恢复了正常。
 
@@ -397,6 +410,6 @@ via: https://marcan.st/2017/12/debugging-an-evil-go-runtime-bug/
 
 作者：[Hector Martin](https://marcan.st/about/)
 译者：[QueShengyao](https://github.com/QueShengyao)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
