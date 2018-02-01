@@ -385,6 +385,6 @@ via: https://www.ribice.ba/swagger-golang/
 
 作者：[Emir Ribic](https://github.com/ribice)
 译者：[fatalc](https://github.com/fatalc)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
