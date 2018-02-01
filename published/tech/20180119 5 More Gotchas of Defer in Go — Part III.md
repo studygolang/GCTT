@@ -2,9 +2,12 @@
 
 > 译注：全文总共有四篇，本文为同系列文章的第三篇
 
+- [第一部分](https://studygolang.com/articles/12061)
+- [第二部分](https://studygolang.com/articles/12136)
+
 本文将侧重于讲解使用 defer 的一些技巧
 
-如果你对 defer 的基本操作还没有清晰的认识，请先阅读这篇 [文章](https://blog.learngoprogramming.com/golang-defer-simplified-77d3b2b817ff) 。
+如果你对 defer 的基本操作还没有清晰的认识，请先阅读这篇 [文章](https://blog.learngoprogramming.com/golang-defer-simplified-77d3b2b817ff) （GCTT 出品的译文 https://studygolang.com/articles/11907）。
 
 ## #1 —— 在延迟调用函数的外部使用 recover
 
@@ -15,8 +18,8 @@
 
 ```go
 func do() {
-  recover()
-  panic("error")
+	recover()
+	panic("error")
 }
 ```
 
@@ -34,12 +37,12 @@ panic: error
 
 ```go
 func do() {
-  defer func() {
-    r := recover()
-    fmt.Println("recovered:", r)
-  }()
+	defer func() {
+		r := recover()
+		fmt.Println("recovered:", r)
+	}()
 
-  panic("error")
+	panic("error")
 }
 ```
 
@@ -51,7 +54,7 @@ recovered: error
 
 ## #2 —— 在错误的位置使用 defer
 
-这个陷阱来自于这篇 [Go的五十度灰](http://devs.cloudimmunity.com/gotchas-and-common-mistakes-in-go-golang/#anameclose_http_resp_bodyaclosinghttpresponsebody)。
+这个陷阱来自于这篇 [Go 的 50 个阴影](http://devs.cloudimmunity.com/gotchas-and-common-mistakes-in-go-golang/#anameclose_http_resp_bodyaclosinghttpresponsebody)。
 
 例子
 
@@ -59,15 +62,15 @@ recovered: error
 
 ```go
 func do() error {
-  res, err := http.Get("http://notexists")
-  defer res.Body.Close()
-  if err != nil {
-    return err
-  }
+	res, err := http.Get("http://notexists")
+	defer res.Body.Close()
+	if err != nil {
+		return err
+	}
 
-  // ..code...
+	// ..code...
 
-  return nil
+	return nil
 }
 ```
 
@@ -87,18 +90,18 @@ panic: runtime error: invalid memory address or nil pointer dereference
 
 ```go
 func do() error {
-  res, err := http.Get("http://notexists")
-  if res != nil {
-    defer res.Body.Close()
-  }
+	res, err := http.Get("http://notexists")
+	if res != nil {
+		defer res.Body.Close()
+	}
 
-  if err != nil {
-    return err
-  }
+	if err != nil {
+		return err
+	}
 
-  // ..code...
+	// ..code...
 
-  return nil
+	return nil
 }
 ```
 
@@ -118,15 +121,15 @@ func do() error {
 
 ```go
 func do() error {
-  f, err := os.Open("book.txt")
-  if err != nil {
-    return err
-  }
-  defer f.Close()
+	f, err := os.Open("book.txt")
+	if err != nil {
+		return err
+	}
+	defer f.Close()
 
-  // ..code...
+	// ..code...
 
-  return nil
+	return nil
 }
 ```
 
@@ -136,20 +139,20 @@ func do() error {
 
 ```go
 func do() error {
-  f, err := os.Open("book.txt")
-  if err != nil {
-    return err
-  }
+	f, err := os.Open("book.txt")
+	if err != nil {
+		return err
+	}
 
-  defer func() {
-    if err := f.Close(); err != nil {
-      // log etc
-    }
-  }()
+	defer func() {
+		if err := f.Close(); err != nil {
+			// log etc
+		}
+	}()
 
-  // ..code...
+	// ..code...
 
-  return nil
+	return nil
 }
 ```
 
@@ -159,20 +162,20 @@ func do() error {
 
 ```go
 func do() (err error) {
-  f, err := os.Open("book.txt")
-  if err != nil {
-    return err
-  }
+	f, err := os.Open("book.txt")
+	if err != nil {
+		return err
+	}
 
-  defer func() {
-    if ferr := f.Close(); ferr != nil {
-      err = ferr
-    }
-  }()
+	defer func() {
+		if ferr := f.Close(); ferr != nil {
+			err = ferr
+		}
+	}()
 
-  // ..code...
+	// ..code...
 
-  return nil
+	return nil
 }
 ```
 
@@ -188,35 +191,35 @@ func do() (err error) {
 
 例子
 
-这段看似没什么问题的代码尝试第二次关闭相同的资源。第二个 *变量r* 会被关闭两次，因为 *r变量* 会因第二个资源而改变它的值
+这段看似没什么问题的代码尝试第二次关闭相同的资源。第二个 *变量 f* 会被关闭两次，因为 * f 变量* 会因第二个资源而改变它的值
 
 ```go
 func do() error {
-  f, err := os.Open("book.txt")
-  if err != nil {
-    return err
-  }
+	f, err := os.Open("book.txt")
+	if err != nil {
+		return err
+	}
 
-  defer func() {
-    if err := f.Close(); err != nil {
-      // log etc
-    }
-  }()
+	defer func() {
+		if err := f.Close(); err != nil {
+			// log etc
+		}
+	}()
 
-  // ..code...
+	// ..code...
 
-  f, err = os.Open("another-book.txt")
-  if err != nil {
-    return err
-  }
+	f, err = os.Open("another-book.txt")
+	if err != nil {
+		return err
+	}
 
-  defer func() {
-    if err := f.Close(); err != nil {
-      // log etc
-    }
-  }()
+	defer func() {
+		if err := f.Close(); err != nil {
+			// log etc
+		}
+	}()
 
-  return nil
+	return nil
 }
 ```
 
@@ -229,37 +232,37 @@ closing resource #another-book.txt
 
 ### 发生了什么
 
-正如我们所看到的，当延迟函数执行时，只有最后一个变量会被用到，因此，*f变量* 会成为最后那个资源 (another-book.txt)。而且两个 *defer* 都会将这个资源作为最后的资源来关闭
+正如我们所看到的，当延迟函数执行时，只有最后一个变量会被用到，因此，*f 变量* 会成为最后那个资源 (another-book.txt)。而且两个 *defer* 都会将这个资源作为最后的资源来关闭
 
 ### 解决方案
 
 ```go
 func do() error {
-  f, err := os.Open("book.txt")
-  if err != nil {
-    return err
-  }
+	f, err := os.Open("book.txt")
+	if err != nil {
+		return err
+	}
 
-  defer func(f io.Closer) {
-    if err := f.Close(); err != nil {
-      // log etc
-    }
-  }(f)
+	defer func(f io.Closer) {
+		if err := f.Close(); err != nil {
+			// log etc
+		}
+	}(f)
 
-  // ..code...
+	// ..code...
 
-  f, err = os.Open("another-book.txt")
-  if err != nil {
-    return err
-  }
+	f, err = os.Open("another-book.txt")
+	if err != nil {
+		return err
+	}
 
-  defer func(f io.Closer) {
-    if err := f.Close(); err != nil {
-      // log etc
-    }
-  }(f)
+	defer func(f io.Closer) {
+		if err := f.Close(); err != nil {
+			// log etc
+		}
+	}(f)
 
-  return nil
+	return nil
 }
 ```
 
@@ -280,13 +283,13 @@ closing resource #book.txt
 
 ```go
 func errorly() {
-  defer func() {
-    fmt.Println(recover())
-  }()
+	defer func() {
+		fmt.Println(recover())
+	}()
 
-  if badHappened {
-    panic("error run run")
-  }
+	if badHappened {
+		panic("error run run")
+	}
 }
 ```
 
@@ -300,13 +303,13 @@ func errorly() {
 
 ```go
 func errorly() {
-  defer func() {
-    fmt.Println(recover())
-  }()
+	defer func() {
+		fmt.Println(recover())
+	}()
 
-  if badHappened {
-    panic(errors.New("error run run")
-  }
+	if badHappened {
+		panic(errors.New("error run run")
+	}
 }
 ```
 
@@ -324,17 +327,17 @@ func errorly() {
 type myerror struct {}
 
 func (myerror) String() string {
-  return "myerror there!"
+	return "myerror there!"
 }
 
 func errorly() {
-  defer func() {
-    fmt.Println(recover())
-  }()
+	defer func() {
+		fmt.Println(recover())
+	}()
 
-  if badHappened {
-    panic(myerror{})
-  }
+	if badHappened {
+		panic(myerror{})
+	}
 }
 ```
 
@@ -369,7 +372,7 @@ panic(value) -> recover() -> value
 via: https://blog.learngoprogramming.com/5-gotchas-of-defer-in-go-golang-part-iii-36a1ab3d6ef1
 
 作者：[Inanc Gumus](https://blog.learngoprogramming.com/@inanc)
-译者：[译者ID](https://github.com/yujiahaol68)
-校对：[校对者ID](https://github.com/校对者ID)
+译者：[yujiahaol68](https://github.com/yujiahaol68)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
