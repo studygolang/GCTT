@@ -6,7 +6,7 @@
 
 示例程序:[链接](https://github.com/ribice/golang-swaggerui-example)
 
-大约两年前，我曾经在开发一个restful风格的企业应用的后台时，第一次知道 [SwaggerUI](https://swagger.io/swagger-ui/) 。 SwaggerUI 的创造者 SmartBear 将其产品描述为：
+大约两年前，我曾经在开发一个 RESTful 风格的企业应用的后台时，第一次知道 [SwaggerUI](https://swagger.io/swagger-ui/) 。 SwaggerUI 的创造者 SmartBear 将其产品描述为：
 
 >" Swagger UI 允许任何人（无论是你的开发团队还是最终用户）在没有任何实现逻辑的情况下对 API 资源进行可视化和交互。它（API文档）通过 Swagger 定义自动生成，可视化文档使得后端实现和客户端消费变得更加容易。"
 
