@@ -106,7 +106,7 @@ NTP 值的分数部分转成纳秒。在这个平凡的例子里，这里是可�
 
 ## 显示时间
 
-最后，函数 time.Unix 被用来创建一个秒数部分使用 secs ，分数部分使用 nanos 值的时间。然后这个时间会被打印到终端。
+最后，函数 time.Unix 被用来创建一个秒数部分使用 secs，分数部分使用 nanos 值的时间。然后这个时间会被打印到终端。
 
 ```go
 fmt.Printf("%v\n", time.Unix(int64(secs), nanos))
