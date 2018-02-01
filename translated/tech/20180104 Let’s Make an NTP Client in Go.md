@@ -41,7 +41,7 @@ type packet struct {
 }
 ```
 
-## 启动UDP连接
+## 启动 UDP 连接
 
 接下来，我们通过 UDP 协议，使用　net.Dial 函数去启动一个 socket，与 NTP 服务器联系，并设定 15 秒的超时时间．
 
