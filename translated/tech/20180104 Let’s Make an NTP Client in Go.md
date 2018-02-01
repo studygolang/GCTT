@@ -12,7 +12,7 @@
 
 ## NTP 包结构
 
-时间同步的概念是非常复杂的，我还不能完全理解，也超过这篇博文的范围。但幸运的是，NTP 使用的数据包格式很简单，对于客户端来说也小而足够了。下面的图展示了 NTP v4 的包格式。关于这篇博文，我们只关注前 48 个字节，忽略掉 v4 版本的扩展部分．
+时间同步的概念是非常复杂的，我还不能完全理解，也超过这篇博文的范围。但幸运的是，NTP 使用的数据包格式很简单，对于客户端来说也小而足够了。下面的图展示了 NTP v4 的包格式。关于这篇博文，我们只关注前 48 个字节，忽略掉 v4 版本的扩展部分。
 
 ![NTP v4 data format (abbreviated) — https://tools.ietf.org/html/rfc5905](https://github.com/studygolang/gctt-images/blob/master/go-ntp/NTP-v4-data-format.png)
 NTP v4 data format (abbreviated) — https://tools.ietf.org/html/rfc5905
@@ -43,7 +43,7 @@ type packet struct {
 
 ## 启动 UDP 连接
 
-接下来，我们通过 UDP 协议，使用　net.Dial 函数去启动一个 socket，与 NTP 服务器联系，并设定 15 秒的超时时间．
+接下来，我们通过 UDP 协议，使用　net.Dial 函数去启动一个 socket，与 NTP 服务器联系，并设定 15 秒的超时时间。
 
 ```
 conn, err := net.Dial("udp", host)
@@ -91,9 +91,9 @@ if err := binary.Read(conn, binary.BigEndian, rsp); err != nil {
 
 ## 解析时间
 
-在这个超普通的例子里面，我们只对　Transmit Time 字段 (rsp.TxTimeSec 和 rspTxTimeFrac) 感兴趣，它们是从服务端发出时的时间。但我们不能直接使用它们，必须先转成 Unix 时间．
+在这个超普通的例子里面，我们只对　Transmit Time 字段 (rsp.TxTimeSec 和 rspTxTimeFrac) 感兴趣，它们是从服务端发出时的时间。但我们不能直接使用它们，必须先转成 Unix 时间。
 
-Unix 时间是一个开始于 1970 年的纪元（或者说从 1970 年开始的秒数）。然而 NTP 使用的是另外一个纪元，从 1900 年开始的秒数。因此，从 NTP 服务端获取到的值要正确地转成 Unix 时间必须减掉这 70 年间的秒数 (1970-1900)，或者说 2208988800 秒
+Unix 时间是一个开始于 1970 年的纪元（或者说从 1970 年开始的秒数）。然而 NTP 使用的是另外一个纪元，从 1900 年开始的秒数。因此，从 NTP 服务端获取到的值要正确地转成 Unix 时间必须减掉这 70 年间的秒数 (1970-1900)，或者说 2208988800 秒。
 
 ```go
 const ntpEpochOffset = 2208988800
@@ -102,11 +102,11 @@ secs := float64(rsp.TxTimeSec) - ntpEpochOffset
 nanos := (int64(rsp.TxTimeFrac) * 1e9) >> 32
 ```
 
-NTP 值的分数部分转成纳秒。在这个平凡的例子里，这里是可选的，展示只是为了完整性．
+NTP 值的分数部分转成纳秒。在这个平凡的例子里，这里是可选的，展示只是为了完整性。
 
 ## 显示时间
 
-最后，函数 time.Unix 被用来创建一个秒数部分使用 secs ，分数部分使用 nanos 值的时间。然后这个时间会被打印到终端．
+最后，函数 time.Unix 被用来创建一个秒数部分使用 secs ，分数部分使用 nanos 值的时间。然后这个时间会被打印到终端。
 
 ```go
 fmt.Printf("%v\n", time.Unix(int64(secs), nanos))
@@ -114,7 +114,7 @@ fmt.Printf("%v\n", time.Unix(int64(secs), nanos))
 
 ## 结论
 
-这篇博文展示了一个关于 NTP 客户端的普通的例子。描述了如何利用 encoding/binary 库，非常容易地将一个结构体转成字节形式。相反，我们使用 binary 库将一个字节流转成对应的结构体值．
+这篇博文展示了一个关于 NTP 客户端的普通的例子。描述了如何利用 encoding/binary 库，非常容易地将一个结构体转成字节形式。相反，我们使用 binary 库将一个字节流转成对应的结构体值。
 
 这个 NTP 客户端还不是一个可用于生产环境的产品，毕竟它缺少了 NTP 规范指定的很多功能。从服务端返回的大部分字段都被忽略了。你可以从[这里](https://github.com/beevik/ntp)获取到一个用 Go 写的更完整的 NTP 客户端。
 
