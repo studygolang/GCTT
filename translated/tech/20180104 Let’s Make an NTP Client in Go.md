@@ -1,6 +1,6 @@
 # Let's Make an NTP Client in Go
 
-在网络编程做了一些研究之后，我邂逅了一篇题目为《Let's Make a NTP Client in C》，由 David Lettier(Lettier) 编写的文章。这篇文章鼓舞了我用 Go 去做相似的事。
+在网络编程做了一些研究之后，我邂逅了一篇题目为《Let's Make a NTP Client in C》，由 David Lettier（Lettier） 编写的文章。这篇文章鼓舞了我用 Go 去做相似的事。
 
 ```
 这篇博文提到的代码都在这里 [https://github.com/vladimirvivien/go-ntp-client](https://github.com/vladimirvivien/go-ntp-client.)
@@ -59,7 +59,7 @@ if err := conn.SetDeadline(
 
 ## 从服务端获取时间
 
-在发送请求包给服务端前，第一个字节是用来设置通信的配置，我们这里用 0x1B (或者二进制 00011011)，代表客户端模式为 3，NTP版本为 3，润年为 0，如下所示：
+在发送请求包给服务端前，第一个字节是用来设置通信的配置，我们这里用 0x1B（或者二进制 00011011），代表客户端模式为 3，NTP版本为 3，润年为 0，如下所示：
 
 ```go
 // configure request settings by specifying the first byte as
@@ -91,9 +91,9 @@ if err := binary.Read(conn, binary.BigEndian, rsp); err != nil {
 
 ## 解析时间
 
-在这个超普通的例子里面，我们只对　Transmit Time 字段 (rsp.TxTimeSec 和 rspTxTimeFrac) 感兴趣，它们是从服务端发出时的时间。但我们不能直接使用它们，必须先转成 Unix 时间。
+在这个超普通的例子里面，我们只对　Transmit Time 字段 （rsp.TxTimeSec 和 rspTxTimeFrac） 感兴趣，它们是从服务端发出时的时间。但我们不能直接使用它们，必须先转成 Unix 时间。
 
-Unix 时间是一个开始于 1970 年的纪元（或者说从 1970 年开始的秒数）。然而 NTP 使用的是另外一个纪元，从 1900 年开始的秒数。因此，从 NTP 服务端获取到的值要正确地转成 Unix 时间必须减掉这 70 年间的秒数 (1970-1900)，或者说 2208988800 秒。
+Unix 时间是一个开始于 1970 年的纪元（或者说从 1970 年开始的秒数）。然而 NTP 使用的是另外一个纪元，从 1900 年开始的秒数。因此，从 NTP 服务端获取到的值要正确地转成 Unix 时间必须减掉这 70 年间的秒数 （1970-1900），或者说 2208988800 秒。
 
 ```go
 const ntpEpochOffset = 2208988800
