@@ -1,4 +1,6 @@
-# Go语言标准库中最常用的标识符是什么?
+已发布：https://studygolang.com/articles/12324
+
+# Go 语言标准库中最常用的标识符是什么?
 
 这篇文章是来自最新 [justforfunc](http://justforfunc.com/) 中同标题的一段。这个程序的[代码](https://github.com/campoy/justforfunc/blob/master/24-go-scanner/main.go)可以在 [justforfunc 仓库](https://github.com/campoy/justforfunc) 中找到。
 
@@ -12,7 +14,7 @@ package main
 import "fmt"
 
 func main() {
-     fmt.Println("Hello, world")
+	fmt.Println("Hello, world")
 }
 ```
 
@@ -43,14 +45,16 @@ identifier = letter { letter | unicode_digit } .
 
 所以，如果我们以 **fmt.Println** 为例， 它可以产生这些 token：标识符 **fmt**, **“.”**, 以及标识符 **Println**。 这是一个函数调用吗？ 在这里我们还无法确定，而且我们也不关心。它的结构就是一个序列，表明 token 出现的顺序。
 
-![](https://cdn-images-1.medium.com/max/2000/0*RPIALvOWCycadJbW.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/most-common-identifier/1.png)
 
 这种能够将给定的字符序列生成 token 序列的程序被称为扫描器。Go 标准库中的 go/scanner 就自带一个扫描器。它生成的记号定义在 go/token 里。
 
 ### 使用 go/scanner
 
 我们已经了解了什么是扫描器，那它如何使用呢？
+
 #### 从命令行中读取参数
+
 让我们先从一个简单程序开始，将传给它的参数打印出来：
 
 ```go
@@ -105,6 +109,7 @@ for _, arg := range os.Args[1:] {
 ```
 
 #### 统计 token
+
 太棒了，我们已经能够打印出所有的 token 了，但是我们还需要跟踪每个标识符出现的次数，然后按照出现次数排序，并打印出前 5 位。
 
 在 Go 中，实现以上需求的最好的方法是用一个 map，让标识符来做 key， 其出现次数做 value。
@@ -138,7 +143,7 @@ for s, n := range counts {
 }
 
 sort.Slice(pairs, func(i, j int) bool {
-        return pairs[i].n > pairs[j].n
+		return pairs[i].n > pairs[j].n
 })
 
 for i := 0; i < len(pairs) && i < 5; i++ {
