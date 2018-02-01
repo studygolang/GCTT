@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12319
+
 # Golang 中 defer 的五个坑 - 第三部分
 
 > 译注：全文总共有四篇，本文为同系列文章的第三篇
