@@ -42,6 +42,43 @@ func doStuff() error {
 
 ## 为什么发生这种情况？
 
+虽然最初看起来我们的代码返回的是我们在函数开始时创建的var err错误，但事实是我们的程序永远不会到达这一行代码。这意味着它永远不会返回特定的err变量，并将其更改为我们的defer函数，结果是毫无意义的。
+
+在调用pressButton之后添加一个Println,但在返回之前，确实有助于说明这一点:
+
+```
+pressButton()  
+// Nothing below here gets executed!
+fmt.Println("we got here!")  
+return err  
+```
+
+在Go Playground上执行它 - https://play.golang.org/p/Vk0DYs20eB
+
+## 我们该如何修复它
+
+为了修复这个问题，我们可以简单地使用命名返回变量
+
+```
+func doStuff() (err error) {  
+    // If there is a panic we need to recover in a deferred func
+    defer func() {
+        if r := recover(); r != nil {
+            err = errors.New("the meeseeks went crazy!")
+        }
+    }()
+
+    pressButton()
+    return err
+}
+```
+在Go Playground上执行它 - https://play.golang.org/p/bqGOroPjQJ
+
+The resulting code looks very similar, but by naming our return variable when we declare the function our program will now return the err variable even if we never hit the return statement at the end of our doStuff function. Because of this minor difference, we can now alter the err variable inside of our deferred function and successfully capture the panic.
+
+最终的代码看起来非常的相似，不过通过命名我们的返回变量，当我们声明这个函数时我们的程序将会立刻发挥这个错误变量，即使我们从未触碰到doStuff函数的末尾的返回语句。由于这个细微的差别，我们现在可以更改我们被defer的函数中的err变量，并且成功地捕获到这个panic。
+
+
 via: https://www.calhoun.io/using-named-return-variables-to-capture-panics-in-go/
 
 作者：[Jon Calhoun](https://www.usegolang.com/)
