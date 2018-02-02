@@ -74,9 +74,10 @@ func doStuff() (err error) {
 ```
 在Go Playground上执行它 - https://play.golang.org/p/bqGOroPjQJ
 
-The resulting code looks very similar, but by naming our return variable when we declare the function our program will now return the err variable even if we never hit the return statement at the end of our doStuff function. Because of this minor difference, we can now alter the err variable inside of our deferred function and successfully capture the panic.
-
 最终的代码看起来非常的相似，不过通过命名我们的返回变量，当我们声明这个函数时我们的程序将会立刻发挥这个错误变量，即使我们从未触碰到doStuff函数的末尾的返回语句。由于这个细微的差别，我们现在可以更改我们被defer的函数中的err变量，并且成功地捕获到这个panic。
+
+
+
 
 
 via: https://www.calhoun.io/using-named-return-variables-to-capture-panics-in-go/
