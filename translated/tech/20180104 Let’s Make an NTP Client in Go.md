@@ -1,4 +1,4 @@
-# Let's Make an NTP Client in Go
+# 让我们用 Go 语言创建一个 NTP 客户端
 
 在网络编程做了一些研究之后，我邂逅了一篇题目为《Let's Make a NTP Client in C》，由 David Lettier（Lettier） 编写的文章。这篇文章鼓舞了我用 Go 去做相似的事。
 
