@@ -1,50 +1,33 @@
 # Escape-Analysis Flaws
 
-### Prelude
+### 序
 
-It will be helpful to read this four-part series first on escape analysis and
-data semantics. Details on how to read an escape analysis report and pprof
-output have been outlined here.
+先阅读这个由四部分组成的系列文章，对理解逃逸分析和数据语义会有帮助。下面详细介绍了阅读逃逸分析报告和 pprof 输出的方法。
 
-<https://www.ardanlabs.com/blog/2017/05/language-mechanics-on-stacks-and-
-pointers.html>
+<https://www.ardanlabs.com/blog/2017/05/language-mechanics-on-stacks-and-pointers.html>
 
-### Introduction
+### 介绍
 
-Even after working with Go for 4 years, I am continually amazed by the
-language. Thanks to the static code analysis the compiler performs, the
-compiler can apply interesting optimizations to the code it produces. One type
-of analysis the compiler performs is called escape analysis. This produces
-optimizations and simplifications around memory management.
+即使使用了 Go 4 年，我仍然会被这门语言震惊到。多亏了编译器执行的静态代码分析，编译器可以对其生成的代码进行一些有趣的优化。编码器执行的其中一种分析称为逃逸分析。这会对内存管理进行优化和简化。
 
-The language team has been focused for the past 2 years on optimizing the code
-the compiler produces for better performance and they have done a fantastic
-job. I believe Go programs could see even more dramatic improvements if some
-of the current flaws in escape analysis are resolved. Back in February 2015,
-Dmitry Vyukov wrote this paper outlining known escape analysis flaws in the
-compiler.
+在过去的两年中，（Go）语言团队一直致力于优化编译器生成的代码，以获得更好的性能，并且做了极其出色的工作。我相信，如果逃逸分析中的一些现有的缺陷得以解决，那么，Go 程序会得到更大的改进。早在 2015 年 2 月，
+Dmitry Vyukov 就撰写了这篇文章，概述了编译器已知的逃逸分析缺陷。
 
 <https://docs.google.com/document/d/1CxgUBPlx9iJzkz9JWkb6tIpTe5q32QDmz8l0BouG0Cw/edit#>
 
-I was curious about how many of these flaws had been fixed since this document
-was written and I found that so far a few have been resolved. That being said,
-five particular flaws have not been fixed that I would love to see worked on
-in a near future release of Go. I label these as:
+我很好奇，自这篇文章以来，当中有多少提及的缺陷被修复了，然后，我发现，迄今为止，只有少数一些缺陷得到了解决。也就是说，有五个特定的缺陷尚未被修复，而我很乐意看到在 Go 不久的将来发布的版本中能有所改善。我将这些缺陷标记为：
 
-  * 间接赋值
-  * 间接调用
-  * Slice 和 Map 赋值
-  * 接口
-  * Unknown
+  * 间接赋值（Indirect Assignment）
+  * 间接调用（Indirect Call）
+  * 切片和 Map 赋值（Slice and Map Assignments）
+  * 接口（Interfaces）
+  * 未知缺陷（Unknown）
 
-I thought it would be fun to explore each of these flaws so you can see the
-positive impact existing Go programs will have once they are fixed. Everything
-you see is based on the 1.9 compiler.
+我认为，探索这些缺陷是很有趣的，所以，你可以看到它们被修复后对现有 Go 程序的积极影响。下面你所看到的所有东西都基于 1.9 编译器。
 
 ### 间接赋值
 
-The “Indirection Assignment” flaw has to do with allocations that occur when a
-value is assigned through an indirection. Here is a code example:
+“间接赋值（Indirect Assignment）”缺陷与通过间接分配值时发生的分配有关。这是一个代码示例：
 
 **代码清单 1**  
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example1/example1_test.go>
@@ -74,23 +57,13 @@ value is assigned through an indirection. Here is a code example:
     
 ```
 
-In listing 1, a type named `X` is declared with a single field named `p` as a
-pointer to an integer. Then on lines 11 through 13, a value of type `X` is
-constructed using the compact form to initialize the `p` field with the
-address of the `i1` variable. The `x1` variable is created as a pointer so
-this variable is the same as the variable created on line 17.
+在代码清单 1 中，类型 `X` 拥有单个字段，这个字段的名字是 `p`，它是一个指向整型的指针。然后在第 11 行到第 13 行中，构造了一个类型为 `X` 的值，使用紧凑形式，用 `i1` 变量的地址来初始化 `p` 字段。`x1` 变量是作为一个指针创建的，因此，这个变量与在第 17 行创建的变量是一样的。
 
-On line 16, a variable named `i2` is declared and on line 17, a value of type
-`X` using pointer semantics is constructed and assigned to the pointer
-variable `x2`. Then on line 18, the address of the `i2` variable is assigned
-to the `p` field within the value that the `x2` variable points to. In this
-statement, there is an assignment through the use of a pointer variable, which
-is an indirection.
+在第 16 行中，声明了名为 `i2` 的变量，然后在第 17 行中，构造了一个使用指针语义的类型为 `X` 的值，然后将其赋值给指针变量 `x2`。接着在第 18 行中，`i2` 变量的地址被赋给变量 `x2` 执行的值中的 `p` 字段。在这个语句中，存在通过使用指针变量的赋值，这是一种间接赋值。
 
-Here is the output from running the benchmark with an escape analysis report.
-Also included is the output for the pprof list command.
+以下是运行基准测试的结果，以及一份逃逸分析报告。还包括了 pprof list 命令的输出。
 
-**Benchmark Output**
+**基准测试输出**
 ```
 
     $ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
@@ -129,9 +102,7 @@ Also included is the output for the pprof list command.
     
 ```
 
-在逃逸分析报告中， the reason given for `i2` to escape is `(star-
-dot-equals)`. I imagine this is referencing the need for the compiler to
-perform an operation like this underneath to make the assignment.
+在逃逸分析报告中，`i2` 逃逸给出的理由是，`(star-dot-equals)`。我想这是指编译器需要执行诸如以下的操作来完成此赋值。
 
 **Star-Dot-Equals**
 ```go
@@ -144,9 +115,7 @@ pprof 输出清晰地显示，`i2` 是在堆上分配的，而 `i1` 不是。喔
 
 ### 间接调用
 
-The “Indirect Call” flaw has to do with allocations that occur when a value is
-shared with a function that is called through an indirection. Here is a code
-example:
+“间接调用（Indirect Call）”缺陷与和通过间接调用的函数共享一个值时发生的分配有关。下面是一个代码示例：
 
 **代码清单 2.1**  
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example2/example2_test.go>
@@ -179,28 +148,15 @@ example:
     
 ```
 
-In listing 2.1, a named function called `foo` on line 21 is declared. This
-function accepts the address of an integer along with an integer value. Then
-the function assigns the integer value that is passed to the location that the
-`p` pointer points to.
+在代码清单 2.1 中，在第 21 行声明了一个名为 `foo` 的命名函数。这个函数接受一个整型的地址和一个整型值作为参数。然后，这个函数将传递的整型值赋值给 `p` 指针指向的位置。
 
-On line 07, a variable named `y1` of type `int` is declared and shared during
-the function call to `foo` on line 08. Between lines 10 through 13, a similar
-situation exists. A variable named `y2` is declared of type `int` and shared
-as the first parameter to a literal function that is declared and executed in
-place on line 13. The literal function is identical to the `foo` function.
+在第 07 行，声明了一个类型为 `int`，名字为 `y1` 的变量，这个变量在第 08 行对 `foo` 的函数调用过程中发生了共享。从第 10 行到第 13 行，存在类似的情况。声明了一个类型为 `int` 的变量 `y2`，然后这个变量作为第一个参数共享给一个在第 13 行声明和执行的字面函数。这个字面函数与 `foo` 函数相同。
 
-Finally between lines 15 through 17, the `foo` function is assigned to a
-variable named `p`. Through the `p` variable, the `foo` function is executed
-with the `y3` variable is shared. This function call on line 17 is done
-through the indirection of the `p` variable. This is identical to how the
-function call of the literal function on line 13 is performed without the
-explicit function variable.
+最后，在第 15 行到第 17 行之间，`foo`函数被赋给一个名为 `p` 的变量。通过变量 `p`，`foo` 函数被执行，其中，变量 `y3` 被共享。第 17 行的这个函数调用是通过 `p` 变量间接完成的。这与第 13 行的字面函数没有显式函数变量所执行的函数调用方式情况相同。
 
-Here is the output from running the benchmark with an escape analysis report.
-Also included is the output for the pprof list command.
+以下是运行基准测试的结果，以及一份逃逸分析报告。还包括了 pprof list 命令的输出。
 
-**Benchmark Output**
+**基准测试输出**
 ```
 
     $ go test -gcflags "-m -m" -run none -bench BenchmarkLiteralFunctions -benchmem -memprofile mem.out
@@ -246,15 +202,9 @@ Also included is the output for the pprof list command.
     
 ```
 
-在逃逸分析报告中， the reason given for the allocation of the `y2`
-and `y3` variables is `(parameter to indirect call)`. The pprof output shows
-clearly that `y2` and `y3` are allocated on the heap and `y1` is not.
+在逃逸分析报告中，为变量 `y2` 和 `y3` 变量的分配给出的原因是 `(parameter to indirect call)`。pprof 输出很清楚的显示出，`y2` 和 `y3` 被分配在堆上，而 `y1` 不是。
 
-Though I would consider the use of a function literal as called on line 13 to
-be a code smell, the use of the `p` variable on line 16 is not. People pass
-functions around in Go all the time. Especially when building web services.
-Fixing this indirect call flaw could help reduce many allocations in Go web
-service applications.
+虽然，我会认为在第 13 行调用的函数字面量的使用是代码异味，但是，第 16 行变量 `p` 的使用并不是。在 Go 中，人们总是会传递函数作为参数。特别是在构建 web 服务的时候。修复这个间接调用缺陷会帮助减少 Go web 服务应用中的许多分配。
 
 这里是一个你会在许多 web 服务应用中找到的例子。
 
@@ -298,23 +248,13 @@ service applications.
     
 ```
 
-In listing 2.2, a common handler wrapping function is declared on line 26,
-which wraps a handler function within the scope of another literal function to
-provide boilerplate code. Then on line 11, a handler function for a specific
-route is declared and it’s passed to the `wrapHandler` function on line 15 so
-it can be chained together with the boilerplate code handler function. On line
-19, a `http.Request` value is created and shared with the `route` call on line
-20. Calling `route` executes both the boilerplate code and specific request
-handler functionality.
+在代码清单 2.2 中，第 26 行声明了一个通用的处理器封装函数，该函数在另一个字面函数的范围内封装了一个处理器函数，以提供样板代码。然后在第 11 行，声明了一个用于特定路由的处理函数，然后在第 15 行，它被传给 `wrapHandler` 函数，以便可以与样板代码处理函数链接在一起。在第 19 行，创建了一个 `http.Request` 值，然后与第 20 行的 `route` 调用共享。调用 `route` 在功能上同时执行了样板代码和特定的请求处理器。
 
-The `route` call on line 20 is an indirect call since the `route` variable is
-a function variable. This will cause the `http.Request` variable to allocate
-on the heap, which is not necessary.
+第 20 行的 `route` 调用属于间接调用，因为 `route` 变量是一个函数变量。这会导致 `http.Request` 变量分配在堆上，这是没有必要的。
 
-Here is the output from running the test with an escape analysis report. Also
-included is the output is the pprof list command.
+以下是运行基准测试的结果，以及一份逃逸分析报告。还包括了 pprof list 命令的输出。
 
-**Benchmark Output**
+**基准测试输出**
 ```
 
     $ go test -gcflags "-m -m" -run none -bench BenchmarkHandler -benchmem -memprofile mem.out
@@ -351,15 +291,11 @@ included is the output is the pprof list command.
     
 ```
 
-在逃逸分析报告中，你可以看到这种分配的原因是 `(parameter to indirect call)`。pprof 报告显示，`r` variable
-is allocating. As stated earlier, this is common code people write in Go when
-building web services. Fixing this could reduce a large number of allocations
-in programs.
+在逃逸分析报告中，你可以看到这种分配的原因是 `(parameter to indirect call)`。pprof 报告显示，`r` 变量正在分配。如前所述，这是人们在用 Go 构建 web 服务时编写的常见代码。修复这个缺陷会减少程序中大量的分配。
 
-### Slice 和 Map 赋值
+### 切片和 Map 赋值
 
-The “Slice and Map Assignments” flaw has to do with allocations that occur
-when a value is shared inside a slice or map. Here is a code example:
+“切片和 Map 赋值（Slice and Map Assignments）”缺陷与值在切片或者 Map 中共享时发生的分配有关。这里是一个代码示例：
 
 **代码清单 3**  
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example3/example3_test.go>
@@ -384,16 +320,11 @@ when a value is shared inside a slice or map. Here is a code example:
     
 ```
 
-In listing 3, a map is made on line 07 which stores addresses of values of
-type `int`. Then on line 08, a value of type `int` is created and shared
-inside the map on line 09, with the key of 0. The same thing happens with the
-slice of `int` addresses on line 11. After the slice is made, a value of type
-`int` is shared inside index 0.
+在代码清单 3 中，第 07 行创建了一个 map，它保存类型 `int` 的值的地址。然后在第 08 行，创建了一个类型 `int` 的值，接着在第 09 行，在 map 中共享了这个值，map 的键为 0。在第 11 行保存 `int` 地址的切片上也发生了同样的事情。在创建切片后，索引 0 内共享了类型为 `int` 的值。
 
-Here is the output from running the benchmark with an escape analysis report.
-Also included is the output for the pprof list command.
+以下是运行基准测试的结果，以及一份逃逸分析报告。还包括了 pprof list 命令的输出。
 
-**Benchmark Output**
+**基准测试输出**
 ```
 
     $ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
@@ -437,11 +368,9 @@ Also included is the output for the pprof list command.
     
 ```
 
-In the escape analysis report the reason given is `(value of map put)` and
-`(slice-element-equals)`. What is even more interesting is the escape analysis
-report says the map and slice data structures do not allocate.
+逃逸分析报告中给出的原因是 `(value of map put)` 和 `(slice-element-equals)`。更有趣的是，逃逸分析报告显示，map 和切片数据结构不分配（不逃逸）。
 
-**No Allocation of Map and Slice**
+**不分配 Map 和切片**
 ```
 
     ./example3_test.go:7:12: BenchmarkSliceMapAssignment make(map[int]*int) does not escape
@@ -449,21 +378,13 @@ report says the map and slice data structures do not allocate.
     
 ```
 
-That further proves `x1` and `x2` in this code example have no need to
-allocate on the heap.
+这进一步证明，代码示例中的 `x1` 和 `x2` 无需在堆上分配。
 
-I have always felt that data in maps and slices should be stored as values
-when it is reasonable and practical to do so. Especially when these data
-structures are storing the core data for a request or task. This flaw provides
-a second reason for trying to avoid storing data through the use of pointers.
-Fixing this flaw probably has little return on investment since maps and
-slices of static size are rare.
+我一直认为，在合理和实际的情况下，map 和切片中的数据应该作为值存储。特别是当这些数据结构正存储着一个请求或任务的核心数据的时候。这个缺陷为尝试避免通过使用指针来存储数据提供了另一个理由。修复这个缺陷可能几乎没有什么回报，因为静态大小的 map 和切片很少见。
 
-### Interfaces
+### 接口
 
-The “Interfaces” flaw is related to the “Indirect Call” flaw you saw earlier.
-This is a flaw that creates a real cost to using interfaces. Here is a code
-example:
+“接口（Interfaces）”缺陷与之前看到的“间接调用”缺陷有关。这是一个使用接口产生实际成本的缺陷。下面是一个代码示例：
 
 **代码清单 4**  
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example4/example4_test.go>
@@ -505,29 +426,17 @@ example:
     
 ```
 
-In listing 4, an interface named `Iface` is declared on line 05 and is kept
-very basic for the example. Then a concrete type named `X` is declared on line
-09 and the `Iface` interface is implemented using a value receiver.
+在代码清单 4 中，在第 05 行声明了一个名为 `Iface` 的接口，并且为了示例目的，这个接口保持得非常简单。然后，在第 09 行声明了一个名为 `X` 的具体类型，并且，使用值接收器来实现 `Iface` 接口。
 
-On line 17, a value of type `X` is constructed and assigned to the `x1`
-variable. A copy of the `x1` variable is stored inside the `i1` interface
-variable on line 18 and then that same `x1` variable is shared with the `i2`
-interface variable on line 19. On lines 21 and 22, `Method` is called against
-both the `i1` and `i2` interface variables.
+在第 17 行中，构建了一个类型为 `X` 的值，然后将其赋给 `x1` 变量。在第 18 行，`x1` 变量的一个拷贝存储在 `i1` 接口变量中，接着，在第 19 行，相同的 `x1` 变量与 `i2` 接口变量共享。在第 21 和 22 行，同时对 `i1` 和 `i2` 接口变量调用 `Method`。
 
-To create a more realistic example, a function named `foo` is declared on line
-30 and it accepts any concrete data that implements the `Iface` interface.
-Then on line 31, the same call to `Method` is made against the local interface
-variable. The `foo` function represents a large number of functions people
-write in Go.
+为了创建一个更实际的例子，在第 30 行声明了一个名为 `foo` 的函数，它接受任何实现 `Iface` 接口的具体数据。然后，在第 31 行，对本地接口变量同样调用 `Method`。`foo` 函数代表了大家在 Go 中写的大量函数。
 
-On line 24, a variable named `x2` of type `X` is constructed and passed to
-`foo` as a copy and shared on lines 25 and 26 respectively.
+在第 24 行，构造了一个类型为 `X` 名为 `x2` 的变量，然后将其作为拷贝传递给 `foo`，并分别在第 25 和 26 行中共享。
 
-Here is the output from running the benchmark with an escape analysis report.
-Also included is the output for the pprof list command.
+以下是运行基准测试的结果，以及一份逃逸分析报告。还包括了 pprof list 命令的输出。
 
-**Benchmark Output**
+**基准测试输出**
 ```
 
     $ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
@@ -588,41 +497,21 @@ Also included is the output for the pprof list command.
     
 ```
 
-In the benchmark report, notice there are four allocations. This is because
-the code makes copies of the `x1` and `x2` variables, which allocate as well.
-These copies are made on line 18 for the `x1` variable during the assignment
-and on line 25 when the value of `x2` is used in the function call to `foo`.
+注意，在基准报告中有四个分配。这是因为代码会复制 `x1` 和 `x2` 变量，这也会产生分配。在第 18 行中使用`x1` 变量进行赋值时，以及在第 25 行中对 `foo` 进行函数调用使用 `x2` 的值时，创建了这些副本。
 
-在逃逸分析报告中， the reason given for `x1` and the copy of `x1`
-to escape is `(receiver in indirect call)`. This is interesting because it is
-the call to `Method` on lines 21 and 22 that is the real culprit here in this
-flaw. Remember, calling a method against an interface requires an indirect
-call through the iTable. As you saw earlier, indirect calls are a flaw in
-escape analysis.
+在逃逸分析报告中，为 `x1` 以及 `x1` 的副本逃逸提供的原因是 `(receiver in indirect call)`。这很有趣，因为第 21 和 22 行对 `Method` 的调用才是这个缺陷真正的罪魁祸首。请记住，针对接口的方法调用需要通过 iTable 进行间接调用。正如你之前看到的，间接调用是逃逸分析中的一个缺陷。
 
-The reason the escape analysis report gives for the `x2` variable to escape is
-`(passed to call[argument escapes])`. However in both cases, `(interface-
-converted)` is another reason which describes the fact that the data is being
-stored inside the interface.
+逃逸分析报告为 `x2` 变量逃逸给出的原因是 `(passed to call[argument escapes])`。但是在这两种情况下，`(interface-converted)` 是另一个原因，它描述了数据存储在接口里的事实。
 
-What’s interesting is, if you remove the method call on line 31 inside the
-`foo` function, the allocation goes away. In reality, the indirect call of
-`Method` through the interface variable on lines 21, 22 and 31 inside of `foo`
-is the problem.
+有趣的是，如果你移除第 31 行中 `foo` 函数里的方法调用，那么，分配就会消失。实际上，第 21，22 和 `foo` 中的 31 行中，通过接口变量对 `Method` 的间接调用才是问题所在。
 
-I always teach that as of 1.9 and earlier, the use of interfaces has the cost
-of indirection and allocation. This is the escape analysis flaw that if fixed,
-can have the most significant impact on Go programs. This could reduce a large
-number of allocations on logging packages alone. Don’t use interfaces unless
-it is obvious the value they are providing.
+我总是在说，从 1.9 甚至更早的版本开始，使用接口会产生间接和分配的开销。这是逃逸分析的缺陷，如果修正这一缺陷，会给 Go 程序带来最大的影响。这可以减少单独日志包的大量分配。不要使用接口，除非它们（指接口）提供的价值是显著的。
 
-### Unknown
+### 未知
 
-这种类型的分配是某些我完全不明白的东东。Even after
-looking at the output of the tooling. I am providing it here with the hope to
-get some answers.
+这种类型的分配是某些我完全不明白的东东。即使在看了工具的输出，还是没搞明白。这里，我把它们供出，期望能得到一些答案。
 
-Here is a code example:
+下面是代码示例。
 
 **代码清单 5**  
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example5/example5_test.go>
@@ -646,17 +535,11 @@ Here is a code example:
     
 ```
 
-In listing 5, a value of type `bytes.Buffer` is created on line 10 and set to
-its zero value. Then the method `Write` is called against the `buf` variable
-on line 11 with a slice value constructed and passed within the call. Finally,
-the Bytes method is called just to prevent potential compiler optimizations
-from throwing all the code away. That call is not necessary to create the
-escape of the `buf` variable.
+在代码清单 5 中，第 10 行创建了一个类型为 `bytes.Buffer` 的值，并将其设置为零值。然后，在第 11 行构造了一个切片值，并将其传递给 `buf` 变量上的 `Write` 方法调用。最后，为了防止防止潜在的编译器优化抛出所有的代码，调用 Bytes 方法。该调用不是创造 `buf` 变量逃逸的必要条件。
 
-Here is the output from running the benchmark with an escape analysis report.
-Also included is the output for the pprof list command.
+以下是运行基准测试的结果，以及一份逃逸分析报告。还包括了 pprof list 命令的输出。
 
-**Benchmark Output**
+**基准测试输出**
 ```
 
     $ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
@@ -690,26 +573,17 @@ Also included is the output for the pprof list command.
     
 ```
 
-In this code, I don’t see any reason why the method call to `Write` on line 11
-is causing an escape. I was given a lead that looked interesting but I will
-leave it up to you to explore further.
+在这个代码中，我没有看到第 11 行对 `Write` 的方法调用引起逃逸的任何原因。我得到了一个看起来很有意思的指引，但我会留给你去进一步探索。
 
-_Potentially it has something to do with the bootstrap array in the `Buffer`
-type. It's meant to be an optimization, but from escape analysis point of view
-it makes `Buffer` to point to itself, which is a circular dependency and these
-are usually hard for analysis. Or perhaps it's because of `append` or maybe
-it's just a combination of several factors and quite complex code in
-`Buffer`._
+_这可能与 `Buffer` 类型的引导数组有关。它意味着一种优化，但是从逃逸分析的角度来说，它让 `Buffer` 指向自身，这是一种循环依赖，通常难以分析。或者也许是因为 `append`，又或者也许只是几个因素和 `Buffer` 中非常复杂的代码的组合。_
 
-**This issue exists which is related to the bootstrap array causing the allocation:**
+**有这个问题，它与导致这种分配的引导数组有关：**
 
 [cmd/compile, bytes: bootstrap array causes bytes.Buffer to always be heap-allocated](https://github.com/golang/go/issues/7921)
 
-**CKS on reddit posted this response:**
+**CKS 在 reddit 上发布了此回复：**
 
-The `Unknown` case escapes because Go thinks the argument to
-bytes.Buffer.Write() escapes. If you run escape analysis on the source to the
-buffer package, it reports (for Write()):
+`Unknown` 情况下的逃逸是因为 Go 认为给 bytes.Buffer.Write() 的参数逃逸。如果你在 buffer 包的源代码上运行逃逸分析，那么它会输出（对于 Write()）：
 
 ```
 
@@ -720,21 +594,11 @@ buffer package, it reports (for Write()):
     
 ```
 
-Given that copy() is a language builtin, it seems like the compiler should
-know that the source argument doesn't escape here. Or possibly the compiler is
-doing something sufficiently interesting with the actual implementation of
-copy() such that the source might escape under some circumstances.
+考虑到 copy() 是语言内置函数，似乎编译器应该知道这里，源参数不逃逸。或者有可能编译器在对 copy() 的实际实现做一些十分有趣的事情，以至于源在某些情况下会逃逸。
 
 ### 总结
 
-I have tried to point out some of the more interesting escape analysis flaws
-that exist today as of 1.9. The interface flaw is probably the flaw that if
-corrected, can have the largest impact on Go programs today. What I find most
-interesting is that all of us can gain from fixing these flaws without any
-need for personal expertise in this area. The static code analysis the
-compiler performs is providing many benefits, such as the ability to optimize
-the code you write over time. Maybe the biggest benefit is, removing or
-reducing the cognitive load you otherwise would have to maintain.
+我试图指出 1.9 版本至今存在的一些更有趣的逃逸分析缺陷。接口缺陷可能是一旦修复就会对当今的 Go 程序产生最大影响的缺陷。我觉得最有意思的是，我们所有人都能从这些缺陷的修复中获益，而不需要有这方面的个人专长。编译器执行的静态代码分析提供了诸多好处，例如优化你随时写入的代码的能力。也许最大的好处是，消除或减少你不得不维持的认知负担。
 
 ----------------
 
