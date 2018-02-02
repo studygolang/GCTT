@@ -35,7 +35,7 @@ func doStuff() error {
 }
 ```
 
-在Go Playground上执行他 - https://play.golang.org/p/wzkjKGqFPL
+在Go Playground上执行它 - https://play.golang.org/p/wzkjKGqFPL
 
 
 之后你go run了你的代码然而...这是什么？你的error是nil甚至是在代码发生异常的时候。这不是我们想要的！
