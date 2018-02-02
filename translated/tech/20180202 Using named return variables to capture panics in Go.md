@@ -4,7 +4,7 @@
 
 ```
 我发现了一个在golang中使用命名返回值的原因并且我现在感到很惊奇。
-                    — Sean Kelly (@StabbyCutyou) November 15, 2017
+                    — Sean Kelly (@StabbyCutyou) 2017年11月15日
 ```
 其目标是为了记录并说明在一种有必要使用命名返回变量的情况，所以说让我们进入正题。
 
