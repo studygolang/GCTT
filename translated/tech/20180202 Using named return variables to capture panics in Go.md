@@ -40,7 +40,7 @@ func doStuff() error {
 
 之后你go run了你的代码然而...这是什么？你的error是nil甚至是在代码发生异常的时候。这不是我们想要的！
 
-##为什么发生这种情况？
+## 为什么发生这种情况？
 
 via: https://www.calhoun.io/using-named-return-variables-to-capture-panics-in-go/
 
