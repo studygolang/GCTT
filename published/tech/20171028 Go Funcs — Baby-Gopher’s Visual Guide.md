@@ -1,22 +1,17 @@
----
-layout: post
-title:  "[GCTT] Go Funcs--Baby-Gopher's Visual Guide"
-date:   2018-01-10
-comments: true
-categories: GCTT
-tags: funcs
-description:
-published: true
----
+已发布：https://studygolang.com/articles/12338
 
 # Go 函数 -- Go 语言新手的带图教程
+
 简单易懂的 Go 函数带图教程
+
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/funcs.png)
 
 **注意：**该教程仅介绍 Go 函数，不包括：可变参数、延迟函数、外部函数、方法、HTTP、封包编码等。
 
 * * *
 
 ### 什么是函数？
+
 函数是一个独立的，可以被重用的，可以一次又一次运行的代码块。函数可以有输入参数，也可以有返回值输出。
 
 ### 为什么我们需要函数？
@@ -28,9 +23,9 @@ published: true
 - 便于组织代码
 - 符合 [DRY 原则](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
-![](1.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/1.png)
 
 声明了一个函数 “Len”，输入参数为 “s”，类型为 “string”，返回值类型为 “int”。
 
@@ -40,7 +35,7 @@ published: true
 
 ```go
 func Len(s string) int {
-  return utf8.RuneCountInString(s)
+	return utf8.RuneCountInString(s)
 }
 ```
 
@@ -54,19 +49,19 @@ Len("Hello world 👋")
 
 [在线运行程序](https://play.golang.org/p/6c2p1yVcMY)
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 输入参数和返回值类型
 
 输入参数被用来把数据传递给函数。返回值类型被用来从函数中返回数据。从函数中返回的数据被称为“返回值”。
 
-![](2.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/2.png)
 
 采用一个名为 “s” 的 string 类型“输入参数”，并返回一个“返回值类型”为 int 的没有名字的返回值。
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
-![](3.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/3.png)
 
 函数签名就是一个[函数的类型](https://golang.org/ref/spec#Function_types) -- 由输入参数类型和返回值类型组成。
 
@@ -96,9 +91,9 @@ flen("Hello!")
 
 一个函数签名的示例代码。
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
-![](4.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/4.png)
 
 当一个函数被调用时，它的主体将以提供的输入参数运行。如果函数声明了至少一个返回值类型，那么函数将会返回一个或多个返回值。
 
@@ -108,7 +103,7 @@ flen("Hello!")
 
 ```go
 func Len(s string) int {
-  return utf8.RuneCountInString(s)
+	return utf8.RuneCountInString(s)
 }
 
 lettersLen := Len("Hey!")
@@ -120,11 +115,11 @@ lettersLen := Len("Hey!")
 
 ```go
 func returnWithExpression(a, b int) int {
-  return a * b * 2 * anotherFunc(a, b)
+	return a * b * 2 * anotherFunc(a, b)
 }
 ```
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 函数块
 
@@ -134,8 +129,8 @@ func returnWithExpression(a, b int) int {
 const message = "Hello world 👋"
 
 func HelloWorld() {
-  name := "Dennis"
-  message := "Hello, earthling!"
+	name := "Dennis"
+	message := "Hello, earthling!"
 }
 ```
 
@@ -155,23 +150,23 @@ HelloWorld()
 
 [在线运行程序](https://play.golang.org/p/GBw0PbDw8p)
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 现在，让我们看看输入参数和返回值类型不同风格的声明方式。
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
-![](5.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/5.png)
 
 声明一个类型为 “String” 的输入参数 “s”，和一个整数返回值类型。
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
-![](6.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/6.png)
 
 一个函数的输入参数和返回值类型就像变量一样起作用。
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### Niladic 函数
 
@@ -179,7 +174,7 @@ Niladic 函数不接受任何输入参数。
 
 ```go
 func tick() {
-  fmt.Println( time.Now().Format( time.Kitchen ) )
+	fmt.Println( time.Now().Format( time.Kitchen ) )
 }
 
 tick()
@@ -191,13 +186,13 @@ tick()
 
 如果一个函数没有返回值，你可以省略返回值类型和 return 这个关键字。
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### Singular 函数
 
 ```go
 func square(n int) int {
-  return n * n
+	return n * n
 }
 
 square(4)
@@ -209,13 +204,13 @@ square(4)
 
 当函数只返回一个返回值时，不要使用括号。
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 多个输入参数和返回值
 
 ```go
 func scale(width, height, scale int) (int, int) {
-  return width * scale, height * scale
+	return width * scale, height * scale
 }
 
 w, h := scale(5, 10, 2)
@@ -227,13 +222,13 @@ w, h := scale(5, 10, 2)
 
 多个返回值类型应该用圆括号括起来。
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 自动类型分配
 
 Go 语言会自动为前面的参数声明类型。
 
-![](6.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/7.png)
 
 * * *
 
@@ -245,7 +240,7 @@ func scale(width, height, scale int) (int, int)
 func scale(width int, height int, scale int) (int, int)
 ```
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 错误值
 
@@ -253,7 +248,7 @@ func scale(width int, height int, scale int) (int, int)
 
 ```go
 func write(w io.Writer, str string) (int, error) {
-  return w.Write([]byte(s))
+	return w.Write([]byte(s))
 }
 
 write(os.Stdout, "hello")
@@ -267,8 +262,8 @@ write(os.Stdout, "hello")
 
 ```go
 func write(w io.Writer, str string) (int, error) {
-  n, err := w.Write([]byte(s))
-  return n, err
+	n, err := w.Write([]byte(s))
+	return n, err
 }
 ```
 
@@ -278,11 +273,11 @@ func write(w io.Writer, str string) (int, error) {
 
 ```go
 func div(a, b float64) (float64, error) {
-  if b == 0 {
-    return 0, errors.New("divide by zero")
-  }
+	if b == 0 {
+		return 0, errors.New("divide by zero")
+	}
 
-  return a / b, nil
+	return a / b, nil
 }
 
 r, err := div(-1, 0)
@@ -292,7 +287,7 @@ r, err := div(-1, 0)
 
 [在线运行程序](https://play.golang.org/p/7n-scmRNy5)
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 丢弃返回值
 
@@ -322,7 +317,7 @@ name, _ := TempDir("", "test")
 TempDir("", "test")
 ```
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 省略参数名字
 
@@ -330,13 +325,13 @@ TempDir("", "test")
 
 ```go
 func Write(_ []byte) (n int, err error) {
-  return 0, nil
+	return 0, nil
 }
 ```
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
-![](8.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/8.png)
 
 命名的返回值参数让你可以像使用变量一样使用返回值，而且它让你可以使用一个空的 return。
 
@@ -348,21 +343,21 @@ func Write(_ []byte) (n int, err error) {
 // biggest 返回切片 nums 中最大的数字的下标。
 func biggest(nums []int) (pos int) {
 
-  if len(nums) == 0 {
-    return -1
-  }
+	if len(nums) == 0 {
+		return -1
+	}
 
-  m := nums[0]
+	m := nums[0]
 
-  for i, n := range nums {
-    if n > m {
-      m = n
-      pos = i
-    }
-  }
+	for i, n := range nums {
+		if n > m {
+			m = n
+			pos = i
+		}
+	}
 
-  // returns the pos
-  return
+	// returns the pos
+	return
 }
 
 pos := biggest([]int{4,5,1})
@@ -374,7 +369,7 @@ pos := biggest([]int{4,5,1})
 
 上面的程序没有经过优化，时间复杂度为 O(n)。
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 什么时候该使用命名返回值参数？
 
@@ -386,23 +381,23 @@ pos := biggest([]int{4,5,1})
 
 当你使用命名返回值参数时，也有一个有[争议](https://news.ycombinator.com/item?id=14668323)的优化技巧，但编译器很快就会修复这个问题来禁止它的使用。
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 小心变量覆盖问题
 
 ```go
 func incr(snum string) (rnum string, err error) {
-  var i int
+	var i int
 
-  // start of a new scope
-  if i, err := strconv.Atoi(snum); err == nil {
-    i = i + 1
-  }
-  // end of the new scope
+	// start of a new scope
+	if i, err := strconv.Atoi(snum); err == nil {
+		i = i + 1
+	}
+	// end of the new scope
 
-  rnum = strconv.Itoa(i)
+	rnum = strconv.Itoa(i)
 
-  return
+	return
 }
 
 incr("abc")
@@ -418,7 +413,7 @@ incr("abc")
 
 点击这里查看该问题解决方案。
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 值传递
 
@@ -426,7 +421,7 @@ incr("abc")
 
 ```go
 func pass(s string, n int) {
-  s, n = "", 0
+	s, n = "", 0
 }
 ```
 
@@ -454,7 +449,7 @@ num is 2
 
 [在线运行程序](https://play.golang.org/p/maAz6FR-TA)
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 值传递和指针
 
@@ -462,8 +457,8 @@ num is 2
 
 ```go
 func pass(ps *string) {
-  *ps = "donald"
-  ps = nil
+	*ps = "donald"
+	ps = nil
 }
 ```
 
@@ -496,7 +491,7 @@ pass(ps)
 
 指针 ps 是按值传递给函数 pass 的，只有它指向的地址被拷贝到了函数 pass 中的一个新的指针变量（形参）。所以，在函数里面把指针变量设置为 nil 对传递给函数做参数的指针（实参）没有影响。
 
-![](9.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/9.png)
 
 `&s` 和 `ps` 是不同的变量，但是他们都指向相同的变量 `s`。
 
@@ -504,17 +499,17 @@ pass(ps)
 
 [在线运行程序](https://play.golang.org/p/ymAPKVFIdg)
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 到目前为止，我们已经学完了函数的参数声明方式。现在，让我们一起来看看如何正确的命名函数、输入参数和返回值类型。
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 函数命名
 
 使用函数的好处有增加代码的可读性和可维护性等。你可能需要根据实际情况选择性的采取这些意见。
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 尽可能简短
 
@@ -526,7 +521,7 @@ func CheckProtocolIsFileTransferProtocol(protocolData io.Reader) bool
 
 // This:
 func Detect(in io.Reader) Name {
-  return FTP
+	return FTP
 }
 
 // Not this:
@@ -536,7 +531,7 @@ func CreateFromIncomingJSONBytes(incomingBytesSource []byte)
 func NewFromJSON(src []byte)
 ```
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 使用驼峰命名法
 
@@ -563,7 +558,7 @@ func ServeHttp()
 func ServeHTTP()
 ```
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 选择描述性的参数名
 
@@ -582,7 +577,7 @@ func Write(w io.Writer, s []byte)
 // 类型就非常清晰了，没有必要再取名字了
 ```
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 使用动词
 
@@ -597,7 +592,7 @@ func connectMongo(host string) error
 func connect(host string) error
 ```
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 使用 is 和 are
 
@@ -609,7 +604,7 @@ func pop(new bool) item
 func pop(isNew bool) item
 ```
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 不需要在命名中带上类型
 
@@ -621,7 +616,7 @@ func show(errorString string)
 func show(err string)
 ```
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### 使用 Getters 和 Setters
 
@@ -641,22 +636,22 @@ func Name() string
 func SetName(name string)
 ```
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 ### Go 函数不支持的特性：
 
-因为我将在即将发布的文章中说明下面问题的一些解决方法，所以你可以不需要去 [duckduckgo](https://duckduckgo.com/?q=does+golang+support+functions&t=hg&ia=qa) 或者 [Google](https://www.google.com.tr/search?q=does+golang+support+functions) 去搜索答案。
+因为我会在即将发布的文章中说明下面问题的一些解决方法，所以你不需要去 [duckduckgo](https://duckduckgo.com/?q=does+golang+support+functions&t=hg&ia=qa) 或者 [Google](https://www.google.com.tr/search?q=does+golang+support+functions) 搜索答案。
 
 - [函数重载](https://golang.org/doc/faq#overloading) -- 它可以通过类型断言来模拟。
 - [模式匹配器函数](http://learnyouahaskell.com/syntax-in-functions)。
 - 函数声明中的默认参数值。
 - 在声明中按任意顺序通过名字指定输入参数。
 
-![](pLine.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/pLine.png)
 
 💓 希望你能把这片文章分享给你的朋友。谢谢！
 
-![](10.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-funcs/10.png)
 
 
 ----------------
@@ -665,6 +660,6 @@ via: https://blog.learngoprogramming.com/golang-funcs-params-named-result-values
 
 作者：[Inanc Gumus](https://blog.learngoprogramming.com/@inanc)
 译者：[MDGSF](https://github.com/MDGSF)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
