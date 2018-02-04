@@ -1,6 +1,4 @@
-#### 在 Golang 中针对 int64 类型优化 abs() 
-
----
+# 在 Golang 中针对 int64 类型优化 abs() 
 
 Go 语言没有内置 `abs()` 标准函数来计算整数的绝对值，这里的绝对值是指负数、正数的非负表示。
 
@@ -14,7 +12,7 @@ Go 实际上已经在 `math` 包中实现了 `abs()` :  [math.Abs](https://golan
 
 
 
-### 类型转换 VS branching
+### 类型转换 VS 分支控制的方法
 
 对我来说取绝对值最简单的函数实现是：输入参数 n 大于等于 0 直接返回 n，小于零则返回 -n（负数取反为正），这个取绝对值的函数依赖分支控制结构来计算绝对值，就命名为： ``abs.WithBranch``
 
@@ -56,26 +54,29 @@ ok      github.com/cavaliercoder/abs    2.320s
 
 举个例子：`abs.WithBranch(-9223372036854775807)` 会正确返回 9223372036854775807。但 `WithStdLib(-9223372036854775807)` 则在类型转换区间发生了溢出，返回 -9223372036854775808，在大的正数输入时， `WithStdLib(9223372036854775807)` 也会返回不正确的负数结果。
 
-branching 取绝对值的方法对有符号整数显然更快更准，不过还有更好的办法吗？
+不依赖分支控制的方法取绝对值的方法对有符号整数显然更快更准，不过还有更好的办法吗？
 
-我们都知道 branching 的代码破坏了程序的运行顺序，即 [pipelining processors](http://euler.mat.uson.mx/~havillam/ca/CS323/0708.cs-323007.html) 无法预知程序的下一步动作。
+我们都知道不依赖分支控制的方法的代码破坏了程序的运行顺序，即 [pipelining processors](http://euler.mat.uson.mx/~havillam/ca/CS323/0708.cs-323007.html) 无法预知程序的下一步动作。
 
 
 
-### 不同于 branching 的解决方案
+### 与不依赖分支控制的方法不同的方案
 
-[Hacker’s Delight](https://books.google.com.au/books?id=VicPJYM0I5QC&lpg=PA18&ots=2o-SROAuXq&dq=hackers%20delight%20absolute&pg=PA18#v=onepage&q=hackers%20delight%20absolute&f=false) 第二章介绍了一种 branch-free 的方法，通过  [Two’s Complement](https://www.cs.cornell.edu/~tomf/notes/cps104/twoscomp.html)  计算有符号整数的绝对值。
+[Hacker’s Delight](https://books.google.com.au/books?id=VicPJYM0I5QC&lpg=PA18&ots=2o-SROAuXq&dq=hackers%20delight%20absolute&pg=PA18#v=onepage&q=hackers%20delight%20absolute&f=false) 第二章介绍了一种无分支控制的方法，通过  [Two’s Complement](https://www.cs.cornell.edu/~tomf/notes/cps104/twoscomp.html)  计算有符号整数的绝对值。
 
 为计算 x 的绝对值：
 
-1.  先计算 `x >> 63` ，即 x 右移 63 位（获取最高位符号位），如果你对熟悉无符号整数的话， 应该知道 x 是负数则 y = 1，x 是非负数则 y = 0
-2.  再计算 `(x ⨁ y) - y` ：x 与 y 异或后减 y，即是 x 的绝对值。代码如下：
+1.  先计算 `x >> 63` ，即 x 右移 63 位（获取最高位符号位），如果你对熟悉无符号整数的话， 应该知道如果 x 是负数则 y 是 1，否者 y 为 0
+
+2.  再计算 `(x ⨁ y) - y` ：x 与 y 异或后减 y，即是 x 的绝对值。
+
+    可以直接使用高效的汇编实现，代码如下：
 
 ```go
 func WithASM(n int64) int64
 ```
 
-```go
+```armasm
 // abs_amd64.s
 TEXT ·WithASM(SB),$0
   MOVQ    n+0(FP), AX     // copy input to AX
@@ -103,7 +104,7 @@ PASS
 ok      github.com/cavaliercoder/abs    6.059s
 ```
 
-这就比较尴尬了，这个简单的基准测试显示 non-branching 高度简洁的代码跑起来居然很慢：1.78 ns/op，怎么会这样呢?
+这就比较尴尬了，这个简单的基准测试显示无分支控制结构高度简洁的代码跑起来居然很慢：1.78 ns/op，怎么会这样呢?
 
 
 
@@ -265,7 +266,7 @@ $ go tool compile -S abs.go
 
 ### 总结
 
- `WithTwosComplement`  的实现方式在 Go 中提供了较好的可移植性，同时实现了函数内联、non-branching 代码、零内存分配与避免类型转换导致的值截断。基准测试没有显示出 non-branching 比 branching 的优势，但在理论上，non-branching 的代码在多种情况下性能更好。
+ `WithTwosComplement`  的实现方式在 Go 中提供了较好的可移植性，同时实现了函数内联、无分支控制的代码、零内存分配与避免类型转换导致的值截断。基准测试没有显示出无分支控制比有分支控制的优势，但在理论上，无分支控制的代码在多种情况下性能会更好。
 
 最后，我对 int64 的 abs 实现如下：
 
@@ -288,7 +289,7 @@ via：[Optimized abs() for int64 in Go](http://cavaliercoder.com/blog/optimized-
 
 作者：[Ryan Armstrong](https://github.com/cavaliercoder)
 译者：[wuYinBest](https://github.com/wuYinBest/) 
-
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，
 [Go中文网](https://studygolang.com/) 荣誉推出
