@@ -1,5 +1,8 @@
+已发布：https://studygolang.com/articles/12350
+
 # 如何只通过 Go 语言标准库创建 RESTful 接口
-瑞安·麦丘 2017年12月9日
+
+瑞安·麦丘 2017 年 12 月 9 日
 
 Go 是一门相当新的语言，并且在最近几年得到了越来越多的关注。它的功能非常强大，而且拥有出色的工具来设计快速高效的 API 接口。虽然已经有很多库可以创建一个 API 接口，像 [Go Buffalo](https://gobuffalo.io/) 和 [Goa](https://goa.design/) 之类；但是，如果能够做到除了数据库和缓存连接器之外，仅仅使用标准库来创建，无疑将非常有趣。
 
@@ -32,24 +35,24 @@ utils
 5. 使用 mux 和控制器创建路由
 6. 启动服务器
 
-``` go
-	db, err := database.Connect(os.Getenv("PGUSER"), os.Getenv("PGPASS"), os.Getenv("PGDB"), os.Getenv("PGHOST"), os.Getenv("PGPORT"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	cache := &caching.Redis{
-		Client: caching.Connect(os.Getenv("REDIS_ADDR"), os.Getenv("REDIS_PASSWORD"), 0),
-	}
+```go
+db, err := database.Connect(os.Getenv("PGUSER"), os.Getenv("PGPASS"), os.Getenv("PGDB"), os.Getenv("PGHOST"), os.Getenv("PGPORT"))
+if err != nil {
+	log.Fatal(err)
+}
+cache := &caching.Redis{
+	Client: caching.Connect(os.Getenv("REDIS_ADDR"), os.Getenv("REDIS_PASSWORD"), 0),
+}
 
-	userController := controllers.NewUserController(db, cache)
-	jobController := controllers.NewJobController(db, cache)
+userController := controllers.NewUserController(db, cache)
+jobController := controllers.NewJobController(db, cache)
 
-	mux := http.NewServeMux()
-	routes.CreateRoutes(mux, userController, jobController)
+mux := http.NewServeMux()
+routes.CreateRoutes(mux, userController, jobController)
 
-	if err := http.ListenAndServe(":8000", mux); err != nil {
-		log.Fatal(err)
-	}
+if err := http.ListenAndServe(":8000", mux); err != nil {
+	log.Fatal(err)
+}
 ```
 
 我们希望代码看起来像上面的一样，创建了数据库和缓存连接、加载了控制器、将控制器连接到了路由，最终启动了服务器。现在，我们拥有了规划好的主入口文件，我们来创建需要使用的库。
@@ -61,7 +64,8 @@ utils
 **database.go** 文件简单的创建了连接字符串，并且打开了一个连接。
 
 **utils/database/database.go**
-``` go
+
+```go
 func Connect(user, password, dbname, host, port string) (*sql.DB, error) {
 	connStr := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s",
 		user, password, dbname, host, port)
@@ -75,38 +79,38 @@ func Connect(user, password, dbname, host, port string) (*sql.DB, error) {
 
 这个可以根据你的需要修改，不过在目前的使用场合，一个好的缓存接口如下所示：
 
-``` go
+```go
 type Cache interface {
-  Get(key string) (string, error)
-  Set(key, value string, expiration time.Duration) error
+	Get(key string) (string, error)
+	Set(key, value string, expiration time.Duration) error
 }
 ```
 
 现在创建一个结构体来实现这个接口：
 
-``` go
+```go
 type Redis struct {
-  Client *redis.Client
+	Client *redis.Client
 }
 
 func (r *Redis) Get(key string) (string, error) {
-  return r.Client.Get(key).Result()
+	return r.Client.Get(key).Result()
 }
 
 func (r *Redis) Set(key, value string, expiration time.Duration) error {
-  return r.Client.Set(key, value, expiration).Err()
+	return r.Client.Set(key, value, expiration).Err()
 }
 ```
 
 最后，一个函数返回了 redis 客户端。
 
-``` go
+```go
 func Connect(addr, password string, db int) *redis.Client {
-   return redis.NewClient(&redis.Options{
-     Addr:     addr,
-     Password: password,
-     DB:       db,
-  })
+	 return redis.NewClient(&redis.Options{
+		 Addr:     addr,
+		 Password: password,
+		 DB:       db,
+	})
 }
 ```
 
@@ -137,21 +141,21 @@ GET /feed
 
 该结构体需要像这样，所以我们在控制器方法内可以调用数据库和缓存，如 **userController.DB** 和 **userController.Cache**。注意缓存是一个接口, 因此我们可以随时替换它的实现。
 
-``` go
+```go
 type UserController struct {
-   DB    *sql.DB
-   Cache caching.Cache
- }
+	DB    *sql.DB
+	Cache caching.Cache
+}
 ```
 
 **NewUserController** 函数应该简单的返回带有数据库和缓存对象的 **UserController** 结构体。
 
-``` go
+```go
 func NewUserController(db *sql.DB, c caching.Cache) *UserController {
-  return &UserController{
-    DB:    db,
-    Cache: c,
-  }
+	return &UserController{
+		DB:    db,
+		Cache: c,
+	}
 }
 ```
 
@@ -161,100 +165,100 @@ func NewUserController(db *sql.DB, c caching.Cache) *UserController {
 
 首先，我们只需要这个端点（Endpoint）的 POST 请求，所以首先检查是否是 POST (HTTP)方法，如果不是的话，返回一个 not found 状态给客户端。
 
-``` go
- func (jc *UserController) Register(w http.ResponseWriter, r *http.Request) {
-   if r.Method != "POST" {
-     http.Error(w, "Not found", http.StatusNotFound)
-     return
-   }
+```go
+func (jc *UserController) Register(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
 ```
 
 检查通过后，需要解码请求的数据体来获取请求数据。如果数据体有问题，发送 bad request 状态到客户端。结构体定义将在本文的后面给出。
 
-``` go
-   decoder := json.NewDecoder(r.Body)
-   var rr requests.RegisterRequest
-   err := decoder.Decode(&rr)
-   if err != nil {
-     http.Error(w, "Invalid request body", http.StatusBadRequest)
-     return
-   }
+```go
+	decoder := json.NewDecoder(r.Body)
+	var rr requests.RegisterRequest
+	err := decoder.Decode(&rr)
+	if err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
 ```
 
 现在我们已经拥有一个含有请求数据的结构体，可以用来创建用户了。因此，把该数据传递到存储库中，它会创建用户并返回 ID。如果这个阶段发生了错误，将返回一个 internal server 的错误。
 
-``` go
-   id, err := repositories.CreateUser(jc.DB, rr.Email, rr.Name, rr.Password)
-   if err != nil {
-     log.Fatalf("Add user to database error: %s", err)
-     http.Error(w, "", http.StatusInternalServerError)
-     return
-   }
+```go
+	id, err := repositories.CreateUser(jc.DB, rr.Email, rr.Name, rr.Password)
+	if err != nil {
+		log.Fatalf("Add user to database error: %s", err)
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
 ```
 
 最后，当用户被保存后，我们生成一个随机的令牌。以令牌为 key，用户的 ID 为值，将之保存到 Redis 缓存中。从而，可以在后续的请求中进行用户鉴权。
 
-``` go
-   token, err := crypto.GenerateToken()
-   if err != nil {
-     log.Fatalf("Generate token Error: %s", err)
-     http.Error(w, "", http.StatusInternalServerError)
-     return
-   }
-   oneMonth := time.Duration(60*60*24*30) * time.Second
-   err = jc.Cache.Set(fmt.Sprintf("token_%s", token), strconv.Itoa(id), oneMonth)
-   if err != nil {
-     log.Fatalf("Add token to redis Error: %s", err)
-     http.Error(w, "", http.StatusInternalServerError)
-     return
-   }
+```go
+	token, err := crypto.GenerateToken()
+	if err != nil {
+		log.Fatalf("Generate token Error: %s", err)
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
+	oneMonth := time.Duration(60*60*24*30) * time.Second
+	err = jc.Cache.Set(fmt.Sprintf("token_%s", token), strconv.Itoa(id), oneMonth)
+	if err != nil {
+		log.Fatalf("Add token to redis Error: %s", err)
+		http.Error(w, "", http.StatusInternalServerError)
+		return
+	}
 ```
 
 最后一步，将令牌返回给用户，并设置内容类型为 json 格式。
 
-``` go
-   p := map[string]string{
-     "token": token,
-   }
-   w.Header().Set("Content-Type", "application/json")
-   json.NewEncoder(w).Encode(p)
- }
+```go
+	p := map[string]string{
+		"token": token,
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(p)
+}
 ```
 
 ## 最后一些事项
 
 现在，控制器和端点（Endpoint）都完成了，但是你会注意到有一些事项被遗漏了。首先，我们需要一个请求对象来承载请求数据。
 
-``` go
+```go
 type RegisterRequest struct {
-  Email    string `json:"email"`
-  Name     string `json:"name"`
-  Password string `json:"password"`
+	Email    string `json:"email"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
 }
 ```
 
 最后一步是创建用户存储库。当创建好 **repositories/user_repository.go** 文件后，需要添加 **CreateUser** 函数。它将生成一个随机种子用于给密码签名，并在用户表中保存所有的数据。
 
-``` go
+```go
 func CreateUser(db *sql.DB, email, name, password string) (int, error) {
-  const query = `
-    insert into users (
-      email,
-      name,
-      password,
-      salt
-    ) values (
-      $1,
-      $2,
-      $3,
-      $4
-    ) returning id
-  `
-  salt := crypto.GenerateSalt()
-  hashedPassword := crypto.HashPassword(password, salt)
-  var id int
-  err := db.QueryRow(query, email, name, hashedPassword, salt).Scan(&id)
-  return id, err
+	const query = `
+		insert into users (
+			email,
+			name,
+			password,
+			salt
+		) values (
+			$1,
+			$2,
+			$3,
+			$4
+		) returning id
+	`
+	salt := crypto.GenerateSalt()
+	hashedPassword := crypto.HashPassword(password, salt)
+	var id int
+	err := db.QueryRow(query, email, name, hashedPassword, salt).Scan(&id)
+	return id, err
 }
 ```
 
