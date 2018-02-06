@@ -49,15 +49,18 @@ JMP runtime·signal_ignore(SB)
 
 TEXT ·signal_recv(SB),NOSPLIT,$0
 JMP runtime·signal_recv(SB)
-and signal_unix.go binding:
+```
 
+而 signal_unix.go 的绑定如下:
+
+```go
 // +build darwin dragonfly freebsd linux nacl netbsd openbsd solaris windows
 
 package signal
 
 import (
-"os"
-"syscall"
+	"os"
+	"syscall"
 )
 
 // In assembly.
@@ -92,10 +95,13 @@ func signal_recv() uint32
 //go:linkname sync_runtime_doSpin sync.runtime_doSpin
 //go:nosplit
 func sync_runtime_doSpin() {
-    procyield(active_spin_cnt)
+	procyield(active_spin_cnt)
 }
-says explicitly to the compiler to add another name to the code which will be runtime_doSpin in sync package. And the sync reuses it in sync/runtime.go with simple:
+```
 
+这里明确地向编译器指示，将另一个名字添加到 sync 包的 runtime_doSpin 函数代码中。并且 sync 包简单的重用了在 sync/runtime.go 中的代码：
+
+```go
 package sync
 
 import "unsafe"
@@ -114,8 +120,8 @@ func runtime_doSpin()
 package net
 
 import (
-    ...
-    _ "unsafe" // For go:linkname
+	...
+	_ "unsafe" // For go:linkname
 )
 
 ...
@@ -140,23 +146,23 @@ func byteIndex(s string, c byte) int
 package main
 
 import (
-    _ "unsafe"
-    "fmt"
-    "runtime/pprof"
-    "os"
-    "time"
+	_ "unsafe"
+	"fmt"
+	"runtime/pprof"
+	"os"
+	"time"
 )
 
 // Event types in the trace, args are given in square brackets.
 const (
-    traceEvGoBlock        = 20 // goroutine blocks [timestamp, stack]
+	traceEvGoBlock        = 20 // goroutine blocks [timestamp, stack]
 )
 
 type mutex struct {
-    // Futex-based impl treats it as uint32 key,
-    // while sema-based impl as M* waitm.
-    // Used to be a union, but unions break precise GC.
-    key uintptr
+	// Futex-based impl treats it as uint32 key,
+	// while sema-based impl as M* waitm.
+	// Used to be a union, but unions break precise GC.
+	key uintptr
 }
 
 //go:linkname lock runtime.lock
@@ -169,15 +175,15 @@ func unlock(l *mutex)
 func goparkunlock(lock *mutex, reason string, traceEv byte, traceskip int)
 
 func main() {
-    l := &mutex{}
-    go func() {
-        lock(l)
-        goparkunlock(l, "xxx", traceEvGoBlock, 1)
-    }()
-    for {
-        pprof.Lookup("goroutine").WriteTo(os.Stdout, 1)
-        time.Sleep(time.Second * 1)
-    }
+	l := &mutex{}
+	go func() {
+		lock(l)
+		goparkunlock(l, "xxx", traceEvGoBlock, 1)
+	}()
+	for {
+		pprof.Lookup("goroutine").WriteTo(os.Stdout, 1)
+		time.Sleep(time.Second * 1)
+	}
 }
 ```
 
