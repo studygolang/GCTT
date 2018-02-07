@@ -105,7 +105,7 @@ g = nil  // cannot use nil as type [10]int in assignment
 
 关于 Go 常量更深入的介绍请查看[官方博客](https://blog.golang.org/constants)
 
-无（显示）指定类型的常量可以被赋值给常量所代表的类型 T 相同的类型为 T 的变量。
+无（显式）指定类型的常量可以被赋值给常量所代表的类型 T 相同的类型为 T 的变量。
 
 ```golang
 var a float32
