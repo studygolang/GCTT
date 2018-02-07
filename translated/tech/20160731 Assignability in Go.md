@@ -1,4 +1,4 @@
-## 在 Go 语言中的可赋值性（Assignability in Go）
+## Go 语言中的可赋值性（Assignability in Go）
 
 Go 是静态类型的编程语言。存储到变量中的值必须与变量的类型匹配。因此，不能像 Python 这种动态类型语言一样，随意的数据都可以作为值赋给变量。这个决定什么是允许赋值的规则就叫做可赋值性（Assignability）。
 
@@ -12,23 +12,23 @@ Go 是静态类型的编程语言。存储到变量中的值必须与变量的�
 
 在 Go 语言中，每种类型都有一种基础类型（underlying type）。对于布尔型，数字，字符串或者常量的基础类型都跟它们本身的类型相同。其他的基础类型来自于声明时的类型：
 
-```golang
+```go
 type X map[string]int
 var x X  // underlying type is map[string]int
 ```
 
 可赋值的第二种情况是相同的基础类型：
 
-```golang
+```go
 type X map[string]int
 var x X
 var y map[string]int
 x = y
 ```
 
-然而，如果有两个不同的类型别名（named types），则不能这么做：
+然而，如果有两个不同的命名类型（named types），则不能这么做：
 
-```golang
+```go
 type X map[string]int
 type Y map[string]int
 var x X
@@ -36,11 +36,11 @@ var y Y
 x = y  // cannot use y (type Y) as type X in assignment
 ```
 
-附加的条件是要求至少一个类型不是一个别名类型。
+附加的条件是要求至少一个类型不是一个命名类型。
 
-Go 中的变量要么是别名类型（named）要么是基础类型（unnamed）。基础类型（unnamed types）是指使用类型字面意思（语言本身）定义的类型：
+Go 中的变量要么是命名类型（named）要么是非命名类型（unnamed）。非命名类型（unnamed types）是指使用类型字面意思（语言本身）定义的类型：
 
-```golang
+```go
 var a [10]string
 var b struct{ field string}
 var c map[string]int
@@ -50,7 +50,7 @@ var c map[string]int
 
 如果一个变量实现了接口 T，那么我们可以将这个变量赋值给一个 T 接口类型的变量。
 
-```golang
+```go
 type Callable interface {
    f() int
 }
@@ -67,7 +67,7 @@ c = t
 
 ### 4. 将双向管道（channel）的变量赋值给相同类型的变量（Assigning bidirectional channel to variable with identical element types）
 
-```golang
+```go
 type T chan<- map[string]int
 var c1 T
 var c2 chan map[string]int
@@ -75,9 +75,9 @@ c1 = c2
 c2 = c1  // cannot use c1 (type T) as type chan map[string]int in assignment
 ```
 
-跟第二种情况（相同的基础类型）一样，要求至少一种管道（channel）变量是基础类型（unnamed type）：
+跟第二种情况（相同的基础类型）一样，要求至少一种管道（channel）变量是非命名类型（unnamed type）：
 
-```golang
+```go
 type T chan<- map[string]int
 type T2 chan map[string]int
 var c1 T
@@ -89,7 +89,7 @@ c1 = c2  // cannot use c2 (type T2) as type T in assignment
 
 允许将 nil 赋值给指针，函数，切片，map，管道，接口类型（的变量）。
 
-```golang
+```go
 var a *int
 var b func(int) int
 var c []int
@@ -101,7 +101,7 @@ var g [10]int
 g = nil  // cannot use nil as type [10]int in assignment
 ```
 
-### 6. 无（显示）指定类型的常量（Untyped constants）
+### 6. 无（显式）指定类型的常量（Untyped constants）
 
 关于 Go 常量更深入的介绍请查看[官方博客](https://blog.golang.org/constants)
 
@@ -124,7 +124,7 @@ via: https://medium.com/golangspec/assignability-in-go-27805bcd5874
 
  作者：[Michał Łowicki](https://twitter.com/mlowicki)
  译者：[Miancai Li](https://github.com/gogeof)
- 校对：
+ 校对：[polaris1119](https://github.com/polaris1119)
 
  本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
