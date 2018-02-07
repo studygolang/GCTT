@@ -107,7 +107,7 @@ g = nil  // cannot use nil as type [10]int in assignment
 
 无（显式）指定类型的常量可以被赋值给常量所代表的类型 T 相同的类型为 T 的变量。
 
-```golang
+```go
 var a float32
 var b float64
 var c int32
