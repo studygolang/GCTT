@@ -1,8 +1,8 @@
-## 通过 `go/parse` 理解 Go
+# 通过 `go/parser` 理解 Go
 
 这篇文章所讲内容和[ episode 25 of justforfunc ](https://www.youtube.com/watch?v=YRWCa84pykM) 是相同的。
 
-#### justforfunc 前情提要
+## justforfunc 前情提要
 
 我们在[上一篇文章](https://medium.com/justforfunc/whats-the-most-common-identifier-in-go-s-stdlib-e468f3c9c7d9)中使用 `go/scanner` 找出了标准库中最常用的标识符。
 
@@ -10,7 +10,7 @@
 
 为了能获取到更有价值的信息，我们只考虑大于等于三个字符的标识符。不出所料，在 Go 中最具代表性的判断语句 `if err != nil {}` 中的 err 和 nil 出现的最为频繁。
 
-#### 全局变量和局部变量
+## 全局变量和局部变量
 
 如果我们想要知道最常用的局部变量名应该怎么做？如果想知道最常用的类型或函数呢？针对这些问题 go/scanner 并不能满足我们的需求，因为它缺少对上下文的支持。按前文的方法我们可以找到需要的 token（例：var a = 3），为了获取 token 所在的作用域（包级，函数级，代码块级）我们需要上下文的支持。
 
@@ -44,7 +44,7 @@ VarSpec = IdentifierList ( Type [ "=" ExpressionList ] | "="
 
 
 
-#### 使用 go/scanner
+## 使用 go/scanner
 
 现在我们有足够的理论基础来写一些代码。来看看我们如何解析表达式 `var a = 3` 并且获得他的 AST。
 
@@ -188,7 +188,7 @@ $ go run main.go
 
 我推荐花点时间认真看一下这个树，并且找到他们对应的源码部分。`Scope`，`Obj`，`Unresolved` 我们会在下面的章节说。
 
-#### 从 AST 到代码
+## 从 AST 到代码
 
 有的时候以源码的位置 打印 AST 比树结构更清晰。使用 go/printer 可以非常简单的打印源码保存的 AST 信息。
 
@@ -215,7 +215,7 @@ func main() {
 
 执行这段代码会打印我们源码的解析结果，将 parser.AllErrors 替换成 parser.ImportsOnly 或者其它值会有不同的输出结果。
 
-#### AST 指南
+## AST 指南
 
 AST 树有我们想知道的所有信息，但是如何才能找出我们想要的信息呢？这时 go/ast 包就派上了用场。
 
@@ -293,7 +293,7 @@ func (v visitor) Visit(n ast.Node) ast.Visitor {
 
 
 
-#### 每种标识符最常用的名称都是什么？
+## 每种标识符最常用的名称都是什么？
 
 我们已经能够解析代码并访问 AST 节点从而导出我们想要的信息：哪个变量名是包中最常用的。
 
@@ -393,7 +393,7 @@ func (v visitor) Visit(n ast.Node) ast.Visitor {
 
 有趣的是为什么 v 不在，我们漏掉了什么局部变量的声明的方式么？
 
-#### 考虑参数和 range 中的变量
+## 考虑参数和 range 中的变量
 
 我们漏掉了一对节点类型其实它们也是一种局部变量。
 
@@ -462,7 +462,7 @@ most common local variable names
   6127 c
 ```
 
-####  处理 var 声明
+##  处理 var 声明
 
 现在我们需要进一步处理 var 声明，它有可能是全局变量也有可能是局部变量，并且只有判断其是否为 ast.File 级来判断它是不是全局变量。
 
@@ -563,11 +563,9 @@ most common global variable names
 
 哪个常量名字最常用？我们如何找到他们？
 
-#### 感谢
+## 感谢
 
-如果你喜欢这篇文章可以分享它也可以订阅我们的频道，或者在跟踪我。也可以考虑成为一个赞助者。
-
-
+如果你喜欢这篇文章可以分享它也可以订阅我们的频道，或者在关注我。也可以考虑成为一个赞助者。
 
 ----------------
 
@@ -575,6 +573,6 @@ via: https://medium.com/@francesc/understanding-go-programs-with-go-parser-c4e88
 
 作者：[JohnKoepi](https://sitano.github.io/)
 译者：[saberuster](https://github.com/saberuster)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
