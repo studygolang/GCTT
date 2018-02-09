@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12381
+
 # Go 语言中的可赋值性（Assignability in Go）
 
 Go 是静态类型的编程语言。存储到变量中的值必须与变量的类型匹配。因此，不能像 Python 这种动态类型语言一样，随意的数据都可以作为值赋给变量。这个决定什么是允许赋值的规则就叫做可赋值性（Assignability）。
@@ -52,11 +54,11 @@ var c map[string]int
 
 ```go
 type Callable interface {
-   f() int
+	f() int
 }
 type T int
 func (t T) f() int {
-    return int(t)
+	return int(t)
 }
 var c Callable
 var t T
@@ -119,12 +121,13 @@ c = untyped
 d = untyped
 ```
 
+---
 
 via: https://medium.com/golangspec/assignability-in-go-27805bcd5874
 
- 作者：[Michał Łowicki](https://twitter.com/mlowicki)
- 译者：[Miancai Li](https://github.com/gogeof)
- 校对：[polaris1119](https://github.com/polaris1119)
+作者：[Michał Łowicki](https://twitter.com/mlowicki)
+译者：[Miancai Li](https://github.com/gogeof)
+校对：[polaris1119](https://github.com/polaris1119)
 
- 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
