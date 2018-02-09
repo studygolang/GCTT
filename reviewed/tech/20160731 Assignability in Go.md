@@ -1,14 +1,14 @@
-## Go 语言中的可赋值性（Assignability in Go）
+# Go 语言中的可赋值性（Assignability in Go）
 
 Go 是静态类型的编程语言。存储到变量中的值必须与变量的类型匹配。因此，不能像 Python 这种动态类型语言一样，随意的数据都可以作为值赋给变量。这个决定什么是允许赋值的规则就叫做可赋值性（Assignability）。
 
 左边类型为 T 的变量，存在 6 种可以将右边的值赋给左边的情况。
 
-### 1. 相同类型（Identical types）
+## 1. 相同类型（Identical types）
 
 第一种是非常明显的。如果右边的类型（也）是 T，则赋值是完全可以的。更多的细节可以参考 ["Identical types in Go"](https://medium.com/golangspec/assignability-in-go-27805bcd5874)。
 
-### 2. 相同的基础类型（Identical underlying types）
+## 2. 相同的基础类型（Identical underlying types）
 
 在 Go 语言中，每种类型都有一种基础类型（underlying type）。对于布尔型，数字，字符串或者常量的基础类型都跟它们本身的类型相同。其他的基础类型来自于声明时的类型：
 
@@ -46,7 +46,7 @@ var b struct{ field string}
 var c map[string]int
 ```
 
-### 3. 将一个实现了接口 T 的变量赋值给 T 接口类型的变量
+## 3. 将一个实现了接口 T 的变量赋值给 T 接口类型的变量
 
 如果一个变量实现了接口 T，那么我们可以将这个变量赋值给一个 T 接口类型的变量。
 
@@ -65,7 +65,7 @@ c = t
 
 更多关于接口类型的细节都在 [语言规范（language spec）](https://golang.org/ref/spec#Interface_types)。
 
-### 4. 将双向管道（channel）的变量赋值给相同类型的变量（Assigning bidirectional channel to variable with identical element types）
+## 4. 将双向管道（channel）的变量赋值给相同类型的变量（Assigning bidirectional channel to variable with identical element types）
 
 ```go
 type T chan<- map[string]int
@@ -85,7 +85,7 @@ var c2 T2
 c1 = c2  // cannot use c2 (type T2) as type T in assignment
 ```
 
-### 5. 赋值 nil（Assigning nil）
+## 5. 赋值 nil（Assigning nil）
 
 允许将 nil 赋值给指针，函数，切片，map，管道，接口类型（的变量）。
 
@@ -101,7 +101,7 @@ var g [10]int
 g = nil  // cannot use nil as type [10]int in assignment
 ```
 
-### 6. 无（显式）指定类型的常量（Untyped constants）
+## 6. 无（显式）指定类型的常量（Untyped constants）
 
 关于 Go 常量更深入的介绍请查看[官方博客](https://blog.golang.org/constants)
 

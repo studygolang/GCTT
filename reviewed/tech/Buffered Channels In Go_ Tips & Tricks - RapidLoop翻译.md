@@ -1,10 +1,10 @@
-##               Go语言的缓冲通道：提示和技巧
+# Go 语言的缓冲通道：提示和技巧
 
-​				Mahadevan Ramachandran   •   January 15
+​Mahadevan Ramachandran • January 15
 
-通道和 goroutine 是Go语言基于 CSP（ communicating sequential processes ，通信顺序进程）并发机制的核心部分。阅读本文可以学到一些关于channel的提示和技巧，尤其是“缓冲” channel ，在 “生产者-消费者” 情境中广泛使用了缓冲通道作为队列。
+通道和 goroutine 是 Go 语言基于 CSP（ communicating sequential processes ，通信顺序进程）并发机制的核心部分。阅读本文可以学到一些关于channel的提示和技巧，尤其是“缓冲” channel ，在 “生产者-消费者” 情境中广泛使用了缓冲通道作为队列。
 
-##缓冲通道=队列
+## 缓冲通道 = 队列
 
 缓冲通道是固定容量的先进先出（FIFO）队列。容量在队列创建的时候就已经固定——其大小不能在运行时更改。			
 
@@ -20,8 +20,6 @@ item1 := &Item{Foo: "bar"}
 queue <- item1
 item1.Foo = "baz" // 有效，但这不是好习惯！
 ```
-
-
 
 生产者（将元素放入队列的代码）在把元素入队时可以选择是否阻塞。
 
@@ -42,16 +40,12 @@ select {
 //   false => 元素没有入队, 会因为queue已满而阻塞
 ```
 
-
-
 消费者通常从队列中取出元素并处理它们。如果队列为空并且消费者无事可做，就会发生阻塞，直到生产者放入一个元素。
 
 ```go
 // 取出一个元素, 或者一直等待，直到可以取出元素
 item := <- queue
 ```
-
-
 
 如果不希望消费者等待，代码如下：
 
@@ -70,7 +64,7 @@ select {
 
 
 
-## 关闭缓冲通道
+##  关闭缓冲通道
 
 缓冲通道最好是由生产者关闭，通道关闭事件会被发送给消费者。如果你需要在生产者或者消费者之外关闭通道，那么你必须使用外部同步来确保生产者不会试图向已关闭的通道写入（这会引发一个 panic ）。
 
@@ -82,7 +76,7 @@ close(queue)  // "panic: 关闭一个已关闭的通道"
 
 
 
-##读取或者写入关闭的通道
+## 读取或者写入关闭的通道
 
 你能向已关闭的通道写入么？当然不能。
 
@@ -186,7 +180,7 @@ select {
 //   ok && !valid => 通道已经关闭，退出轮询
 ```
 
-## 咨询和训练
+##  咨询和训练
 
 需要帮助获得一个使用 Golang 的项目？我们在创建和运行生产级 Go 平台软件解决方案领域拥有丰富经验。我们可以帮助你架构和设计 Go 平台项目，或者为使用 Go 工作的团队提供建议和监督。我们也会为希望开展Go项目的团队提供培训或者提升 Golang 知识。[这里发现更多](https://www.rapidloop.com/training) 或者 [马上联系我们](https://www.rapidloop.com/contact) 来讨论你的需求！
 
@@ -196,7 +190,6 @@ Co-founder & CEO, RapidLoop
 [@mdevanr](https://twitter.com/mdevanr)
 
 
-
 ```
 ----------------
 
@@ -204,7 +197,7 @@ via: https://www.rapidloop.com/blog/golang-channels-tips-tricks.html
 
 作者：[Aaron Schlesinger](https://medium.com/@arschles)
 译者：[sunzhaohao](https://github.com/sunzhaohao)
-校对：[校对者ID](https://github.com/polaris1119)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 ```
