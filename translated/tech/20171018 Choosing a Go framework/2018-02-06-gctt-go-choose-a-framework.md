@@ -1,16 +1,16 @@
 ![](heading.jpg)
 
-### 选择一个 Go 框架
+# 选择一个 Go 框架
 
-每一天，或者是每隔几天，总有人来到 [/r/golang](https://www.reddit.com/r/golang/) ，并询问些类似如下的问题“哪个框架是最好的？”。我认为我们应该尝试着问这个问题，至少在某种方法上这是很容易理解的。你不应该使用框架。
+每一天，或者是每隔几天，总有人来到 [/r/golang](https://www.reddit.com/r/golang/) ，并询问些类似如下的问题“哪个框架是最好的？”。我认为我们应该尝试提出这个问题，至少以一种容易理解的方式提出。你不应该使用框架。
 
 对于一个复杂的问题，这也许是一个非常简洁的答案。这并不是说你任何时候都不应该使用框架。众所周知，当我们开发软件的时候，有这么一种趋势，慢慢形成适应通用开发的模式，并且一次又一次地加快开发同样的东西。它试着尽可能的消除重复代码。
 
-### 标准库或 stdlib
+## 标准库或 stdlib
 
 Go 语言标准库的质量很高。你应该尽可能的使用它。如果你正在编写 API 服务，你需要熟悉 `net/http` 包，而且你最终无论使用哪个框架都是基于这个包的。将第三方包导入标准库是需要认真考虑的，当他们解决的是一个非常专注的问题时，这是不适合进入标准库的。举个例子，生成 UUID 的包，或 JWT 包。一些包（包括 web 框架）都是基于标准库构建的。一个很好的具体例子，[jmoiron/sqlx](https://jmoiron.github.io/sqlx/) 包就是基于 `sql/database` 包构建的。
 
-### 包管理器
+## 包管理器
 
 Go 和包含一个软件包市场的语言有很大的不同。Node 有 [npm](https://www.npmjs.com/)，PHP 有 [packagist（composer）](https://packagist.org/)，Ruby 有 [gems](https://rubygems.org/)。事实上 Go 没有官方软件包管理器（一个中央市场），这对于寻找到一个软件包有着重大的影响。有几个软件包管理器可用，例如 [gvt](https://github.com/FiloSottile/gvt)，[glide](https://github.com/Masterminds/glide) 和一个官方的试验品 dep，[dep](https://github.com/golang/dep) 可能会在将来的某个时间和 Go 语言工具链一起捆绑发布。
 
@@ -24,13 +24,13 @@ Go 代码放在 GitHub，Bitbucket 和其他存储库，甚至可以自行托管
 
 相比之下，Node 的软件包质量急剧下降，因为它的焦点分布在前端和后端之间，所以 Node 中有许多怪癖的代码，这在 Go 中是不存在。Go 是一个完全服务器端的语言，而 Node 往往服务于很多前端的 Javascript 代码。Node 开发中有一些东西，无法用任何逻辑来解释，例如开发和采用 [left-pad](https://www.npmjs.com/package/left-pad) 和 [is-array](https://www.npmjs.com/package/is-array) 包的原因。我无法解释它们为何每周有成百上千万的下载量。
 
-### Go 生态系统
+## Go 生态系统
 
 Go 有一个较小的生态系统，但是有很多基于 Go 的项目都被广泛的采用，最近 GitHub 上的 [go-chi/chi](https://github.com/go-chi/chi) 有 2500 星星和非常好的评论（和 sqlx 类似，chi 项目是基于底层的 `net/http` 包构建的）。我们在 [ErrorHub](https://errorhub.io/) 上使用它，我建议你使用它。
 
 有许多 web 框架可用，但是如上所述，你应该首先使用 stdlib，这样你可以在继续前进时明白你真正需要的。使用 web 框架本身是完全没有必要的，但是当你有新的需求时，你可以做出更明智地选择从哪里迁移。
 
-### 从其他语言迁移到 Go
+## 从其他语言迁移到 Go
 
 Go 和其他语言之间的不同之处在于语言细节。从 Python 迁移到 Ruby 或从 PHP 迁移到 Javascript 时，你会发现同样的差异。Go 也不例外。你可能会发现[（例如切片是如何工作的）](https://scene-si.org/2017/08/06/the-thing-about-slices/)起初有点混乱，但从任何语言迁移到任何其他语言时都会遇到这些问题。让我们再看看 ruby 的一个例子 [predicate methods](http://ruby-for-beginners.rubymonstas.org/objects/predicates.html)。
 
@@ -40,18 +40,18 @@ Go 的入门门槛真的很低。我在 15 年前使用 PHP，迁移到 Go 是�
 >
 > **Ryan Dahl**
 
-### Go 的力量
+## Go 的力量
 
-Go 非常适合提供 API 端点到你选择用来驱动你的前端框架的任何项目。Websockets？没问题。一群正在互相交谈的 Go 程序？你有没有听说过 Docker 或者 Kubernetes？
+Go 非常适合为任何您选择驱动您的前端框架的项目提供 API 端点。Websockets？没问题。一群正在互相交谈的 Go 程序？你有没有听说过 Docker 或者 Kubernetes？
 这些系统有着令人难以置信的可扩展性，并且是用 Go 写的。
 
-Go 是一种出色的语言，可以提供后端逻辑，例如和数据库交互接口，并通过 HTTP API 端点开放访问。前端技术栈的选择将确保你可以为浏览器使用和呈现此数据。
+Go 是一门出色的语言，可以提供后端逻辑，例如和数据库交互接口，并通过 HTTP API 端点开放访问。前端技术栈的选择将确保你可以为浏览器使用和呈现此数据。
 
 你被 React 所困恼吗？将其替换为 VueJS 而不用丢弃任何 Go 代码。在其他语言中，你必须严格遵守这个原则来分割应用程序，因为通常情况下，你不是在编写服务器，而只是生成将在浏览器中运行产生输出的脚本。当然，使用 Go 可以以相同的方式使用 `html/template`，但是选择使用前端框架实现前端，将会给你带来好处：专注于该框架的开发人员。不是每个人都喜欢 Go。
 
 你不会用 bash 写一个 web 服务器，对不对？
 
-### 你为什么要用 Go？
+## 你为什么要用 Go？
 
 对我来说主要的卖点就是标准库，语言和文档的质量非常高。Ruby，Node，PHP 和其他以 web 开发为中心的语言通常都是单线程的，如果可能的话，超出这个范围的通常都是使用一个附加组件，而不是一等公民。他们的内存管理很差（尽管，至少 PHP 在过去的 15 年里有了很大的改进），也许最重要的是它们都属于脚本语言范畴。编译的代码总是会比通过解释器运行的任何代码都快。
 
@@ -59,11 +59,11 @@ Go 是一种出色的语言，可以提供后端逻辑，例如和数据库交�
 
 其他的东西可能不会被处理（这就是为什么在 Go 中有很多关于泛型的争议），但总是有可以改进的空间。我不排除有人会另辟蹊径去提供他们认为最合适的最好的泛型的可能性。人们总是根据他们的经验做出反应。如果你的经验告诉你，并发性是某些 XY 语言的问题，那么你将会找到解决办法。迁移到 Go 是一个很好的方法来解决这个问题。
 
-### 笔记
+## 笔记
 
 这篇文章反映了 Go 确实有包管理器，但是到目前为止还没有官方的工具，也没有和 Go 的工具链一起捆绑发布。前面的文章误导了这一点，它暗示了 Go 根本没有包管理器。从技术上讲，所有其他包管理器（至少 npm 和 composer）都是是附加组件。
 
-### 我很荣幸你能够阅读本文...
+## 我很荣幸你能够阅读本文...
 
 但如果你能购买一本我的书，那真是太棒了：
 
@@ -81,6 +81,6 @@ via: https://scene-si.org/2017/10/18/choosing-a-go-framework/
 
 作者：[Tit Petric](https://scene-si.org/about/)
 译者：[MDGSF](https://github.com/MDGSF)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
