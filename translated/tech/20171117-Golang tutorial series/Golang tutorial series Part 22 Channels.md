@@ -4,10 +4,10 @@
 
 在[上一教程](#)里，我们探讨了如何使用 Go 协程（Goroutine）来实现并发。我们接着在本教程里学习信道（Channel），学习如何通过信道来实现 Go 协程间的通信。  
 
-### 什么是信道？
+## 什么是信道？
 信道可以想像成 Go 协程之间通信的管道。如同管道中的水会从一端流到另一端，通过使用信道，数据也可以从一端发送，在另一端接收。  
 
-### 信道的声明
+## 信道的声明
 所有信道都关联了一个类型。信道只能运输这种类型的数据，而运输其他类型的数据都是非法的。  
 
 `chan T` 表示 `T` 类型的信道。  
@@ -22,12 +22,12 @@ package main
 import "fmt"
 
 func main() {  
-    var a chan int
-    if a == nil {
-        fmt.Println("channel a is nil, going to define it")
-        a = make(chan int)
-        fmt.Printf("Type of a is %T", a)
-    }
+	var a chan int
+	if a == nil {
+		fmt.Println("channel a is nil, going to define it")
+		a = make(chan int)
+		fmt.Printf("Type of a is %T", a)
+	}
 }
 ```
 [在线运行程序](https://play.golang.org/p/QDtf6mvymD)  
@@ -47,7 +47,7 @@ a := make(chan int)
 
 这一行代码同样定义了一个 int 类型的信道 `a`。  
 
-### 通过信道进行发送和接收
+## 通过信道进行发送和接收
 如下所示，该语法通过信道发送和接收数据。  
 
 ```go
@@ -61,12 +61,12 @@ a <- data // 写入信道 a
 
 在第二行，箭头指向了 `a`，因此我们在把数据写入信道 `a`。  
 
-### 发送与接收默认是阻塞的
+## 发送与接收默认是阻塞的
 发送与接收默认是阻塞的。这是什么意思？当把数据发送到信道时，程序控制会在发送数据的语句处发生阻塞，直到有其它 Go 协程从信道读取到数据，才会解除阻塞。与此类似，当读取信道的数据时，如果没有其它的协程把数据写入到这个信道，那么读取过程就会一直阻塞着。  
 
 信道的这种特性能够帮助 Go 协程之间进行高效的通信，不需要用到其他编程语言常见的显式锁或条件变量。  
 
-### 信道的代码示例
+## 信道的代码示例
 理论已经够了:)。接下来写点代码，看看协程之间通过信道是怎么通信的吧。  
 
 我们其实可以重写上章学习 [Go 协程](#) 时写的程序，现在我们在这里用上信道。  
@@ -77,17 +77,17 @@ a <- data // 写入信道 a
 package main
 
 import (  
-    "fmt"
-    "time"
+	"fmt"
+	"time"
 )
 
 func hello() {  
-    fmt.Println("Hello world goroutine")
+	fmt.Println("Hello world goroutine")
 }
 func main() {  
-    go hello()
-    time.Sleep(1 * time.Second)
-    fmt.Println("main function")
+	go hello()
+	time.Sleep(1 * time.Second)
+	fmt.Println("main function")
 }
 ```
 [在线运行程序](https://play.golang.org/p/U9ZZuSql8-)  
@@ -100,18 +100,18 @@ func main() {
 package main
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 func hello(done chan bool) {  
-    fmt.Println("Hello world goroutine")
-    done <- true
+	fmt.Println("Hello world goroutine")
+	done <- true
 }
 func main() {  
-    done := make(chan bool)
-    go hello(done)
-    <-done
-    fmt.Println("main function")
+	done := make(chan bool)
+	go hello(done)
+	<-done
+	fmt.Println("main function")
 }
 ```
 [在线运行程序](https://play.golang.org/p/I8goKv6ZMF)  
@@ -135,22 +135,22 @@ main function
 package main
 
 import (  
-    "fmt"
-    "time"
+	"fmt"
+	"time"
 )
 
 func hello(done chan bool) {  
-    fmt.Println("hello go routine is going to sleep")
-    time.Sleep(4 * time.Second)
-    fmt.Println("hello go routine awake and going to write to done")
-    done <- true
+	fmt.Println("hello go routine is going to sleep")
+	time.Sleep(4 * time.Second)
+	fmt.Println("hello go routine awake and going to write to done")
+	done <- true
 }
 func main() {  
-    done := make(chan bool)
-    fmt.Println("Main going to call hello go goroutine")
-    go hello(done)
-    <-done
-    fmt.Println("Main received data")
+	done := make(chan bool)
+	fmt.Println("Main going to call hello go goroutine")
+	go hello(done)
+	<-done
+	fmt.Println("Main received data")
 }
 ```
 [在线运行程序](https://play.golang.org/p/EejiO-yjUQ)  
@@ -159,7 +159,7 @@ func main() {
 
 程序首先会打印 `Main going to call hello go goroutine`。接着会开启 `hello` 协程，打印 `hello go routine is going to sleep`。打印完之后，`hello` 协程会休眠 4 秒钟，而在这期间，主协程会在 `<-done` 这一行发生阻塞，等待来自信道 `done` 的数据。4 秒钟之后，打印 `hello go routine awake and going to write to done`，接着再打印 `Main received data`。  
 
-### 信道的另一个示例
+## 信道的另一个示例
 我们再编写一个程序来更好地理解信道。该程序会计算一个数中每一位的平方和与立方和，然后把平方和与立方和相加并打印出来。  
 
 例如，如果输出是 123，该程序会如下计算输出：  
@@ -176,37 +176,37 @@ output = squares + cubes = 49
 package main
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 func calcSquares(number int, squareop chan int) {  
-    sum := 0
-    for number != 0 {
-        digit := number % 10
-        sum += digit * digit
-        number /= 10
-    }
-    squareop <- sum
+	sum := 0
+	for number != 0 {
+		digit := number % 10
+		sum += digit * digit
+		number /= 10
+	}
+	squareop <- sum
 }
 
 func calcCubes(number int, cubeop chan int) {  
-    sum := 0 
-    for number != 0 {
-        digit := number % 10
-        sum += digit * digit * digit
-        number /= 10
-    }
-    cubeop <- sum
+	sum := 0 
+	for number != 0 {
+		digit := number % 10
+		sum += digit * digit * digit
+		number /= 10
+	}
+	cubeop <- sum
 } 
 
 func main() {  
-    number := 589
-    sqrch := make(chan int)
-    cubech := make(chan int)
-    go calcSquares(number, sqrch)
-    go calcCubes(number, cubech)
-    squares, cubes := <-sqrch, <-cubech
-    fmt.Println("Final output", squares + cubes)
+	number := 589
+	sqrch := make(chan int)
+	cubech := make(chan int)
+	go calcSquares(number, sqrch)
+	go calcCubes(number, cubech)
+	squares, cubes := <-sqrch, <-cubech
+	fmt.Println("Final output", squares + cubes)
 }
 ```
 [在线运行程序](https://play.golang.org/p/4RKr7_YO_B)  
@@ -219,7 +219,7 @@ func main() {
 Final output 1536 
 ```
 
-### 死锁
+## 死锁
 使用信道需要考虑的一个重点是死锁。当 Go 协程给一个信道发送数据时，照理说会有其他 Go 协程来接收数据。如果没有的话，程序就会在运行时触发 panic，形成死锁。  
 
 同理，当有 Go 协程等着从一个信道接收数据时，我们期望其他的 Go 协程会向该信道写入数据，要不然程序就会触发 panic。  
@@ -229,8 +229,8 @@ package main
 
 
 func main() {  
-    ch := make(chan int)
-    ch <- 5
+	ch := make(chan int)
+	ch <- 5
 }
 ```
 [在线运行程序](https://play.golang.org/p/q1O5sNx4aW)  
@@ -242,10 +242,10 @@ fatal error: all goroutines are asleep - deadlock!
 
 goroutine 1 [chan send]:  
 main.main()  
-    /tmp/sandbox249677995/main.go:6 +0x80
+	/tmp/sandbox249677995/main.go:6 +0x80
 ```
 
-### 单向信道
+## 单向信道
 我们目前讨论的信道都是双向信道，即通过信道既能发送数据，又能接收数据。其实也可以创建单向信道，这种信道只能发送或者接收数据。  
 
 ```go
@@ -254,13 +254,13 @@ package main
 import "fmt"
 
 func sendData(sendch chan<- int) {  
-    sendch <- 10
+	sendch <- 10
 }
 
 func main() {  
-    sendch := make(chan<- int)
-    go sendData(sendch)
-    fmt.Println(<-sendch)
+	sendch := make(chan<- int)
+	go sendData(sendch)
+	fmt.Println(<-sendch)
 }
 ```
 [在线运行程序](https://play.golang.org/p/PRKHxM-iRK)  
@@ -281,20 +281,20 @@ package main
 import "fmt"
 
 func sendData(sendch chan<- int) {  
-    sendch <- 10
+	sendch <- 10
 }
 
 func main() {  
-    chnl := make(chan int)
-    go sendData(chnl)
-    fmt.Println(<-chnl)
+	chnl := make(chan int)
+	go sendData(chnl)
+	fmt.Println(<-chnl)
 }
 ```
 [在线运行程序](https://play.golang.org/p/aqi_rJ1U8j)  
 
 在上述程序的第 10 行，我们创建了一个双向信道 `cha1`。在第 11 行 `cha1` 作为参数传递给了 `sendData` 协程。在第 5 行，函数 `sendData` 里的参数 `sendch chan<- int` 把 `cha1` 转换为一个唯送信道。于是该信道在 `sendData` 协程里是一个唯送信道，而在 Go 主协程里是一个双向信道。该程序最终打印输出 `10`。  
 
-### 关闭信道和使用 for range 遍历信道
+## 关闭信道和使用 for range 遍历信道
 数据发送方可以关闭信道，通知接收方这个信道不再有数据发送过来。  
 
 当从信道接收数据时，接收方可以多用一个变量来检查信道是否已经关闭。  
@@ -309,25 +309,25 @@ v, ok := <- ch
 package main
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 func producer(chnl chan int) {  
-    for i := 0; i < 10; i++ {
-        chnl <- i
-    }
-    close(chnl)
+	for i := 0; i < 10; i++ {
+		chnl <- i
+	}
+	close(chnl)
 }
 func main() {  
-    ch := make(chan int)
-    go producer(ch)
-    for {
-        v, ok := <-ch
-        if ok == false {
-            break
-        }
-        fmt.Println("Received ", v, ok)
-    }
+	ch := make(chan int)
+	go producer(ch)
+	for {
+		v, ok := <-ch
+		if ok == false {
+			break
+		}
+		fmt.Println("Received ", v, ok)
+	}
 }
 ```
 [在线运行程序](https://play.golang.org/p/XWmUKDA2Ri)  
@@ -355,21 +355,21 @@ for range 循环用于在一个信道关闭之前，从信道接收数据。
 package main
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 func producer(chnl chan int) {  
-    for i := 0; i < 10; i++ {
-        chnl <- i
-    }
-    close(chnl)
+	for i := 0; i < 10; i++ {
+		chnl <- i
+	}
+	close(chnl)
 }
 func main() {  
-    ch := make(chan int)
-    go producer(ch)
-    for v := range ch {
-        fmt.Println("Received ",v)
-    }
+	ch := make(chan int)
+	go producer(ch)
+	for v := range ch {
+		fmt.Println("Received ",v)
+	}
 }
 ```
 [在线运行程序](https://play.golang.org/p/JJ3Ida1r_6)  
@@ -397,45 +397,45 @@ Received  9
 package main
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 func digits(number int, dchnl chan int) {  
-    for number != 0 {
-        digit := number % 10
-        dchnl <- digit
-        number /= 10
-    }
-    close(dchnl)
+	for number != 0 {
+		digit := number % 10
+		dchnl <- digit
+		number /= 10
+	}
+	close(dchnl)
 }
 func calcSquares(number int, squareop chan int) {  
-    sum := 0
-    dch := make(chan int)
-    go digits(number, dch)
-    for digit := range dch {
-        sum += digit * digit
-    }
-    squareop <- sum
+	sum := 0
+	dch := make(chan int)
+	go digits(number, dch)
+	for digit := range dch {
+		sum += digit * digit
+	}
+	squareop <- sum
 }
 
 func calcCubes(number int, cubeop chan int) {  
-    sum := 0
-    dch := make(chan int)
-    go digits(number, dch)
-    for digit := range dch {
-        sum += digit * digit * digit
-    }
-    cubeop <- sum
+	sum := 0
+	dch := make(chan int)
+	go digits(number, dch)
+	for digit := range dch {
+		sum += digit * digit * digit
+	}
+	cubeop <- sum
 }
 
 func main() {  
-    number := 589
-    sqrch := make(chan int)
-    cubech := make(chan int)
-    go calcSquares(number, sqrch)
-    go calcCubes(number, cubech)
-    squares, cubes := <-sqrch, <-cubech
-    fmt.Println("Final output", squares+cubes)
+	number := 589
+	sqrch := make(chan int)
+	cubech := make(chan int)
+	go calcSquares(number, sqrch)
+	go calcCubes(number, cubech)
+	squares, cubes := <-sqrch, <-cubech
+	fmt.Println("Final output", squares+cubes)
 }
 ```
 [在线运行程序](https://play.golang.org/p/oL86W9Ui03)  

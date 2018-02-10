@@ -1,8 +1,5 @@
-
-
-[原文](https://medium.com/@cep21/what-accept-interfaces-return-structs-means-in-go-2fe879e25ee8)
-
 # 接受 interface 参数，返回 struct 在 go 中意味着什么
+
 ## 注意细节
 
 在之前的文章中，我提到了一个关于 *accept interfaces, return structs* 的参考指南，在查看同事代码的时候经常会被问“为什么”。特别是这不是一个必须遵守的规则。这个想法的关键点以及理解什么时候妥协，在于维护项目灵活性和避免抢占抽象（译者注：“Preemptive abstractions” 并发系统中连续组件的轻量级验证方案的一种抽象技术）之间的平衡。
@@ -40,7 +37,7 @@
 
 ```go
 func addNumbers(a int, b int, s string) int {
-  return a + b
+	return a + b
 }
 ```
 
@@ -51,7 +48,7 @@ type Database struct{ }
 func (d *Database) AddUser(s string) {...}
 func (d *Database) RemoveUser(s string) {...}
 func NewUser(d *Database, firstName string, lastName string) {
-  d.AddUser(firstName + lastName)
+	d.AddUser(firstName + lastName)
 }
 ```
 
@@ -59,10 +56,10 @@ func NewUser(d *Database, firstName string, lastName string) {
 
 ```go
 type DatabaseWriter interface {
-  AddUser(string)
+	AddUser(string)
 }
 func NewUser(d DatabaseWriter, firstName string, lastName string) {
-  d.AddUser(firstName + lastName)
+	d.AddUser(firstName + lastName)
 }
 ```
 
