@@ -1,5 +1,8 @@
+已发布：https://studygolang.com/articles/12264
+
 # 第17部分：方法
-欢迎来到 [Golang 系列教程](https://golangbot.com/learn-golang-series/) 的第 17 个教程。
+
+欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2) 的第 17 个教程。
 
 ### 什么是方法？
 
@@ -32,7 +35,7 @@ type Employee struct {
 }
 
 /*
- displaySalary() 方法将 Employee 做为接收器类型
+  displaySalary() 方法将 Employee 做为接收器类型
 */
 func (e Employee) displaySalary() {
     fmt.Printf("Salary of %s is %s%d", e.name, e.currency, e.salary)
@@ -44,7 +47,7 @@ func main() {
         salary:   5000,
         currency: "$",
     }
-    emp1.displaySalary() //调用 Employee 类型的 displaySalary() 方法
+    emp1.displaySalary() // 调用 Employee 类型的 displaySalary() 方法
 }
 ```
 
@@ -57,6 +60,7 @@ func main() {
 程序输出：`Salary of Sam Adolf is $5000`。
 
 ### 为什么我们已经有函数了还需要方法呢？
+
 上面的程序已经被重写为只使用函数，没有方法。
 
 ```go
@@ -485,7 +489,6 @@ func main() {
 这就是Go中的方法。祝你有美好的一天。
 
 下一章 [接口 - I](https://golangbot.com/interfaces-part-1/)
-
 
 ----------------
 
