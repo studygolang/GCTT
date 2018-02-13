@@ -1,14 +1,15 @@
+已发布：https://studygolang.com/articles/12397
+
 # 接受 interface 参数，返回 struct 在 go 中意味着什么
 
 ## 注意细节
 
 在之前的文章中，我提到了一个关于 *accept interfaces, return structs* 的参考指南，在查看同事代码的时候经常会被问“为什么”。特别是这不是一个必须遵守的规则。这个想法的关键点以及理解什么时候妥协，在于维护项目灵活性和避免抢占抽象（译者注：“Preemptive abstractions” 并发系统中连续组件的轻量级验证方案的一种抽象技术）之间的平衡。
 
-<center>
-<img alt="c90d04d0.png" src="接受interface参数，返回struct在go中意味着什么/c90d04d0.png" width="300" height="" >
-</center>
+![c90d04d0.png](https://raw.githubusercontent.com/studygolang/gctt-images/master/accept-interface/c90d04d0.png)
 
 ## 抢占抽象让系统变得复杂
+
 > 除了因为太多的迂回方式所造成的问题之外，所有的计算机科学问题都能够通过另一个级别的迂回方式来解决。  
 >  - David J. Wheeler
 
@@ -28,10 +29,8 @@
 
 ## 去掉无用的代码细节
 
-<center>
-<img alt="0ba28e07.png" src="接受interface参数，返回struct在go中意味着什么/0ba28e07.png" width="500" height="" >  
-复杂的做鸡蛋的方法  
-</center>  
+![0ba28e07.png](https://raw.githubusercontent.com/studygolang/gctt-images/master/accept-interface/0ba28e07.png)
+复杂的做鸡蛋的方法
 
 简化的另一个方面是去除不需要的细节。类似菜单函数：给一个输入然后你得到一个蛋糕！不需要列出做蛋糕的材料。同样的，函数也不需要列出不使用的输入参数。下面的函数你会怎么想？  
 
@@ -63,7 +62,7 @@ func NewUser(d DatabaseWriter, firstName string, lastName string) {
 }
 ```
 
-Dave Cheney在写[接口隔离原则](https://en.wikipedia.org/wiki/Interface_segregation_principle)的时候也提到了这一点。他还描述了一些关于限制输入的其他好处，值得读一下。概括一下就是：  
+Dave Cheney 在写[接口隔离原则](https://en.wikipedia.org/wiki/Interface_segregation_principle)的时候也提到了[这一点](https://dave.cheney.net/2016/08/20/solid-go-design)。他还描述了一些关于限制输入的其他好处，值得读一下。概括一下就是：  
 
 > 依照需求描述的结果也就是函数-仅仅是需要可写并且提供相应的功能
 
