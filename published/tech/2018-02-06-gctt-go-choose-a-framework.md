@@ -1,6 +1,8 @@
-![](heading.jpg)
+已发布：https://studygolang.com/articles/12399
 
 # 选择一个 Go 框架
+
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/choose-framework/heading.jpg)
 
 每一天，或者是每隔几天，总有人来到 [/r/golang](https://www.reddit.com/r/golang/) ，并询问些类似如下的问题“哪个框架是最好的？”。我认为我们应该尝试提出这个问题，至少以一种容易理解的方式提出。你不应该使用框架。
 
@@ -42,8 +44,7 @@ Go 的入门门槛真的很低。我在 15 年前使用 PHP，迁移到 Go 是�
 
 ## Go 的力量
 
-Go 非常适合为任何您选择驱动您的前端框架的项目提供 API 端点。Websockets？没问题。一群正在互相交谈的 Go 程序？你有没有听说过 Docker 或者 Kubernetes？
-这些系统有着令人难以置信的可扩展性，并且是用 Go 写的。
+Go 非常适合为任何您选择驱动您的前端框架的项目提供 API 端点。Websockets？没问题。一群正在互相交谈的 Go 程序？你有没有听说过 Docker 或者 Kubernetes？这些系统有着令人难以置信的可扩展性，并且是用 Go 写的。
 
 Go 是一门出色的语言，可以提供后端逻辑，例如和数据库交互接口，并通过 HTTP API 端点开放访问。前端技术栈的选择将确保你可以为浏览器使用和呈现此数据。
 
