@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12395
+
 # Go 语言的缓冲通道：提示和技巧
 
 ​Mahadevan Ramachandran • January 15
@@ -62,8 +64,6 @@ select {
 //   false => 没有取出元素, queue为空而发生阻塞
 ```
 
-
-
 ##  关闭缓冲通道
 
 缓冲通道最好是由生产者关闭，通道关闭事件会被发送给消费者。如果你需要在生产者或者消费者之外关闭通道，那么你必须使用外部同步来确保生产者不会试图向已关闭的通道写入（这会引发一个 panic ）。
@@ -74,8 +74,6 @@ close(queue)  // 关闭队列
 close(queue)  // "panic: 关闭一个已关闭的通道"
 ```
 
-
-
 ## 读取或者写入关闭的通道
 
 你能向已关闭的通道写入么？当然不能。
@@ -83,8 +81,6 @@ close(queue)  // "panic: 关闭一个已关闭的通道"
 ```go
 queue <- item // "panic: 向已关闭的通道写入"
 ```
-
-
 
 那么能从已关闭的通道读取么？事实上，在往下翻之前，请先猜测下这段代码的输出结果：
 
@@ -106,8 +102,6 @@ func main() {
     fmt.Println(<-queue)
 }
 ```
-
-
 
 这里有运行以上代码的 [链接](https://play.golang.org/p/ot87ro27tFk) .
 
@@ -136,8 +130,6 @@ item, valid := <- queue
 //    false => "queue" 已经关闭, "item" 只是一个 “零值”
 ```
 
-
-
 因此你在写消费者代码的时候可以这样：
 
 ```go
@@ -152,13 +144,11 @@ for {
 // 并且 queue 也已经关闭
 ```
 
-
-
 其实，“for..range” 循环是一种更加简单的写法:
 
 ```go
 for item := range queue {
-     // 处理 item
+    // 处理 item
 }
 // 到这里，所有被放入到 queue 中的元素都已经处理完毕，
 // 并且 queue 也已经关闭
@@ -188,7 +178,6 @@ select {
 
 Co-founder & CEO, RapidLoop 
 [@mdevanr](https://twitter.com/mdevanr)
-
 
 ```
 ----------------
