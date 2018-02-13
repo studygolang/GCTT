@@ -1,8 +1,10 @@
-# 逃逸分析的缺陷
+已发布：https://studygolang.com/articles/12396
+
+# Go 逃逸分析的缺陷
 
 ## 序
 
-先阅读这个由四部分组成的系列文章，对理解逃逸分析和数据语义会有帮助。下面详细介绍了阅读逃逸分析报告和 pprof 输出的方法。
+先阅读这个由四部分组成的系列文章，对理解逃逸分析和数据语义会有帮助。下面详细介绍了阅读逃逸分析报告和 pprof 输出的方法。（GCTT 已经在翻译中）
 
 <https://www.ardanlabs.com/blog/2017/05/language-mechanics-on-stacks-and-pointers.html>
 
@@ -12,7 +14,7 @@
 
 在过去的两年中，（Go）语言团队一直致力于优化编译器生成的代码，以获得更好的性能，并且做了极其出色的工作。我相信，如果逃逸分析中的一些现有的缺陷得以解决，那么，Go 程序会得到更大的改进。早在 2015 年 2 月，Dmitry Vyukov 就撰写了这篇文章，概述了编译器已知的逃逸分析缺陷。
 
-<https://docs.google.com/document/d/1CxgUBPlx9iJzkz9JWkb6tIpTe5q32QDmz8l0BouG0Cw/edit#>
+https://docs.google.com/document/d/1CxgUBPlx9iJzkz9JWkb6tIpTe5q32QDmz8l0BouG0Cw/edit
 
 我很好奇，自这篇文章以来，当中有多少提及的缺陷被修复了，然后，我发现，迄今为止，只有少数一些缺陷得到了解决。也就是说，有五个特定的缺陷尚未被修复，而我很乐意看到在 Go 不久的将来发布的版本中能有所改善。我将这些缺陷标记为：
 
@@ -32,28 +34,26 @@
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example1/example1_test.go>
 
 ```go
+package flaws
 
-    01 package flaws
-    02
-    03 import "testing"
-    04 
-    05 func BenchmarkAssignmentIndirect(b *testing.B) {
-    06     type X struct {
-    07         p *int
-    08     }
-    09     for i := 0; i < b.N; i++ {
-    10         var i1 int
-    11         x1 := &X{
-    12             p: &i1, // GOOD: i1 does not escape
-    13         }
-    14         _ = x1
-    15
-    16         var i2 int
-    17         x2 := &X{}
-    18         x2.p = &i2 // BAD: Cause of i2 escape
-    19     }
-    20 }
-    
+import "testing"
+
+func BenchmarkAssignmentIndirect(b *testing.B) {
+	type X struct {
+		p *int
+	}
+	for i := 0; i < b.N; i++ {
+		var i1 int
+		x1 := &X{
+			p: &i1, // GOOD: i1 does not escape
+		}
+		_ = x1
+
+		var i2 int
+		x2 := &X{}
+		x2.p = &i2 // BAD: Cause of i2 escape
+	}
+}
 ```
 
 在代码清单 1 中，类型 `X` 拥有单个字段，这个字段的名字是 `p`，它是一个指向整型的指针。然后在第 11 行到第 13 行中，构造了一个类型为 `X` 的值，使用紧凑形式，用 `i1` 变量的地址来初始化 `p` 字段。`x1` 变量是作为一个指针创建的，因此，这个变量与在第 17 行创建的变量是一样的。
@@ -63,51 +63,47 @@
 以下是运行基准测试的结果，以及一份逃逸分析报告。还包括了 pprof list 命令的输出。
 
 **基准测试输出**
-```
 
-    $ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
-    
-    BenchmarkAssignmentIndirect-8       100000000	       14.2 ns/op         8 B/op	      1 allocs/op
-    
+```console
+$ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
+
+BenchmarkAssignmentIndirect-8       100000000	       14.2 ns/op         8 B/op	      1 allocs/op
 ```
 
 **逃逸分析报告**
-```
 
-    ./example2_test.go:18:10: &i2 escapes to heap
-    ./example2_test.go:18:10:   from x2.p (star-dot-equals) at ./example2_test.go:18:8
-    ./example2_test.go:16:7: moved to heap: i2
-    ./example2_test.go:12:7: BenchmarkAssignmentIndirect &i1 does not escape
-    
+```
+./example2_test.go:18:10: &i2 escapes to heap
+./example2_test.go:18:10: from x2.p (star-dot-equals) at ./example2_test.go:18:8
+./example2_test.go:16:7: moved to heap: i2
+./example2_test.go:12:7: BenchmarkAssignmentIndirect &i1 does not escape
 ```
 
 **Pprof 输出**
-```
 
-    $ go tool pprof -alloc_space mem.out
-    
-    ROUTINE ========================
-     759.51MB   759.51MB (flat, cum)   100% of Total
-            .          .     11:       x1 := &X{
-            .          .     12:           p: &i1, // GOOD: i1 does not escape
-            .          .     13:       }
-            .          .     14:       _ = x1
-            .          .     15:
-     759.51MB   759.51MB     16:       var i2 int
-            .          .     17:       x2 := &X{}
-            .          .     18:       x2.p = &i2 // BAD: Cause of i2 escape
-            .          .     19:   }
-            .          .     20:}
-    
+```
+$ go tool pprof -alloc_space mem.out
+
+ROUTINE ========================
+	759.51MB   759.51MB (flat, cum)   100% of Total
+		.          .     11:       x1 := &X{
+		.          .     12:           p: &i1, // GOOD: i1 does not escape
+		.          .     13:       }
+		.          .     14:       _ = x1
+		.          .     15:
+	759.51MB   759.51MB     16:       var i2 int
+		.          .     17:       x2 := &X{}
+		.          .     18:       x2.p = &i2 // BAD: Cause of i2 escape
+		.          .     19:   }
+		.          .     20:}	
 ```
 
 在逃逸分析报告中，`i2` 逃逸给出的理由是，`(star-dot-equals)`。我想这是指编译器需要执行诸如以下的操作来完成此赋值。
 
 **Star-Dot-Equals**
-```go
 
-    (*x2).p = &i2
-    
+```go
+(*x2).p = &i2
 ```
 
 pprof 输出清晰地显示，`i2` 是在堆上分配的，而 `i1` 不是。我在 Go 语言小萌新写的 Go 代码中，大量看到 16 行到 18 行这样的代码。这个缺陷可以帮助更萌新的开发者从堆中移除一些垃圾。
@@ -117,34 +113,34 @@ pprof 输出清晰地显示，`i2` 是在堆上分配的，而 `i1` 不是。我
 “间接调用（Indirect Call）”缺陷与和通过间接调用的函数共享一个值时发生的分配有关。下面是一个代码示例：
 
 **代码清单 2.1**  
+
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example2/example2_test.go>
 
 ```go
+package flaws
 
-    01 package flaws
-    02
-    03 import "testing"
-    04
-    05 func BenchmarkLiteralFunctions(b *testing.B) {
-    06     for i := 0; i < b.N; i++ {
-    07         var y1 int
-    08         foo(&y1, 42) // GOOD: y1 does not escape
-    09
-    10         var y2 int
-    11         func(p *int, x int) {
-    12             *p = x
-    13         }(&y2, 42) // BAD: Cause of y2 escape
-    14
-    15         var y3 int
-    16         p := foo
-    17         p(&y3, 42) // BAD: Cause of y3 escape
-    18     }
-    19 }
-    20
-    21 func foo(p *int, x int) {
-    22     *p = x
-    23 }
-    
+import "testing"
+
+func BenchmarkLiteralFunctions(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		var y1 int
+		foo(&y1, 42) // GOOD: y1 does not escape
+
+		var y2 int
+		func(p *int, x int) {
+			*p = x
+		}(&y2, 42) // BAD: Cause of y2 escape
+
+		var y3 int
+		p := foo
+		p(&y3, 42) // BAD: Cause of y3 escape
+	}
+}
+
+func foo(p *int, x int) {
+	*p = x
+}
+	
 ```
 
 在代码清单 2.1 中，在第 21 行声明了一个名为 `foo` 的命名函数。这个函数接受一个整型的地址和一个整型值作为参数。然后，这个函数将传递的整型值赋值给 `p` 指针指向的位置。
@@ -157,48 +153,45 @@ pprof 输出清晰地显示，`i2` 是在堆上分配的，而 `i1` 不是。我
 
 **基准测试输出**
 ```
-
-    $ go test -gcflags "-m -m" -run none -bench BenchmarkLiteralFunctions -benchmem -memprofile mem.out
-    
-    BenchmarkLiteralFunctions-8     50000000 	       30.7 ns/op        16 B/op	      2 allocs/op
-    
+$ go test -gcflags "-m -m" -run none -bench BenchmarkLiteralFunctions -benchmem -memprofile mem.out
+	
+BenchmarkLiteralFunctions-8     50000000 	       30.7 ns/op        16 B/op	      2 allocs/op
 ```
 
 **逃逸分析报告**
-```
 
-    ./example2_test.go:13:5: &y2 escapes to heap
-    ./example2_test.go:13:5:    from (func literal)(&y2, 42) (parameter to indirect call) at ./example2_test.go:13:4
-    ./example2_test.go:10:7: moved to heap: y2
-    ./example2_test.go:17:5: &y3 escapes to heap
-    ./example2_test.go:17:5:    from p(&y3, 42) (parameter to indirect call) at ./example2_test.go:17:4
-    ./example2_test.go:15:7: moved to heap: y3
-    
+```
+./example2_test.go:13:5: &y2 escapes to heap
+./example2_test.go:13:5:    from (func literal)(&y2, 42) (parameter to indirect call) at ./example2_test.go:13:4
+./example2_test.go:10:7: moved to heap: y2
+./example2_test.go:17:5: &y3 escapes to heap
+./example2_test.go:17:5:    from p(&y3, 42) (parameter to indirect call) at ./example2_test.go:17:4
+./example2_test.go:15:7: moved to heap: y3
 ```
 
 **Pprof 输出**
-```
 
-    $ go tool pprof -alloc_space mem.out
-    
-    ROUTINE ========================
-     768.01MB   768.01MB (flat, cum)   100% of Total
-            .          .      5:func BenchmarkLiteralFunctions(b *testing.B) {
-            .          .      6:   for i := 0; i < b.N; i++ {
-            .          .      7:       var y1 int
-            .          .      8:       foo(&y1, 42) // GOOD: y1 does not escape
-            .          .      9:
-     380.51MB   380.51MB     10:       var y2 int
-            .          .     11:       func(p *int, x int) {
-            .          .     12:           *p = x
-            .          .     13:       }(&y2, 42) // BAD: Cause of y2 escape
-            .          .     14:
-     387.51MB   387.51MB     15:       var y3 int
-            .          .     16:       p := foo
-            .          .     17:       p(&y3, 42) // BAD: Cause of y3 escape
-            .          .     18:   }
-            .          .     19:}
-    
+```
+$ go tool pprof -alloc_space mem.out
+
+ROUTINE ========================
+ 768.01MB   768.01MB (flat, cum)   100% of Total
+		.          .      5:func BenchmarkLiteralFunctions(b *testing.B) {
+		.          .      6:   for i := 0; i < b.N; i++ {
+		.          .      7:       var y1 int
+		.          .      8:       foo(&y1, 42) // GOOD: y1 does not escape
+		.          .      9:
+ 380.51MB   380.51MB     10:       var y2 int
+		.          .     11:       func(p *int, x int) {
+		.          .     12:           *p = x
+		.          .     13:       }(&y2, 42) // BAD: Cause of y2 escape
+		.          .     14:
+ 387.51MB   387.51MB     15:       var y3 int
+		.          .     16:       p := foo
+		.          .     17:       p(&y3, 42) // BAD: Cause of y3 escape
+		.          .     18:   }
+		.          .     19:}
+
 ```
 
 在逃逸分析报告中，为变量 `y2` 和 `y3` 变量的分配给出的原因是 `(parameter to indirect call)`。pprof 输出很清楚的显示出，`y2` 和 `y3` 被分配在堆上，而 `y1` 不是。
@@ -208,43 +201,42 @@ pprof 输出清晰地显示，`i2` 是在堆上分配的，而 `i1` 不是。我
 这里是一个你会在许多 web 服务应用中找到的例子。
 
 **代码清单 2.2**  
+
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example2/example2_http_test.go>
 
 ```go
+package flaws
 
-    01 package flaws
-    02
-    03 import (
-    04     "net/http"
-    05     "testing"
-    06 )
-    07
-    08 func BenchmarkHandler(b *testing.B) {
-    09
-    10     // Setup route with specific handler.
-    11     h := func(w http.ResponseWriter, r *http.Request) error {
-    12         // fmt.Println("Specific Request Handler")
-    13         return nil
-    14     }
-    15     route := wrapHandler(h)
-    16
-    17     // Execute route.
-    18     for i := 0; i < b.N; i++ {
-    19         var r http.Request
-    20         route(nil, &r) // BAD: Cause of r escape
-    21     }
-    22 }
-    23
-    24 type Handler func(w http.ResponseWriter, r *http.Request) error
-    25
-    26 func wrapHandler(h Handler) Handler {
-    27     f := func(w http.ResponseWriter, r *http.Request) error {
-    28         // fmt.Println("Boilerplate Code")
-    29         return h(w, r)
-    30     }
-    31     return f
-    32 }
-    
+import (
+    "net/http"
+    "testing"
+)
+
+func BenchmarkHandler(b *testing.B) {
+
+    // Setup route with specific handler.
+    h := func(w http.ResponseWriter, r *http.Request) error {
+        // fmt.Println("Specific Request Handler")
+        return nil
+    }
+    route := wrapHandler(h)
+
+    // Execute route.
+    for i := 0; i < b.N; i++ {
+        var r http.Request
+        route(nil, &r) // BAD: Cause of r escape
+    }
+}
+
+type Handler func(w http.ResponseWriter, r *http.Request) error
+
+func wrapHandler(h Handler) Handler {
+    f := func(w http.ResponseWriter, r *http.Request) error {
+        // fmt.Println("Boilerplate Code")
+        return h(w, r)
+    }
+    return f
+}
 ```
 
 在代码清单 2.2 中，第 26 行声明了一个通用的处理器封装函数，该函数在另一个字面函数的范围内封装了一个处理器函数，以提供样板代码。然后在第 11 行，声明了一个用于特定路由的处理函数，然后在第 15 行，它被传给 `wrapHandler` 函数，以便可以与样板代码处理函数链接在一起。在第 19 行，创建了一个 `http.Request` 值，然后与第 20 行的 `route` 调用共享。调用 `route` 在功能上同时执行了样板代码和特定的请求处理器。
@@ -254,40 +246,37 @@ pprof 输出清晰地显示，`i2` 是在堆上分配的，而 `i1` 不是。我
 以下是运行基准测试的结果，以及一份逃逸分析报告。还包括了 pprof list 命令的输出。
 
 **基准测试输出**
-```
 
-    $ go test -gcflags "-m -m" -run none -bench BenchmarkHandler -benchmem -memprofile mem.out
-    
-    BenchmarkHandler-8      20000000 	       72.4 ns/op       256 B/op	      1 allocs/op
-    
+```
+$ go test -gcflags "-m -m" -run none -bench BenchmarkHandler -benchmem -memprofile mem.out
+
+BenchmarkHandler-8      20000000 	       72.4 ns/op       256 B/op	      1 allocs/op
 ```
 
 **逃逸分析报告**
-```
 
-    ./example2_http_test.go:20:14: &r escapes to heap
-    ./example2_http_test.go:20:14:  from route(nil, &r) (parameter to indirect call) at ./example2_http_test.go:20:8
-    ./example2_http_test.go:19:7: moved to heap: r
-    
+```
+./example2_http_test.go:20:14: &r escapes to heap
+./example2_http_test.go:20:14:  from route(nil, &r) (parameter to indirect call) at ./example2_http_test.go:20:8
+./example2_http_test.go:19:7: moved to heap: r
 ```
 
 **Pprof 输出**
-```
 
-    $ go tool pprof -alloc_space mem.out
-    
-    ROUTINE ========================
-       5.07GB     5.07GB (flat, cum)   100% of Total
-            .          .     14:   }
-            .          .     15:   route := wrapHandler(h)
-            .          .     16:
-            .          .     17:   // Execute route.
-            .          .     18:   for i := 0; i < b.N; i++ {
-       5.07GB     5.07GB     19:       var r http.Request
-            .          .     20:       route(nil, &r) // BAD: Cause of r escape
-            .          .     21:   }
-            .          .     22:}
-    
+```
+$ go tool pprof -alloc_space mem.out
+
+ROUTINE ========================
+   5.07GB     5.07GB (flat, cum)   100% of Total
+		.          .     14:   }
+		.          .     15:   route := wrapHandler(h)
+		.          .     16:
+		.          .     17:   // Execute route.
+		.          .     18:   for i := 0; i < b.N; i++ {
+   5.07GB     5.07GB     19:       var r http.Request
+		.          .     20:       route(nil, &r) // BAD: Cause of r escape
+		.          .     21:   }
+		.          .     22:}
 ```
 
 在逃逸分析报告中，你可以看到这种分配的原因是 `(parameter to indirect call)`。pprof 报告显示，`r` 变量正在分配。如前所述，这是人们在用 Go 构建 web 服务时编写的常见代码。修复这个缺陷会减少程序中大量的分配。
@@ -297,26 +286,25 @@ pprof 输出清晰地显示，`i2` 是在堆上分配的，而 `i1` 不是。我
 “切片和 Map 赋值（Slice and Map Assignments）”缺陷与值在切片或者 Map 中共享时发生的分配有关。这里是一个代码示例：
 
 **代码清单 3**  
+
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example3/example3_test.go>
 
 ```go
+package flaws
 
-    01 package flaws
-    02
-    03 import "testing"
-    04
-    05 func BenchmarkSliceMapAssignment(b *testing.B) {
-    06     for i := 0; i < b.N; i++ {
-    07         m := make(map[int]*int)
-    08         var x1 int
-    09         m[0] = &x1 // BAD: cause of x1 escape
-    10
-    11         s := make([]*int, 1)
-    12         var x2 int
-    13         s[0] = &x2 // BAD: cause of x2 escape
-    14    }
-    15 }
-    
+import "testing"
+
+func BenchmarkSliceMapAssignment(b *testing.B) {
+    for i := 0; i < b.N; i++ {
+        m := make(map[int]*int)
+        var x1 int
+        m[0] = &x1 // BAD: cause of x1 escape
+
+        s := make([]*int, 1)
+        var x2 int
+        s[0] = &x2 // BAD: cause of x2 escape
+   }
+}
 ```
 
 在代码清单 3 中，第 07 行创建了一个 map，它保存类型 `int` 的值的地址。然后在第 08 行，创建了一个类型 `int` 的值，接着在第 09 行，在 map 中共享了这个值，map 的键为 0。在第 11 行保存 `int` 地址的切片上也发生了同样的事情。在创建切片后，索引 0 内共享了类型为 `int` 的值。
@@ -324,57 +312,53 @@ pprof 输出清晰地显示，`i2` 是在堆上分配的，而 `i1` 不是。我
 以下是运行基准测试的结果，以及一份逃逸分析报告。还包括了 pprof list 命令的输出。
 
 **基准测试输出**
-```
 
-    $ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
-    
-    BenchmarkSliceMapAssignment-8       10000000 	      104 ns/op 	     16 B/op	      2 allocs/op
-    
+```
+$ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
+
+BenchmarkSliceMapAssignment-8       10000000 	      104 ns/op 	     16 B/op	      2 allocs/op
 ```
 
 **逃逸分析报告**
-```
 
-    ./example3_test.go:9:10: &x1 escapes to heap
-    ./example3_test.go:9:10:    from m[0] (value of map put) at ./example3_test.go:9:8
-    ./example3_test.go:8:7: moved to heap: x1
-    ./example3_test.go:13:10: &x2 escapes to heap
-    ./example3_test.go:13:10:   from s[0] (slice-element-equals) at ./example3_test.go:13:8
-    ./example3_test.go:12:7: moved to heap: x2
-    ./example3_test.go:7:12: BenchmarkSliceMapAssignment make(map[int]*int) does not escape
-    ./example3_test.go:11:12: BenchmarkSliceMapAssignment make([]*int, 1) does not escape
-    
+```
+./example3_test.go:9:10: &x1 escapes to heap
+./example3_test.go:9:10:    from m[0] (value of map put) at ./example3_test.go:9:8
+./example3_test.go:8:7: moved to heap: x1
+./example3_test.go:13:10: &x2 escapes to heap
+./example3_test.go:13:10:   from s[0] (slice-element-equals) at ./example3_test.go:13:8
+./example3_test.go:12:7: moved to heap: x2
+./example3_test.go:7:12: BenchmarkSliceMapAssignment make(map[int]*int) does not escape
+./example3_test.go:11:12: BenchmarkSliceMapAssignment make([]*int, 1) does not escape
 ```
 
 **Pprof 输出**
-```
 
-    $ go tool pprof -alloc_space mem.out
-    
-    ROUTINE ========================
-     162.50MB   162.50MB (flat, cum)   100% of Total
-            .          .      5:func BenchmarkSliceMapAssignment(b *testing.B) {
-            .          .      6:   for i := 0; i < b.N; i++ {
-            .          .      7:       m := make(map[int]*int)
-     107.50MB   107.50MB      8:       var x1 int
-            .          .      9:       m[0] = &x1 // BAD: cause of x1 escape
-            .          .     10:
-            .          .     11:       s := make([]*int, 1)
-         55MB       55MB     12:       var x2 int
-            .          .     13:       s[0] = &x2 // BAD: cause of x2 escape
-            .          .     14:   }
-            .          .     15:}
-    
+```
+$ go tool pprof -alloc_space mem.out
+
+ROUTINE ========================
+ 162.50MB   162.50MB (flat, cum)   100% of Total
+		.          .      5:func BenchmarkSliceMapAssignment(b *testing.B) {
+		.          .      6:   for i := 0; i < b.N; i++ {
+		.          .      7:       m := make(map[int]*int)
+ 107.50MB   107.50MB      8:       var x1 int
+		.          .      9:       m[0] = &x1 // BAD: cause of x1 escape
+		.          .     10:
+		.          .     11:       s := make([]*int, 1)
+	 55MB       55MB     12:       var x2 int
+		.          .     13:       s[0] = &x2 // BAD: cause of x2 escape
+		.          .     14:   }
+		.          .     15:}
 ```
 
 逃逸分析报告中给出的原因是 `(value of map put)` 和 `(slice-element-equals)`。更有趣的是，逃逸分析报告显示，map 和切片数据结构不分配（不逃逸）。
 
 **不分配 Map 和切片**
-```
 
-    ./example3_test.go:7:12: BenchmarkSliceMapAssignment make(map[int]*int) does not escape
-    ./example3_test.go:11:12: BenchmarkSliceMapAssignment make([]*int, 1) does not escape
-    
+```
+./example3_test.go:7:12: BenchmarkSliceMapAssignment make(map[int]*int) does not escape
+./example3_test.go:11:12: BenchmarkSliceMapAssignment make([]*int, 1) does not escape
 ```
 
 这进一步证明，代码示例中的 `x1` 和 `x2` 无需在堆上分配。
@@ -389,40 +373,38 @@ pprof 输出清晰地显示，`i2` 是在堆上分配的，而 `i1` 不是。我
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example4/example4_test.go>
 
 ```go
+package flaws
 
-    01 package flaws
-    02
-    03 import "testing"
-    04
-    05 type Iface interface {
-    06     Method()
-    07 }
-    08
-    09 type X struct {
-    10     name string
-    11 }
-    12
-    13 func (x X) Method() {}
-    14
-    15 func BenchmarkInterfaces(b *testing.B) {
-    16     for i := 0; i < b.N; i++ {
-    17         x1 := X{"bill"}
-    18         var i1 Iface = x1
-    19         var i2 Iface = &x1
-    20
-    21         i1.Method() // BAD: cause copy of x1 to escape
-    22         i2.Method() // BAD: cause x1 to escape
-    23
-    24         x2 := X{"bill"}
-    25         foo(x2)
-    26         foo(&x2)
-    27     }
-    28 }
-    29
-    30 func foo(i Iface) {
-    31     i.Method() // BAD: cause value passed in to escape
-    32 }
-    
+import "testing"
+
+type Iface interface {
+    Method()
+}
+
+type X struct {
+    name string
+}
+
+func (x X) Method() {}
+
+func BenchmarkInterfaces(b *testing.B) {
+    for i := 0; i < b.N; i++ {
+        x1 := X{"bill"}
+        var i1 Iface = x1
+        var i2 Iface = &x1
+
+        i1.Method() // BAD: cause copy of x1 to escape
+        i2.Method() // BAD: cause x1 to escape
+
+        x2 := X{"bill"}
+        foo(x2)
+        foo(&x2)
+    }
+}
+
+func foo(i Iface) {
+    i.Method() // BAD: cause value passed in to escape
+}
 ```
 
 在代码清单 4 中，在第 05 行声明了一个名为 `Iface` 的接口，并且为了示例目的，这个接口保持得非常简单。然后，在第 09 行声明了一个名为 `X` 的具体类型，并且，使用值接收器来实现 `Iface` 接口。
@@ -436,64 +418,62 @@ pprof 输出清晰地显示，`i2` 是在堆上分配的，而 `i1` 不是。我
 以下是运行基准测试的结果，以及一份逃逸分析报告。还包括了 pprof list 命令的输出。
 
 **基准测试输出**
-```
 
-    $ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
-    
-    BenchmarkInterfaces-8     10000000         126 ns/op        64 B/op        4 allocs/op
-    
+```
+$ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
+	
+BenchmarkInterfaces-8     10000000         126 ns/op        64 B/op        4 allocs/op
 ```
 
 **逃逸分析报告**
-```
 
-    ./example4_test.go:18:7: x1 escapes to heap
-    ./example4_test.go:18:7:  from i1 (assigned) at ./example4_test.go:18:7
-    ./example4_test.go:18:7:  from i1.Method() (receiver in indirect call) at ./example4_test.go:21:12
-    ./example4_test.go:19:7: &x1 escapes to heap
-    ./example4_test.go:19:7:  from i2 (assigned) at ./example4_test.go:19:7
-    ./example4_test.go:19:7:  from i2.Method() (receiver in indirect call) at ./example4_test.go:22:12
-    ./example4_test.go:19:18: &x1 escapes to heap
-    ./example4_test.go:19:18:   from &x1 (interface-converted) at ./example4_test.go:19:7
-    ./example4_test.go:19:18:   from i2 (assigned) at ./example4_test.go:19:7
-    ./example4_test.go:19:18:   from i2.Method() (receiver in indirect call) at ./example4_test.go:22:12
-    ./example4_test.go:17:17: moved to heap: x1
-    ./example4_test.go:25:6: x2 escapes to heap
-    ./example4_test.go:25:6:  from x2 (passed to call[argument escapes]) at ./example4_test.go:25:6
-    ./example4_test.go:26:7: &x2 escapes to heap
-    ./example4_test.go:26:7:  from &x2 (passed to call[argument escapes]) at ./example4_test.go:26:6
-    ./example4_test.go:26:7: &x2 escapes to heap
-    ./example4_test.go:26:7:  from &x2 (interface-converted) at ./example4_test.go:26:7
-    ./example4_test.go:26:7:  from &x2 (passed to call[argument escapes]) at ./example4_test.go:26:6
-    ./example4_test.go:24:17: moved to heap: x2
-    
+```
+./example4_test.go:18:7: x1 escapes to heap
+./example4_test.go:18:7:  from i1 (assigned) at ./example4_test.go:18:7
+./example4_test.go:18:7:  from i1.Method() (receiver in indirect call) at ./example4_test.go:21:12
+./example4_test.go:19:7: &x1 escapes to heap
+./example4_test.go:19:7:  from i2 (assigned) at ./example4_test.go:19:7
+./example4_test.go:19:7:  from i2.Method() (receiver in indirect call) at ./example4_test.go:22:12
+./example4_test.go:19:18: &x1 escapes to heap
+./example4_test.go:19:18:   from &x1 (interface-converted) at ./example4_test.go:19:7
+./example4_test.go:19:18:   from i2 (assigned) at ./example4_test.go:19:7
+./example4_test.go:19:18:   from i2.Method() (receiver in indirect call) at ./example4_test.go:22:12
+./example4_test.go:17:17: moved to heap: x1
+./example4_test.go:25:6: x2 escapes to heap
+./example4_test.go:25:6:  from x2 (passed to call[argument escapes]) at ./example4_test.go:25:6
+./example4_test.go:26:7: &x2 escapes to heap
+./example4_test.go:26:7:  from &x2 (passed to call[argument escapes]) at ./example4_test.go:26:6
+./example4_test.go:26:7: &x2 escapes to heap
+./example4_test.go:26:7:  from &x2 (interface-converted) at ./example4_test.go:26:7
+./example4_test.go:26:7:  from &x2 (passed to call[argument escapes]) at ./example4_test.go:26:6
+./example4_test.go:24:17: moved to heap: x2
 ```
 
 **Pprof 输出**
-```
 
-    $ go tool pprof -alloc_space mem.out
-    
-    ROUTINE ======================== 
-     658.01MB   658.01MB (flat, cum)   100% of Total
-            .          .     12:
-            .          .     13:func (x X) Method() {}
-            .          .     14:
-            .          .     15:func BenchmarkInterfaces(b *testing.B) {
-            .          .     16: for i := 0; i < b.N; i++ {
-     167.50MB   167.50MB     17:   x1 := X{"bill"}
-     163.50MB   163.50MB     18:   var i1 Iface = x1
-            .          .     19:   var i2 Iface = &x1
-            .          .     20:
-            .          .     21:   i1.Method() // BAD: cause copy of x1 to escape
-            .          .     22:   i2.Method() // BAD: cause x1 to escape
-            .          .     23:
-     163.50MB   163.50MB     24:   x2 := X{"bill"}
-     163.50MB   163.50MB     25:   foo(x2)
-            .          .     26:   foo(&x2)
-            .          .     27: }
-            .          .     28:}
-    
+```
+$ go tool pprof -alloc_space mem.out
+
+ROUTINE ======================== 
+ 658.01MB   658.01MB (flat, cum)   100% of Total
+		.          .     12:
+		.          .     13:func (x X) Method() {}
+		.          .     14:
+		.          .     15:func BenchmarkInterfaces(b *testing.B) {
+		.          .     16: for i := 0; i < b.N; i++ {
+ 167.50MB   167.50MB     17:   x1 := X{"bill"}
+ 163.50MB   163.50MB     18:   var i1 Iface = x1
+		.          .     19:   var i2 Iface = &x1
+		.          .     20:
+		.          .     21:   i1.Method() // BAD: cause copy of x1 to escape
+		.          .     22:   i2.Method() // BAD: cause x1 to escape
+		.          .     23:
+ 163.50MB   163.50MB     24:   x2 := X{"bill"}
+ 163.50MB   163.50MB     25:   foo(x2)
+		.          .     26:   foo(&x2)
+		.          .     27: }
+		.          .     28:}
+
 ```
 
 注意，在基准报告中有四个分配。这是因为代码会复制 `x1` 和 `x2` 变量，这也会产生分配。在第 18 行中使用`x1` 变量进行赋值时，以及在第 25 行中对 `foo` 进行函数调用使用 `x2` 的值时，创建了这些副本。
@@ -516,22 +496,20 @@ pprof 输出清晰地显示，`i2` 是在堆上分配的，而 `i1` 不是。我
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example5/example5_test.go>
 
 ```go
+package flaws
 
-    01 package flaws
-    02
-    03 import (
-    04     "bytes"
-    05     "testing"
-    06 )
-    07
-    08 func BenchmarkUnknown(b *testing.B) {
-    09     for i := 0; i < b.N; i++ {
-    10         var buf bytes.Buffer
-    11         buf.Write([]byte{1})
-    12         _ = buf.Bytes()
-    13     }
-    14 }
-    
+import (
+    "bytes"
+    "testing"
+)
+
+func BenchmarkUnknown(b *testing.B) {
+    for i := 0; i < b.N; i++ {
+        var buf bytes.Buffer
+        buf.Write([]byte{1})
+        _ = buf.Bytes()
+    }
+}
 ```
 
 在代码清单 5 中，第 10 行创建了一个类型为 `bytes.Buffer` 的值，并将其设置为零值。然后，在第 11 行构造了一个切片值，并将其传递给 `buf` 变量上的 `Write` 方法调用。最后，为了防止潜在的编译器优化抛出所有的代码，调用 Bytes 方法。该调用不是创造 `buf` 变量逃逸的必要条件。
@@ -539,37 +517,35 @@ pprof 输出清晰地显示，`i2` 是在堆上分配的，而 `i1` 不是。我
 以下是运行基准测试的结果，以及一份逃逸分析报告。还包括了 pprof list 命令的输出。
 
 **基准测试输出**
-```
 
-    $ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
-    
-    Benchmark-8     20000000 	       50.8 ns/op       112 B/op	      1 allocs/op
-    
+```
+$ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
+
+Benchmark-8     20000000 	       50.8 ns/op       112 B/op	      1 allocs/op
 ```
 
 **逃逸分析报告**
-```
 
-    ./example5_test.go:11:6: buf escapes to heap
-    ./example5_test.go:11:6:    from buf (passed to call[argument escapes]) at ./example5_test.go:11:12
-    
+```
+./example5_test.go:11:6: buf escapes to heap
+./example5_test.go:11:6:    from buf (passed to call[argument escapes]) at ./example5_test.go:11:12
 ```
 
 **Pprof 输出**
-```
 
-    $ go tool pprof -alloc_space mem.out
-    
-    ROUTINE ======================== 
-       2.19GB     2.19GB (flat, cum)   100% of Total
-            .          .      8:func BenchmarkUnknown(b *testing.B) {
-            .          .      9:   for i := 0; i < b.N; i++ {
-       2.19GB     2.19GB     10:       var buf bytes.Buffer
-            .          .     11:       buf.Write([]byte{1})
-            .          .     12:       _ = buf.Bytes()
-            .          .     13:   }
-            .          .     14:}
-    
+```
+$ go tool pprof -alloc_space mem.out
+
+ROUTINE ======================== 
+   2.19GB     2.19GB (flat, cum)   100% of Total
+		.          .      8:func BenchmarkUnknown(b *testing.B) {
+		.          .      9:   for i := 0; i < b.N; i++ {
+   2.19GB     2.19GB     10:       var buf bytes.Buffer
+		.          .     11:       buf.Write([]byte{1})
+		.          .     12:       _ = buf.Bytes()
+		.          .     13:   }
+		.          .     14:}
+
 ```
 
 在这个代码中，我没有看到第 11 行对 `Write` 的方法调用引起逃逸的任何原因。我得到了一个看起来很有意思的指引，但我会留给你去进一步探索。
@@ -585,12 +561,10 @@ _这可能与 `Buffer` 类型的引导数组有关。它意味着一种优化，
 `Unknown` 情况下的逃逸是因为 Go 认为给 bytes.Buffer.Write() 的参数逃逸。如果你在 buffer 包的源代码上运行逃逸分析，那么它会输出（对于 Write()）：
 
 ```
-
-    ./buffer.go:170:46: leaking param content: p
-    ./buffer.go:170:46:     from *p (indirection) at ./buffer.go:170:46
-    ./buffer.go:170:46:     from copy(b.buf[m:], p) (copied slice) at ./buffer.go:176:13
-    (The line numbers are for the current git tip; they may be slightly off in other copies.)
-    
+./buffer.go:170:46: leaking param content: p
+./buffer.go:170:46:     from *p (indirection) at ./buffer.go:170:46
+./buffer.go:170:46:     from copy(b.buf[m:], p) (copied slice) at ./buffer.go:176:13
+(The line numbers are for the current git tip; they may be slightly off in other copies.)
 ```
 
 考虑到 copy() 是语言内置函数，似乎编译器应该知道这里，源参数不逃逸。或者有可能编译器在对 copy() 的实际实现做一些十分有趣的事情，以至于源在某些情况下会逃逸。
