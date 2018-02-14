@@ -1,10 +1,12 @@
+已发布：https://studygolang.com/articles/12403
+
 # 通过 `go/parser` 理解 Go
 
-这篇文章所讲内容和[ episode 25 of justforfunc ](https://www.youtube.com/watch?v=YRWCa84pykM) 是相同的。
+这篇文章所讲内容和 [episode 25 of justforfunc](https://www.youtube.com/watch?v=YRWCa84pykM) 是相同的。
 
 ## justforfunc 前情提要
 
-我们在[上一篇文章](https://medium.com/justforfunc/whats-the-most-common-identifier-in-go-s-stdlib-e468f3c9c7d9)中使用 `go/scanner` 找出了标准库中最常用的标识符。
+我们在[上一篇文章](https://studygolang.com/articles/12324)中使用 `go/scanner` 找出了标准库中最常用的标识符。
 
 > 这个标识符就是 v
 
@@ -21,7 +23,7 @@
 ```
 VarDecl = "var" ( VarSpec | "(" { VarSpec ";" } ")" ) .
 VarSpec = IdentifierList ( Type [ "=" ExpressionList ] | "="  
-                        ExpressionList ) .
+						ExpressionList ) .
 ```
 
 这个转换规则告诉我们一个 `VarDecl`（变量声明） 以一个 `var` token 开始，紧接着是一个 `VarSpec`（变量说明）或是一个被括号包围的以分号分隔的标识符列表。
@@ -38,11 +40,9 @@ VarSpec = IdentifierList ( Type [ "=" ExpressionList ] | "="
 
 如果用树表示，会是下面图片这样：
 
-![image](https://cdn-images-1.medium.com/max/1600/0*STJNoHjXJBsnWB4x.png)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-parser/0_STJNoHjXJBsnWB4x.png)
 
 这个能使我们能从 token 序列解析树结构的规则叫做语法或句法，而解析出的树结构叫做抽象语法树，简称 AST。
-
-
 
 ## 使用 go/scanner
 
@@ -107,7 +107,7 @@ func main() {
 ```
 $ go run main.go
 &{<nil> 1 main [0xc420054100] scope 0xc42000e210 {
-        var a
+		var a
 }
  [] [] []}
 ```
@@ -157,27 +157,27 @@ $ go run main.go
    Tok: (token.Token) var,
    Lparen: (token.Pos) 0,
    Specs: ([]ast.Spec) (len=1 cap=1) {
-    (*ast.ValueSpec)(0xc4200802d0)({
-     Doc: (*ast.CommentGroup)(<nil>),
-     Names: ([]*ast.Ident) (len=1 cap=1) {
-      (*ast.Ident)(0xc42000a140)(a)
-     },
-     Type: (ast.Expr) <nil>,
-     Values: ([]ast.Expr) (len=1 cap=1) {
-      (*ast.BasicLit)(0xc42000a160)({
-       ValuePos: (token.Pos) 23,
-       Kind: (token.Token) INT,
-       Value: (string) (len=1) "3"
-      })
-     },
-     Comment: (*ast.CommentGroup)(<nil>)
-    })
+	(*ast.ValueSpec)(0xc4200802d0)({
+	 Doc: (*ast.CommentGroup)(<nil>),
+	 Names: ([]*ast.Ident) (len=1 cap=1) {
+	  (*ast.Ident)(0xc42000a140)(a)
+	 },
+	 Type: (ast.Expr) <nil>,
+	 Values: ([]ast.Expr) (len=1 cap=1) {
+	  (*ast.BasicLit)(0xc42000a160)({
+	   ValuePos: (token.Pos) 23,
+	   Kind: (token.Token) INT,
+	   Value: (string) (len=1) "3"
+	  })
+	 },
+	 Comment: (*ast.CommentGroup)(<nil>)
+	})
    },
    Rparen: (token.Pos) 0
   })
  },
  Scope: (*ast.Scope)(0xc42000e2b0)(scope 0xc42000e2b0 {
-        var a
+	var a
 }
 ),
  Imports: ([]*ast.ImportSpec) <nil>,
@@ -278,20 +278,16 @@ func (v visitor) Visit(n ast.Node) ast.Visitor {
 }
 ```
 
-
-
 程序的其他部分没有改变，执行以后我们会得到以下输出：
 
 ```
 *ast.File
-        *ast.Ident
-        *ast.GenDecl
-                *ast.ValueSpec
-                        *ast.Ident
-                        *ast.BasicLit
+	*ast.Ident
+	*ast.GenDecl
+		*ast.ValueSpec
+			*ast.Ident
+			*ast.BasicLit
 ```
-
-
 
 ## 每种标识符最常用的名称都是什么？
 
@@ -384,11 +380,11 @@ func (v visitor) Visit(n ast.Node) ast.Visitor {
 如果我们对标准库执行这段代码将会得到：
 
 ```
-  7761 err
-  6310 x
-  5446 got
-  4702 i
-  3821 c
+7761 err
+6310 x
+5446 got
+4702 i
+3821 c
 ```
 
 有趣的是为什么 v 不在，我们漏掉了什么局部变量的声明的方式么？
@@ -455,7 +451,7 @@ case *ast.FuncDecl:
 ```shell
 $ ./parser ~/go/src/**/*.go
 most common local variable names
- 12264 err
+  12264 err
   9395 t
   9163 x
   7442 i
@@ -498,19 +494,19 @@ func newVisitor(f *ast.File) visitor {
 locals, globals := make(map[string]int), make(map[string]int)
 
 for _, arg := range os.Args[1:] {
-      f, err := parser.ParseFile(fs, arg, nil, parser.AllErrors)
-      if err != nil {
-            log.Printf("could not parse %s: %v", arg, err)
-            continue
-      }
-      v := newVisitor(f)
-      ast.Walk(v, f)
-      for k, v := range v.locals {
-            locals[k] += v
-      }
-      for k, v := range v.globals {
-            globals[k] += v
-      }
+	f, err := parser.ParseFile(fs, arg, nil, parser.AllErrors)
+	if err != nil {
+		og.Printf("could not parse %s: %v", arg, err)
+		continue
+	}
+	v := newVisitor(f)
+	ast.Walk(v, f)
+	for k, v := range v.locals {
+		locals[k] += v
+	}
+	for k, v := range v.globals {
+		globals[k] += v
+	}
 }
 ```
 
@@ -546,17 +542,17 @@ case *ast.GenDecl:
 ```shell
 $ ./parser ~/go/src/**/*.go
 most common local variable names
- 12565 err
+  12565 err
   9876 x
   9464 t
   7554 i
   6226 b
 most common global variable names
-    29 errors
-    28 signals
-    23 failed
-    15 tests
-    12 debug
+	29 errors
+	28 signals
+	23 failed
+	15 tests
+	12 debug
 ```
 
 至此，我们得出结论，最常用的局部变量就是 err。最常用的包名是 errors。
