@@ -2,7 +2,7 @@
 
 在`Cloudflare`的人们都非常喜欢Go语言。我们在许多[内部软件项目](https://blog.cloudflare.com/what-weve-been-doing-with-go/)以及更大的[管道系统](https://blog.cloudflare.com/meet-gatebot-a-bot-that-allows-us-to-sleep/)中使用它。但是，我们能否进入下一个层次并将其用作我们最喜欢的操作系统Linux的脚本语言呢？
 
-![image here]()
+![image here](https://github.com/shniu/resources/raw/master/images/gopher-tux-1.png)
 
 ## 为什么考虑将Go作为脚本语言
 
@@ -18,7 +18,7 @@
 
 ## Go脚本的当前状态
 
-咋一看Go脚本貌似很容易实现Unix脚本的shebang(#! ...)支持。shebang行是脚本的第一行，以`#!`开头，并指定脚本解释器用于执行脚本（例如，`#!/bin/bash`或`#!/usr/bin/env python`），所以无论使用何种编程语言，系统都确切知道如何执行脚本。Go已经使用`go run`命令支持`.go`文件的类似于解释器的调用，所以只需要添加适当的shebang行（`#!/usr/bin/env go run`）到任何的`.go`文件中，设置好可执行状态位，然后就可以愉快的玩耍了。
+咋一看Go脚本貌似很容易实现Unix脚本的shebang(#! ...)支持。shebang行是脚本的第一行，以`#!`开头，并指定脚本解释器用于执行脚本（例如，`#!/bin/bash`或`#!/usr/bin/env python`），所以无论使用何种编程语言，系统都确切知道如何执行脚本。Go已经使用`go run`命令支持`.go`文件的类似于解释器的调用，所以只需要添加适当的shebang行（`#!/usr/bin/env go run`）到任何的`.go`文件中，设置好文件的可执行状态，然后就可以愉快的玩耍了。
 
 但是，直接使用go run还是有问题的。[这篇牛b的文章](https://gist.github.com/posener/73ffd326d88483df6b1cb66e8ed1e0bd)详细描述了围绕`go run`的所有问题和潜在解决方法，但其要点是：
 
