@@ -18,4 +18,22 @@
 
 ## Go脚本的当前状态
 
-todo...
+咋一看Go脚本貌似很容易实现Unix脚本的shebang(#! ...)支持。shebang行是脚本的第一行，以`#!`开头，并指定脚本解释器用于执行脚本（例如，`#!/bin/bash`或`#!/usr/bin/env python`），所以无论使用何种编程语言，系统都确切知道如何执行脚本。Go已经使用`go run`命令支持`.go`文件的类似于解释器的调用，所以只需要添加适当的shebang行（`#!/usr/bin/env go run`）到任何的`.go`文件中，设置好可执行状态位，然后就可以愉快的玩耍了。
+
+但是，直接使用go run还是有问题的。[这篇牛b的文章](https://gist.github.com/posener/73ffd326d88483df6b1cb66e8ed1e0bd)详细描述了围绕`go run`的所有问题和潜在解决方法，但其要点是：
+
+* `go run`不能正确地将脚本错误代码返回给操作系统，这对脚本很重要，因为错误代码是多个脚本之间相互交互和操作系统环境最常见的方式之一。
+
+* ...
+
+
+---
+
+via：[Using Go as a scripting language in Linux](https://blog.cloudflare.com/using-go-as-a-scripting-language-in-linux/)
+
+作者：[Ignat Korchagin](https://blog.cloudflare.com/author/ignat/)
+译者：[shniu](https://github.com/shniu)
+校对：[?](https://github.com/?)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，
+[Go中文网](https://studygolang.com/) 荣誉推出
