@@ -384,3 +384,14 @@ func extractUnsafePointer(v reflect.Value) (unsafe.Pointer, error) {
 请注意：reflect.Value 结构的所有方法在使用时都需要检验它们的 kind，否则很容易引发 panic。
 
 在下一篇博客中，我会写更多像 struct、pointer、chan、map、slice、array 等复杂类型对象的创建。敬请期待！
+
+
+----------------
+
+via: https://medium.com/kokster/go-reflection-creating-objects-from-types-part-i-primitive-types-6119e3737f5d
+
+作者：[Sidhartha Mani](https://medium.com/@utter_babbage)  
+译者：[yiyulantian](https://github.com/yiyulantian)  
+校对：[polaris1119](https://github.com/polaris1119)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
