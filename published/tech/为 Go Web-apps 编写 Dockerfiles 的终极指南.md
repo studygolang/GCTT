@@ -1,4 +1,6 @@
-> * 题目：为 Go Web-apps 编写 Dockerfiles 的终极指南
+已发布：https://studygolang.com/articles/12432
+
+# 为 Go Web-apps 编写 Dockerfiles 的终极指南
 
 你或许想在 Docker 中使用 Go，原因有：
 
@@ -14,7 +16,7 @@
 
 如果你只想要最终的代码，请看 [GitHub](https://github.com/shahidhk/go-docker/blob/master/src/main.go)。
 
-```docker
+```bash
 FROM golang:1.8.5-jessie as builder
 # install xz
 RUN apt-get update && apt-get install -y \
@@ -63,9 +65,9 @@ go-docker
     └── main.go
 ```
 
-# 最简单的版本
+## 最简单的版本
 
-```
+```bash
 FROM golang:1.8.5-jessie
 # create a working directory
 WORKDIR /go/src/app
@@ -79,7 +81,7 @@ CMD ["go", "run", "src/main.go"]
 
 构建并运行该镜像：
 
-```
+```bash
 $ cd go-docker
 $ docker build -t go-docker-dev .
 $ docker run --rm -it -p 8080:8080 go-docker-dev
@@ -91,7 +93,7 @@ $ docker run --rm -it -p 8080:8080 go-docker-dev
 
 一个更好的版本是将源代码挂载到 docker 容器中，并使用容器内的 shell 来停止和启动 `go run`。
 
-```
+```bash
 $ cd go-docker
 $ docker build -t go-docker-dev .
 $ docker run --rm -it -p 8080:8080 -v $(pwd):/go/src/app \
@@ -103,12 +105,12 @@ root@id:/go/src/app# go run src/main.go
 
 但是，如何管理包呢？
 
-# 包管理和镜像分层
+## 包管理和镜像分层
 [Go 的包管理](https://github.com/golang/go/wiki/PackageManagementTools) 仍处在实验阶段。有很多工具可以选择，但是我最喜欢的是 [Glide](https://glide.sh/)。我们将在容器中安装 Glide 并使用它。
 
 在 `go-docker` 项目中新建两个文件 `glide.yaml` 和 `glide.lock`：
 
-```
+```bash
 $ cd go-docker
 $ touch glide.yaml
 $ touch glide.lock
@@ -116,7 +118,7 @@ $ touch glide.lock
 
 按照下面所示修改 Dockerfile 并构建一个新的镜像：
 
-```
+```bash
 FROM golang:1.8.5-jessie
 # install glide
 RUN go get github.com/Masterminds/glide
@@ -137,7 +139,7 @@ CMD ["go", "run", "src/main.go"]
 
 让我们进入容器的 shell 安装一个包：
 
-```
+```bash
 $ cd go-docker
 $ docker build -t go-docker-dev .
 $ docker run --rm -it -v $(pwd):/go/src/app go-docker-dev bash
@@ -146,7 +148,7 @@ root@id:/go/src/app# glide get github.com/golang/glog
 
 Glide 会将所有包安装到 `vendor` 目录，该目录可以被 `gitignored` 和 `dockerignored`。使用 `glide.lock` 来锁定某个包的版本。要安装（或重新安装）`glide.yaml` 中提到的所有包，执行：
 
-```
+```bash
 $ cd go-docker
 $ docker run --rm -it -p 8080:8080 -v $(pwd):/go/src/app \
              go-docker-dev bash
@@ -165,10 +167,10 @@ root@id:/go/src/app# glide install
 └── vendor/
 ```
 
-# 实时重载
+## 实时重载
 [codegangsta/gin](https://github.com/codegangsta/gin) 是我最喜欢的实时重载工具。它简直就是为 Go web 服务而生的。我们使用 `go get` 来安装 gin：
 
-```docker
+```bash
 FROM golang:1.8.5-jessie
 # install glide
 RUN go get github.com/Masterminds/glide
@@ -189,7 +191,7 @@ CMD ["go", "run", "src/main.go"]
 
 构建镜像并运行 gin 以便当我们修改了 `src` 中的源代码时可以自动重新编译：
 
-```
+```bash
 $ cd go-docker
 $ docker build -t go-docker-dev .
 $ docker run --rm -it -p 8080:8080 -v $(pwd):/go/src/app \
@@ -203,9 +205,9 @@ root@id:/go/src/app# gin --path src --port 8080 run main.go
 
 一旦开发完毕，我们可以构建二进制文件并运行它，而不需要使用 `go run` 命令。可以使用相同的镜像来构建，或者也可以使用 Docker 的多阶段构建，即使用 `golang` 镜像来构建并使用迷你 linux 容器如 `alpine` 来运行服务。
 
-# 单阶段生产构建
+## 单阶段生产构建
 
-```
+```bash
 FROM golang:1.8.5-jessie
 # install glide
 RUN go get github.com/Masterminds/glide
@@ -226,7 +228,7 @@ CMD ["./main"]
 
 构建并运行该一体化的镜像：
 
-```
+```bash
 $ cd go-docker
 $ docker build -t go-docker-prod .
 $ docker run --rm -it -p 8080:8080 go-docker-prod
@@ -234,10 +236,10 @@ $ docker run --rm -it -p 8080:8080 go-docker-prod
 
 因为底层使用了 Debian 镜像，该镜像会达到 750 MB 左右的大小（取决于你的源代码）。让我们看看如何缩减体积。
 
-# 多阶段生产构建
+## 多阶段生产构建
 多阶段构建允许你在一个完整的 OS 环境中进行构建，但构建后的二进制文件通过一个非常苗条的镜像来运行，该镜像仅比构建后的二进制文件略大一点而已。
 
-```
+```bash
 FROM golang:1.8.5-jessie as builder
 # install glide
 RUN go get github.com/Masterminds/glide
@@ -269,11 +271,11 @@ CMD ["./main"]
 
 想减小二进制文件体积吗？继续看吧。
 
-# 福利：使用 UPX 来压缩二进制文件
+## 福利：使用 UPX 来压缩二进制文件
 
 在 [Hasura](https://hasura.io/)，我们已经在到处使用 [UPX](https://upx.github.io/) 了，压缩后我们的 CLI 二进制文件从 50 MB 左右降到 8 MB左右，大大加快了下载速度。UPX 可以极快地进行原地解压，不需要额外的工具，因为它将解压器嵌入到了二进制文件内部。
 
-```
+```bash
 FROM golang:1.8.5-jessie as builder
 # install xz
 RUN apt-get update && apt-get install -y \
@@ -319,8 +321,8 @@ UPX 压缩后的二进制文件为 3 MB 左右并且 docker 镜像为 6 MB 左�
 
 如果你有更好的建议或是你需要其他的使用场景，请在评论区留言或者去 [HackerNews](https://news.ycombinator.com/item?id=16308391) 和 [Reddit](https://www.reddit.com/r/golang/comments/7vexdl/the_ultimate_guide_to_writing_dockerfiles_for_go/) 进行讨论。
 
+## 广告
 
-# 广告
 额...你尝试过在 Hasura 上部署 Go web-app 吗？这真的是世界上最快的将 Go apps 部署到 HTTPS 域下的方法（仅仅 `git push` 就够了）。使用这里的项目模板快速开始吧：https://hasura.io/hub/go-frameworks。Hasura 所有项目模板都配套有 Dockerfile 和 Kubernetes spec，允许你按照你的方式来自定义。
 
 ---
@@ -328,10 +330,7 @@ UPX 压缩后的二进制文件为 3 MB 左右并且 docker 镜像为 6 MB 左�
 via：https://blog.hasura.io/the-ultimate-guide-to-writing-dockerfiles-for-go-web-apps-336efad7012c
 
 作者：[Shahidh K Muhammed](https://github.com/shahidhk)
-
 译者：[ParadeTo](https://github.com/ParadeTo)
+校对：[polaris1119](https://github.com/polaris1119)
 
-校对：
-
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，
-[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
