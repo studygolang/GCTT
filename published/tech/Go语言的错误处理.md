@@ -1,17 +1,19 @@
 
+已发布：https://studygolang.com/articles/12430
+
 [原文](https://scene-si.org/2017/11/13/error-handling-in-go/)
 
 # Go 语言的错误处理
 
 Go 语言的错误处理是基于明确的目的而设计的。你应该从函数中返回所有可能的错误，并且检查/处理这些返回值。和其他语言相比，这一点可能看起来有些繁琐和不人性化，其实并不是这样的。让我们来看看一些基本的例子，然后继续做一些较重要的事情。
 
-## Non错误
+## Non 错误
 
 实际上 Go 有个概念 non-error。这是一个语言特性，不能用在用户自定义函数中。最明显的例子就是从 map 中通过 key 获取值。
 
 ```go
 if val, ok := data["key"]; ok {
-	// key/value 在map中存在
+	// key/value 在 map 中存在
 }
 ```
 当尝试获取指定 key 的值的时候，会返回一个可选的第二个值，是一个 boolean 类型表示获取的值是否存在。
@@ -49,7 +51,7 @@ v := "abc"
 s, _ := strconv.Atoi(v)
 fmt.Printf("%d\n", s)
 ```
-很明显转换不会成功，在这处理 “invalid syntax” 错误会很繁琐。当然这取决于你的使用场景，有一些场景处理返回错误没什么价值。  
+很明显转换不会成功，在这处理 “invalid syntax” 错误会很繁琐。当然这取决于你的使用场景，有一些场景处理返回错误没什么价值。
 
 我近期遇到的一个例子是  [sony/sonyflake](https://github.com/sony/sonyflake) 。 这个项目是一个 ID 生成器，返回 int64 类型的 id 和可能的错误。
 
@@ -73,7 +75,7 @@ fmt.Printf("%d\n", s)
 base64decoder := base64.NewDecoder(base64.StdEncoding, r.Body)
 gz, err := zlib.NewReader(base64decoder)
 if err != nil {
-    return err
+	return err
 }
 defer gz.Close()
 
@@ -89,13 +91,13 @@ r.Body.Close()
 
 如果能像处理 if 语句一样，独立处理每个返回错误不是更好么？让我们看一些你不知道的情况：  
 
-`if func1() || func2() || func3() {`  
+`if func1() || func2() || func3() {`
 
 这个 if 语句会分别测试每个表达式。也就是说如果 `func1()` 返回了 false，那么 `func2` 和 `func3` 函数就不会被调用。if 语句可以中断执行流程，尽管如此也没有方法使用一条语句完成检查返回错误。 至少你可以按照下面的方法来处理：  
 
 ```go
 if gz, err := zlib.NewReader(base64decoder); err != nil {
-        return err
+	return err
 }
 // ...
 if err := decoder.Decode(&t); err != nil {
@@ -133,13 +135,13 @@ err := flow(
 ```go
 var err error
 if err = db.Get(result, "select one row") ||
-   err = db.Select(result, "select multiple rows") ||
-   err = db.Get(result, "select another row") {
+	err = db.Select(result, "select multiple rows") ||
+	err = db.Get(result, "select another row") {
 	return err
 )
 ```
 
-可惜的是， Go 不会把 errors 作为 boolean 表达式处理， 也不允许在 boolean 表达式中赋值， 会提示错误 ”expected boolean expression, found simple statement (missing parentheses around composite literal?)“ 。对于这一点我并不是很强烈的认为不好，因为还有其他的方法可以做到。如果你在其他语言例如 Node 或者 PHP，尝试使用赋值给一个变量来代替测试一个值的话，你会发现 Go 的处理方式更加优美，注意：有时也非常痛苦。
+可惜的是，Go 不会把 errors 作为 boolean 表达式处理，也不允许在 boolean 表达式中赋值，会提示错误 ”expected boolean expression, found simple statement (missing parentheses around composite literal?)“ 。对于这一点我并不是很强烈的认为不好，因为还有其他的方法可以做到。如果你在其他语言例如 Node 或者 PHP，尝试使用赋值给一个变量来代替测试一个值的话，你会发现 Go 的处理方式更加优美，注意：有时也非常痛苦。
 
 ## 改进错误处理
 
@@ -148,41 +150,42 @@ if err = db.Get(result, "select one row") ||
 ```go
 // JSON responds with the first non-nil payload, formats error messages
 func JSON(w http.ResponseWriter, responses ...interface{}) {
-    respond := func(payload interface{}) {
-            json, err := json.Marshal(payload)
-            if err != nil {
-                    http.Error(w, err.Error(), http.StatusInternalServerError)
-                    return
-            }
-            w.Header().Set("Content-Type", "application/json")
-            w.Write(json)
-    }
+	respond := func(payload interface{}) {
+		json, err := json.Marshal(payload)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(json)
+	}
 
-    for _, response := range responses {
-            switch value := response.(type) {
-            case nil:
-                    continue
-            case func() error:
-                    err := value()
-                    if err == nil {
-                            continue
-                    }
-                    respond(Error(err))
-            case error:
-                    respond(Error(value))
-            default:
-                    respond(struct {
-                            Response interface{} `json:"response"`
-                    }{response})
-            }
-            // Exit on the first output...
-            break
-    }
+	for _, response := range responses {
+		switch value := response.(type) {
+		case nil:
+			continue
+		case func() error:
+			err := value()
+			if err == nil {
+				continue
+			}
+			respond(Error(err))
+		case error:
+			respond(Error(value))
+		default:
+			respond(struct {
+				Response interface{} `json:"response"`
+			}{response})
+		}
+		// Exit on the first output...
+		break
+	}
 }
 ```
 
-这个函数的好处是提供了基于可变参数的条件执行处理。和传入 `...error` 和 `[]error` 不同的是不需要先执行所有的函数。  
-使用这个函数的一个简单的 API 调用样例如下：  
+这个函数的好处是提供了基于可变参数的条件执行处理。和传入 `...error` 和 `[]error` 不同的是不需要先执行所有的函数。
+
+使用这个函数的一个简单的 API 调用样例如下：
 
 ```go
 input := RequestInput{}
@@ -209,29 +212,30 @@ resputil.JSON(w, validate, process, result)
 ```go
 var g errgroup.Group
 var urls = []string{
-    "http://www.golang.org/",
-    "http://www.google.com/",
-    "http://www.somestupidname.com/",
+	"http://www.golang.org/",
+	"http://www.google.com/",
+	"http://www.somestupidname.com/",
 }
 for _, url := range urls {
-    // Launch a goroutine to fetch the URL.
-    url := url // https://golang.org/doc/faq#closures_and_goroutines
-    g.Go(func() error {
-        // Fetch the URL.
-        resp, err := http.Get(url)
-        if err == nil {
-            resp.Body.Close()
-        }
-        return err
-    })
+	// Launch a goroutine to fetch the URL.
+	url := url // https://golang.org/doc/faq#closures_and_goroutines
+	g.Go(func() error {
+		// Fetch the URL.
+		resp, err := http.Get(url)
+		if err == nil {
+			resp.Body.Close()
+		}
+		return err
+	})
 }
 // Wait for all HTTP fetches to complete.
 if err := g.Wait(); err == nil {
-    fmt.Println("Successfully fetched all URLs.")
+	fmt.Println("Successfully fetched all URLs.")
 }
 ```
 
-开始的时候，我觉得这个包还不错，但是里面有一些需要注意的地方。   
+开始的时候，我觉得这个包还不错，但是里面有一些需要注意的地方。
+
 1. 你可能需要返回所有的错误（你只能拿到第一个）  
 2. 在发生错误的时候想要中断执行（必须等到所有的 goroutines 执行完毕）  
 3. 执行的是并行检查（没有提供顺序执行的 API ）
@@ -242,7 +246,7 @@ if err := g.Wait(); err == nil {
 
 有些时候看起来 Go 语言检查返回值错误是比较痛苦的事情，特别是当你受到有 try/catch 特性的语言影响的时候，例如： Java，PHP 等。当你第一次看到 Go 的这种处理方式的时候可能并不喜欢，希望检查错误的处理能更好些（更简洁些？），我相信其他的语言有更糟糕的例子，更加繁琐，更多不足的地方。  
 
-errors 和 panics 有一些不同的地方，实际上 panics 是带有函数调用栈信息的。如果你想在 errors 里面添加调用栈信息，我推荐你使用 Dave Cheney 的 [pkg/errors](https://dave.cheney.net/2016/06/12/stack-traces-and-the-errors-package) 包。文章 [Don’t just check errors, handle them gracefully](https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully) 对每个人来说都是在必读列表中的。  
+errors 和 panics 有一些不同的地方，实际上 panics 是带有函数调用栈信息的。如果你想在 errors 里面添加调用栈信息，我推荐你使用 Dave Cheney 的 [pkg/errors](https://dave.cheney.net/2016/06/12/stack-traces-and-the-errors-package) 包。文章 [Don’t just check errors, handle them gracefully](https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully) 对每个人来说都是在必读列表中的。
 
 在其他语言中对错误的处理有一些显著的痛点，如果 Go 的处理有一点繁琐的话，那么它带来的是更多的好处。
 
