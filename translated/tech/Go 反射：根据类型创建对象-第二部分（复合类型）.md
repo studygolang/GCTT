@@ -1,6 +1,8 @@
 # Go 反射：根据类型创建对象-第二部分（复合类型）
 
-> 这是关于 Golang 中根据类型创建对象系列博客的第二篇，讨论的是创建复合对象。第一篇在[这里]()
+> 这是关于 Golang 中根据类型创建对象系列博客的第二篇，讨论的是创建复合对象。第一篇在[这里](https://studygolang.com/articles/12434)
+
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-reflect/cover1.png)
 
 在前一篇博客中，我解释了 go reflect 包 `type` 和 `kind` 的概念。这篇博客，我将深入探讨这些术语。因为相比原始类型，`type` 和 `kind` 对于复合类型来说含义更多。
 
@@ -445,3 +447,20 @@ func extractStruct(v reflect.Value) (interface{}, error) {
   return st, nil
 }
 ```
+
+## 结论
+这是一个关于使用 reflect 包来动态创建任意 Go 类型对象的完整教程。我提供了创建 `Func` 类型的便利方法，因为它比其他类型更复杂，如果不仔细设计，很容易污染您的代码库。
+请继续关注我的下一篇博文，将任何类型转换为 Golang 中的其他类型！接下来，我将解释如何在 Golang 中编写 JIT （即时），然后介绍使用 reflect 来生成代码。
+
+
+---
+via：https://medium.com/kokster/go-reflection-creating-objects-from-types-part-ii-composite-types-69a0e8134f20
+
+作者：[Sidhartha Mani](https://medium.com/@utter_babbage)
+
+译者：[ParadeTo](https://github.com/ParadeTo)
+
+校对：
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，
+[Go中文网](https://studygolang.com/) 荣誉推出
