@@ -37,14 +37,14 @@ Golang 是一种编程语言，在过去的几年中你可能听说过很多。�
 - 竞争条件检测
 - 学习曲线
 - 反射
-- Opinionatedness
+- 固定的代码风格
 - 文化
 
-请注意，列表不遵循任何特定的顺序。它也被视为地狱。
+请注意，列表不遵循任何特定的顺序。完全随意排序。
 
 ## GoDoc
 
-Go 非常重视代码中的文档。所以这变得很简单。
+Go 非常重视代码中的文档。在 Go 中，文档也很容易添加。
 
 [GoDoc](https://godoc.org/) 是一个静态代码分析工具，可以直接从你的代码中创建出漂亮的文档页面。关于 GoDoc 的一个值得注意的事情是，它不使用任何额外的语言，就像 JavaDoc，PHPDoc 或 JSDoc 在代码中的注释结构一样。仅仅只使用英语。
 
@@ -120,7 +120,7 @@ Go 比 Java（和它的家族成员），Javascript，Ruby，Python 甚至 PHP �
 
 你也可以在这里阅读 JSON 包源代码中的一些真实代码：[src/encoding/json/encode.go — Source Code](https://golang.org/src/encoding/json/encode.go)
 
-## Opinionatedness
+## 固定的代码风格
 
 顺便说一句，有这样一个词吗？
 
@@ -185,6 +185,6 @@ via: https://medium.freecodecamp.org/here-are-some-amazing-advantages-of-go-that
 
 作者：[Kirill Rogovoy](https://medium.freecodecamp.org/@kirillrogovoy)
 译者：[MDGSF](https://github.com/MDGSF)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
