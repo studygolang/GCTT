@@ -19,7 +19,7 @@
 
 ## 程序 （The Program）
 
-我想了解 ***io*** 包，所以我创建了一个简单的项目。给定一个字符序列，写一个函数，可以找到字符串 ***elvis*** 并用大写开头的 ***Elvis*** 替换它。我们正在讨论国王（Elvis 即猫王，摇滚明星），他的名字总是大写的。
+我想了解 `io` 包，所以我创建了一个简单的项目。给定一个字符序列，写一个函数，可以找到字符串 `elvis` 并用大写开头的 `Elvis` 替换它。我们正在讨论国王（Elvis 即猫王，摇滚明星），他的名字总是大写的。
 
 这是一个解决方案的链接：
 [https://play.golang.org/p/n_SzF4Cer4](https://play.golang.org/p/n_SzF4Cer4)
@@ -27,9 +27,9 @@
 这是一个压力测试的链接：
 [https://play.golang.org/p/TnXrxJVfLV](https://play.golang.org/p/TnXrxJVfLV)
 
-代码列表里面有两个不同的函数可以解决这个问题。这篇博文将会关注（其中的）***algOne*** 函数，因为它使用到了 ***io*** 库。你可以自己用下 ***algTwo***，体验一下内存，CPU 消耗的差异。
+代码列表里面有两个不同的函数可以解决这个问题。这篇博文将会关注（其中的）`algOne` 函数，因为它使用到了 `io` 库。你可以自己用下 `algTwo`，体验一下内存，CPU 消耗的差异。
 
-### 表 1
+### 清单 1
 ```
 Input:
 abcelvisaElvisabcelviseelvisaelvisaabeeeelvise l v i saa bb e l v i saa elvi
@@ -40,9 +40,9 @@ abcElvisaElvisabcElviseElvisaElvisaabeeeElvise l v i saa bb e l v i saa elvi
 selviElviselvielviElviselvi1elviElvisElvis
 ```
 
-这是完整的 ***algOne*** 函数
+这是完整的 `algOne` 函数
 
-### 表 2 
+### 清单 2 
 ```go
 func algOne(data []byte, find []byte, repl []byte, output *bytes.Buffer) {
 	
@@ -98,9 +98,9 @@ func algOne(data []byte, find []byte, repl []byte, output *bytes.Buffer) {
 
 ## 压力测试（Benchmarking）
 
-这个是我写的压力测试函数，它在内部中调用 ***algOne*** 函数去处理数据流。
+这个是我写的压力测试函数，它在内部调用 `algOne` 函数去处理数据流。
 
-### 表 3
+### 清单 3
 ```go
 func BenchmarkAlgorithmOne(b *testing.B) {
     var output bytes.Buffer
@@ -117,21 +117,21 @@ func BenchmarkAlgorithmOne(b *testing.B) {
 }
 ```
 
-有这个压力测试函数，我们就可以运行 ***go test*** 并使用 -***bench***，-***benchtime*** 和 -***benchmem*** 选项。
+有这个压力测试函数，我们就可以运行 `go test` 并使用 -`bench`，-`benchtime` 和 -`benchmem` 选项。
 
-### 表 4
+### 清单 4
 ```
 $ go test -run none -bench AlgorithmOne -benchtime 3s -benchmem
 BenchmarkAlgorithmOne-8    	2000000 	     2522 ns/op       117 B/op  	      2 allocs/op
 ```
 
-运行完压力测试后，我们可以看到 ***algOne*** 函数分配了两次值，每次共分配了 117 个字节。这真的很棒，但我们还需要知道哪行代码造成了分配。为了这个目的，我们需要生成压力测试的分析数据。
+运行完压力测试后，我们可以看到 `algOne` 函数分配了两次值，每次分配了 117 个字节。这真的很棒，但我们还需要知道哪行代码造成了分配。为了这个目的，我们需要生成压力测试的分析数据。
 
-## 分析数据（Profiling）
+## 性能分析（Profiling）
 
-为了生成分析数据，我们将再次运行压力测试，但这次为了生成内存检测数据，我们打开 -***memprofile*** 开关。
+为了生成分析数据，我们将再次运行压力测试，但这次为了生成内存检测数据，我们打开 -`memprofile` 开关。
 
-### 表 5
+### 清单 5
 ```
 $ go test -run none -bench AlgorithmOne -benchtime 3s -benchmem -memprofile mem.out
 BenchmarkAlgorithmOne-8    	2000000 	     2570 ns/op       117 B/op  	      2 allocs/op
@@ -139,7 +139,7 @@ BenchmarkAlgorithmOne-8    	2000000 	     2570 ns/op       117 B/op  	      2 al
 
 一旦压力测试完成，测试工具就会生成两个新的文件。
 
-### 表 6
+### 清单 6
 ```
 ~/code/go/src/.../memcpu
 $ ls - '
@@ -150,22 +150,22 @@ total 9248
 -rw-r--r--  1 bill  staff      880 May 22 14:49 stream_test.go
 ```
       
-源码在 ***memcpu*** 目录中，***algOne*** 函数在 ***stream.go*** 文件中，压力测试函数在 ***stream_test.go*** 文件中。新生成的文件为 ***mem.out*** 和 ***memcpu.test***。***mem.out*** 包含分析数据和 ***memcpu.test*** 文件，以及包含我们查看分析数据时需要访问符号的二进制文件。
+源码在 `memcpu` 目录中，`algOne` 函数在 `stream.go` 文件中，压力测试函数在 `stream_test.go` 文件中。新生成的文件为 `mem.out` 和 `memcpu.test`。`mem.out` 包含分析数据和 `memcpu.test` 文件，以及包含我们查看分析数据时需要访问符号的二进制文件。
 
-有了分析数据和二进制测试文件，我们就可以运行 ***pprof*** 工具学习数据分析。
+有了分析数据和二进制测试文件，我们就可以运行 `pprof` 工具学习数据分析。
 
-### 表 7
+### 清单 7
 ```
 $ go tool pprof -alloc_space memcpu.test mem.out
 Entering interactive mode (type "help" for commands)
 (pprof) _
 ```
 
-当分析内存数据时，为了轻而易举地得到我们要的信息，你会想用 -***alloc_space*** 选项替代默认的 -***inuse_space*** 选项。这将会向你展示每一次分配时发生在哪里，不管你分析数据时它是不是还在内存中。
+当分析内存数据时，为了轻而易举地得到我们要的信息，你会想用 -`alloc_space` 选项替代默认的 -`inuse_space` 选项。这将会向你展示每一次分配发生在哪里，不管你分析数据时它是不是还在内存中。
 
-在 ***（pprof）*** 提示下，我们使用 ***list*** 命令检查 ***algOne*** 函数。这个命令可以使用正则表达式作为参数找到你要的函数。
+在 `（pprof）` 提示下，我们使用 `list` 命令检查 `algOne` 函数。这个命令可以使用正则表达式作为参数找到你要的函数。
 
-### 表 8
+### 清单 8
 ```
 (pprof) list algOne
 Total: 335.03MB
@@ -191,13 +191,13 @@ ROUTINE ======================== .../memcpu.algOne in code/go/src/.../memcpu/str
 (pprof) _
 ```
 
-基于这次的数据分析，我们现在知道了 ***input***，***buf*** 数组在堆中分配。因为 ***input*** 是指针变量，分析数据表明 ***input*** 指针变量指定的 ***bytes.Buffer*** 值分配了。我们先关注 ***input*** 内存分配以及弄清楚为啥会被分配。
+基于这次的数据分析，我们现在知道了 `input`，`buf` 数组在堆中分配。因为 `input` 是指针变量，分析数据表明 `input` 指针变量指定的 `bytes.Buffer` 值分配了。我们先关注 `input` 内存分配以及弄清楚为啥会被分配。
 
-我们可以假定它被分配是因为调用 ***bytes.NewBuffer*** 函数时在栈上共享了 ***bytes.Buffer*** 值。然而，存在于 ***flat*** 列（pprof 输出的第一列）的值告诉我们值被分配是因为 ***algOne*** 函数共享造成了它的逃逸。
+我们可以假定它被分配是因为调用 `bytes.NewBuffer` 函数时在栈上共享了 `bytes.Buffer` 值。然而，存在于 `flat` 列（pprof 输出的第一列）的值告诉我们值被分配是因为 `algOne` 函数共享造成了它的逃逸。
 
-我知道 ***flat*** 列代表在函数中的分配是因为 ***list*** 命令显示 ***Benchmark*** 函数中调用了 ***aglOne***。
+我知道 `flat` 列代表在函数中的分配是因为 `list` 命令显示 `Benchmark` 函数中调用了 `aglOne`。
 
-### 表 9
+### 清单 9
 
 ```
 (pprof) list Benchmark
@@ -218,23 +218,23 @@ ROUTINE ======================== .../memcpu.BenchmarkAlgorithmOne in code/go/src
 (pprof) _
 ```
 
-因为在 ***cum*** 列（第二列）只有一个值，这告诉我 ***Benchmark*** 没有直接分配。所有的内存分配都发生在函数调用的循环里。你可以看到这两个 ***list*** 调用的分配次数是匹配的。
+因为在 `cum` 列（第二列）只有一个值，这告诉我 `Benchmark` 没有直接分配。所有的内存分配都发生在函数调用的循环里。你可以看到这两个 `list` 调用的分配次数是匹配的。
 
-我们还是不知道为什么 ***bytes.Buffer*** 值被分配。这时在 ***go build*** 的时候打开 -***gcflags "-m -m"*** 就派上用场了。分析数据只能告诉你哪些值逃逸，但编译命令可以告诉你为啥。
+我们还是不知道为什么 `bytes.Buffer` 值被分配。这时在 `go build` 的时候打开 -`gcflags "-m -m"` 就派上用场了。分析数据只能告诉你哪些值逃逸，但编译命令可以告诉你为啥。
 
 ## 编译器报告（Compiler Reporting）
 
 让我们看一下编译器关于代码中逃逸分析的判决。
 
-### 表 10
+### 清单 10
 
 ```bash
 go build -gcflags "-m -m"
 ```
 
-这个命令产生了一大堆的输出。我们只需要搜索输出中包含 ***stream.go:83***，因为 ***stream.go*** 是包含这段代码的文件名并且第 83 行包含 ***bytes.Buffer*** 的值。搜索后我们找到 6 行。
+这个命令产生了一大堆的输出。我们只需要搜索输出中包含 `stream.go:83`，因为 `stream.go` 是包含这段代码的文件名并且第 83 行包含 `bytes.Buffer` 的值。搜索后我们找到 6 行。
 
-### 表 11
+### 清单 11
 
 ```
 ./stream.go:83: inlining call to bytes.NewBuffer func([]byte) *bytes.Buffer { return &bytes.Buffer literal }
@@ -246,33 +246,33 @@ go build -gcflags "-m -m"
 ./stream.go:83:   from input (passed to call[argument escapes]) at ./stream.go:93
 ```
 
-我们搜索 ***stream.go:83*** 找到的第一行很有趣。
+我们搜索 `stream.go:83` 找到的第一行很有趣。
 
-### 表 12
+### 清单 12
 
 ```
 ./stream.go:83: inlining call to bytes.NewBuffer func([]byte) *bytes.Buffer { return &bytes.Buffer literal }
 ```
 
-可以肯定 ***bytes.Buffer*** 值没有逃逸，因为它传递给了调用栈。这是因为没有调用 ***bytes.NewBuffer***，函数内联处理了。
+可以肯定 `bytes.Buffer` 值没有逃逸，因为它传递给了调用栈。这是因为没有调用 `bytes.NewBuffer`，函数内联处理了。
 
 所以这是我写的代码片段：
 
-## 表 13
+## 清单 13
  ```go
 83     input := bytes.NewBuffer(data)
 ```
 
-因为编译器选择内联 ***bytes.NewBuffer*** 函数调用，我写的代码被转成：
+因为编译器选择内联 `bytes.NewBuffer` 函数调用，我写的代码被转成：
 
-### 表 14
+### 清单 14
 ```go
 input := &bytes.Buffer{buf: data}
 ```
 
-这意味着 ***algOne*** 函数直接构造 ***bytes.Buffer*** 值。那么，现在的问题是什么造成了值从 ***algOne*** 栈帧中逃逸？答案在我们搜索结果中的另外 5 行。
+这意味着 `algOne` 函数直接构造 `bytes.Buffer` 值。那么，现在的问题是什么造成了值从 `algOne` 栈帧中逃逸？答案在我们搜索结果中的另外 5 行。
 
-### 表 15
+### 清单 15
 
 ```
 ./stream.go:83: &bytes.Buffer literal escapes to heap
@@ -282,13 +282,13 @@ input := &bytes.Buffer{buf: data}
 ./stream.go:83:   from input (passed to call[argument escapes]) at ./stream.go:93
 ```
 
-这几行告诉我们代码中的第 93 行造成了逃逸。***input*** 变量被赋值给一个接口变量。
+这几行告诉我们代码中的第 93 行造成了逃逸。`input` 变量被赋值给一个接口变量。
 
 ## 接口（Interfaces）
 
 我完全不记得在代码中将值赋给了接口变量。然而，如果你看到 93 行，就可以非常清楚地看到发生了什么。
 
-### 表 16
+### 清单 16
 ```go
  93     if n, err := io.ReadFull(input, buf[:end]); err != nil {
  94         output.Write(buf[:n])
@@ -296,9 +296,9 @@ input := &bytes.Buffer{buf: data}
  96     }
 ```
 
-***io.ReadFull*** 调用造成了接口赋值。如果你看了 ***io.ReadFull*** 函数的定义，你可以看到一个接口类型是如何接收 ***input*** 值。
+`io.ReadFull` 调用造成了接口赋值。如果你看了 `io.ReadFull` 函数的定义，你可以看到一个接口类型是如何接收 `input` 值。
 
-### 表 17
+### 清单 17
 
 ```go
 type Reader interface {
@@ -310,7 +310,7 @@ func ReadFull(r Reader, buf []byte) (n int, err error) {
 }
 ```
 
-传递 ***bytes.Buffer*** 地址到调用栈，在 ***Reader*** 接口变量中存储会造成一次逃逸。现在我们知道使用接口变量是需要开销的：分配和重定向。所以，如果没有很明显的使用接口的原因，你可能不想使用接口。下面是我选择在我的代码中是否使用接口的原则。
+传递 `bytes.Buffer` 地址到调用栈，在 `Reader` 接口变量中存储会造成一次逃逸。现在我们知道使用接口变量是需要开销的：分配和重定向。所以，如果没有很明显的使用接口的原因，你可能不想使用接口。下面是我选择在我的代码中是否使用接口的原则。
 
 使用接口的情况：
 
@@ -324,13 +324,13 @@ func ReadFull(r Reader, buf []byte) (n int, err error) {
 - 推广算法。
 - 当用户可以定义自己的接口时。
 
-现在我们可以问自己，这个算法真的需要 ***io.ReadFull 函数吗？答案是否定的，因为 ***bytes.Buffer*** 类型有一个方法可以供我们使用。使用方法而不是调用一个函数可以防止重新分配内存。
+现在我们可以问自己，这个算法真的需要 `io.ReadFull 函数吗？答案是否定的，因为 `bytes.Buffer` 类型有一个方法可以供我们使用。使用方法而不是调用一个函数可以防止重新分配内存。
 
-让我们修改代码，删除 ***io*** 包，并直接使用 ***Read*** 函数而不是 ***input*** 变量。
+让我们修改代码，删除 `io` 包，并直接使用 `Read` 函数而不是 `input` 变量。
 
-修改后的代码删除了 ***io*** 包的调用，为了保留相同的行号，我使用空标志符替代 ***io*** 包的引用。这会允许（没有使用的）库导入的行待在列表中。
+修改后的代码删除了 `io` 包的调用，为了保留相同的行号，我使用空标志符替代 `io` 包的引用。这会允许（没有使用的）库导入的行待在列表中。
 
-### 表 18
+### 清单 18
 ```go
  12 import (
  13     "bytes"
@@ -388,18 +388,18 @@ func ReadFull(r Reader, buf []byte) (n int, err error) {
 127 }
 ```
 
-修改后我们执行压力测试，可以看到 ***bytes.Buffer*** 的分配消失了。
+修改后我们执行压力测试，可以看到 `bytes.Buffer` 的分配消失了。
 
-### 表 19
+### 清单 19
 
 ```
 $ go test -run none -bench AlgorithmOne -benchtime 3s -benchmem -memprofile mem.out
 BenchmarkAlgorithmOne-8    	2000000 	     1814 ns/op         5 B/op  	      1 allocs/op
 ```
 
-我们可以看到大约 29% 的性能提升。代码从 ***2570 ns/op*** 降到 ***1814 ns/op***。解决了这个问题，我们现在可以关注 ***buf*** 切片数组。如果再次使用测试代码生成分析数据，我们应该能够识别到造成剩下的分配的原因。
+我们可以看到大约 29% 的性能提升。代码从 `2570 ns/op` 降到 `1814 ns/op`。解决了这个问题，我们现在可以关注 `buf` 切片数组。如果再次使用测试代码生成分析数据，我们应该能够识别到造成剩下的分配的原因。
 
-## 表 20
+## 清单 20
 ```
 $ go tool pprof -alloc_space memcpu.test mem.out
 Entering interactive mode (type "help" for commands)
@@ -420,33 +420,33 @@ ROUTINE ======================== .../memcpu.BenchmarkAlgorithmOne in code/go/src
         .          .     94:       output.Write(buf[:n])
 ```
 
-只剩下为了数组切片的 89 行的分配，
+只剩下 89 行所示，对数组切片的分配
 
 ## 栈帧
 
-想知道造成 ***buf*** 数组切片的分配的原因？让我们再次运行 ***go build***，并使用 -***gcflags "-m -m"选项并搜索 ***stream.go:89***。
+想知道造成 `buf` 数组切片的分配的原因？让我们再次运行 `go build`，并使用 -`gcflags "-m -m"选项并搜索 `stream.go:89`。
 
-## 表 21
+## 清单 21
 ```
 $ go build -gcflags "-m -m"
 ./stream.go:89: make([]byte, size) escapes to heap
 ./stream.go:89:   from make([]byte, size) (too large for stack) at ./stream.go:89
 ```
 
-报告表明数组对于栈来说太大了。这个信息误导了我们。并不是支持数组太大，而是编译器在编译时并不知道数组的大小。
+报告显示，对于栈来说，数组太大了。这个信息误导了我们。并不是说底层的数组太大，而是编译器在编译时并不知道数组的大小。
 
 值只有在编译器编译时知道其大小才会将它分配到栈中。这是因为每个函数的栈帧大小是在编译时计算的。如果编译器不知道其大小，就只会在堆中分配。
 
 为了验证（我们的想法），我们将值硬编码为 5，然后再次运行压力测试。
 
-### 表 22
+### 清单 22
 ```go
  89     buf := make([]byte, 5)
 ```
 
 这一次我们运行压力测试，分配消失了。
 
-### 表 23
+### 清单 23
 
 ```
 $ go test -run none -bench AlgorithmOne -benchtime 3s -benchmem
@@ -455,7 +455,7 @@ BenchmarkAlgorithmOne-8    	3000000 	     1720 ns/op         0 B/op  	      0 al
 
 如果你再看一下编译器报告，你会发现没有需要逃逸处理的。
 
-### 表 24
+### 清单 24
 ```
 $ go build -gcflags "-m -m"
 ./stream.go:83: algOne &bytes.Buffer literal does not escape
@@ -468,7 +468,7 @@ $ go build -gcflags "-m -m"
 
 比较一下我们在重构过程中，每次提升的性能。
 
-### 表 25
+### 清单 25
 ```
 Before any optimization
 BenchmarkAlgorithmOne-8    	2000000 	     2570 ns/op       117 B/op  	      2 allocs/op
@@ -492,6 +492,6 @@ via: https://www.ardanlabs.com/blog/2017/06/language-mechanics-on-memory-profili
 
 作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
 译者：[gogeof](https://github.com/gogeof)
-校对：
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
