@@ -98,7 +98,8 @@ Int 类型表示平台定义的默认整型大小。另外 4 种类型分别是
 ```go
 // Extract Int32
 func extractInt32(v reflect.Value) (int32, error) {
-	if reflect.Kind() != reflect.Int32 {
+	// 译注：原文是 reflect.Kind() != reflect.Int32，这次错误的。
+	if v.Kind() != reflect.Int32 {
 		return int32(0), errors.New("Invalid input")
 	}
 	var intVal int64
@@ -114,7 +115,8 @@ func extractInt32(v reflect.Value) (int32, error) {
 ```go
 // Extract Int64
 func extractInt64(v reflect.Value) (int64, error) {
-	if reflect.Kind() != reflect.Int64 {
+	// 译注：原文是 reflect.Kind() != reflect.Int64，这次错误的。
+	if v.Kind() != reflect.Int64 {
 		return int64(0), errors.New("Invalid input")
 	}
 	var intVal int64
@@ -124,7 +126,8 @@ func extractInt64(v reflect.Value) (int64, error) {
 
 // Extract Int16
 func extractInt16(v reflect.Value) (int16, error) {
-	if reflect.Kind() != reflect.Int16 {
+	// 译注：原文是 reflect.Kind() != reflect.Int16，这次错误的。
+	if v.Kind() != reflect.Int16 {
 		return int16(0), errors.New("Invalid input")
 	}
 	var intVal int64
@@ -134,7 +137,8 @@ func extractInt16(v reflect.Value) (int16, error) {
 
 // Extract Int8
 func extractInt8(v reflect.Value) (int8, error) {
-	if reflect.Kind() != reflect.Int8 {
+	// 译注：原文是 reflect.Kind() != reflect.Int8，这次错误的。
+	if v.Kind() != reflect.Int8 {
 		return int8(0), errors.New("Invalid input")
 	}
 	var intVal int64
@@ -144,7 +148,8 @@ func extractInt8(v reflect.Value) (int8, error) {
 
 // Extract Int
 func extractInt(v reflect.Value) (int, error) {
-	if reflect.Kind() != reflect.Int {
+	// 译注：原文是 reflect.Kind() != reflect.Int，这次错误的。
+	if v.Kind() != reflect.Int {
 		return int(0), errors.New("Invalid input")
 	}
 	var intVal int64
@@ -162,7 +167,8 @@ func extractInt(v reflect.Value) (int, error) {
 ```go
 // Extract Bool
 func extractBool(v reflect.Value) (bool, error) {
-	if reflect.Kind() != reflect.Bool {
+	// 译注：原文是 reflect.Kind() != reflect.Bool，这次错误的。
+	if v.Kind() != reflect.Bool {
 		return false, errors.New("Invalid input")
 	}
 	return v.Bool(), nil
@@ -190,7 +196,8 @@ Uint 类型表示平台定义的默认无符号整型大小。另外 4 种类型
 ```go
 // Extract Uint32
 func extractUint32(v reflect.Value) (uint32, error) {
-	if reflect.Kind() != reflect.Uint32 {
+	// 译注：原文是 reflect.Kind() != reflect.Uint32，这次错误的。
+	if v.Kind() != reflect.Uint32 {
 		return uint32(0), errors.New("Invalid input")
 	}
 	var uintVal uint64
@@ -206,7 +213,8 @@ func extractUint32(v reflect.Value) (uint32, error) {
 ```go
 // Extract Uint64
 func extractUint64(v reflect.Value) (uint64, error) {
-	if reflect.Kind() != reflect.Uint64 {
+	// 译注：原文是 reflect.Kind() != reflect.Uint64，这次错误的。
+	if v.Kind() != reflect.Uint64 {
 		return uint64(0), errors.New("Invalid input")
 	}
 	var uintVal uint64
@@ -216,7 +224,8 @@ func extractUint64(v reflect.Value) (uint64, error) {
 
 // Extract Uint16
 func extractUint16(v reflect.Value) (uint16, error) {
-	if reflect.Kind() != reflect.Uint16 {
+	// 译注：原文是 reflect.Kind() != reflect.Uint16，这次错误的。
+	if v.Kind() != reflect.Uint16 {
 		return uint16(0), errors.New("Invalid input")
 	}
 	var uintVal uint64
@@ -226,7 +235,8 @@ func extractUint16(v reflect.Value) (uint16, error) {
 
 // Extract Uint8
 func extractUint8(v reflect.Value) (uint8, error) {
-	if reflect.Kind() != reflect.Uint8 {
+	// 译注：原文是 reflect.Kind() != reflect.Uint8，这次错误的。
+	if v.Kind() != reflect.Uint8 {
 		return uint8(0), errors.New("Invalid input")
 	}
 	var uintVal uint64
@@ -236,7 +246,8 @@ func extractUint8(v reflect.Value) (uint8, error) {
 
 // Extract Uint
 func extractUint(v reflect.Value) (uint, error) {
-	if reflect.Kind() != reflect.Uint {
+	// 译注：原文是 reflect.Kind() != reflect.Uint，这次错误的。
+	if v.Kind() != reflect.Uint {
 		return uint(0), errors.New("Invalid input")
 	}
 	var uintVal uint64
@@ -264,7 +275,8 @@ Float64 类型表示 64bit 大小的浮点数。
 ```go
 // Extract Float32
 func extractFloat32(v reflect.Value) (float32, error) {
-	if reflect.Kind() != reflect.Float32 {
+	// 译注：原文是 reflect.Kind() != reflect.Float32，这次错误的。
+	if v.Kind() != reflect.Float32 {
 		return float32(0), errors.New("Invalid input")
 	}
 	var floatVal float64
@@ -280,7 +292,8 @@ func extractFloat32(v reflect.Value) (float32, error) {
 ```go
 // Extract Float64
 func extractFloat64(v reflect.Value) (float64, error) {
-	if reflect.Kind() != reflect.Float64 {
+	// 译注：原文是 reflect.Kind() != reflect.Float64，这次错误的。
+	if v.Kind() != reflect.Float64 {
 		return float64(0), errors.New("Invalid input")
 	}
 	var floatVal float64
@@ -307,7 +320,8 @@ Complex64 类型表示 64bit 大小的复数。Complex128 类型表示 128bit 
 ```go
 // Extract Complex64
 func extractComplex64(v reflect.Value) (complex64, error) {
-	if reflect.Kind() != reflect.Complex64 {
+	// 译注：原文是 reflect.Kind() != reflect.Complex64，这次错误的。
+	if v.Kind() != reflect.Complex64 {
 		return complex64(0), errors.New("Invalid input")
 	}
 	var complexVal complex128
@@ -323,7 +337,8 @@ func extractComplex64(v reflect.Value) (complex64, error) {
 ```go
 // Extract Complex128
 func extractComplex128(v reflect.Value) (complex128, error) {
-	if reflect.Kind() != reflect.Complex128 {
+	// 译注：原文是 reflect.Kind() != reflect.Complex128，这次错误的。
+	if v.Kind() != reflect.Complex128 {
 		return complex128(0), errors.New("Invalid input")
 	}
 	var complexVal complex128
@@ -343,7 +358,8 @@ func extractComplex128(v reflect.Value) (complex128, error) {
 ```go
 // Extract String
 func extractString(v reflect.Value) (string, error) {
-	if reflect.Kind() != reflect.String {
+	// 译注：原文是 reflect.Kind() != reflect.String，这次错误的。
+	if v.Kind() != reflect.String {
 		return "", errors.New("Invalid input")
 	}
 	return v.String(), nil
@@ -368,7 +384,8 @@ Uintptr 和 UnsafePointer 可以分别通过 Addr() 和 UnsafeAddr() 方法，�
 ```go
 // Extract Uintptr
 func extractUintptr(v reflect.Value) (uintptr, error) {
-	if reflect.Kind() != reflect.Uintptr {
+	// 译注：原文是 reflect.Kind() != reflect.Uintptr，这次错误的。
+	if v.Kind() != reflect.Uintptr {
 		return uintptr(0), errors.New("Invalid input")
 	}
 	var ptrVal uintptr
@@ -382,7 +399,8 @@ func extractUintptr(v reflect.Value) (uintptr, error) {
 ```go
 // Extract UnsafePointer
 func extractUnsafePointer(v reflect.Value) (unsafe.Pointer, error) {
-	if reflect.Kind() != reflect.UnsafePointer {
+	// 译注：原文是 reflect.Kind() != reflect.UnsafePointer，这次错误的。
+	if v.Kind() != reflect.UnsafePointer {
 		return unsafe.Pointer(0), errors.New("Invalid input")
 	}
 	var unsafeVal unsafe.Pointer
