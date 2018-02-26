@@ -222,7 +222,7 @@ Scheduler latency profile
 
 不幸的是，官方文档缺少一些实验来让我们试验、理解追踪器显示的信息。这也是个给官方文档、社区（如博客）做贡献的[机会](https://github.com/golang/go/issues/16526)。
 
-André 是 [Globo.com](http://www.globo.com/) 的高级软件工程师, 开发[Tsuru](https://tsuru.io/). twitter请@andresantostc, 或者 web 留言https://andrestc.com。
+André 是 [Globo.com](http://www.globo.com/) 的高级软件工程师, 开发[Tsuru](https://tsuru.io/)项目。 twitter请@andresantostc, 或者 web 留言https://andrestc.com。
 
 ## 引用
 
