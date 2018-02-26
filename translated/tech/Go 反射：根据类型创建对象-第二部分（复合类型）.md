@@ -147,7 +147,7 @@ func CreateCompositeObjects(t reflect.Type) reflect.Value {
 
 该函数会创建一个包含一个任意空复合对象的 `reflect.Value` 类型的结构体。
 
-reflect 包有两个方法来创建一个信道。`ChanOf` 可以用来创建信道的 type signature，`MakeChan(Type, int)` 方法可以用来给信道分配内存。下面是一个例子：
+reflect 包有两个方法来创建一个信道。`ChanOf` 是用来创建信道的 type signature，`MakeChan(Type, int)` 方法可以用来给信道分配内存。下面是一个例子：
 
 ```go
 func CreateChan(t reflect.Type, buffer int) reflect.Value {
@@ -164,7 +164,7 @@ func CreateChan(t reflect.Type, buffer int) reflect.Value {
   BothDir
 ```
 
-`BothDir` 表明信道即可读又可写。`SendDir` 表明信道只能写。`RecvDir` 表明信道只能读。
+`BothDir` 表明信道既可读又可写。`SendDir` 表明信道只能写。`RecvDir` 表明信道只能读。
 
 ```go
 func extractChan(v reflect.Value) (interface{}, error) {
@@ -180,7 +180,7 @@ func extractChan(v reflect.Value) (interface{}, error) {
 ## 通过 type signature 来创建复合函数对象
 函数对象不能使用零值来创建。
 
-reflect 包有两个方法来创建函数。`FuncOf` 方法用于创建函数的 type signature，`MakeFunc(Type, func(args []Value) (results []Value)) Value` 方法可以用来给函数分配内存。下面是一个例子：
+reflect 包有两个方法来创建函数。`FuncOf` 方法是用于创建函数的 type signature，`MakeFunc(Type, func(args []Value) (results []Value)) Value` 方法可以用来给函数分配内存。下面是一个例子：
 
 ```go
 func CreateFunc(
@@ -460,7 +460,7 @@ via：https://medium.com/kokster/go-reflection-creating-objects-from-types-part-
 
 译者：[ParadeTo](https://github.com/ParadeTo)
 
-校对：
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，
 [Go中文网](https://studygolang.com/) 荣誉推出
