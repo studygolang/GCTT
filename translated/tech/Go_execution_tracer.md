@@ -208,7 +208,7 @@ Scheduler latency profile
 
 点击“View trace (2.546634537s-5.00392737s)”我们可以看到有很多东西：
 
-[trace-web.png](https://blog.gopheracademy.com/postimages/advent-2017/go-execution-tracer/trace-web.png)
+![trace-web.png](https://blog.gopheracademy.com/postimages/advent-2017/go-execution-tracer/trace-web.png)
 
 该截图显示 1169 ms ~ 1170 ms 之间开始、1174 ms 之后结束的一个 GC 操作。这段时间内，一个操作系统线程（PROC 1）启动一个 goroutine 专门做 GC，其他的 goroutine 辅助 GC 操作（在 goroutine 行下展示，标示为 MARK ASSIST ）,截频的末尾，我们可以看到大部分分配的内存已被 GC 释放掉。
 
