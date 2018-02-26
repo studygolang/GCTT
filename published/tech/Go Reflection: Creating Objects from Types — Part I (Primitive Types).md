@@ -1,20 +1,26 @@
-# Go 反射：根据类型创建对象-第一部分（原始类型）  
+已发布：https://studygolang.com/articles/12434
+
+# Go 反射：根据类型创建对象-第一部分（原始类型）
+
 > 这是关于在 Go 中根据类型创建对象的博客系列两部分的第一部分。这部分讨论原始类型的对象创建  
 
-Go 中的 reflect 包提供了根据执行过程中对象的类型来改变程序控制流的 API。  
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-reflect/cover1.png)
 
-reflect 包提供了两个重要的结构 - Type 和 Value。  
+Go 中的 reflect 包提供了根据执行过程中对象的类型来改变程序控制流的 API。 
+
+reflect 包提供了两个重要的结构 - Type 和 Value。 
 
 Type 是一个 Go 中任何类型的代表。换句话说，它可以被用于编码任何 Go 类型（例如：int , string , bool , myCustomType 等等）。Value 是一个 Go 中任何值的代表。换句话说，它可以被用于编码、操作任何 Go 的值。
 
 ## 类型与类别(Types 和 Kinds)
+
 Go 中有一个隐蔽的、鲜为人知的，使得 Type 和 Kind 含义有差别的公约。这种差别可以通过一个例子理解一下。
 看一下这个结构：
 
 ```go
 type example struct {
-  field1 type1
-  field2 type2
+	field1 type1
+	field2 type2
 }
 ```
 
@@ -22,12 +28,13 @@ type example struct {
 
 > 在 Go 里所有 structs 都是相同的 kind，但不是相同的 Type  
 
-像Pointer、Array、Slice、Map 等等复杂类型，使得 type 和 kind 的含义产生了这样的差异。  
+像 Pointer、Array、Slice、Map 等等复杂类型，使得 type 和 kind 的含义产生了这样的差异。  
 
 相比之下，像 int、float、string 等等原始类型，并没有产生 type 和 kind 含义上的差别。换句话说，一个 int 变量的 kind 是 int。一个 int 变量的 type 也是 int。
 
 ## 根据类型创建对象
-为了根据一个类型标签（type signature）创建一个对象，这个对象的 type 和 kind 都是必要的。从这里开始，当我用到‘type signature’这个术语时，我的意思就是 Go 里的 reflect.Type 类型的对象。
+
+为了根据一个类型标签（type signature）创建一个对象，这个对象的 type 和 kind 都是必要的。从这里开始，当我用到 ‘type signature’ 这个术语时，我的意思就是 Go 里的 reflect.Type 类型的对象。
 
 ### 根据原始类型创建原始对象
 
@@ -38,31 +45,31 @@ type example struct {
 这是一个 Go 中所有原始类型的列表：
 
 ```
-        Bool
-        Int
-        Int8
-        Int16
-        Int32
-        Int64
-        Uint
-        Uint8
-        Uint16
-        Uint32
-        Uint64
-        Uintptr
-        Float32
-        Float64
-        Complex64
-        Complex128
-        String
-        UnsafePointer
+Bool
+Int
+Int8
+Int16
+Int32
+Int64
+Uint
+Uint8
+Uint16
+Uint32
+Uint64
+Uintptr
+Float32
+Float64
+Complex64
+Complex128
+String
+UnsafePointer
 ```
 
 通过使用 reflect.Zero 函数，可以创建原始类型的对象
 
 ```go
 func CreatePrimitiveObjects(t reflect.Type) reflect.Value {
-  return reflect.Zero(t)
+	return reflect.Zero(t)
 }
 ```
 
@@ -75,11 +82,11 @@ func CreatePrimitiveObjects(t reflect.Type) reflect.Value {
 在 Go 里有 5 种整数类型：
 
 ```
-        Int
-        Int8
-        Int16
-        Int32
-        Int64
+Int
+Int8
+Int16
+Int32
+Int64
 ```
 
 Int 类型表示平台定义的默认整型大小。另外 4 种类型分别是 8，16，32，64（bit单位）大小的整型。
@@ -91,12 +98,13 @@ Int 类型表示平台定义的默认整型大小。另外 4 种类型分别是
 ```go
 // Extract Int32
 func extractInt32(v reflect.Value) (int32, error) {
-  if reflect.Kind() != reflect.Int32 {
-    return int32(0), errors.New("Invalid input")
-  }
-  var intVal int64
-  intVal = v.Int()
-  return int32(intVal), nil
+	// 译注：原文是 reflect.Kind() != reflect.Int32，这次错误的。
+	if v.Kind() != reflect.Int32 {
+		return int32(0), errors.New("Invalid input")
+	}
+	var intVal int64
+	intVal = v.Int()
+	return int32(intVal), nil
 }
 ```
 
@@ -107,39 +115,46 @@ func extractInt32(v reflect.Value) (int32, error) {
 ```go
 // Extract Int64
 func extractInt64(v reflect.Value) (int64, error) {
-  if reflect.Kind() != reflect.Int64 {
-    return int64(0), errors.New("Invalid input")
-  }
-  var intVal int64
-  intVal = v.Int()
-  return intVal, nil
+	// 译注：原文是 reflect.Kind() != reflect.Int64，这次错误的。
+	if v.Kind() != reflect.Int64 {
+		return int64(0), errors.New("Invalid input")
+	}
+	var intVal int64
+	intVal = v.Int()
+	return intVal, nil
 }
+
 // Extract Int16
 func extractInt16(v reflect.Value) (int16, error) {
-  if reflect.Kind() != reflect.Int16 {
-    return int16(0), errors.New("Invalid input")
-  }
-  var intVal int64
-  intVal = v.Int()
-  return int16(intVal), nil
+	// 译注：原文是 reflect.Kind() != reflect.Int16，这次错误的。
+	if v.Kind() != reflect.Int16 {
+		return int16(0), errors.New("Invalid input")
+	}
+	var intVal int64
+	intVal = v.Int()
+	return int16(intVal), nil
 }
+
 // Extract Int8
 func extractInt8(v reflect.Value) (int8, error) {
-  if reflect.Kind() != reflect.Int8 {
-    return int8(0), errors.New("Invalid input")
-  }
-  var intVal int64
-  intVal = v.Int()
-  return int8(intVal), nil
+	// 译注：原文是 reflect.Kind() != reflect.Int8，这次错误的。
+	if v.Kind() != reflect.Int8 {
+		return int8(0), errors.New("Invalid input")
+	}
+	var intVal int64
+	intVal = v.Int()
+	return int8(intVal), nil
 }
+
 // Extract Int
 func extractInt(v reflect.Value) (int, error) {
-  if reflect.Kind() != reflect.Int {
-    return int(0), errors.New("Invalid input")
-  }
-  var intVal int64
-  intVal = v.Int()
-  return int(intVal), nil
+	// 译注：原文是 reflect.Kind() != reflect.Int，这次错误的。
+	if v.Kind() != reflect.Int {
+		return int(0), errors.New("Invalid input")
+	}
+	var intVal int64
+	intVal = v.Int()
+	return int(intVal), nil
 }
 ```
 
@@ -152,10 +167,11 @@ func extractInt(v reflect.Value) (int, error) {
 ```go
 // Extract Bool
 func extractBool(v reflect.Value) (bool, error) {
-  if reflect.Kind() != reflect.Bool {
-    return false, errors.New("Invalid input")
-  }
-  return v.Bool(), nil
+	// 译注：原文是 reflect.Kind() != reflect.Bool，这次错误的。
+	if v.Kind() != reflect.Bool {
+		return false, errors.New("Invalid input")
+	}
+	return v.Bool(), nil
 }
 ```
 
@@ -164,11 +180,11 @@ func extractBool(v reflect.Value) (bool, error) {
 在 Go 中有 5 种无符号整数类型：
 
 ```
-        Uint
-        Uint8
-        Uint16
-        Uint32
-        Uint64
+Uint
+Uint8
+Uint16
+Uint32
+Uint64
 ```
 
 Uint 类型表示平台定义的默认无符号整型大小。另外 4 种类型分别是 8，16，32，64（bit单位）大小的无符号整型。
@@ -180,12 +196,13 @@ Uint 类型表示平台定义的默认无符号整型大小。另外 4 种类型
 ```go
 // Extract Uint32
 func extractUint32(v reflect.Value) (uint32, error) {
-  if reflect.Kind() != reflect.Uint32 {
-    return uint32(0), errors.New("Invalid input")
-  }
-  var uintVal uint64
-  uintVal = v.Uint()
-  return uint32(uintVal), nil
+	// 译注：原文是 reflect.Kind() != reflect.Uint32，这次错误的。
+	if v.Kind() != reflect.Uint32 {
+		return uint32(0), errors.New("Invalid input")
+	}
+	var uintVal uint64
+	uintVal = v.Uint()
+	return uint32(uintVal), nil
 }
 ```
 
@@ -196,39 +213,46 @@ func extractUint32(v reflect.Value) (uint32, error) {
 ```go
 // Extract Uint64
 func extractUint64(v reflect.Value) (uint64, error) {
-  if reflect.Kind() != reflect.Uint64 {
-    return uint64(0), errors.New("Invalid input")
-  }
-  var uintVal uint64
-  uintVal = v.Uint()
-  return uintVal, nil
+	// 译注：原文是 reflect.Kind() != reflect.Uint64，这次错误的。
+	if v.Kind() != reflect.Uint64 {
+		return uint64(0), errors.New("Invalid input")
+	}
+	var uintVal uint64
+	uintVal = v.Uint()
+	return uintVal, nil
 }
+
 // Extract Uint16
 func extractUint16(v reflect.Value) (uint16, error) {
-  if reflect.Kind() != reflect.Uint16 {
-    return uint16(0), errors.New("Invalid input")
-  }
-  var uintVal uint64
-  uintVal = v.Uint()
-  return uint16(uintVal), nil
+	// 译注：原文是 reflect.Kind() != reflect.Uint16，这次错误的。
+	if v.Kind() != reflect.Uint16 {
+		return uint16(0), errors.New("Invalid input")
+	}
+	var uintVal uint64
+	uintVal = v.Uint()
+	return uint16(uintVal), nil
 }
+
 // Extract Uint8
 func extractUint8(v reflect.Value) (uint8, error) {
-  if reflect.Kind() != reflect.Uint8 {
-    return uint8(0), errors.New("Invalid input")
-  }
-  var uintVal uint64
-  uintVal = v.Uint()
-  return uint8(uintVal), nil
+	// 译注：原文是 reflect.Kind() != reflect.Uint8，这次错误的。
+	if v.Kind() != reflect.Uint8 {
+		return uint8(0), errors.New("Invalid input")
+	}
+	var uintVal uint64
+	uintVal = v.Uint()
+	return uint8(uintVal), nil
 }
+
 // Extract Uint
 func extractUint(v reflect.Value) (uint, error) {
-  if reflect.Kind() != reflect.Uint {
-    return uint(0), errors.New("Invalid input")
-  }
-  var uintVal uint64
-  uintVal = v.Uint()
-  return uint(uintVal), nil
+	// 译注：原文是 reflect.Kind() != reflect.Uint，这次错误的。
+	if v.Kind() != reflect.Uint {
+		return uint(0), errors.New("Invalid input")
+	}
+	var uintVal uint64
+	uintVal = v.Uint()
+	return uint(uintVal), nil
 }
 ```
 
@@ -237,8 +261,8 @@ func extractUint(v reflect.Value) (uint, error) {
 在 Go 中有 2 种浮点数类型：
 
 ```
-        Float32
-        Float64
+Float32
+Float64
 ```
 
 Float32 类型表示 32bit 大小的浮点数。  
@@ -251,12 +275,13 @@ Float64 类型表示 64bit 大小的浮点数。
 ```go
 // Extract Float32
 func extractFloat32(v reflect.Value) (float32, error) {
-  if reflect.Kind() != reflect.Float32 {
-    return float32(0), errors.New("Invalid input")
-  }
-  var floatVal float64
-  floatVal = v.Float()
-  return float32(floatVal), nil
+	// 译注：原文是 reflect.Kind() != reflect.Float32，这次错误的。
+	if v.Kind() != reflect.Float32 {
+		return float32(0), errors.New("Invalid input")
+	}
+	var floatVal float64
+	floatVal = v.Float()
+	return float32(floatVal), nil
 }
 ```
 
@@ -267,12 +292,13 @@ func extractFloat32(v reflect.Value) (float32, error) {
 ```go
 // Extract Float64
 func extractFloat64(v reflect.Value) (float64, error) {
-  if reflect.Kind() != reflect.Float64 {
-    return float64(0), errors.New("Invalid input")
-  }
-  var floatVal float64
-  floatVal = v.Float()
-  return floatVal, nil
+	// 译注：原文是 reflect.Kind() != reflect.Float64，这次错误的。
+	if v.Kind() != reflect.Float64 {
+		return float64(0), errors.New("Invalid input")
+	}
+	var floatVal float64
+	floatVal = v.Float()
+	return floatVal, nil
 }
 ```
 
@@ -281,8 +307,8 @@ func extractFloat64(v reflect.Value) (float64, error) {
 在 Go 中有 2 种复数类型：
 
 ```
-        Complex64
-        Complex128
+Complex64
+Complex128
 ```
 
 Complex64 类型表示 64bit 大小的复数。Complex128 类型表示 128bit 大小的复数。
@@ -294,12 +320,13 @@ Complex64 类型表示 64bit 大小的复数。Complex128 类型表示 128bit 
 ```go
 // Extract Complex64
 func extractComplex64(v reflect.Value) (complex64, error) {
-  if reflect.Kind() != reflect.Complex64 {
-    return complex64(0), errors.New("Invalid input")
-  }
-  var complexVal complex128
-  complexVal = v.Complex()
-  return complex64(complexVal), nil
+	// 译注：原文是 reflect.Kind() != reflect.Complex64，这次错误的。
+	if v.Kind() != reflect.Complex64 {
+		return complex64(0), errors.New("Invalid input")
+	}
+	var complexVal complex128
+	complexVal = v.Complex()
+	return complex64(complexVal), nil
 }
 ```
 
@@ -310,12 +337,13 @@ func extractComplex64(v reflect.Value) (complex64, error) {
 ```go
 // Extract Complex128
 func extractComplex128(v reflect.Value) (complex128, error) {
-  if reflect.Kind() != reflect.Complex128 {
-    return complex128(0), errors.New("Invalid input")
-  }
-  var complexVal complex128
-  complexVal = v.Complex()
-  return complexVal, nil
+	// 译注：原文是 reflect.Kind() != reflect.Complex128，这次错误的。
+	if v.Kind() != reflect.Complex128 {
+		return complex128(0), errors.New("Invalid input")
+	}
+	var complexVal complex128
+	complexVal = v.Complex()
+	return complexVal, nil
 }
 ```
 
@@ -330,10 +358,11 @@ func extractComplex128(v reflect.Value) (complex128, error) {
 ```go
 // Extract String
 func extractString(v reflect.Value) (string, error) {
-  if reflect.Kind() != reflect.String {
-    return "", errors.New("Invalid input")
-  }
-  return v.String(), nil
+	// 译注：原文是 reflect.Kind() != reflect.String，这次错误的。
+	if v.Kind() != reflect.String {
+		return "", errors.New("Invalid input")
+	}
+	return v.String(), nil
 }
 ```
 
@@ -342,8 +371,8 @@ func extractString(v reflect.Value) (string, error) {
 在 Go 中，有 2 种指针类型：
 
 ```
-        Uintptr
-        UnsafePointer
+Uintptr
+UnsafePointer
 ```
 
 Uintptr 和 UnsafePointer 其实是程序内存中代表一个虚拟地址的 uint 值。它可以表示一个变量或函数的位置。
@@ -355,12 +384,13 @@ Uintptr 和 UnsafePointer 可以分别通过 Addr() 和 UnsafeAddr() 方法，�
 ```go
 // Extract Uintptr
 func extractUintptr(v reflect.Value) (uintptr, error) {
-  if reflect.Kind() != reflect.Uintptr {
-    return uintptr(0), errors.New("Invalid input")
-  }
-  var ptrVal uintptr
-  ptrVal = v.Addr()
-  return ptrVal, nil
+	// 译注：原文是 reflect.Kind() != reflect.Uintptr，这次错误的。
+	if v.Kind() != reflect.Uintptr {
+		return uintptr(0), errors.New("Invalid input")
+	}
+	var ptrVal uintptr
+	ptrVal = v.Addr()
+	return ptrVal, nil
 }
 ```
 
@@ -369,28 +399,29 @@ func extractUintptr(v reflect.Value) (uintptr, error) {
 ```go
 // Extract UnsafePointer
 func extractUnsafePointer(v reflect.Value) (unsafe.Pointer, error) {
-  if reflect.Kind() != reflect.UnsafePointer {
-    return unsafe.Pointer(0), errors.New("Invalid input")
-  }
-  var unsafeVal unsafe.Pointer
-  unsafeVal = unsafe.Pointer(v.UnsafeAddr())
-  return unsafeVal, nil
+	// 译注：原文是 reflect.Kind() != reflect.UnsafePointer，这次错误的。
+	if v.Kind() != reflect.UnsafePointer {
+		return unsafe.Pointer(0), errors.New("Invalid input")
+	}
+	var unsafeVal unsafe.Pointer
+	unsafeVal = unsafe.Pointer(v.UnsafeAddr())
+	return unsafeVal, nil
 }
 ```
 
 值得注意的是：上面 v.UnsafeAddr() 会返回 uintptr 值。它应该在同一行进行类型转换，否则这个 unsafe.Pointer 的值不一定指向预期的位置。
 
 ## 接下来是什么
+
 请注意：reflect.Value 结构的所有方法在使用时都需要检验它们的 kind，否则很容易引发 panic。
 
 在下一篇博客中，我会写更多像 struct、pointer、chan、map、slice、array 等复杂类型对象的创建。敬请期待！
 
-
-----------------
+---
 
 via: https://medium.com/kokster/go-reflection-creating-objects-from-types-part-i-primitive-types-6119e3737f5d
 
-作者：[Sidhartha Mani](https://medium.com/@utter_babbage)  
+作者：[Sidhartha Mani](https://medium.com/@utter_babbage)
 译者：[yiyulantian](https://github.com/yiyulantian)  
 校对：[polaris1119](https://github.com/polaris1119)
 
