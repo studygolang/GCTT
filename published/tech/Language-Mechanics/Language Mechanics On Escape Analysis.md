@@ -10,7 +10,7 @@
 
 1. [Go 语言机制之栈与指针](https://studygolang.com/articles/12443)
 2. [Go 语言机制之逃逸分析](https://studygolang.com/articles/12444)
-3. [Go 语言机制之内存剖析](https://www.ardanlabs.com/blog/2017/06/language-mechanics-on-memory-profiling.html)
+3. [Go 语言机制之内存剖析](https://studygolang.com/articles/12445)
 4. [Go 语言机制之数据和语法的设计哲学](https://www.ardanlabs.com/blog/2017/06/design-philosophy-on-data-and-semantics.html)
 
 ## 介绍（Introduction）
