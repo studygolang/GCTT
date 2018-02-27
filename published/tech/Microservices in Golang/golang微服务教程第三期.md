@@ -1,15 +1,19 @@
+已发布：https://studygolang.com/articles/12452
+
 # golang 中的微服务 - 第3部分 - docker compose 和 datastores
 
-在[之前的文章](https://ewanvalentine.io/microservices-in-golang-part-2/)中，我们介绍了[go-micro](https://github.com/micro/go-micro)和[Docker](https://www.docker.com/)的一些基础知识。在推出了这两项服务之后我们将在本文介绍[docker-compose](https://docs.docker.com/compose/)、教大家如何更便捷地在本地运行多个服务，还会列述一些在本系列微服务教程中可以使用的数据库类型，最后引出本系列的第三项服务——User service。
+在[之前的文章](https://studygolang.com/articles/12094)中，我们介绍了 [go-micro](https://github.com/micro/go-micro) 和 [Docker](https://www.docker.com/) 的一些基础知识。在推出了这两项服务之后我们将在本文介绍 [docker-compose](https://docs.docker.com/compose/)、教大家如何更便捷地在本地运行多个服务，还会列述一些在本系列微服务教程中可以使用的数据库类型，最后引出本系列的第三项服务 —— User service。
 
-【译者注：阅读本文之前建议先下载作者[源码](https://github.com/EwanValentine/shippy.git)配合理解 】
+(译者注：阅读本文之前建议先下载作者[源码](https://github.com/EwanValentine/shippy.git)配合理解)
 
 ## 准备工作
-安装docker-compose : https://docs.docker.com/compose/install/ 
+
+安装 docker-compose: https://docs.docker.com/compose/install/ 
 
 docker-compose 安装完毕之后，我们来介绍一些可用的数据库以及他们之间的区别。
 
 ## 数据库选择
+
 在前两篇文章，我们的数据并不会持久化的存储到某地，它只会存储在我们服务的内存中，当容器重新启动时，这些数据会丢失。所以需要选择一种数据库来持久化的存储和查询我们的数据。
 
 微服务的优点是，你可以为每个服务选择一个不同的数据库。当然许多情况下我们不必这样做。例如生产环境中的小团队完全不必选择多个数据库，这样会增加维护成本。但在某些情况下，一个服务的数据可能并不兼容其他服务的数据库，这时不得不增加一个数据库。微服务使得数据兼容这件事变得更加简单，你完全不必操心不同服务的数据使用不同的数据库带来的额外维护成本。
@@ -20,16 +24,15 @@ docker-compose 安装完毕之后，我们来介绍一些可用的数据库以�
 
 如果你不想亲自管理自己的数据库（通常是可取的），你可以选择使用亚马逊或者谷歌提供的完全成熟的 NoSQL 和 RDBMS 解决方案。除此之外 **compose** 则是另外一个非常棒的选择，你可以将自己的服务完全托管在 compose 上，它可以提供类似于亚马逊和谷歌的云服务，并且能够更加便捷的扩展各种数据库实例，同时还具备更低的延迟。
 
-
 * 亚马逊：
-RDBMS：https://aws.amazon.com/rds/
-NoSQL：https：//aws.amazon.com/dynamodb/
+
+	RDBMS：https://aws.amazon.com/rds/  
+	NoSQL：https：//aws.amazon.com/dynamodb/
 
 * 谷歌：
-RDBMS：https：//cloud.google.com/spanner/
-NoSQL：https：//cloud.google.com/datastore/
 
-
+	RDBMS：https：//cloud.google.com/spanner/  
+	NoSQL：https：//cloud.google.com/datastore/
  
 数据库相关知识讨论完毕之后我们就可以写一些代码了！
 
@@ -98,7 +101,6 @@ services:
 
 这个 yml 文件首先定义了要使用的 docker-compose 的版本号`3.1`，然后定义一个 service 列表。还有其他的根级定义，比如网络和卷。
 
-
 先关注 service ，每个 service 都由其名称定义，然后我们加入了一个 build 路径，这里要存放我们的 Dockerfile 文件，docker-compose 会从这个路径下寻找 Dockerfile 来构建镜像，后文我们会演示如何用 `image` 字段来引用一个构建好的镜像。然后我们还可以定义映射端口和环境变量。
 
 这些是 docker-compose 的基本命令：
@@ -110,29 +112,27 @@ services:
 
 接下来就可以运行我们的容器集了。你能够看到很多 dockerfile 正在 build 的输出信息。也可能会从我们的 CLI 中看到少量 error ，不用太在意，这一般都是一些其他服务在处理彼此之间的依赖关系。
 
-命令`$ docker-compose run consignment-cli`可以帮助我们使用 CLI 工具来测试所有服务是否正常工作，一旦所有容器都显示 running 就意味着我们的 docker-compose 成功了。和我们以前不借助 docker-compose 直接使用 dockerfile 和 docker 命令取得的效果一样。
+命令 `$ docker-compose run consignment-cli` 可以帮助我们使用 CLI 工具来测试所有服务是否正常工作，一旦所有容器都显示 running 就意味着我们的 docker-compose 成功了。和我们以前不借助 docker-compose 直接使用 dockerfile 和 docker 命令取得的效果一样。
 
 ## 容器实体和 protobufs
 
 本系列前面的文章已经讲过使用 [protobufs](https://www.ibm.com/developerworks/cn/linux/l-cn-gpb/) 作为数据模型的模板。我们用它来定义我们的服务结构和功能函数。因为 protobuf 生成的结构基本上都是正确的数据类型，我们也可以将这些结构重复利用为底层数据库模型。这实际上是相当令人兴奋的。protobufs保证了数据的来源单一性和一致性。
 
-当然这种方法确有其不足之处。有时候，将 protobuf 生成的代码封装到一个有效的数据库实体是非常棘手的。有时数据库很难利用 protobuf 生成的自定义本地数据类型。例如，如何将一个 Mongodb 实体里的 `bson.ObjectId` 类型的 ID 转换成 `string` 类型的 ID 就困扰了我很久。后来通过实验论证，无论如何 bson.ObjectId 实际上只是一个字符串，所以你可以把它们封装在一起。此外，mongodb 的 id 索引在内部被存储为` _id `，该`_Id`字段是无法被执行的，所以必须要将它与 Id 字符串字段绑定在一起。这意味着你要为你的 protobuf 文件定义自定义标签。稍后我们讨论如何做到这一点。
-
+当然这种方法确有其不足之处。有时候，将 protobuf 生成的代码封装到一个有效的数据库实体是非常棘手的。有时数据库很难利用 protobuf 生成的自定义本地数据类型。例如，如何将一个 Mongodb 实体里的 `bson.ObjectId` 类型的 ID 转换成 `string` 类型的 ID 就困扰了我很久。后来通过实验论证，无论如何 bson.ObjectId 实际上只是一个字符串，所以你可以把它们封装在一起。此外，mongodb 的 id 索引在内部被存储为` _id `，该 `_Id` 字段是无法被执行的，所以必须要将它与 Id 字符串字段绑定在一起。这意味着你要为你的 protobuf 文件定义自定义标签。稍后我们讨论如何做到这一点。
 
 与此同时，使用 protobuf 会导致服务间通信与数据库代码的耦合度更高，这也成为了许多人反对使用 protobuf 定义的数据作为数据库实体的一大原因。
-
 
 一般建议在 protobuf 定义代码和你的数据库实体之间进行相互转换。但是，这两种类型的代码之间相互转换需要大量的编码工作：
 
 ```go
 func (service *Service) (ctx context.Context, req *proto.User, res *proto.Response) error {
-  entity := &models.User{
-    Name: req.Name.
-    Email: req.Email,
-    Password: req.Password,
-  }
-  err := service.repo.Create(entity)
-  ... 
+	entity := &models.User{
+		Name: req.Name.
+		Email: req.Email,
+		Password: req.Password,
+	}
+	err := service.repo.Create(entity)
+	... 
 }
 ```
 
@@ -144,7 +144,7 @@ func (service *Service) (ctx context.Context, req *proto.User, res *proto.Respon
 
 先整理一下代码文件： main.go 文件已经包含了我们所有的逻辑代码。为了使我们的微服务示例代码更加清晰，我在 consignment 服务的根目录下创建了另外几个文件：`handler.go`、`datastore.go`和`respository.go`，而不是将这些代码文件创建为一个新的目录或包。这种方式对于一个小型的微服务来说是完全可行的。插一句题外话，对于开发人员来说，可能会非常喜欢使用这样的目录结构来存放自己的代码文件：
 
-```go
+```
 main.go
 models/
   user.go
@@ -187,7 +187,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build  -o consignment-service -a -installsuffix 
 ```
 这条命令会将我们刚刚创建的新文件导入。
 
-[Golang 编写的 MongoDB driver 就是这种简单性的一个很好的例子](https://github.com/go-mgo/mgo)。最后，这里有[一篇关于组织Go代码库的文章](https://rakyll.org/style-packages/)推荐给大家学习。
+[Golang 编写的 MongoDB driver 就是这种简单性的一个很好的例子](https://github.com/go-mgo/mgo)。最后，这里有[一篇关于组织Go代码库的文章](https://studygolang.com/articles/11823)推荐给大家学习。
 
 我们可以先删除 main.go 中已经导入的所有仓库代码然后使用 golang 的 mongodb 库 mgo 来重新实现它。我在代码里进行了详细的标注以解释每部分的作用，因此请仔细阅读代码和注释。 尤其是mgo如何处理 sessions 的部分：
 
@@ -342,15 +342,15 @@ func main() {
 
 ## Copy vs Clone
 
-你可能已经注意到使用 mgo Mongodb 库时。我们会创建一个被传递给 handlers 的数据库session，每出现一个请求，就会调用一个该session的克隆方法。
+你可能已经注意到使用 mgo Mongodb 库时。我们会创建一个被传递给 handlers 的数据库 session，每出现一个请求，就会调用一个该session的克隆方法。
 
-实际上，除了建立与数据库的第一次连接之外，我们从不调用“主会话”，每次我们要访问数据存储时都调用session.Clone()方法。如代码注释所言，若使用主会话，则必须再次使用相同的套接字。这意味着您的查询可能会被其他查询阻塞，必须等待此套接字的占用被锁释放。在支持并发的语言中这是绝对无法容忍的。
+实际上，除了建立与数据库的第一次连接之外，我们从不调用“主会话”，每次我们要访问数据存储时都调用 session.Clone() 方法。如代码注释所言，若使用主会话，则必须再次使用相同的套接字。这意味着您的查询可能会被其他查询阻塞，必须等待此套接字的占用被锁释放。在支持并发的语言中这是绝对无法容忍的。
 
-所以为了避免阻塞请求，mgo允许你 Copy() 或者Clone()一个会话，这样你就可以为每个请求建立一个并发连接。你会注意到我提到了Copy和Clone方法，这些方法非常相似，但有一个微妙但重要的区别：Clone重新使用和主会话相同的套接字，减少了产生一个新的套接字的开销，十分适用于对写入性能要求更高的代码。但是，在耗时较长的读操作（例如十分复杂的查询或大数据作业等）中其他go协程使用这个相同套接字时可能会引发阻塞。
+所以为了避免阻塞请求，mgo 允许你 Copy() 或者 Clone() 一个会话，这样你就可以为每个请求建立一个并发连接。你会注意到我提到了 Copy 和 Clone 方法，这些方法非常相似，但有一个微妙但重要的区别：Clone重新使用和主会话相同的套接字，减少了产生一个新的套接字的开销，十分适用于对写入性能要求更高的代码。但是，在耗时较长的读操作（例如十分复杂的查询或大数据作业等）中其他 Go 协程使用这个相同套接字时可能会引发阻塞。
 
-像我们公司这样写入操作更多的业务，使用Clone()更合适一些。
+像我们公司这样写入操作更多的业务，使用 Clone() 更合适一些。
 
-最后一步是将我们的 gRPC 处理程序代码移出到我们新的handler.go文件中，代码如下：
+最后一步是将我们的 gRPC 处理程序代码移出到我们新的 handler.go 文件中，代码如下：
 
 ```go
 // consignment-service.go
@@ -371,7 +371,7 @@ type service struct {
 }
 
 func (s *service) GetRepo() Repository {
-    return &ConsignmentRepository{s.session.Clone()}
+	return &ConsignmentRepository{s.session.Clone()}
 }
 
 // CreateConsignment 是 service 的一个方法，该方法将 gRPC server 控制的 context 和 request 作为参数
@@ -408,8 +408,8 @@ func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, re
 }
 
 func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest, res *pb.Response) error {
-    repo := s.GetRepo()
-    defer repo.Close()
+	repo := s.GetRepo()
+	defer repo.Close()
 	consignments, err := repo.GetAll()
 	if err != nil {
 		return err
@@ -436,7 +436,7 @@ type Repository interface {
 type Repository interface {
 	Create(*pb.Consignment) error
 	GetAll() ([]*pb.Consignment, error)
-    Close()
+	Close()
 }
 
 ```
@@ -458,23 +458,23 @@ service VesselService {
 }
 
 message Vessel {
-  string id = 1;
-  int32 capacity = 2;
-  int32 max_weight = 3;
-  string name = 4;
-  bool available = 5;
-  string owner_id = 6;
+	string id = 1;
+	int32 capacity = 2;
+	int32 max_weight = 3;
+	string name = 4;
+	bool available = 5;
+	string owner_id = 6;
 }
 
 message Specification {
-  int32 capacity = 1;
-  int32 max_weight = 2;
+	int32 capacity = 1;
+	int32 max_weight = 2;
 }
 
 message Response {
-  Vessel vessel = 1;
-  repeated Vessel vessels = 2;
-  bool created = 3;
+	Vessel vessel = 1;
+	repeated Vessel vessels = 2;
+	bool created = 3;
 }
 
 ```
@@ -485,12 +485,12 @@ message Response {
 // vessel-service/handler.go
 
 func (s *service) GetRepo() Repository {
-    return &VesselRepository{s.session.Clone()}
+	return &VesselRepository{s.session.Clone()}
 }
 
 func (s *service) Create(ctx context.Context, req *pb.Vessel, res *pb.Response) error {
-    repo := s.GetRepo()
-    defer repo.Close()
+	repo := s.GetRepo()
+	defer repo.Close()
 	if err := repo.Create(req); err != nil {
 		return err
 	}
@@ -799,8 +799,8 @@ func main() {
 
 	// 创建一个新的 greeter client
 	client := pb.NewUserServiceClient("go.micro.srv.user", microclient.DefaultClient)
-    
-    // 定义可用参数
+
+	// 定义可用参数
 	service := micro.NewService(
 		micro.Flags(
 			cli.StringFlag{
@@ -821,8 +821,8 @@ func main() {
 			},
 		),
 	)
-    
-    // 作为一个 service 初始化启动
+
+	// 作为一个 service 初始化启动
 	service.Init(
 
 		micro.Action(func(c *cli.Context) {
@@ -884,12 +884,11 @@ $ docker-compose run user-cli command \
 
 如果你发现这个系列有用，请[打赏作者](https://monzo.me/ewanvalentine)。
 
-
-***
- via: https://ewanvalentine.io/microservices-in-golang-part-3/
+---
+via: https://ewanvalentine.io/microservices-in-golang-part-3/
 
 作者：[Ewan Valentine](http://ewanvalentine.io/author/ewan) 
 译者：[张阳](https://github.com/zhangyang9)
-校对：polaris1119
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](Go语言中文网) 荣誉推出
