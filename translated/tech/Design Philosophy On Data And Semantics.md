@@ -289,3 +289,11 @@ func epipecheck(file *File, e error) {
 我在做代码 review 时，会寻找值或者指针语义是否使用一致。它可以帮助你保证代码的一致性和可预测性。它还使每个人能保持清晰和一致的心智模型。随着代码库和团队变得越来越大，值或者指针语义的一致性使用将会越来越重要。
 
 Go 语言令人不解的地方在于指针和值语义之间的选择早已超出了接收器和函数参数的声明范围。接口的机制，函数值和切片都在语言的工作范围内。在将来的文章中，我将在这些语言的不同部分中展示值或者指针语义。
+
+via: https://www.ardanlabs.com/blog/2017/06/design-philosophy-on-data-and-semantics.html
+
+作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
+译者：[gogeof](https://github.com/gogeof)
+校对：
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
