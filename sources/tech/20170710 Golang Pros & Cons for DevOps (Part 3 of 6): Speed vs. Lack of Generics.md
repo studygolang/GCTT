@@ -2,15 +2,15 @@
 
 这是我们关于 DevOps 开发流程之中使用 Golang 之利与弊的六部曲系列。在这篇文章里，我们会讨论 Golang 的运行时/编译/维护的速度（好的方面）；以及缺少泛型（缺点）。
 
-在阅读这篇文章之前，请确保你已经阅读了[上一篇](https://blog.bluematador.com/blog/posts/Golang -pros-cons-for- DevOps -part-2/)关于“接口实现以及公有/私有命名方式”，或者[订阅](http://eepurl.com/cOHJ3f)我们的博客更新提醒来获取此六部曲后续文章的音讯。（我们会隔周更新，但是鉴于我们正在忙着发布[我们的beta平台](https://blog.bluematador.com/blog/posts/announcing-beta-launch-blue-matador- DevOps -monitoring-platform/)我们的进度确实有点延后。)
+在阅读这篇文章之前，请确保你已经阅读了[上一篇](https://blog.bluematador.com/blog/posts/golang-pros-cons-for-devops-part-2/)关于“接口实现以及公有/私有命名方式”，或者[订阅](http://eepurl.com/cOHJ3f)我们的博客更新提醒来获取此六部曲后续文章的音讯。（我们会隔周更新，但是鉴于我们正在忙着发布[我们的beta平台](https://blog.bluematador.com/blog/posts/announcing-beta-launch-blue-matador-devops-monitoring-platform/)我们的进度确实有点延后。)
 
-- [Golang 之于 DevOps 开发者的利与弊#1：Goroutines，Channels，Panics和Errors](https://blog.bluematador.com/blog/posts/Golang -pros-cons-for- DevOps -part-1-goroutines-panics-errors/)
+- [Golang 之于 DevOps 开发者的利与弊#1：Goroutines，Channels，Panics和Errors](https://blog.bluematador.com/blog/posts/golang-pros-cons-for-devops-part-1-goroutines-panics-errors/)
 
-- [Golang 之于 DevOps 开发者的利与弊#2：接口的自动化实现，公有/私有变量](https://blog.bluematador.com/blog/posts/Golang -pros-cons-for- DevOps -part-1-goroutines-panics-errors/)
+- [Golang 之于 DevOps 开发者的利与弊#2：接口的自动化实现，公有/私有变量](https://blog.bluematador.com/blog/posts/golang-pros-cons-for-devops-part-1-goroutines-panics-errors/)
 
 - Golang 之于 DevOps 开发者的利与弊#3：速度 vs. 缺少泛型 [本文]
 
-- [Golang 之于 DevOps 开发者的利与弊#4：time包以及重载](https://blog.bluematador.com/Golang -pros-cons-part-4-time-package-method-overloading)
+- [Golang 之于 DevOps 开发者的利与弊#4：time包以及重载](https://blog.bluematador.com/golang-pros-cons-part-4-time-package-method-overloading)
 
 - Golang 之于 DevOps 开发者的利与弊#5：跨平台编译，Windows，Signals，Docs以及编译器
 
