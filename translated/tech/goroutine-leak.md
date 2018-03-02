@@ -1,8 +1,8 @@
 # Goroutine 泄露
 
-Go 中的并发性是以 goroutine（独立活动）和 channel（用于通信）的形式实现的。处理 goroutine 时，程序员需要小心翼翼地避免泄露。如果最终永远堵塞在 I/O 上（例如 channel 通信），或者陷入死循环，那么 goroutine 会发生泄露。即使是阻塞的 goroutine，也会消耗资源，因此，程序可能会使用比实际需要更多的内存，或者最终耗尽内存，从而导致崩溃。让我们来看看几个可能会发生泄露的例子。然后，我们将重点关注如果检测程序是否受到这种问题的影响。
+Go 中的并发性是以 goroutine（独立活动）和 channel（用于通信）的形式实现的。处理 goroutine 时，程序员需要小心翼翼地避免泄露。如果最终永远堵塞在 I/O 上（例如 channel 通信），或者陷入死循环，那么 goroutine 会发生泄露。即使是阻塞的 goroutine，也会消耗资源，因此，程序可能会使用比实际需要更多的内存，或者最终耗尽内存，从而导致崩溃。让我们来看看几个可能会发生泄露的例子。然后，我们将重点关注如何检测程序是否受到这种问题的影响。
 
-### 发送到一个没有接收者的 channel
+## 发送到一个没有接收者的 channel
 
 ![](https://cdn-images-1.medium.com/max/800/1*7Ii5H_ld1frQDFa4VuUm5g.jpeg)
 
@@ -51,15 +51,15 @@ Go 中的并发性是以 goroutine（独立活动）和 channel（用于通信�
     #goroutines: 9
 ```
 
-每次调用 _queryAll _后，goroutine 的数目会发生增长。问题在于，在接收到第一个响应后，“较慢的” goroutine 将会发送到另一端没有接收者的 channel 中。
+每次调用 _queryAll_ 后，goroutine 的数目会发生增长。问题在于，在接收到第一个响应后，“较慢的” goroutine 将会发送到另一端没有接收者的 channel 中。
 
 可能的解决方法是，如果提前知道后端服务器的数量，那么使用缓存 channel。否则，只要至少有一个 goroutine 仍在工作，我们就可以使用另一个 goroutine 来接收来自这个 channel 的数据。其他的解决方案可能是使用 [context](https://golang.org/pkg/context/)（[example](http://golang.rakyll.org/leakingctx/)），利用 某些机制来取消其他请求。
 
-### 从没有发送者的 channel 中接收数据
+## 从没有发送者的 channel 中接收数据
 
 这种场景类似于发送到一个没有接收者的 channel。[泄露 goroutine](http://openmymind.net/Leaking-Goroutines/) 这篇文章中包含了一个示例。
 
-### nil channel
+## nil channel
 
 写入到 _nil_ channel 会永远阻塞：
 
@@ -126,21 +126,21 @@ Go 中的并发性是以 goroutine（独立活动）和 channel（用于通信�
     }
 ```
 
-在这个例子中，有一个显而易见的罪魁祸首 —— `if false {`，但是在更大的程序中，更容易忘记这回事，然后使用 channel 的零值（_nil_）。
+在这个例子中，有一个显而易见的罪魁祸首 —— `if false {`，但是在更大的程序中，更容易忘记这件事，然后使用 channel 的零值（_nil_）。
 
-### 死循环
+## 死循环
 
 goroutine 泄露不仅仅是因为 channel 的错误使用造成的。泄露的原因也可能是 I/O 操作上的堵塞，例如发送请求到 API 服务器，而没有使用超时。另一种原因是，程序可以单纯地陷入死循环中。
 
-### 分析
+## 分析
 
 ![](https://cdn-images-1.medium.com/max/800/1*AzMvKBxKAmQQxCU7sqK4DA.jpeg)
 
-#### runtime.NumGoroutine
+### runtime.NumGoroutine
 
 简单的方式是使用由 [_runtime.NumGoroutine_](https://golang.org/pkg/runtime/#NumGoroutine) 返回的值。
 
-#### net/http/pprof
+### net/http/pprof
 
 ```go
 
@@ -158,7 +158,7 @@ goroutine 泄露不仅仅是因为 channel 的错误使用造成的。泄露的�
 
 调用 <http://localhost:6060/debug/pprof/goroutine?debug=1>，将会返回带有堆栈跟踪的 goroutine 列表。
 
-#### runtime/pprof
+### runtime/pprof
 
 要将现有的 goroutine 的堆栈跟踪打印到标准输出，请执行以下操作：
 
@@ -174,7 +174,7 @@ goroutine 泄露不仅仅是因为 channel 的错误使用造成的。泄露的�
     pprof.Lookup("goroutine").WriteTo(os.Stdout, 1)
 ```
 
-#### [gops](https://github.com/google/gops)
+### [gops](https://github.com/google/gops)
 
 ```go
 
@@ -208,9 +208,9 @@ goroutine 泄露不仅仅是因为 channel 的错误使用造成的。泄露的�
     num CPU: 4
 ```
 
-#### [leaktest](https://github.com/fortytw2/leaktest)
+### [leaktest](https://github.com/fortytw2/leaktest)
 
-这是用测试自动检测泄露的方法之一。它基本上是在测试的开始和结束的时候，利用 [runtime.Stack](https://golang.org/pkg/runtime/#Stack) 获取活跃 goroutine 的堆栈跟踪。如果在测试完成后还有一些新的 goroutine，那么将其归类为泄露。
+这是用测试来自动检测泄露的方法之一。它基本上是在测试的开始和结束的时候，利用 [runtime.Stack](https://golang.org/pkg/runtime/#Stack) 获取活跃 goroutine 的堆栈跟踪。如果在测试完成后还有一些新的 goroutine，那么将其归类为泄露。
 
 ---
 
@@ -219,7 +219,7 @@ goroutine 泄露不仅仅是因为 channel 的错误使用造成的。泄露的�
 点击原文中的 ❤ 以帮助其他人发现这个问题。如果你想实时获得新的更新，请关注原作者哦~
 
 
-### 资源
+## 资源
 * [包 —— Go 编程语言](https://golang.org/pkg/)
     
     bufio 包实现了缓存 I/O。它封装一个 io.Reader 或者 io.Writer 对象，创建其他对象（Reader 或者……
@@ -241,7 +241,7 @@ goroutine 泄露不仅仅是因为 channel 的错误使用造成的。泄露的�
 via: https://medium.com/golangspec/goroutine-leak-400063aef468
 
 作者：[Michał Łowicki](https://medium.com/@mlowicki)
-译者：[译者ID](https://github.com/译者ID)
-校对：[校对者ID](https://github.com/校对者ID)
+译者：[ictar](https://github.com/ictar)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
