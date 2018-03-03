@@ -174,6 +174,8 @@ Seconds [0.601]
 
 via: https://www.ardanlabs.com/blog/2013/06/gos-duration-type-unravelled.html
 
-作者:[William Kennedy](https://github.com/ardanlabs/gotraining)
+作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
+译者：[swardsman](https://github.com/swardsman)
+校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
