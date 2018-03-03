@@ -169,3 +169,11 @@ Seconds [0.601]
 ```
 
 不再通过比较本地类型来确定时间是否已经用完，而是比较两个 Duration 类型变量，这样更加清晰明了。虽然花了一些时间，但最终我理解了 Duration 类型，我也希望这篇文章能帮助其他人在使用 Go 语言的过程中解决 Duration 类型的疑惑。
+
+
+
+via: https://www.ardanlabs.com/blog/2013/06/gos-duration-type-unravelled.html
+
+作者:[William Kennedy](https://github.com/ardanlabs/gotraining)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
