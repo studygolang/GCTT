@@ -1,8 +1,10 @@
+已发布：https://studygolang.com/articles/12461
+
 # 在 Linux 中使用 Go 作为脚本语言
 
-在 `Cloudflare` 的人们都非常喜欢 Go 语言。我们在许多[内部软件项目](https://blog.cloudflare.com/what-weve-been-doing-with-go/)以及更大的[管道系统](https://blog.cloudflare.com/meet-gatebot-a-bot-that-allows-us-to-sleep/)中使用它。但是，我们能否进入下一个层次并将其用作我们最喜欢的操作系统Linux的脚本语言呢？
+在 `Cloudflare` 的人们都非常喜欢 Go 语言。我们在许多[内部软件项目](https://blog.cloudflare.com/what-weve-been-doing-with-go/)以及更大的[管道系统](https://blog.cloudflare.com/meet-gatebot-a-bot-that-allows-us-to-sleep/)中使用它。但是，我们能否进入下一个层次并将其用作我们最喜欢的操作系统 Linux 的脚本语言呢？
 
-![image here](https://github.com/shniu/resources/raw/master/images/gopher-tux-1.png)
+![image here](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-script/gopher-tux-1.png)
 
 ## 为什么考虑将 Go 作为脚本语言
 
@@ -132,14 +134,12 @@ $ echo $?
 
 就这样了！现在我们可以根据自己的喜好编辑 helloscript.go，并在下次执行文件时看到更改将立即可见。此外，和此前的 shebang 方式不同，我们可以随时使用 `go build` 将文件编译成真正的可执行文件。
 
-
 ---
 
 via：[Using Go as a scripting language in Linux](https://blog.cloudflare.com/using-go-as-a-scripting-language-in-linux/)
 
 作者：[Ignat Korchagin](https://blog.cloudflare.com/author/ignat/)
 译者：[shniu](https://github.com/shniu)
-校对：[?](https://github.com/?)
+校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，
-[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
