@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12487
+
 # Go 语言机制之数据和语法的设计哲学（Design Philosophy On Data And Semantics）
 
 ## 前序（Prelude）
@@ -6,10 +8,10 @@
 
 以下是本系列文章的索引：
 
-1) [Go 语言机制之栈与指针](https://www.goinggo.net/2017/05/language-mechanics-on-stacks-and-pointers.html)
-2) [Go 语言机制之逃逸分析](https://www.ardanlabs.com/blog/2017/05/language-mechanics-on-escape-analysis.html)
-3) [Go 语言机制之内存剖析](https://www.ardanlabs.com/blog/2017/06/language-mechanics-on-memory-profiling.html)
-4) [Go 语言机制之数据和语法的设计哲学](https://www.ardanlabs.com/blog/2017/06/design-philosophy-on-data-and-semantics.html)
+1. [Go 语言机制之栈与指针](https://studygolang.com/articles/12443)
+2. [Go 语言机制之逃逸分析](https://studygolang.com/articles/12444)
+3. [Go 语言机制之内存剖析](https://studygolang.com/articles/12445)
+4. [Go 语言机制之数据和语法的设计哲学](https://studygolang.com/articles/12487)
 
 ## 设计哲学（Design Philosophies）
 
@@ -74,7 +76,7 @@ C 语言是我见过的在性能和表达性上平衡得最好的。你可以通
 我希望你始终专注于理解具体的数据和为了解决问题所需要的数据转换的算法。采用这种原型的第一种方法，编写也可以在生产环境中部署的具体实现（如果这样做是合理和实际的话）。一旦一个具体的实现已经能够工作，一旦你已经知道哪些工作起作用，哪些不起作用，就应该关注于重构，将实现与具体数据分离，将之赋予数据以能力（译者注：我的理解，简单地说，就是抽象为数据类型的一个方法）。
 
 ## 语义原则（Semantic Guidelines）
-                                         
+										 
 你在声明类型时，必须决定特定数据类型将使用哪种语义，值或者指针。接收或返回该类型数据的 API 必须遵循为该类型选择的语义。API 不允许（用户）指定或改变语义。他们必须知道数据使用什么语义，并符合这一点。这是实现大型代码库一致性的起码要求。
 
 以下是基本指导原则：
@@ -96,6 +98,7 @@ Go 语言中内置类型包括数字，文本和布尔类型。这些类型应�
 作为一个例子，从 strings 包中查看这些函数的声明。
 
 ### 代码清单 1
+
 ```go
 func Replace(s, old, new string, n int) string
 func LastIndex(s, sep string) int
@@ -111,6 +114,7 @@ Go 语言中引用类型包括切片，map，接口，函数和 channel。这些
 除非你有很好的理由，否则不要用指针共享这些类型的值。将调用栈中的 map 或 slice 共享给 Unmarshal 函数可能是一个例外。作为一个例子，看看 net 库上声明的这两种类型。
 
 ### 代码清单 2
+
 ```go
 type IP []byte
 type IPMask []byte
@@ -119,23 +123,24 @@ type IPMask []byte
 IP 和 IPMask 都是字节切片。这意味着它们是引用类型，并且它们应该要符合值语义。下面是一个名叫 Mask 的方法，它被声明为接收一个 IPMask 值的 IP 类型。
 
 ### 代码清单 3
+
 ```go
 func (ip IP) Mask(mask IPMask) IP {
-    if len(mask) == IPv6len && len(ip) == IPv4len && allFF(mask[:12]) {
-        mask = mask[12:]
-    }
-    if len(mask) == IPv4len && len(ip) == IPv6len && bytesEqual(ip[:12], v4InV6Prefix) {
-        ip = ip[12:]
-    }
-    n := len(ip)
-    if n != len(mask) {
-        return nil
-    }
-    out := make(IP, n)
-    for i := 0; i < n; i++ {
-        out[i] = ip[i] & mask[i]
-    }
-    return out
+	if len(mask) == IPv6len && len(ip) == IPv4len && allFF(mask[:12]) {
+		mask = mask[12:]
+	}
+	if len(mask) == IPv4len && len(ip) == IPv6len && bytesEqual(ip[:12], v4InV6Prefix) {
+		ip = ip[12:]
+	}
+	n := len(ip)
+	if n != len(mask) {
+		return nil
+	}
+	out := make(IP, n)
+	for i := 0; i < n; i++ {
+		out[i] = ip[i] & mask[i]
+	}
+	return out
 }
 ```
 
@@ -144,6 +149,7 @@ func (ip IP) Mask(mask IPMask) IP {
 这跟系统默认的 append 函数有点相似。
 
 ### 代码清单 4
+
 ```go
 var data []string
 data = append(data, "string")
@@ -154,19 +160,20 @@ append 函数的转变操作使用值语义。将切片值传递给 append，并
 总是除了 unmarshaling，它需要使用指针语义。
 
 ### 代码清单 5
+
 ```go
 func (ip *IP) UnmarshalText(text []byte) error {
-  	if len(text) == 0 {
-  		*ip = nil
-  		return nil
-  	}
-  	s := string(text)
-  	x := ParseIP(s)
-  	if x == nil {
-  		return &ParseError{Type: "IP address", Text: s}
-  	}
-  	*ip = x
-  	return nil
+	if len(text) == 0 {
+		*ip = nil
+		return nil
+	}
+	s := string(text)
+	x := ParseIP(s)
+	if x == nil {
+		return &ParseError{Type: "IP address", Text: s}
+	}
+	*ip = x
+	return nil
 }
 ```
 
@@ -179,11 +186,12 @@ UnmarshalText 实现 encoding.TextUnmarshaler 接口。如果没有使用指针�
 如果我要求你给 time 包编写 API 接口，给你这种类型。
 
 ### 代码清单 6
+
 ```go
 type Time struct {
-    sec  int64
-    nsec int32
-    loc  *Location
+	sec  int64
+	nsec int32
+	loc  *Location
 }
 ```
 
@@ -192,10 +200,11 @@ type Time struct {
 在 Time 包中查看此类型的实现以及工厂函数 Now。
 
 ### 代码清单 7
+
 ```go
 func Now() Time {
-  	sec, nsec := now()
-  	return Time{sec + unixToInternal, nsec, Local}
+	sec, nsec := now()
+	return Time{sec + unixToInternal, nsec, Local}
 }
 ```
 
@@ -204,19 +213,20 @@ func Now() Time {
 再看一下 Add 方法，它也是一个转变操作。
 
 ### 代码清单 8
+
 ```go
 func (t Time) Add(d Duration) Time {
-  	t.sec += int64(d / 1e9)
-  	nsec := t.nsec + int32(d%1e9)
-  	if nsec >= 1e9 {
-  		t.sec++
-  		nsec -= 1e9
-  	} else if nsec < 0 {
-  		t.sec--
-  		nsec += 1e9
-  	}
-  	t.nsec = nsec
-  	return t
+	t.sec += int64(d / 1e9)
+	nsec := t.nsec + int32(d%1e9)
+	if nsec >= 1e9 {
+		t.sec++
+		nsec -= 1e9
+	} else if nsec < 0 {
+		t.sec--
+		nsec += 1e9
+	}
+	t.nsec = nsec
+	return t
 }
 ```
 
@@ -225,6 +235,7 @@ func (t Time) Add(d Duration) Time {
 以下是一个接受 Time 值的函数：
 
 ### 代码清单 9
+
 ```go
 func div(t Time, d Duration) (qmod2 int, r Duration) {
 ```
@@ -232,6 +243,7 @@ func div(t Time, d Duration) (qmod2 int, r Duration) {
 再一次，接受 Time 类型的值使用值语义。唯一使用指针语义的 Time API 接口，是这些 Unmarshal 相关的函数：
 
 ### 代码清单 10 
+
 ```go
 func (t *Time) UnmarshalBinary(data []byte) error {
 func (t *Time) GobDecode(data []byte) error {
@@ -244,9 +256,10 @@ func (t *Time) UnmarshalText(data []byte) error {
 查看 os 包中的 File 类型的生产函数。
 
 ### 代码清单 11
+
 ```go
 func Open(name string) (file *File, err error) {
-    return OpenFile(name, O_RDONLY, 0)
+	return OpenFile(name, O_RDONLY, 0)
 }
 ```
 
@@ -255,30 +268,32 @@ Open 函数返回一个 File 类型的指针。这意味着，对于 File 类型
 查看更多的 API， 你将会看到更多使用指针语义的例子。
 
 ### 代码清单 12
+
 ```go
 func (f *File) Chdir() error {
-    if f == nil {
-        return ErrInvalid
-    }
-    if e := syscall.Fchdir(f.fd); e != nil {
-        return &PathError{"chdir", f.name, e}
-    }
-    return nil
+	if f == nil {
+		return ErrInvalid
+	}
+	if e := syscall.Fchdir(f.fd); e != nil {
+		return &PathError{"chdir", f.name, e}
+	}
+	return nil
 }
 ```
 
 虽然 File 值永远不会被修改，但是 Chdir 方法还是使用指针语义。该方法必须遵循该类型的语义约定。
 
 ### 代码清单 13
+
 ```go
 func epipecheck(file *File, e error) {
-    if e == syscall.EPIPE {
-        if atomic.AddInt32(&file.nepipe, 1) >= 10 {
-            sigpipe()
-        }
-    } else {
-        atomic.StoreInt32(&file.nepipe, 0)
-    }
+	if e == syscall.EPIPE {
+		if atomic.AddInt32(&file.nepipe, 1) >= 10 {
+			sigpipe()
+		}
+	} else {
+		atomic.StoreInt32(&file.nepipe, 0)
+	}
 }
 ```
 
@@ -290,10 +305,12 @@ func epipecheck(file *File, e error) {
 
 Go 语言令人不解的地方在于指针和值语义之间的选择早已超出了接收器和函数参数的声明范围。接口的机制，函数值和切片都在语言的工作范围内。在将来的文章中，我将在这些语言的不同部分中展示值或者指针语义。
 
+---
+
 via: https://www.ardanlabs.com/blog/2017/06/design-philosophy-on-data-and-semantics.html
 
 作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
 译者：[gogeof](https://github.com/gogeof)
-校对：
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
