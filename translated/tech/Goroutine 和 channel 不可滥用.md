@@ -4,7 +4,7 @@
 
 我在给[我的课程项目](https://bradfieldcs.com/courses/databases/)做一个[玩具相关的数据库](https://github.com/robot-dreams/zdb2)。一开始，我从 CSV 文件里加载数据表，后来我需要添加一个二进制的表格结构。不幸的是，第一次尝试（加载二进制表格）的效果比加载 CSV 文件差远了。
 
-```go
+```
 
 $ ./csv_scan_benchmark -path table.csv
 Done scanning 20000263 records after 15.69807191s
@@ -33,18 +33,18 @@ Done scanning 20000263 records after 27.01220384s
 ```go
 
 func NewBinaryScan(path string) (*binaryScan, error) {
-...
-go s.producer()
-return s, nil
+    ...
+    go s.producer()
+    return s, nil
 }
 func (s *binaryScan) producer() {
-for {
-record, err = s.readAndDecodeRecord(s.bufferedReader)
-s.resultChan <- &result{record, err}
-if err != nil {
-return
-}
-}
+    for {
+        record, err = s.readAndDecodeRecord(s.bufferedReader)
+        s.resultChan <- &result{record, err}
+        if err != nil {
+            return
+        }
+    }   
 }
 
 ```
@@ -54,8 +54,8 @@ return
 ```go
 
 func (s *binaryScan) NextRecord() (Record, error) {
-result := <-s.resultChan:
-return result.record, result.err
+    result := <-s.resultChan:
+    return result.record, result.err
 }
 
 ```
@@ -67,12 +67,12 @@ return result.record, result.err
 ```go
 
 func NewBinaryScan(path string) (*binaryScan, error) {
-...
-// No more producer.
-return s, nil
+    ...
+    // No more producer.
+    return s, nil
 }
 func (s *binaryScan) NextRecord() (Record, error) {
-return s.readAndDecodeRecord(s.bufferedReader)
+    return s.readAndDecodeRecord(s.bufferedReader)
 }
 
 ```
@@ -84,7 +84,7 @@ return s.readAndDecodeRecord(s.bufferedReader)
 
 下面是更新后的 benchmark 结果：
 
-```go
+```
 
 $ ./binary_scan_benchmark -path ratings.bt
 Done scanning 20000263 records after 8.160765247s
@@ -101,12 +101,12 @@ Done scanning 20000263 records after 8.160765247s
 
 - 在 `select` 添加 `context.Context` ，减少 producer 超时时间： 59.4s
 - 在 `select` 添加 `context.Context` ，减少 consumer 超时时间： 58.0s
-- 使用缓存为 1 的 channel ：23.5s 
-- 使用缓存为 1000 的 channel ：17.4s
+- 使用缓冲为 1 的 channel ：23.5s 
+- 使用缓冲为 1000 的 channel ：17.4s
 - 在 `done` channel 中去掉 `select` （`done` channel 不在上述代码片段里）：19.9s
-- 在 `done` channel 去掉 `select`，同时使用缓存为 1000 的 channel：14.3s
+- 在 `done` channel 去掉 `select`，同时使用缓冲为 1000 的 channel：14.3s
 
-看来我们又学到一点：channel 缓存大小和 `select` 语句的复杂度都对性能都有很大影响。
+看来我们又学到一点：channel 缓冲大小和 `select` 语句的复杂度都对性能都有很大影响。
 
 **[校对2]**
 
