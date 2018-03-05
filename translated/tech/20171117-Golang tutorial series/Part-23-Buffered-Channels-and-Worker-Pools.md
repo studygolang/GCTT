@@ -1,22 +1,22 @@
 # 第 23 篇：缓冲信道和工作池
-欢迎来到 [Golang 系列教程](#)的第 23 篇。  
+欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 23 篇。  
 
-### 什么是缓冲信道？
-在[上一教程](#)里，我们讨论的主要是无缓冲信道。我们在[信道](#)的教程里详细讨论了，无缓冲信道的发送和接收过程是阻塞的。  
+## 什么是缓冲信道？
+在[上一教程](https://studygolang.com/articles/12402)里，我们讨论的主要是无缓冲信道。我们在[信道](https://studygolang.com/articles/12402)的教程里详细讨论了，无缓冲信道的发送和接收过程是阻塞的。  
 
 我们还可以创建一个有缓冲（Buffer）的信道。只在缓冲已满的情况，才会阻塞向缓冲信道（Buffered Channel）发送数据。同样，只有在缓冲为空的时候，才会阻塞从缓冲信道接收数据。  
 
 通过向 `make` 函数再传递一个表示容量的参数（指定缓冲的大小），可以创建缓冲信道。  
 
-```
+```go
 ch := make(chan type, capacity)  
 ```
 
-要让一个信道有缓冲，上面语法中的 `capacity` 应该大于 0。无缓冲信道的容量默认为 0，因此我们在[上一教程](#)创建信道时，省略了容量参数。  
+要让一个信道有缓冲，上面语法中的 `capacity` 应该大于 0。无缓冲信道的容量默认为 0，因此我们在[上一教程](https://studygolang.com/articles/12402)创建信道时，省略了容量参数。  
 
 我们开始编写代码，创建一个缓冲信道。  
 
-### 示例一
+## 示例一
 ```go
 package main
 
@@ -42,7 +42,7 @@ naveen
 paul 
 ```
 
-### 示例二
+## 示例二
 我们再看一个缓冲信道的示例，其中有一个并发的 Go 协程来向信道写入数据，而 Go 主协程负责读取数据。该示例帮助我们进一步理解，在向缓冲信道写入数据时，什么时候会发生阻塞。  
 
 ```go
@@ -102,7 +102,7 @@ read value 3 from ch
 read value 4 from ch  
 ```
 
-### 死锁
+## 死锁
 ```go
 package main
 
@@ -121,7 +121,7 @@ func main() {
 ```
 [在线运行程序](https://play.golang.org/p/FW-LHeH7oD)  
 
-在上面程序里，我们向容量为 2 的缓冲信道写入 3 个字符串。当在程序控制到达第 3 次写入时（第 11 行），由于它超出了信道的容量，因此这次写入发生了阻塞。现在要想要这次写操作能够进行下去，必须要有其它协程来读取这个信道的数据。但在本例中，并没有并发协程来读取这个信道，因此这里会发生**死锁**（deadlock）。程序会在运行时触发 panic，信息如下：  
+在上面程序里，我们向容量为 2 的缓冲信道写入 3 个字符串。当在程序控制到达第 3 次写入时（第 11 行），由于它超出了信道的容量，因此这次写入发生了阻塞。现在想要这次写操作能够进行下去，必须要有其它协程来读取这个信道的数据。但在本例中，并没有并发协程来读取这个信道，因此这里会发生**死锁**（deadlock）。程序会在运行时触发 panic，信息如下：  
 
 ```
 fatal error: all goroutines are asleep - deadlock!
@@ -131,7 +131,7 @@ main.main()
     /tmp/sandbox274756028/main.go:11 +0x100
 ```
 
-### 长度 vs 容量
+## 长度 vs 容量
 缓冲信道的容量是指信道可以存储的值的数量。我们在使用 `make` 函数创建缓冲信道的时候会指定容量大小。  
 
 缓冲信道的长度是指信道中当前排队的元素个数。  
@@ -166,7 +166,7 @@ read value naveen
 new length is 1
 ```
 
-### WaitGroup
+## WaitGroup
 在本教程的下一节里，我们会讲到**工作池**（Worker Pools）。而 `WaitGroup` 用于实现工作池，因此要理解工作池，我们首先需要学习 `WaitGroup`。  
 
 `WaitGroup` 用于等待一批 Go 协程执行结束。程序控制会一直阻塞，直到这些协程全部执行完毕。假设我们有 3 个并发执行的 Go 协程（由 Go 主协程生成）。Go 主协程需要等待这 3 个协程执行结束后，才会终止。这就可以用 `WaitGroup` 来实现。  
@@ -222,7 +222,7 @@ All go routines finished executing
 
 由于 Go 协程的执行顺序不一定，因此你的输出可能和我不一样。:)  
 
-### 工作池的实现
+## 工作池的实现
 缓冲信道的重要应用之一就是实现[工作池](https://en.wikipedia.org/wiki/Thread_pool)。  
 
 一般而言，工作池就是一组等待任务分配的线程。一旦完成了所分配的任务，这些线程可继续等待任务的分配。  
@@ -279,10 +279,9 @@ func digits(number int) int {
 }
 ```
 
-然后，我们写一个创建工作
-协程的函数。  
+然后，我们写一个创建工作协程的函数。  
 
-```
+```go
 func worker(wg *sync.WaitGroup) {  
     for job := range jobs {
         output := Result{job, digits(job.randomno)}
@@ -472,10 +471,12 @@ total time taken  10.004364685 seconds
 
 **下一教程 - [Select](#)**
 
+---
+
 via: https://golangbot.com/buffered-channels-worker-pools/
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[Noluye](https://github.com/Noluye)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
