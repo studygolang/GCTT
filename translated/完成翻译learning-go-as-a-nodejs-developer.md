@@ -14,7 +14,7 @@ GERGELY NEMETH 2018-02-08
 
 > Go 是一个开源的编程语言，它能让构造简单、可靠且高效的软件变得容易. - golang.org
 
-Go 由 Google 的 Robert Griesemer, Rob Pike, 和 Ken Thompson 于2009年发布。它是一款静态类型的编译语言，拥有垃圾收集机制，基于CSP并发模型来处理异步操作。 Go 还有类C的语法：
+Go 由 Google 的 Robert Griesemer, Rob Pike, 和 Ken Thompson 于2009年发布。它是一款静态类型的编译语言，拥有垃圾收集机制，基于CSP并发模型来处理异步操作。 Go 还有类 C 的语法：
 
 ```go
     package main
@@ -41,7 +41,7 @@ Go 由 Google 的 Robert Griesemer, Rob Pike, 和 Ken Thompson 于2009年发布�
 go get -u github.com/golang/dep/cmd/dep
 ```
 
-然而，使用 go get 有一个缺点 —— go get并不处理版本，它仅仅是获取 Github 仓库的最新版本。这就是为什么推荐大家安装并使用 dep。如果是 Mac 系统，安装 dep 也可以通过如下命令：
+然而，使用 go get 有一个缺点 —— go get 并不处理版本，它仅仅是获取 Github 仓库的最新版本。这就是为什么推荐大家安装并使用 dep。如果是 Mac 系统，安装 dep 也可以通过如下命令：
 
 ```go
 brew install dep
@@ -49,7 +49,7 @@ brew upgrade dep
 ```
 （如果是其他操作系统，安装请参见： https://golang.org/doc/install）
 
-一旦安装了 dep,你就可以使用 **dep init**来初始化项目，就好像使用**npm init**初始化 nodejs 项目一样。
+一旦安装了 dep，你就可以使用 **dep init** 来初始化项目，就好像使用 **npm init** 初始化 nodejs 项目一样。
 
 > 开发Go项目之前，你需要花点时间设置好GOPATH环境变量。—— [官方指导链接](https://golang.org/doc/install)
 
@@ -111,7 +111,7 @@ dep 会像 npm 一样，创建一个 Node.js 项目中类似 package.json 的文
 
 我们来一行行看看上面代码是怎么工作的：
 
-- *import* —— 有了 import 关键字，你可以引入项目依赖的包文件，就像 Node.js 中的*require*
+- *import* —— 有了 import 关键字，你可以引入项目依赖的包文件，就像 Node.js 中的 *require*
 - func main —— 应用程序的入口
 - ioutil.ReadFile —— 该函数尝试去读取文件，并由两个返回值：
 	- datFile1 如果读操作成功，
