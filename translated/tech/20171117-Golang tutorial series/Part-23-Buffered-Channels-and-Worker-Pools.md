@@ -470,7 +470,6 @@ total time taken  10.004364685 seconds
 本教程到此结束。祝你愉快。   
 
 **下一教程 - [Select](#)**
-
 ---
 
 via: https://golangbot.com/buffered-channels-worker-pools/
