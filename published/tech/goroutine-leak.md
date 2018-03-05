@@ -1,54 +1,56 @@
+已发布：https://studygolang.com/articles/12495
+
 # Goroutine 泄露
+
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/goroutine-leak/cover.jpg)
 
 Go 中的并发性是以 goroutine（独立活动）和 channel（用于通信）的形式实现的。处理 goroutine 时，程序员需要小心翼翼地避免泄露。如果最终永远堵塞在 I/O 上（例如 channel 通信），或者陷入死循环，那么 goroutine 会发生泄露。即使是阻塞的 goroutine，也会消耗资源，因此，程序可能会使用比实际需要更多的内存，或者最终耗尽内存，从而导致崩溃。让我们来看看几个可能会发生泄露的例子。然后，我们将重点关注如何检测程序是否受到这种问题的影响。
 
 ## 发送到一个没有接收者的 channel
 
-![](https://cdn-images-1.medium.com/max/800/1*7Ii5H_ld1frQDFa4VuUm5g.jpeg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/goroutine-leak/1.jpg)
 
 假设出于冗余的目的，程序发送请求到许多后端。使用首先收到的响应，丢弃后面的响应。下面的代码将会通过等待随机数毫秒，来模拟向下游服务器发送请求：
 
 ```go
+package main
 
-    package main
+import (  
+	"fmt"  
+	"math/rand"  
+	"runtime"  
+	"time"  
+)
 
-    import (  
-        "fmt"  
-        "math/rand"  
-        "runtime"  
-        "time"  
-    )
+func query() int {  
+	n := rand.Intn(100)  
+	time.Sleep(time.Duration(n) * time.Millisecond)  
+	return n  
+}
 
+func queryAll() int {  
+	ch := make(chan int)  
+	go func() { ch <- query() }()  
+	go func() { ch <- query() }()  
+	go func() { ch <- query() }()  
+	return <-ch  
+}
 
-    func query() int {  
-        n := rand.Intn(100)  
-        time.Sleep(time.Duration(n) * time.Millisecond)  
-        return n  
-    }
+func main() {  
+	for i := 0; i < 4; i++ {  
+		queryAll()  
+		fmt.Printf("#goroutines: %d", runtime.NumGoroutine())  
+	}  
+}
+```
 
+输出：
 
-    func queryAll() int {  
-        ch := make(chan int)  
-        go func() { ch <- query() }()  
-        go func() { ch <- query() }()  
-        go func() { ch <- query() }()  
-        return <-ch  
-    }
-
-
-    func main() {  
-        for i := 0; i < 4; i++ {  
-            queryAll()  
-            fmt.Printf("#goroutines: %d
-    ", runtime.NumGoroutine())  
-        }  
-    }
-
-
-    #goroutines: 3  
-    #goroutines: 5  
-    #goroutines: 7  
-    #goroutines: 9
+```
+#goroutines: 3  
+#goroutines: 5  
+#goroutines: 7  
+#goroutines: 9
 ```
 
 每次调用 _queryAll_ 后，goroutine 的数目会发生增长。问题在于，在接收到第一个响应后，“较慢的” goroutine 将会发送到另一端没有接收者的 channel 中。
@@ -64,66 +66,57 @@ Go 中的并发性是以 goroutine（独立活动）和 channel（用于通信�
 写入到 _nil_ channel 会永远阻塞：
 
 ```go
+package main
 
-    package main
-
-
-    func main() {  
-        var ch chan struct{}  
-        ch <- struct{}{}  
-    }
+func main() {  
+	var ch chan struct{}  
+	ch <- struct{}{}  
+}
 ```
 
 所以它导致死锁：
 
-```go
+```
+fatal error: all goroutines are asleep - deadlock!
 
-    fatal error: all goroutines are asleep - deadlock!
-
-
-    goroutine 1 [chan send (nil chan)]:  
-    main.main()  
-        ...
+goroutine 1 [chan send (nil chan)]:  
+main.main()  
+...
 ```
 
 当从 _nil_ channel 读取数据时，同样的事情发生了：
 
 ```go
-
-    var ch chan struct{}  
-    <-ch
+var ch chan struct{}  
+<-ch
 ```
 
 当传递尚未初始化的 channel 时，也可能会发生：
 
 ```go
+package main
 
-    package main
+import (  
+	"fmt"  
+	"runtime"  
+	"time"  
+)
 
+func main() {  
+	var ch chan int  
+	if false {  
+		ch = make(chan int, 1)  
+		ch <- 1  
+	}  
+	go func(ch chan int) {  
+		<-ch  
+	}(ch)
 
-    import (  
-        "fmt"  
-        "runtime"  
-        "time"  
-    )
-
-    func main() {  
-        var ch chan int  
-        if false {  
-            ch = make(chan int, 1)  
-            ch <- 1  
-        }  
-        go func(ch chan int) {  
-            <-ch  
-        }(ch)
-
-
-        c := time.Tick(1 * time.Second)  
-        for range c {  
-            fmt.Printf("#goroutines: %d
-    ", runtime.NumGoroutine())  
-        }  
-    }
+	c := time.Tick(1 * time.Second)  
+	for range c {  
+		fmt.Printf("#goroutines: %d", runtime.NumGoroutine())  
+	}  
+}
 ```
 
 在这个例子中，有一个显而易见的罪魁祸首 —— `if false {`，但是在更大的程序中，更容易忘记这件事，然后使用 channel 的零值（_nil_）。
@@ -134,7 +127,7 @@ goroutine 泄露不仅仅是因为 channel 的错误使用造成的。泄露的�
 
 ## 分析
 
-![](https://cdn-images-1.medium.com/max/800/1*AzMvKBxKAmQQxCU7sqK4DA.jpeg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/goroutine-leak/2.jpg
 
 ### runtime.NumGoroutine
 
@@ -143,69 +136,62 @@ goroutine 泄露不仅仅是因为 channel 的错误使用造成的。泄露的�
 ### net/http/pprof
 
 ```go
+import (  
+	"log"  
+	"net/http"  
+	_ "net/http/pprof"  
+)
 
-    import (  
-        "log"  
-        "net/http"  
-        _ "net/http/pprof"  
-    )
+...
 
-    ...
-
-
-    log.Println(http.ListenAndServe("localhost:6060", nil))
+log.Println(http.ListenAndServe("localhost:6060", nil))
 ```
 
-调用 <http://localhost:6060/debug/pprof/goroutine?debug=1>，将会返回带有堆栈跟踪的 goroutine 列表。
+调用 http://localhost:6060/debug/pprof/goroutine?debug=1 ，将会返回带有堆栈跟踪的 goroutine 列表。
 
 ### runtime/pprof
 
 要将现有的 goroutine 的堆栈跟踪打印到标准输出，请执行以下操作：
 
 ```go
+import (  
+	"os"  
+	"runtime/pprof"  
+)
 
-    import (  
-        "os"  
-        "runtime/pprof"  
-    )
+...
 
-    ...
-
-    pprof.Lookup("goroutine").WriteTo(os.Stdout, 1)
+pprof.Lookup("goroutine").WriteTo(os.Stdout, 1)
 ```
 
 ### [gops](https://github.com/google/gops)
 
-```go
-
-    > go get -u github.com/google/gops
+```
+> go get -u github.com/google/gops
 ```
 
 集成到你的程序中：
 
 ```go
+import "github.com/google/gops/agent"
 
-    import "github.com/google/gops/agent"
+...
 
-    ...
-
-
-    if err := agent.Start(); err != nil {  
-        log.Fatal(err)  
-    }  
-    time.Sleep(time.Hour)
+if err := agent.Start(); err != nil {  
+	log.Fatal(err)  
+}  
+time.Sleep(time.Hour)
 ```
 
-```go
-
-    > ./bin/gops  
-    12365   gops    (/Users/mlowicki/projects/golang/spec/bin/gops)  
-    12336*  lab     (/Users/mlowicki/projects/golang/spec/bin/lab)  
-    > ./bin/gops vitals -p=12336  
-    goroutines: 14  
-    OS threads: 9  
-    GOMAXPROCS: 4  
-    num CPU: 4
+```
+> ./bin/gops  
+12365   gops    (/Users/mlowicki/projects/golang/spec/bin/gops)  
+12336*  lab     (/Users/mlowicki/projects/golang/spec/bin/lab)  
+> ./bin/gops vitals -p=12336  
+goroutines: 14  
+OS threads: 9  
+GOMAXPROCS: 4  
+num CPU: 4
 ```
 
 ### [leaktest](https://github.com/fortytw2/leaktest)
@@ -221,20 +207,20 @@ goroutine 泄露不仅仅是因为 channel 的错误使用造成的。泄露的�
 
 ## 资源
 * [包 —— Go 编程语言](https://golang.org/pkg/)
-    
-    bufio 包实现了缓存 I/O。它封装一个 io.Reader 或者 io.Writer 对象，创建其他对象（Reader 或者……
+	
+	bufio 包实现了缓存 I/O。它封装一个 io.Reader 或者 io.Writer 对象，创建其他对象（Reader 或者……）
 
 * [google/gops](https://github.com/google/gops)
 
-    gops —— 一个列出和诊断当前运行在你的系统上的 Go 进程的工具。
+	gops —— 一个列出和诊断当前运行在你的系统上的 Go 进程的工具。
 
 * [runtime：检测僵尸 goroutine · 问题 #5308 · golang/go](https://github.com/golang/go/issues/5308)
 
-    runtime 可以检测不可达 channel / mutex 等上面的 goroutine 阻塞，然后报告此类问题。这需要一个接口……
+	runtime 可以检测不可达 channel / mutex 等上面的 goroutine 阻塞，然后报告此类问题。这需要一个接口……
 
 * [fortytw2/leaktest](https://github.com/fortytw2/leaktest)
 
-    leaktest - goroutine 泄露检测器。
+	leaktest - goroutine 泄露检测器。
 
 ----------------
 

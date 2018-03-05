@@ -1,7 +1,8 @@
+已发布：https://studygolang.com/articles/12488
 
-# Golang 下的微服务 - Part5 - Go Micro 的事件代理
+# Golang 下的微服务 - 第 5 部分 - Go Micro 的事件代理
 
-在本系列的前一部分中，我们谈到了用户认证和 JWT。在这一部分中，我们将快速浏览 go-micro 的代理功能。
+在本系列的[前一部分中](https://studygolang.com/articles/12485)，我们谈到了用户认证和 JWT。在这一部分中，我们将快速浏览 go-micro 的代理功能。
 
 正如前面的文章提到的，go-micro 是一个可插拔的框架，它连接了许多不同的常用技术。如果你看看[插件仓库](https://github.com/micro/go-plugins)，你会看到它支持多少插件。
 
@@ -11,7 +12,7 @@
 
 [事件驱动的架构](https://en.wikipedia.org/wiki/Event-driven_architecture)是一个非常简单的概念。我们通常认为好的架构是要解耦的，一个服务不应该与其他服务耦合或者感知到其他服务。当我们使用诸如 `gRPC` 协议时，在某些情况下是正确的，我们以向 `go.srv.user-service` 发布请求为例。其中就使用了服务发现的方式来查找该服务的实际位置。 尽管这并不直接将我们与实现耦合，但它确实将该服务耦合到了其他名为 `go.srv.user-service` 的服务，因此它不是完全的解耦，因为它直接与其他服务进行交互。
 
-那么什么让事件驱动架构真正的解耦呢？为了理解这一点，我们首先看看发布和订阅事件的过程。服务 a 完成了一项任务 x，然后向系统发布一个事件`x 刚刚发生了`。服务并不需要知道或者关心谁在监听这个事件，或者该事件正在发生什么影响。这些事情留给了监听事件的客户端。如果你期待 n 个服务对某个事件采取行动，那么也很容易。例如，你想 12 个不同的服务针对使用 `gRPC` 创建新用户采取行动，可能需要在用户服务中实例化 12 个客户端。而借助事件发布订阅或事件驱动架构，你的服务就不需要关心这些。
+那么什么让事件驱动架构真正的解耦呢？为了理解这一点，我们首先看看发布和订阅事件的过程。服务 a 完成了一项任务 x，然后向系统发布一个事件 `x 刚刚发生了`。服务并不需要知道或者关心谁在监听这个事件，或者该事件正在发生什么影响。这些事情留给了监听事件的客户端。如果你期待 n 个服务对某个事件采取行动，那么也很容易。例如，你想 12 个不同的服务针对使用 `gRPC` 创建新用户采取行动，可能需要在用户服务中实例化 12 个客户端。而借助事件发布订阅或事件驱动架构，你的服务就不需要关心这些。
 
 现在，客户端服务只需要简单的监听事件。这意味着，你需要中间的介质来接收这些事件，并通知订阅了事件的客户端。
 
@@ -24,8 +25,8 @@
 ```go
 // shippy-user-service/main.go
 func main() {
-    ... 
-    // Init will parse the command line flags.
+	... 
+	// Init will parse the command line flags.
 	srv.Init()
 
 	// Get instance of the broker using our defaults
@@ -33,7 +34,7 @@ func main() {
 
 	// Register handler
 	pb.RegisterUserServiceHandler(srv.Server(), &service{repo, tokenService, pubsub})
-    ...
+	...
 }
 ```
 
@@ -199,11 +200,11 @@ nc.Publish("user.created", userJsonString)
 
 订阅一个事件：
 
-```
+```go
 // Simple Async Subscriber
 nc.Subscribe("user.created", func(m *nats.Msg) {
-    user := convertUserString(m.Data)
-    go sendEmail(user)
+	user := convertUserString(m.Data)
+	go sendEmail(user)
 })
 ```
 
@@ -211,19 +212,19 @@ nc.Subscribe("user.created", func(m *nats.Msg) {
 
 内置 go-micro 是 pubsub 层，位于代理层之上，但不需要第三方代理（如 NATS）。 但是这个功能真正棒的部分在于它利用了 protobuf 的定义。 所以我们回到了低延迟二进制流的领域。 因此，让我们更新我们的用户服务，用 go-micro 的 pubsub 替换现有的 NATS 代理：
 
-```
+```go
 // shippy-user-service/main.go
 func main() {
-    ...
-    publisher := micro.NewPublisher("user.created", srv.Client())
+	...
+	publisher := micro.NewPublisher("user.created", srv.Client())
 
 	// Register handler
 	pb.RegisterUserServiceHandler(srv.Server(), &service{repo, tokenService, publisher})
-    ...
+	...
 }
 ```
 
-```
+```go
 // shippy-user-service/handler.go
 func (srv *service) Create(ctx context.Context, req *pb.User, res *pb.Response) error {
 
@@ -234,7 +235,7 @@ func (srv *service) Create(ctx context.Context, req *pb.User, res *pb.Response) 
 	}
 	req.Password = string(hashedPass)
 
-    // Here's our new publisher code, much simpler
+	// Here's our new publisher code, much simpler
 	if err := srv.repo.Create(req); err != nil {
 		return err
 	}
@@ -248,7 +249,7 @@ func (srv *service) Create(ctx context.Context, req *pb.User, res *pb.Response) 
 
 现在我们的邮件服务是这样的：
 
-```
+```go
 // shippy-email-service
 const topic = "user.created"
 
@@ -261,9 +262,9 @@ func (sub *Subscriber) Process(ctx context.Context, user *pb.User) error {
 }
 
 func main() {
-    ...
-    micro.RegisterSubscriber(topic, srv.Server(), new(Subscriber))
-    ...
+	...
+	micro.RegisterSubscriber(topic, srv.Server(), new(Subscriber))
+	...
 }
 ```
 
@@ -271,15 +272,14 @@ func main() {
 
 这是一个包装！ 接下来的教程我们将着眼于为我们的服务创建一个用户界面，并研究 Web 客户端如何开始与我们的服务进行交互。
 
-本文中的任何错误、反馈，或任何您会发现有用的东西，请给我发一封[电子邮件](ewan.valentine89@gmail.com)。
+本文中的任何错误、反馈，或任何您会发现有用的东西，请给我发[电子邮件](ewan.valentine89@gmail.com)。
 
 ---
 
 via：[Microservices in Golang - Part 5 - Event brokering with Go Micro](https://ewanvalentine.io/microservices-in-golang-part-5/)
 
-作者：[ewanvalentine.io](http://ewanvalentine.io/)
+作者：[André Carvalho](https://ewanvalentine.io/)
 译者：[shniu](https://github.com/shniu)
 校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，
-[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
