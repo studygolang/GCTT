@@ -31,8 +31,7 @@ func Test() {
 	var durationAsInt64 = int64(duration)
 
 	if durationAsInt64 >= waitFiveHundredMillisections {
-		fmt.Printf("Time Elapsed : Wait[%d] Duration[%d]\n",
-				waitFiveHundredMillisections, durationAsInt64)
+		fmt.Printf("Time Elapsed : Wait[%d] Duration[%d]\n", waitFiveHundredMillisections, durationAsInt64)
 	} else {
 		fmt.Printf("Time DID NOT Elapsed : Wait[%d] Duration[%d]\n", waitFiveHundredMillisections, durationAsInt64)
 	}
@@ -72,10 +71,7 @@ func Test() {
 	var duration_Seconds time.Duration = (1250 * 10) * time.Millisecond
 	var duration_Minute time.Duration = 2 * time.Minute
 
-	fmt.Printf("Milli [%v]\nSeconds [%v]\nMinute [%v]\n",
-				duration_Milliseconds,
-				duration_Seconds,
-				duration_Minute)
+	fmt.Printf("Milli [%v]\nSeconds [%v]\nMinute [%v]\n", duration_Milliseconds, duration_Seconds, duration_Minute)
 }
 ```
 
@@ -118,10 +114,7 @@ func Test() {
 
 	var castToInt64 int64 = duration_Milliseconds.Nanoseconds() / 1e6
 	var castToFloat64 float64 = duration_Milliseconds.Seconds() * 1e3
-	fmt.Printf("Duration [%v]\ncastToInt64 [%d]\ncastToFloat64 [%.0f]\n",
-				duration_Milliseconds,
-				castToInt64,
-				castToFloat64)
+	fmt.Printf("Duration [%v]\ncastToInt64 [%d]\ncastToFloat64 [%.0f]\n", duration_Milliseconds, castToInt64, castToFloat64)
 }
 ```
 
@@ -146,11 +139,8 @@ func Test() {
 	var duration time.Duration = endingTime.Sub(startingTime)
 
 	if duration >= waitFiveHundredMillisections {
-	fmt.Printf("Wait %v\nNative [%v]\nMilliseconds [%d]\nSeconds [%.3f]\n",
-				waitFiveHundredMillisections,
-				duration,
-				duration.Nanoseconds()/1e6,
-				duration.Seconds())
+	fmt.Printf("Wait %v\nNative [%v]\nMilliseconds [%d]\nSeconds [%.3f]\n", waitFiveHundredMillisections,
+			duration, duration.Nanoseconds()/1e6, duration.Seconds())
 	}
 }
 ```
@@ -166,7 +156,7 @@ Seconds [0.601]
 
 不再通过比较本地类型来确定时间是否已经用完，而是比较两个 Duration 类型变量，这样更加清晰明了。虽然花了一些时间，但最终我理解了 Duration 类型，我也希望这篇文章能帮助其他人在使用 Go 语言的过程中解决 Duration 类型的疑惑。
 
------------------------------------------------------------------------------------------------------------------------------------
+---
 
 via: https://www.ardanlabs.com/blog/2013/06/gos-duration-type-unravelled.html
 
