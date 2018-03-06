@@ -1,8 +1,8 @@
-# Yak Shaving With Backoff Libraries in Go
+# 关于在 Go 代码中使用退避方法，啰嗦几句（Yak Shaving With Backoff Libraries in Go）
 
-我相信你有过调用 API 接口需要使用退避算法的时候。在 Go 语言现有技术中，有 github.com/cenkalti/backoff，github.com/jpillora/backoff，和其它库可以使用。
+我相信你有过调用 API 接口需要使用退避算法的时候。在 Go 语言现有技术中，有 [github.com/cenkalti/backoff](https://github.com/cenkalti/backoff)，[github.com/jpillora/backoff](https://github.com/jpillora/backoff)，和其它库可以使用。
 
-我曾经使用过 github.com/cenkalti/backoff，但是有一件让我感到困惑的事：它要求你在操作中创建一个闭包，以 func() error 的方式。
+我曾经使用过 [github.com/cenkalti/backoff](https://github.com/cenkalti/backoff)，但是有一件让我感到困惑的事：它要求你为操作加上闭包，强制输入为 func() error 的形式。
 
 举个例子，当你需要一个可以自动重试的函数（如下面的 myFunc 函数），返回 3 个值和一个 error，你需要和作用域斗智斗勇。
 
@@ -17,10 +17,10 @@ backoff.Retry(func() error {
 
 在性能方面，这可能可以忽略不计，但作用域全搞乱了，这个时候你必须要小心，在赋值时不要使用 :=，而是使用 = 来确保获得正确的值。
 
-这是我写 [github.com/lestrrat-go/backoff](github.com/lestrrat-go/backoff )  库的主要原因。
+这是我写 [github.com/lestrrat-go/backoff](github.com/lestrrat-go/backoff) 库的主要原因。
 
 
-使用这个库，你将不得不写更多的样板代码（使用库需要执行的函数：NewExponential()，Start() 等），但是你不需要实现一个闭包，我发现结果更像是 Go-ish。计算退避持续时间仍然很难，如果你有更好的算法，请告诉我。
+使用这个库，你将不得不写更多的样板代码（使用库需要执行的函数：NewExponential()，Start() 等），但是你不需要实现一个闭包，我发现这样更加符合 Go 的风格。计算退避持续时间仍然很难，如果你有更好的算法，请告诉我。
 
 使用 [github.com/lestrrat-go/backoff](github.com/lestrrat-go/backoff) 库，首先你要创建一个策略对象：
 
@@ -77,6 +77,7 @@ via: https://medium.com/@lestrrat/yak-shaving-with-backoff-libraries-in-go-80240
 
 作者：[Daisuke Maki](https://github.com/lestrrat)
 译者：[gogeof](https://github.com/gogeof)
-校对：
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
+
