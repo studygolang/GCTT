@@ -2,7 +2,7 @@
 
 在这系列的第五篇文章，我们将讨论 Go 项目的跨平台编译.
 
-在阅读这篇文章之前，请确保你已经阅读了上一篇关于“Time包以及重载”，或者订阅我们的博客更新提醒来获取此六部曲后续文章的音讯。
+在阅读这篇文章之前，请确保你已经阅读了[上一篇](https://blog.bluematador.com/golang-pros-cons-part-4-time-package-method-overloading)关于“Time包以及重载”的文章，或者订阅我们的博客更新提醒来获取此六部曲后续文章的音讯。
 
 - [Golang 之于 DevOps 开发者的利与弊#1：Goroutines，Channels，Panics和Errors](https://blog.bluematador.com/blog/posts/golang-pros-cons-for-devops-part-1-goroutines-panics-errors/)
 
@@ -18,7 +18,7 @@
 
 ## Golang 之利: 在 Linux 下编译 Windows 程序
 
-对于我这类主要使用 Linux 的人来说，我对于偶尔不得不去应付 Windows 的时候感到十分的痛苦。这句话在我写我们的 [Smart Agent™](https://www.bluematador.com/smart-agent) 的时候显得格外正确，它能同时跑在 Linux 和 Windows 上，并且会为了我们的日志管理及监控软件去深入探究这两个系统的底层相关问题。
+对于我这类主要使用 Linux 的人来说，我对于偶尔不得不去应付 Windows 下的问题感到十分的痛苦。这句话在我写我们的 [Smart Agent™](https://www.bluematador.com/smart-agent) 的时候显得格外正确，它能同时跑在 Linux 和 Windows 上，并且会为了我们的日志管理及监控软件去深入探究这两个系统的底层相关问题。
 
 因为我们的 agent 是用 Golang 写的，在 Linux 环境下把代码编译成能在 Windows 跑的程序是十分轻松的。大部分的工作是由两个运行 `go build` 命令时的传入参数：GOARCH 和 GOOS 所完成的.
 
