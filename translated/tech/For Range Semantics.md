@@ -15,7 +15,7 @@
 
 ## 介绍
 
-在这篇文章中，我将探索 Go 中的 `for range` 语句如何提供值和执行语义形式。我将教授语言机制，并展示这些语义有多深奥。然后件展示一个简单的例子，说明将这些语义和可能导致的问题混合起来是多么容易。
+在这篇文章中，我将探索 Go 中的 `for range` 语句如何提供值和指针语义形式。我将教授语言机制，并展示这些语义有多深奥。然后件展示一个简单的例子，说明将这些语义和可能导致的问题混合起来是多么容易。
 
 ## 语言机制
 
@@ -53,7 +53,7 @@ func main() {
 如果你要使用指针语义，`for range` 循环看起来像这样。
 
 **代码清单2**
-```
+```go
 for i := range users {
     fmt.Println(i, users[i])
 }
@@ -64,7 +64,7 @@ for i := range users {
 要解决这个问题，需要再做一次最后的修改。
 
 **代码清单3**
-```
+```go
 for i := range users {
     fmt.Println(i, &users[i])
 }
@@ -75,7 +75,7 @@ for i := range users {
 作为参考，清单4并排显示了值和指针语义。
 
 **代码清单4**
-```
+```go
 // Value semantics.           // Pointer semantics.
 for i, u := range users {     for i := range users {
     fmt.Println(i, u)             fmt.Println(i, &users[i])
@@ -89,7 +89,7 @@ for i, u := range users {     for i := range users {
 [https://play.golang.org/p/IlAiEkgs4C](https://play.golang.org/p/IlAiEkgs4C)
 
 **代码清单5**
-```
+```go
 package main
 
 import "fmt"
@@ -117,11 +117,11 @@ Aft[Jack]
 ```
 正如你所期望的那样，第 10 行的代码已经改变了索引 1 的字符串，你可以在输出中看到。该程序使用 `for range` 循环的指针语义版本。接下来，代码将使用 `for range` 循环的值语义版本。
 
-[ttps://play.golang.org/p/opSsIGtNU1](ttps://play.golang.org/p/opSsIGtNU1)
+[https://play.golang.org/p/opSsIGtNU1](https://play.golang.org/p/opSsIGtNU1)
 
 **清单7**
 
-```
+```go
 package main
 
 import "fmt"
@@ -146,12 +146,72 @@ func main() {
 ```
 Bfr[Betty] : v[Betty]
 ```
+我们可以看到这种形式的 `for range` 真的是使用了值语义。`for ranage` 在数组的拷贝上进行迭代。这就是为什么在输出中并未看到值的改变。
+
+当使用值语义形式覆盖切片时，将采用切片标头的副本。 这就是为什么清单 9 中的代码不必惊慌。
+
+**清单9**
+```go
+package main
+
+import "fmt"
+
+func main() {
+    five := []string{"Annie", "Betty", "Charley", "Doug", "Edward"}
+
+    for _, v := range five {
+        five = five[:2]
+        fmt.Printf("v[%s]\n", v)
+    }
+}
+
+Output:
+v[Annie]
+v[Betty]
+v[Charley]
+v[Doug]
+v[Edward]
+```
+
+如果您查看第09行，循环内的切片值会缩减为2，但循环将在切片值的自身副本上进行操作。 这允许循环使用原始长度进行迭代而没有任何问题，因为后备数组仍然是完整的。
+
+如果代码使用 `for range ` 的指针语义形式，程序就会发生混乱。
+
+**清单10**
+```
+package main
+
+import "fmt"
+
+func main() {
+    five := []string{"Annie", "Betty", "Charley", "Doug", "Edward"}
+
+    for i := range five {
+        five = five[:2]
+        fmt.Printf("v[%s]\n", five[i])
+    }
+}
+
+Output:
+v[Annie]
+v[Betty]
+panic: runtime error: index out of range
+
+goroutine 1 [running]:
+main.main()
+	/tmp/sandbox688667612/main.go:10 +0x140
+```
+
+`for range` 在迭代之前获取到切片的长度，但是在循环过程中长度发生了变换。现在在第三次迭代的时候，循环尝试访问不再与切片长度相关联的元素。
+
+## 混合语义
+
+这是一个完全糟糕的例子。该代码混合了用户类型定义的语义，并引发了一个 bug。
 
 
 
 
 ---
-
 via: https://www.ardanlabs.com/blog/2017/06/for-range-semantics.html
 
 作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
