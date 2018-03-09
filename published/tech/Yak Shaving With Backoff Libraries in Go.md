@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12531
+
 # 关于在 Go 代码中使用退避方法，啰嗦几句（Yak Shaving With Backoff Libraries in Go）
 
 我相信你有过调用 API 接口需要使用退避算法的时候。在 Go 语言现有技术中，有 [github.com/cenkalti/backoff](https://github.com/cenkalti/backoff)，[github.com/jpillora/backoff](https://github.com/jpillora/backoff)，和其它库可以使用。
@@ -9,16 +11,15 @@
 ```go
 var a, b, c Result
 backoff.Retry(func() error {
-  var err error
-  a, b, c, err = myFunc(arg, ...)
-  return err
+	var err error
+	a, b, c, err = myFunc(arg, ...)
+	return err
 }, backoffObject)
 ```
 
 在性能方面，这可能可以忽略不计，但作用域全搞乱了，这个时候你必须要小心，在赋值时不要使用 :=，而是使用 = 来确保获得正确的值。
 
 这是我写 [github.com/lestrrat-go/backoff](github.com/lestrrat-go/backoff) 库的主要原因。
-
 
 使用这个库，你将不得不写更多的样板代码（使用库需要执行的函数：NewExponential()，Start() 等），但是你不需要实现一个闭包，我发现这样更加符合 Go 的风格。计算退避持续时间仍然很难，如果你有更好的算法，请告诉我。
 
@@ -50,20 +51,20 @@ b, cancel := policy.Start(ctx)
 
 ```go
 func MyFuncWithRetries(ctx context.Context, ... ) (Result1, Result2, Result3, error) {
-  b, cancel := policy.Start(ctx)
-  defer cancel()
-  for {
-    ret1, ret2, ret3, err := MyFunc(...)
-    if err == nil { // success
-      return ret1, ret2, ret3, nil
-    }
-    select {
-    case <-b.Done():
-      return nil, nil, nil, errors.New(`all attempts failed`)
-    case <-b.Next():
-      // continue to beginning of the for loop, execute MyFunc again
-    }
-  }
+	b, cancel := policy.Start(ctx)
+	defer cancel()
+	for {
+		ret1, ret2, ret3, err := MyFunc(...)
+		if err == nil { // success
+			return ret1, ret2, ret3, nil
+		}
+		select {
+		case <-b.Done():
+			return nil, nil, nil, errors.New(`all attempts failed`)
+		case <-b.Next():
+			// continue to beginning of the for loop, execute MyFunc again
+		}
+	}
 }
 ```
 
@@ -72,6 +73,8 @@ func MyFuncWithRetries(ctx context.Context, ... ) (Result1, Result2, Result3, er
 我认为这是一个关于口味的问题，所以你应该选择符合你口味或者习惯的库。这恰好是我想要的库，希望也对你有帮助。
 
 编程快乐！
+
+---
 
 via: https://medium.com/@lestrrat/yak-shaving-with-backoff-libraries-in-go-80240f0aa30c
 
