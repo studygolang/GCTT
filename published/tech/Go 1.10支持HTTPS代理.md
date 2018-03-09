@@ -1,4 +1,6 @@
-# Go1.10 支持HTTPS代理
+已发布：https://studygolang.com/articles/12525
+
+# Go1.10 支持 HTTPS 代理
 
 Go1.9 出来后 6 个多月的时间，Go1.10 就被[发布](https://blog.golang.org/go1.10)。新版本带来大大小小的变化([发行说明](https://golang.org/doc/go1.10))，但是我想谈谈有关 `net/http` 包的改变。1.10 版本支持在 HTTPS([commit](https://github.com/hyangah/go/commit/ab0372d91c17ca97a8258670beadadc6601d0da2)) 上的代理，而在原来它只能通过使用普通的（未加密）HTTP 来和代理进行沟通。接下来让我们来看看它是否真的可以工作。
 
@@ -43,7 +45,9 @@ func main() {
 	fmt.Printf("%q", dump)
 }
 ```
+
 ## 1.9 和 1.10 对比
+
 ```
 >go version
 go version go1.10 darwin/amd64

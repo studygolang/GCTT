@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12522
+
 # 第 24 篇：Select
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 24 篇。  
 
@@ -251,6 +253,6 @@ via: https://golangbot.com/select/
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[Noluye](https://github.com/Noluye)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
