@@ -208,8 +208,100 @@ main.main()
 
 这是一个完全糟糕的例子。该代码混合了用户类型定义的语义，并引发了一个 bug。
 
+**清单11**
 
+```go
+package main
 
+import "fmt"
+
+type struct user {
+    name string
+    likes int
+}
+
+func (u *user) notify() {
+    fmt.Printf("%s has %d likes\n", u.name, u.likes)
+}
+
+func (u *user) addLike() {
+    u.likes++
+}
+
+func main() {
+    users := []user{
+        {name: "bill"},
+        {name: "lisa"},
+    }
+
+    for _, u := range users {
+        u.addLike()
+    }
+
+    for _, u := range users {
+        u.notify()
+    }
+}
+```
+
+这个例子没有那么做作。在第05行，`user` 类型被声明并且选择指针语义来实现为用户类型设置的方法。然后在 `main` 程序中，在 `for range` 循环中使用值语义为每个用户添加一个 like。然后使用第二个循环来再次使用值语义来通知每个 `user`。
+
+**清单12**
+
+```
+bill has 0 likes
+lisa has 0 likes
+```
+
+输出显示并没有增加 like。我无法强调，您应该为给定类型选择语义，并坚持使用该类型的数据。
+
+这是代码应该看起来如何与用户类型的指针语义保持一致。
+
+**清单13**
+
+```go
+package main
+
+import "fmt"
+
+type user struct {
+    name string
+    likes int
+}
+
+func (u *user) notify() {
+    fmt.Printf("%s has %d likes\n", u.name, u.likes)
+}
+
+func (u *user) addLike() {
+    u.likes++
+}
+
+func main() {
+    users := []user{
+        {name: "bill"},
+        {name: "lisa"},
+    }
+
+    for i := range users {
+        users[i].addLike()
+    }
+
+    for i := range users {
+        users[i].notify()
+    }
+}
+
+// Output:
+bill has 1 likes
+lisa has 1 likes
+```
+
+## 结论
+
+值和指针语义是Go编程语言的重要组成部分，正如我已经展示的那样，集成到了 `for range` 循环中。在使用 `for range` 时，验证你正在迭代的给定类型在使用正确的形式。最后一件事时混合语义，如果你没有注意的话，`for range` 很容易混合使用语义。
+
+语言给了你这种选择语义的力量，并且干净而一致地使用它。这是你想要充分利用的东西。 我想让你决定每种类型使用的语义并保持一致。你对一段数据的语义越一致，您的代码库就越好。如果你有一个很好的理由来改变语义，然后广泛地记录下来。
 
 ---
 via: https://www.ardanlabs.com/blog/2017/06/for-range-semantics.html
