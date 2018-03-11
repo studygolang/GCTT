@@ -100,7 +100,7 @@ panic: test timed out after 1s
 
 ### 并行执行测试（Parallelizing tests）
 
-默认情况下，指定包的测试是按照顺序执行的，但也可以通过在测试的函数内部使用 `t.Parallel()` 来标志某些测试也可以被安全的同步执行（和默认的一样，假设参数名为 `t`）。在并行执行的情况下，只有当那些被标记为并行的测试才会被并行执行，所以只有一个测试函数时是没意义的。它应该在测试函数体中第一个被调用（在任何需要跳过的条件之后），因为它会重置测试时间：
+默认情况下，指定包的测试是按照顺序执行的，但也可以通过在测试的函数内部使用 `t.Parallel()` 来标志某些测试也可以被安全的并发执行（和默认的一样，假设参数名为 `t`）。在并行执行的情况下，只有当那些被标记为并行的测试才会被并行执行，所以只有一个测试函数时是没意义的。它应该在测试函数体中第一个被调用（在任何需要跳过的条件之后），因为它会重置测试时间：
 
 ```go
 func TestParallel(t *testing.T) {
@@ -117,7 +117,7 @@ func TestParallel(t *testing.T) {
 
 还有，另外一个可以并行化的地方（你应该测试一下）是在包的代码里面。多亏了 Go 非常棒的并行原语，实际上，除非 GOMAXPROCS 通过环境变量或者在代码中显式设置为 GOMAXPROCS=1，否则，包中一个goroutines 都没有用是不太常见的。想要使用 2 个 CPU，可以执行 `GOMAXPROCS=2 go test`，想要使用 4 个 CPU，可以执行 `GOMAXPROCS=4 go test`，但还有更好的方法：`go test -cpu=1,2,4` 将会执行 3 次，其中 GOMAXPROCS 值分别为 1，2，和 4。
 
-`-cpu` 标志，搭配数据竞争的探测标志 `-race`，简直进入天堂（或者下地狱，取决于它具体怎么运行）。竞争探测是一个很神奇的工具，在以高并发为主的开发中不得不使用这个工具（来防止死锁问题），但对它的讨论已经超过了本文的范围。对于任何感兴趣的 Go 程序员来说，[Go 博客中的介绍](http://blog.golang.org/race-detector)都是一个了解相关内容的好地方。
+`-cpu` 标志，搭配数据竞争的探测标志 `-race`，简直进入天堂（或者下地狱，取决于它具体怎么运行）。竞争探测是一个很神奇的工具，在以高并发为主的开发中不得不使用这个工具（来防止死锁问题），但对它的讨论已经超过了本文的范围。如果你对此感兴趣，可以阅读 Go 官方博客的 [这篇文章](http://blog.golang.org/race-detector)。
 
 ## 更多的内容
 
@@ -133,7 +133,7 @@ via: https://splice.com/blog/lesser-known-features-go-test/
 
 作者：[MARTIN ANGERS](https://splice.com/blog/author/martin/)
 译者：[gogeof](https://github.com/gogeof)
-校对：
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
