@@ -1,6 +1,6 @@
 # Go 语言神奇的 JSON
 
-今天我想和大家分享 Go 语言一些非常实用的技巧,用于编码和解码 JSON 文档。Go 语言的  `encoding/json` 包有一些有趣的特性，帮助我们轻松地解析 JSON 文档。你可以轻松的将大多数实际应用中的 JSON 转换为带有 Go 语言结构体标签的接口或者是 `Marshaler` 和 `Unmarshaler` 接口。
+今天我想和大家分享 Go 语言一些非常实用的技巧,用于编码和解码 JSON 文档。Go 语言的  `encoding/json` 包有一些有趣的特性，帮助我们轻松地解析 JSON 文档。你可以轻松地将大多数实际应用中的 JSON 转换为带有 Go 语言结构体标签的接口或者是 `Marshaler` 和 `Unmarshaler` 接口。
 
 但有一个案例比较棘手：包含转义 JSON 元素的 JSON 文档。如下所示：
 
@@ -102,7 +102,7 @@ via: https://medium.com/@turgon/json-in-go-is-magical-c5b71505a937
 
 作者：[turgon](https://medium.com/@turgon)
 译者：[SergeyChang](https://github.com/SergeyChang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
