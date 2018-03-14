@@ -33,7 +33,25 @@ GCTT 的组成
 
 * 2017/11/16 倡议并得到了大家的积极响应，成立翻译组。有人提到 LCTT 做的不错，因此仿照 LCTT，创立了 GCTT。
 * 2017/11/17 完成了 GCTT 仓库文档等工作；并开始了翻译。
+* 2017/11/19 Go 中文网 GCTT 官网开发并上线，主要是数据和 GitHub 同步。
+* 2017/11/21 无闻加入 GCTT，参与校对工作。
+* 2017/11/22 核心成员 Noluye 主导的 Go 系列教程翻译，发布第一篇。
+* 2017/11/24 设计师 lijing 帮制作 GCTT logo 和 banner。
+* 2017/11/24 待校对文章积压，提升 rxcai 为校对，主导校对工作。
+* 2017/12/04 根据大家的建议，选题采用提 issue + label 的方式，解决不好找以及冲突等问题。
+* 2017/12/07 根据 rxcai 的建议，提升 QueShengyao 为校对。
+* 2018/03/01 提升 gogeof 为核心成员
 
-## Inspire By LCTT
+Inspire By LCTT
+-------------------
 
 感谢 Linux 中国 的 [LCTT 项目](https://github.com/LCTT/TranslateProject)，此项目是 LCTT 项目在 Go 领域的一个实现！
+
+已发布专栏
+--------------
+GCTT 翻译的文章发布在 Go 中文网 如下专栏：
+- [GCTT - Go 中文翻译组](https://studygolang.com/subject/1)
+- [Go 系列教程（Golang tutorial series）](https://studygolang.com/subject/2)
+
+更多细分系列专栏：
+- [Go 语言机制](https://studygolang.com/subject/74)
