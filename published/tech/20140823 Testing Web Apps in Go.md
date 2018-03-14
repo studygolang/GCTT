@@ -18,17 +18,17 @@
 package main
 
 import (
-    "fmt"
-    "net/http"
+	"fmt"
+	"net/http"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
+	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
 }
 
 func main() {
-    http.HandleFunc("/", handler)
-    http.ListenAndServe(":8080", nil)
+	http.HandleFunc("/", handler)
+	http.ListenAndServe(":8080", nil)
 }
 ```
 来源: [编写一个 Web 应用 - Golang Wiki](https://golang.org/doc/articles/wiki/)
@@ -39,25 +39,25 @@ func main() {
 package main
 
 import (
-    "fmt"
-    "net/http"
-    "github.com/markberger/database"
+	"fmt"
+	"net/http"
+	"github.com/markberger/database"
 )
 
 type AppDatabase interface {
-    GetBacon() string
+	GetBacon() string
 }
 
 func homeHandler(db AppDatabase) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        fmt.Fprintf(w, "Hi there, I love %s!", db.GetBacon())
-    })
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hi there, I love %s!", db.GetBacon())
+	})
 }
 
 func main() {
-    db := database.NewDatabase()
-    http.HandleFunc("/", homeHandler(db))
-    http.ListenAndServe(":8080", nil)
+	db := database.NewDatabase()
+	http.HandleFunc("/", homeHandler(db))
+	http.ListenAndServe(":8080", nil)
 }
 ```
 
@@ -71,26 +71,26 @@ func main() {
 package main
 
 import(
-    "net/http"
-    "net/http/httptest"
-    "testing"
+	"net/http"
+	"net/http/httptest"
+	"testing"
 )
 
 type MockDd struct {}
 
 function (db MockDb) GetBacon() {
-    return "bacon"
+	return "bacon"
 }
 
 function TestHome(t *testing.T) {
-    mockDb := MockDb{}
-    homeHandle := homeHandler(mockDb)
-    req, _ := http.NewRequest("GET", "", nil)
-    w := httptest.NewRecorder()
-    homeHandle.ServeHTTP(w, req)
-    if w.Code != http.StatusOK {
-        t.Errorf("Home page didn't return %v", http.StatusOK)
-    }
+	mockDb := MockDb{}
+	homeHandle := homeHandler(mockDb)
+	req, _ := http.NewRequest("GET", "", nil)
+	w := httptest.NewRecorder()
+	homeHandle.ServeHTTP(w, req)
+	if w.Code != http.StatusOK {
+		t.Errorf("Home page didn't return %v", http.StatusOK)
+	}
 }
 ```
 当然，这些代码能很好的复用，尤其是进行 POST 请求测试时。因此，我一直在使用这些方法来进行测试操作。
@@ -99,15 +99,15 @@ function TestHome(t *testing.T) {
 package main
 
 import (
-    "net/http"
-    "net/http/httptest"
-    "net/url"
-    "testing"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
+	"testing"
 )
 
 type HandleTester func(
-    method string,
-    params url.Values,
+	method string,
+	params url.Values,
 ) *httptest.ResponseRecorder
 
 // Given the current test runner and an http.Handler, generate a
@@ -115,45 +115,45 @@ type HandleTester func(
 // handler.
 
 func GenerateHandleTester(
-    t *testing.T,
-    handleFunc http.Handler,
+	t *testing.T,
+	handleFunc http.Handler,
 ) HandleTester {
 
-    // Given a method type ("GET", "POST", etc) and
-    // parameters, serve the response against the handler and
-    // return the ResponseRecorder.
+	// Given a method type ("GET", "POST", etc) and
+	// parameters, serve the response against the handler and
+	// return the ResponseRecorder.
 
-    return func(
-        method string,
-        params url.Values,
-    ) *httptest.ResponseRecorder {
+	return func(
+		method string,
+		params url.Values,
+	) *httptest.ResponseRecorder {
 
-        req, err := http.NewRequest(
-            method,
-            "",
-            strings.NewReader(params.Encode()),
-        )
-        if err != nil {
-            t.Errorf("%v", err)
-        }
-        req.Header.Set(
-            "Content-Type",
-            "application/x-www-form-urlencoded; param=value",
-        )
-        w := httptest.NewRecorder()
-        handleFunc.ServeHTTP(w, req)
-        return w
-    }
+		req, err := http.NewRequest(
+			method,
+			"",
+			strings.NewReader(params.Encode()),
+		)
+		if err != nil {
+			t.Errorf("%v", err)
+		}
+		req.Header.Set(
+			"Content-Type",
+			"application/x-www-form-urlencoded; param=value",
+		)
+		w := httptest.NewRecorder()
+		handleFunc.ServeHTTP(w, req)
+		return w
+	}
 }
 
 function TestHome(t *testing.T) {
-    mockDb := MockDb{}
-    homeHandle := homeHandler(mockDb)
-    test := GenerateHandleTester(t, homeHandle)
-    w := test("GET", url.Values{})
-    if w.Code != http.StatusOK {
-        t.Errorf("Home page didn't return %v", http.StatusOK)
-    }
+	mockDb := MockDb{}
+	homeHandle := homeHandler(mockDb)
+	test := GenerateHandleTester(t, homeHandle)
+	w := test("GET", url.Values{})
+	if w.Code != http.StatusOK {
+		t.Errorf("Home page didn't return %v", http.StatusOK)
+	}
 }
 ```
 
