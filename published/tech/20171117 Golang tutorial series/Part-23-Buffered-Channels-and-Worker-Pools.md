@@ -1,7 +1,11 @@
+已发布：https://studygolang.com/articles/12512
+
 # 第 23 篇：缓冲信道和工作池
+
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 23 篇。  
 
 ## 什么是缓冲信道？
+
 在[上一教程](https://studygolang.com/articles/12402)里，我们讨论的主要是无缓冲信道。我们在[信道](https://studygolang.com/articles/12402)的教程里详细讨论了，无缓冲信道的发送和接收过程是阻塞的。  
 
 我们还可以创建一个有缓冲（Buffer）的信道。只在缓冲已满的情况，才会阻塞向缓冲信道（Buffered Channel）发送数据。同样，只有在缓冲为空的时候，才会阻塞从缓冲信道接收数据。  
@@ -17,20 +21,21 @@ ch := make(chan type, capacity)
 我们开始编写代码，创建一个缓冲信道。  
 
 ## 示例一
+
 ```go
 package main
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 
 func main() {  
-    ch := make(chan string, 2)
-    ch <- "naveen"
-    ch <- "paul"
-    fmt.Println(<- ch)
-    fmt.Println(<- ch)
+	ch := make(chan string, 2)
+	ch <- "naveen"
+	ch <- "paul"
+	fmt.Println(<- ch)
+	fmt.Println(<- ch)
 }
 ```
 [在线运行程序](https://play.golang.org/p/It-em11etK)  
@@ -43,32 +48,33 @@ paul
 ```
 
 ## 示例二
+
 我们再看一个缓冲信道的示例，其中有一个并发的 Go 协程来向信道写入数据，而 Go 主协程负责读取数据。该示例帮助我们进一步理解，在向缓冲信道写入数据时，什么时候会发生阻塞。  
 
 ```go
 package main
 
 import (  
-    "fmt"
-    "time"
+	"fmt"
+	"time"
 )
 
 func write(ch chan int) {  
-    for i := 0; i < 5; i++ {
-        ch <- i
-        fmt.Println("successfully wrote", i, "to ch")
-    }
-    close(ch)
+	for i := 0; i < 5; i++ {
+		ch <- i
+		fmt.Println("successfully wrote", i, "to ch")
+	}
+	close(ch)
 }
 func main() {  
-    ch := make(chan int, 2)
-    go write(ch)
-    time.Sleep(2 * time.Second)
-    for v := range ch {
-        fmt.Println("read value", v,"from ch")
-        time.Sleep(2 * time.Second)
+	ch := make(chan int, 2)
+	go write(ch)
+	time.Sleep(2 * time.Second)
+	for v := range ch {
+		fmt.Println("read value", v,"from ch")
+		time.Sleep(2 * time.Second)
 
-    }
+	}
 }
 ```
 [在线运行程序](https://play.golang.org/p/bKe5GdgMK9)  
@@ -103,20 +109,21 @@ read value 4 from ch
 ```
 
 ## 死锁
+
 ```go
 package main
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 func main() {  
-    ch := make(chan string, 2)
-    ch <- "naveen"
-    ch <- "paul"
-    ch <- "steve"
-    fmt.Println(<-ch)
-    fmt.Println(<-ch)
+	ch := make(chan string, 2)
+	ch <- "naveen"
+	ch <- "paul"
+	ch <- "steve"
+	fmt.Println(<-ch)
+	fmt.Println(<-ch)
 }
 ```
 [在线运行程序](https://play.golang.org/p/FW-LHeH7oD)  
@@ -128,10 +135,11 @@ fatal error: all goroutines are asleep - deadlock!
 
 goroutine 1 [chan send]:  
 main.main()  
-    /tmp/sandbox274756028/main.go:11 +0x100
+	/tmp/sandbox274756028/main.go:11 +0x100
 ```
 
 ## 长度 vs 容量
+
 缓冲信道的容量是指信道可以存储的值的数量。我们在使用 `make` 函数创建缓冲信道的时候会指定容量大小。  
 
 缓冲信道的长度是指信道中当前排队的元素个数。  
@@ -142,17 +150,17 @@ main.main()
 package main
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 func main() {  
-    ch := make(chan string, 3)
-    ch <- "naveen"
-    ch <- "paul"
-    fmt.Println("capacity is", cap(ch))
-    fmt.Println("length is", len(ch))
-    fmt.Println("read value", <-ch)
-    fmt.Println("new length is", len(ch))
+	ch := make(chan string, 3)
+	ch <- "naveen"
+	ch <- "paul"
+	fmt.Println("capacity is", cap(ch))
+	fmt.Println("length is", len(ch))
+	fmt.Println("read value", <-ch)
+	fmt.Println("new length is", len(ch))
 }
 ```
 [在线运行程序](https://play.golang.org/p/2ggC64yyvr)  
@@ -167,6 +175,7 @@ new length is 1
 ```
 
 ## WaitGroup
+
 在本教程的下一节里，我们会讲到**工作池**（Worker Pools）。而 `WaitGroup` 用于实现工作池，因此要理解工作池，我们首先需要学习 `WaitGroup`。  
 
 `WaitGroup` 用于等待一批 Go 协程执行结束。程序控制会一直阻塞，直到这些协程全部执行完毕。假设我们有 3 个并发执行的 Go 协程（由 Go 主协程生成）。Go 主协程需要等待这 3 个协程执行结束后，才会终止。这就可以用 `WaitGroup` 来实现。  
@@ -177,27 +186,27 @@ new length is 1
 package main
 
 import (  
-    "fmt"
-    "sync"
-    "time"
+	"fmt"
+	"sync"
+	"time"
 )
 
 func process(i int, wg *sync.WaitGroup) {  
-    fmt.Println("started Goroutine ", i)
-    time.Sleep(2 * time.Second)
-    fmt.Printf("Goroutine %d ended\n", i)
-    wg.Done()
+	fmt.Println("started Goroutine ", i)
+	time.Sleep(2 * time.Second)
+	fmt.Printf("Goroutine %d ended\n", i)
+	wg.Done()
 }
 
 func main() {  
-    no := 3
-    var wg sync.WaitGroup
-    for i := 0; i < no; i++ {
-        wg.Add(1)
-        go process(i, &wg)
-    }
-    wg.Wait()
-    fmt.Println("All go routines finished executing")
+	no := 3
+	var wg sync.WaitGroup
+	for i := 0; i < no; i++ {
+		wg.Add(1)
+		go process(i, &wg)
+	}
+	wg.Wait()
+	fmt.Println("All go routines finished executing")
 }
 ```
 [在线运行程序](https://play.golang.org/p/CZNtu8ktQh)  
@@ -223,6 +232,7 @@ All go routines finished executing
 由于 Go 协程的执行顺序不一定，因此你的输出可能和我不一样。:)  
 
 ## 工作池的实现
+
 缓冲信道的重要应用之一就是实现[工作池](https://en.wikipedia.org/wiki/Thread_pool)。  
 
 一般而言，工作池就是一组等待任务分配的线程。一旦完成了所分配的任务，这些线程可继续等待任务的分配。  
@@ -241,12 +251,12 @@ All go routines finished executing
 
 ```go
 type Job struct {  
-    id       int
-    randomno int
+	id       int
+	randomno int
 }
 type Result struct {  
-    job         Job
-    sumofdigits int
+	job         Job
+	sumofdigits int
 }
 ```
 
@@ -267,15 +277,15 @@ var results = make(chan Result, 10)
 
 ```go
 func digits(number int) int {  
-    sum := 0
-    no := number
-    for no != 0 {
-        digit := no % 10
-        sum += digit
-        no /= 10
-    }
-    time.Sleep(2 * time.Second)
-    return sum
+	sum := 0
+	no := number
+	for no != 0 {
+		digit := no % 10
+		sum += digit
+		no /= 10
+	}
+	time.Sleep(2 * time.Second)
+	return sum
 }
 ```
 
@@ -283,11 +293,11 @@ func digits(number int) int {
 
 ```go
 func worker(wg *sync.WaitGroup) {  
-    for job := range jobs {
-        output := Result{job, digits(job.randomno)}
-        results <- output
-    }
-    wg.Done()
+	for job := range jobs {
+		output := Result{job, digits(job.randomno)}
+		results <- output
+	}
+	wg.Done()
 }
 ```
 
@@ -297,13 +307,13 @@ func worker(wg *sync.WaitGroup) {
 
 ```go
 func createWorkerPool(noOfWorkers int) {  
-    var wg sync.WaitGroup
-    for i := 0; i < noOfWorkers; i++ {
-        wg.Add(1)
-        go worker(&wg)
-    }
-    wg.Wait()
-    close(results)
+	var wg sync.WaitGroup
+	for i := 0; i < noOfWorkers; i++ {
+		wg.Add(1)
+		go worker(&wg)
+	}
+	wg.Wait()
+	close(results)
 }
 ```
 
@@ -313,12 +323,12 @@ func createWorkerPool(noOfWorkers int) {
 
 ```go
 func allocate(noOfJobs int) {  
-    for i := 0; i < noOfJobs; i++ {
-        randomno := rand.Intn(999)
-        job := Job{i, randomno}
-        jobs <- job
-    }
-    close(jobs)
+	for i := 0; i < noOfJobs; i++ {
+		randomno := rand.Intn(999)
+		job := Job{i, randomno}
+		jobs <- job
+	}
+	close(jobs)
 }
 ```
 
@@ -328,10 +338,10 @@ func allocate(noOfJobs int) {
 
 ```go
 func result(done chan bool) {  
-    for result := range results {
-        fmt.Printf("Job id %d, input random no %d , sum of digits %d\n", result.job.id, result.job.randomno, result.sumofdigits)
-    }
-    done <- true
+	for result := range results {
+		fmt.Printf("Job id %d, input random no %d , sum of digits %d\n", result.job.id, result.job.randomno, result.sumofdigits)
+	}
+	done <- true
 }
 ```
 
@@ -341,17 +351,17 @@ func result(done chan bool) {
 
 ```go
 func main() {  
-    startTime := time.Now()
-    noOfJobs := 100
-    go allocate(noOfJobs)
-    done := make(chan bool)
-    go result(done)
-    noOfWorkers := 10
-    createWorkerPool(noOfWorkers)
-    <-done
-    endTime := time.Now()
-    diff := endTime.Sub(startTime)
-    fmt.Println("total time taken ", diff.Seconds(), "seconds")
+	startTime := time.Now()
+	noOfJobs := 100
+	go allocate(noOfJobs)
+	done := make(chan bool)
+	go result(done)
+	noOfWorkers := 10
+	createWorkerPool(noOfWorkers)
+	<-done
+	endTime := time.Now()
+	diff := endTime.Sub(startTime)
+	fmt.Println("total time taken ", diff.Seconds(), "seconds")
 }
 ```
 
@@ -369,77 +379,77 @@ func main() {
 package main
 
 import (  
-    "fmt"
-    "math/rand"
-    "sync"
-    "time"
+	"fmt"
+	"math/rand"
+	"sync"
+	"time"
 )
 
 type Job struct {  
-    id       int
-    randomno int
+	id       int
+	randomno int
 }
 type Result struct {  
-    job         Job
-    sumofdigits int
+	job         Job
+	sumofdigits int
 }
 
 var jobs = make(chan Job, 10)  
 var results = make(chan Result, 10)
 
 func digits(number int) int {  
-    sum := 0
-    no := number
-    for no != 0 {
-        digit := no % 10
-        sum += digit
-        no /= 10
-    }
-    time.Sleep(2 * time.Second)
-    return sum
+	sum := 0
+	no := number
+	for no != 0 {
+		digit := no % 10
+		sum += digit
+		no /= 10
+	}
+	time.Sleep(2 * time.Second)
+	return sum
 }
 func worker(wg *sync.WaitGroup) {  
-    for job := range jobs {
-        output := Result{job, digits(job.randomno)}
-        results <- output
-    }
-    wg.Done()
+	for job := range jobs {
+		output := Result{job, digits(job.randomno)}
+		results <- output
+	}
+	wg.Done()
 }
 func createWorkerPool(noOfWorkers int) {  
-    var wg sync.WaitGroup
-    for i := 0; i < noOfWorkers; i++ {
-        wg.Add(1)
-        go worker(&wg)
-    }
-    wg.Wait()
-    close(results)
+	var wg sync.WaitGroup
+	for i := 0; i < noOfWorkers; i++ {
+		wg.Add(1)
+		go worker(&wg)
+	}
+	wg.Wait()
+	close(results)
 }
 func allocate(noOfJobs int) {  
-    for i := 0; i < noOfJobs; i++ {
-        randomno := rand.Intn(999)
-        job := Job{i, randomno}
-        jobs <- job
-    }
-    close(jobs)
+	for i := 0; i < noOfJobs; i++ {
+		randomno := rand.Intn(999)
+		job := Job{i, randomno}
+		jobs <- job
+	}
+	close(jobs)
 }
 func result(done chan bool) {  
-    for result := range results {
-        fmt.Printf("Job id %d, input random no %d , sum of digits %d\n", result.job.id, result.job.randomno, result.sumofdigits)
-    }
-    done <- true
+	for result := range results {
+		fmt.Printf("Job id %d, input random no %d , sum of digits %d\n", result.job.id, result.job.randomno, result.sumofdigits)
+	}
+	done <- true
 }
 func main() {  
-    startTime := time.Now()
-    noOfJobs := 100
-    go allocate(noOfJobs)
-    done := make(chan bool)
-    go result(done)
-    noOfWorkers := 10
-    createWorkerPool(noOfWorkers)
-    <-done
-    endTime := time.Now()
-    diff := endTime.Sub(startTime)
-    fmt.Println("total time taken ", diff.Seconds(), "seconds")
+	startTime := time.Now()
+	noOfJobs := 100
+	go allocate(noOfJobs)
+	done := make(chan bool)
+	go result(done)
+	noOfWorkers := 10
+	createWorkerPool(noOfWorkers)
+	<-done
+	endTime := time.Now()
+	diff := endTime.Sub(startTime)
+	fmt.Println("total time taken ", diff.Seconds(), "seconds")
 }
 ```
 [在线运行程序](https://play.golang.org/p/au5islUIbx)  
@@ -469,7 +479,8 @@ total time taken  10.004364685 seconds
 
 本教程到此结束。祝你愉快。   
 
-**下一教程 - [Select](#)**
+## 下一教程 - [Select](#)
+
 ---
 
 via: https://golangbot.com/buffered-channels-worker-pools/

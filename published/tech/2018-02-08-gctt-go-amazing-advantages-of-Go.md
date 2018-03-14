@@ -11,15 +11,15 @@ published: true
 
 # 你所不知道的 Go 语言的一些令人惊叹的优点
 
-![](1.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-advantage/1.png)
+> 插图来自 https://github.com/ashleymcnamara/gophers
 
 在这篇文章中，我将会讨论为什么你应该尝试下 Go 语言，并且应该从哪里开始下手。
 
 Golang 是一种编程语言，在过去的几年中你可能听说过很多。尽管是在 2009 年创建的，但是近年来才开始流行。
 
-![](2.png)
-
-上图是根据 Google Trends 得出的 Golang 的流行程度
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-advantage/2.png)
+> 上图是根据 Google Trends 得出的 Golang 的流行程度
 
 本文不是关于你通常看到的 Go 的主要卖点。
 

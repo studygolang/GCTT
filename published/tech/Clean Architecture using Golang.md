@@ -1,10 +1,13 @@
+已发布：https://studygolang.com/articles/12530
+
 # 使用 Golang 构建整洁架构
 
-## 什么是整洁架构 ?
+## 什么是整洁架构?
 
 在《Clean Architecture: A Craftsman’s Guide to Software Structure and Design》一书中，著名作家 Robert “Uncle Bob” Martin 提出了一种具有一些重要特性的体系结构，如框架、数据库和接口的可测试性和独立性。
 
 整洁架构的约束条件是:
+
 * 独立的框架。该体系结构并不依赖于某些带有特性的软件库的存在。这允许您使用这些框架作为工具，而不是将您的系统束缚在有限的约束中。
 * 可测试的。业务规则可以在没有 UI、数据库、Web 服务器或任何其他外部元素的情况下进行测试。
 * 独立的 UI 。UI 可以很容易地更改，而不会改变系统的其他部分。例如，可以用控制台 UI 替换 Web UI，而不需要更改业务规则。
@@ -16,6 +19,7 @@
 因此，基于这些约束，每一层都必须是独立的和可测试的。
 
 从 Uncle Bob 的架构中，我们可以将代码分成 4 层:
+
 * 实体: 封装企业范围的业务规则。Go 中的实体是一组数据结构和函数。
 * 用例: 这个层中的软件包含应用程序特定的业务规则。它封装并实现了系统的所有用例。
 * 控制器: 该层中的软件是一组适配器，它将数据从最方便的用例和实体转换为最方便的外部代理，例如数据库或 Web。
@@ -171,7 +175,7 @@ if err != nil {
 mPool := mgosession.NewPool(nil, session, 1)
 queueService, err := queue.NewAWSService()
 if err != nil {
-		elog.Error(err)
+	elog.Error(err)
 }
 userRepo := user.NewMongoRepository(mPool)
 userService := user.NewService(userRepo, queueService)	
@@ -217,8 +221,8 @@ func TestIsValidUser(t *testing.T) {
 
 ## 引用
 
-https://hackernoon.com/golang-clean-archithecture-efd6d7c43047
-https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html
+- https://hackernoon.com/golang-clean-archithecture-efd6d7c43047
+- https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html
 
 ----------------
 
@@ -226,6 +230,6 @@ via: https://medium.com/@eminetto/clean-architecture-using-golang-b63587aa5e3f
 
 作者：[Elton Minetto](https://medium.com/@eminetto)
 译者：[SergeyChang](https://github.com/SergeyChang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

@@ -1,12 +1,10 @@
-## 对Go中长时间运行io.Reader和io.Writer的操作测算进度和估算剩余时间
+已发布：https://studygolang.com/articles/12547
 
-​                                                                   				 		 Mat Ryer
+# 对 Go 中长时间运行 io.Reader 和 io.Writer 的操作测算进度和估算剩余时间
 
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/reader-writer/1_YfQ0FQIK4l6NMW3wsl9NNw.jpeg)
 
-
-![img](https://cdn-images-1.medium.com/max/900/1*YfQ0FQIK4l6NMW3wsl9NNw.jpeg)
-
-每当我们在使用类似 io.Copy 和  ioutil.ReadAll 的工具时，比如我们正在从 http.Response 主体读入或者上传一个文件，我们会发现这些方法将一直堵塞，直到整个过程完成，哪怕耗时数十分钟甚至是小时——而且我们没有办法来查看进度，以及计算出完成所需剩余时间的估测值。
+每当我们在使用类似 io.Copy 和 ioutil.ReadAll 的工具时，比如我们正在从 http.Response 主体读入或者上传一个文件，我们会发现这些方法将一直堵塞，直到整个过程完成，哪怕耗时数十分钟甚至是小时——而且我们没有办法来查看进度，以及计算出完成所需剩余时间的估测值。
 
 本文很长，不想深究瞅这里：这篇文章最终导向 progress 包，你可以在自己的项目中自由使用——https://github.com/machinebox/progress
 
@@ -19,24 +17,26 @@
 ```go
 // Reader ：计数通过它读取的字节数。
 type Reader struct {
- r io.Reader
- n int64
+	r io.Reader
+	n int64
+
 }
 // NewReader 返回一个可以计数通过它读取到字节数的
 // Reader
 func NewReader(r io.Reader) *Reader {
- return &Reader{
- r: r,
- }
+	return &Reader{
+		r: r,
+	}
 }
 func (r *Reader) Read(p []byte) (n int, err error) {
- n, err = r.r.Read(p)
- atomic.AddInt64(&r.n, int64(n))
- return
+	n, err = r.r.Read(p)
+	atomic.AddInt64(&r.n, int64(n))
+	return
 }
+
 // N 表示目前为止读取到的字节数
 func (r *Reader) N() int64 {
- return atomic.LoadInt64(&r.n)
+	return atomic.LoadInt64(&r.n)
 }
 
 ```
@@ -54,7 +54,7 @@ func (r *Reader) N() int64 {
 ```go
 info, err := os.Stat(filename)
 if err != nil {
- return errors.Wrap(err, "cannot get file info")
+	return errors.Wrap(err, "cannot get file info")
 }
 size := info.Size(
 ```
@@ -63,10 +63,9 @@ size := info.Size(
 
 ```go
 contentLengthHeader := resp.Header.Get("ContentLength")
-size, err := strconv.ParseInt(contentLengthHeader, 10,
-64)
+size, err := strconv.ParseInt(contentLengthHeader, 10, 64)
 if err != nil {
- return err
+	return err
 }
 ```
 
@@ -80,13 +79,13 @@ if err != nil {
 
 ```go
 func percent(n, size float64) float64 {
- if n == 0 {
- return 0
- }
- if n >= size {
- return 100
- }
- return 100.0 / (size / n ）
+	if n == 0 {
+		return 0
+	}
+	if n >= size {
+		return 100
+	}
+	return 100.0 / (size / n ）
 }
 ```
 
@@ -113,8 +112,6 @@ estimated := started.Add(total)
 duration := estimated.Sub(time.Now())
 ```
 
- 
-
 - `ratio`  — 已经完成字节数所占的百分比
 - `past`  — 从开始到现在的耗时
 - `total` — 基于已完成的百分比 ratio 和相应耗费的时间，从而得出的预计总耗时
@@ -123,15 +120,15 @@ duration := estimated.Sub(time.Now())
 
 ## 浏览 progess 包
 
-![img](https://cdn-images-1.medium.com/max/1200/1*zjDaQfSU9YYY4WIz0K5CxA.png)
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/reader-writer/1_zjDaQfSU9YYY4WIz0K5CxA.png)
 
-我们热爱开源，所以我们封装了所有代码到一个  [package](https://github.com/machinebox/progress)  中以方便您的使用。
+我们热爱开源，所以我们封装了所有代码到一个 [package](https://github.com/machinebox/progress) 中以方便您的使用。
 
 它也支持 io.EOF 和其他你知道的可能会在操作时发生的错误。
 
 ### 小助手
 
-我们还添加了一个小助手，它可以给你一个进度上的 go channel 来周期性报告。  你可以开启一个新的 goroutine 并打印进度，或更新进度，这取决于您的用例。
+我们还添加了一个小助手，它可以给你一个进度上的 go channel 来周期性报告。 你可以开启一个新的 goroutine 并打印进度，或更新进度，这取决于您的用例。
 
 ```go
 ctx := context.Background()
@@ -143,12 +140,11 @@ r := progress.NewReader(strings.NewReader(s))
 
 // 开启一个 goroutine 打印进度
 go func() {
-    progressChan := progress.NewTicker(ctx, r, size, 1*time.Second)
-    for p := range <-progressChan {
-        fmt.Printf("\r%v remaining...", 
-                   p.Remaining().Round(time.Second))
-    }
-    fmt.Println("\rdownload is completed")
+	progressChan := progress.NewTicker(ctx, r, size, 1*time.Second)
+	for p := range <-progressChan {
+		fmt.Printf("\r%v remaining...", p.Remaining().Round(time.Second))
+	}
+	fmt.Println("\rdownload is completed")
 }()
 
 // 使用 reader
@@ -157,13 +153,13 @@ if _, err := io.Copy(dest, r); err != nil {
 }
 ```
 
-该 channel 会周期性的返回一个  [Progress](https://godoc.org/github.com/machinebox/progress#Progress)  结构体，该结构体有下列几个方法帮助你了解细节。
+该 channel 会周期性的返回一个 [Progress](https://godoc.org/github.com/machinebox/progress#Progress) 结构体，该结构体有下列几个方法帮助你了解细节。
 
 - `Percent` — 获取操作完成的百分比
 - `Estimated` —  `time.Time` 表示预期操作结束的时间点
 - `Remaining` — 一个 `time.Duration` 变量标识剩余时间
 
- channel 会在几种情况下被关闭，例如操作已完成，或者操作被取消。
+channel 会在几种情况下被关闭，例如操作已完成，或者操作被取消。
 
 [点击文档](https://godoc.org/github.com/machinebox/progress) 可以获取 API 的最新详细目录
 
@@ -177,7 +173,7 @@ if _, err := io.Copy(dest, r); err != nil {
 
 ## 什么是 Machine Box ？
 
-![img](https://cdn-images-1.medium.com/max/1200/1*GPdHUaxzqp2dJYd0l_hwcA.jpeg)
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/reader-writer/1_GPdHUaxzqp2dJYd0l_hwcA.jpeg)
 
 [Machine Box](https://machinebox.io/?utm_source=blog&utm_medium=medium&utm_campaign=matblog) 把先进的机器学习技术放到 Docker 容器中，以便让开发人员可以更轻松的集成
 
@@ -187,9 +183,9 @@ if _, err := io.Copy(dest, r); err != nil {
 
 [玩一玩](https://machinebox.io/docs/facebox/teaching-facebox) , 并且请告知我们您宝贵的意见。
 
+---
 
-
-via: <https://blog.machinebox.io/measuring-the-progress-of-long-running-io-reader-and-io-writer-operations-in-go-ba26b204a507>
+via: https://blog.machinebox.io/measuring-the-progress-of-long-running-io-reader-and-io-writer-operations-in-go-ba26b204a507
 
 作者：[Mat Ryer](https://blog.machinebox.io/@matryer)
 译者：[sunzhaohao](https://github.com/sunzhaohao)
