@@ -201,7 +201,7 @@ cancel()
 
 但是这段代码有一点比较困难。如果你在 channel 中积压了一些工作（<-jobChan 不会阻塞），并且已经调用了 cancel() 函数（<-ctx.Done() 也不会阻塞）。因为两个 case 都没阻塞，`select` 必须在它们之间作出选择。
 
-事实上不会出现这种情况。尽管在 `<-ctx.Done()` 没有阻塞时也会选择  `<-jobChan` 的情况看起来很合理，不过在实际使用的时候很容易让人苦恼。即使我们调用了取消函数可 channel 依旧会弹出任务，如果我们插入更多任务，它会一直这样错误的运行。
+事实上不会出现这种情况。尽管在 `<-ctx.Done()` 没有阻塞时也会选择  `<-jobChan` 的情况看起来很合理，不过在实际使用的时候很容易让人苦恼。即使我们调用了取消函数，可 channel 依旧会弹出任务，如果我们插入更多任务，它会一直这样错误地运行。
 
 不过我们不需要担心，但是要注意。context 的取消 case 应该比其他 case 有更高的优先级。这样做很不容易，不过使用 Go 提供的内置功能就能解决这个问题。
 
@@ -361,7 +361,7 @@ via: https://www.opsdash.com/blog/job-queues-in-go.html
 
 作者：[Mahadevan Ramachandran](https://twitter.com/mdevanr)
 译者：[saberuster](https://github.com/saberuster)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 ```
