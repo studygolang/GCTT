@@ -1,15 +1,17 @@
-# Go 对于 DevOps 之利弊(六部曲之二)：接口实现和公开/私有指定。
+已发布：https://studygolang.com/articles/12608
+
+# Go 对于 DevOps 之利弊(六部曲之二)：接口实现和公开/私有指定
 
 在这系列的第二篇文章，我们讨论接口实现(优势)和公共/私有设计(一个明显的劣势)。
 
 如果你错过了上一篇关于 goroutines 和 panics/error 的文章，请务必将它补上。你也可以订阅我们的博客，以及时获得更新状况通知。(大概隔周更新一次)
 
-- [Golang 之于 DevOps 开发者的利与弊#1：Goroutines，Channels，Panics和Errors](https://blog.bluematador.com/blog/posts/golang-pros-cons-for-devops-part-1-goroutines-panics-errors/)
-- Golang 之于 DevOps 开发者的利与弊#2：接口的自动化实现，公有/私有变量 [本文]
-- [Golang 之于 DevOps 开发者的利与弊#3：速度 vs. 缺少泛型](https://blog.bluematador.com/posts/golang-pros-cons-devops-part-3-speed-lack-generics/)
-- [Golang 之于 DevOps 开发者的利与弊#4：time包以及重载](https://blog.bluematador.com/golang-pros-cons-part-4-time-package-method-overloading)
-- Golang 之于 DevOps 开发者的利与弊#5：跨平台编译，Windows，Signals，Docs以及编译器
-- Golang 之于 DevOps 开发者的利与弊#6：Defer指令和包依赖性的版本控制
+- [Golang 之于 DevOps 开发的利与弊（六部曲之一）：Goroutines, Channels, Panics, 和 Errors](https://studygolang.com/articles/11983)
+- [Golang 之于 DevOps 开发的利与弊（六部曲之二）：接口实现的自动化和公有/私有实现](https://studygolang.com/articles/12608)
+- [Golang 之于 DevOps 开发的利与弊（六部曲之三）：速度 vs. 缺少泛型](https://studygolang.com/articles/12614)
+- [Golang 之于 DevOps 开发的利与弊（六部曲之四）：time 包和方法重载](https://studygolang.com/articles/12615)
+- [Golang 之于 DevOps 开发的利与弊（六部曲之五）：跨平台编译，Windows，Signals，Docs 以及编译器](https://studygolang.com/articles/12616)
+- Golang 之于 DevOps 开发的利与弊（六部曲之六）：Defer 指令和包依赖性的版本控制
 
 ## Go 语言的优势：接口实现
 

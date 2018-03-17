@@ -12,12 +12,12 @@
 
 从这周开始，我们将发布由 6 篇组成一系列关于 Go 语言利和弊的文章，每一篇文章都详述了少许的内容。正如我们所做的，我们将通过链接到其它篇目来更新这篇文章：
 
-- Golang 对于 DevOps 之利弊第一篇：Goroutines, Channels, Panics, 和 Errors(本篇)
-- [Golang 对于 DevOps 之利弊第二篇：自动接口实现，共有/私有变量](https://blog.bluematador.com/posts/golang-pros-cons-for-devops-part-2)
-- [Golang 对于 DevOps 之利弊第三篇：速度 VS 缺少泛型](https://blog.bluematador.com/posts/golang-pros-cons-devops-part-3-speed-lack-generics)   
-- [Golang 对于 DevOps 之利弊第四篇：打包时间与方法重载](https://blog.bluematador.com/golang-pros-cons-part-4-time-package-method-overloading)
-- Golang 对于 DevOps 之利弊第五篇：交叉编译，窗口，信号，文档和编译器
-- Golang 对于 DevOps 之利弊第六篇：Defer 语句和包依赖版本控制
+- [Golang 之于 DevOps 开发的利与弊（六部曲之一）：Goroutines, Channels, Panics, 和 Errors](https://studygolang.com/articles/11983)
+- [Golang 之于 DevOps 开发的利与弊（六部曲之二）：接口实现的自动化和公有/私有实现](https://studygolang.com/articles/12608)
+- [Golang 之于 DevOps 开发的利与弊（六部曲之三）：速度 vs. 缺少泛型](https://studygolang.com/articles/12614)
+- [Golang 之于 DevOps 开发的利与弊（六部曲之四）：time 包和方法重载](https://studygolang.com/articles/12615)
+- [Golang 之于 DevOps 开发的利与弊（六部曲之五）：跨平台编译，Windows，Signals，Docs 以及编译器](https://studygolang.com/articles/12616)
+- Golang 之于 DevOps 开发的利与弊（六部曲之六）：Defer 指令和包依赖性的版本控制
 
 如果这是你首次阅读有关 Go 的文章，并且你已经知道怎样用类 C 的语言进行编程，你应该去参考[Go 语言之旅](https://tour.golang.org/welcome/1)，它将大约花费你一个小时，而且介绍相当有深度。接下来的内容并不是介绍学习如何用 Go 进行编程，而是我们在用 Go 语言开发智能代理系统过程中有过的抱怨和发现的可取之处。
 
