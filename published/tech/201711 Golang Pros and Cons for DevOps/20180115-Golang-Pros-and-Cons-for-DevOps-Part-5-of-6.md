@@ -1,20 +1,17 @@
-# Golang 之于 DevOps 开发者的利与弊(六部曲之五)：跨平台编译
+已发布：https://studygolang.com/articles/12616
+
+# Golang 之于 DevOps 开发的利与弊(六部曲之五)：跨平台编译
 
 在这系列的第五篇文章，我们将讨论 Go 项目的跨平台编译.
 
-在阅读这篇文章之前，请确保你已经阅读了[上一篇](https://blog.bluematador.com/golang-pros-cons-part-4-time-package-method-overloading)关于“Time包以及重载”的文章，或者订阅我们的博客更新提醒来获取此六部曲后续文章的音讯。
+在阅读这篇文章之前，请确保你已经阅读了[上一篇](https://studygolang.com/articles/12615)关于“Time包以及重载”的文章，或者订阅我们的博客更新提醒来获取此六部曲后续文章的音讯。
 
-- [Golang 之于 DevOps 开发者的利与弊#1：Goroutines，Channels，Panics和Errors](https://blog.bluematador.com/blog/posts/golang-pros-cons-for-devops-part-1-goroutines-panics-errors/)
-
-- [Golang 之于 DevOps 开发者的利与弊#2：接口的自动化实现，公有/私有变量](https://blog.bluematador.com/blog/posts/golang-pros-cons-for-devops-part-1-goroutines-panics-errors/)
-
-- [Golang 之于 DevOps 开发者的利与弊#3：速度 vs. 缺少泛型](https://blog.bluematador.com/posts/golang-pros-cons-devops-part-3-speed-lack-generics/)
-
-- [Golang 之于 DevOps 开发者的利与弊#4：time包以及重载](https://blog.bluematador.com/golang-pros-cons-part-4-time-package-method-overloading)
-
-- Golang 之于 DevOps 开发者的利与弊#5：跨平台编译，Windows，Signals，Docs以及编译器 [本文]
-
-- Golang 之于 DevOps 开发者的利与弊#6：Defer指令和包依赖性的版本控制
+- [Golang 之于 DevOps 开发的利与弊（六部曲之一）：Goroutines, Channels, Panics, 和 Errors](https://studygolang.com/articles/11983)
+- [Golang 之于 DevOps 开发的利与弊（六部曲之二）：接口实现的自动化和公有/私有实现](https://studygolang.com/articles/12608)
+- [Golang 之于 DevOps 开发的利与弊（六部曲之三）：速度 vs. 缺少泛型](https://studygolang.com/articles/12614)
+- [Golang 之于 DevOps 开发的利与弊（六部曲之四）：time 包和方法重载](https://studygolang.com/articles/12615)
+- [Golang 之于 DevOps 开发的利与弊（六部曲之五）：跨平台编译，Windows，Signals，Docs 以及编译器](https://studygolang.com/articles/12616)
+- Golang 之于 DevOps 开发的利与弊（六部曲之六）：Defer 指令和包依赖性的版本控制
 
 ## Golang 之利: 在 Linux 下编译 Windows 程序
 
@@ -22,7 +19,7 @@
 
 因为我们的 agent 是用 Golang 写的，在 Linux 环境下把代码编译成能在 Windows 跑的程序是十分轻松的。大部分的工作是由两个运行 `go build` 命令时的传入参数：GOARCH 和 GOOS 所完成的.
 
-![](https://blog.bluematador.com/hs-fs/hubfs/blog/2018-1-12-golang-part-5/goos-meme.jpg?width=1420&height=946&name=goos-meme.jpg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go_devops/goos-meme.jpg)
 
 你可以运行 `go tool dist list` 去查看这两个参数所有的组合，在 Go 1.8 下一共有 38 种组合。以下的例子展示了如何在 AMD64 和 Intel i386 架构下编译适用于 Linux 和 Windows 的程序，而且你可以轻松看到如何创建一个 `Makefile` 来轻易地为各种不同的系统构建程序。
 
@@ -84,7 +81,7 @@ Getegid 返回 caller 有效的 group id.
 
 在 Golang 里，使用 [build constraints](https://golang.org/pkg/go/build/#hdr-Build_Constraints) 在编译时排除或者包含各种文件非常容易。例如，在一份仅为了 NT 编译的代码文件中去包含一个只支持 Windows 的依赖，你只需要这么做: 
 
-```golang
+```go
 // +build windows
 
 package mypackage
@@ -104,13 +101,12 @@ import "github.com/bluematador/linux-only"
 
 这很棒的一点是，它让你更多地去理清你的代码，并让你可以通过源码中的 build constraints 拥有一个能在两个系统下都能调用但行为不同的函数。
 
-
 ----------------
 
 via: https://blog.bluematador.com/golang-pros-cons-part-5-cross-platform-compiling
 
 作者：[Matthew Barlocker](https://github.com/mbarlocker)
 译者：[p31d3ng](https://github.com/p31d3ng)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
