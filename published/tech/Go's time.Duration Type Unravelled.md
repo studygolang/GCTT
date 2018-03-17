@@ -1,25 +1,27 @@
+已发布：https://studygolang.com/articles/12617
+
 # 详解 Go 语言中的 `time.Duration` 类型
 
 长久以来，我一直抓狂于 Go 标准库中的 Time 包，我的抓狂来自于两个功能，一是捕获两个不同时间段之间间隔的毫秒数，二是将一个用毫秒表示的连续时间段与预先定义的时间段进行比较。这听起来很简单，没错，确实如此，但它的确让我抓狂了。
 
 在 Time 包中，定义有一个名为 Duration 的类型和一些辅助的常量：
 
-```<go>
+```go
 type Duration int64
 
 const (
-	 Nanosecond Duration = 1
-	 Microsecond = 1000 * Nanosecond
-	 Millisecond = 1000 * Microsecond
-	 Second = 1000 * Millisecond
-	 Minute = 60 * Second
-	 Hour = 60 * Minute
+	Nanosecond Duration = 1
+	Microsecond = 1000 * Nanosecond
+	Millisecond = 1000 * Microsecond
+	Second = 1000 * Millisecond
+	Minute = 60 * Second
+	Hour = 60 * Minute
 ) 
 ```
 
 这些东西我可能已经看了有上千次了，但我的大脑依旧一片迷茫。我只是想比较两个时间段、恢复要持续的时间、比较持续时间的长短并且当预设的时间用完时做一些别的事情，但无论如何这个结构还是无法解决我的困扰。我写下了下面的测试代码，但它没有卵用：
 
-```<go>
+```go
 func Test() {
 	var waitFiveHundredMillisections int64 = 500
 
@@ -46,7 +48,7 @@ Time Elapsed : Wait[500] Duration[10724798]
 
 那么问题出在哪里？我又一次将眼光投向了 Duration 类型的定义：
 
-```<go>
+```go
 type Duration int64
 
 const (
@@ -65,7 +67,7 @@ const (
 
 我知道最好使用 Duration 类型中定义的数据，这将最大可能地减少问题的发生。基于 Duration 中定义的常量，我能够像下面这样创建一个 Duration 变量：
 
-```<go>
+```go
 func Test() {
 	var duration_Milliseconds time.Duration = 500 * time.Millisecond
 	var duration_Seconds time.Duration = (1250 * 10) * time.Millisecond
@@ -87,7 +89,7 @@ Minute [2m0s]
 
 实际上， Duration 类型拥有一些便捷的类型转换函数，它们能将 Duration 类型转化为 Go 语言的内建类型 int64 或 float64 ，像下面这样：
 
-```<go>
+```go
 func Test() {
 	var duration_Seconds time.Duration = (1250 * 10) * time.Millisecond
 	var duration_Minute time.Duration = 2 * time.Minute
@@ -108,7 +110,7 @@ Minutes [2.00]
 
 但我需要转换毫秒值，为什么包里面单单没有提供毫秒值的转换呢？因为 Go 语言的设计者希望我有更多的选择，而不只是将毫秒值转换成某种单独的内建类型。下面的代码中，我将毫秒值转化为了 int64 类型和 float64 类型：
 
-```<go>
+```go
 func Test() {
 	var duration_Milliseconds time.Duration = 500 * time.Millisecond
 
@@ -128,7 +130,7 @@ castToFloat64 [500]
 
 现在，我知道了 Duration 类型是什么和怎么用，下面是我最终写的使用毫秒值的测试代码示例：
 
-```<go>
+```go
 func Test() {
 	var waitFiveHundredMillisections time.Duration = 500 * time.Millisecond
 
@@ -139,8 +141,7 @@ func Test() {
 	var duration time.Duration = endingTime.Sub(startingTime)
 
 	if duration >= waitFiveHundredMillisections {
-	fmt.Printf("Wait %v\nNative [%v]\nMilliseconds [%d]\nSeconds [%.3f]\n", waitFiveHundredMillisections,
-			duration, duration.Nanoseconds()/1e6, duration.Seconds())
+		fmt.Printf("Wait %v\nNative [%v]\nMilliseconds [%d]\nSeconds [%.3f]\n", waitFiveHundredMillisections, duration, duration.Nanoseconds()/1e6, duration.Seconds())
 	}
 }
 ```
@@ -162,6 +163,6 @@ via: https://www.ardanlabs.com/blog/2013/06/gos-duration-type-unravelled.html
 
 作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
 译者：[swardsman](https://github.com/swardsman)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
