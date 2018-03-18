@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12598
+
 # 第 25 篇：Mutex
 
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 25 篇。  
@@ -26,13 +28,13 @@ x = x + 1
 
 我们讨论一下当有两个并发的协程执行该代码时，会发生什么。下图描述了当两个协程并发地访问代码行 `x = x + 1` 时，可能出现的一种情况。  
 
-![one-scenario](https://golangbot.com/content/images/2017/08/cs5.png)  
+![one-scenario](https://raw.githubusercontent.com/studygolang/gctt-images/master/golang-series/cs5.png)  
 
 我们假设 `x` 的初始值为 0。而协程 1 获取 `x` 的初始值，并计算 `x + 1`。而在协程 1 将计算值赋值给 `x` 之前，系统上下文切换到了协程 2。于是，协程 2 获取了 `x` 的初始值（依然为 0），并计算 `x + 1`。接着系统上下文又切换回了协程 1。现在，协程 1 将计算值 1 赋值给 `x`，因此 `x` 等于 1。然后，协程 2 继续开始执行，把计算值（依然是 1）复制给了 `x`，因此在所有协程执行完毕之后，`x` 都等于 1。  
 
 现在我们考虑另外一种可能发生的情况。  
 
-![another-scenario](https://golangbot.com/content/images/2017/08/cs-6.png)  
+![another-scenario](https://raw.githubusercontent.com/studygolang/gctt-images/master/golang-series/cs-6.png)  
 
 在上面的情形里，协程 1 开始执行，完成了三个步骤后结束，因此 `x` 的值等于 1。接着，开始执行协程 2。目前 `x` 的值等于 1。而当协程 2 执行完毕时，`x` 的值等于 2。  
 
@@ -188,6 +190,6 @@ via: https://golangbot.com/mutex/
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[Noluye](https://github.com/Noluye)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

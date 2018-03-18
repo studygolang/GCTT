@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12587
+
 # Go test 少为人知的特性
 
 大多数的 Go 程序员都知道和喜欢用 `go test`，这个测试工具来自于 Go 官方的 `gc` 工具链。（想要执行测试代码）这个命令可能是最简单的了，而且还能做得很漂亮。
@@ -19,24 +21,24 @@ package example
 var start int
 
 func Add(n int) int {
-  start += n
-  return start
+	start += n
+	return start
 }
 
 // in example_test.go
 package example_test
 
 import (
-  "testing"
+	"testing"
 
-  . "bitbucket.org/splice/blog/example"
+	. "bitbucket.org/splice/blog/example"
 )
 
 func TestAdd(t *testing.T) {
-  got := Add(1)
-  if got != 1 {
-    t.Errorf("got %d, want 1", got)
-  }
+	got := Add(1)
+	if got != 1 {
+		t.Errorf("got %d, want 1", got)
+	}
 }
 ```
 
@@ -50,10 +52,10 @@ func TestAdd(t *testing.T) {
 
 ```go
 func TestSomeProtectedResource(t *testing.T) {
-  if os.Getenv("SOME_ACCESS_TOKEN") == "" {
-    t.Skip("skipping test; $SOME_ACCESS_TOKEN not set")
-  }
-  // ... the actual test
+	if os.Getenv("SOME_ACCESS_TOKEN") == "" {
+		t.Skip("skipping test; $SOME_ACCESS_TOKEN not set")
+	}
+	// ... the actual test
 }
 ```
 
@@ -62,7 +64,7 @@ func TestSomeProtectedResource(t *testing.T) {
 ```
 === RUN TestSomeProtectedResource
 --- SKIP: TestSomeProtectedResource (0.00 seconds)
-    example_test.go:17: skipping test; $SOME_ACCESS_TOKEN not set
+		example_test.go:17: skipping test; $SOME_ACCESS_TOKEN not set
 ```
 
 通常是用 `-short` 命令行标志来实现这个跳过的特性，如果标志被设置的话，反映到代码中，`testing.Short()` 将简单地返回 true（就像是 `-v` 标志一样，如果它被设置，通过判断 `testing.Verbose()` ，你可以打印出额外的调试日志）。
@@ -71,10 +73,10 @@ func TestSomeProtectedResource(t *testing.T) {
 
 ```go
 func TestCountMallocs(t *testing.T) {
-  if testing.Short() {
-    t.Skip("skipping malloc count in short mode")
-  }
-  // rest of test...
+	if testing.Short() {
+		t.Skip("skipping malloc count in short mode")
+	}
+	// rest of test...
 }
 ```
 
@@ -84,8 +86,8 @@ func TestCountMallocs(t *testing.T) {
 
 ```go
 func TestWillTimeout(t *testing.T) {
-  time.Sleep(2 * time.Second)
-  // pass if timeout > 2s
+	time.Sleep(2 * time.Second)
+	// pass if timeout > 2s
 }
 ```
 
@@ -104,8 +106,8 @@ panic: test timed out after 1s
 
 ```go
 func TestParallel(t *testing.T) {
-  t.Parallel()
-  // actual test...
+	t.Parallel()
+	// actual test...
 }
 ```
 

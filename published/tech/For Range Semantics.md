@@ -1,3 +1,4 @@
+已发布：https://studygolang.com/articles/12607
 
 # For Range 的语义
 
@@ -5,11 +6,11 @@
 
 为了更好地理解本文中提及的内容，这些是需要首先阅读的好文章：
 
-下面列出4篇文章的索引：
-- 1. [Language Mechanics On Stacks And Pointers](https://www.goinggo.net/2017/05/language-mechanics-on-stacks-and-pointers.html)
-- 2. [Language Mechanics On Escape Analysis](https://www.goinggo.net/2017/05/language-mechanics-on-escape-analysis.html)
-- 3. [Language Mechanics On Memory Profiling](https://www.goinggo.net/2017/06/language-mechanics-on-memory-profiling.html)
-- 4. [Design Philosophy On Data And Semantics](https://www.goinggo.net/2017/06/design-philosophy-on-data-and-semantics.html)
+下面列出 4 篇文章的索引：
+1. [Go 语言机制之栈和指针](https://studygolang.com/articles/12443)
+2. [Go 语言机制之逃逸分析](https://studygolang.com/articles/12444)
+3. [Go 语言机制之内存剖析](https://studygolang.com/articles/12445)
+4. [Go 语言机制之数据和语法的设计哲学](https://studygolang.com/articles/12487)
 
 在 Go 编程语言中，值语义和指针语义的思想无处不在。如前面的文章所述，语义一致性对于完整性和可读性至关重要。它允许开发人员在代码持续不断增长时保持强大的代码库[心理模型](https://en.wikipedia.org/wiki/Mental_model)。它还有助于最大限度地减少错误，副作用和未知行为。
 
@@ -31,21 +32,21 @@ package main
 import "fmt"
 
 type user struct {
-    name string
-    email string
+	name string
+	email string
 }
 
 func main() {
-    users := []user{
-        {"Bill", "bill@email.com"},
-        {"Lisa", "lisa@email.com"},
-        {"Nancy", "nancy@email.com"},
-        {"Paul", "paul@email.com"},
-    }
+	users := []user{
+		{"Bill", "bill@email.com"},
+		{"Lisa", "lisa@email.com"},
+		{"Nancy", "nancy@email.com"},
+		{"Paul", "paul@email.com"},
+	}
 
-    for i, u := range users {
-        fmt.Println(i, u)
-    }
+	for i, u := range users {
+		fmt.Println(i, u)
+	}
 }
 ```
 在代码清单1中，程序声明一个名为 `user` 的类型，创建四个用户值，然后显示关于每个用户的信息。第 18 行的范围循环使用值语义。这是因为在每次迭代中都会在循环内部创建并操作来自切片的原始用户值的副本。实际上，对 `Println` 的调用会创建循环副本的第二个副本。如果要为用户值使用值语义，这就是你想要的。
@@ -53,9 +54,10 @@ func main() {
 如果你要使用指针语义，`for range` 循环看起来像这样。
 
 **代码清单2**
+
 ```go
 for i := range users {
-    fmt.Println(i, users[i])
+	fmt.Println(i, users[i])
 }
 ```
 
@@ -64,9 +66,10 @@ for i := range users {
 要解决这个问题，需要再做一次最后的修改。
 
 **代码清单3**
+
 ```go
 for i := range users {
-    fmt.Println(i, &users[i])
+	fmt.Println(i, &users[i])
 }
 ```
 
@@ -75,10 +78,11 @@ for i := range users {
 作为参考，清单4并排显示了值和指针语义。
 
 **代码清单4**
+
 ```go
 // Value semantics.           // Pointer semantics.
 for i, u := range users {     for i := range users {
-    fmt.Println(i, u)             fmt.Println(i, &users[i])
+	fmt.Println(i, u)             fmt.Println(i, &users[i])
 }                             }
 ```
 
@@ -89,22 +93,23 @@ for i, u := range users {     for i := range users {
 [https://play.golang.org/p/IlAiEkgs4C](https://play.golang.org/p/IlAiEkgs4C)
 
 **代码清单5**
+
 ```go
 package main
 
 import "fmt"
 
 func main() {
-    five := [5]string{"Annie", "Betty", "Charley", "Doug", "Edward"}
-    fmt.Printf("Bfr[%s] : ", five[1])
+	five := [5]string{"Annie", "Betty", "Charley", "Doug", "Edward"}
+	fmt.Printf("Bfr[%s] : ", five[1])
 
-    for i := range five {
-        five[1] = "Jack"
+	for i := range five {
+		five[1] = "Jack"
 
-        if i == 1 {
-           fmt.Printf("Aft[%s]\n", five[1])
-        }
-    }
+		if i == 1 {
+		   fmt.Printf("Aft[%s]\n", five[1])
+		}
+	}
 }
 ```
 
@@ -127,16 +132,16 @@ package main
 import "fmt"
 
 func main() {
-    five := [5]string{"Annie", "Betty", "Charley", "Doug", "Edward"}
-    fmt.Printf("Bfr[%s] : ", five[1])
+	five := [5]string{"Annie", "Betty", "Charley", "Doug", "Edward"}
+	fmt.Printf("Bfr[%s] : ", five[1])
 
-    for i, v := range five {
-        five[1] = "Jack"
+	for i, v := range five {
+		five[1] = "Jack"
 
-        if i == 1 {
-            fmt.Printf("v[%s]\n", v)
-        }
-    }
+		if i == 1 {
+			fmt.Printf("v[%s]\n", v)
+		}
+	}
 }
 ```
 
@@ -151,18 +156,19 @@ Bfr[Betty] : v[Betty]
 当使用值语义形式覆盖切片时，将采用切片标头的副本。 这就是为什么清单 9 中的代码不必惊慌。
 
 **清单9**
+
 ```go
 package main
 
 import "fmt"
 
 func main() {
-    five := []string{"Annie", "Betty", "Charley", "Doug", "Edward"}
+	five := []string{"Annie", "Betty", "Charley", "Doug", "Edward"}
 
-    for _, v := range five {
-        five = five[:2]
-        fmt.Printf("v[%s]\n", v)
-    }
+	for _, v := range five {
+		five = five[:2]
+		fmt.Printf("v[%s]\n", v)
+	}
 }
 
 Output:
@@ -178,18 +184,19 @@ v[Edward]
 如果代码使用 `for range ` 的指针语义形式，程序就会发生混乱。
 
 **清单10**
-```
+
+```go
 package main
 
 import "fmt"
 
 func main() {
-    five := []string{"Annie", "Betty", "Charley", "Doug", "Edward"}
+	five := []string{"Annie", "Betty", "Charley", "Doug", "Edward"}
 
-    for i := range five {
-        five = five[:2]
-        fmt.Printf("v[%s]\n", five[i])
-    }
+	for i := range five {
+		five = five[:2]
+		fmt.Printf("v[%s]\n", five[i])
+	}
 }
 
 Output:
@@ -216,31 +223,31 @@ package main
 import "fmt"
 
 type struct user {
-    name string
-    likes int
+	name string
+	likes int
 }
 
 func (u *user) notify() {
-    fmt.Printf("%s has %d likes\n", u.name, u.likes)
+	fmt.Printf("%s has %d likes\n", u.name, u.likes)
 }
 
 func (u *user) addLike() {
-    u.likes++
+	u.likes++
 }
 
 func main() {
-    users := []user{
-        {name: "bill"},
-        {name: "lisa"},
-    }
+	users := []user{
+		{name: "bill"},
+		{name: "lisa"},
+	}
 
-    for _, u := range users {
-        u.addLike()
-    }
+	for _, u := range users {
+		u.addLike()
+	}
 
-    for _, u := range users {
-        u.notify()
-    }
+	for _, u := range users {
+		u.notify()
+	}
 }
 ```
 
@@ -265,31 +272,31 @@ package main
 import "fmt"
 
 type user struct {
-    name string
-    likes int
+	name string
+	likes int
 }
 
 func (u *user) notify() {
-    fmt.Printf("%s has %d likes\n", u.name, u.likes)
+	fmt.Printf("%s has %d likes\n", u.name, u.likes)
 }
 
 func (u *user) addLike() {
-    u.likes++
+	u.likes++
 }
 
 func main() {
-    users := []user{
-        {name: "bill"},
-        {name: "lisa"},
-    }
+	users := []user{
+		{name: "bill"},
+		{name: "lisa"},
+	}
 
-    for i := range users {
-        users[i].addLike()
-    }
+	for i := range users {
+		users[i].addLike()
+	}
 
-    for i := range users {
-        users[i].notify()
-    }
+	for i := range users {
+		users[i].notify()
+	}
 }
 
 // Output:
