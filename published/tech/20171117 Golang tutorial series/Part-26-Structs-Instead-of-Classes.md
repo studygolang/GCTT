@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12630
+
 # 第 26 篇：结构体取代类
 
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 26 篇。
@@ -23,7 +25,7 @@ Go 不支持类，而是提供了[结构体](https://studygolang.com/articles/12
 文件夹结构会是这样：
 
 ```
-       workspacepath -> oop -> employee -> employee.go
+workspacepath -> oop -> employee -> employee.go
 ```
 
 请将 `employee.go` 里的内容替换为如下所示的代码。
@@ -32,18 +34,18 @@ Go 不支持类，而是提供了[结构体](https://studygolang.com/articles/12
 package employee
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 type Employee struct {  
-    FirstName   string
-    LastName    string
-    TotalLeaves int
-    LeavesTaken int
+	FirstName   string
+	LastName    string
+	TotalLeaves int
+	LeavesTaken int
 }
 
 func (e Employee) LeavesRemaining() {  
-    fmt.Printf("%s %s has %d leaves remaining", e.FirstName, e.LastName, (e.TotalLeaves - e.LeavesTaken))
+	fmt.Printf("%s %s has %d leaves remaining", e.FirstName, e.LastName, (e.TotalLeaves - e.LeavesTaken))
 }
 ```
 
@@ -66,13 +68,13 @@ package main
 import "oop/employee"
 
 func main() {  
-    e := employee.Employee {
-        FirstName: "Sam",
-        LastName: "Adolf",
-        TotalLeaves: 30,
-        LeavesTaken: 20,
-    }
-    e.LeavesRemaining()
+	e := employee.Employee {
+		FirstName: "Sam",
+		LastName: "Adolf",
+		TotalLeaves: 30,
+		LeavesTaken: 20,
+	}
+	e.LeavesRemaining()
 }
 ```
 
@@ -94,15 +96,15 @@ package main
 import "oop/employee"
 
 func main() {  
-    var e employee.Employee
-    e.LeavesRemaining()
+	var e employee.Employee
+	e.LeavesRemaining()
 }
 ```
 
 我们的修改只是创建一个零值的 `Employee` 结构体变量（第 6 行）。该程序会输出：
 
 ```bash
-  has 0 leaves remaining
+has 0 leaves remaining
 ```
 
 你可以看到，使用 `Employee` 创建的零值变量没有什么用。它没有合法的姓名，也没有合理的休假细节。
@@ -119,23 +121,23 @@ Go 并不支持构造器。如果某类型的零值不可用，需要程序员�
 package employee
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 type employee struct {  
-    firstName   string
-    lastName    string
-    totalLeaves int
-    leavesTaken int
+	firstName   string
+	lastName    string
+	totalLeaves int
+	leavesTaken int
 }
 
 func New(firstName string, lastName string, totalLeave int, leavesTaken int) employee {  
-    e := employee {firstName, lastName, totalLeave, leavesTaken}
-    return e
+	e := employee {firstName, lastName, totalLeave, leavesTaken}
+	return e
 }
 
 func (e employee) LeavesRemaining() {  
-    fmt.Printf("%s %s has %d leaves remaining", e.firstName, e.lastName, (e.totalLeaves - e.leavesTaken))
+	fmt.Printf("%s %s has %d leaves remaining", e.firstName, e.lastName, (e.totalLeaves - e.leavesTaken))
 }
 ```
 
@@ -161,8 +163,8 @@ package main
 import "oop/employee"
 
 func main() {  
-    e := employee.New("Sam", "Adolf", 30, 20)
-    e.LeavesRemaining()
+	e := employee.New("Sam", "Adolf", 30, 20)
+	e.LeavesRemaining()
 }
 ```
 
@@ -176,23 +178,23 @@ employee.go
 package employee
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 type employee struct {  
-    firstName   string
-    lastName    string
-    totalLeaves int
-    leavesTaken int
+	firstName   string
+	lastName    string
+	totalLeaves int
+	leavesTaken int
 }
 
 func New(firstName string, lastName string, totalLeave int, leavesTaken int) employee {  
-    e := employee {firstName, lastName, totalLeave, leavesTaken}
-    return e
+	e := employee {firstName, lastName, totalLeave, leavesTaken}
+	return e
 }
 
 func (e employee) LeavesRemaining() {  
-    fmt.Printf("%s %s has %d leaves remaining", e.firstName, e.lastName, (e.totalLeaves - e.leavesTaken))
+	fmt.Printf("%s %s has %d leaves remaining", e.firstName, e.lastName, (e.totalLeaves - e.leavesTaken))
 }
 ```
 
@@ -204,8 +206,8 @@ package main
 import "oop/employee"
 
 func main() {  
-    e := employee.New("Sam", "Adolf", 30, 20)
-    e.LeavesRemaining()
+	e := employee.New("Sam", "Adolf", 30, 20)
+	e.LeavesRemaining()
 }
 ```
 
@@ -229,6 +231,6 @@ via: https://golangbot.com/structs-instead-of-classes/
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[Noluye](https://github.com/Noluye)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
