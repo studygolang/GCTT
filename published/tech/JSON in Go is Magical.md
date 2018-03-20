@@ -1,14 +1,16 @@
+已发布：https://studygolang.com/articles/12619
+
 # Go 语言神奇的 JSON
 
-今天我想和大家分享 Go 语言一些非常实用的技巧,用于编码和解码 JSON 文档。Go 语言的  `encoding/json` 包有一些有趣的特性，帮助我们轻松地解析 JSON 文档。你可以轻松地将大多数实际应用中的 JSON 转换为带有 Go 语言结构体标签的接口或者是 `Marshaler` 和 `Unmarshaler` 接口。
+今天我想和大家分享 Go 语言一些非常实用的技巧，用于编码和解码 JSON 文档。Go 语言的  `encoding/json` 包有一些有趣的特性，帮助我们轻松地解析 JSON 文档。你可以轻松地将大多数实际应用中的 JSON 转换为带有 Go 语言结构体标签的接口或者是 `Marshaler` 和 `Unmarshaler` 接口。
 
 但有一个案例比较棘手：包含转义 JSON 元素的 JSON 文档。如下所示：
 
 ```json
 {
-    "id": 12345,
-    "name": "Test Document",
-    "payload": "          {\"message\":\"hello!\"}"
+	"id": 12345,
+	"name": "Test Document",
+	"payload": "{\"message\":\"hello!\"}"
 }
 ```
 
@@ -16,12 +18,12 @@
 
 ```go
 type LogEntry struct {
-    ID      int    `json:"id"`
-    Name    string `json:"name"`
-    Payload string `json:"payload"`
+	ID      int    `json:"id"`
+	Name    string `json:"name"`
+	Payload string `json:"payload"`
 }
 type LogPayload struct {
-    Message string `json:"message"`
+	Message string `json:"message"`
 }
 ```
 
@@ -31,15 +33,15 @@ Matt Holt 的 [*json-to-go*](https://mholt.github.io/json-to-go/) 能够帮助�
 
 ```go
 func (lp *LogPayload) UnmarshalJSON(b []byte) error {
-    var s string
-    if err := json.Unmarshal(b, &s); err != nil {
-        return err
-    }
-    if err := json.Unmarshal([]byte(s), lp); err != nil {
-        return err
-    }
+	var s string
+	if err := json.Unmarshal(b, &s); err != nil {
+		return err
+	}
+	if err := json.Unmarshal([]byte(s), lp); err != nil {
+		return err
+	}
  
-    return nil
+	return nil
 }
 ```
 
@@ -54,18 +56,18 @@ type fauxLogPayload LogPayload
 
 ```go
 func (lp *LogPayload) UnmarshalJSON(b []byte) error {
-    var s string
-    if err := json.Unmarshal(b, &s); err != nil {
-        return err
-    }
-    var f fauxLogPayload
-    if err := json.Unmarshal([]byte(s), &f); err != nil {
-        return err
-    }
+	var s string
+	if err := json.Unmarshal(b, &s); err != nil {
+		return err
+	}
+	var f fauxLogPayload
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
  
-    *lp = LogPayload(f)
+	*lp = LogPayload(f)
  
-    return nil
+	return nil
 }
 ```
 
@@ -74,16 +76,16 @@ func (lp *LogPayload) UnmarshalJSON(b []byte) error {
 
 ```go
 func main() {
-    doc := []byte(`{
-        "id": 12345,
-        "name": "Test Document",
-        "payload": "{\"message\":\"test\"}"
-    }`)
-    var entry LogEntry
-    if err := json.Unmarshal(doc, &entry); err != nil {
-        fmt.Println("Error!", err)
-    }
-    fmt.Printf("%v", entry)
+	doc := []byte(`{
+		"id": 12345,
+		"name": "Test Document",
+		"payload": "{\"message\":\"test\"}"
+	}`)
+	var entry LogEntry
+	if err := json.Unmarshal(doc, &entry); err != nil {
+		fmt.Println("Error!", err)
+	}
+	fmt.Printf("%v", entry)
 }
 ```
 
@@ -94,7 +96,6 @@ func main() {
 Cheers！
 
 感谢 [Redditors BubuX](https://www.reddit.com/r/golang/comments/801c4i/json_in_go_is_magical/dusgzny/) 和 [quiI](https://www.reddit.com/r/golang/comments/801c4i/json_in_go_is_magical/duso6pc/) ，他们建议链接到 *JSON -to- Go* ，并在 `main.go` 中为我的 JSON 使用 Go 语言的字符串文字。
-
 
 ----------------
 
