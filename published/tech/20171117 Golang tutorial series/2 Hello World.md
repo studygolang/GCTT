@@ -53,7 +53,7 @@ go
 
 在控制台上会看见 `Hello World` 的输出。
 
-2. 使用 **go install** 命令 - 在 `workspacepath/bin/hello` 目录下，输入 `go install hello` 命令来运行程序。
+2. 使用 **go install** 命令 - 运行 `go install hello`，接着可以用 `workspacepath/bin/hello` 来运行该程序。
 
 上述命令中的 **workspacepath** 应该替换为你自己的工作区路径（Windows 下的 **C:/Users/YourName/go**，Linux 或 Mac 下的 **$HOME/go**）。
 
