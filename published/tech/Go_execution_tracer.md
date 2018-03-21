@@ -1,27 +1,29 @@
-# Go execution tracer
+已发布：https://studygolang.com/articles/12639
+
+# Go 执行追踪器（execution tracer）
 
 ## 概述
+
 你有没有好奇过 Go 运行时是如何调度 goroutine 的？有没有深入研究过为什么有时候加了并发但是性能没有提高？ Go 提供了执行跟踪器，可以帮助你诊断性能问题（如延迟、竞争或低并发等）、解决前面那些疑问。
 
 Go 从 1.5 版本开始有执行跟踪器这么一个工具，原理是：监听 Go 运行时的一些特定的事件，如：
 
 1. goroutine的创建、开始和结束。
-1. 阻塞/解锁goroutine的一些事件（系统调用，channel，锁）
-1. 网络I/O相关事件
-1. 系统调用
-1. 垃圾回收
+2. 阻塞/解锁goroutine的一些事件（系统调用，channel，锁）
+3. 网络I/O相关事件
+4. 系统调用
+5. 垃圾回收
 
 追踪器会原原本本地收集这些信息，不做任何聚合或者抽样操作。对于负载高的应用来说，就可能会生成一个比较大的文件，该文件后面可以通过 `go tool trace` 命令来进行解析。
 
-在执行追踪器之前， Go 已经提供了 pprof 分析器可以用来分析内存和CPU，那么问题来了，为什么还要再添加这么一个官方工具链？ CPU 分析器可以很清晰地查看到是哪个函数最占用 CPU 时间，但是你没办法通过它知道是什么原因导致 goroutine 不运行，也没法知道底层如何在操作系统线程上调度 goroutine 的。而这些恰恰是追踪器所擅长的。追踪器的 [设计文档](https://docs.google.com/document/u/1/d/1FP5apqzBgr7ahCCgFO-yoVhk4YZrNIDNf9RybngBc14/pub)
-详尽地说明了引入追踪器的原因以及工作原理。
+在执行追踪器之前， Go 已经提供了 pprof 分析器可以用来分析内存和CPU，那么问题来了，为什么还要再添加这么一个官方工具链？ CPU 分析器可以很清晰地查看到是哪个函数最占用 CPU 时间，但是你没办法通过它知道是什么原因导致 goroutine 不运行，也没法知道底层如何在操作系统线程上调度 goroutine 的。而这些恰恰是追踪器所擅长的。追踪器的 [设计文档](https://docs.google.com/document/u/1/d/1FP5apqzBgr7ahCCgFO-yoVhk4YZrNIDNf9RybngBc14/pub) 详尽地说明了引入追踪器的原因以及工作原理。
 
 ## 追踪器”之旅“
 
 从一个简单的”Hello world“例子开始。会使用到 `runtime/trace` 包，用于控制开始/停止写追踪数据；数据会被写到标准错误输出。
 
 ```go
-    package main
+package main
 
 import (
 	"os"
@@ -44,15 +46,15 @@ func main() {
 }
 ```
 
-本例中，先创建了一个无缓冲 channel,然后初始化一个 goroutine 通过 channel 发送数字42。主 goroutine 会一直阻塞直到另外的那个 goroutine 通过 channel 发送一个值过来。
+本例中，先创建了一个无缓冲 channel,然后初始化一个 goroutine 通过 channel 发送数字 42。主 goroutine 会一直阻塞直到另外的那个 goroutine 通过 channel 发送一个值过来。
 
-通过运行`go run main.go 2> trace.out`命令，将追踪信息输出到`trace.out`文件，可以用`go tool trace trace.out`命令读取该文件。
+通过运行 `go run main.go 2> trace.out` 命令，将追踪信息输出到 `trace.out` 文件，可以用 `go tool trace trace.out` 命令读取该文件。
 
-> Go 1.8 版本之前，想要分析追踪数据要求提供可执行二进制文件和追踪的数据这两个东西；而对于 Go 1.8 版本之后编译的程序，执行`go tool trace`就只用提供追踪的数据，它包含了所有内容。
+> Go 1.8 版本之前，想要分析追踪数据要求提供可执行二进制文件和追踪的数据这两个东西；而对于 Go 1.8 版本之后编译的程序，执行 `go tool trace` 就只用提供追踪的数据，它包含了所有内容。
 
 运行过该命令后，会打开一个浏览器窗口，显示几个选项。每个选项打开后是追踪器不同的视图，包含程序执行的不同信息。
 
-![Trace](https://blog.gopheracademy.com/postimages/advent-2017/go-execution-tracer/trace-opts.png)
+![Trace](https://raw.githubusercontent.com/studygolang/gctt-images/master/execution-tracer/trace-opts.png)
 
 1. View trace（查看追踪信息）
 
@@ -78,7 +80,7 @@ func main() {
 
 下图标注了重要的几个部分，都在下面做了介绍：
 
-![View trace](https://blog.gopheracademy.com/postimages/advent-2017/go-execution-tracer/view-trace.png)
+![View trace](https://raw.githubusercontent.com/studygolang/gctt-images/master/execution-tracer/view-trace.png)
 
 1. Timeline （时间线）
 
@@ -104,11 +106,11 @@ func main() {
 
 展示每个虚拟处理器上的 goroutine 跑的内容/跑在哪里。连接 goroutine 的线代表事件。在例图中，我们可以看到： Goroutine “G1 runtime.main”产生出两个不同的 Goroutine：G6 和 G5 （前者负责收集追踪信息，后者是使用“go”关键字产生的）。
 
-每个虚拟处理器的第二行可能会显示额外的事件例如系统调用和运行时事件。同时包括了 goroutine 为运行时做的一些工作（例如，协助垃圾收集）。
+每个虚拟处理器的第二行可能会显示额外的事件，例如系统调用和运行时事件。同时包括了 goroutine 为运行时做的一些工作（例如，协助垃圾收集）。
 
 下图显示选择一个 goroutine 时得到的信息。
 
-![view-goroutine.png](https://blog.gopheracademy.com/postimages/advent-2017/go-execution-tracer/view-goroutine.png)
+![view-goroutine.png](https://raw.githubusercontent.com/studygolang/gctt-images/master/execution-tracer/view-goroutine.png)
 
 包括如下信息：
 
@@ -121,7 +123,7 @@ func main() {
 
 我们可以看到：该 goroutine 产生两个事件：生成用于追踪的 goroutine 以及在channel上开始发送数字42的 goroutine。
 
-![view-event.png](https://blog.gopheracademy.com/postimages/advent-2017/go-execution-tracer/view-event.png)
+![view-event.png](https://raw.githubusercontent.com/studygolang/gctt-images/master/execution-tracer/view-event.png)
 
 通过点击一个特定的事件（图中一条线或者通过点 goroutine 之后选事件），我们可以看到：
 * 事件开始时刻的堆栈轨迹
@@ -136,7 +138,7 @@ func main() {
 
 下图显示对我们示例代码的“同步阻塞分析”。
 
-![blocking-profile.png](https://blog.gopheracademy.com/postimages/advent-2017/go-execution-tracer/blocking-profile.png)
+![blocking-profile.png](https://raw.githubusercontent.com/studygolang/gctt-images/master/execution-tracer/blocking-profile.png)
 
 该图说明主 goroutine 从 channel 接收数据阻塞时间花费 12.08 微秒。这种类型的图对于多个 goroutine 竞争资源锁，查找锁竞争情况非常有用。
 
@@ -144,21 +146,21 @@ func main() {
 
 有三种收集追踪数据的方式：
 
-1.应用`runtime/trace`包
+1.应用 `runtime/trace` 包
 
-包含调用`trace.Start`和`trace.Stop`，在“Hello,Tracing”例子中已经描述过。
+包含调用 `trace.Start` 和 `trace.Stop`，在 “Hello,Tracing” 例子中已经描述过。
 
-1.使用`trace=<file>`测试标志
+2.使用 `trace=<file>` 测试标志
 
 这种方式对于要被测试的代码或者测试本身收集追踪信息十分有用。
 
-1.使用 debug/pprof/trace 处理器
+3.使用 debug/pprof/trace 处理器
 
 是从正在运行 web 应用收集追踪数据的最好方式。
 
 ## 追踪一个 web 应用
 
-为了能够对 Go 写的正在运行的 web 应用收集追踪信息，需要添加`/debug/pprof/trace`处理器。下文示例代码说明对于`http.DefaultServerMux`如何做到这一点：通过简单地引入`net/http/pprof`包。
+为了能够对 Go 写的正在运行的 web 应用收集追踪信息，需要添加 `/debug/pprof/trace` 处理器。下文示例代码说明对于 `http.DefaultServerMux` 如何做到这一点：通过简单地引入 `net/http/pprof` 包。
 
 ```go
 package main
@@ -179,17 +181,17 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-收集追踪信息，我们需要向端点发送请求，例如，`curl localhost:8181/debug/pprof/trace?seconds=10 > trace.out`。该请求会被阻塞 10 秒，追踪信息会被写入`trace.out`文件。这样生成的追踪信息可以像之前一样查看：通过`go tool trace trace.out`。
+收集追踪信息，我们需要向端点发送请求，例如，`curl localhost:8181/debug/pprof/trace?seconds=10 > trace.out`。该请求会被阻塞 10 秒，追踪信息会被写入 `trace.out` 文件。这样生成的追踪信息可以像之前一样查看：通过 `go tool trace trace.out`。
 
 > 安全提醒：注意，不建议将 pprof 处理器暴露到 Internet 上。推荐将这些端点暴露到一个不同的 http.Server ，该 http.Server 绑定到回环端口。[这篇博客](http://mmcloughlin.com/posts/your-pprof-is-showing) 讨论了存在的风险，同时提供如何恰当地暴露 pprof 处理器的示例代码。
 
-收集追踪数据钱，先对服务加一些负载，用到了`wrk`：
+收集追踪数据前，先对服务加一些负载，用到了 `wrk`：
 
 ```
 $ wrk -c 100 -t 10 -d 60s http://localhost:8181/hello
 ```
 
-该命令会在 60 秒内通过 10 个线程使用 100 个链接发起请求。跑`wrk`的同时，我们可以收集 5 s 的追踪数据：`curl localhost:8181/debug/pprof/trace?seconds=5 > trace.out`。该命令会在本人 4 CPU 机器上生成一个 5 MB 的文件（文件大小会随负载加大而快速增加）。
+该命令会在 60 秒内通过 10 个线程使用 100 个连接发起请求。跑`wrk`的同时，我们可以收集 5 s 的追踪数据：`curl localhost:8181/debug/pprof/trace?seconds=5 > trace.out`。该命令会在本人 4 CPU 机器上生成一个 5 MB 的文件（文件大小会随负载加大而快速增加）。
 
 同样的，通过 go 工具 trace 命令打开追踪数据：`go tool trace trace.out`。由于工具要分析整个文件，会比前例耗费更长时间。完成之后，页面看起来稍微有点不一样：
 
@@ -208,7 +210,7 @@ Scheduler latency profile
 
 点击“View trace (2.546634537s-5.00392737s)”我们可以看到有很多东西：
 
-![trace-web.png](https://blog.gopheracademy.com/postimages/advent-2017/go-execution-tracer/trace-web.png)
+![trace-web.png](https://raw.githubusercontent.com/studygolang/gctt-images/master/execution-tracer/trace-web.png)
 
 该截图显示 1169 ms ~ 1170 ms 之间开始、1174 ms 之后结束的一个 GC 操作。这段时间内，一个操作系统线程（PROC 1）启动一个 goroutine 专门做 GC，其他的 goroutine 辅助 GC 操作（在 goroutine 行下展示，标示为 MARK ASSIST ）,截频的末尾，我们可以看到大部分分配的内存已被 GC 释放掉。
 
@@ -222,11 +224,21 @@ Scheduler latency profile
 
 不幸的是，官方文档缺少一些实验来让我们试验、理解追踪器显示的信息。这也是个给官方文档、社区（如博客）做贡献的[机会](https://github.com/golang/go/issues/16526)。
 
-André 是 [Globo.com](http://www.globo.com/) 的高级软件工程师, 开发[Tsuru](https://tsuru.io/)项目。 twitter请@andresantostc, 或者 web 留言https://andrestc.com。
+André 是 [Globo.com](http://www.globo.com/) 的高级软件工程师, 开发 [Tsuru](https://tsuru.io/)项目。 twitter 请@andresantostc, 或者 web 留言https://andrestc.com。
 
-## 引用
+## 参考
 
 1. [Go execution tracer (design doc)](https://docs.google.com/document/u/1/d/1FP5apqzBgr7ahCCgFO-yoVhk4YZrNIDNf9RybngBc14/pub)
-1. [Using the go tracer to speed fractal rendering](https://medium.com/justforfunc/using-the-go-execution-tracer-to-speed-up-fractal-rendering-c06bb3760507)
-1. [Go tool trace](https://making.pusher.com/go-tool-trace/)
-1. [Your pprof is showing](http://mmcloughlin.com/posts/your-pprof-is-showing)
+2. [Using the go tracer to speed fractal rendering](https://medium.com/justforfunc/using-the-go-execution-tracer-to-speed-up-fractal-rendering-c06bb3760507)
+3. [Go tool trace](https://making.pusher.com/go-tool-trace/)
+4. [Your pprof is showing](http://mmcloughlin.com/posts/your-pprof-is-showing)
+
+---
+
+via: https://blog.gopheracademy.com/advent-2017/go-execution-tracer/
+
+作者：[André Carvalho](https://blog.gopheracademy.com/advent-2017/go-execution-tracer/)
+译者：[dongfengkuayue](https://github.com/dongfengkuayue)
+校对：[polaris1119](https://github.com/polaris1119)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
