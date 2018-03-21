@@ -1,6 +1,8 @@
-# vgo 概览
+已发布：https://studygolang.com/articles/12637
 
-昨天，Russ Cox 发布了 [vgo](https://research.swtch.com/vgo)，作为一个现有 go 构建命令的继任者，添加了一直缺失的包版本管理功能。虽然它只是一个大胆的尝试，但是在大家都认为 [dep](https://github.com/golang/dep) 将要成为 Go 语言官方正式的包管理工具的时候，它的出现多少让大家有点意外。Russ 写的 [vgo 简介](https://research.swtch.com/vgo-intro) 和一起发布的 [vgo 使用指南](https://research.swtch.com/vgo-tour) 是了解 vgo 很好的参考资料，尽管许多人对文章中的一些观点有些误解，我还是强烈建议第一次接触 vgo 的朋友读一下。
+# 探索 vgo
+
+昨天，Russ Cox 发布了 [vgo](https://research.swtch.com/vgo)，作为一个现有 go 构建命令的继任者，添加了一直缺失的包版本管理功能。虽然它只是一个大胆的尝试，但是在大家都认为 [dep](https://github.com/golang/dep) 将要成为 Go 语言官方正式的包管理工具的时候，它的出现多少让大家有点意外。Russ 写的 [vgo 简介](https://research.swtch.com/vgo-intro) 和一起发布的 [vgo 使用指南](https://research.swtch.com/vgo-tour) 是了解 vgo 很好的参考资料，尽管许多人对文章中的一些观点有些误解，我还是强烈建议第一次接触 vgo 的朋友读一下。（译注：vgo 的系列文章，Go 中文网专栏有中译文，地址：https://studygolang.com/subject/52）
 
 第一次读那篇文章的时候，我和大家一样，对文章里提到的一些观点比较困惑，总是觉得哪里有些不对，但是又不能很明确的表达出来。为了更加深入地理解 vgo 是什么，我决定在读 [vgo 使用指南](https://research.swtch.com/vgo-tour) 的同时，下载 vgo 的源码，做一些代码测试。大家可以从 Github 上下载到我在这期间写的一些 [代码](https://github.com/joncalhoun?tab=repositories)
 
