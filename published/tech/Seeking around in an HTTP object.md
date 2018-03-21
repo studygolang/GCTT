@@ -1,16 +1,18 @@
-### 对HTTP对象的查找
+已发布：https://studygolang.com/articles/12638
 
-想象一下，在 `HTTP` 服务器上有一个巨大的 `ZIP` 文件，你想知道里面的内容。你不知道压缩包内是否有你需要的东西，而且你不想下载整个文件。是否可以像执行  `unzip -l https://example.com/giant.zip`  的操作来查看压缩包的内容呢？
+# Go 实现对 HTTP 对象的查找
+
+想象一下，在 `HTTP` 服务器上有一个巨大的 `ZIP` 文件，你想知道里面的内容。你不知道压缩包内是否有你需要的东西，而且你不想下载整个文件。是否可以像执行  `unzip -l https://example.com/giant.zip` 的操作来查看压缩包的内容呢？
 
 这并不是一个为了用 `Go` 展示某些知识的理论问题。实际上，我也不想写一篇文章，除了我想通过那些压缩文件了解如何从 [美国专利和商标局（USPTO）](https://bulkdata.uspto.gov/data/patent/officialgazette/2017/) 下载大量专利。或者，我认为，能够从这些 `tar` 文件中获取 [1790 年发布的一些专利图像](https://bulkdata.uspto.gov/data/patent/grant/multipagepdf/1790_1999/) 有多酷？
 
 去看看。那里有数百个巨大的 `ZIP` 和 `tarfiles` 值得探索！
 
-在 `ZIP` 文件中最后的位置，有一个目录。因此在本地磁盘上，`“unzip -l” ` 就像“寻求最终结果，找到 `TOC`，解析并打印它”一样简单。事实上，我们可以知道 `Go` 是如何处理的，因为在 [`zip.NewReader` 函数](https://godoc.org/archive/zip#NewReader) 需要传入一个文件路径。至于 `TAR` 文件，它们被设计用于磁带流式传输和内存稀少的时候，因此它们的目录在文件本身之间交错排列。
+在 `ZIP` 文件中最后的位置，有一个目录。因此在本地磁盘上，`“unzip -l”` 就像“寻求最终结果，找到 `TOC`，解析并打印它”一样简单。事实上，我们可以知道 `Go` 是如何处理的，因为在 [`zip.NewReader` 函数](https://godoc.org/archive/zip#NewReader) 需要传入一个文件路径。至于 `TAR` 文件，它们被设计用于磁带流式传输和内存稀少的时候，因此它们的目录在文件本身之间交错排列。
 
 但我们不在本地，要从 `URL` 中读取内容对我们来说很有挑战。该怎么办？从哪里开始？
 
-我们有几件事需要考虑，然后我们可以规划接下来的方向。寻找和读取 `HTTP` 文件也就是要找到和读取 `Range`标头。那么，`USPTO` 服务器是否支持 `Range` 头呢？这很容易检查，使用 `curl` 和 `HTTP HEAD` 请求：
+我们有几件事需要考虑，然后我们可以规划接下来的方向。寻找和读取 `HTTP` 文件也就是要找到和读取 `Range` 标头。那么，`USPTO` 服务器是否支持 `Range` 头呢？这很容易检查，使用 `curl` 和 `HTTP HEAD` 请求：
 
 ```shell
 $ curl -I https://bulkdata.uspto.gov/data/patent/officialgazette/2017/e-OG20170103_1434-1.zip
@@ -31,7 +33,7 @@ Content-Type: application/zip
 
 现在我们需要写一个处理 `ZIP` 文件格式的方法，它可以让我们使用具有 `Range` 头部的 `HTTP` 的 `GET` 请求，只读取元数据的方式，实现替换“读取下一个目录头文件”的某个部分。这就是 `Go` 的 [`archive/zip`](https://golang.org/pkg/archive/zip) 和 [`archive/tar`](https://godoc.org/archive/tar) 包的实现！
 
-正如我们前面所说，[zip.NewReader](https://godoc.org/archive/zip#NewReader) 正在琢磨什么位置开始查找。然而，当我们看看 `TAR` 时，我们发现了一个问题。`tar.NewReader` 方法需要一个 `io.Reader`。`io.Reader` 的问题在于，它不会让我们随机访问资源，就像`io.ReaderAt` 一样。它是这样实现的，因为它使 `tar` 包更具适应性。特别是，您可以将 `Go tar` 包直接挂接到 `compress/gzip` 包并读取 `tar.gz` 文件 - 只要您按顺序阅读它们，而不是像我们希望的那样跳过。
+正如我们前面所说，[zip.NewReader](https://godoc.org/archive/zip#NewReader) 正在琢磨什么位置开始查找。然而，当我们看看 `TAR` 时，我们发现了一个问题。`tar.NewReader` 方法需要一个 `io.Reader`。`io.Reader` 的问题在于，它不会让我们随机访问资源，就像`io.ReaderAt` 一样。它是这样实现的，因为它使 `tar` 包更具适应性。特别是，您可以将 `Go tar` 包直接挂接到 `compress/gzip` 包并读取 `tar.gz` 文件 - 只要您按顺序读取它们，而不是像我们希望的那样跳过。
 
 那么该怎么办？使用源码。环顾四周，找找[下一个方法](https://github.com/golang/go/blob/c007ce824d9a4fccb148f9204e04c23ed2984b71/src/archive/tar/reader.go#L88)。这就是我们期望它能够找到下一个元数据的地方。在几行代码内，对于 [`skipUnread`](https://github.com/golang/go/blob/c007ce824d9a4fccb148f9204e04c23ed2984b71/src/archive/tar/reader.go#L407) 函数， 我们发现一个有趣的调用。在那里，我们发现一些非常有趣的东西：
 
@@ -51,17 +53,17 @@ func (tr *Reader) skipUnread() {
 // Note: This is from Go 1.4, which had a simpler skipUnread than go 1.9 does.
 ```
 
-这里表示：”如果 `io.Reader` 实际上也能够搜索，那么我们不是直接阅读和丢弃，而是直接找到正确的地方。“找到了！我们只需要将 `tar` 文件传给 `io.Reader`。`NewReader` 也满足 [`io.Seeker`](https://golang.org/pkg/io/#Seeker)的功能（因此，它是一个[`io.ReadSeeker`](https://golang.org/pkg/io/#ReadSeeker)）。
+这里表示：”如果 `io.Reader` 实际上也能够搜索，那么我们不是直接读取和丢弃，而是直接找到正确的地方。“找到了！我们只需要将 `tar` 文件传给 `io.Reader`。`NewReader` 也满足 [`io.Seeker`](https://golang.org/pkg/io/#Seeker)的功能（因此，它是一个[`io.ReadSeeker`](https://golang.org/pkg/io/#ReadSeeker)）。
 
 所以，现在请查看包 [`github.com/jeffallen/seekinghttp`](https://godoc.org/github.com/jeffallen/seekinghttp)，就像它的名字所暗示的那样，它是一个用于在 `HTTP` 对象（[`Github` 上的源代码](https://github.com/jeffallen/seekinghttp) 中查找的软件包。
 
 这个软件包不仅[实现](https://github.com/jeffallen/seekinghttp/blob/master/seekinghttp.go#L26)了 `io.ReadSeeker`，还实现了 `io.ReaderAt`。
+
 为什么？因为，正如我上面提到的，读取 `ZIP` 文件需要一个 `io.ReaderAt`。它还需要传递给它的文件的长度，以便它可以查看目录文件的末尾。`HTTP HEAD` 方法可以很好地获取 `HTTP` 对象的 `Content-Length`，而不需要下载整个文件。
 
 用于远程获取 `tar` 和 `zip` 文件目录的命令行工具位于 `remote-archive-ls` 中。打开 `“-debug”` 选项用来查看日志。**将 `Go` 的标准库作为 `TAR` 或 `ZIP` 阅读器“回调”到我们的代码中，并在这里请求几个字节，这里有几个字节是很有趣的。** 
 
 在我第一次运行这个程序后不久，我发现了一个严重的缺陷。这是一个示例运行结果：
-
 
 ``` shell
 $ ./remote-archive-ls -debug 'https://bulkdata.uspto.gov/data/patent/grant/multipagepdf/1790_1999/grant_pdf_17900731_18641101.tar'
@@ -120,10 +122,7 @@ File: 00000001-X009741H/00/000/001/00000001.pdf
 via：https://blog.gopheracademy.com/advent-2017/seekable-http/
 
 作者：[Jeff R. Allen](https://github.com/jeffallen)
-
 译者：[deadvia](https://github.com/deadvia)
-
 校对：[Unknwon](https://github.com/Unknwon)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，
-[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
