@@ -118,7 +118,7 @@ Time per request:       0.042 [ms] (mean, across all concurrent requests)
 go tool pprof goprofex http://127.0.0.1:8080/debug/pprof/profile
 ```
 
-这个 CPU profiler 默认执行30秒。它使用采样来确定哪些函数花费大部分CPU时间。Go runtime 每10毫秒就停止执行过程并记录每一个运行中的协程的当前堆栈信息。
+这个 CPU profiler 默认执行30秒。它使用采样的方式来确定哪些函数花费了大多数的CPU时间。Go runtime 每10毫秒就停止执行过程并记录每一个运行中的协程的当前堆栈信息。
 
 当 pprof 进入交互模式，输入 `top`，这条命令会展示收集样本中最常出现的函数列表。在我们的案例中，是所有 runtime 与标准库函数，这不是很有用。
 
@@ -451,7 +451,7 @@ func (s *StatsD) Send(stat string, kind string, delta float64) {
 
 以下是有一些可能的值得改进的地方：
 
-- `Sprintf` 对字符串格式化非常便利，它性能表现很好，除非你每秒调用它几千次。不过，它会消耗 CPU 时间将输入格式化字符串，而且每次调用都会分配一个新的字符串。为了更好的性能优化，我们可以使用 `bytes.Buffer` + `Buffer.WriteString/Buffer.WriteByte` 来替换它。
+- `Sprintf` 对字符串格式化非常便利，它性能表现很好，除非你每秒调用它几千次。不过，它把输入参数进行字符串格式化的时候会消耗 CPU 时间，而且每次调用都会分配一个新的字符串。为了更好的性能优化，我们可以使用 `bytes.Buffer` + `Buffer.WriteString/Buffer.WriteByte` 来替换它。
 - 这个函数不需要每一次都创建一个新的 `Replacer` 实例，它可以声明为全局变量，或者作为 `StatsD` 结构体的一部分。
 - 用 `strconv.AppendFloat` 替换 `strconv.FormatFloat` ，并且使用堆栈上分配的 buffer 来传递变量，防止额外的堆分配。
 
