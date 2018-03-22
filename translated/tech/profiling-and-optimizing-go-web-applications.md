@@ -10,7 +10,7 @@ Go语言有一个很强大的内置分析器（profiler），支持CPU、内存�
 
 Go提供了一个低级的分析 API [runtime/pprof](https://golang.org/pkg/runtime/pprof/) ，但如果你在开发一个长期运行的服务，使用更高级的 [net/http/pprof](https://golang.org/pkg/net/http/pprof/) 包会更加便利。
 
-你只需要在代码中加入 `import _ "net/http/pprof"` ，它就会自动注册所需的 HTTP handlers 。
+你只需要在代码中加入 `import _ "net/http/pprof"` ，它就会自动注册所需的 HTTP 处理器（Handler） 。
 
 ```go
 package main
@@ -100,14 +100,14 @@ ab -k -c 8 -n 100000 "http://127.0.0.1:8080/v1/leftpad/?str=test&len=50&chr=*"
 # -n   Number of total requests to make
 ```
 
-测试结果不过，而且可能更快
+测试结果不差，但可以做到更快
 
 ```shell
 Requests per second:    22810.15 [#/sec] (mean)
 Time per request:       0.042 [ms] (mean, across all concurrent requests)
 ```
 
-注：得出上面的测试结果，所执行环境是 MacBook Pro Late 2013 (2.6 GHz Intel Core i5, 8 GB 1600 MHz DDR3, macOS 10.12.3) using Go 1.8.
+注：上面的测试结果的执行环境：笔记本 MacBook Pro Late 2013 (2.6 GHz Intel Core i5, 8 GB 1600 MHz DDR3, macOS 10.12.3) , Go编译器版本是1.8 。
 
 
 ## CPU 分析（CPU profile）
@@ -179,7 +179,7 @@ ROUTINE ======================== main.leftpad
 
 ## 函数堆栈分析（Heap profile）
 
-执行 heap profiler
+执行堆栈分析器（heap profiler）
 
 ```shell
 go tool pprof goprofex http://127.0.0.1:8080/debug/pprof/heap
@@ -249,7 +249,7 @@ func main() {
 }
 ```
 
-在上面的例子中，　`make([]string, 8)` 是在栈上分配内存的。Go 通过 escape analysis 来判断使用堆而不是栈来分配内存是否安全。你可以添加选项 `-gcflags=-m` 来查看 escape analysis 的结果：
+在上面的例子中，　`make([]string, 8)` 是在栈上分配内存的。Go 通过 escape analysis 来判断使用堆而不是栈来分配内存是否安全。你可以添加选项 `-gcflags=-m` 来查看逃逸分析（escape analysis）的结果：
 
 ```go
 5  type X struct {v int}
@@ -301,7 +301,7 @@ func main() {
 }
 ```
 
-Dmitry Vyukov 的论文 [Go Escape Analysis Flaws](https://docs.google.com/document/d/1CxgUBPlx9iJzkz9JWkb6tIpTe5q32QDmz8l0BouG0Cw/view) 讲述了更多的 escape analysis 无法处理的案例。
+Dmitry Vyukov 的论文 [Go Escape Analysis Flaws](https://docs.google.com/document/d/1CxgUBPlx9iJzkz9JWkb6tIpTe5q32QDmz8l0BouG0Cw/view) 讲述了更多的逃逸分析（escape analysis）无法处理的案例。
 
 一般来说，对于你不需要再修改数据的小结构体，你应该使用值传参而不是指针传参。
 
@@ -386,9 +386,9 @@ BenchmarkStatsD-4                1000000          1516 ns/op         560 B/op   
 
 ### Logging
 
-让应用运行更快，一个很好又不是经常管用的方法是，让它执行更少的工作。除了 debug 的目的之外，这行代码 `log.Printf("%s request took %v", name, elapsed)` 在 web service 中不需要。所有非必要的 logs 应该在生产环境中被移除代码或者关闭功能。可以使用 a leveled logger 来解决这个问题，比如这些很棒的 [logging libraries](https://github.com/avelino/awesome-go#logging)
+让应用运行更快，一个很好又不是经常管用的方法是，让它执行更少的工作。除了 debug 的目的之外，这行代码 `log.Printf("%s request took %v", name, elapsed)` 在 web service 中不需要。所有非必要的 logs 应该在生产环境中被移除代码或者关闭功能。可以使用分级日志（a leveled logger）来解决这个问题，比如这些很棒的 [日志工具库（logging libraries）](https://github.com/avelino/awesome-go#logging)
 
-关于 logging 或者其他一般的 I/O 操作，另一个重要的事情是尽可能使用 buffered input/output ，这样可以减少系统调用的次数。通常，并不是每个 logger 调用都需要立即写入文件 —— 使用 [bufio](https://golang.org/pkg/bufio/) package 来实现 buffered I/O 。我们可以使用 `bufio.NewWriter` 或者 `bufio.NewWriterSize` 来简单地封装 `io.Writer` 对象，再传递给 logger ：
+关于打日志或者其他一般的 I/O 操作，另一个重要的事情是尽可能使用有缓冲的输入输出（buffered input/output），这样可以减少系统调用的次数。通常，并不是每个 logger 调用都需要立即写入文件 —— 使用 [bufio](https://golang.org/pkg/bufio/) package 来实现 buffered I/O 。我们可以使用 `bufio.NewWriter` 或者 `bufio.NewWriterSize` 来简单地封装 `io.Writer` 对象，再传递给 logger ：
 
 ```go
 log.SetOutput(bufio.NewWriterSize(f, 1024*16))
@@ -473,7 +473,7 @@ func (s *StatsD) Send(stat string, kind string, delta float64) {
 }
 ```
 
-这样做，将 number of allocations 从14减少到1个，并且使 `Send` 运行快了4倍。
+这样做，将分配数量（number of allocations）从14减少到1个，并且使 `Send` 运行快了4倍。
 
 ```
 BenchmarkStatsD-4                5000000           381 ns/op         112 B/op          1 allocs/op
@@ -525,9 +525,9 @@ Time per request:       0.030 [ms] (mean, across all concurrent requests)
 - 对于不大的结构体，值传参比指针传参更好。
 - 如果你事先知道长度，最好提前分配 maps 或者 slice 的内存。
 - 生产环境下，非必要情况不打日志。
-- 如果你要频繁进行连续的读写，请使用 buffered I/O
-- 如果你的应用广泛使用 JSON，请考虑使用 parser/serializer generators （作者个人更喜欢 [easyjson](https://github.com/mailru/easyjson)）
-- 每一个操作都要精锤细炼（Every operation matters in a hot path）
+- 如果你要频繁进行连续的读写，请使用缓冲读写（buffered I/O）
+- 如果你的应用广泛使用 JSON，请考虑使用解析器/序列化器（parser/serializer generators）（作者个人更喜欢 [easyjson](https://github.com/mailru/easyjson)）
+- 在主要路径上的每一个操作都很关键（Every operation matters in a hot path）
 
 ## 结论
 
@@ -544,6 +544,6 @@ via: http://artem.krylysov.com/blog/2017/03/13/profiling-and-optimizing-go-web-a
 
 作者：[Artem Krylsov](http://artem.krylysov.com/)
 译者：[lightfish-zhang](https://github.com/lightfish-zhang)
-校对：[校对者](https://github.com/xxx)
+校对：[Unknwon](https://github.com/Unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
