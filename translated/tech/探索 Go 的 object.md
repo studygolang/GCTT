@@ -1,6 +1,6 @@
 #Go 的 object  探索#
 
-![](https://katcipis.github.io/blog/exploring-go-objects/)
+![](https://katcipis.github.io/img/goexplorer.png)
 
 当我接受了 Go 根本没有 object 之后，我才开始更容易理解 Go 的 object 是什么，其实就是一些可以操作共有状态的函数集合，加了点语法糖的点缀。
 
@@ -18,7 +18,7 @@
 
 ## 从函数开始 ##
 
-好，我试着开始从函数上证实下，下面是这个略蠢的例子是为了看看用函数能做什么。
+好，我试着开始从函数上证实下，下面这个略蠢的例子是为了看看用函数能做什么。
 
 我们来定义一个类型，实际上这是一个函数：
 
@@ -424,7 +424,7 @@ func main() {
 
 ```
 
-这个函数也做了同样的事情，用不同的方式。和 object 一样也可以管理状态，而且用作用域为了保证状态独立性，只有函数能修改状态。
+这个函数也做了同样的事情，用不同的方式。和 object 一样也可以管理状态，而且用作用域将状态隔离，只有函数能修改这个状态。
 
 为了完成这部分，我们写几个函数，操作一个共享状态（这就是 object 所做的）：
 
@@ -618,7 +618,7 @@ func codeThatDependsOnCalculator(c Calculator) {
 
 ```
 
-这样可以允许 N 个不同的 **Calculator** 实现去结合到依赖的代码，但是不安全。很简单，只完成一半的实现就能瞒天过海了。所有接收 **Calculator** 的函数都要检查 **Add** 和 **Sub** 不是 nil 的。
+这将允许一个 **Calculator** 的 N 个不同的实现与依赖它的代码集成，但是不安全。很简单，只完成一半的实现就能瞒天过海了。所有接收 **Calculator** 的函数都要检查 **Add** 和 **Sub** 不是 nil 的。
 
 这和 C 里面实现的太像了，这个工作显然是编译器能帮你做的（在 C 里面你可以用宏定义）。
 
@@ -645,6 +645,6 @@ via: https://katcipis.github.io/blog/exploring-go-objects/
 
 作者：[TIAGO KATCIPIS](https://katcipis.github.io/)
 译者：[ArisAries](https://github.com/ArisAries)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
