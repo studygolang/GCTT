@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12680
+
 # 第 27 篇：组合取代继承
 
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 27 篇。
@@ -257,7 +259,7 @@ Bio:  Golang Enthusiast
 
 **上一教程 - [结构体取代类](https://studygolang.com/articles/12630)**
 
-**下一教程 - 多态（暂未发布，敬请期待）**
+**下一教程 - [多态](https://studygolang.com/articles/12681)**
 
 ---
 
@@ -265,6 +267,6 @@ via: https://golangbot.com/inheritance
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[Noluye](https://github.com/Noluye)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

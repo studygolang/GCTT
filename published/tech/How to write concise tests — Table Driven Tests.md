@@ -1,4 +1,6 @@
-# 如何编写简洁测试 -- 表格驱动测试
+已发布：https://studygolang.com/articles/12682
+
+# Go 如何编写简洁测试 -- 表格驱动测试
 
 表格驱动测试是一种编写易于扩展测试用例的测试方法。表格驱动测试在 Go 语言中很常见（并非唯一），以至于很多标准库<sup>[1](#reference)</sup>都有使用。表格驱动测试使用匿名结构体。
 
@@ -69,14 +71,14 @@ func <b>getShortFilename(file string)</b> string {
 
 我们先从一个空的测试函数开始：
 
-<pre>
+```go
 func TestShortFilename(t *testing.T) {
 }
-</pre>
+```
 
 紧接着，我们引入一个包含字段 `in` 和 `expected` 的匿名结构体（struct）。`in` 表示传递给 `getShortFilename()` 的参数，`expected` 则代表我们预期的返回结果。`tests` 是包含多个这样结构体的一个数组。
 
-<pre>
+```go
 func TestShortFilename(t *testing.T) {
     tests := []struct {
         in       string   // input
@@ -88,11 +90,11 @@ func TestShortFilename(t *testing.T) {
         {"main/hello/filename.go", "filename.go"},
     }
 }
-</pre>
+```
 
 有了这个，我们就能通过循环来实现我们的测试方法。
 
-<pre>
+```go
 func TestShortFilename(t *testing.T) {
     tests := []struct {
         in       string
@@ -111,7 +113,7 @@ func TestShortFilename(t *testing.T) {
         }
     }
 }
-</pre>
+```
 
 可以注意到，添加测试用例极其简单，只需在 `tests` 中添加项目即可。
 
@@ -120,7 +122,6 @@ func TestShortFilename(t *testing.T) {
 就这样了。
 
 代码可以从 [我的 github](https://github.com/virup/errline/tree/master) 获取。
-
 
 ## <p id="reference">引用</p>
 
@@ -139,5 +140,3 @@ via: https://medium.com/@virup/how-to-write-concise-tests-table-driven-tests-ed6
 校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
-
