@@ -1,14 +1,16 @@
-# 剖析与优化 GO 的 web 应用
+已发布：https://studygolang.com/articles/12685
+
+# 剖析与优化 Go 的 web 应用
 
 原文发表日期: 2017/3/13
 
 关键字: `dev` `go` `golang` `pprof`
 
-Go语言有一个很强大的内置分析器（profiler），支持CPU、内存、协程 与 阻塞/抢占（block/contention）的分析。
+Go 语言有一个很强大的内置分析器（profiler），支持CPU、内存、协程 与 阻塞/抢占（block/contention）的分析。
 
 ## 开启分析器（profiler）
 
-Go提供了一个低级的分析 API [runtime/pprof](https://golang.org/pkg/runtime/pprof/) ，但如果你在开发一个长期运行的服务，使用更高级的 [net/http/pprof](https://golang.org/pkg/net/http/pprof/) 包会更加便利。
+Go 提供了一个低级的分析 API [runtime/pprof](https://golang.org/pkg/runtime/pprof/) ，但如果你在开发一个长期运行的服务，使用更高级的 [net/http/pprof](https://golang.org/pkg/net/http/pprof/) 包会更加便利。
 
 你只需要在代码中加入 `import _ "net/http/pprof"` ，它就会自动注册所需的 HTTP 处理器（Handler） 。
 
@@ -16,17 +18,17 @@ Go提供了一个低级的分析 API [runtime/pprof](https://golang.org/pkg/runt
 package main
 
 import (
-    "net/http"
-    _ "net/http/pprof"
+	"net/http"
+	_ "net/http/pprof"
 )
 
 func hiHandler(w http.ResponseWriter, r *http.Request) {
-    w.Write([]byte("hi"))
+	w.Write([]byte("hi"))
 }
 
 func main() {
-    http.HandleFunc("/", hiHandler)
-    http.ListenAndServe(":8080", nil)
+	http.HandleFunc("/", hiHandler)
+	http.ListenAndServe(":8080", nil)
 }
 ```
 
@@ -36,26 +38,26 @@ func main() {
 package main
 
 import (
-    "net/http"
-    "net/http/pprof"
+	"net/http"
+	"net/http/pprof"
 )
 
 func hiHandler(w http.ResponseWriter, r *http.Request) {
-    w.Write([]byte("hi"))
+	w.Write([]byte("hi"))
 }
 
 func main() {
-    r := http.NewServeMux()
-    r.HandleFunc("/", hiHandler)
+	r := http.NewServeMux()
+	r.HandleFunc("/", hiHandler)
 
-    // Register pprof handlers
-    r.HandleFunc("/debug/pprof/", pprof.Index)
-    r.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
-    r.HandleFunc("/debug/pprof/profile", pprof.Profile)
-    r.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
-    r.HandleFunc("/debug/pprof/trace", pprof.Trace)
+	// Register pprof handlers
+	r.HandleFunc("/debug/pprof/", pprof.Index)
+	r.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+	r.HandleFunc("/debug/pprof/profile", pprof.Profile)
+	r.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+	r.HandleFunc("/debug/pprof/trace", pprof.Trace)
 
-    http.ListenAndServe(":8080", r)
+	http.ListenAndServe(":8080", r)
 }
 ```
 
@@ -68,7 +70,6 @@ go tool pprof [binary] http://127.0.0.1:8080/debug/pprof/profile
 pprof 的最大的优点之一是它是的性能负载很小，可以在生产环境中使用，不会对 web 请求响应造成明显的性能消耗。
 
 但是在深入挖掘 pprof 之前，我们需要一个真实案例来展示如何在 GO 应用中检查并解决性能问题。
-
 
 ## 案例： Left-pad 微服务
 
@@ -109,7 +110,6 @@ Time per request:       0.042 [ms] (mean, across all concurrent requests)
 
 注：上面的测试结果的执行环境：笔记本 MacBook Pro Late 2013 (2.6 GHz Intel Core i5, 8 GB 1600 MHz DDR3, macOS 10.12.3) , Go编译器版本是1.8 。
 
-
 ## CPU 分析（CPU profile）
 
 再次执行 Apache benchmark tool ，但这次使用更高的请求数量（1百万应该足够了），并同时执行 pprof ：
@@ -127,17 +127,17 @@ go tool pprof goprofex http://127.0.0.1:8080/debug/pprof/profile
 63.77s of 69.02s total (92.39%)
 Dropped 331 nodes (cum <= 0.35s)
 Showing top 10 nodes out of 78 (cum >= 0.64s)
-      flat  flat%   sum%        cum   cum%
-    50.79s 73.59% 73.59%     50.92s 73.78%  syscall.Syscall
-     4.66s  6.75% 80.34%      4.66s  6.75%  runtime.kevent
-     2.65s  3.84% 84.18%      2.65s  3.84%  runtime.usleep
-     1.88s  2.72% 86.90%      1.88s  2.72%  runtime.freedefer
-     1.31s  1.90% 88.80%      1.31s  1.90%  runtime.mach_semaphore_signal
-     1.10s  1.59% 90.39%      1.10s  1.59%  runtime.mach_semaphore_wait
-     0.51s  0.74% 91.13%      0.61s  0.88%  log.(*Logger).formatHeader
-     0.49s  0.71% 91.84%      1.06s  1.54%  runtime.mallocgc
-     0.21s   0.3% 92.15%      0.56s  0.81%  runtime.concatstrings
-     0.17s  0.25% 92.39%      0.64s  0.93%  fmt.(*pp).doPrintf
+	  flat  flat%   sum%        cum   cum%
+	50.79s 73.59% 73.59%     50.92s 73.78%  syscall.Syscall
+	 4.66s  6.75% 80.34%      4.66s  6.75%  runtime.kevent
+	 2.65s  3.84% 84.18%      2.65s  3.84%  runtime.usleep
+	 1.88s  2.72% 86.90%      1.88s  2.72%  runtime.freedefer
+	 1.31s  1.90% 88.80%      1.31s  1.90%  runtime.mach_semaphore_signal
+	 1.10s  1.59% 90.39%      1.10s  1.59%  runtime.mach_semaphore_wait
+	 0.51s  0.74% 91.13%      0.61s  0.88%  log.(*Logger).formatHeader
+	 0.49s  0.71% 91.84%      1.06s  1.54%  runtime.mallocgc
+	 0.21s   0.3% 92.15%      0.56s  0.81%  runtime.concatstrings
+	 0.17s  0.25% 92.39%      0.64s  0.93%  fmt.(*pp).doPrintf
 ```
 
 有一个更好的方法来查看高级别的性能概况 —— `web` 命令，它会生成一个热点（hot spots）的 SVG 图像，可以在浏览器中打开它：
@@ -151,13 +151,13 @@ Showing top 10 nodes out of 78 (cum >= 0.64s)
 ```shell
 (pprof) list leftpad
 ROUTINE ======================== main.leftpad in /Users/artem/go/src/github.com/akrylysov/goprofex/leftpad.go
-      20ms      490ms (flat, cum)  0.71% of Total
-         .          .      3:func leftpad(s string, length int, char rune) string {
-         .          .      4:   for len(s) < length {
-      20ms      490ms      5:       s = string(char) + s
-         .          .      6:   }
-         .          .      7:   return s
-         .          .      8:}
+	  20ms      490ms (flat, cum)  0.71% of Total
+		 .          .      3:func leftpad(s string, length int, char rune) string {
+		 .          .      4:   for len(s) < length {
+	  20ms      490ms      5:       s = string(char) + s
+		 .          .      6:   }
+		 .          .      7:   return s
+		 .          .      8:}
 ```
 
 对无惧查看反汇编代码的人而言，可以使用 pprof 的 `disasm` 命令，它有助于查看实际的处理器指令：
@@ -165,15 +165,15 @@ ROUTINE ======================== main.leftpad in /Users/artem/go/src/github.com/
 ```shell
 (pprof) disasm leftpad
 ROUTINE ======================== main.leftpad
-      20ms      490ms (flat, cum)  0.71% of Total
-         .          .    1312ab0: GS MOVQ GS:0x8a0, CX
-         .          .    1312ab9: CMPQ 0x10(CX), SP
-         .          .    1312abd: JBE 0x1312b5e
-         .          .    1312ac3: SUBQ $0x48, SP
-         .          .    1312ac7: MOVQ BP, 0x40(SP)
-         .          .    1312acc: LEAQ 0x40(SP), BP
-         .          .    1312ad1: MOVQ 0x50(SP), AX
-         .          .    1312ad6: MOVQ 0x58(SP), CX
+	  20ms      490ms (flat, cum)  0.71% of Total
+		 .          .    1312ab0: GS MOVQ GS:0x8a0, CX
+		 .          .    1312ab9: CMPQ 0x10(CX), SP
+		 .          .    1312abd: JBE 0x1312b5e
+		 .          .    1312ac3: SUBQ $0x48, SP
+		 .          .    1312ac7: MOVQ BP, 0x40(SP)
+		 .          .    1312acc: LEAQ 0x40(SP), BP
+		 .          .    1312ad1: MOVQ 0x50(SP), AX
+		 .          .    1312ad6: MOVQ 0x58(SP), CX
 ...
 ```
 
@@ -192,17 +192,17 @@ go tool pprof goprofex http://127.0.0.1:8080/debug/pprof/heap
 512.17kB of 512.17kB total (  100%)
 Dropped 85 nodes (cum <= 2.56kB)
 Showing top 10 nodes out of 13 (cum >= 512.17kB)
-      flat  flat%   sum%        cum   cum%
+	  flat  flat%   sum%        cum   cum%
   512.17kB   100%   100%   512.17kB   100%  runtime.mapassign
-         0     0%   100%   512.17kB   100%  main.leftpadHandler
-         0     0%   100%   512.17kB   100%  main.timedHandler.func1
-         0     0%   100%   512.17kB   100%  net/http.(*Request).FormValue
-         0     0%   100%   512.17kB   100%  net/http.(*Request).ParseForm
-         0     0%   100%   512.17kB   100%  net/http.(*Request).ParseMultipartForm
-         0     0%   100%   512.17kB   100%  net/http.(*ServeMux).ServeHTTP
-         0     0%   100%   512.17kB   100%  net/http.(*conn).serve
-         0     0%   100%   512.17kB   100%  net/http.HandlerFunc.ServeHTTP
-         0     0%   100%   512.17kB   100%  net/http.serverHandler.ServeHTTP
+		 0     0%   100%   512.17kB   100%  main.leftpadHandler
+		 0     0%   100%   512.17kB   100%  main.timedHandler.func1
+		 0     0%   100%   512.17kB   100%  net/http.(*Request).FormValue
+		 0     0%   100%   512.17kB   100%  net/http.(*Request).ParseForm
+		 0     0%   100%   512.17kB   100%  net/http.(*Request).ParseMultipartForm
+		 0     0%   100%   512.17kB   100%  net/http.(*ServeMux).ServeHTTP
+		 0     0%   100%   512.17kB   100%  net/http.(*conn).serve
+		 0     0%   100%   512.17kB   100%  net/http.HandlerFunc.ServeHTTP
+		 0     0%   100%   512.17kB   100%  net/http.serverHandler.ServeHTTP
 ```
 
 但是我们更感兴趣的是分配的对象的数量，执行 pprof 时使用选项 `-alloc_objects`
@@ -218,7 +218,7 @@ go tool pprof -alloc_objects goprofex http://127.0.0.1:8080/debug/pprof/heap
 559346486 of 633887751 total (88.24%)
 Dropped 32 nodes (cum <= 3169438)
 Showing top 10 nodes out of 46 (cum >= 14866706)
-      flat  flat%   sum%        cum   cum%
+	  flat  flat%   sum%        cum   cum%
  218124937 34.41% 34.41%  218124937 34.41%  main.leftpad
  116692715 18.41% 52.82%  218702222 34.50%  main.(*StatsD).Send
   52326692  8.25% 61.07%   57278218  9.04%  fmt.Sprintf
@@ -241,11 +241,11 @@ Showing top 10 nodes out of 46 (cum >= 14866706)
 
 ```go
 func foo(a []string) {
-      fmt.Println(len(a))
+	fmt.Println(len(a))
 }
 
 func main() {
-      foo(make([]string, 8))
+	foo(make([]string, 8))
 }
 ```
 
@@ -275,29 +275,29 @@ Go 编译器足够智能，可以将一些动态分配转换为栈分配。但�
 ```go
 // Example 1
 type Fooer interface {
-      foo(a []string)
+	foo(a []string)
 }
 
 type FooerX struct{}
 
 func (FooerX) foo(a []string) {
-      fmt.Println(len(a))
+	fmt.Println(len(a))
 }
 
 func main() {
-      a := make([]string, 8) // make([]string, 8) escapes to heap
-      var fooer Fooer
-      fooer = FooerX{}
-      fooer.foo(a)
+	a := make([]string, 8) // make([]string, 8) escapes to heap
+	var fooer Fooer
+	fooer = FooerX{}
+	fooer.foo(a)
 }
 
 // Example 2
 func foo(a interface{}) string {
-      return a.(fmt.Stringer).String()
+	return a.(fmt.Stringer).String()
 }
 
 func main() {
-      foo(make([]string, 8)) // make([]string, 8) escapes to heap
+	foo(make([]string, 8)) // make([]string, 8) escapes to heap
 }
 ```
 
@@ -317,7 +317,6 @@ go tool pprof goprofex http://127.0.0.1:8080/debug/pprof/goroutine
 
 ![](https://github.com/studygolang/gctt-images/raw/master/profiling-and-optimizing-go-web-applications/web-goroutine.png)
 
-
 上图只有18个活跃中的协程，这是非常小的数字。拥有数千个运行中的协程的情况并不少见，但并不会显著降低性能。
 
 ## 阻塞分析（Block profile）
@@ -332,9 +331,7 @@ go tool pprof goprofex http://127.0.0.1:8080/debug/pprof/block
 
 ![](https://github.com/studygolang/gctt-images/raw/master/profiling-and-optimizing-go-web-applications/web-block.png)
 
-
 `timedHandler` 与 `leftpadHandler` 花费了大量的时间来等待 `log.Printf` 中的互斥锁。导致这个结果的原因是 `log` package 的实现使用了互斥锁来对多个协程共享的文件进行同步访问（synchronize access）。
-
 
 ## 指标（Benchmarking）
 
@@ -342,13 +339,13 @@ go tool pprof goprofex http://127.0.0.1:8080/debug/pprof/block
 
 ```go
 func BenchmarkStatsD(b *testing.B) {
-    statsd := StatsD{
-        Namespace:  "namespace",
-        SampleRate: 0.5,
-    }
-    for i := 0; i < b.N; i++ {
-        statsd.Incr("test")
-    }
+	statsd := StatsD{
+		Namespace:  "namespace",
+		SampleRate: 0.5,
+	}
+	for i := 0; i < b.N; i++ {
+		statsd.Incr("test")
+	}
 }
 ```
 
@@ -356,11 +353,11 @@ func BenchmarkStatsD(b *testing.B) {
 
 ```go
 func BenchmarkLeftpadHandler(b *testing.B) {
-    r := httptest.NewRequest("GET", "/v1/leftpad/?str=test&len=50&chr=*", nil)
-    for i := 0; i < b.N; i++ {
-        w := httptest.NewRecorder()
-        leftpadHandler(w, r)
-    }
+	r := httptest.NewRequest("GET", "/v1/leftpad/?str=test&len=50&chr=*", nil)
+	for i := 0; i < b.N; i++ {
+		w := httptest.NewRecorder()
+		leftpadHandler(w, r)
+	}
 }
 ```
 
@@ -372,7 +369,6 @@ go test -bench=. -benchmem
 
 它会显示每次迭代需要的时间量，以及 内存/分配数量 （amount of memory/number of allocations）：
 
-
 ```
 BenchmarkTimedHandler-4           200000          6511 ns/op        1621 B/op         41 allocs/op
 BenchmarkLeftpadHandler-4         200000         10546 ns/op        3297 B/op         75 allocs/op
@@ -380,7 +376,6 @@ BenchmarkLeftpad10-4             5000000           339 ns/op          64 B/op   
 BenchmarkLeftpad50-4              500000          3079 ns/op        1568 B/op         46 allocs/op
 BenchmarkStatsD-4                1000000          1516 ns/op         560 B/op         15 allocs/op
 ```
-
 
 ## 优化性能
 
@@ -394,17 +389,16 @@ BenchmarkStatsD-4                1000000          1516 ns/op         560 B/op   
 log.SetOutput(bufio.NewWriterSize(f, 1024*16))
 ```
 
-
 ### 左填充（leftpad）
 
 再看一遍 `leftpad` 函数
 
 ```go
 func leftpad(s string, length int, char rune) string {
-    for len(s) < length {
-        s = string(char) + s
-    }
-    return s
+	for len(s) < length {
+		s = string(char) + s
+	}
+	return s
 }
 ```
 
@@ -412,12 +406,12 @@ func leftpad(s string, length int, char rune) string {
 
 ```go
 func leftpad(s string, length int, char rune) string {
-    buf := bytes.Buffer{}
-    for i := 0; i < length-len(s); i++ {
-        buf.WriteRune(char)
-    }
-    buf.WriteString(s)
-    return buf.String()
+	buf := bytes.Buffer{}
+	for i := 0; i < length-len(s); i++ {
+		buf.WriteRune(char)
+	}
+	buf.WriteString(s)
+	return buf.String()
 }
 ```
 
@@ -425,13 +419,12 @@ func leftpad(s string, length int, char rune) string {
 
 ```go
 func leftpad(s string, length int, char rune) string {
-    if len(s) < length {
-        return strings.Repeat(string(char), length-len(s)) + s
-    }
-    return s
+	if len(s) < length {
+		return strings.Repeat(string(char), length-len(s)) + s
+	}
+	return s
 }
 ```
-
 
 ### StatsD client
 
@@ -439,13 +432,13 @@ func leftpad(s string, length int, char rune) string {
 
 ```go
 func (s *StatsD) Send(stat string, kind string, delta float64) {
-    buf := fmt.Sprintf("%s.", s.Namespace)
-    trimmedStat := strings.NewReplacer(":", "_", "|", "_", "@", "_").Replace(stat)
-    buf += fmt.Sprintf("%s:%s|%s", trimmedStat, delta, kind)
-    if s.SampleRate != 0 && s.SampleRate < 1 {
-        buf += fmt.Sprintf("|@%s", strconv.FormatFloat(s.SampleRate, 'f', -1, 64))
-    }
-    ioutil.Discard.Write([]byte(buf)) // TODO: Write to a socket
+	buf := fmt.Sprintf("%s.", s.Namespace)
+	trimmedStat := strings.NewReplacer(":", "_", "|", "_", "@", "_").Replace(stat)
+	buf += fmt.Sprintf("%s:%s|%s", trimmedStat, delta, kind)
+	if s.SampleRate != 0 && s.SampleRate < 1 {
+		buf += fmt.Sprintf("|@%s", strconv.FormatFloat(s.SampleRate, 'f', -1, 64))
+	}
+	ioutil.Discard.Write([]byte(buf)) // TODO: Write to a socket
 }
 ```
 
@@ -457,19 +450,19 @@ func (s *StatsD) Send(stat string, kind string, delta float64) {
 
 ```go
 func (s *StatsD) Send(stat string, kind string, delta float64) {
-    buf := bytes.Buffer{}
-    buf.WriteString(s.Namespace)
-    buf.WriteByte('.')
-    buf.WriteString(reservedReplacer.Replace(stat))
-    buf.WriteByte(':')
-    buf.Write(strconv.AppendFloat(make([]byte, 0, 24), delta, 'f', -1, 64))
-    buf.WriteByte('|')
-    buf.WriteString(kind)
-    if s.SampleRate != 0 && s.SampleRate < 1 {
-        buf.WriteString("|@")
-        buf.Write(strconv.AppendFloat(make([]byte, 0, 24), s.SampleRate, 'f', -1, 64))
-    }
-    buf.WriteTo(ioutil.Discard) // TODO: Write to a socket
+	buf := bytes.Buffer{}
+	buf.WriteString(s.Namespace)
+	buf.WriteByte('.')
+	buf.WriteString(reservedReplacer.Replace(stat))
+	buf.WriteByte(':')
+	buf.Write(strconv.AppendFloat(make([]byte, 0, 24), delta, 'f', -1, 64))
+	buf.WriteByte('|')
+	buf.WriteString(kind)
+	if s.SampleRate != 0 && s.SampleRate < 1 {
+		buf.WriteString("|@")
+		buf.Write(strconv.AppendFloat(make([]byte, 0, 24), s.SampleRate, 'f', -1, 64))
+	}
+	buf.WriteTo(ioutil.Discard) // TODO: Write to a socket
 }
 ```
 
@@ -478,7 +471,6 @@ func (s *StatsD) Send(stat string, kind string, delta float64) {
 ```
 BenchmarkStatsD-4                5000000           381 ns/op         112 B/op          1 allocs/op
 ```
-
 
 ## 测试优化结果
 
@@ -518,7 +510,6 @@ Time per request:       0.030 [ms] (mean, across all concurrent requests)
 
 这个 web 服务现在可以每秒多处理10000个请求！　
 
-
 ## 优化技巧
 
 - 避免不必要的 heap 内存分配。
@@ -536,7 +527,6 @@ Time per request:       0.030 [ms] (mean, across all concurrent requests)
 你可以在 [Github](https://github.com/akrylysov/goprofex) 上找到本案例的完整的源代码，初始版本 tag 为 v1，优化版本 tag 为 v2 。比较这两个版本的[传送门](https://github.com/akrylysov/goprofex/compare/v1...v2) 。
 
 > 作者并非以英语为母语，并且他在努力提高英语水平，如果原文有表达问题或者语法错误，请纠正他。
-
 
 ---
 
