@@ -1,4 +1,4 @@
-# Small Functions considered Harmful
+# 小函数被认为是有害的（Small Functions considered Harmful）
 
 在这篇博文中，我的目标是：
 
