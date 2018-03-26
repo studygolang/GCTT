@@ -1,6 +1,6 @@
 # 自动代码生成的 5 点建议
 
-`//go:generate` 的引入使得 Go 语言在构建过程中集成自动代码生成工具更加简单。`stringer` 使得编写重复代码更轻松，而 `yacc` 和 `ragel` 这类程序则让优化解析器的生成变的可能。在 [GoGenerateTools](https://github.com/golang/go/wiki/GoGenerateTools) 上你可以找到关于这类工具的一份不完整的列表。
+`//go:generate` 的引入使得 Go 语言在构建过程中集成自动代码生成工具更加简单。`stringer` 使得编写重复代码更轻松，而 `yacc` 和 `ragel` 这类程序则让优化解析器的生成变得可能。在 [GoGenerateTools](https://github.com/golang/go/wiki/GoGenerateTools) 上你可以找到关于这类工具的一份不完整的列表。
 
 **给自动生成的代码做标记**。为了让构建工具能够识别出自动生成的代码，必须使用一个符合下列正则表达式的注释：
 
@@ -27,7 +27,7 @@ via: https://medium.com/@dgryski/five-nice-things-for-machine-generated-code-533
 
 作者：[Damian Gryski](https://medium.com/@dgryski)
 译者：[alfred-zhong](https://github.com/alfred-zhong)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
