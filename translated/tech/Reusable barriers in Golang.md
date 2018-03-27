@@ -398,7 +398,7 @@ via: https://medium.com/golangspec/reusable-barriers-in-golang-156db1f75d0b
 
 作者：[Michał Łowicki](https://medium.com/@mlowicki)
 译者：[alfred-zhong](https://github.com/alfred-zhong)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
