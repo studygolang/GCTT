@@ -1,6 +1,8 @@
-#Go 的 object  探索#
+已发布：https://studygolang.com/articles/12703
 
-![](https://katcipis.github.io/img/goexplorer.png)
+# 探索 Go 中的对象（object） 
+
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-object/goexplorer.png)
 
 当我接受了 Go 根本没有 object 之后，我才开始更容易理解 Go 的 object 是什么，其实就是一些可以操作共有状态的函数集合，加了点语法糖的点缀。
 
@@ -16,38 +18,31 @@
 
 下面的解构看起来可能不太好，因为我不精通 Go,不过我还是强迫自己试了试，因为看起来还挺好玩的:-)。
 
-## 从函数开始 ##
+## 从函数开始
 
 好，我试着开始从函数上证实下，下面这个略蠢的例子是为了看看用函数能做什么。
 
 我们来定义一个类型，实际上这是一个函数：
 
 ```go
-
 type Adder func(int, int) int
-
 ```
 
-你可以把这当成一个 interface（不过他们不是一回事）。任何符合这个特征的函数都可以被当作 **Adder** 类型：
+你可以把这当成一个 interface（不过它们不是一回事）。任何符合这个特征的函数都可以被当作 **Adder** 类型：
 
 ```go
-
 // Same type as Adder
 func add(a int, b int) int {
 	return a + b
 }
-
 ```
-
 
 一个不知道怎么 add 的抽象 adder：
 
 ```go
-
 func abstractedAdd(a Adder, b int, c int) int {
 	return a(b, c)
 }
-
 ```
 
 这真让人想起可以用 interface 做类似的事。 **abstractedAdd** 不知道怎么做 add，但是他可以接受任何一个遵循同样协议的 Adder 的实现。
@@ -78,25 +73,21 @@ func main() {
 	fmt.Printf("%d + %d = %d\n", 1, 1, abstractedAdd(a, 1, 1))
 	fmt.Printf("%d + %d = %d\n", 1, 1, abstractedAdd(add, 1, 1))
 }
-
 ```
 
 从这个例子中我们探讨下 Go 的 object。一个方法能符合 **Adder** 类型吗？依你的经验来看可能有点反直觉（就好象，你需要一个函数，而实际给了一个方法，这个意思），我们看看 adder object。
 
 ```go
-
 type ObjectAdder struct{}
 
 func (o *ObjectAdder) Add(a int, b int) int {
 	return a + b
 }
-
 ```
 
 看起来没错，加到我们的例子里：
 
 ```go
-
 package main
 
 import "fmt"
@@ -128,46 +119,37 @@ func main() {
 	var o *ObjectAdder
 	fmt.Printf("object: %d + %d = %d\n", 1, 1, abstractedAdd(o.Add, 1, 1))
 }
-
 ```
 
 结果输出：
 
 ```
-
 Adder: <nil>
 Adder initialized: 0x401000
 func: 1 + 1 = 2
 func: 1 + 1 = 2
 object: 1 + 1 = 2
-
 ```
 
 哈，成功的。和接口不一样，函数签名不会匹配任何方法名称，你可以像传参数一样传方法，因为方法实际上就是函数，有点像下面这个：
 
 ```go
-
 var o *ObjectAdder
-	fmt.Printf("object: %d + %d = %d\n", 1, 1, abstractedAdd(o.Whatever, 1, 1))
-
+fmt.Printf("object: %d + %d = %d\n", 1, 1, abstractedAdd(o.Whatever, 1, 1))
 ```
 
 应该能运行。没看出来方法就是函数吗？再看这个：
 
 ```go
-
 fmt.Printf("func add: %T\n", add)
-	fmt.Printf("object.Add: %T\n", o.Add)
-
+fmt.Printf("object.Add: %T\n", o.Add)
 ```
 
 结果输出：
 
 ```
-
 func add: func(int, int) int
 object.Add: func(int, int) int
-
 ```
 
 你看出来这个空函数和这个 object 方法的区别了吗？没有，因为没区别。这就是为什么传参数可以运行。这也可以解释代码里另一个容易让学 Go 的新手（像我这样的）困惑的问题。
@@ -179,21 +161,17 @@ object.Add: func(int, int) int
 细化下我们的例子：
 
 ```go
-
-	fmt.Printf("ObjectAdder.Add: %T\n", (*ObjectAdder).Add)
-	fmt.Printf("ObjectAdder.Add: %d + %d = %d\n", 1, 1, (*ObjectAdder).Add(nil, 1, 1))
-
+fmt.Printf("ObjectAdder.Add: %T\n", (*ObjectAdder).Add)
+fmt.Printf("ObjectAdder.Add: %d + %d = %d\n", 1, 1, (*ObjectAdder).Add(nil, 1, 1))
 ```
 
 我在这做了什么呢？就是搞清楚你在做如下声明的时候 Go 实际上做了什么：
 
 ```go
-
 type ObjectAdder struct{}
 
 func (o *ObjectAdder) Add(a int, b int) int {
 }
-
 ```
 
 在这给 ***ObjectAdder** 类型添加了一个函数。这个函数可以被访问并且可以被当作任何值使用（被调用，作为参数传递等）。
@@ -205,10 +183,8 @@ func (o *ObjectAdder) Add(a int, b int) int {
 总之，继续往下看吧，输出结果：
 
 ```
-
 ObjectAdder.Add: func(*main.ObjectAdder, int, int) int
 ObjectAdder.Add: 1 + 1 = 2
-
 ```
 
 根本就没有方法，就是函数。我们在 Go 里看到的 object 就是一些关联到某个类型的函数组合，加点语法糖，来把第一个参数传给你。
@@ -220,7 +196,6 @@ ObjectAdder.Add: 1 + 1 = 2
 下面是例子中最终的所有代码：
 
 ```go
-
 package main
 
 import "fmt"
@@ -258,7 +233,6 @@ func main() {
 	fmt.Printf("ObjectAdder.Add: %T\n", (*ObjectAdder).Add)
 	fmt.Printf("ObjectAdder.Add: %d + %d = %d\n", 1, 1, (*ObjectAdder).Add(nil, 1, 1))
 }
-
 ```
 
 这个例子是完全状态无关的。Object 通常会有状态和副作用，Go 的函数也有状态和副作用吗？
@@ -268,7 +242,6 @@ func main() {
 为了让函数和 object 之间的差距更小一点，我们用个最原始的/最简单的例子，一个 iterator：
 
 ```go
-
 package main
 
 import "fmt"
@@ -289,27 +262,22 @@ func main() {
 	fmt.Printf("iter 2: %d\n", iter())
 	fmt.Printf("iter 3: %d\n", iter())
 }
-
 ```
 
 如果你运行一下，你就会看到这个 iterator 是有效的。准确的讲我们现在有什么呢？我们有一个 **iterator** 函数，看起来像另一个函数的的构造函数，它会返回这个函数，这就是为什么 **iterator** 返回的类型是：
 
 ```go
-
 func() int
-
 ```
 
 通常指的闭包是这样的语法结构：
 
 ```go
-
-	a := 0
-	return func() int {
-		a++
-		return a
-	}
-
+a := 0
+return func() int {
+	a++
+	return a
+}
 ```
 
 我们实例化的这个函数，用到了外部的一个变量，会将变量 **a** 和新创建的函数关联起来，它包含一个 **a** 的引用而且可以操作（**a**）。
@@ -319,7 +287,6 @@ func() int
 在 Go 语言里，函数可以随时初始化，下面是这个例子的另一版，说明我们实际在初始化函数：
 
 ```go
-
 package main
 
 import "fmt"
@@ -344,20 +311,17 @@ func main() {
 	fmt.Printf("iterb 2: %d\n", iterb())
 	fmt.Printf("iterb 3: %d\n", iterb())
 }
-
 ```
 
 得到结果：
 
-```go
-
+```
 itera 1: 1
 itera 2: 2
 itera 3: 3
 iterb 1: 1
 iterb 2: 2
 iterb 3: 3
-
 ```
 
 因此每个 iterator 都是互相独立的，没有办法让一个函数从另一个函数获得状态，除非在代码里明确的允许，或者你用不安全的包，做很糟糕的指针运算。
@@ -367,7 +331,6 @@ iterb 3: 3
 我们看一眼用 Go 的 object 的闭包是什么样的：
 
 ```go
-
 package main
 
 import "fmt"
@@ -394,7 +357,6 @@ func main() {
 	fmt.Printf("iter 2: %d\n", i.iter())
 	fmt.Printf("iter 3: %d\n", i.iter())
 }
-
 ```
 
 可以看到，非常简单的事情，用 object 的方式会显得更笨拙一点，至少在我看来是这样。我甚至用了一个同样糟糕的名为 **a** 的 int 变量，实际上它表示状态。
@@ -402,7 +364,6 @@ func main() {
 现在我们创建一个 struct，保存状态，给函数添加类型，用这个函数控制状态。 如果你觉得复杂，你也可以不用 struct：
 
 ```go
-
 package main
 
 import "fmt"
@@ -421,7 +382,6 @@ func main() {
 	fmt.Printf("iter 2: %d\n", i.iter())
 	fmt.Printf("iter 3: %d\n", i.iter())
 }
-
 ```
 
 这个函数也做了同样的事情，用不同的方式。和 object 一样也可以管理状态，而且用作用域将状态隔离，只有函数能修改这个状态。
@@ -458,20 +418,17 @@ func main() {
 	fmt.Printf("dec 2: %d\n", dec())
 	fmt.Printf("dec 3: %d\n", dec())
 }
-
 ```
 
 输出：
 
 ```
-
 inc 1: 1
 inc 2: 2
 inc 3: 3
 dec 1: 2
 dec 2: 1
 dec 3: 0
-
 ```
 
 可以清楚看到，两个函数共享同一个状态，都能管理状态，就像你用含有两个方法的 object 做的一样。 
@@ -485,7 +442,6 @@ dec 3: 0
 一个日历操作：
 
 ```go
-
 package main
 
 import "fmt"
@@ -511,32 +467,6 @@ func main() {
 	fmt.Println(calc.Add(3, 2))
 	fmt.Println(calc.Sub(3, 2))
 }
-package main
-
-import "fmt"
-
-type Calculator struct {
-	Add func(int,int) int
-	Sub func(int,int) int
-}
-
-func newCalculator() Calculator {
-	return Calculator{
-		Add: func(a int, b int) int {
-			return a + b
-		},
-		Sub: func(a int, b int) int {
-			return a - b
-		},
-	}
-}
-
-func main() {
-	calc := newCalculator()
-	fmt.Println(calc.Add(3, 2))
-	fmt.Println(calc.Sub(3, 2))
-}
-
 ```
 
 嗯，你可以争论代码冗繁的问题，以你的经验来看这种方式可能比 Go 使用方法更好。但是你不可否认这给犯错误留了很大空间。
@@ -569,27 +499,24 @@ func main() {
 	fmt.Println(calc.Add(3, 2))
 	fmt.Println(calc.Sub(3, 2))
 }
-
 ```
 
 输出结果是：
 
 ```
-
 panic: runtime error: invalid memory address or nil pointer dereference
 [signal SIGSEGV: segmentation violation code=0xffffffff addr=0x0 pc=0xc64e8]
 
 goroutine 1 [running]:
 main.main()
 	/tmp/sandbox772959961/main.go:23 +0x28
-
 ```
 
 虽然使用方法也可能出现这个问题，但给类型添加函数比代表函数组合操作同一个类型要安全好多倍。至少调用方法永远是安全的（当然你也可能遇到一个无效的方法接受者，使程序崩溃）。
 
 除了繁琐和容易出错，还有一个问题就是怎样表达抽象概念，这比单独的函数复杂多了。
 
-## 抽象 ##
+## 抽象
 
 我们目前的所有抽象方法都是由一个函数组成的，一个函数就可以表示，但是如果抽象需求多于一个函数怎么办呢？
 
@@ -606,16 +533,14 @@ main.main()
 安全是很重要的，因为 calculator 的例子可能会用来实现这样的形式。我们可以这样做：
 
 ```go
-
 type Calculator struct {
 	Add func(int,int) int
 	Sub func(int,int) int
 }
 
 func codeThatDependsOnCalculator(c Calculator) {
-        // etc
+	// etc
 }
-
 ```
 
 这将允许一个 **Calculator** 的 N 个不同的实现与依赖它的代码集成，但是不安全。很简单，只完成一半的实现就能瞒天过海了。所有接收 **Calculator** 的函数都要检查 **Add** 和 **Sub** 不是 nil 的。
@@ -628,7 +553,7 @@ Go 的解决方案是用接口，在我看来这是 Go 里最棒的特性。
 
 祝探索 Go 的过程愉快;-)。
 
-## 致谢 ##
+## 致谢
 
 特别感谢：
 
@@ -637,7 +562,6 @@ Go 的解决方案是用接口，在我看来这是 Go 里最棒的特性。
 - [cadicallegari](https://github.com/cadicallegari)
 
 感谢诸位花时间帮我 review 并且指出了一些低级的错误。
-
 
 ----------------
 
