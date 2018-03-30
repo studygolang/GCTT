@@ -145,6 +145,6 @@ via: https://syslog.ravelin.com/anatomy-of-a-function-call-in-go-f6fc81b80ecc
 
 作者：[Phil Pearl](https://syslog.ravelin.com/@philpearl)
 译者：[krystollia](https://github.com/krystollia)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
