@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12719
+
 # 第 29 篇：Defer
 
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 29 篇。
@@ -12,28 +14,28 @@
 package main
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 func finished() {  
-    fmt.Println("Finished finding largest")
+	fmt.Println("Finished finding largest")
 }
 
 func largest(nums []int) {  
-    defer finished()    
-    fmt.Println("Started finding largest")
-    max := nums[0]
-    for _, v := range nums {
-        if v > max {
-            max = v
-        }
-    }
-    fmt.Println("Largest number in", nums, "is", max)
+	defer finished()
+	fmt.Println("Started finding largest")
+	max := nums[0]
+	for _, v := range nums {
+		if v > max {
+			max = v
+		}
+	}
+	fmt.Println("Largest number in", nums, "is", max)
 }
 
 func main() {  
-    nums := []int{78, 109, 2, 563, 300}
-    largest(nums)
+	nums := []int{78, 109, 2, 563, 300}
+	largest(nums)
 }
 ```
 
@@ -57,26 +59,26 @@ Finished finding largest
 package main
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 
 type person struct {  
-    firstName string
-    lastName string
+	firstName string
+	lastName string
 }
 
 func (p person) fullName() {  
-    fmt.Printf("%s %s",p.firstName,p.lastName)
+	fmt.Printf("%s %s",p.firstName,p.lastName)
 }
 
 func main() {  
-    p := person {
-        firstName: "John",
-        lastName: "Smith",
-    }
-    defer p.fullName()
-    fmt.Printf("Welcome ")  
+	p := person {
+		firstName: "John",
+		lastName: "Smith",
+	}
+	defer p.fullName()
+	fmt.Printf("Welcome ")  
 }
 ```
 
@@ -98,17 +100,17 @@ Welcome John Smith
 package main
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 func printA(a int) {  
-    fmt.Println("value of a in deferred function", a)
+	fmt.Println("value of a in deferred function", a)
 }
 func main() {  
-    a := 5
-    defer printA(a)
-    a = 10
-    fmt.Println("value of a before deferred function call", a)
+	a := 5
+	defer printA(a)
+	a = 10
+	fmt.Println("value of a before deferred function call", a)
 
 }
 ```
@@ -134,16 +136,16 @@ value of a in deferred function 5
 package main
 
 import (  
-    "fmt"
+	"fmt"
 )
 
 func main() {  
-    name := "Naveen"
-    fmt.Printf("Orignal String: %s\n", string(name))
-    fmt.Printf("Reversed String: ")
-    for _, v := range []rune(name) {
-        defer fmt.Printf("%c", v)
-    }
+	name := "Naveen"
+	fmt.Printf("Orignal String: %s\n", string(name))
+	fmt.Printf("Reversed String: ")
+	for _, v := range []rune(name) {
+		defer fmt.Printf("%c", v)
+	}
 }
 ```
 
@@ -166,43 +168,43 @@ Reversed String: neevaN
 package main
 
 import (  
-    "fmt"
-    "sync"
+	"fmt"
+	"sync"
 )
 
 type rect struct {  
-    length int
-    width  int
+	length int
+	width  int
 }
 
 func (r rect) area(wg *sync.WaitGroup) {  
-    if r.length < 0 {
-        fmt.Printf("rect %v's length should be greater than zero\n", r)
-        wg.Done()
-        return
-    }
-    if r.width < 0 {
-        fmt.Printf("rect %v's width should be greater than zero\n", r)
-        wg.Done()
-        return
-    }
-    area := r.length * r.width
-    fmt.Printf("rect %v's area %d\n", r, area)
-    wg.Done()
+	if r.length < 0 {
+		fmt.Printf("rect %v's length should be greater than zero\n", r)
+		wg.Done()
+		return
+	}
+	if r.width < 0 {
+		fmt.Printf("rect %v's width should be greater than zero\n", r)
+		wg.Done()
+		return
+	}
+	area := r.length * r.width
+	fmt.Printf("rect %v's area %d\n", r, area)
+	wg.Done()
 }
 
 func main() {  
-    var wg sync.WaitGroup
-    r1 := rect{-67, 89}
-    r2 := rect{5, -67}
-    r3 := rect{8, 9}
-    rects := []rect{r1, r2, r3}
-    for _, v := range rects {
-        wg.Add(1)
-        go v.area(&wg)
-    }
-    wg.Wait()
-    fmt.Println("All go routines finished executing")
+	var wg sync.WaitGroup
+	r1 := rect{-67, 89}
+	r2 := rect{5, -67}
+	r3 := rect{8, 9}
+	rects := []rect{r1, r2, r3}
+	for _, v := range rects {
+		wg.Add(1)
+		go v.area(&wg)
+	}
+	wg.Wait()
+	fmt.Println("All go routines finished executing")
 }
 ```
 
@@ -220,41 +222,41 @@ func main() {
 package main
 
 import (  
-    "fmt"
-    "sync"
+	"fmt"
+	"sync"
 )
 
 type rect struct {  
-    length int
-    width  int
+	length int
+	width  int
 }
 
 func (r rect) area(wg *sync.WaitGroup) {  
-    defer wg.Done()
-    if r.length < 0 {
-        fmt.Printf("rect %v's length should be greater than zero\n", r)
-        return
-    }
-    if r.width < 0 {
-        fmt.Printf("rect %v's width should be greater than zero\n", r)
-        return
-    }
-    area := r.length * r.width
-    fmt.Printf("rect %v's area %d\n", r, area)
+	defer wg.Done()
+	if r.length < 0 {
+		fmt.Printf("rect %v's length should be greater than zero\n", r)
+		return
+	}
+	if r.width < 0 {
+		fmt.Printf("rect %v's width should be greater than zero\n", r)
+		return
+	}
+	area := r.length * r.width
+	fmt.Printf("rect %v's area %d\n", r, area)
 }
 
 func main() {  
-    var wg sync.WaitGroup
-    r1 := rect{-67, 89}
-    r2 := rect{5, -67}
-    r3 := rect{8, 9}
-    rects := []rect{r1, r2, r3}
-    for _, v := range rects {
-        wg.Add(1)
-        go v.area(&wg)
-    }
-    wg.Wait()
-    fmt.Println("All go routines finished executing")
+	var wg sync.WaitGroup
+	r1 := rect{-67, 89}
+	r2 := rect{5, -67}
+	r3 := rect{8, 9}
+	rects := []rect{r1, r2, r3}
+	for _, v := range rects {
+		wg.Add(1)
+		go v.area(&wg)
+	}
+	wg.Wait()
+	fmt.Println("All go routines finished executing")
 }
 ```
 
@@ -283,6 +285,6 @@ via: https://golangbot.com/defer/
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[Noluye](https://github.com/Noluye)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
