@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12718
+
 # Golang 中的回环栅栏
 
 这篇文章中我们会研究一个基本的同步问题。并使用 Golang 中原生的 Buffered Channels 来为这个问题找到一个简洁的解决方案。
@@ -8,7 +10,7 @@
 
 ```go
 for i := 0; i < workers; i++ {
-    go worker()
+	go worker()
 }
 ```
 
@@ -16,9 +18,9 @@ worker 需要做一系列的工作 job：
 
 ```go
 func worker() {
-    for i := 0; i < 3; i++ {
-        job()
-    }
+	for i := 0; i < 3; i++ {
+		job()
+	}
 }
 ```
 
@@ -26,11 +28,11 @@ func worker() {
 
 ```go
 func worker() {
-    for i := 0; i < 3; i++ {
-        bootstrap()
-        # wait for other workers to bootstrap
-        job()
-    }
+	for i := 0; i < 3; i++ {
+		bootstrap()
+		# wait for other workers to bootstrap
+		job()
+	}
 }
 ```
 
@@ -38,12 +40,12 @@ func worker() {
 
 ```go
 func worker() {
-    for i := 0; i < 3; i++ {
-        # wait for all workers to finish previous loop
-        bootstrap()
-        # wait for other workers to bootstrap
-        job()
-    }
+	for i := 0; i < 3; i++ {
+		# wait for all workers to finish previous loop
+		bootstrap()
+		# wait for other workers to bootstrap
+		job()
+	}
 }
 ```
 
@@ -51,31 +53,31 @@ func worker() {
 
 ```go
 type counter struct {
-    c int
-    sync.Mutex
+	c int
+	sync.Mutex
 }
 
 func (c *counter) Incr() {
-    c.Lock()
-    c.c += 1
-    c.Unlock()
+	c.Lock()
+	c.c += 1
+	c.Unlock()
 }
 
 func (c *counter) Get() (res int) {
-    c.Lock()
-    res = c.c
-    c.Unlock()
-    return
+	c.Lock()
+	res = c.c
+	c.Unlock()
+	return
 }
 
 func worker(c *counter) {
-    for i := 0; i < 3; i++ {
-        # wait for all workers to finish previous loop
-        c.Incr()
-        # wait for other workers to do bootstrap
-        time.Sleep(time.Duration(rand.Intn(100)) * time.Millisecond)
-        fmt.Println(c.Get())
-    }
+	for i := 0; i < 3; i++ {
+		# wait for all workers to finish previous loop
+		c.Incr()
+		# wait for other workers to do bootstrap
+		time.Sleep(time.Duration(rand.Intn(100)) * time.Millisecond)
+		fmt.Println(c.Get())
+	}
 }
 ```
 
@@ -166,8 +168,8 @@ worker 此时可以开始执行 job 并接着在下一次循环中再次抵达�
 
 ```
 
-     1st gate     2nd gate
-        v             v
+	 1st gate     2nd gate
+		v             v
 -w1-->  |             |
  --w2-->|
 --w3--> |          
@@ -178,21 +180,21 @@ worker 此时可以开始执行 job 并接着在下一次循环中再次抵达�
  --w3-->|
  --w4-->|             
  --w5-->|             |
-        |      --w1-->|
-               --w2-->|
-            --w3-->   |
-             --w4-->  |
-        |      --w5-->|
-        |      --w1-->|
-               --w2-->|
-               --w3-->|
-               --w4-->|
-        |      --w5-->|
+		|      --w1-->|
+			   --w2-->|
+			--w3-->   |
+			 --w4-->  |
+		|      --w5-->|
+		|      --w1-->|
+			   --w2-->|
+			   --w3-->|
+			   --w4-->|
+		|      --w5-->|
 --w1--> |             |
-        |              --w2-->
+		|              --w2-->
  --w3-->|
 --w4--> |             
-        |             | --w5-->
+		|             | --w5-->
 ```
 
 下文有两种解决方案，实现略有不同。下面的代码可用来对两种方案进行测试：
@@ -201,59 +203,59 @@ worker 此时可以开始执行 job 并接着在下一次循环中再次抵达�
 package main
 
 import (
-    "fmt"
-    "math/rand"
-    "sync"
-    "time"
-    // Set this import spec to point
-    // to the copy of one of proposed
-    // solutions.
-    "path/to/package/barrier"
+	"fmt"
+	"math/rand"
+	"sync"
+	"time"
+	// Set this import spec to point
+	// to the copy of one of proposed
+	// solutions.
+	"path/to/package/barrier"
 )
 
 func init() {
-    rand.Seed(time.Now().Unix())
+	rand.Seed(time.Now().Unix())
 }
 
 type counter struct {
-    c int
-    sync.Mutex
+	c int
+	sync.Mutex
 }
 
 func (c *counter) Incr() {
-    c.Lock()
-    c.c += 1
-    c.Unlock()
+	c.Lock()
+	c.c += 1
+	c.Unlock()
 }
 
 func (c *counter) Get() (res int) {
-    c.Lock()
-    res = c.c
-    c.Unlock()
-    return
+	c.Lock()
+	res = c.c
+	c.Unlock()
+	return
 }
 
 func worker(c *counter, br *barrier.Barrier, wg *sync.WaitGroup) {
-    for i := 0; i < 3; i++ {
-        br.Before()
-        c.Incr()
-        br.After()
-        time.Sleep(time.Duration(rand.Intn(100)) * time.Millisecond)
-        fmt.Println(c.Get())
-    }
-    wg.Done()
+	for i := 0; i < 3; i++ {
+		br.Before()
+		c.Incr()
+		br.After()
+		time.Sleep(time.Duration(rand.Intn(100)) * time.Millisecond)
+		fmt.Println(c.Get())
+	}
+	wg.Done()
 }
 
 func main() {
-    var wg sync.WaitGroup
-    workers := 3
-    br := barrier.New(workers)
-    c := counter{}
-    for i := 0; i < workers; i++ {
-        wg.Add(1)
-        go worker(&c, br, &wg)
-    }
-    wg.Wait()
+	var wg sync.WaitGroup
+	workers := 3
+	br := barrier.New(workers)
+	c := counter{}
+	for i := 0; i < workers; i++ {
+		wg.Add(1)
+		go worker(&c, br, &wg)
+	}
+	wg.Wait()
 }
 ```
 
@@ -285,50 +287,50 @@ package barrier
 import "sync"
 
 type Barrier struct {
-    c      int
-    n      int
-    m      sync.Mutex
-    before chan int
-    after  chan int
+	c      int
+	n      int
+	m      sync.Mutex
+	before chan int
+	after  chan int
 }
 
 func New(n int) *Barrier {
-    b := Barrier{
-        n:      n,
-        before: make(chan int, 1),
-        after:  make(chan int, 1),
-    }
-    // close 1st gate
-    b.after <- 1  
-    return &b
+	b := Barrier{
+		n:      n,
+		before: make(chan int, 1),
+		after:  make(chan int, 1),
+	}
+	// close 1st gate
+	b.after <- 1  
+	return &b
 }
 
 func (b *Barrier) Before() {
-    b.m.Lock()
-    b.c += 1
-    if b.c == b.n {
-        // close 2nd gate
-        <-b.after
-        // open 1st gate
-        b.before <- 1
-    }
-    b.m.Unlock()
-    <-b.before
-    b.before <- 1
+	b.m.Lock()
+	b.c += 1
+	if b.c == b.n {
+		// close 2nd gate
+		<-b.after
+		// open 1st gate
+		b.before <- 1
+	}
+	b.m.Unlock()
+	<-b.before
+	b.before <- 1
 }
 
 func (b *Barrier) After() {
-    b.m.Lock()
-    b.c -= 1
-    if b.c == 0 {
-       // close 1st gate
-       <-b.before
-       // open 2st gate
-       b.after <- 1
-    }
-    b.m.Unlock()
-    <-b.after
-    b.after <- 1
+	b.m.Lock()
+	b.c -= 1
+	if b.c == 0 {
+	   // close 1st gate
+	   <-b.before
+	   // open 2st gate
+	   b.after <- 1
+	}
+	b.m.Unlock()
+	<-b.after
+	b.after <- 1
 }
 ```
 
@@ -343,46 +345,46 @@ package barrier
 import "sync"
 
 type Barrier struct {
-    c      int
-    n      int
-    m      sync.Mutex
-    before chan int
-    after  chan int
+	c      int
+	n      int
+	m      sync.Mutex
+	before chan int
+	after  chan int
 }
 
 func New(n int) *Barrier {
-    b := Barrier{
-        n:      n,
-        before: make(chan int, n),
-        after:  make(chan int, n),
-    }
-    return &b
+	b := Barrier{
+		n:      n,
+		before: make(chan int, n),
+		after:  make(chan int, n),
+	}
+	return &b
 }
 
 func (b *Barrier) Before() {
-    b.m.Lock()
-    b.c += 1
-    if b.c == b.n {
-        // open 2nd gate
-        for i := 0; i < b.n; i++ {
-            b.before <- 1
-        }
-    }
-    b.m.Unlock()
-    <-b.before
+	b.m.Lock()
+	b.c += 1
+	if b.c == b.n {
+		// open 2nd gate
+		for i := 0; i < b.n; i++ {
+			b.before <- 1
+		}
+	}
+	b.m.Unlock()
+	<-b.before
 }
 
 func (b *Barrier) After() {
-    b.m.Lock()
-    b.c -= 1
-    if b.c == 0 {
-        // open 1st gate
-        for i := 0; i < b.n; i++ {
-            b.after <- 1
-        }
-    }
-    b.m.Unlock()
-    <-b.after
+	b.m.Lock()
+	b.c -= 1
+	if b.c == 0 {
+		// open 1st gate
+		for i := 0; i < b.n; i++ {
+			b.after <- 1
+		}
+	}
+	b.m.Unlock()
+	<-b.after
 }
 
 ```
