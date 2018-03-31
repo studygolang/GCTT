@@ -223,7 +223,7 @@ Sam Adolf has 10 leaves remaining
 
 **上一教程 - [Mutex](https://studygolang.com/articles/12598)**
 
-**下一教程 - 组合取代继承（暂未发布，敬请期待）**
+**下一教程 - [组合取代继承](https://studygolang.com/articles/12680)**
 
 ---
 

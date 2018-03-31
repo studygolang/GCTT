@@ -273,7 +273,9 @@ func main() {
 
 接口的介绍到此结束。祝你愉快。
 
-**下一教程 - [并发入门](#)**
+**上一教程 - [接口 - I](https://studygolang.com/articles/12266)**
+
+**下一教程 - [并发入门](https://studygolang.com/articles/12341)**
 
 ---
 

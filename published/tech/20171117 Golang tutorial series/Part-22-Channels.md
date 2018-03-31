@@ -456,7 +456,9 @@ Final output 1536
 
 本教程的内容到此结束。关于信道还有一些其他的概念，比如缓冲信道（Buffered Channel）、工作池（Worker Pool）和 select。我们会在接下来的教程里专门介绍它们。感谢阅读。祝你愉快。  
 
-**下一教程 - [缓冲信道和工作池](#)**
+**上一教程 - [Go 协程](https://studygolang.com/articles/12342)**
+
+**下一教程 - [缓冲信道和工作池](https://studygolang.com/articles/12512)**
 
 ---
 

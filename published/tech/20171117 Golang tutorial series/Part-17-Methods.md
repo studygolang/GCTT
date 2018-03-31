@@ -488,7 +488,9 @@ func main() {
 
 这就是Go中的方法。祝你有美好的一天。
 
-下一章 [接口 - I](https://golangbot.com/interfaces-part-1/)
+**上一教程 - [结构体](https://studygolang.com/articles/12263)**
+
+**下一教程 - [接口 - I](https://studygolang.com/articles/12266)**
 
 ----------------
 

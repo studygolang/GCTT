@@ -626,7 +626,9 @@ func main() {
 
 [github](https://github.com/golangbot/structs) 上有本教程的源代码。  
 
-**下一教程 - 方法**
+**上一教程 - [指针](https://studygolang.com/articles/12262)**
+
+**下一教程 - [方法](https://studygolang.com/articles/12264)**
 
 ---
 

@@ -177,7 +177,9 @@ func main() {
 
 本章教程到此告一段落了，感谢您的阅读，欢迎您的任何评论和反馈。
 
-**下一个教程 - 循环**
+**上一教程 - [包 (Packages)](https://studygolang.com/articles/11893)**
+
+**下一教程 - [循环](https://studygolang.com/articles/11924)**
 
 ----------------
 

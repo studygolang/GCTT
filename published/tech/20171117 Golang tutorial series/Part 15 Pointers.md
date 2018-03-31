@@ -252,7 +252,9 @@ func main() {
 
 关于指针的介绍到此结束。祝您愉快。
 
-**下一教程 - 结构体**
+**上一教程 - [字符串](https://studygolang.com/articles/12261)**
+
+**下一教程 - [结构体](https://studygolang.com/articles/12263)**
 
 ---
 

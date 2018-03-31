@@ -124,7 +124,9 @@ func main() {
 
 Go 协程的介绍到此结束。祝你愉快。
 
-**下一教程 - [信道](#)**
+**上一教程 - [并发入门](https://studygolang.com/articles/12341)**
+
+**下一教程 - [信道](https://studygolang.com/articles/12402)**
 
 ---
 

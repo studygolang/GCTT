@@ -360,6 +360,10 @@ func main() {
 
 关于字符串的介绍到此为止。祝你愉快。
 
+**上一教程 - [Maps](https://studygolang.com/articles/12251)**
+
+**下一教程 - [指针](https://studygolang.com/articles/12262)**
+
 ----------------
 
 via: https://golangbot.com/strings/

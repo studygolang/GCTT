@@ -245,7 +245,9 @@ main.main()
 
 本教程到此结束。祝你愉快。  
 
-**下一教程 - [Mutex](#)**
+**上一教程 - [缓冲信道和工作池](https://studygolang.com/articles/12512)**
+
+**下一教程 - [Mutex](https://studygolang.com/articles/12598)**
 
 ---
 
