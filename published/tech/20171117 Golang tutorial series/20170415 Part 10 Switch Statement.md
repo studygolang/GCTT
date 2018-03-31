@@ -205,7 +205,9 @@ switch 和 case 的表达式不一定是常量。它们也可以在运行过程�
 
 希望您能享受本次阅读。请留下您宝贵的意见和建议。
 
-#### 下一部分 - Arrays 和 Slices
+**上一教程 - [循环](https://studygolang.com/articles/11924)**
+
+**下一教程 - [Arrays 和 Slices](https://studygolang.com/articles/12121)**
 
 ----------------
 

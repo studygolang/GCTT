@@ -395,7 +395,9 @@ Naveen R is 25 years old
 
 接口（一）的内容到此结束。在接口（二）中我们还会继续讨论接口。祝您愉快！  
 
-**下一教程 - 接口（二）**
+**上一教程 - [方法](https://studygolang.com/articles/12264)**
+
+**下一教程 - [接口 - II](https://studygolang.com/articles/12325)**
 
 ---
 

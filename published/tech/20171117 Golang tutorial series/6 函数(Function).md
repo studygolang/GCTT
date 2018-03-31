@@ -165,7 +165,9 @@ func main() {
 
 本章教程到此告一段落了，感谢您的阅读，欢迎您的任何评论和反馈。
 
-**下个教程 - 包 (Packages)**
+**上一教程 - [常量](https://studygolang.com/articles/11872)**
+
+**下一教程 - [包 (Packages)](https://studygolang.com/articles/11893)**
 
 -------
 via: https://golangbot.com/functions/

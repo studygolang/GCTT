@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12681
+
 # 第 28 篇：多态
 
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 28 篇。
@@ -306,7 +308,7 @@ Net income of organisation = $23750
 
 **上一教程 - [组合取代继承](https://studygolang.com/articles/12680)**
 
-**下一教程 - Defer（暂未发布，敬请期待）**
+**下一教程 - [Defer](https://studygolang.com/articles/12719)**
 
 ---
 

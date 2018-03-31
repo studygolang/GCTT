@@ -479,7 +479,9 @@ total time taken  10.004364685 seconds
 
 本教程到此结束。祝你愉快。   
 
-## 下一教程 - [Select](#)
+**上一教程 - [信道](https://studygolang.com/articles/12402)**
+
+**下一教程 - [Select](https://studygolang.com/articles/12522)**
 
 ---
 

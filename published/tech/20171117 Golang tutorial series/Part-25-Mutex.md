@@ -182,7 +182,9 @@ final value of x 1000
 
 本教程到此结束。祝你愉快。  
 
-**下一教程 - [结构体取代类](#)**
+**上一教程 - [Select](https://studygolang.com/articles/12522)**
+
+**下一教程 - [结构体取代类](https://studygolang.com/articles/12630)**
 
 ---
 

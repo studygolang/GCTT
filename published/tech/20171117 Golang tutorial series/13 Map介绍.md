@@ -342,6 +342,10 @@ func main() {
 
 这就是 map 。谢谢你的阅读。祝好。
 
+**上一教程 - [可变参数函数](https://studygolang.com/articles/12173)**
+
+**下一教程 - [字符串](https://studygolang.com/articles/12261)**
+
 ---
 
 via: https://golangbot.com/maps/
