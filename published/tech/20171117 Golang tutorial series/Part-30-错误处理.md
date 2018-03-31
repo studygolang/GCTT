@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12724
+
 # 第 30 篇：错误处理
 
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 30 篇。
@@ -80,7 +82,7 @@ open /test.txt: No such file or directory
 
 **我们解析了这条错误信息，虽然获取了发生错误的文件路径，但是这种方法很不优雅。随着语言版本的更新，这条错误的描述随时都有可能变化，使我们程序出错**。
 
-有没有更加可靠的方法来获取文件名呢？答案是肯定的，这是可以做到的，Go 标准库给出了各种提取错误相关信息的方法。我们依个来看看吧。
+有没有更加可靠的方法来获取文件名呢？答案是肯定的，这是可以做到的，Go 标准库给出了各种提取错误相关信息的方法。我们一个个来看看吧。
 
 ### 1. 断言底层结构体类型，使用结构体字段获取更多信息
 
@@ -295,6 +297,6 @@ via: https://golangbot.com/error-handling/
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[Noluye](https://github.com/Noluye)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

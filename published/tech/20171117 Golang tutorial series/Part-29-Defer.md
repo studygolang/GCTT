@@ -277,7 +277,7 @@ All go routines finished executing
 
 **上一教程 - [多态](https://studygolang.com/articles/12681)**
 
-**下一教程 - 错误处理（暂未发布，敬请期待）**
+**下一教程 - [错误处理](https://studygolang.com/articles/12724)**
 
 ---
 
