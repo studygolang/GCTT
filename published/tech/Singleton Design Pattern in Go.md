@@ -1,3 +1,4 @@
+已发布：https://studygolang.com/articles/12728
 
 # Go 中的单例设计模式
 
@@ -24,13 +25,13 @@ straps 包提供了一种机制来将配置选项（straps）存储在XML文档�
 
 ```xml
 <straps>
-    <!– Log Settings –>
-    <strap key="baseFilePath" value="/Users/bill/Logs/OC-DataServer">
-    <strap key="machineName" value="my-machine">
-    <strap key="daysToKeep" value="1">
+	<!– Log Settings –>
+	<strap key="baseFilePath" value="/Users/bill/Logs/OC-DataServer">
+	<strap key="machineName" value="my-machine">
+	<strap key="daysToKeep" value="1">
 
-    <!– ServerManager Settings –>
-    <strap key="cpuMultiplier" value="100">
+	<!– ServerManager Settings –>
+	<strap key="cpuMultiplier" value="100">
 </straps>
 ```
 
@@ -42,11 +43,11 @@ straps 包知道如何读取这个 xml 文件，并通过基于 Singleton 的公
 package straps
 
 import (
-    "encoding/xml"
-    "io"
-    "os"
-    "path/filepath"
-    "strconv"
+	"encoding/xml"
+	"io"
+	"os"
+	"path/filepath"
+	"strconv"
 )
 
 .
@@ -54,7 +55,7 @@ import (
 .
 
 type straps struct {
-    StrapMap map[string]string // The map of strap key value pairs
+	StrapMap map[string]string // The map of strap key value pairs
 }
 
 var st straps // A reference to the singleton
@@ -74,32 +75,32 @@ straps 类型和 st 变量都是私有的，只能从包中访问。
 
 ```go
 func MustLoad() {
-    // Find the location of the straps.xml file
-    strapsFilePath, err := filepath.Abs("straps.xml")
+	// Find the location of the straps.xml file
+	strapsFilePath, err := filepath.Abs("straps.xml")
 
-    // Open the straps.xml file
-    file, err := os.Open(strapsFilePath)
-    if err != nil {
-        panic(err.Error())
-    }
+	// Open the straps.xml file
+	file, err := os.Open(strapsFilePath)
+	if err != nil {
+		panic(err.Error())
+	}
 
-    defer file.Close()
+	defer file.Close()
 
-    // Read the straps file
-    xmlStraps, err := readStraps(file)
-    if err != nil {
-        panic(err.Error())
-    }
+	// Read the straps file
+	xmlStraps, err := readStraps(file)
+	if err != nil {
+		panic(err.Error())
+	}
 
-    // Create a straps object
-    st = straps{
-        StrapMap: make(map[string]string),
-    }
+	// Create a straps object
+	st = straps{
+		StrapMap: make(map[string]string),
+	}
 
-    // Store the key/value pairs for each strap
-    for _, strap := range xmlStraps {
-        st.StrapMap[strap.Key] = strap.Value
-    }
+	// Store the key/value pairs for each strap
+	for _, strap := range xmlStraps {
+		st.StrapMap[strap.Key] = strap.Value
+	}
 }
 ```
 
@@ -109,7 +110,7 @@ Load 函数是包的公有函数。应用程序可以通过包名来访问这个
 
 ```go
 func Strap(key string) string {
-    return st.StrapMap[key]
+	return st.StrapMap[key]
 }
 ```
 
@@ -121,14 +122,14 @@ func Strap(key string) string {
 
 ```go
 func SomePublicFunction() {
-    .
-    st.SomePrivateMemberFunction("key")
-    .
+	.
+	st.SomePrivateMemberFunction("key")
+	.
 }
 
 func (straps *straps) SomePrivateMemberFunction(key string) {
-    return straps.StrapMap[key]
-    .
+	return straps.StrapMap[key]
+	.
 }
 ```
 
@@ -140,12 +141,12 @@ func (straps *straps) SomePrivateMemberFunction(key string) {
 package main
 
 import (
-    "ArdanStudios/straps"
+	"ArdanStudios/straps"
 )
 
 func main() {
-    straps.MustLoad()
-    cpu := straps.Strap("cpuMultiplier")
+	straps.MustLoad()
+	cpu := straps.Strap("cpuMultiplier")
 }
 ```
 
