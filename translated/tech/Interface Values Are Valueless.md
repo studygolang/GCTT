@@ -171,6 +171,8 @@ Tom 的观点已经清楚地表明，具体的数据才是设计实现不同行�
 
 在 Go 中，你可以写函数和方法。选择方法而不是函数的一个原因是，数据被要求要实现给定接口的方法集。
 
+### 代码清单 8
+
 ```go
 05 type reader interface {
 06     read(b []byte) (int, error)
@@ -209,7 +211,7 @@ Tom 的观点已经清楚地表明，具体的数据才是设计实现不同行�
 
 一旦这些值，值和指针，实现了这些方法，它们就可以传递给多态函数 retrieve。
 
-## 代码清单 9
+### 代码清单 9
 
 ```go
 package main
@@ -271,6 +273,8 @@ func retrieve(r reader) error {
 
 接口不是值类型的观点可以延伸到接口值的分配。看下这些接口类型。
 
+### 代码清单 10
+
 ```go
 05 type Reader interface {
 06     Read()
@@ -289,6 +293,7 @@ func retrieve(r reader) error {
 有了这些接口声明，你可以实现一个实现了所有这三个接口的具体类型。
 
 ### 代码清单 11
+
 ```go
 18 type system struct{
 19     Host string
