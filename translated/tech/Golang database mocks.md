@@ -45,3 +45,12 @@ type dataAccess interface {
 
 对（依赖于）数据库相关的代码进行单元测试有不同的方法，而这就是我在 Go 项目中采用的方法 - 我非常乐意提供（我的）建议，或者方案，以及快乐地进行单元测试的方法！
 
+----------------
+
+via: https://dev.to/forstmeier/golang-database-mocks-1hm9
+
+作者：[John Forstmeier](https://dev.to/forstmeier)
+译者：[gogeof](https://github.com/gogeof)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
