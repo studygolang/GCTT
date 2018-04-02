@@ -1,5 +1,7 @@
 # 第 31 篇：自定义错误
 
+![custom errors](https://golangbot.com/content/images/2017/11/custom-errors-golang-1.png)
+
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 31 篇。
 
 在[上一教程](https://studygolang.com/articles/12724)里，我们学习了 Go 中的错误是如何表示的，并学习了如何处理标准库里的错误。我们还学习了从标准库的错误中提取更多的信息。
@@ -10,7 +12,7 @@
 
 创建自定义错误最简单的方法是使用 [`errors`](https://golang.org/pkg/errors/) 包中的 [`New`](https://golang.org/pkg/errors/#New) 函数。
 
-在使用 New [函数](https://studygolang.com/articles/11892) 创建自定义函数之前，我们先来看看 `New` 是如何实现的。如下所示，是 [`errors` 包](https://golang.org/src/errors/errors.go?s=293:320#L1) 中的 `New` 函数的实现。
+在使用 New [函数](https://studygolang.com/articles/11892) 创建自定义错误之前，我们先来看看 `New` 是如何实现的。如下所示，是 [`errors` 包](https://golang.org/src/errors/errors.go?s=293:320#L1) 中的 `New` 函数的实现。
 
 ```go
 // Package errors implements functions to manipulate errors.
@@ -80,7 +82,7 @@ Area calculation failed, radius is less than zero
 
 ## 使用 Errorf 给错误添加更多信息
 
-上面的程序效果不错，但是如果我们能够打印出当前圆的面积，那就更好了。这就要用到 [`fmt`](https://golang.org/pkg/fmt/) 包中的 [`Errorf`](https://golang.org/pkg/fmt/#Errorf) 函数了。`Errorf` 函数会根据格式说明符，规定错误的格式，并返回一个符合该错误的[字符串](https://studygolang.com/articles/12261)。
+上面的程序效果不错，但是如果我们能够打印出当前圆的半径，那就更好了。这就要用到 [`fmt`](https://golang.org/pkg/fmt/) 包中的 [`Errorf`](https://golang.org/pkg/fmt/#Errorf) 函数了。`Errorf` 函数会根据格式说明符，规定错误的格式，并返回一个符合该错误的[字符串](https://studygolang.com/articles/12261)。
 
 接下来我们使用 `Errorf` 函数来改进我们的程序。
 
@@ -392,6 +394,6 @@ via: https://golangbot.com/custom-errors/
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[Noluye](https://github.com/Noluye)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
