@@ -92,8 +92,7 @@ record := Record{name: "Michał", age: 29}
 Record{Person{name: "Michał", age: 29}, Employee{position: "Software Engineer"}}
 ```
 
-**来源：**
-
-[](https://golang.org/ref/spec#Struct_types)
+[来源：](https://golang.org/ref/spec#Struct_types)
+![](https://github.com/gogeof/gctt-images/blob/master/gogeof/Promoted%20fields%20and%20methods%20in%20Go/promoted-fields-and-methods-in-go-1.jpg?raw=true)
 
 
