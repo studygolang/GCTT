@@ -69,7 +69,7 @@ func (b *Builder) Grow(n int)
 
 ![do-not-copy](https://cdn-images-1.medium.com/max/1600/1*a4IwPDq3tEJJ_FRZfhreyQ.png)
 
-`strings.Builder` 不推荐被拷贝。当你试图拷贝 `strings.Builder` 并写入的时候，你就会得到 panic。
+`strings.Builder` 不推荐被拷贝。当你试图拷贝 `strings.Builder` 并写入的时候，你的程序就会崩溃。
 
 ```go
 var b1 strings.Builder
@@ -177,7 +177,7 @@ via: https://medium.com/@thuc/8-notes-about-strings-builder-in-golang-65260daae6
 
 作者：[Thuc Le](https://medium.com/@thuc)
 译者：[alfred-zhong](https://github.com/alfred-zhong)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
