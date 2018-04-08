@@ -1,15 +1,15 @@
-#golang 中的微服务 - 第3部分 - docker compose 和 datastores
+# golang 中的微服务 - 第3部分 - docker compose 和 datastores
 
 在[之前的文章](https://ewanvalentine.io/microservices-in-golang-part-2/)中，我们介绍了[go-micro](https://github.com/micro/go-micro)和[Docker](https://www.docker.com/)的一些基础知识。在推出了这两项服务之后我们将在本文介绍[docker-compose](https://docs.docker.com/compose/)、教大家如何更便捷地在本地运行多个服务，还会列述一些在本系列微服务教程中可以使用的数据库类型，最后引出本系列的第三项服务——User service。
 
 【译者注：阅读本文之前建议先下载作者[源码](https://github.com/EwanValentine/shippy.git)配合理解 】
 
-##准备工作
+## 准备工作
 安装docker-compose : https://docs.docker.com/compose/install/ 
 
 docker-compose 安装完毕之后，我们来介绍一些可用的数据库以及他们之间的区别。
 
-##数据库选择
+## 数据库选择
 在前两篇文章，我们的数据并不会持久化的存储到某地，它只会存储在我们服务的内存中，当容器重新启动时，这些数据会丢失。所以需要选择一种数据库来持久化的存储和查询我们的数据。
 
 微服务的优点是，你可以为每个服务选择一个不同的数据库。当然许多情况下我们不必这样做。例如生产环境中的小团队完全不必选择多个数据库，这样会增加维护成本。但在某些情况下，一个服务的数据可能并不兼容其他服务的数据库，这时不得不增加一个数据库。微服务使得数据兼容这件事变得更加简单，你完全不必操心不同服务的数据使用不同的数据库带来的额外维护成本。
@@ -33,7 +33,7 @@ NoSQL：https：//cloud.google.com/datastore/
  
 数据库相关知识讨论完毕之后我们就可以写一些代码了！
 
-##docker-compose
+## docker-compose
 
 上一篇文章我们介绍了 [Docker](https://docker.com/) ，它可以用轻量级的容器运行我们的服务，并拥有自己独立的运行时间和依赖关系。但是服务数量较多的情景下使用单独的 Makefile 运行和管理每个服务太麻烦了。[docker-compose](https://docs.docker.com/compose/) 应运而生，它很好的帮我们解决了这一问题。 Docker-compose 允许我们在 yaml 文件中定义 Docker 容器列表，并指定关于其运行时间的元数据。我们可以从 Docker-compose 中看到一些熟悉的 docker 命令的影子。例如：
 
@@ -112,7 +112,7 @@ services:
 
 命令`$ docker-compose run consignment-cli`可以帮助我们使用 CLI 工具来测试所有服务是否正常工作，一旦所有容器都显示 running 就意味着我们的 docker-compose 成功了。和我们以前不借助 docker-compose 直接使用 dockerfile 和 docker 命令取得的效果一样。
 
-##容器实体和 protobufs
+## 容器实体和 protobufs
 
 本系列前面的文章已经讲过使用 [protobufs](https://www.ibm.com/developerworks/cn/linux/l-cn-gpb/) 作为数据模型的模板。我们用它来定义我们的服务结构和功能函数。因为 protobuf 生成的结构基本上都是正确的数据类型，我们也可以将这些结构重复利用为底层数据库模型。这实际上是相当令人兴奋的。protobufs保证了数据的来源单一性和一致性。
 
@@ -124,7 +124,7 @@ services:
 
 一般建议在 protobuf 定义代码和你的数据库实体之间进行相互转换。但是，这两种类型的代码之间相互转换需要大量的编码工作：
 
-```
+```go
 func (service *Service) (ctx context.Context, req *proto.User, res *proto.Response) error {
   entity := &models.User{
     Name: req.Name.
@@ -144,7 +144,7 @@ func (service *Service) (ctx context.Context, req *proto.User, res *proto.Respon
 
 先整理一下代码文件： main.go 文件已经包含了我们所有的逻辑代码。为了使我们的微服务示例代码更加清晰，我在 consignment 服务的根目录下创建了另外几个文件：`handler.go`、`datastore.go`和`respository.go`，而不是将这些代码文件创建为一个新的目录或包。这种方式对于一个小型的微服务来说是完全可行的。插一句题外话，对于开发人员来说，可能会非常喜欢使用这样的目录结构来存放自己的代码文件：
 
-```
+```go
 main.go
 models/
   user.go
@@ -179,7 +179,7 @@ containers/
 但是，由于我们正在处理的是一个只需要关注单一简单问题的微服务，所以我们不需要将目录结构考虑得太复杂。实际上，Go的精神就是鼓励简单。 所以我们将从简单的一步开始，把所有简易命名的代码文件都放在我们的服务的根目录中。
 
 
-一方面，我们要修改 Dockerfile 文件的内容，因为我们没有将新代码分离出来作为包导入，我们需要在 Dockerfile 文件里告诉go编译器来引入这些新文件b并更新构建函数：
+一方面，我们要修改 Dockerfile 文件的内容，因为我们没有将新代码分离出来作为包导入，我们需要在 Dockerfile 文件里告诉go编译器来引入这些新文件并更新构建函数：
 
 ```
 RUN CGO_ENABLED=0 GOOS=linux go build  -o consignment-service -a -installsuffix cgo main.go repository.go handler.go datastore.go
@@ -191,7 +191,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build  -o consignment-service -a -installsuffix 
 
 我们可以先删除 main.go 中已经导入的所有仓库代码然后使用 golang 的 mongodb 库 mgo 来重新实现它。我在代码里进行了详细的标注以解释每部分的作用，因此请仔细阅读代码和注释。 尤其是mgo如何处理 sessions 的部分：
 
-```
+```go
 // consignment-service/repository.go
 package main
 
@@ -252,7 +252,7 @@ func (repo *ConsignmentRepository) collection() *mgo.Collection {
 接下来需要编写与 Mongodb 数据库交互的代码，创建主会话/连接。 按照如下所示修改`consignment-service/datastore.go`：
 
 
-```
+```go
 // consignment-service/datastore.go
 package main
 
@@ -275,7 +275,7 @@ func CreateSession(host string) (*mgo.Session, error) {
 
 就是这样，非常简单。下一步修改`main.go`文件用以连接 repository，它将一个主机字符串作为参数，返回了一个连接到数据库的 session 和一个可能出现的 error，以便程序启动时可以处理这个 error。 
 
-```
+```go
 // consignment-service/main.go
 package main
 
@@ -340,19 +340,19 @@ func main() {
 }
 ```
 
-##Copy vs Clone
+## Copy vs Clone
 
 你可能已经注意到使用 mgo Mongodb 库时。我们会创建一个被传递给 handlers 的数据库session，每出现一个请求，就会调用一个该session的克隆方法。
 
 实际上，除了建立与数据库的第一次连接之外，我们从不调用“主会话”，每次我们要访问数据存储时都调用session.Clone()方法。如代码注释所言，若使用主会话，则必须再次使用相同的套接字。这意味着您的查询可能会被其他查询阻塞，必须等待此套接字的占用被锁释放。在支持并发的语言中这是绝对无法容忍的。
 
-所以为了避免阻塞请求，mgo允许你 Copy() 或者Clone()一个会话，这样你就可以为每个请求建立一个并发连接。你会注意到我提到了Copy和Clone方法，这些方法非常相似，但有一个微妙但重要的区别：Clone重新使用和主会员相同的套接字，减少了产生一个新的套接字的开销，十分适用于对写入性能要求更高的代码。但是，在耗时较长的读操作（例如十分复杂的查询或大数据作业等）中其他go协程使用这个相同套接字时可能会引发阻塞。
+所以为了避免阻塞请求，mgo允许你 Copy() 或者Clone()一个会话，这样你就可以为每个请求建立一个并发连接。你会注意到我提到了Copy和Clone方法，这些方法非常相似，但有一个微妙但重要的区别：Clone重新使用和主会话相同的套接字，减少了产生一个新的套接字的开销，十分适用于对写入性能要求更高的代码。但是，在耗时较长的读操作（例如十分复杂的查询或大数据作业等）中其他go协程使用这个相同套接字时可能会引发阻塞。
 
 像我们公司这样写入操作更多的业务，使用Clone()更合适一些。
 
 最后一步是将我们的 gRPC 处理程序代码移出到我们新的handler.go文件中，代码如下：
 
-```
+```go
 // consignment-service.go
 
 package main
@@ -423,7 +423,7 @@ func (s *service) GetConsignments(ctx context.Context, req *pb.GetRequest, res *
 我将上一篇教程中 repo 的返回值做了轻微的修改，修改如下：
 旧：
 
-```
+```go
 type Repository interface {
 	Create(*pb.Consignment) (*pb.Consignment, error)
 	GetAll() []*pb.Consignment
@@ -432,7 +432,7 @@ type Repository interface {
 
 新：
 
-```
+```go
 type Repository interface {
 	Create(*pb.Consignment) error
 	GetAll() ([]*pb.Consignment, error)
@@ -447,7 +447,7 @@ type Repository interface {
 
 我们也可以修改 protobuf 来在 vessel-service 里添加一个新的方法，这个方法要负责创建新 vessels ：
 
-```
+```go
 syntax = "proto3";
 
 package vessel;
@@ -481,7 +481,7 @@ message Response {
 
 我们在gRPC服务下创建了一个新的Create方法，该方法需要一个 vessel 并返回 generic response。 我已经在 response message  中添加了一个 bool 类型的新字段：`created`。 这是你需要运行`$ make build`来更新这个服务。 现在我们将在`vessel-service / handler.go`中添加一个新的处理程序，并添加一个新的 repository 方法：
 
-```
+```go
 // vessel-service/handler.go
 
 func (s *service) GetRepo() Repository {
@@ -502,7 +502,7 @@ func (s *service) Create(ctx context.Context, req *pb.Vessel, res *pb.Response) 
 ```
 
 
-```
+```go
 // vessel-service/repository.go
 func (repo *VesselRepository) Create(vessel *pb.Vessel) error {
 	return repo.collection().Insert(vessel)
@@ -566,7 +566,7 @@ services:
 ```
 重新 build 一下，运行`$ docker-compose build`然后运行`$ docker-compose up`。 请注意，有时候由于 Dockers 的缓存机制，在 build 时需要加一个`--no-cache` 参数来取消缓存。
 
-##User service
+## User service
 
 User service 是我们创建的第三个服务。首先修改`docker-compose.yml`，微服务的概念之一就是将所有的东西全部集中起来服务化，所以我们将 Postgres 添加到 docker 容器集里面用来为我们的 User service 服务。
 
@@ -588,7 +588,7 @@ User service 是我们创建的第三个服务。首先修改`docker-compose.yml
 
 ```
 现在在根目录下创建一个 user-service 目录。根据创建前几个 service 的经验，我们还需要创建以下文件：`handler.go`，`main.go`，`repository.go`，`database.go`，`Dockerfile`，`Makefile`，以及一个存放 proto 文件的子目录，以及 proto 文件本身：
-`proto / user / user.proto`
+`proto/user/user.proto`
 
 将以下内容添加到 user.proto：
 
@@ -640,7 +640,7 @@ message Error {
 
 你的处理程序应该是这样的：
 
-```
+```go
 // user-service/handler.go
 package main
 
@@ -697,7 +697,7 @@ func (srv *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.To
 
 现在让我们添加我们的 repository 代码：
 
-```
+```go
 // user-service/repository.go
 package main
 
@@ -751,7 +751,7 @@ func (repo *UserRepository) Create(user *pb.User) error {
 
 为了避免使用整数 ID ，我们还需要更改 ORM 行为，以便在创建时生成一个 [UUID](https://baike.baidu.com/item/UUID/5921266?fr=aladdin)。如果您不知道，UUID是一组随机生成的带有连字符的字符串，用作ID或主键。这比使用自动递增的整数 ID 更安全，因为它可以阻止人们猜测或遍历 API 节点。MongoDB 已经使用了 UUID，但我们需要告诉 Postgres 模型使用UUID。 因此，我们需要在`user-service/proto/user`中创建一个名为extensions.go的新文件，编码如下：
 
-```
+```go
 package go_micro_srv_user
 
 import (
@@ -769,7 +769,7 @@ func (model *User) BeforeCreate(scope *gorm.Scope) error {
 
 与 Mongodb 服务不同的是我们没有进行任何连接处理，这与原生 SQL/postgres 驱动程序的工作方式稍有不同，但是这次我们不需要为连接问题担心，因为我们正在使用一个名为'gorm'的软件包，我们来简单介绍一下。
 
-##Gorm - Go + ORM
+## Gorm - Go + ORM
 
 [Gorm](http://gorm.book.jasperxu.com/) 是一个相当轻量级的对象关系映射器，它可以很好地与 Postgres，MySQL，Sqlite 等配合使用。它可以非常容易地自动设置、使用和管理你的数据库模式。
 
@@ -777,7 +777,7 @@ func (model *User) BeforeCreate(scope *gorm.Scope) error {
 
 现在尝试一下创建用户，所以我们可以先创建一个 cli 工具。 这个`user-cli`位于这个项目的根目录下。类似于`consignment-cli, `，但稍有不同，代码如下：
 
-```
+```go
 package main
 
 import (
@@ -880,7 +880,7 @@ $ docker-compose run user-cli command \
 
 所以目前为止，代码雏形已经建立出来了，我们创建了一个额外的命令行工具，并且我们已经开始使用两种不同的数据库来保存我们的数据。 
 
-为了避免给读者造成太大压力，本文到此结束，若读者对本犀利文章有所建议，请[尽可能给我反馈](ewan.valentine89@gmail.com)！
+为了避免给读者造成太大压力，本文到此结束，若读者对本系列文章有所建议，请[尽可能给我反馈](ewan.valentine89@gmail.com)！
 
 如果你发现这个系列有用，请[打赏作者](https://monzo.me/ewanvalentine)。
 
@@ -890,6 +890,6 @@ $ docker-compose run user-cli command \
 
 作者：[Ewan Valentine](http://ewanvalentine.io/author/ewan) 
 译者：[张阳](https://github.com/zhangyang9)
-校对：校对者ID
+校对：polaris1119
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](Go语言中文网) 荣誉推出
