@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12790
+
 # Go 语言中的线程池（Thread Pooling in Go Programming）
 
 用过一段时间的 Go 之后，我学会了如何使用一个不带缓存的 channel 去创建一个 goroutine 池。我喜欢这个实现，这个实现甚至比这篇博文描述的更好。虽然这样说，这篇博文仍然对它所描述的部分有一定的价值。
@@ -8,7 +10,7 @@
 
 在我的服务器开发的职业生涯里，线程池一直是在微软系统的堆栈上构建健壮代码的关键。微软在 .Net 上的失败，是因为它给每个进程分配一个单独的线程池，并认为在它们并发运行时能够管理好。我早就已经意识到这是不可能的。至少，在我开发的服务器上不可行。
 
-当我用 Win32 API，C/C++ 构建系统时，我创建了一个抽象的 IOCP 类，它可以给我分配好线程池，我把工作扔给它（去处理）。这样工作得非常好，并且我还能够指定线程池的数量和并发度（能够同时被执行的线程数）。在我使用 C# 开发的时间里，我沿用了这段代码。如果你想了解更多，我在几年前写了一篇文章 (http://www.theukwebdesigncompany.com/articles/iocp-thread-pooling.php)[http://www.theukwebdesigncompany.com/articles/iocp-thread-pooling.php]。 使用 IOCP，给我带来了需要的性能和灵活性。 顺便说一下，.Net 线程池使用了下面的 IOCP。
+当我用 Win32 API，C/C++ 构建系统时，我创建了一个抽象的 IOCP 类，它可以给我分配好线程池，我把工作扔给它（去处理）。这样工作得非常好，并且我还能够指定线程池的数量和并发度（能够同时被执行的线程数）。在我使用 C# 开发的时间里，我沿用了这段代码。如果你想了解更多，我在几年前写了一篇文章 http://www.theukwebdesigncompany.com/articles/iocp-thread-pooling.php 。 使用 IOCP，给我带来了需要的性能和灵活性。 顺便说一下，.Net 线程池使用了下面的 IOCP。
 
 线程池的想法非常简单。工作被发送到服务器，它们需要被处理。大多数工作本质上是异步的，但不一定是。大多数时候，工作来自于一个内部协程的通信。线程池将工作加入其中，然后这个池子中的一个线程会被分配来处理这个工作。工作按照接收的顺序被执行。线程池为有效地执行工作提供了一个很好的模式。（设想一下，）每次需要处理工作时，产生一个新线程会给操作系统带来沉重的负担，并导致严重的性能问题。
 
@@ -34,64 +36,64 @@
 package main
 
 import (
-    "bufio"
-    "fmt"
-    "os"
-    "runtime"
-    "strconv"
-    "time"
+	"bufio"
+	"fmt"
+	"os"
+	"runtime"
+	"strconv"
+	"time"
 
-    "github.com/goinggo/workpool"
+	"github.com/goinggo/workpool"
 )
 
 type MyWork struct {
-    Name string
-    BirthYear int
-    WP *workpool.WorkPool
+	Name string
+	BirthYear int
+	WP *workpool.WorkPool
 }
 
 func (mw *MyWork) DoWork(workRoutine int) {
-    fmt.Printf("%s : %d\n", mw.Name, mw.BirthYear)
-    fmt.Printf("Q:%d R:%d\n", mw.WP.QueuedWork(), mw.WP.ActiveRoutines())
+	fmt.Printf("%s : %d\n", mw.Name, mw.BirthYear)
+	fmt.Printf("Q:%d R:%d\n", mw.WP.QueuedWork(), mw.WP.ActiveRoutines())
 
-    // Simulate some delay
-    time.Sleep(100 * time.Millisecond)
+	// Simulate some delay
+	time.Sleep(100 * time.Millisecond)
 }
 
 func main() {
-    runtime.GOMAXPROCS(runtime.NumCPU())
+	runtime.GOMAXPROCS(runtime.NumCPU())
 
-    workPool := workpool.New(runtime.NumCPU(), 800)
+	workPool := workpool.New(runtime.NumCPU(), 800)
 
-    shutdown := false // Race Condition, Sorry
+	shutdown := false // Race Condition, Sorry
 
-    go func() {
-        for i := 0; i < 1000; i++ {
-            work := MyWork {
-                Name: "A" + strconv.Itoa(i),
-                BirthYear: i,
-                WP: workPool,
-            }
+	go func() {
+		for i := 0; i < 1000; i++ {
+			work := MyWork {
+				Name: "A" + strconv.Itoa(i),
+				BirthYear: i,
+				WP: workPool,
+			}
 
-            if err := workPool.PostWork("routine", &work); err != nil {
-                fmt.Printf("ERROR: %s\n", err)
-                time.Sleep(100 * time.Millisecond)
-            }
+			if err := workPool.PostWork("routine", &work); err != nil {
+				fmt.Printf("ERROR: %s\n", err)
+				time.Sleep(100 * time.Millisecond)
+			}
 
-            if shutdown == true {
-                return
-            }
-        }
-    }()
+			if shutdown == true {
+				return
+			}
+		}
+	}()
 
-    fmt.Println("Hit any key to exit")
-    reader := bufio.NewReader(os.Stdin)
-    reader.ReadString(’\n’)
+	fmt.Println("Hit any key to exit")
+	reader := bufio.NewReader(os.Stdin)
+	reader.ReadString(’\n’)
 
-    shutdown = true
+	shutdown = true
 
-    fmt.Println("Shutting Down")
-    workPool.Shutdown("routine")
+	fmt.Println("Shutting Down")
+	workPool.Shutdown("routine")
 }
 ```
 
@@ -117,54 +119,54 @@ jobpool 包跟 workpool 包很相似，除了一个实现的细节。这个包�
 package main
 
 import (
-    "fmt"
-    "time"
+	"fmt"
+	"time"
 
-    "github.com/goinggo/jobpool"
+	"github.com/goinggo/jobpool"
 )
 
 type WorkProvider1 struct {
-    Name string
+	Name string
 }
 
 func (wp *WorkProvider1) RunJob(jobRoutine int) {
-    fmt.Printf("Perform Job : Provider 1 : Started: %s\n", wp.Name)
-    time.Sleep(2 * time.Second)
-    fmt.Printf("Perform Job : Provider 1 : DONE: %s\n", wp.Name)
+	fmt.Printf("Perform Job : Provider 1 : Started: %s\n", wp.Name)
+	time.Sleep(2 * time.Second)
+	fmt.Printf("Perform Job : Provider 1 : DONE: %s\n", wp.Name)
 }
 
 type WorkProvider2 struct {
-    Name string
+	Name string
 }
 
 func (wp *WorkProvider2) RunJob(jobRoutine int) {
-    fmt.Printf("Perform Job : Provider 2 : Started: %s\n", wp.Name)
-    time.Sleep(5 * time.Second)
-    fmt.Printf("Perform Job : Provider 2 : DONE: %s\n", wp.Name)
+	fmt.Printf("Perform Job : Provider 2 : Started: %s\n", wp.Name)
+	time.Sleep(5 * time.Second)
+	fmt.Printf("Perform Job : Provider 2 : DONE: %s\n", wp.Name)
 }
 
 func main() {
-    jobPool := jobpool.New(2, 1000)
+	jobPool := jobpool.New(2, 1000)
 
-    jobPool.QueueJob("main", &WorkProvider1{"Normal Priority : 1"}, false)
+	jobPool.QueueJob("main", &WorkProvider1{"Normal Priority : 1"}, false)
 
-    fmt.Printf("*******> QW: %d AR: %d\n",
-        jobPool.QueuedJobs(),
-        jobPool.ActiveRoutines())
+	fmt.Printf("*******> QW: %d AR: %d\n",
+		jobPool.QueuedJobs(),
+		jobPool.ActiveRoutines())
 
-    time.Sleep(1 * time.Second)
+	time.Sleep(1 * time.Second)
 
-    jobPool.QueueJob("main", &WorkProvider1{"Normal Priority : 2"}, false)
-    jobPool.QueueJob("main", &WorkProvider1{"Normal Priority : 3"}, false)
+	jobPool.QueueJob("main", &WorkProvider1{"Normal Priority : 2"}, false)
+	jobPool.QueueJob("main", &WorkProvider1{"Normal Priority : 3"}, false)
 
-    jobPool.QueueJob("main", &WorkProvider2{"High Priority : 4"}, true)
-    fmt.Printf("*******> QW: %d AR: %d\n",
-        jobPool.QueuedJobs(),
-        jobPool.ActiveRoutines())
+	jobPool.QueueJob("main", &WorkProvider2{"High Priority : 4"}, true)
+	fmt.Printf("*******> QW: %d AR: %d\n",
+		jobPool.QueuedJobs(),
+		jobPool.ActiveRoutines())
 
-    time.Sleep(15 * time.Second)
+	time.Sleep(15 * time.Second)
 
-    jobPool.Shutdown("main")
+	jobPool.Shutdown("main")
 }
 ```
 
@@ -184,7 +186,7 @@ via: https://www.ardanlabs.com/blog/2013/05/thread-pooling-in-go-programming.htm
 
 作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
 译者：[gogeof](https://github.com/gogeof)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
