@@ -1,6 +1,8 @@
+已发布：https://studygolang.com/articles/12785
+
 # 第 32 篇：panic 和 recover
 
-![panic 和 recover](https://golangbot.com/content/images/2017/12/panic-recover-golang-2-2.png)
+![panic 和 recover](https://raw.githubusercontent.com/studygolang/gctt-images/master/golang-series/panic-recover-golang-2-2.png)
 
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 32 篇。
 
@@ -479,9 +481,9 @@ normally returned from main
 
 祝你愉快。
 
-**上一教程 - 自定义错误（暂未发布，敬请期待）**
+**上一教程 - [自定义错误](https://studygolang.com/articles/12784)**
 
-**下一教程 - 头等函数（暂未发布，敬请期待）**
+**下一教程 - 函数是一等公民（暂未发布，敬请期待）**
 
 ---
 
@@ -489,6 +491,6 @@ via: https://golangbot.com/panic-and-recover/
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[Noluye](https://github.com/Noluye)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

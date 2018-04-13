@@ -1,6 +1,8 @@
+已发布：https://studygolang.com/articles/12784
+
 # 第 31 篇：自定义错误
 
-![custom errors](https://golangbot.com/content/images/2017/11/custom-errors-golang-1.png)
+![custom errors](https://raw.githubusercontent.com/studygolang/gctt-images/master/golang-series/custom-errors-golang-1.png)
 
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 31 篇。
 
@@ -16,21 +18,21 @@
 
 ```go
 // Package errors implements functions to manipulate errors.
-  package errors
+package errors
 
-  // New returns an error that formats as the given text.
-  func New(text string) error {
-      return &errorString{text}
-  }
+// New returns an error that formats as the given text.
+func New(text string) error {
+	return &errorString{text}
+}
 
-  // errorString is a trivial implementation of error.
-  type errorString struct {
-      s string
-  }
+// errorString is a trivial implementation of error.
+type errorString struct {
+	s string
+}
 
-  func (e *errorString) Error() string {
-      return e.s
-  }
+func (e *errorString) Error() string {
+	return e.s
+}
 ```
 
 `New` 函数的实现很简单。`errorString` 是一个[结构体](https://studygolang.com/articles/12263)类型，只有一个字符串字段 `s`。第 14 行使用了 `errorString` 指针接受者（Pointer Receiver），来实现 `error` 接口的 `Error() string` [方法](https://studygolang.com/articles/12264)。
@@ -45,26 +47,26 @@
 package main
 
 import (  
-    "errors"
-    "fmt"
-    "math"
+	"errors"
+	"fmt"
+	"math"
 )
 
 func circleArea(radius float64) (float64, error) {  
-    if radius < 0 {
-        return 0, errors.New("Area calculation failed, radius is less than zero")
-    }
-    return math.Pi * radius * radius, nil
+	if radius < 0 {
+		return 0, errors.New("Area calculation failed, radius is less than zero")
+	}
+	return math.Pi * radius * radius, nil
 }
 
 func main() {  
-    radius := -20.0
-    area, err := circleArea(radius)
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
-    fmt.Printf("Area of circle %0.2f", area)
+	radius := -20.0
+	area, err := circleArea(radius)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Printf("Area of circle %0.2f", area)
 }
 ```
 
@@ -90,25 +92,25 @@ Area calculation failed, radius is less than zero
 package main
 
 import (  
-    "fmt"
-    "math"
+	"fmt"
+	"math"
 )
 
 func circleArea(radius float64) (float64, error) {  
-    if radius < 0 {
-        return 0, fmt.Errorf("Area calculation failed, radius %0.2f is less than zero", radius)
-    }
-    return math.Pi * radius * radius, nil
+	if radius < 0 {
+		return 0, fmt.Errorf("Area calculation failed, radius %0.2f is less than zero", radius)
+	}
+	return math.Pi * radius * radius, nil
 }
 
 func main() {  
-    radius := -20.0
-    area, err := circleArea(radius)
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
-    fmt.Printf("Area of circle %0.2f", area)
+	radius := -20.0
+	area, err := circleArea(radius)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Printf("Area of circle %0.2f", area)
 }
 ```
 
@@ -130,8 +132,8 @@ Area calculation failed, radius -20.00 is less than zero
 
 ```go
 type areaError struct {  
-    err    string
-    radius float64
+	err    string
+	radius float64
 }
 ```
 
@@ -141,7 +143,7 @@ type areaError struct {
 
 ```go
 func (e *areaError) Error() string {  
-    return fmt.Sprintf("radius %0.2f: %s", e.radius, e.err)
+	return fmt.Sprintf("radius %0.2f: %s", e.radius, e.err)
 }
 ```
 
@@ -153,38 +155,38 @@ func (e *areaError) Error() string {
 package main
 
 import (  
-    "fmt"
-    "math"
+	"fmt"
+	"math"
 )
 
 type areaError struct {  
-    err    string
-    radius float64
+	err    string
+	radius float64
 }
 
 func (e *areaError) Error() string {  
-    return fmt.Sprintf("radius %0.2f: %s", e.radius, e.err)
+	return fmt.Sprintf("radius %0.2f: %s", e.radius, e.err)
 }
 
 func circleArea(radius float64) (float64, error) {  
-    if radius < 0 {
-        return 0, &areaError{"radius is negative", radius}
-    }
-    return math.Pi * radius * radius, nil
+	if radius < 0 {
+		return 0, &areaError{"radius is negative", radius}
+	}
+	return math.Pi * radius * radius, nil
 }
 
 func main() {  
-    radius := -20.0
-    area, err := circleArea(radius)
-    if err != nil {
-        if err, ok := err.(*areaError); ok {
-            fmt.Printf("Radius %0.2f is less than zero", err.radius)
-            return
-        }
-        fmt.Println(err)
-        return
-    }
-    fmt.Printf("Area of rectangle1 %0.2f", area)
+	radius := -20.0
+	area, err := circleArea(radius)
+	if err != nil {
+		if err, ok := err.(*areaError); ok {
+			fmt.Printf("Radius %0.2f is less than zero", err.radius)
+			return
+		}
+		fmt.Println(err)
+		return
+	}
+	fmt.Printf("Area of rectangle1 %0.2f", area)
 }
 ```
 
@@ -216,9 +218,9 @@ Radius -20.00 is less than zero
 
 ```go
 type areaError struct {  
-    err    string //error description
-    length float64 //length which caused the error
-    width  float64 //width which caused the error
+	err    string //error description
+	length float64 //length which caused the error
+	width  float64 //width which caused the error
 }
 ```
 
@@ -228,15 +230,15 @@ type areaError struct {
 
 ```go
 func (e *areaError) Error() string {  
-    return e.err
+	return e.err
 }
 
 func (e *areaError) lengthNegative() bool {  
-    return e.length < 0
+	return e.length < 0
 }
 
 func (e *areaError) widthNegative() bool {  
-    return e.width < 0
+	return e.width < 0
 }
 ```
 
@@ -246,21 +248,21 @@ func (e *areaError) widthNegative() bool {
 
 ```go
 func rectArea(length, width float64) (float64, error) {  
-    err := ""
-    if length < 0 {
-        err += "length is less than zero"
-    }
-    if width < 0 {
-        if err == "" {
-            err = "width is less than zero"
-        } else {
-            err += ", width is less than zero"
-        }
-    }
-    if err != "" {
-        return 0, &areaError{err, length, width}
-    }
-    return length * width, nil
+	err := ""
+	if length < 0 {
+		err += "length is less than zero"
+	}
+	if width < 0 {
+		if err == "" {
+			err = "width is less than zero"
+		} else {
+			err += ", width is less than zero"
+		}
+	}
+	if err != "" {
+		return 0, &areaError{err, length, width}
+	}
+	return length * width, nil
 }
 ```
 
@@ -270,24 +272,24 @@ func rectArea(length, width float64) (float64, error) {
 
 ```go
 func main() {  
-    length, width := -5.0, -9.0
-    area, err := rectArea(length, width)
-    if err != nil {
-        if err, ok := err.(*areaError); ok {
-            if err.lengthNegative() {
-                fmt.Printf("error: length %0.2f is less than zero\n", err.length)
+	length, width := -5.0, -9.0
+	area, err := rectArea(length, width)
+	if err != nil {
+		if err, ok := err.(*areaError); ok {
+			if err.lengthNegative() {
+				fmt.Printf("error: length %0.2f is less than zero\n", err.length)
 
-            }
-            if err.widthNegative() {
-                fmt.Printf("error: width %0.2f is less than zero\n", err.width)
+			}
+			if err.widthNegative() {
+				fmt.Printf("error: width %0.2f is less than zero\n", err.width)
 
-            }
-            return
-        }
-        fmt.Println(err)
-        return
-    }
-    fmt.Println("area of rect", area)
+			}
+			return
+		}
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("area of rect", area)
 }
 ```
 
@@ -303,60 +305,60 @@ package main
 import "fmt"
 
 type areaError struct {  
-    err    string  //error description
-    length float64 //length which caused the error
-    width  float64 //width which caused the error
+	err    string  //error description
+	length float64 //length which caused the error
+	width  float64 //width which caused the error
 }
 
 func (e *areaError) Error() string {  
-    return e.err
+	return e.err
 }
 
 func (e *areaError) lengthNegative() bool {  
-    return e.length < 0
+	return e.length < 0
 }
 
 func (e *areaError) widthNegative() bool {  
-    return e.width < 0
+	return e.width < 0
 }
 
 func rectArea(length, width float64) (float64, error) {  
-    err := ""
-    if length < 0 {
-        err += "length is less than zero"
-    }
-    if width < 0 {
-        if err == "" {
-            err = "width is less than zero"
-        } else {
-            err += ", width is less than zero"
-        }
-    }
-    if err != "" {
-        return 0, &areaError{err, length, width}
-    }
-    return length * width, nil
+	err := ""
+	if length < 0 {
+		err += "length is less than zero"
+	}
+	if width < 0 {
+		if err == "" {
+			err = "width is less than zero"
+		} else {
+			err += ", width is less than zero"
+		}
+	}
+	if err != "" {
+		return 0, &areaError{err, length, width}
+	}
+	return length * width, nil
 }
 
 func main() {  
-    length, width := -5.0, -9.0
-    area, err := rectArea(length, width)
-    if err != nil {
-        if err, ok := err.(*areaError); ok {
-            if err.lengthNegative() {
-                fmt.Printf("error: length %0.2f is less than zero\n", err.length)
+	length, width := -5.0, -9.0
+	area, err := rectArea(length, width)
+	if err != nil {
+		if err, ok := err.(*areaError); ok {
+			if err.lengthNegative() {
+				fmt.Printf("error: length %0.2f is less than zero\n", err.length)
 
-            }
-            if err.widthNegative() {
-                fmt.Printf("error: width %0.2f is less than zero\n", err.width)
+			}
+			if err.widthNegative() {
+				fmt.Printf("error: width %0.2f is less than zero\n", err.width)
 
-            }
-            return
-        }
-        fmt.Println(err)
-        return
-    }
-    fmt.Println("area of rect", area)
+			}
+			return
+		}
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("area of rect", area)
 }
 ```
 
