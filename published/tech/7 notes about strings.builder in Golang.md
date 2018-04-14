@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12796
+
 # Golang 中 strings.builder 的 7 个要点
 
 自从 Go 1.10 发布的一个月以来，我多少使用了一下 `strings.Builder`，略有心得。你也许知道它，特别是你了解 `bytes.Buffer` 的话。所以我在此分享一下我的心得，并希望能对你有所帮助。
@@ -15,7 +17,7 @@ func (b *Builder) WriteString(s string) (int, error)
 
 有了它们，用户可以根据输入数据的不同类型（byte 数组，byte， rune 或者 string），选择对应的写入方法。
 
-![four-forms-of-writing-methods](https://cdn-images-1.medium.com/max/1600/1*IGv0x1gMwkszbv7IWnpfaQ.png)
+![four-forms-of-writing-methods](https://raw.githubusercontent.com/studygolang/gctt-images/master/strings-builder/1_IGv0x1gMwkszbv7IWnpfaQ.png)
 
 ## 2. 字符串的存储原理
 
@@ -25,7 +27,7 @@ func (b *Builder) WriteString(s string) (int, error)
 
 `string.Builder` 通过使用一个内部的 slice 来存储数据片段。当开发者调用写入方法的时候，数据实际上是被追加（append）到了其内部的 slice 上。
 
-![slice-store-data](https://cdn-images-1.medium.com/max/1600/1*luRaetJ4m36JH43xh0rHcA.png)
+![slice-store-data](https://raw.githubusercontent.com/studygolang/gctt-images/master/strings-builder/1_luRaetJ4m36JH43xh0rHcA.png)
 
 
 ## 3. 高效地使用 strings.Builder
@@ -67,7 +69,7 @@ func (b *Builder) Grow(n int)
 
 ## 5. 不要拷贝
 
-![do-not-copy](https://cdn-images-1.medium.com/max/1600/1*a4IwPDq3tEJJ_FRZfhreyQ.png)
+![do-not-copy](https://raw.githubusercontent.com/studygolang/gctt-images/master/strings-builder/1_a4IwPDq3tEJJ_FRZfhreyQ.png)
 
 `strings.Builder` 不推荐被拷贝。当你试图拷贝 `strings.Builder` 并写入的时候，你的程序就会崩溃。
 
@@ -81,11 +83,11 @@ b2.WriteString("DEF")
 
 你已经知道，`strings.Builder` 内部通过 slice 来保存和管理内容。slice 内部则是通过一个指针指向实际保存内容的数组。
 
-![slice-internally](https://cdn-images-1.medium.com/max/1600/1*KD02pGfasisf8I_BWE_JKQ.png)
+![slice-internally](https://raw.githubusercontent.com/studygolang/gctt-images/master/strings-builder/1_KD02pGfasisf8I_BWE_JKQ.png)
 
 当我们拷贝了 builder 以后，同样也拷贝了其 slice 的指针。但是它仍然指向同一个旧的数组。当你对源 builder 或者拷贝后的 builder 写入的时候，问题就产生了。另一个 builder 指向的数组内容也被改变了。这就是为什么 `strings.Builder` 不允许拷贝的原因。
 
-![copy-and-write](https://cdn-images-1.medium.com/max/1600/1*Ppak_h63S_TvYzJa2sFCpA.png)
+![copy-and-write](https://raw.githubusercontent.com/studygolang/gctt-images/master/strings-builder/1_Ppak_h63S_TvYzJa2sFCpA.png)
 
 对于一个未写入任何东西的空内容 builder 则是个例外。我们可以拷贝空内容的 builder 而不报错。
 
@@ -134,25 +136,25 @@ fmt.Println(b2.String()) // DEF
 package main
 
 import (
-    "fmt"
-    "strings"
-    "sync"
+	"fmt"
+	"strings"
+	"sync"
 )
 
 func main() {
-    var b strings.Builder
-    n := 0
-    var wait sync.WaitGroup
-    for n < 1000 {
-        wait.Add(1)
-        go func() {
-            b.WriteString("1")
-            n++
-            wait.Done()
-        }()
-    }
-    wait.Wait()
-    fmt.Println(len(b.String()))
+	var b strings.Builder
+	n := 0
+	var wait sync.WaitGroup
+	for n < 1000 {
+		wait.Add(1)
+		go func() {
+			b.WriteString("1")
+			n++
+			wait.Done()
+		}()
+	}
+	wait.Wait()
+	fmt.Println(len(b.String()))
 }
 ```
 
@@ -168,8 +170,7 @@ func main() {
 * `func (r *http.Request) Write(w io.Writer) error`
 * 其他使用 io.Writer 的库
 
-![io-writer](https://cdn-images-1.medium.com/max/1600/1*MhBcQBYT4ocfA7ftVT2iGw.png)
-
+![io-writer](https://raw.githubusercontent.com/studygolang/gctt-images/master/strings-builder/1_MhBcQBYT4ocfA7ftVT2iGw.png)
 
 ----------------
 
@@ -180,5 +181,3 @@ via: https://medium.com/@thuc/8-notes-about-strings-builder-in-golang-65260daae6
 校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
-
