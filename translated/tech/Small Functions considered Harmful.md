@@ -1,11 +1,11 @@
-# 小函数被认为是有害的（Small Functions considered Harmful）
+# 小函数可能是有害的（Small Functions considered Harmful）
 
 在这篇博文中，我的目标是：
 
 - 揭示小函数的一些似是而非的优点
 - 解释为什么我个人认为有点不像建议说的那么好
 - 解释为什么小函数有时是适得其反
-- 解释一下我认为小函数真正有用的地方
+- 解释一下我认为小函数真正有 mock 用的地方
 
 通常，编程建议总是说使用更优雅和有益的小函数。《Code Clean》被普遍认为是一本编程圣经，它有一章专门讲述函数，文章的开始就是介绍一个非常长，令人头疼的函数。该书认为该函数的最大问题是长度过长，并指出：
 
@@ -17,13 +17,15 @@
 
 函数应该很小的观点几乎被认为是权威看法，不容质疑。在代码审查，twitter 上，会议上，关于编程的书籍和播客中，关于代码重构的最佳实践的文章中，等等。这个想法几天前以这种推文的形式再次进入我的时间线：
 
-![](https://twitter.com/martinfowler/status/893100444507144192?ref_src=twsrc%5Etfw&ref_url=https%3A%2F%2Fmedium.com%2Fmedia%2Fdf2ebc5a22625a0231d13c3f818475db%3FpostId%3D91035d316c29)
+![](https://github.com/studygolang/gctt-images/blob/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-1.jpg)
 
 Fowler 在他的推文中，链接了他关于函数长度的文章，并继续指出：
 
 如果你不得不花费精力查看这一段代码来确定它在做什么，那么你应该把它提取到一个函数中，并以它的功能命名该函数。
 
 一旦我接受了这个原则，我就养成了写一些非常小的函数的习惯 - 通常只有几行 [2](https://martinfowler.com/bliki/FunctionLength.html#footnote-nested)。任何超过半打行数的函数都会让我觉得不舒服，对我而言，只有一行代码的函数也并不罕见 [3](https://martinfowler.com/bliki/FunctionLength.html#footnote-mine)。
+
+![](https://github.com/studygolang/gctt-images/blob/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-2.jpg)
 
 有些人很迷恋小函数，所以对任何可能看起来很复杂的逻辑抽象成一个单独的函数的想法向来都是推崇备至。
 
@@ -35,7 +37,7 @@ Fowler 在他的推文中，链接了他关于函数长度的文章，并继续�
 
 ### 只做一件事（Do one thing）
 
-![](https://twitter.com/davecheney)
+![](https://github.com/studygolang/gctt-images/blob/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-3.jpg)
 
 这个想法很简单 - 一个函数应该只做一件事，并做得好。从表面上看，这听起来像是一个非常好的想法，跟 Unix 哲学不谋而合。
 
@@ -45,13 +47,13 @@ Fowler 在他的推文中，链接了他关于函数长度的文章，并继续�
 
 因此，“单一抽象层次” 不仅仅是一个层次。我所看到的是，那些完全理解函数应该做 “一件事” 的想法的程序员往往很难抵制将递归应用于他们编写的每个函数和方法的冲动。
 
-![](https://twitter.com/copyconstruct)
+![](https://github.com/studygolang/gctt-images/blob/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-4.jpg)
 
 因此，我们现在不再是为了可以被理解（和测试）而抽象成一个合理的单元，而是将更小的单元划分出来，以描述 ”一件事“ 的每个组成部分，直到它完全模块化，完全 DRY（Don't repeat yourself）。
 
 ## DRY 的谬论
 
-![](https://twitter.com/xaprb?ref_src=twsrc%5Etfw&ref_url=https%3A%2F%2Fmedium.com%2Fmedia%2Fcce95ff15f09e3d21189acf0cbbe7fb5%3FpostId%3D91035d316c29)
+![](https://github.com/studygolang/gctt-images/blob/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-5.jpg)
 
 DRY 和尽可能小的函数的倾向并不一定是同一件事，但我已经看到后者很多时候会让目标变成前者。DRY 在我看来已经是一个很好的指导原则，但实用和理性在教条地坚持 DRY 下牺牲了，特别是那些信服 Rails 的程序员。
 
@@ -59,7 +61,7 @@ Python 的核心开发人员 Raymond Hettinger 发表了一篇名为 [Beyond PEP
 
 即使你没有看完整个演讲，你也应该看下这个讲话的开头一分钟，这个演讲与 DRY 的警鸣做了令人惊讶的类比。程序员坚持要尽可能多地精简代码，会让他们只关注局部，忽略掉整体。
 
-我对于 DRY 的主要问题在与它强制抽象成为抽象 - 嵌套和太早的抽象。由于不可能完美地抽象，所以我们只能尽可能地做到足够好的抽象。“足够好” 的定义很难，并且取决于很多因素。
+我对于 DRY 的主要问题在于它强制抽象成为抽象 - 嵌套和太早的抽象。由于不可能完美地抽象，所以我们只能尽可能地做到足够好的抽象。“足够好” 的定义很难，并且取决于很多因素。
 
 在下图中，“抽象” 一词可以与 “函数” 互换使用。例如，假设我们要设计抽象层 A，我们可能需要考虑以下几点：
 
@@ -87,21 +89,27 @@ Rubyist Sandi Metz 有一场名为 All The Little Things 的著名演讲，她�
 
 我认为这有助于将抽象视为图谱，如我们在本文前面看到的图表一样。该图谱的一端优化精度，我们代码的每个方面，最后都要求要精确。这当然有其好处，但是因为努力寻求完美的对齐方式，所以并不适合好的抽象。该图谱的另外一端优化，带来了不精确性和缺少边界。虽然这确实允许最大的灵活性，但我发现这种极端的倾向将导致其他的缺点。
 
+![](https://github.com/studygolang/gctt-images/blob/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-6.jpg)
+
 跟其他大多数事情一样，“理想模型” 处于这两者之间。没有一种娱乐能取悦所有人。这个 “理想模型” 也取决于许多因素 - 工程和社会关系 - 并且，良好的工程是能够确定这个 “理想模型” 在不同环境所处的位置，并能不断地重新评估并校准这个模型。
 
-给抽象命名
+### 给抽象命名（The name of the game）
 
 说到抽象，一旦确定了抽象什么以及如何抽象，就需要给它一个名称。
 
 给事物命名向来都很难。
 
-这种方式大家都认为是编程过程中，使代码能获活得更长的有效办法，更具描述性的名称是一件好事，甚至有人主张用带有注释的名称代替代码中的注释。他们的想法是，一个名称越具描述性，意味着封装得越好。
+这种方式（译者注：给抽象命名）普遍认为是编程过程中，使代码能活得更长的有效办法，更具描述性的名称是一件好事，甚至有人主张用带有注释的名称代替代码中的注释。他们的想法是，一个名称越具描述性，意味着封装得越好。
 
-这个观点在Java的世界里到处飞，（Java程序中）冗长的名称非常常见，但我从来没有发现这些冗长的名称使代码更加容易阅读。例如，可能 4-5 行的代码中就隐藏一个名字非常长的函数。当我正在阅读代码时，突然一个非常长的单词出现，会让我停下来，因为我得试图处理这个函数名称中的所有不同的音节，尝试将它融入到我已创建的心智模型中，然后决定，是否通过跳转到它定义的地方，来看它的具体实现的代码。
+![](https://github.com/studygolang/gctt-images/blob/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-7.jpg)
+
+这个观点在 Java 的世界里到处飞，（ Java 程序中）冗长的名称非常常见，但我从来没有发现这些冗长的名称使代码更加容易阅读。例如，可能 4-5 行的代码中就隐藏一个名字非常长的函数。当我正在阅读代码时，突然一个非常长的单词出现，会让我停下来，因为我得试图处理这个函数名称中的所有不同的音节，尝试将它融入到我已创建的心智模型中，然后决定，是否通过跳转到它定义的地方，来看它的具体实现的代码。
 
 然而，“小函数” 的问题在于追寻小函数的过程中导致了更多的小函数，所有这些函数都倾向于在记录自己和避免讨论的过程中给出了非常冗长的名称。
 
 结果，处理描述详细的函数（和变量）的名称带来了认知的开销，以及将它们映射到我迄今为止构建的心智模型中，以确定哪些函数需要深入探究，哪些函数可以剔除，并将这些拼图拼在一起，以揭开程序的面纱变得相当地困难。
+
+![](https://github.com/studygolang/gctt-images/blob/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-8.jpg)
 
 就我个人而言，与查看自定义的变量或者函数名相比，从视觉角度来说，我发现编程语言提供的关键字，构造和习惯用法更加容易（接受）。例如，当我阅读 if-else 模块时，我很少需要花费精力去处理关键字 if 或者 elseif，只需要花时间理解程序的逻辑流程。
 
@@ -109,7 +117,8 @@ Rubyist Sandi Metz 有一场名为 All The Little Things 的著名演讲，她�
 
 过度强调小函数的另外一个问题是，尤其是那些描述性很强但名字不直观的函数，在代码库中更难搜索到。相比之下，一个名为 createUser 的函数很容易，且直观地用于 grep，比如 renderPageWithSetupsAndTeardowns（在《Clean Code》中是作为明星例子，这个名字不是最容易记住的名称，也不是最容易搜索到的名字）。许多编辑器也对代码库进行了模糊搜索，因此具有相似前缀的函数也更可能造成搜索时出现多余的结果，这不是我们想要的。
 
-本地的丢失（注：这里指可以在本函数，本文件，本包中实现的代码，却为了小函数移到了其他的函数，文件，或包中）
+### 本地的丢失（Loss of Locality）
+（注：这里指可以在本函数，本文件，本包中实现的代码，却为了小函数移到了其他的函数，文件，或包中）
 
 当我们不必跳过文件或包来查找函数的定义时，小函数的效果最好。“Clean Code” 一书为此提出了一个名为 “The Stepdown Rule” 的原则。
 
@@ -137,6 +146,8 @@ Rubyist Sandi Metz 有一场名为 All The Little Things 的著名演讲，她�
 
 现在，人们可能会争辩说，从某种程度上说，这是不可避免的。他们是对的。我们很少讨论编写将会退役的代码是多么重要。过去我写过关于使代码在操作上易于退役的重要性，在涉及代码库本身时更是如此。
 
+![](https://github.com/studygolang/gctt-images/blob/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-9.jpg)
+
 通常情况下，程序员只会在代码确定被删除，或者不再使用时，将代码视为 “已死亡”。如果我们开始（以代码将 “死亡”）思考我们的编写的代码，那么每增加一个新的 git commit，我认为我们可能会更加积极地编写易于修改的代码。在思考如何抽象时，认识到我们正在构建的代码可能距离死亡（正在被修改）只有几个小时的事实对于我们很有帮助。因此，为了便于修改代码而进行的优化往往比试图构建 《Clean Code》中提到的自顶向下的设计更好。
 
 ## 类污染
@@ -151,6 +162,8 @@ Rubyist Sandi Metz 有一场名为 All The Little Things 的著名演讲，她�
 
 函数参数较少的问题在于，存在依赖关系不清晰的风险。
 
+![](https://github.com/studygolang/gctt-images/blob/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-10.jpg)
+
 我已经看到了 Ruby 类有 5-10 个方法，所有这些方法通常会做一些非常简单的事情，并且可能会有一两个变量作为参数。我也看到他们中的很多人改变了共享的全局变量的状态，或者依赖于没有明确传递关系的单例，只要存在一种情况，就（跟我们之前的讨论的）是一种相反的模式。
 
 此外，当依赖关系不明确时，测试将变得更加复杂，在针对我们的 itty-bitty 函数的独立测试前，需要重新设置和修改状态值，才能让它运行。
@@ -158,6 +171,8 @@ Rubyist Sandi Metz 有一场名为 All The Little Things 的著名演讲，她�
 ## 更难阅读
 
 这已经在前面陈述过了，但值得重申的是 - 小函数的爆炸式增长，特别是一行的函数，使代码库难以阅读。这尤其会伤害那些代码应该被优化的人 - 新手。
+
+![](https://github.com/studygolang/gctt-images/blob/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-11.jpg)
 
 代码库中有几种类型的新手。根据我的经验，一个好的经验法则是记住某些可能会检查上述 ”新“ 类别的人。这样做可以帮助我重新评估自己的假设，并重新思考我可能会无意中将某些新手加入到第一次阅读代码的新手中。我意识到，这种方法实际上导致比其他方式可能更好更简单的代码。
 
@@ -168,6 +183,8 @@ Rubyist Sandi Metz 有一场名为 All The Little Things 的著名演讲，她�
 在这段时间里，我没有看过一个陌生的代码库，所以我会说：
 
 嗯，这些函数都是足够小，并且符合 DRY 风格的。
+
+![](https://github.com/studygolang/gctt-images/blob/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-12.jpg)
 
 在我尝试寻找问题答案的同时，我冒险进入了未知领域，真正希望的是让最少数量的思维跳跃和上下文切换。
 
@@ -181,11 +198,13 @@ Rubyist Sandi Metz 有一场名为 All The Little Things 的著名演讲，她�
 
 这不是一篇关于如何最好地为大量服务编写函数，集成和单元测试的文章。然而，当谈到单元测试时，网络 I/O 通过某某方式测试，好吧，实际上没有测试。
 
-我不是打桩函数的粉丝。打桩函数有几个缺点。首先，打桩是一些结果的人工模拟。只有当我们的想象力和我们具备预测我们应用程序可能遇到的各种失败模式的能力时。打桩也很可能与他们所支持的真实服务不同，除非每个人都对真正的服务进行过严格的测试（注：对细节很了解）。当每个特定模拟只有一个实例并且每个测试使用相同的模拟时，打桩才是最好的。
+![](https://github.com/studygolang/gctt-images/blob/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-13.jpg)
 
-也就是说，打桩仍然是单独测试某些形式的网络 I/O 的唯一方法。我们生活在一个微服务时代，并将大部分（如果不是全部的话）关于我们的主要产品的关注都外包给供应商。现在很多应用程序的核心功能都需要一个调用或者多个调用，对这些调用进行单元测试的最佳方法是将其模拟出来。
+我不是 mock 函数的粉丝。 mock 函数有几个缺点。首先， mock 是一些结果的人工模拟。只有当我们的想象力和我们具备预测我们应用程序可能遇到的各种失败模式的能力时。 mock 也很可能与他们所支持的真实服务不同，除非每个人都对真正的服务进行过严格的测试（注：对细节很了解）。当每个特定模拟只有一个实例并且每个测试使用相同的模拟时， mock 才是最好的。
 
-总体而言，我发现限制能够打桩的范围，才是最好的。调用电子邮件服务的 API，以向我们新创建的用户发送欢迎电子邮件，（当然这）需要建立 HTTP 连接。将此请求隔离到尽可能少的函数中，并允许我们在测试中打桩，以最小化代码量。通常，这应该是一个不超过 1-2 行的函数，用于建立 HTTP 连接并返回任何错误以及响应。将事件发给 Kafka 或在数据库中新创建的用户时也是如此。
+也就是说， mock 仍然是单独测试某些形式的网络 I/O 的唯一方法。我们生活在一个微服务时代，并将大部分（如果不是全部的话）关于我们的主要产品的关注都外包给供应商。现在很多应用程序的核心功能都需要一个调用或者多个调用，对这些调用进行单元测试的最佳方法是将其模拟出来。
+
+总体而言，我发现限制能够 mock 的范围，才是最好的。调用电子邮件服务的 API，以向我们新创建的用户发送欢迎电子邮件，（当然这）需要建立 HTTP 连接。将此请求隔离到尽可能少的函数中，并允许我们在测试中 mock ，以最小化代码量。通常，这应该是一个不超过 1-2 行的函数，用于建立 HTTP 连接并返回任何错误以及响应。将事件发给 Kafka 或在数据库中新创建的用户时也是如此。
 
 ## 基于属性的测试
 
@@ -195,14 +214,26 @@ Rubyist Sandi Metz 有一场名为 All The Little Things 的著名演讲，她�
 
 ## 结论
 
-这篇文章的意图既不是说 DRY 也不是说小函数本身就是坏的（即使这个标题没有提出这样的说法）。只是说他们本质上没有好坏。
+这篇文章的意图既不是说 DRY 也不是说小函数本身就是坏的（尽管本文的标题给出了这样的暗示）。只是说他们本质上没有好坏。
 
 代码库中的小函数的数量或平均函数长度本身并不是一个可以吹嘘的指标。在 2016 年 PyCon 谈话中有一个名为 onelineizer 的话题，讲述了一个可以将任何 Python 程序（包括它本身）转换为一行代码的同名 Python 程序。虽然这使得会议讨论变得有趣而诱人，但在相同的问题上编写（类似的）产品代码将显得非常愚蠢。
+
+![](https://github.com/studygolang/gctt-images/blob/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-14.jpg)
 
 上述建议普遍适用，不仅仅对 Go 而言。由于我们编写的程序的复杂性大大增加，而且我们所反对的限制变得更加多变，程序员应该相应地调整他们的思想。
 
 不幸的是，正统的编程思想依然严重受到面向对象编程和设计模式至高无上的影响。迄今为止，广泛传播的很多想法和最佳实践在很大程度上，几十年以来，一直没有受到过挑战，当前迫切地需要重新思考，尤其是，近年来编程格局和范例已经发生了很大的变化。
 
 不改变旧的风格不仅会助长懒惰，而且会让程序员陷入他们无法承受的虚假的安抚感中。
+
+----------------
+
+via: https://medium.com/@copyconstruct/small-functions-considered-harmful-91035d316c29
+
+作者：[Cindy Sridharan](https://medium.com/@copyconstruct)
+译者：[gogeof](https://github.com/gogeof)
+校对：[polaris1119](https://github.com/polaris1119)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
 
