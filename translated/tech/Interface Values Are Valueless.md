@@ -98,7 +98,7 @@
 var r reader
 ``` 
 
-有趣的是你可以定义 `interface` 类型，就像代码清单 6 中展示的一样。这非常有趣，因为如果在 `interface` 中没有具体的值，那么变量 `r` 似乎就是毫无意义的。`interface` 类型定义以及创建的值是毫无价值的！
+有趣的是你可以声明一个 `interface` 类型的变量，就像代码清单 6 中展示的一样。这非常有趣，因为如果在 `interface` 中没有具体的值，那么变量 `r` 似乎就是毫无意义的。`interface` 类型定义以及创建的值是毫无价值的！
 
 Boom！大脑爆炸了。
 
@@ -110,7 +110,7 @@ Boom！大脑爆炸了。
 
 有一个实现细节使得 r 在后台是真实存在的，但从我们的编程模型来看，它却是不存在的。
 
-当你认识到 `interface` 不是值类型，整个世界的就变的清晰可以理解了。
+当你认识到 `interface` 不是值类型，整个世界就变得清晰可以理解了。
 
 ### 代码清单 7
 ```go
@@ -303,7 +303,7 @@ func retrieve(r reader) error {
 23 func (*system) Write() { /* ... */ }
 ```
 
-现在，你可以再看一次接口是如何不是值类型的。
+下面，你可以再一次确认，接口为何不是值类型。
 
 ### 代码清单 12
 
@@ -329,4 +329,14 @@ func retrieve(r reader) error {
 ## 结论（Conclusion）
 
 我希望这篇文章能给你提供一种思考接口以及如何设计代码的不同方式的参考。我相信，一旦你摆脱了实现细节，并专注于接口与具体数据之间的关系，那么事情就会变得更加合理。面向数据的设计是编写更好的算法的方式，但要求关注对行为的解耦。接口允许通过调用具体数据的方法来达到行为的解耦。
+
+----------------
+
+via: https://www.ardanlabs.com/blog/2018/03/interface-values-are-valueless.html
+
+作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
+译者：[gogeof](https://github.com/gogeof)
+校对：[polaris1119](https://github.com/polaris1119)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
