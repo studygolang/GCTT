@@ -1,4 +1,4 @@
-# Go语言中的类型断言
+# Go 语言中的类型断言
 ![](https://cdn-images-1.medium.com/max/800/1*p6c6i0niHNOIlRbsAhD3lA.jpeg)
 <center>[https://en.wikipedia.org/wikiPsycho_(1960_film)](https://en.wikipedia.org/wiki/Psycho_%281960_film%29)</center>
 
@@ -8,9 +8,9 @@
 ```go
 PrimaryExpression.(Type)
 ```
-PrimaryExpression可以在[go语言规范](https://golang.org/ref/spec#PrimaryExpr)中找到，并且它可以是标识符，特定索引的数组元素，切片等等。
+PrimaryExpression 可以在[ Go 语言规范](https://golang.org/ref/spec#PrimaryExpr)中找到，并且它可以是标识符，特定索引的数组元素，切片等等。
 
-Type既可以是类型标识符，也可以是类型字面量，比如：
+Type 既可以是类型标识符，也可以是类型字面量，比如：
 
 ```go
 type I interface {
@@ -29,7 +29,7 @@ fmt.Println(i.(interface {
     walk()
 }))
 ```
-PrimaryExpression 必须是接口类型，否则它就是一个编译时错误
+PrimaryExpression 必须是接口类型，否则就会产生一个编译时错误：
 
 ```go
 type I interface{
@@ -38,7 +38,7 @@ type I interface{
 }
 
 type S struct{}
-S{}.(I) // 无效类型断言：S{}.(I)(非接口类型S在左侧)
+S{}.(I) // 无效类型断言：S{}.(I)(操作符左边的 S 并不是个接口类型)
 ```
 > 如果表达式为nil，类型断言就不会成立。
 
@@ -60,16 +60,16 @@ func (b B) walk() {}
 
 func main() {
     var i I
-    i = A{}  // i的动态类型是A
+    i = A{}  // i 的动态类型是 A
     fmt.Printf("%T\n", i.(A))
-    i = B{}  // i的动态类型是B
+    i = B{}  // i 的动态类型是 B
     fmt.Printf("%T\n", i.(B))
 }
 ```
 
 ## 接口类型
 
-如果T来自v.(T)is一个接口类型，这样断言检查的动态类型v是否实现了接口T：
+如果 T 来自 v.(T) 是一个接口类型，这样断言检查的动态类型 v 是否实现了接口 T：
 
 ```go
 type I interfacce {
@@ -98,7 +98,7 @@ func main() {
     }
 ```
 ## 非接口类型
-如果T来自v.(T)不是接口类型，这样断言检查动态类型v是否与T类型相同：
+如果 T 来自 v.(T) 不是接口类型，这样断言检查动态类型 v 是否与 T 类型相同：
 
 ```go
 type I interface {
@@ -120,7 +120,7 @@ func main() {
     fmt.Printf("%T\n", i.(B))  // panic: 接口转换: main.I 是 main.A, 不是 main.B
 }
 ```
-在非接口类型情况下进行类型传递就必须实现接口I，如果不满足这个要求的话就会在编译时被捕获：
+在非接口类型情况下进行类型传递就必须实现接口 I，如果不满足这个要求的话就会在编译时被捕获：
 ```go
 type C struct{}
 fmt.Prinf("%T\n", i.(C))
@@ -128,14 +128,14 @@ fmt.Prinf("%T\n", i.(C))
 输出：
 ```bash
 不可能的类型断言：
-结构C 没有实现接口I（未实现接口I的walk方法）
+结构 C 没有实现接口 I（未实现接口 I 的 walk 方法）
 ```
 
 ## 不要 panic
 
-在上述情况下，当断言不能成立时，运行时panic将会被触发。为了优雅的处理错误，这里有特殊的形式来赋值或者初始化：
+在上述情况下，当断言不能成立时，运行时 panic 将会被触发。为了优雅的处理错误，这里有特殊的形式来赋值或者初始化：
 
-```go 
+```go
 type I interface {
     walk()
 }
@@ -165,19 +165,14 @@ func main() {
 > 当断言不成立时，第一个值将会作为测试类型的[零值](https://golang.org/ref/spec#The_zero_value)
 
 ## 资源：
-* [go编程语言规范-go编程语言](https://golang.org/ref/spec#TypeAssertion)
-* [Go是一个通用语言，设计时考虑了系统编程。它是强类型的并且具有垃圾回收机制...](https://golang.org/ref/spec#TypeAssertion)
+* [go 编程语言规范- go 编程语言](https://golang.org/ref/spec#TypeAssertion)
+* [Go 是一个通用语言，设计时考虑了系统编程。它是强类型的并且具有垃圾回收机制...](https://golang.org/ref/spec#TypeAssertion)
 * [golang.org](https://golang.org/ref/spec#TypeAssertion)
 
 via：https://medium.com/golangspec/type-assertions-in-go-e609759c42e1
 
  作者：[Michał Łowicki](https://medium.com/@mlowicki)
  译者：[fredvence](https://github.com/fredvence)
- 校对：[校对者ID](https://github.com/校对者ID)
+ 校对：[rxcai](https://github.com/rxcai)
 
  本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
-
-
-
-
-
