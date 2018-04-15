@@ -1,10 +1,10 @@
-# Golang 数据库打桩（Golang database mocks）
+# Golang 数据库 mocks（Golang database mocks）
 
-我们当前项目的核心是一个 MemSQL 数据库，它是我们核心的数据管道；这是一个非常酷的技术，它的速度非常快，我们实在是太喜欢它了。但是，测试跟它相关的代码却有点困难，这个问题通过试验或者当遇到错误（主要是遇到错误）时，很快就可以发现。由于 Go 标准包已通过全面的测试，我只需要确保调用和依赖他们的代码在生产中也能够正常运行就好。
+我们[当前项目的核心](https://heupr.io/)是一个 [MemSQL](https://www.memsql.com/) 数据库，它是我们核心的数据管道；这是一个非常酷的技术，它的速度非常快，我们实在是太喜欢它了。但是，测试跟它相关的代码却有点困难，这个问题通过试验或者当遇到错误（主要是遇到错误）时，很快就可以发现。由于 Go 标准包已通过全面的测试，我只需要确保调用和依赖他们的代码在生产中也能够正常运行就好。
 
 测试我们项目的数据库代码，我通过两个步骤完成。
 
-通过 database/sql 包，我们有了 sql.DB 结构，它代表一系列的连接，以及包含一系列与这些连接进行交互的方法。在我们的代码库中，我们使用了其中的两个（以及一个返回打开的数据库的函数）：
+通过 database/sql 包，我们有了 sql.DB 结构，它代表一系列mocks的连接，以及包含一系列与这些连接进行交互的方法。在我们的代码库中，我们使用了其中的两个（以及一个返回打开的数据库的函数）：
 
 ```go
 func Open(driverName, dataSourceName string) (*DB, error)
@@ -51,6 +51,8 @@ via: https://dev.to/forstmeier/golang-database-mocks-1hm9
 
 作者：[John Forstmeier](https://dev.to/forstmeier)
 译者：[gogeof](https://github.com/gogeof)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
+
+
