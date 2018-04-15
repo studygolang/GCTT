@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12805
+
 # 小函数可能是有害的（Small Functions considered Harmful）
 
 在这篇博文中，我的目标是：
