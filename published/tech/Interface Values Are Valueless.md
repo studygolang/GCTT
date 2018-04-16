@@ -255,7 +255,7 @@ func retrieve(r reader) error {
 
    len, err := r.read(data)
    if err != nil {
-       return err
+	   return err
    }
 
    fmt.Println(string(data[:len]))
@@ -307,7 +307,7 @@ func retrieve(r reader) error {
 
 ### 代码清单 12
 
-```
+```go
 25 func main() {
 26     var rw ReadWriter = &system{"127.0.0.1"}
 27     var r Reader = rw
