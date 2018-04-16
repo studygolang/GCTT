@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12815
+
 # Golang 数据库 mocks（Golang database mocks）
 
 我们[当前项目的核心](https://heupr.io/)是一个 [MemSQL](https://www.memsql.com/) 数据库，它是我们核心的数据管道；这是一个非常酷的技术，它的速度非常快，我们实在是太喜欢它了。但是，测试跟它相关的代码却有点困难，这个问题通过试验或者当遇到错误（主要是遇到错误）时，很快就可以发现。由于 Go 标准包已通过全面的测试，我只需要确保调用和依赖他们的代码在生产中也能够正常运行就好。
@@ -18,9 +20,9 @@ func (db *DB) Query(query string, args ...interface{}) (*Rows, error)
 
 ```go
 type sqlDB interface {
-    Open(driverName, dataSourceName string) (*sql.DB, error)
-    Close() error
-    Query(query string, args ...interface{}) (*sql.Rows, error)
+	Open(driverName, dataSourceName string) (*sql.DB, error)
+	Close() error
+	Query(query string, args ...interface{}) (*sql.Rows, error)
 }
 ```
 
@@ -30,9 +32,9 @@ type sqlDB interface {
 
 ```go
 type dataAccess interface {
-    readIntegrations(query string) (map[int64]*integration, error)
-    readSettings(query string) (map[int64]*settings, error)
-    readEvents(query string) (map[int64][]*preprocess.Container, error)
+	readIntegrations(query string) (map[int64]*integration, error)
+	readSettings(query string) (map[int64]*settings, error)
+	readEvents(query string) (map[int64][]*preprocess.Container, error)
 }
 ```
 
