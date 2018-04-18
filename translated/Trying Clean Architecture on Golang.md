@@ -39,7 +39,7 @@
 * 模型层（Models）
 * 仓库层（Repository)
 * 用例层 (Usecase)
-* 表现层（Delivery）
+* 传递层（Delivery）
 
 ## 模型（Models）
 
@@ -79,7 +79,7 @@ type Article struct {
 
 用例层将依赖于仓库层。
 
-## 表现（Delivery）
+## 传递（Delivery）
 
 这一层将作为表现者。决定数据如何呈现。任何交付类型都可以作为是 REST API， 或者是 HTML 文件，或者是 gRPC
 
@@ -131,4 +131,105 @@ type ArticleUsecase interface {
 }
 ```
 
-与用例层相同， 表现层将会使用这个约定接口。 并且用例层必须实现该接口。
+与用例层相同， 传递层将会使用这个约定接口。 并且用例层必须实现该接口。
+
+## 测试
+
+我们知道， 简洁就意味着独立。 甚至在其他层还不存在的情况下，每一层都具有可测试性。
+
+* 模型（ Models ）层
+
+  该层仅测试任意结构声明的函数或方法。
+  这可以独立于其他层，轻松的进行测试。
+
+* 仓库（ Repository ）层
+
+  为了测试该层，更好的方式是进行集成测试，但你也可以为每一个测试进行模拟测试， 我使用 github.com/DATA-DOG/go-sqlmock 作为我的工具来模拟查询过程 mysql
+
+* 用例（ Usecase ）层
+
+  因为该层依赖于仓库层， 意味着该层需要仓库层来支持测试。所以我们根据之前定义的契约接口制作一个模拟的仓库（ Repository ）模型。
+
+* 表现（ Delivery ）层
+
+  与用例层相同，因为该层依赖于用例层，意味着改成需要用例层来支持测试。基于之前定义的契约接口， 也需要对用例层进行模拟。
+
+对于模拟，我使用 vektra 的 golang的模拟库：
+[https://github.com/vektra/mockery](https://github.com/vektra/mockery)
+
+## 仓库层(Repository)测试
+
+为了测试这层，就如我之前所说， 我使用 sql-mock 来模拟我的查询过程。
+你可以像我一样使用 github.com/DATA-DOG/go-sqlmock ，或者使用其他具有相似功能的库。
+
+```go
+func TestGetByID(t *testing.T) {
+ db, mock, err := sqlmock.New()
+ if err != nil {
+    t.Fatalf(“an error ‘%s’ was not expected when opening a stub database connection”, err)
+  }
+
+ defer db.Close()
+ rows := sqlmock.NewRows([]string{
+        “id”, “title”, “content”, “updated_at”, “created_at”}).   
+        AddRow(1, “title 1”, “Content 1”, time.Now(), time.Now())
+
+ query := “SELECT id,title,content,updated_at, created_at FROM article WHERE ID = \\?”
+
+ mock.ExpectQuery(query).WillReturnRows(rows)
+
+ a := articleRepo.NewMysqlArticleRepository(db)
+ num := int64(1)
+
+ anArticle, err := a.GetByID(num)
+
+ assert.NoError(t, err)
+ assert.NotNil(t, anArticle)
+}
+
+```
+
+## 用例层（Usecase）测试
+
+用于用例层的示例测试，依赖于仓库层。
+
+```go
+package usecase_test
+
+import (
+	"errors"
+	"strconv"
+	"testing"
+
+	"github.com/bxcodec/faker"
+	models "github.com/bxcodec/go-clean-arch/article"
+	"github.com/bxcodec/go-clean-arch/article/repository/mocks"
+	ucase "github.com/bxcodec/go-clean-arch/article/usecase"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+)
+
+func TestFetch(t *testing.T) {
+	mockArticleRepo := new(mocks.ArticleRepository)
+	var mockArticle models.Article
+	err := faker.FakeData(&mockArticle)
+	assert.NoError(t, err)
+
+	mockListArtilce := make([]*models.Article, 0)
+	mockListArtilce = append(mockListArtilce, &mockArticle)
+	mockArticleRepo.On("Fetch", mock.AnythingOfType("string"), mock.AnythingOfType("int64")).Return(mockListArtilce, nil)
+	u := ucase.NewArticleUsecase(mockArticleRepo)
+	num := int64(1)
+	cursor := "12"
+	list, nextCursor, err := u.Fetch(cursor, num)
+	cursorExpected := strconv.Itoa(int(mockArticle.ID))
+	assert.Equal(t, cursorExpected, nextCursor)
+	assert.NotEmpty(t, nextCursor)
+	assert.NoError(t, err)
+	assert.Len(t, list, len(mockListArtilce))
+
+	mockArticleRepo.AssertCalled(t, "Fetch", mock.AnythingOfType("string"), mock.AnythingOfType("int64"))
+
+}
+```
+Mockery 将会为我生成一个仓库层模型，我不需要先完成仓库（Repository）层， 我可以先完成用例（Usecase），即使我的尚未实现。
