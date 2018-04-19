@@ -1,14 +1,14 @@
 # 在Golang中尝试简洁架构
 >（独立性，可测试性的和简洁性）
 
-在阅读了 Bob 叔叔的 Clean Architecture Concept之后，我尝试在 Golang 中实现它。我们公司也有使用相似的架构，[Kurio - App Berita Indonesia](https://kurio.co.id/)， 但是结构有点不同。并不是太不同， 相同的概念，但是文件夹结构不同。
+在阅读了 Bob 叔叔的 Clean Architecture Concept 之后，我尝试在 Golang 中实现它。我们公司也有使用相似的架构，[Kurio - App Berita Indonesia](https://kurio.co.id/)， 但是结构有点不同。并不是太不同， 相同的概念，但是文件目录结构不同。
 
-你可以在这里找到一个示例项目[https://github.com/bxcodec/go-clean-arch](https://github.com/bxcodec/go-clean-arch)，这是一个CRUD管理示例文章
+你可以在这里找到一个示例项目[https://github.com/bxcodec/go-clean-arch](https://github.com/bxcodec/go-clean-arch)，这是一个 CRUD 管理示例文章
 ![](https://cdn-images-1.medium.com/max/1600/1*CyteJRpIHC-DFE23UtlZfQ.png)
 
 * 免责声明：
 
-  我不推荐这里使用的任何库或框架，你可以使用你自己的或者第三方具有相同功能的任何框架来替换。
+  我不推荐使用这里的任何库或框架，你可以使用你自己的或者第三方具有相同功能的任何框架来替换。
 
 ## 基础
 
@@ -29,21 +29,21 @@
 
 如Bob叔叔的架构有4层：
 
-* 实体层（Entities）
-* 用例层（Usecase）
-* 控制层（Controller）
-* 框架和驱动层（Framework & Driver）
+* 实体层（ Entities ）
+* 用例层（ Usecase ）
+* 控制层（ Controller ）
+* 框架和驱动层（ Framework & Driver ）
 
 在我的项目里，我也使用了4层架构：
 
-* 模型层（Models）
-* 仓库层（Repository)
-* 用例层 (Usecase)
-* 传递层（Delivery）
+* 模型层（ Models ）
+* 仓库层（ Repository )
+* 用例层 ( Usecase )
+* 传递层（ Delivery ）
 
-## 模型（Models）
+## 模型层（ Models ）
 
-与实体（Entities）一样， 模型会在每一层中使用，在这一层中将存储对象的结构和它的方法。例如： Article， Student， Book。
+与实体（ Entities ）一样， 模型会在每一层中使用，在这一层中将存储对象的结构和它的方法。例如： Article， Student， Book。
 
 ```go
 import "time"
@@ -59,7 +59,7 @@ type Article struct {
 
 所以实体或者模型将会被存放在这里
 
-## 仓库（Repository）
+## 仓库层（ Repository  ）
 
 仓库将存放所有的数据库处理器，查询，创建或插入数据库的处理器将存放在这一层，该层仅对数据库执行 CRUD 操作。 该层没有业务流程。只有操作数据库的普通函数。
 
@@ -69,9 +69,9 @@ type Article struct {
 
 如果调用微服务， 也将在这层进行处理。创建 HTTP 请求去请求其他服务并清理数据，这层必须完全充当仓库。 处理所有的数据输入，输出，并且没有特定的逻辑交互。
 
-该仓库层（Repository）将依赖于连接 DB 或其他微服务（如果存在的话）
+该仓库层（ Repository  ）将依赖于连接数据库 或其他微服务（如果存在的话）
 
-## 用例（Usecase）
+## 用例层（ Usecase ）
 
 这层将会扮演业务流程处理器的角色。任何流程都将在这里处理。该层将决定哪个仓库层被使用。并且负责提供数据给服务以便交付。处理数据进行计算或者在这里完成任何事。
 
@@ -79,7 +79,7 @@ type Article struct {
 
 用例层将依赖于仓库层。
 
-## 传递（Delivery）
+## 表现层（ Delivery  ）
 
 这一层将作为表现者。决定数据如何呈现。任何交付类型都可以作为是 REST API， 或者是 HTML 文件，或者是 gRPC
 
@@ -91,9 +91,9 @@ type Article struct {
 
 ## 层与层之间的通信
 
-除了模型层， 每一层都需要通过接口进行通信。例如，用例层需要仓库层，那么他们该如何通信呢？仓库层将提供一个接口作为他们沟通桥梁。
+除了模型层， 每一层都需要通过接口进行通信。例如，用例（ Usecase ）层需要仓库（ Repository ）层，那么它们该如何通信呢？仓库（ Repository ）层将提供一个接口作为他们沟通桥梁。
 
-仓库层接口示例：
+仓库层（ Repository ）接口示例：
 
 ```go
 
@@ -110,7 +110,7 @@ type ArticleRepository interface {
 	Delete(id int64) (bool, error)
 }
 ```
-用例层将通过这个接口与仓库层进行通信，仓库层必须实现这个接口，以便用例层使用该接口。
+用例层（ Usecase ）将通过这个接口与仓库层进行通信，仓库层（ Repository ）必须实现这个接口，以便用例层（ Usecase ）使用该接口。
 
 用例层接口示例：
 
@@ -232,4 +232,141 @@ func TestFetch(t *testing.T) {
 
 }
 ```
-Mockery 将会为我生成一个仓库层模型，我不需要先完成仓库（Repository）层， 我可以先完成用例（Usecase），即使我的尚未实现。
+Mockery 将会为我生成一个仓库层模型，我不需要先完成仓库（Repository）层， 我可以先完成用例（Usecase），即使我的仓库（Repository）层尚未实现。
+
+## 表现层（ Delivery ）测试
+
+表现层测试依赖于你如何传递的数据。如果使用 http REST API， 我们可以使用 golang 中的内置包 httptest。
+
+因为该层依赖于用例( Usecase )层, 所以 我们需要模拟 Usecase， 与仓库层相同，我使用 Mockery 模拟我的 Usecase 来进行表现层（ Delivery ）的测试。
+
+  ```go
+  func TestGetByID(t *testing.T) {
+   var mockArticle models.Article
+   err := faker.FakeData(&mockArticle)
+   assert.NoError(t, err)
+   mockUCase := new(mocks.ArticleUsecase)
+   num := int(mockArticle.ID)
+   mockUCase.On(“GetByID”, int64(num)).Return(&mockArticle, nil)
+   e := echo.New()
+   req, err := http.NewRequest(echo.GET, “/article/” +  
+               strconv.Itoa(int(num)), strings.NewReader(“”))
+
+   assert.NoError(t, err)
+   rec := httptest.NewRecorder()
+   c := e.NewContext(req, rec)
+   c.SetPath(“article/:id”)
+   c.SetParamNames(“id”)
+   c.SetParamValues(strconv.Itoa(num))
+
+   handler:= articleHttp.ArticleHandler{
+              AUsecase: mockUCase,
+              Helper: httpHelper.HttpHelper{}
+   }
+   handler.GetByID(c)
+
+   assert.Equal(t, http.StatusOK, rec.Code)
+   mockUCase.AssertCalled(t, “GetByID”, int64(num))
+  }
+  ```
+
+## 最终输出与合并
+
+完成所有层的编码并通过测试之后。你应该在的根项目的 main.go 文件中将其合并成一个系统。
+
+在这里你将会定义并创建每一个环境需求， 并将所有层合并在一起。
+
+以我的 main.go 为示例：
+
+```go
+package main
+
+import (
+	"database/sql"
+	"fmt"
+	"net/url"
+
+	httpDeliver "github.com/bxcodec/go-clean-arch/article/delivery/http"
+	articleRepo "github.com/bxcodec/go-clean-arch/article/repository/mysql"
+	articleUcase "github.com/bxcodec/go-clean-arch/article/usecase"
+	cfg "github.com/bxcodec/go-clean-arch/config/env"
+	"github.com/bxcodec/go-clean-arch/config/middleware"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/labstack/echo"
+)
+
+var config cfg.Config
+
+func init() {
+	config = cfg.NewViperConfig()
+
+	if config.GetBool(`debug`) {
+		fmt.Println("Service RUN on DEBUG mode")
+	}
+
+}
+
+func main() {
+
+	dbHost := config.GetString(`database.host`)
+	dbPort := config.GetString(`database.port`)
+	dbUser := config.GetString(`database.user`)
+	dbPass := config.GetString(`database.pass`)
+	dbName := config.GetString(`database.name`)
+	connection := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", dbUser, dbPass, dbHost, dbPort, dbName)
+	val := url.Values{}
+	val.Add("parseTime", "1")
+	val.Add("loc", "Asia/Jakarta")
+	dsn := fmt.Sprintf("%s?%s", connection, val.Encode())
+	dbConn, err := sql.Open(`mysql`, dsn)
+	if err != nil && config.GetBool("debug") {
+		fmt.Println(err)
+	}
+	defer dbConn.Close()
+	e := echo.New()
+	middL := middleware.InitMiddleware()
+	e.Use(middL.CORS)
+
+	ar := articleRepo.NewMysqlArticleRepository(dbConn)
+	au := articleUcase.NewArticleUsecase(ar)
+
+	httpDeliver.NewArticleHttpHandler(e, au)
+
+	e.Start(config.GetString("server.address"))
+}
+```
+
+你可以看见，每一层都与它的依赖关系合并在一起了。
+
+## 结论
+
+总之，如果画在一张图上，就如下图所示：
+![](https://cdn-images-1.medium.com/max/1600/1*GQdkAd7IwIwOWW-WLG5ikQ.png)
+
+* 在这里使用的每一个库都可以由你自己修改。因为简洁架构的重点在于：你使用的库不重要， 关键是你的架构是简洁的，可测试的并且是独立的。
+
+* 我项目就是这样组织的。通过评论和分享， 你可以讨论或者赞成，当然能改善它就更好了。
+
+## 示例项目
+
+示例项目可以在这里看见：[ https://github.com/bxcodec/go-clean-arch]( https://github.com/bxcodec/go-clean-arch)
+
+我的项目中使用到的库：
+
+* Glide ：包管理工具
+
+* go-sqlmock from github.com/DATA-DOG/go-sqlmock
+
+* Testify ： 测试库
+
+* Echo Labstack （Golang Web 框架）用于 表现层
+
+* Viper ：环境配置
+
+进一步阅读简洁架构 ：
+
+* [https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html)
+
+* [http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/](http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/)。 这是Golang种另一个版本的简洁架构。
+
+如果你任何问题，或者需要更多的解释，或者我在这里没有解释清楚的。你可以通过我的[LinkedIn](https://www.linkedin.com/in/imantumorang/)或者[email](iman.tumorang@gmail.com)联系我。谢谢。
