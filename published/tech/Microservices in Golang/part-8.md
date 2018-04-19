@@ -1,12 +1,12 @@
-# Golang 中的微服务-第八部分-Kubernetes 和 容器引擎 #
+已发布：https://studygolang.com/articles/12836
 
-你可以在 [Patreon](https://www.patreon.com/ewanvalentine) 上赞助我噢。
+# Golang 下的微服务 - 第 8 部分 - Kubernetes 和 容器引擎
 
-[之前的博文里](https://ewanvalentine.io/microservices-in-golang-part-7/) 我们看了看用 [Terraform](https://terraform.io/) 创建容器引擎集群。在本篇博文里，我们看看使用容器引擎和 [Kubernetes](https://kubernetes.io/) 部署容器到集群里。
+[上一篇博文](https://studygolang.com/articles/12799) 我们看了看用 [Terraform](https://terraform.io/) 创建容器引擎集群。在本篇博文里，我们看看使用容器引擎和 [Kubernetes](https://kubernetes.io/) 部署容器到集群里。
 
-## Kubernetes ##
+## Kubernetes
 
-首先，什么是 [Kubernetes](https://kubernetes.io/) Kubernetes(https://kubernetes.io/)? [Kubernetes](https://kubernetes.io/) Kubernetes(https://kubernetes.io/) 是一个开源的，管理容器的框架。与平台无关，就是说着你可以在你本机上，在 AWS 或者 Google Cloud，任何其他的平台运行它。（Kubernetes）能让你通过使用声明的配置内容，控制一组容器，和容器的网络规则。
+首先，什么是 [Kubernetes](https://kubernetes.io/) ? [Kubernetes](https://kubernetes.io/) 是一个开源的、管理容器的框架。与平台无关，就是说着你可以在你本机上，在 AWS 或者 Google Cloud，任何其他的平台运行它。（Kubernetes）能让你通过使用声明的配置内容，控制一组容器，和容器的网络规则。
 
 你只需要写个 yaml/json 文件，描述下需要在哪运行哪个容器。定义你的网络规则，比如端口转发。它就会帮你管理服务发现。
 
@@ -18,7 +18,6 @@ Kubernetes 是云场景的重要补充，而且现在正迅速成为云容器管
 
 ```
 $ gcloud components install kubectl
-
 ```
 
 现在确保你连接到集群，并且认证正确。第一步，我们登录进去，确保已被认证。第二步我们设置下项目配置，确保我们使用正确的项目 ID 和可访问区域。
@@ -53,11 +52,11 @@ $ gcloud container clusters get-credentials <cluster-name>
 ```
 点这你可以看到项目 ID...
 
-![](https://ewanvalentine.io/content/images/2018/03/Screen-Shot-2018-03-17-at-17.55.41.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-micro/Screen-Shot-2018-03-17-at-17.55.41.png)
 
 现在找下我们的项目 ID...
 
-![](https://ewanvalentine.io/content/images/2018/03/Screen-Shot-2018-03-17-at-17.56.35.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-micro/Screen-Shot-2018-03-17-at-17.56.35.png)
 
 集群区域 region/zone 和集群名称可以点菜单左上角的 'ComputeEngine'，然后选 'VM Instances' 就找到了。 你能看到你的 Kubernetes VM，点进去看更多细节，这能看见和你集群相关的每个内容。
 
@@ -72,7 +71,7 @@ $ kubectl get pods
 
 然后我需要部署服务了，vessel 服务，user 服务，consignment 服务和 email 服务。好了，很简单！
 
-从 Mongodb 实例开始吧。以为它不属于一个单独的服务，而且这是的平台整体的一部分，我们把这些部署放在 shippy-infrastructure 仓库下。这个仓库我提交到了 Github ，因为包含了很多敏感数据，但是我可以给你们所有的部署文件。
+从 Mongodb 实例开始吧。因为它不属于一个单独的服务，而且这是的平台整体的一部分，我们把这些部署放在 shippy-infrastructure 仓库下。这个仓库我提交到了 Github ，因为包含了很多敏感数据，但是我可以给你们所有的部署文件。
 
 首先，我们需要一个配置创建一个 ssd，用于长期存储。这样当我们重启容器的时候就不会丢失数据。
 
@@ -228,7 +227,7 @@ $ kubectl get pods
 
 那么我们给集群打开自动扩容，默认是一个池。为了达到目的，需要到 Google Cloud Console，选择 Kubernetes 引擎，编辑你的实例，打开自动扩容，设置最小值和最大值为 2，然后点保存。
 
-![](https://ewanvalentine.io/content/images/2018/03/Screen-Shot-2018-03-17-at-20.36.17.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-micro/Screen-Shot-2018-03-17-at-20.36.17.png)
 
 过几分钟，你的 node 节点会扩成两个，运行 `$ kubectl get pods` 你会看到 'ContainerCreating'。直到所有的容器以期待的方式运行。
 
@@ -260,21 +259,19 @@ func main() {
 
 ```
 
-我们在这做的所有事情，就是使用了 import 的新库 `k8s.NewService` 覆盖了已有的 `micro.NewService()`。那么新的数据库和什么呢？
+我们在这做的所有事情，就是使用了 import 的新库 `k8s.NewService` 覆盖了已有的 `micro.NewService()`。那么新库是什么呢？
 
 ## Kubernetes 中的微服务 ##
 
 我喜欢 micro 中的一点，因为它对 cloud 有很深理解而构建，能一直适应新技术。Micro 很重视 Kubernetes，因此创建了一个 micro 的 [Kubernetes 库](https://github.com/micro/kubernetes/)。
 
-
 实际情况是，所有的库实际上都是 micro，配置了 Kuberntes 的一些合理的默认值，和一个直接集成在 Kubernetes 服务之上的 service selector。也就是说它把服务发现交给了 Kubernetes。默认用 gRPC 作为默认 transport 。 当然你也可以使用环境变量和 plugin 来覆盖这些状态。
 
-在 Micro 的世界里还有很多让人着迷的功能，这也是让我很兴奋的地方。一定要参加 [slack channel](http://slack.micro.mu/)。
+在 Micro 的世界里还有很多让人着迷的功能，这也是让我很兴奋的地方。一定要加入 [slack channel](http://slack.micro.mu/)。
 
 现在我们在服务上创建一个部署服务，在这我们要稍微了解下关于每个部分作用的细节。
 
 ```
-
 // shippy-vessel-service/deployments/deployment.yml
 apiVersion: apps/v1beta1
 kind: Deployment
@@ -325,7 +322,6 @@ spec:
 你也注意到了，我们从一个私有仓库拉取镜像。当使用 Google 的容器工具时，你可以获取一个容器注册，用来创建你的容器镜像，推送下，像下面这样...
 
 ```
-
 $ docker build -t eu.gcr.io/<your-project-name>/vessel-service:latest .
 $ gcloud docker -- push eu.gcr.io/<your-project-name>/vessel-service:latest
 
@@ -334,7 +330,6 @@ $ gcloud docker -- push eu.gcr.io/<your-project-name>/vessel-service:latest
 现在看我们的服务...
 
 ```
-
 // shippy-vessel-service/deployments/service.yml
 apiVersion: v1
 kind: Service
@@ -348,7 +343,6 @@ spec:
     protocol: TCP
   selector:
     app: vessel
-
 ```
 
 在这里，如之前所说的我们有一个 `kind`，在这个 case 下是一个服务元（本质上是一组网络级别的 DNS 和防火墙规则）。然后我们给服务名字和标签。spec 允许我们给服务定义端口，你也可以在这定义一个 `targetPort` 来查找特定的容器。不过幸好有 Kubernetes/micro 实现，我们可以自动操作。最后，selector 最重要的部分，必须和你目标的 pod 相匹配，否则服务通过代理找不到任何东西，不会工作的。
@@ -356,10 +350,8 @@ spec:
 现在我们部署下集群里的修改吧。
 
 ```
-
 $ kubectl create -f ./deployments/deployment.yml
 $ kubectl create -f ./deployments/service.yml
-
 ```
 
 等几分钟，然后运行...
@@ -383,12 +375,10 @@ $ kubectl get services
 但是在这个教程里，我们做点好玩的事，不过要留神，这是一种懒人写法，而且不是最好的实践方法。我创建了一个新文件 `deployments/deployment.tmpl` ，作为 deployment 的模板。然后我设置了一个环境变量 `UPDATED_AT`，值为 `{{ UPDATED_AT }}`。我更新了 Makefile 来打开模板文件，通过环境变量设置当前的 date/time ，然后输出到最终的 deployment.yml 文件。这有点不规范的感觉，不过只是暂时这么做。我看过很多方式，你感觉怎么合适怎么做吧。
 
 ```
-
 // shippy-vessel-service/Makefile
 deploy:
 	sed "s/{{ UPDATED_AT }}/$(shell date)/g" ./deployments/deployment.tmpl > ./deployments/deployment.yml
 	kubectl replace -f ./deployments/deployment.yml
-
 ```
 
 好了，我们成功了，部署了一个服务，运行的和我们想的一样。
@@ -404,7 +394,6 @@ deploy:
 给我们的用户服务部署 Postgres ...
 
 ```
-
 apiVersion: apps/v1beta2
 kind: StatefulSet
 metadata:
@@ -479,7 +468,7 @@ parameters:
 
 ```
 
-## 部署 micro ##
+## 部署 micro
 
 ```
 
@@ -556,7 +545,7 @@ $ curl localhost/rpc -XPOST -d '{
 
 你会看到一个返回 `created: true`。超简洁！这就是你的 gRPC 服务，被代理并且转成了 web 友好的格式，使用了分片的 mongodb 实例。没费多大劲！
 
-## 部署 UI ##
+## 部署 UI
 
 服务部署的不错，我们来部署下用户接口
 
@@ -615,7 +604,7 @@ spec:
 注意到服务是 80 端口上的负载均衡，因为这是一个公共的用户接口，这就是用户如何与我们服务交互的。一看就明白！
 
 
-## 最后总结 ##
+## 最后总结
 
 看我们成功了，用 docker 容器和 Kubernetes 管理我们的容器，成功的将整个工程部署到云端。希望你能从这篇文章发现一些有用的内容，没有觉得太不好消化。
 
@@ -626,13 +615,12 @@ spec:
 
 或者，在 [Patreon](https://www.patreon.com/ewanvalentine) 上赞助我下吧。
 
-
 ----------------
 
 via: https://ewanvalentine.io/microservices-in-golang-part-8/
 
 作者：[Ewan Valentine](https://ewanvalentine.io/author/ewan/)
 译者：[ArisAries](https://github.com/ArisAries)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
