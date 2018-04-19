@@ -127,3 +127,74 @@ while readstring = f.read(bufsize)
 end
 ```
 在循环中的每一次迭代，内部的文件指针都会被更新。当下一次读取开始时，数据将从文件指针的偏移量处开始，直到读取了缓冲区大小的内容。这个指针不是编程语言中的概念，而是操作系统中的概念。在 linux 中，这个指针是指创建的文件描述符的属性。所有的 read/Read 函数调用（在 Ruby/Go 中）都被内部转化为系统调用并发送给内核，然后由内核管理所有的这些指针。
+
+#### 并行分批读取文件
+
+那怎么样才能加速分批读取文件呢？其中一种方法是用多个 go routine。相对于连续分批读取文件，我们需要知道每个 go routine 的偏移量。值得注意的是，当剩余的数据小于缓冲区时，`ReadAt` 的表现和 `Read` 有[轻微的不同](https://golang.org/pkg/io/#ReaderAt)。
+
+另外，我在这里并没有设置 go routine 数量的上限，而是由缓冲区的大小自行决定。但在实际的应用中通常都会设定 go routine 的数量上限。
+
+```go
+const BufferSize = 100
+file, err := os.Open("filetoread.txt")
+if err != nil {
+  fmt.Println(err)
+  return
+}
+defer file.Close()
+
+fileinfo, err := file.Stat()
+if err != nil {
+  fmt.Println(err)
+  return
+}
+
+filesize := int(fileinfo.Size())
+// Number of go routines we need to spawn.
+concurrency := filesize / BufferSize
+
+// check for any left over bytes. Add one more go routine if required.
+if remainder := filesize % BufferSize; remainder != 0 {
+  concurrency++
+}
+
+var wg sync.WaitGroup
+wg.Add(concurrency)
+
+for i := 0; i < concurrency; i++ {
+  go func(chunksizes []chunk, i int) {
+    defer wg.Done()
+
+    chunk := chunksizes[i]
+    buffer := make([]byte, chunk.bufsize)
+    bytesread, err := file.ReadAt(buffer, chunk.offset)
+
+    // As noted above, ReadAt differs slighly compared to Read when the
+    // output buffer provided is larger than the data that's available
+    // for reading. So, let's return early only if the error is
+    // something other than an EOF. Returning early will run the
+    // deferred function above
+    if err != nil && err != io.EOF {
+      fmt.Println(err)
+      return
+    }
+
+    fmt.Println("bytes read, string(bytestream): ", bytesread)
+    fmt.Println("bytestream to string: ", string(buffer[:bytesread]))
+  }(chunksizes, i)
+}
+
+wg.Wait()
+```
+[reading-chunkwise-multiple.go](https://github.com/kgrz/reading-files-in-go/blob/master/reading-chunkwise-multiple.go) on Github
+
+这比之前的方法都需要考虑得更多：
+
+1. 我尝试创建特定数量的 Go-routines， 这个数量取决于文件大小以及缓冲区大小（在我们的例子中是 100k）。
+2. 我们需要一种方法能确定等所有的 go routines 都结束。在这个例子中，我们使用 wait group。
+3. 我们在每个 go routine 结束时发送信号，而不是使用 `break` 从 for 循环中跳出。由于我们在 `defer` 中调用 `wg.Done()`，每次从 go routine 中”返回“时都会调用该函数。
+
+注意：每次都应该检查返回的字节数，并刷新（reslice）输出缓冲区。
+
+#### 扫描
+
