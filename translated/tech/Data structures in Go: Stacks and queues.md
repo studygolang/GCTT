@@ -88,7 +88,6 @@ func (history *ActionHistory) Undo() *Action {
 //--------------------
 //译者注：此处代码存在问题，建议修改如下。
 ```
-感谢 [无闻](https://github.com/Unknwon) 的建议
 ```go
 func (history *ActionHistory) Undo() *Action {
 	topAction := new(Action)
@@ -101,6 +100,7 @@ func (history *ActionHistory) Undo() *Action {
 }
 
 ```
+感谢 [无闻](https://github.com/Unknwon) 的建议。
 
 如果你仔细观擦，你会注意到这与从链表中删除一个节点有一点不同。由于一个 `ActionHistory` 的性质，我们希望最后一个被执行了的动作是最先被撤销的,这才是我们所希望实现的。
 
@@ -119,7 +119,7 @@ func (history *ActionHistory) Undo() *Action {
 
 ## 行李控制
 
-我们大多数人都是坐飞机旅行的，而且知道所有人员都必须通过安检才能上飞机。当然，这是为了我们的安全，但有时进行全部的扫描、检查和测试是不必要的。
+我们大多数人都是坐飞机旅行的，而且知道所有人员都必须通过安检才能上飞机。当然，这是为了我们的安全，但有时进行全部的扫描、检查和测试是不必要的。
 
 机场安检点的一个常见场景是安检人员排起长龙，行李放在 x 光机的带子上，而人们则通过金属探测器门。也许我们对这些不甚了解，但是让我们关注一下扫描我们的袋子的 x 光机。
 
