@@ -492,3 +492,14 @@ handle(err)
 我之所以不想用 `defer` 是因为 `log.Fatal` 内部会调用 `os.Exit` 函数，而该函数不会运行 deferred 函数，所以我选择了手动关闭文件，然而却忽略了正常运行的情况。
 
 我已经在更新了的例子中使用了 `defer`，并用 `return` 取代了 `os.Exit()`。
+
+
+----------------
+
+via: [原文链接](http://kgrz.io/reading-files-in-go-an-overview.html#update)
+
+作者：[作者](作者链接)
+译者：[Killernova](https://github.com/killernova)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
