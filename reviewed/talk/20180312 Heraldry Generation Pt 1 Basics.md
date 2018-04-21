@@ -50,7 +50,7 @@ via: https://www.benovermyer.com/post/heraldry-pt-1/
 
 作者：[Ben Overmyer](https://www.benovermyer.com/page/about/)
 译者：[M1seRy](https://github.com/M1seRy)
-校对：[rxcai](https://github.com/rxcai
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
