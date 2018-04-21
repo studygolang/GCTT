@@ -31,7 +31,6 @@ type Action struct {
 type Action struct {
 	name string
 	metadata Meta
-	// Probably some other data here...
 	// 这里或许还有一些其他数据
 	next *Action
 }
