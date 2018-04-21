@@ -12,9 +12,9 @@
 
 为了快速地开发，我选择使用 PHP 来完成这个生成器，如果将来需要的话，我会用更高效的语言来重写它，就目前来说，它已经满足我的需求。
 
-最初，我使用一个已经存在的库来处理 SVG ,但当我完成初始版本的时候，我发现这个库暂时还不支持 <msk> 标签，这意味着我无法将文件剪切成细小的部分。
+最初，我使用一个已经存在的库来处理 SVG ,但当我完成初始版本的时候，我发现这个库暂时还不支持 `<msk>` 标签，这意味着我无法将文件剪切成细小的部分。
 
-在第二个迭代版本，我移除了了这个库，直接在XML文件上进行处理，最后的效果比较好，支持任意属性的操作。
+在第二个迭代版本，我移除了了这个库，直接在 XML 文件上进行处理，最后的效果比较好，支持任意属性的操作。
 
 纹章的生成坚持必要的原则，盾型的徽章基本上如同现在的路标，目的是清楚地指明方向。于是我为这个构造器假定了一些规则：
 
@@ -50,7 +50,7 @@ via: https://www.benovermyer.com/post/heraldry-pt-1/
 
 作者：[Ben Overmyer](https://www.benovermyer.com/page/about/)
 译者：[M1seRy](https://github.com/M1seRy)
-校对：[Rxcai](https://github.com/rxcai)
+校对：[rxcai](https://github.com/rxcai
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
