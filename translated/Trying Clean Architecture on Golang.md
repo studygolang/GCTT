@@ -371,7 +371,7 @@ func main() {
 
 如果你任何问题，或者需要更多的解释，或者我在这里没有解释清楚的。你可以通过我的[LinkedIn](https://www.linkedin.com/in/imantumorang/)或者[email](iman.tumorang@gmail.com)联系我。谢谢。
 
-via：来源链接
+链接：https://hackernoon.com/golang-clean-archithecture-efd6d7c43047
 
 作者：[Iman Tumorang](https://hackernoon.com/@imantumorang)
 译者：[fredvence](https://github.com/fredvence)
