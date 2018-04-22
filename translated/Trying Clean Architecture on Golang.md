@@ -25,7 +25,7 @@
 
 更多详见：[ https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html]( https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html)
 
-所以， 基于这个约束，每一层都必须是独立的和可测试的。
+所以， 基于这些约束，每一层都必须是独立的和可测试的。
 
 如Bob叔叔的架构有4层：
 
@@ -39,7 +39,7 @@
 * 模型层（ Models ）
 * 仓库层（ Repository )
 * 用例层 ( Usecase )
-* 传递层（ Delivery ）
+* 表现层（ Delivery ）
 
 ## 模型层（ Models ）
 
@@ -57,7 +57,7 @@ type Article struct {
 }
 ```
 
-所以实体或者模型将会被存放在这里
+所以实体或者模型将会被存放在这一层
 
 ## 仓库层（ Repository  ）
 
@@ -81,7 +81,7 @@ type Article struct {
 
 ## 表现层（ Delivery  ）
 
-这一层将作为表现者。决定数据如何呈现。任何交付类型都可以作为是 REST API， 或者是 HTML 文件，或者是 gRPC
+这一层将作为表现者。决定数据如何呈现。任何传递类型都可以作为是 REST API， 或者是 HTML 文件，或者是 gRPC
 
 这一层将接收来自用户的输入， 并清理数据然后传递给用例层。
 
@@ -131,7 +131,7 @@ type ArticleUsecase interface {
 }
 ```
 
-与用例层相同， 传递层将会使用这个约定接口。 并且用例层必须实现该接口。
+与用例层相同， 表现层将会使用这个约定接口。 并且用例层必须实现该接口。
 
 ## 测试
 
@@ -370,3 +370,12 @@ func main() {
 * [http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/](http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/)。 这是Golang种另一个版本的简洁架构。
 
 如果你任何问题，或者需要更多的解释，或者我在这里没有解释清楚的。你可以通过我的[LinkedIn](https://www.linkedin.com/in/imantumorang/)或者[email](iman.tumorang@gmail.com)联系我。谢谢。
+
+via：来源链接
+
+作者：[Iman Tumorang](https://hackernoon.com/@imantumorang)
+译者：[fredvence](https://github.com/fredvence)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，
+[Go中文网](https://studygolang.com/) 荣誉推出
