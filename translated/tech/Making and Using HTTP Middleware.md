@@ -348,5 +348,12 @@ http.Handle("/foo", stdChain.Then(fooHandler))
 http.Handle("/bar", stdChain.Then(barHandler))
 ```
 
+----------------
 
+via: http://www.alexedwards.net/blog/making-and-using-middleware
 
+作者：[TIAGO KATCIPIS](https://katcipis.github.io/)
+译者：[gogeof](https://github.com/gogeof)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
