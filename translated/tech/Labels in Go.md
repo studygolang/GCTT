@@ -211,3 +211,17 @@ End:
       fmt.Println(v)
   }
   ```
+
+
+
+```
+----------------
+
+via: https://medium.com/golangspec/labels-in-go-4ffd81932339
+
+作者：[Michał Łowicki](https://medium.com/@mlowicki)
+译者：[译者ID](https://github.com/saberuster)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
+```
