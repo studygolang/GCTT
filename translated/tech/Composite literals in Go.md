@@ -170,3 +170,13 @@ fmt.Printf(“%#v\n”, engineers)
 ```
 ## 资源
 https://golang.org/ref/spec#Composite_literals
+
+----------------
+
+via: https://medium.com/golangspec/composite-literals-in-go-10dc62eec06a
+
+作者：[Michał Łowicki](https://medium.com/@mlowicki)
+译者：[yiyulantian](https://github.com/yiyulantian)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
