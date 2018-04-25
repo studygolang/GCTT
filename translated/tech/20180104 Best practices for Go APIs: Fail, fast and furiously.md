@@ -65,6 +65,6 @@ via: https://medium.com/@LiveRamp/friday-thoughts-fail-fast-and-furiously-26705b
 
 作者：[LiveRamp](https://medium.com/@LiveRamp)
 译者：[krystollia](https://github.com/krystollia)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
