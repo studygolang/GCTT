@@ -200,7 +200,7 @@ myfoo := heap.Pop(&someheap) // myfoo has the correct type
 via: https://medium.com/@bob.clark_34506/go-is-not-very-simple-folks-3e84220e73c7
 
 作者：[The Other Bob](https://medium.com/@bob.clark_34506)
-译者：[deadvia](https://github.com/deadvia)
+译者：[yuhanle](https://github.com/yuhanle)
 校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
