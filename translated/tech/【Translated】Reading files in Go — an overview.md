@@ -1,7 +1,7 @@
 ### 使用 Go 读取文件 - 概览
 2017 年 12 月 30 日
 
-2018 年 1 月 1 日：[更新](http://kgrz.io/reading-files-in-go-an-overview.html#update)
+2018 年 1 月 1 日：[更新](http://kgrz.io/reading-files-in-go-an-overview.html#update)（译注：在文章末尾）
 
 
 <hr>
@@ -43,7 +43,7 @@
 
 标准库里提供了众多的函数和工具来读取文件数据。我们先从 `os` 包中提供的基本例子入手。这意味着两个先决条件：
 
-1. 该文件需要匹配内存
+1. 该文件需要放入内存
 2. 我们需要预先知道文件大小以便实例化一个足够装下该文件的缓冲区
 
 当我们获得了 `os.File` 对象的句柄，我们就可以事先查询文件的大小以及实例化一个字节数组。
@@ -74,7 +74,7 @@ if err != nil {
 fmt.Println("bytes read: ", bytesread)
 fmt.Println("bytestream to string: ", string(buffer))
 ```
-[basic.go](https://github.com/kgrz/reading-files-in-go/blob/master/basic.go) on Github
+在 Github 中查看源文件 [basic.go](https://github.com/kgrz/reading-files-in-go/blob/master/basic.go)
 
 #### 分批读取文件
 
@@ -106,7 +106,7 @@ for {
   fmt.Println("bytestream to string: ", string(buffer[:bytesread]))
 }
 ```
-[reading-chunkwise.go](https://github.com/kgrz/reading-files-in-go/blob/master/reading-chunkwise.go) on Github
+在 Github 中查看源文件 [reading-chunkwise.go](https://github.com/kgrz/reading-files-in-go/blob/master/reading-chunkwise.go) 
 
 与读取整个文件的区别在于：
 
@@ -130,9 +130,9 @@ end
 
 #### 并行分批读取文件
 
-那怎么样才能加速分批读取文件呢？其中一种方法是用多个 go routine。相对于连续分批读取文件，我们需要知道每个 go routine 的偏移量。值得注意的是，当剩余的数据小于缓冲区时，`ReadAt` 的表现和 `Read` 有[轻微的不同](https://golang.org/pkg/io/#ReaderAt)。
+那怎么样才能加速分批读取文件呢？其中一种方法是用多个 go routine。相对于连续分批读取文件，我们需要知道每个 goroutine 的偏移量。值得注意的是，当剩余的数据小于缓冲区时，`ReadAt` 的表现和 `Read` 有[轻微的不同](https://golang.org/pkg/io/#ReaderAt)。
 
-另外，我在这里并没有设置 go routine 数量的上限，而是由缓冲区的大小自行决定。但在实际的应用中通常都会设定 go routine 的数量上限。
+另外，我在这里并没有设置 goroutine 数量的上限，而是由缓冲区的大小自行决定。但在实际的应用中通常都会设定 goroutine 的数量上限。
 
 ```go
 const BufferSize = 100
@@ -150,10 +150,10 @@ if err != nil {
 }
 
 filesize := int(fileinfo.Size())
-// Number of go routines we need to spawn.
+// 我们需要使用的 goroutine 数量
 concurrency := filesize / BufferSize
 
-// check for any left over bytes. Add one more go routine if required.
+// 如果有多余的字节，增加一个额外的 goroutine
 if remainder := filesize % BufferSize; remainder != 0 {
   concurrency++
 }
@@ -169,11 +169,9 @@ for i := 0; i < concurrency; i++ {
     buffer := make([]byte, chunk.bufsize)
     bytesread, err := file.ReadAt(buffer, chunk.offset)
 
-    // As noted above, ReadAt differs slighly compared to Read when the
-    // output buffer provided is larger than the data that's available
-    // for reading. So, let's return early only if the error is
-    // something other than an EOF. Returning early will run the
-    // deferred function above
+    // 如上所述，当输出缓冲区的容量比要读取的数据大时，ReadAt 和 Read 方法稍微有些区别。
+    // 因此当遇到非 EOF 类型的错误时，我们需要提前从函数返回。这中情况下 deferred 函数会在
+    // 主函数返回前执行
     if err != nil && err != io.EOF {
       fmt.Println(err)
       return
@@ -186,13 +184,13 @@ for i := 0; i < concurrency; i++ {
 
 wg.Wait()
 ```
-[reading-chunkwise-multiple.go](https://github.com/kgrz/reading-files-in-go/blob/master/reading-chunkwise-multiple.go) on Github
+在 Github 中查看源文件 [reading-chunkwise-multiple.go](https://github.com/kgrz/reading-files-in-go/blob/master/reading-chunkwise-multiple.go)
 
 这比之前的方法都需要考虑得更多：
 
 1. 我尝试创建特定数量的 Go-routines， 这个数量取决于文件大小以及缓冲区大小（在我们的例子中是 100k）。
-2. 我们需要一种方法能确定等所有的 go routines 都结束。在这个例子中，我们使用 wait group。
-3. 我们在每个 go routine 结束时发送信号，而不是使用 `break` 从 for 循环中跳出。由于我们在 `defer` 中调用 `wg.Done()`，每次从 go routine 中”返回“时都会调用该函数。
+2. 我们需要一种方法能确定等所有的 goroutines 都结束。在这个例子中，我们使用 wait group。
+3. 我们在每个 goroutine 结束时发送信号，而不是使用 `break` 从 for 循环中跳出。由于我们在 `defer` 中调用 `wg.Done()`，每次从 goroutine 中”返回“时都会调用该函数。
 
 注意：每次都应该检查返回的字节数，并刷新（reslice）输出缓冲区。
 
@@ -213,9 +211,8 @@ defer file.Close()
 scanner := bufio.NewScanner(file)
 scanner.Split(bufio.ScanLines)
 
-// Returns a boolean based on whether there's a next instance of `\n`
-// character in the IO stream. This step also advances the internal pointer
-// to the next position (after '\n') if it did find that token.
+// 根据 IO 流中的下个字符是否是'\n' 来返回 boolean 值。如果找到该符号，
+// 该步骤会提前将内部指针移动到下一个位置（'\n' 的后面）。
 read := scanner.Scan()
 
 if read {
@@ -223,9 +220,9 @@ if read {
   fmt.Println("read string: ", scanner.Text())
 }
 
-// goto Scan() line, and repeat
+// 回到 Scan() 那一行, 然后重复执行。
 ```
-[scanner-example.go](https://github.com/kgrz/reading-files-in-go/blob/master/scanner-example.go) on Github
+在 Github 中查看源文件 [scanner-example.go](https://github.com/kgrz/reading-files-in-go/blob/master/scanner-example.go)
 
 因此，若想按行读取整个文件，可以这么做：
 
@@ -240,7 +237,7 @@ defer file.Close()
 scanner := bufio.NewScanner(file)
 scanner.Split(bufio.ScanLines)
 
-// This is our buffer now
+// 这是我们的缓冲区
 var lines []string
 
 for scanner.Scan() {
@@ -252,7 +249,7 @@ for _, line := range lines {
   fmt.Println(line)
 }
 ```
-[scanner.go](https://github.com/kgrz/reading-files-in-go/blob/master/scanner.go) on Github
+在 Github 中查看源文件 [scanner.go](https://github.com/kgrz/reading-files-in-go/blob/master/scanner.go)
 
 #### 按单词扫描
 
@@ -301,15 +298,14 @@ defer file.Close()
 scanner := bufio.NewScanner(file)
 scanner.Split(bufio.ScanWords)
 
-// initial size of our wordlist
+// 初始化我们的单词列表
 bufferSize := 50
 words := make([]string, bufferSize)
 pos := 0
 
 for scanner.Scan() {
   if err := scanner.Err(); err != nil {
-    // This error is a non-EOF error. End the iteration if we encounter
-    // an error
+    // 这是一个非 EOF 错误。如果遇到这种错误则结束循环。
     fmt.Println(err)
     break
   }
@@ -325,16 +321,14 @@ for scanner.Scan() {
 }
 
 fmt.Println("word list:")
-// we are iterating only until the value of "pos" because our buffer size
-// might be more than the number of words because we increase the length by
-// a constant value. Or the scanner loop might've terminated due to an
-// error prematurely. In this case the "pos" contains the index of the last
-// successful update.
+// 由于我们会按固定大小扩充缓冲区，缓冲区容量可能比实际的单词数量大， 因此我们只有在 "pos" 
+// 有效时才进行迭代。否则扫描器可能会因为遇到错误而提前终止。在这个例子中，"pos" 包含了
+// 最后一次更新的索引。
 for _, word := range words[:pos] {
   fmt.Println(word)
 }
 ```
-[scanner-word-list-grow.go](https://github.com/kgrz/reading-files-in-go/blob/master/scanner-word-list-grow.go) on Github
+在 Github 中查看源文件 [scanner-word-list-grow.go](https://github.com/kgrz/reading-files-in-go/blob/master/scanner-word-list-grow.go)
 
 最终我们可以实现更少的 “扩增” 操作，但同时根据 `bufferSize` 我们可能会在末尾存在一些空的插槽，这算是一种折中的方法。
 
@@ -384,27 +378,25 @@ for _, word := range words {
 ```go
 csvstring := "name, age, occupation"
 
-// An anonymous function declaration to avoid repeating main()
+// 定义一个匿名函数来避免重复 main() 函数
 ScanCSV := func(data []byte, atEOF bool) (advance int, token []byte, err error) {
   commaidx := bytes.IndexByte(data, ',')
   if commaidx > 0 {
-    // we need to return the next position
+    // 我们需要返回下一个位置
     buffer := data[:commaidx]
     return commaidx + 1, bytes.TrimSpace(buffer), nil
   }
 
-  // if we are at the end of the string, just return the entire buffer
+  // 如果碰到了字符串的末尾，那么直接返回整个缓冲区
   if atEOF {
-    // but only do that when there is some data. If not, this might mean
-    // that we've reached the end of our input CSV string
+    // 以下代码只有在有数据时才执行，否则可能意味着已经到达输入的 CSV 字符串的末尾
     if len(data) > 0 {
       return len(data), bytes.TrimSpace(data), nil
     }
   }
 
-  // when 0, nil, nil is returned, this is a signal to the interface to read
-  // more data in from the input reader. In this case, this input is our
-  // string reader and this pretty much will never occur.
+  // 返回 0, nil, nil 是让接口从输入源读取更多的数据的信号。
+  // 在这个例子中，输入源是字符串读取器，基本上不太可能碰到这种情况。
   return 0, nil, nil
 }
 
@@ -415,7 +407,7 @@ for scanner.Scan() {
   fmt.Println(scanner.Text())
 }
 ```
-[comma-separated-string.go](https://github.com/kgrz/reading-files-in-go/blob/master/comma-separated-string.go#L10) on Github
+在 Github 中查看源文件 [comma-separated-string.go](https://github.com/kgrz/reading-files-in-go/blob/master/comma-separated-string.go#L10)
 
 #### Ruby 风格
 
@@ -462,7 +454,7 @@ for _, fileinfo := range filelist {
 在标准库中还有很多读取文件的函数（确切得说，读取器）。为了防止这篇本已冗长的文章变得更加冗长，我列举了一些我发现的函数：
 
 1. `ioutil.ReadAll()` -> 使用一个类似 io 的对象，返回字节数组
-2. `io.ReadFull()
+2. `io.ReadFull()`
 3. `io.ReadAtLeast()`
 4. `io.MultiReader` -> 一个非常有用的合并多个类 io 对象的基本工具（primitive）。你可以把多个文件当成是一个连续的数据块来处理，而无需处理
 在上一个文件结束后切换至另一个文件对象的复杂操作。
@@ -481,7 +473,7 @@ func handleFn(file *os.File) func(error) {
   }
 }
 
-// inside the main function:
+// 在 main 函数内：
 file, err := os.Open("filetoread.txt")
 handle := handleFn(file)
 handle(err)
