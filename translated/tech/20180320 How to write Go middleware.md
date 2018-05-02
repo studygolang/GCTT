@@ -177,4 +177,13 @@ func (s *serverWriter) Flush() {
 
 祝你好运！你正在写什么中间件呢，它们运行的怎样？
 
+----------------
+
+via: https://kev.inburke.com/kevin/how-to-write-go-middleware/
+
+作者：[Kevin Burke](https://kev.inburke.com/about)
+译者：[SergeyChang](https://github.com/SergeyChang)
+校对：[rxcai](https://github.com/rxcai)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
