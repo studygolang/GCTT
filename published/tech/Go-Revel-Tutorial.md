@@ -1,6 +1,8 @@
+已发布：https://studygolang.com/articles/12898
+
 # Go/Revel教程：在浏览器（使用 PaizaCloud IDE）上，构建 Go web 框架 Revel 的应用程序
 
-![gopher](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180323/20180323134353.png)
+![gopher](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180323134353.png)
 
 Go 语言（golang）的特性有：
 
@@ -12,7 +14,7 @@ Go 语言（golang）的特性有：
 
 如下图所示，我们可以在 Google Trends 看到 Go 受关注的程度。
 
-![From google trends](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180323/20180323105259.png)
+![From google trends](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180323105259.png)
 
 来自 [google trends](https://trends.google.com/trends/explore?date=2010-02-23%202018-03-23&q=golang)
 
@@ -40,7 +42,7 @@ Go 框架 Revel 的 web 开发功能有：路由、MVC、生成器。按照 Reve
 
 [这里](https://paiza.cloud/)是 [PaizaCloud Cloud IDE](https://paiza.cloud/) 的网站。
 
-![paiza cloud](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20171214/20171214154059.png)
+![paiza cloud](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20171214154059.png)
 
 可以用邮箱注册，并在确认邮件中点击链接。你还可以用 GitHub 或 Google 账户来注册。
 
@@ -48,13 +50,13 @@ Go 框架 Revel 的 web 开发功能有：路由、MVC、生成器。按照 Reve
 
 在开发工作区上，我们创建一个新的服务器。
 
-![new server](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20171214/20171214154558.png)
+![new server](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20171214154558.png)
 
-点击 `New Server`，回打开一个对话框来设置服务器。
+点击 `New Server`，会打开一个对话框来设置服务器。
 
 这里，你可以选择 `PHP`、`phpMyAdmin` 和 `MySQL`，并点击 `New Server` 按钮。
 
-![server settings](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20171214/20171214154330.png)
+![server settings](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20171214154330.png)
 
 只需 3 秒钟，你就有了一个基于浏览器的 Go/Revel 开发环境。
 
@@ -68,7 +70,7 @@ Go 框架 Revel 的 web 开发功能有：路由、MVC、生成器。按照 Reve
 
 在页面的左边，点击 `Terminal` 按钮。
 
-![terminal](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20171214/20171214154805.png)
+![terminal](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20171214154805.png)
 
 现在我们启动了 `Terminal` 程序。我们现在要在终端输入 `go get [package name]` 命令。
 
@@ -83,7 +85,7 @@ $ go get github.com/jinzhu/gorm
 $ go get github.com/go-sql-driver/mysql
 ```
 
-![bash](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180323/20180323105536.png)
+![bash](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180323105536.png)
 
 现在，我们已经把包安装在了 `~/go/bin`。
 
@@ -97,9 +99,9 @@ $ go get github.com/go-sql-driver/mysql
 
 在页面的左边，点击 `Terminal` 按钮。
 
-![terminal](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20171214/20171214154805.png)
+![terminal](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20171214154805.png)
 
-现在我们启动了 `Terminal` 程序。我们现在要在终端输入 `go get [application name]` 命令。
+现在我们启动了 `Terminal` 程序。我们现在要在终端输入 `revel new [application name]` 命令。
 
 `[application name]` 是你创建的程序名称。可以用你喜欢的名称，如 `music-app` 或者 `game-app`。
 
@@ -111,11 +113,11 @@ $ go get github.com/go-sql-driver/mysql
 $ revel new myapp
 ```
 
-![revel new myapp](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180323/20180323111349.png)
+![revel new myapp](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180323111349.png)
 
 在页面左边的文件管理器视图中，你可以看到 `go/src/myapp` 目录。点击文件夹并打开，看看里面的内容。
 
-![file manager view](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180323/20180323110203.png)
+![file manager view](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180323110203.png)
 
 你会看到里面有很多 Go/Revel 文件。
 
@@ -130,17 +132,17 @@ $ cd ~/go
 $ revel run myapp
 ```
 
-![revel run myapp](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180323/20180323111505.png)
+![revel run myapp](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180323111505.png)
 
 在页面左边，会出现一个新的按钮，显示文字 `9000`。
 
-![button 9000](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180323/20180323111533.png)
+![button 9000](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180323111533.png)
 
 Revel 服务器会在 9000 端口上运行。[PaizaCloud Cloud IDE](https://paiza.cloud/) 监测到了这个端口号（9000），自动添加了一个按钮，用于在这个端口上打开浏览器。
 
 点击该按钮，会出现浏览器程序（PaizaClound 中的浏览器应用程序）。现在，你可以看到 Revel 的网页了，这就是你的应用！
 
-![your web page](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180323/20180323111629.png)
+![your web page](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180323111629.png)
 
 （尽管 Revel 是作为 HTTP 服务器运行的，但是 PaizaCloud 会把 HTTP 转换为 HTTPS。）
 
@@ -150,17 +152,17 @@ Revel 服务器会在 9000 端口上运行。[PaizaCloud Cloud IDE](https://paiz
 
 在文件管理器视图上，双击 `~/go/src/myapp/app/views/App/Index.html` 文件进行编辑。
 
-![index.html](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180323/20180323111814.png)
+![index.html](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180323111814.png)
 
 编辑标题部分，把 `It works` 替换为下面内容：
 
 `go/src/myapp/app/views/App/Index.html`：
 
 ```html
-      <h1>Hello Go and Revel!</h1>
+	<h1>Hello Go and Revel!</h1>
 ```
 
-![edit index.html](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180326/20180326143312.png)
+![edit index.html](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180326143312.png)
 
 编辑完以后，点击 `Save` 按钮或者键入 `Command-S`（或 `Ctrl-S`），保存该文件。
 
@@ -172,7 +174,7 @@ $ revel run myapp
 
 接下来，在页面的左边，单击有 `9000` 文字的浏览器图标。如果你已经运行了浏览器，点击刷新按钮。
 
-![browser](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180326/20180326143503.png)
+![browser](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180326143503.png)
 
 于是你可以看到刚才修改的页面内容了！
 
@@ -194,7 +196,7 @@ $ mysql -u root
 create database mydb;
 ```
 
-![create database mydb](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180216/20180216010049.png)
+![create database mydb](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180216010049.png)
 
 于是你创建了一个数据库。
 
@@ -215,11 +217,11 @@ db.info = root:@/mydb?charset=utf8&parseTime=True
 
 在文件管理器视图下，右击 `go/src/myapp/app/controllers` 目录，打开快捷菜单，选择 `New File` 菜单。
 
-![New File menu](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180326/20180326143634.png)
+![New File menu](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180326143634.png)
 
 输入文件名 `gorm.go`，点击 `Create` 按钮，创建该文件。
 
-![Create a file gorm.go](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180326/20180326143715.png)
+![Create a file gorm.go](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180326143715.png)
 
 打开编辑器，编写代码，如下所示：
 
@@ -229,25 +231,25 @@ db.info = root:@/mydb?charset=utf8&parseTime=True
 package controllers
 
 import (
-    _ "github.com/go-sql-driver/mysql"
-    "github.com/jinzhu/gorm"
-    "github.com/revel/revel"
-    "myapp/app/models"
-    "log"
-    )
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
+	"github.com/revel/revel"
+	"myapp/app/models"
+	"log"
+)
 
 var DB *gorm.DB
 
 func InitDB() {
-    dbInfo, _ := revel.Config.String("db.info")
-    db, err := gorm.Open("mysql", dbInfo)
-    if err != nil {
-        log.Panicf("Failed gorm.Open: %v\n", err)
-    }
+	dbInfo, _ := revel.Config.String("db.info")
+	db, err := gorm.Open("mysql", dbInfo)
+	if err != nil {
+		log.Panicf("Failed gorm.Open: %v\n", err)
+	}
 
-    db.DB()
-    db.AutoMigrate(&models.Post{})
-    DB = db
+	db.DB()
+	db.AutoMigrate(&models.Post{})
+	DB = db
 }
 ```
 
@@ -299,8 +301,8 @@ func init() {
 package models
 
 type Post struct {
-    Id  uint64 `gorm:"primary_key" json:"id"`
-    Body string `sql:"size:255" json:"body"`
+	Id  uint64 `gorm:"primary_key" json:"id"`
+	Body string `sql:"size:255" json:"body"`
 }
 ```
 
@@ -317,7 +319,7 @@ $ revel run myapp
 
 在 PaizaCloud 中的浏览器上，在 URL 区域上输入 `http://localhost/phpmyadmin/`。
 
-![phpmyadmin](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180323/20180323132256.png)
+![phpmyadmin](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180323132256.png)
 
 我们可以看到 `posts` 表。你可以在这里添加、编辑和删除数据记录。
 
@@ -360,47 +362,47 @@ POST    /posts/:id/delete                       Post.Delete
 package controllers
 
 import (
-    "github.com/revel/revel"
-    "myapp/app/models"
-    "errors"
+	"github.com/revel/revel"
+	"myapp/app/models"
+	"errors"
 )
 
 type Post struct {
-    *revel.Controller
+	*revel.Controller
 }
 
 func (c Post) Index() revel.Result {
-    posts := []models.Post{}
+	posts := []models.Post{}
 
-    result := DB.Order("id desc").Find(&posts);
-    err := result.Error
-    if err != nil {
-        return c.RenderError(errors.New("Record Not Found"))
-    }
-    return c.Render(posts)
+	result := DB.Order("id desc").Find(&posts);
+	err := result.Error
+	if err != nil {
+		return c.RenderError(errors.New("Record Not Found"))
+	}
+	return c.Render(posts)
 }
 func (c Post) Create() revel.Result {
-    post := models.Post{
-        Body: c.Params.Form.Get("body"),
-    }
-    ret := DB.Create(&post)
-    if ret.Error != nil {
-        return c.RenderError(errors.New("Record Create failure." + ret.Error.Error()))
-    }
-    return c.Redirect("/posts")    
+	post := models.Post{
+		Body: c.Params.Form.Get("body"),
+	}
+	ret := DB.Create(&post)
+	if ret.Error != nil {
+		return c.RenderError(errors.New("Record Create failure." + ret.Error.Error()))
+	}
+	return c.Redirect("/posts")    
 }
 func (c Post) Delete() revel.Result {
-    id := c.Params.Route.Get("id")
-    posts := []models.Post{}
-    ret := DB.Delete(&posts, id)
-    if ret.Error != nil {
-        return c.RenderError(errors.New("Record Delete failure." + ret.Error.Error()))
-    }
-    return c.Redirect("/posts")    
+	id := c.Params.Route.Get("id")
+	posts := []models.Post{}
+	ret := DB.Delete(&posts, id)
+	if ret.Error != nil {
+		return c.RenderError(errors.New("Record Delete failure." + ret.Error.Error()))
+	}
+	return c.Redirect("/posts")    
 }
 
 func (c Post) RedirectToPosts() revel.Result {
-    return c.Redirect("/posts")    
+	return c.Redirect("/posts")    
 }
 ```
 
@@ -434,58 +436,58 @@ func (c Post) RedirectToPosts() revel.Result {
 
 <header class="jumbotron" style="background-color:#A9F16C">
   <div class="container">
-    <div class="row">
-      <h1>Todo list</h1>
-      <p></p>
-    </div>
+	<div class="row">
+	  <h1>Todo list</h1>
+	  <p></p>
+	</div>
   </div>
 </header>
 
 <div class="container">
   <div class="row">
-    <div class="span6">
-      {{template "flash.html" .}}
-    </div>
+	<div class="span6">
+	  {{template "flash.html" .}}
+	</div>
   </div>
 </div>
 
 <div class="container">
-    <form action="/posts" method="post">
-        <div class="form-group">
-            <div class="row">
-                <label for="todo" class="col-xs-2">Todo</label>
-                <input type="text" name="body" class="col-xs-8">
-                <div class="col-xs-2">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fa fa-plus"></i> Add Todo
-                    </button>
-                </div>            
-            </div>
-        </div>
-    </form>
+	<form action="/posts" method="post">
+		<div class="form-group">
+			<div class="row">
+				<label for="todo" class="col-xs-2">Todo</label>
+				<input type="text" name="body" class="col-xs-8">
+				<div class="col-xs-2">
+					<button type="submit" class="btn btn-success">
+						<i class="fa fa-plus"></i> Add Todo
+					</button>
+				</div>            
+			</div>
+		</div>
+	</form>
 
-    <h2>Current Todos</h2>
-    <table class="table table-striped todo-table">
-        <thead>
-            <th>Todos</th><th>&nbsp;</th>
-        </thead>
+	<h2>Current Todos</h2>
+	<table class="table table-striped todo-table">
+		<thead>
+			<th>Todos</th><th>&nbsp;</th>
+		</thead>
 
-        <tbody>
-            {{ range .posts }}
-                <tr>
-                    <td>
-                        <div>{{ .Body }}</div>
-                    </td>
-                    <td>
-                        <form action="/posts/{{.Id}}/delete" method="post">
-                            <button class="btn btn-danger">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            {{ end }}
-        </tbody>
-    </table>
-    
+		<tbody>
+			{{ range .posts }}
+				<tr>
+					<td>
+						<div>{{ .Body }}</div>
+					</td>
+					<td>
+						<form action="/posts/{{.Id}}/delete" method="post">
+							<button class="btn btn-danger">Delete</button>
+						</form>
+					</td>
+				</tr>
+			{{ end }}
+		</tbody>
+	</table>
+	
 </div>
 
 
@@ -518,7 +520,7 @@ func (c Post) RedirectToPosts() revel.Result {
 
 我们来添加和删除任务。
 
-![Todo list](https://cdn-ak.f.st-hatena.com/images/fotolife/p/paiza/20180326/20180326144011.png)
+![Todo list](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180326144011.png)
 
 它奏效了！我们通过 Go/Revel，成功地创建了任务清单的应用程序！
 
@@ -536,6 +538,6 @@ via: http://engineering.paiza.io/entry/paizacloud_golang_revel
 
 作者：[Tsuneo](http://twitter.com/yoshiokatsuneo)
 译者：[Noluye](https://github.com/Noluye)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
