@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12900
+
 # 周五有感：失败，快速且猛烈
 
 **摘要**：*在实现一个服务或 API 时，如果你收到一个你不太理解的请求，最友好的方式就是返回一个错误信息。*
@@ -8,9 +10,9 @@
 
 非常简单，是不是？我可能会这样来实现它：
 
-```
+```go
 func mySum(args url.Arguments, w http.ResponseWriter) {
-    w.Write(int(args["num"][0]) + int(args["num"][1]))
+	w.Write(int(args["num"][0]) + int(args["num"][1]))
 }
 ```
 
@@ -26,9 +28,9 @@ func mySum(args url.Arguments, w http.ResponseWriter) {
 
 (1) 给参数以明确的表示。通常，Thrift RPC 或者 gRPC 可以很好的帮你。对于 mySum API，我们将有这样的结构：
 
-```
+```go
 type MySumParams struct {
-    Lhs, Rhs int
+	Lhs, Rhs int
 }
 ```
 
@@ -40,14 +42,14 @@ type MySumParams struct {
 
 (3) 一旦参数被解析出来，将它们从请求的参数列表中删除。Thrift 和 gRPC 倾向于帮你管理这一切，但是例如对如下的 REST API：
 
-```
+```go
 func extractMySumParams(args url.Arguments) MySumParams {
-    var result = MySumParams{
-        Lhs: args["num"][0],
-        Rhs: args["num"][1],
-    }
-    // Strip consumed num arguments.
-    args["num"] = args["num"][:2]
+	var result = MySumParams{
+		Lhs: args["num"][0],
+		Rhs: args["num"][1],
+	}
+	// Strip consumed num arguments.
+	args["num"] = args["num"][:2]
 }
 ```
 

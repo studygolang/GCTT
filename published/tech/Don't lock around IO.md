@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12899
+
 # 不要对 I/O 上锁
 
 锁可用于同步操作。但如果使用不当的话，也会引发显著的性能问题。一个比较常见出问题的地方是 HTTP handlers 处。尤其很容易在不经意间就会锁住网络 I/O。要理解这种问题，我们最好还是来看一个例子。这篇文章中，我会使用 Go。
@@ -134,7 +136,7 @@ via: https://commandercoriander.net/blog/2018/04/10/dont-lock-around-io/
 
 作者：[Eno](https://enocom.io/)
 译者：[alfred-zhong](https://github.com/alfred-zhong)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
