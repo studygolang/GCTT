@@ -1,33 +1,35 @@
-### 使用 Go 读取文件 - 概览
+已发布：https://studygolang.com/articles/12905
+
+# 使用 Go 读取文件 - 概览
+
 2017 年 12 月 30 日
 
 2018 年 1 月 1 日：[更新](http://kgrz.io/reading-files-in-go-an-overview.html#update)（译注：在文章末尾）
 
-
-<hr>
+---
 
 当我开始学习 Go 的时候，我很难熟练得运用各种操作文件的 API。在我尝试写一个多核心的计数器（[kgrz/kwc](https://github.com/kgrz/kwc)）时让我感到了困惑 - 操作同一个文件的不同方法。
 
 在今年的 [Advent of Code](http://adventofcode.com/2017/) 中遇到了一些需要多种读取输入源的方式的问题。最终我把每种方法都至少使用了一次，因此现在我对这些技术有了一个清晰的认识。我会在这篇文章中将这些记录下来。我会按照我遇到这些技术的顺序列出来，而不是按照从易到难的顺序。
 
 * 按字节读取 
-  * 将整个文件读入内存中
-  * 分批读取文件
-  * 并行分批读取文件
+	* 将整个文件读入内存中
+	* 分批读取文件
+	* 并行分批读取文件
 
 * 扫描
-  * 按单词扫描
-  * 将一个长字符串分割成多个单词
-  * 扫描用逗号分割的字符串
+	* 按单词扫描
+	* 将一个长字符串分割成多个单词
+	* 扫描用逗号分割的字符串
 
 * Ruby 风格
-  * 读取整个文件
-  * 读取目录下的所有文件
+	* 读取整个文件
+	* 读取目录下的所有文件
 
 * 更多帮助方法
 * 更新
 
-#### 一些基本的假设
+## 一些基本的假设
 
 * 所有的代码都包裹在 `main()` 代码块内
 * 大部分情况下我会使用 "array" 和 "slice" 来指代 slices，但它们的含义是不同的。[这](https://blog.golang.org/go-slices-usage-and-internals)[两](https://blog.golang.org/slices)篇文章很好得解释了两者的不同之处。
@@ -37,7 +39,7 @@
 
 为了让这篇文章更加通俗易懂，我会使用 `string(arrayOfBytes)` 来将 `字节` 数组转化为字符串，但不建议在生产模式中使用这种方式。
 
-#### 按字节读取
+## 按字节读取
 
 *将整个文件读入内存中*
 
@@ -51,15 +53,15 @@
 ```go
 file, err := os.Open("filetoread.txt")
 if err != nil {
-  fmt.Println(err)
-  return
+	fmt.Println(err)
+	return
 }
 defer file.Close()
 
 fileinfo, err := file.Stat()
 if err != nil {
-  fmt.Println(err)
-  return
+	fmt.Println(err)
+	return
 }
 
 filesize := fileinfo.Size()
@@ -67,8 +69,8 @@ buffer := make([]byte, filesize)
 
 bytesread, err := file.Read(buffer)
 if err != nil {
-  fmt.Println(err)
-  return
+	fmt.Println(err)
+	return
 }
 
 fmt.Println("bytes read: ", bytesread)
@@ -76,7 +78,7 @@ fmt.Println("bytestream to string: ", string(buffer))
 ```
 在 Github 中查看源文件 [basic.go](https://github.com/kgrz/reading-files-in-go/blob/master/basic.go)
 
-#### 分批读取文件
+## 分批读取文件
 
 大部分情况下我们都可以将这个文件读入内存，但有时候我们希望使用更保守的内存使用策略。比如读取一定大小的文件内容，处理它们，然后循环这个过程直到结束。在下面这个例子中使用了 100 字节的缓冲区。
 
@@ -84,26 +86,26 @@ fmt.Println("bytestream to string: ", string(buffer))
 const BufferSize = 100
 file, err := os.Open("filetoread.txt")
 if err != nil {
-  fmt.Println(err)
-  return
+	fmt.Println(err)
+	return
 }
 defer file.Close()
 
 buffer := make([]byte, BufferSize)
 
 for {
-  bytesread, err := file.Read(buffer)
+	bytesread, err := file.Read(buffer)
 
-  if err != nil {
-    if err != io.EOF {
-      fmt.Println(err)
-    }
+	if err != nil {
+		if err != io.EOF {
+			fmt.Println(err)
+		}
 
-    break
-  }
+		break
+	}
 
-  fmt.Println("bytes read: ", bytesread)
-  fmt.Println("bytestream to string: ", string(buffer[:bytesread]))
+	fmt.Println("bytes read: ", bytesread)
+	fmt.Println("bytestream to string: ", string(buffer[:bytesread]))
 }
 ```
 在 Github 中查看源文件 [reading-chunkwise.go](https://github.com/kgrz/reading-files-in-go/blob/master/reading-chunkwise.go) 
@@ -121,14 +123,15 @@ bufsize = 100
 f = File.new "_config.yml", "r"
 
 while readstring = f.read(bufsize)
-  break if readstring.nil?
+	break if readstring.nil?
 
-  puts readstring
+	puts readstring
 end
 ```
+
 在循环中的每一次迭代，内部的文件指针都会被更新。当下一次读取开始时，数据将从文件指针的偏移量处开始，直到读取了缓冲区大小的内容。这个指针不是编程语言中的概念，而是操作系统中的概念。在 linux 中，这个指针是指创建的文件描述符的属性。所有的 read/Read 函数调用（在 Ruby/Go 中）都被内部转化为系统调用并发送给内核，然后由内核管理所有的这些指针。
 
-#### 并行分批读取文件
+## 并行分批读取文件
 
 那怎么样才能加速分批读取文件呢？其中一种方法是用多个 go routine。相对于连续分批读取文件，我们需要知道每个 goroutine 的偏移量。值得注意的是，当剩余的数据小于缓冲区时，`ReadAt` 的表现和 `Read` 有[轻微的不同](https://golang.org/pkg/io/#ReaderAt)。
 
@@ -138,15 +141,15 @@ end
 const BufferSize = 100
 file, err := os.Open("filetoread.txt")
 if err != nil {
-  fmt.Println(err)
-  return
+	fmt.Println(err)
+	return
 }
 defer file.Close()
 
 fileinfo, err := file.Stat()
 if err != nil {
-  fmt.Println(err)
-  return
+	fmt.Println(err)
+	return
 }
 
 filesize := int(fileinfo.Size())
@@ -155,31 +158,31 @@ concurrency := filesize / BufferSize
 
 // 如果有多余的字节，增加一个额外的 goroutine
 if remainder := filesize % BufferSize; remainder != 0 {
-  concurrency++
+	concurrency++
 }
 
 var wg sync.WaitGroup
 wg.Add(concurrency)
 
 for i := 0; i < concurrency; i++ {
-  go func(chunksizes []chunk, i int) {
-    defer wg.Done()
+	go func(chunksizes []chunk, i int) {
+		defer wg.Done()
 
-    chunk := chunksizes[i]
-    buffer := make([]byte, chunk.bufsize)
-    bytesread, err := file.ReadAt(buffer, chunk.offset)
+		chunk := chunksizes[i]
+		buffer := make([]byte, chunk.bufsize)
+		bytesread, err := file.ReadAt(buffer, chunk.offset)
 
-    // 如上所述，当输出缓冲区的容量比要读取的数据大时，ReadAt 和 Read 方法稍微有些区别。
-    // 因此当遇到非 EOF 类型的错误时，我们需要提前从函数返回。这中情况下 deferred 函数会在
-    // 主函数返回前执行
-    if err != nil && err != io.EOF {
-      fmt.Println(err)
-      return
-    }
+		// 如上所述，当输出缓冲区的容量比要读取的数据大时，ReadAt 和 Read 方法稍微有些区别。
+		// 因此当遇到非 EOF 类型的错误时，我们需要提前从函数返回。这中情况下 deferred 函数会在
+		// 主函数返回前执行
+		if err != nil && err != io.EOF {
+			fmt.Println(err)
+			return
+		}
 
-    fmt.Println("bytes read, string(bytestream): ", bytesread)
-    fmt.Println("bytestream to string: ", string(buffer[:bytesread]))
-  }(chunksizes, i)
+		fmt.Println("bytes read, string(bytestream): ", bytesread)
+		fmt.Println("bytestream to string: ", string(buffer[:bytesread]))
+	}(chunksizes, i)
 }
 
 wg.Wait()
@@ -194,7 +197,7 @@ wg.Wait()
 
 注意：每次都应该检查返回的字节数，并刷新（reslice）输出缓冲区。
 
-#### 扫描
+## 扫描
 
 你可以在各种场景下使用 `Read()` 方法来读取文件，但有时候你需要一些更加方便的方法。就像在 Ruby 中经常使用的类似于 `each_line`，`each_char`，`each_codepoint` 等 IO 函数。我们可以使用 `Scanner` 类型以及 `bufio` 包中的相关函数来达到类似的效果。
 
@@ -203,8 +206,8 @@ wg.Wait()
 ```go
 file, err := os.Open("filetoread.txt")
 if err != nil {
-  fmt.Println(err)
-  return
+	fmt.Println(err)
+	return
 }
 defer file.Close()
 
@@ -216,8 +219,8 @@ scanner.Split(bufio.ScanLines)
 read := scanner.Scan()
 
 if read {
-  fmt.Println("read byte array: ", scanner.Bytes())
-  fmt.Println("read string: ", scanner.Text())
+	fmt.Println("read byte array: ", scanner.Bytes())
+	fmt.Println("read string: ", scanner.Text())
 }
 
 // 回到 Scan() 那一行, 然后重复执行。
@@ -229,8 +232,8 @@ if read {
 ```go
 file, err := os.Open("filetoread.txt")
 if err != nil {
-  fmt.Println(err)
-  return
+	fmt.Println(err)
+	return
 }
 defer file.Close()
 
@@ -241,17 +244,17 @@ scanner.Split(bufio.ScanLines)
 var lines []string
 
 for scanner.Scan() {
-  lines = append(lines, scanner.Text())
+	lines = append(lines, scanner.Text())
 }
 
 fmt.Println("read lines:")
 for _, line := range lines {
-  fmt.Println(line)
+	fmt.Println(line)
 }
 ```
 在 Github 中查看源文件 [scanner.go](https://github.com/kgrz/reading-files-in-go/blob/master/scanner.go)
 
-#### 按单词扫描
+## 按单词扫描
 
 `bufio` 包包含了一些基本的预定义的分割函数：
 
@@ -265,8 +268,8 @@ for _, line := range lines {
 ```go
 file, err := os.Open("filetoread.txt")
 if err != nil {
-  fmt.Println(err)
-  return
+	fmt.Println(err)
+	return
 }
 defer file.Close()
 
@@ -290,8 +293,8 @@ for _, word := range words {
 ```go
 file, err := os.Open("filetoread.txt")
 if err != nil {
-  fmt.Println(err)
-  return
+	fmt.Println(err)
+	return
 }
 defer file.Close()
 
@@ -304,20 +307,20 @@ words := make([]string, bufferSize)
 pos := 0
 
 for scanner.Scan() {
-  if err := scanner.Err(); err != nil {
-    // 这是一个非 EOF 错误。如果遇到这种错误则结束循环。
-    fmt.Println(err)
-    break
-  }
+	if err := scanner.Err(); err != nil {
+		// 这是一个非 EOF 错误。如果遇到这种错误则结束循环。
+		fmt.Println(err)
+		break
+	}
 
-  words[pos] = scanner.Text()
-  pos++
+	words[pos] = scanner.Text()
+	pos++
 
-  if pos >= len(words) {
-    // expand the buffer by 100 again
-    newbuf := make([]string, bufferSize)
-    words = append(words, newbuf...)
-  }
+	if pos >= len(words) {
+		// expand the buffer by 100 again
+		newbuf := make([]string, bufferSize)
+		words = append(words, newbuf...)
+	}
 }
 
 fmt.Println("word list:")
@@ -325,14 +328,14 @@ fmt.Println("word list:")
 // 有效时才进行迭代。否则扫描器可能会因为遇到错误而提前终止。在这个例子中，"pos" 包含了
 // 最后一次更新的索引。
 for _, word := range words[:pos] {
-  fmt.Println(word)
+	fmt.Println(word)
 }
 ```
 在 Github 中查看源文件 [scanner-word-list-grow.go](https://github.com/kgrz/reading-files-in-go/blob/master/scanner-word-list-grow.go)
 
 最终我们可以实现更少的 “扩增” 操作，但同时根据 `bufferSize` 我们可能会在末尾存在一些空的插槽，这算是一种折中的方法。
 
-#### 将一个长字符串分割成多个单词
+## 将一个长字符串分割成多个单词
 
 `bufio.Scanner` 有一个参数，这个参数是实现了 `io.Reader` 接口的类型，这意味着该类型可以是任何拥有 `Read` 方法的类型。在标准库中 `strings.NewReader` 函数是一个返回 “reader” 类型的字符串实用方法。
 我们可以把两者结合起来使用：
@@ -357,7 +360,7 @@ for _, word := range words {
 }
 ```
 
-#### 读取逗号分隔的字符串
+## 读取逗号分隔的字符串
 
 用基本的 `file.Read()` 或者 `Scanner` 类型去解析 CSV 文件/字符串显得过于笨重，因为在 `bufio.ScanWords` 函数中“单词”是指被 unicode 空格分隔的符号（runes）。读取单个符号（runes)，并持续跟踪缓冲区大小以及位置（就像 lexing/parsing 所做的）需要做太多的工作和操作。
 
@@ -380,45 +383,45 @@ csvstring := "name, age, occupation"
 
 // 定义一个匿名函数来避免重复 main() 函数
 ScanCSV := func(data []byte, atEOF bool) (advance int, token []byte, err error) {
-  commaidx := bytes.IndexByte(data, ',')
-  if commaidx > 0 {
-    // 我们需要返回下一个位置
-    buffer := data[:commaidx]
-    return commaidx + 1, bytes.TrimSpace(buffer), nil
-  }
+	commaidx := bytes.IndexByte(data, ',')
+	if commaidx > 0 {
+		// 我们需要返回下一个位置
+		buffer := data[:commaidx]
+		return commaidx + 1, bytes.TrimSpace(buffer), nil
+	}
 
-  // 如果碰到了字符串的末尾，那么直接返回整个缓冲区
-  if atEOF {
-    // 以下代码只有在有数据时才执行，否则可能意味着已经到达输入的 CSV 字符串的末尾
-    if len(data) > 0 {
-      return len(data), bytes.TrimSpace(data), nil
-    }
-  }
+	// 如果碰到了字符串的末尾，那么直接返回整个缓冲区
+	if atEOF {
+		// 以下代码只有在有数据时才执行，否则可能意味着已经到达输入的 CSV 字符串的末尾
+		if len(data) > 0 {
+			return len(data), bytes.TrimSpace(data), nil
+		}
+	}
 
-  // 返回 0, nil, nil 是让接口从输入源读取更多的数据的信号。
-  // 在这个例子中，输入源是字符串读取器，基本上不太可能碰到这种情况。
-  return 0, nil, nil
+	// 返回 0, nil, nil 是让接口从输入源读取更多的数据的信号。
+	// 在这个例子中，输入源是字符串读取器，基本上不太可能碰到这种情况。
+	return 0, nil, nil
 }
 
 scanner := bufio.NewScanner(strings.NewReader(csvstring))
 scanner.Split(ScanCSV)
 
 for scanner.Scan() {
-  fmt.Println(scanner.Text())
+	fmt.Println(scanner.Text())
 }
 ```
 在 Github 中查看源文件 [comma-separated-string.go](https://github.com/kgrz/reading-files-in-go/blob/master/comma-separated-string.go#L10)
 
-#### Ruby 风格
+## Ruby 风格
 
 我们已经按照便利程度和功能一次增加的顺序列举了许多读取文件的方法。如果我们仅仅是想将一个文件读入缓冲区呢？标准库中的 `ioutil` 包包含了一些更简便的函数。
 
-#### 读取整个文件
+## 读取整个文件
 
 ```go
 bytes, err := ioutil.ReadFile("_config.yml")
 if err != nil {
-  log.Fatal(err)
+	log.Fatal(err)
 }
 
 fmt.Println("Bytes read: ", len(bytes))
@@ -427,29 +430,29 @@ fmt.Println("String read: ", string(bytes))
 
 这种方式看起来更像一些高级脚本语言的写法。
 
-#### 读取这个文件夹下的所有文件
+## 读取这个文件夹下的所有文件
 
 无需多言， 如果你有很大的文件，*不要*运行这个脚本 :D
 
 ```go
 filelist, err := ioutil.ReadDir(".")
 if err != nil {
-  log.Fatal(err)
+	log.Fatal(err)
 }
 
 for _, fileinfo := range filelist {
-  if fileinfo.Mode().IsRegular() {
-    bytes, err := ioutil.ReadFile(fileinfo.Name())
-    if err != nil {
-      log.Fatal(err)
-    }
-    fmt.Println("Bytes read: ", len(bytes))
-    fmt.Println("String read: ", string(bytes))
-  }
+	if fileinfo.Mode().IsRegular() {
+		bytes, err := ioutil.ReadFile(fileinfo.Name())
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("Bytes read: ", len(bytes))
+		fmt.Println("String read: ", string(bytes))
+	}
 }
 ```
 
-#### 更多的帮助方法
+## 更多的帮助方法
 
 在标准库中还有很多读取文件的函数（确切得说，读取器）。为了防止这篇本已冗长的文章变得更加冗长，我列举了一些我发现的函数：
 
@@ -459,18 +462,18 @@ for _, fileinfo := range filelist {
 4. `io.MultiReader` -> 一个非常有用的合并多个类 io 对象的基本工具（primitive）。你可以把多个文件当成是一个连续的数据块来处理，而无需处理
 在上一个文件结束后切换至另一个文件对象的复杂操作。
 
-#### 更新
+## 更新
 
 我尝试强调 “读取” 函数，我选择使用 error 函数来打印以及关闭文件：
 
 ```go
 func handleFn(file *os.File) func(error) {
-  return func(err error) {
-    if err != nil {
-      file.Close()
-      log.Fatal(err)
-    }
-  }
+	return func(err error) {
+		if err != nil {
+			file.Close()
+			log.Fatal(err)
+		}
+	}
 }
 
 // 在 main 函数内：
@@ -485,13 +488,12 @@ handle(err)
 
 我已经在更新了的例子中使用了 `defer`，并用 `return` 取代了 `os.Exit()`。
 
-
 ----------------
 
-via: [原文链接](http://kgrz.io/reading-files-in-go-an-overview.html#update)
+via: [原文链接](http://kgrz.io/reading-files-in-go-an-overview.html)
 
-作者：[作者](作者链接)
+作者：[Kashyap Kondamudi](http://github.com/kgrz)
 译者：[Killernova](https://github.com/killernova)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[无闻](https://github.com/Unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

@@ -1,4 +1,7 @@
+已发布：https://studygolang.com/articles/12907
+
 # Go 语言的优点，缺点和令人厌恶的设计
+
 这是关于 「[Go是一门设计糟糕的编程语言 （Go is not good)](https://github.com/ksimka/go-is-not-good)」 系列的另一篇文章。Go 确实有一些很棒的特性，所以我在这篇文章中展示了它的优点。但是总体而言，当超过 API 或者网络服务器（这也是它的设计所在）的范畴，用 Go 处理商业领域的逻辑时，我感觉它用起来麻烦而且痛苦。就算在网络编程方面，Go 的设计和实现也存在诸多问题，这使它看上去简单实际则暗藏危险。
 
 写这篇文章的动机是因为我最近重新开始用 Go 写一个业余项目。在以前的工作中我广泛的使用了 Go 为 SaaS 服务编写网络代理（包括 http 和原始的 tcp）。网络编程的部分是相当令人愉快的（我也正在探索这门语言），但随之而来的会计和账单部分则苦不堪言。因为我的业余项目只是一个简单的 API，我认为 Go 非常适合快速的完成这个任务。但是我们都知道，很多项目的增长会超过了预期的范围，所以我不得不写一些数据处理来计算统计数据，Go 的痛苦之处也随着而来。下面就是我对 Go 的困扰。
@@ -8,33 +11,33 @@
 这是一篇很长的文章，所以我列出了菜单来“激发你的食欲”：
 
 - [优点](#good)
-    - [Go 很容易学习](#go-easy-learn)
-    - [基于 goroutines 和 channels 的简单并发编程](#easy-concurrent)
-    - [丰富的标准库](#greate-standard-library)
-    - [Go 性能优越](#go-performant)
-    - [语言层面定义源代码的格式化](#defined-code-format)
-    - [标准化的测试框架](#test-framework)
-    - [Go 程序方便操作](#great-operations)
-    - [Defer 声明，避免忘记清理](#defer)
-    - [新类型](#new-type)
+	- [Go 很容易学习](#go-easy-learn)
+	- [基于 goroutines 和 channels 的简单并发编程](#easy-concurrent)
+	- [丰富的标准库](#greate-standard-library)
+	- [Go 性能优越](#go-performant)
+	- [语言层面定义源代码的格式化](#defined-code-format)
+	- [标准化的测试框架](#test-framework)
+	- [Go 程序方便操作](#great-operations)
+	- [Defer 声明，避免忘记清理](#defer)
+	- [新类型](#new-type)
 - [缺点](#bad)
-    - [Go 忽略了现代语言设计的进步](#ignore-advances)
-    - [接口是结构类型](#interfaces-types)
-    - [没有枚举](#no-enum)
-    - [:=  / var 两难选择](#dilemma)
-    - [零值会导致 panic](#zero-panic)
-    - [Go 没有异常，Emmmm 等等... 它有](#exceptions)！
+	- [Go 忽略了现代语言设计的进步](#ignore-advances)
+	- [接口是结构类型](#interfaces-types)
+	- [没有枚举](#no-enum)
+	- [:=  / var 两难选择](#dilemma)
+	- [零值会导致 panic](#zero-panic)
+	- [Go 没有异常，Emmmm 等等... 它有](#exceptions)！
 - [令人厌恶的点](#ugly)
-    - [依赖管理的噩梦](#dependency-nightmare)
-    - [易变性被语言硬编码](#mutability-hardcode)
-    - [切片（slice）陷阱](#slice-gotchas)
-    - [易变性和 channels: 竞争条件更容易发生](#race-conditions)
-    - [嘈杂的错误管理](#error-management)
-    - [Nil 接口值](#nil-interface-values)
-    - [Struct 字段标记：DSL 在字符串中的运行时间](#dsl)
-    - [没有泛型...至少没给你](#generic)
-    - [Go 在 slice 和 map 之外几乎没有别的数据结构](#no-structures)
-    - [go generate，还说得过去，但是...](#generate)
+	- [依赖管理的噩梦](#dependency-nightmare)
+	- [易变性被语言硬编码](#mutability-hardcode)
+	- [切片（slice）陷阱](#slice-gotchas)
+	- [易变性和 channels: 竞争条件更容易发生](#race-conditions)
+	- [嘈杂的错误管理](#error-management)
+	- [Nil 接口值](#nil-interface-values)
+	- [Struct 字段标记：DSL 在字符串中的运行时间](#dsl)
+	- [没有泛型...至少没给你](#generic)
+	- [Go 在 slice 和 map 之外几乎没有别的数据结构](#no-structures)
+	- [go generate，还说得过去，但是...](#generate)
 - [结论](#conclusion)
 - [几天后: Hacker News 第三名!](#hacker-news)
 
@@ -96,10 +99,10 @@ Go还具有一些内置的观察性功能，可以使用 [`expvar`](http://docsc
 ### <span id="defer">Defer 声明，防止忘记清理</span>
 defer 语句的目的类似于 Java 的 `finally`：在当前函数的末尾执行一些清理代码，而不管此函数如何退出。`defer` 的有趣之处在于它跟代码块没有联系，可以随时出现。这使得清理代码尽可能接近需要清理的代码:  
 
-```
+```go
 file, err := os.Open(fileName)
 if err != nil {
-    return
+	return
 }
 defer file.Close()
 
@@ -112,24 +115,24 @@ defer file.Close()
 
 Go 对新类型有一等支持，即类型为现有类型并赋予其独立身份，与原有类型不同。 与包装相反，新类型没有运行时间开销。 这允许编译器捕捉这种错误：
 
-```
+```go
 type UserId string // <-- new type
 type ProductId string
 
 func AddProduct(userId UserId, productId ProductId) {}
 
 func main() {
-    userId := UserId("some-user-id")
-    productId := ProductId("some-product-id")
+	userId := UserId("some-user-id")
+	productId := ProductId("some-product-id")
 
-    // 正确的顺序： 没有问题
-    AddProduct(userId, productId)
+	// 正确的顺序： 没有问题
+	AddProduct(userId, productId)
 
-    // 错误的顺序：将会编译错误 
-    AddProduct(productId, userId)
-    // 编译错误：
-    // AddProduct 不能用 productId(type ProductId) 作为 type UserId的参数
-    // Addproduct 不能用 userId(type UserId) 作为type ProfuctId 的参数 
+	// 错误的顺序：将会编译错误 
+	AddProduct(productId, userId)
+	// 编译错误：
+	// AddProduct 不能用 productId(type ProductId) 作为 type UserId的参数
+	// Addproduct 不能用 userId(type UserId) 作为type ProfuctId 的参数 
 }
 ```
 不幸的是，缺乏泛型使得使用新类型变得麻烦，因为为它们编写可重用代码需要从原始类型转换值。
@@ -180,7 +183,7 @@ Go 提供两种方法来声明一个变量，并为其赋值: `var x = "foo"` �
 
 使用 `var`
 
-```
+```go
 var x, err1 = SomeFunction()
 if (err1 != nil) {
   return nil
@@ -194,7 +197,7 @@ if (err2 != nil) {
 
 使用 `:=`:
 
-```
+```go
 x, err := SomeFunction()
 if (err != nil) {
   return nil
@@ -208,7 +211,7 @@ if (err != nil) {
 
 `:=` 的语法也很容易意外的影响一个变量。我已经不止一次吃这个亏了，因为 `:=` (声明和赋值)太接近了 `=` (赋值)，如下图所示:
 
-```
+```go
 foo := "bar"
 if someCondition {
   foo := "baz"
@@ -222,28 +225,28 @@ Go 没有构造函数。正因为如此，它坚持认为“零值”应该是�
 
 在实践中，许多类型在没有正确初始化的情况下不能做有用的事情。让我们看一下 `io.File` 对象，从 [实效 Go 编程](http://docscn.studygolang.com/doc/effective_go.html#%E5%A4%8D%E5%90%88%E5%AD%97%E9%9D%A2) 取出的一个例子:
 
-```
+```go
 type File struct {
-    *file // os specific
+	*file // os specific
 }
 
 func (f *File) Name() string {
-    return f.name
+	return f.name
 }
 
 func (f *File) Read(b []byte) (n int, err error) {
-    if err := f.checkValid("read"); err != nil {
-        return 0, err
-    }
-    n, e := f.read(b)
-    return n, f.wrapErr("read", e)
+	if err := f.checkValid("read"); err != nil {
+		return 0, err
+	}
+	n, e := f.read(b)
+	return n, f.wrapErr("read", e)
 }
 
 func (f *File) checkValid(op string) error {
-    if f == nil {
-        return ErrInvalid
-    }
-    return nil
+	if f == nil {
+		return ErrInvalid
+	}
+	return nil
 }
 ```
 
@@ -258,7 +261,7 @@ func (f *File) checkValid(op string) error {
 
 还有一个很严重的问题: `map` 的零值:你可以查询它，但是在它里面存储东西会导致 `panic`:
 
-```
+```go
 var m1 = map[string]string{} // 空值 map
 var m0 map[string]string     // 零值 map (nil)
 
@@ -279,7 +282,7 @@ m0["foo"] = "bar"  // panics!
 这篇博客文章「[为什么 Go 获得异常的方式是对的](https://dave.cheney.net/2012/01/18/why-go-gets-exceptions-right)」详细解释了为什么异常是糟糕的，为什么Go方法要求返回 `错误` 是更好的。我可以同意这一点，确实在使用异步编程或像 Java 流这样的函数风格时，异常是很难处理的（前者可以放到一边，由于 goroutines 的原因它在 Go
  中是没有必要的，而后者几乎是不可能）。这篇博文提到 `panic` 「总是对你的程序抛出致命错误，游戏结束」，这很不错。
 
-现在，「[Defer, panic and recover](https://blog.golang.org/defer-panic-and-recover)」在它之前，解释了如何从 `panic` 中恢复（通过实际捕获它们），并说「在真实的 panic 和 recover 的例子中，从 Go 标准库中看到 json 包」。
+在此之前，「[Defer, panic and recover](https://blog.golang.org/defer-panic-and-recover)」 解释了如何从 `panic` 中恢复（实际上是通过捕获它们），并提到在 go 标准库中 json 包可以看到 panic 和 recover 的真实使用。
 
 事实上, json 解码器有一个 [共同的错误处理函数](https://github.com/golang/go/blob/release-branch.go1.10/src/encoding/json/decode.go#L299) 去 panics,panic 在顶层 `unmarshal`函数中恢复（recover）,[检查panic类型](https://github.com/golang/go/blob/release-branch.go1.10/src/encoding/json/decode.go#L173) 并返回一个错误如果它是一个“本地 panic ”或其它错误再次触发的 panic（ 失去最初的 panic 的追溯）。
 
@@ -324,20 +327,21 @@ m0["foo"] = "bar"  // panics!
 然而，不出所料的，它不复制指针引用的值。而且由于内置的集合（map、slice 和 array）是引用和可变的，复制包含其中任意一项的 `struct` 只是复制了指向底层内层的指针。
 
 下面的例子说明了这个问题：
-```
+
+```go
 type S struct {
-    A string
-    B []string
+	A string
+	B []string
 }
 
 func main() {
-    x := S{"x-A", []string{"x-B"}}
-    y := x // 复制 struct
-    y.A = "y-A"
-    y.B[0] = "y-B"
+	x := S{"x-A", []string{"x-B"}}
+	y := x // 复制 struct
+	y.A = "y-A"
+	y.B[0] = "y-B"
 
-    fmt.Println(x, y)
-    // 输出 "{x-A [y-B]} {y-A [y-B]}" -- x 被修改!
+	fmt.Println(x, y)
+	// 输出 "{x-A [y-B]} {y-A [y-B]}" -- x 被修改!
 }
 ```
 
@@ -353,35 +357,35 @@ func main() {
 
 在下面的代码中，我们看到为子切片追加值的影响取决于原始切片的容量:
 
-```
+```go
 func doStuff(value []string) {
-    fmt.Printf("value=%v\n", value)
+	fmt.Printf("value=%v\n", value)
 
-    value2 := value[:]
-    value2 = append(value2, "b")
-    fmt.Printf("value=%v, value2=%v\n", value, value2)
+	value2 := value[:]
+	value2 = append(value2, "b")
+	fmt.Printf("value=%v, value2=%v\n", value, value2)
 
-    value2[0] = "z"
-    fmt.Printf("value=%v, value2=%v\n", value, value2)
+	value2[0] = "z"
+	fmt.Printf("value=%v, value2=%v\n", value, value2)
 }
 
 func main() {
-    slice1 := []string{"a"} // 长度 1, 容量 1
+	slice1 := []string{"a"} // 长度 1, 容量 1
 
-    doStuff(slice1)
-    // Output:
-    // value=[a] -- ok
-    // value=[a], value2=[a b] -- ok: value 未改变, value2 被更新
-    // value=[a], value2=[z b] -- ok: value 未改变, value2 被更新
+	doStuff(slice1)
+	// Output:
+	// value=[a] -- ok
+	// value=[a], value2=[a b] -- ok: value 未改变, value2 被更新
+	// value=[a], value2=[z b] -- ok: value 未改变, value2 被更新
 
-    slice10 := make([]string, 1, 10) // 长度 1, 容量 10
-    slice10[0] = "a"
+	slice10 := make([]string, 1, 10) // 长度 1, 容量 10
+	slice10[0] = "a"
 
-    doStuff(slice10)
-    // Output:
-    // value=[a] -- ok
-    // value=[a], value2=[a b] -- ok: value 未改变, value2 被更新
-    // value=[z], value2=[z b] -- WTF?!? value 改变了???
+	doStuff(slice10)
+	// Output:
+	// value=[a] -- ok
+	// value=[a], value2=[a b] -- ok: value 未改变, value2 被更新
+	// value=[z], value2=[z b] -- WTF?!? value 改变了???
 }
 ```
 
@@ -398,10 +402,10 @@ Go 并发性是 [通过 channels 建立在CSP](https://golang.org/doc/faq#csp) �
 
 你可以很快学会 Go 的错误处理模式，重复到令人作呕:
 
-```
+```go
 someData, err := SomeFunction()
 if err != nil {
-    return err;
+	return err;
 }
 ```
 
@@ -411,42 +415,41 @@ if err != nil {
 
 这里有几个问题，因为一个错误的结果可能有名无实，例如当从无所不在的 io.Reader读取时：
 
-```
+```go
 len, err := reader.Read(bytes)
 if err != nil {
-    if err == io.EOF {
-        // 一切正常，文件结尾
-    } else {
-        return err
-    }
+	if err == io.EOF {
+		// 一切正常，文件结尾
+	} else {
+		return err
+	}
 }
 ```
 
 在“Error has values”中，Rob Pike 提出了一些减少错误处理冗余的策略。我发现它们实际上是危险的创可贴:
 
-
-```
+```go
 type errWriter struct {
-    w   io.Writer
-    err error
+	w   io.Writer
+	err error
 }
 
 func (ew *errWriter) write(buf []byte) {
-    if ew.err != nil {
-        return // 当已经出错时，什么都不写入
-    }
-    _, ew.err = ew.w.Write(buf)
+	if ew.err != nil {
+		return // 当已经出错时，什么都不写入
+	}
+	_, ew.err = ew.w.Write(buf)
 }
 
 func doIt(fd io.Writer) {
-    ew := &errWriter{w: fd}
-    ew.write(p0[a:b])
-    ew.write(p1[c:d])
-    ew.write(p2[e:f])
-    // 等等
-    if ew.err != nil {
-        return ew.err
-    }
+	ew := &errWriter{w: fd}
+	ew.write(p0[a:b])
+	ew.write(p1[c:d])
+	ew.write(p2[e:f])
+	// 等等
+	if ew.err != nil {
+		return ew.err
+	}
 }
 ```
 
@@ -461,10 +464,10 @@ Rust 有类似的问题:没有异常(真的没有，跟 Go
 
 这是在看到 [redditor jmickeyd](https://www.reddit.com/r/programming/comments/8bj4yc/go_the_good_the_bad_and_the_ugly/dx82cgz/) 展示了 nil 和接口的怪异表现后的更新，这绝对称得上是丑陋的。我稍微扩展了一下:
 
-```
+```go
 type Explodes interface {
-    Bang()
-    Boom()
+	Bang()
+	Boom()
 }
 
 // Type Bomb implements Explodes
@@ -473,16 +476,16 @@ func (*Bomb) Bang() {}
 func (Bomb) Boom() {}
 
 func main() {
-    var bomb *Bomb = nil
-    var explodes Explodes = bomb
-    println(bomb, explodes) // '0x0 (0x10a7060,0x0)'
-    if explodes != nil {
-        println("Not nil!") // 'Not nil!' 我们为什么会走到这里?!?!
-        explodes.Bang()     // 运行正常
-        explodes.Boom()     // panic: value method main.Bomb.Boom called using nil *Bomb pointer
-    } else {
-        println("nil!")     // 为什么没有在这里结束？
-    }
+	var bomb *Bomb = nil
+	var explodes Explodes = bomb
+	println(bomb, explodes) // '0x0 (0x10a7060,0x0)'
+	if explodes != nil {
+		println("Not nil!") // 'Not nil!' 我们为什么会走到这里?!?!
+		explodes.Bang()     // 运行正常
+		explodes.Boom()     // panic: value method main.Bomb.Boom called using nil *Bomb pointer
+	} else {
+		println("nil!")     // 为什么没有在这里结束？
+	}
 }
 ```
 上面的代码验证了 `explodes` 不是nil，但是代码在 `Boom` 中 panics，在 `Bang` 中没有。这是为什么呢?解释在 `println` 这一行:`bomb` 指针是 `0x0`，它实际上是 `nil`，但是 `explodes` 是非nil `(0x10a7060,0x0)`。
@@ -495,13 +498,13 @@ func main() {
 
 那么，我们应该如何安全地编写测试呢?我们必须检查接口值,如果是非 nil，检查接口对象指向的值…使用反射!
 
-```
+```go
 if explodes != nil && !reflect.ValueOf(explodes).IsNil() {
-    println("Not nil!") // we no more end up here
-    explodes.Bang()
-    explodes.Boom()
+	println("Not nil!") // we no more end up here
+	explodes.Bang()
+	explodes.Boom()
 } else {
-    println("nil!")     // 'nil' -- all good!
+	println("nil!")     // 'nil' -- all good!
 }
 ```
 
@@ -513,11 +516,11 @@ if explodes != nil && !reflect.ValueOf(explodes).IsNil() {
 
 如果您在 Go 中使用了 JSON，您肯定遇到过类似的情况:
 
-```
+```go
 type User struct {
-    Id string    `json:"id"`
-    Email string `json:"email"`
-    Name string  `json:"name,omitempty"`
+	Id string    `json:"id"`
+	Email string `json:"email"`
+	Name string  `json:"name,omitempty"`
 }
 ```
 
@@ -529,12 +532,12 @@ type User struct {
 
 当您使用多个库时，情况会变得很糟糕:这里有一个从协议缓冲区的 [Go文档](https://godoc.org/github.com/golang/protobuf/proto) 中取出的示例:
 
-```
+```go
 type Test struct {
-    Label         *string             `protobuf:"bytes,1,req,name=label" json:"label,omitempty"`
-    Type          *int32              `protobuf:"varint,2,opt,name=type,def=77" json:"type,omitempty"`
-    Reps          []int64             `protobuf:"varint,3,rep,name=reps" json:"reps,omitempty"`
-    Optionalgroup *Test_OptionalGroup `protobuf:"group,4,opt,name=OptionalGroup" json:"optionalgroup,omitempty"`
+	Label         *string             `protobuf:"bytes,1,req,name=label" json:"label,omitempty"`
+	Type          *int32              `protobuf:"varint,2,opt,name=type,def=77" json:"type,omitempty"`
+	Reps          []int64             `protobuf:"varint,3,rep,name=reps" json:"reps,omitempty"`
+	Optionalgroup *Test_OptionalGroup `protobuf:"group,4,opt,name=OptionalGroup" json:"optionalgroup,omitempty"`
 }
 ```
 附注:为什么这些标签在使用 JSON 时如此常见？因为在 Go 公共字段中，必须使用大写字母，或者至少以大写字母开头，而在 JSON 中命名字段的常见约定是小写的 camelcase 或 snake_case。因此需要进行冗长的标记。
@@ -558,51 +561,51 @@ Go 生态系统没有很多数据结构，它们可以从内置的 slices 和 ma
 
 让我们来看一个 [snc.Map](`https://medium.com/@deckarep/the-new-kid-in-town-gos-sync-map-de24a6bf7c2c`) 的例子，它是一个具有较低线程争用的并发映射，而不是使用互斥锁来保护常规映射：:
 
-```
+```go
 type MetricValue struct {
-    Value float64
-    Time time.Time
+	Value float64
+	Time time.Time
 }
 
 func main() {
-    metric := MetricValue{
-        Value: 1.0,
-        Time: time.Now(),
-    }
+	metric := MetricValue{
+		Value: 1.0,
+		Time: time.Now(),
+	}
 
-    // Store a value
+	// Store a value
 
-    m0 := map[string]MetricValue{}
-    m0["foo"] = metric
+	m0 := map[string]MetricValue{}
+	m0["foo"] = metric
 
-    m1 := sync.Map{}
-    m1.Store("foo", metric) // not type-checked
+	m1 := sync.Map{}
+	m1.Store("foo", metric) // not type-checked
 
-    // Load a value and print its square
+	// Load a value and print its square
 
-    foo0 := m0["foo"].Value // rely on zero-value hack if not present
-    fmt.Printf("Foo square = %f\n", math.Pow(foo0, 2))
+	foo0 := m0["foo"].Value // rely on zero-value hack if not present
+	fmt.Printf("Foo square = %f\n", math.Pow(foo0, 2))
 
-    foo1 := 0.0
-    if x, ok := m1.Load("foo"); ok { // have to make sure it's present (not bad, actually)
-        foo1 = x.(MetricValue).Value // cast interface{} value
-    }
-    fmt.Printf("Foo square = %f\n", math.Pow(foo1, 2))
+	foo1 := 0.0
+	if x, ok := m1.Load("foo"); ok { // have to make sure it's present (not bad, actually)
+		foo1 = x.(MetricValue).Value // cast interface{} value
+	}
+	fmt.Printf("Foo square = %f\n", math.Pow(foo1, 2))
 
-    // Sum all elements
+	// Sum all elements
 
-    sum0 := 0.0
-    for _, v := range m0 { // built-in range iteration on map
-        sum0 += v.Value
-    }
-    fmt.Printf("Sum = %f\n", sum0)
+	sum0 := 0.0
+	for _, v := range m0 { // built-in range iteration on map
+		sum0 += v.Value
+	}
+	fmt.Printf("Sum = %f\n", sum0)
 
-    sum1 := 0.0
-    m1.Range(func(key, value interface{}) bool { // no 'range' for you! Provide a function
-        sum1 += value.(MetricValue).Value        // with untyped interface{} parameters
-        return true // continue iteration
-    })
-    fmt.Printf("Sum = %f\n", sum1)
+	sum1 := 0.0
+	m1.Range(func(key, value interface{}) bool { // no 'range' for you! Provide a function
+		sum1 += value.(MetricValue).Value        // with untyped interface{} parameters
+		return true // continue iteration
+	})
+	fmt.Printf("Sum = %f\n", sum1)
 }
 ```
 
@@ -615,12 +618,12 @@ func main() {
 
 当我们想要编写可重用的算法时，内置结构和 Go 代码之间的二元性在细节方面是痛苦的。这是标准库的 [排序扩展包](https://golang.org/pkg/sort/) 中的一个例子:
 
-```
+```go
 import "sort"
 
 type Person struct {
-    Name string
-    Age  int
+	Name string
+	Age  int
 }
 
 // ByAge implements sort.Interface for []Person based on the Age field.
@@ -631,7 +634,7 @@ func (a ByAge) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a ByAge) Less(i, j int) bool { return a[i].Age < a[j].Age }
 
 func SortPeople(people []Person) {
-    sort.Sort(ByAge(people))
+	sort.Sort(ByAge(people))
 }
 ```
 
@@ -694,8 +697,8 @@ Swift 也是这个家庭的一份子，或者是 C 和 C++ 的最新替代品。
 via: https://bluxte.net/musings/2018/04/10/go-good-bad-ugly/
 
 作者：[Sylvain Wallez](https://bluxte.net/about/)
-译者：[译者ID](https://github.com/Donng)
-校对：[校对者ID](https://github.com/校对者ID)
+译者：[Donng](https://github.com/Donng)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 

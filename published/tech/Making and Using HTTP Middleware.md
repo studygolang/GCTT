@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12901
+
 # 创建和使用 HTTP 中间层（Making and Using HTTP Middleware）
 
 在构建 Web 应用时，可能需要为许多（甚至全部）HTTP 请求运行一些公共的函数。你可能需要对每个请求进行记录，对每个响应进行压缩，或者在执行一些重要的处理之前检查一下缓存。
@@ -354,6 +356,6 @@ via: http://www.alexedwards.net/blog/making-and-using-middleware
 
 作者：[TIAGO KATCIPIS](https://katcipis.github.io/)
 译者：[gogeof](https://github.com/gogeof)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
