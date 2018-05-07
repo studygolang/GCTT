@@ -1,10 +1,12 @@
-# 在Golang中尝试简洁架构
+已发布：https://studygolang.com/articles/12909
+
+# 在 Golang 中尝试简洁架构
 >（独立性，可测试性的和简洁性）
 
 在阅读了 Bob 叔叔的 Clean Architecture Concept 之后，我尝试在 Golang 中实现它。我们公司也有使用相似的架构，[Kurio - App Berita Indonesia](https://kurio.co.id/)， 但是结构有点不同。并不是太不同， 相同的概念，但是文件目录结构不同。
 
 你可以在这里找到一个示例项目[https://github.com/bxcodec/go-clean-arch](https://github.com/bxcodec/go-clean-arch)，这是一个 CRUD 管理示例文章
-![](https://cdn-images-1.medium.com/max/1600/1*CyteJRpIHC-DFE23UtlZfQ.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/clean-arthitecture/1_CyteJRpIHC-DFE23UtlZfQ.png)
 
 * 免责声明：
 
@@ -27,14 +29,14 @@
 
 所以， 基于这些约束，每一层都必须是独立的和可测试的。
 
-如Bob叔叔的架构有4层：
+如 Bob 叔叔的架构有 4 层：
 
 * 实体层（ Entities ）
 * 用例层（ Usecase ）
 * 控制层（ Controller ）
 * 框架和驱动层（ Framework & Driver ）
 
-在我的项目里，我也使用了4层架构：
+在我的项目里，我也使用了 4 层架构：
 
 * 模型层（ Models ）
 * 仓库层（ Repository )
@@ -341,7 +343,7 @@ func main() {
 ## 结论
 
 总之，如果画在一张图上，就如下图所示：
-![](https://cdn-images-1.medium.com/max/1600/1*GQdkAd7IwIwOWW-WLG5ikQ.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/clean-arthitecture/1_GQdkAd7IwIwOWW-WLG5ikQ.png)
 
 * 在这里使用的每一个库都可以由你自己修改。因为简洁架构的重点在于：你使用的库不重要， 关键是你的架构是简洁的，可测试的并且是独立的。
 
@@ -371,11 +373,12 @@ func main() {
 
 如果你任何问题，或者需要更多的解释，或者我在这里没有解释清楚的。你可以通过我的[LinkedIn](https://www.linkedin.com/in/imantumorang/)或者[email](iman.tumorang@gmail.com)联系我。谢谢。
 
+---
+
 链接：https://hackernoon.com/golang-clean-archithecture-efd6d7c43047
 
 作者：[Iman Tumorang](https://hackernoon.com/@imantumorang)
 译者：[fredvence](https://github.com/fredvence)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，
-[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
