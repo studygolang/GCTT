@@ -72,7 +72,7 @@ func Server(h http.Handler, servername string) http.Handler {
 ```
 
 
-## 最后写入
+## 使用最后写入的头部信息
 
 
 上面写入响应头信息存在的问题是：如果内部处理程序也设置了服务器头部信息，你设置的响应头信息将被覆盖。
