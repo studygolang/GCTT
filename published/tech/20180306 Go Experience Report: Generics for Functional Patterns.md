@@ -1,8 +1,10 @@
+已发布：https://studygolang.com/articles/12930
+
 # Go 实验报告：函数式编程之泛型
 
 在 2017 年的年中，我在 GopherCon 上发表了《Go 的函数式编程》的演讲。我提出了一些函数式编程的概念，Gophers 使用它，可以提高编程效率，代码更加简洁。
 
-![](https://github.com/studygolang/gctt-images/raw/master/go-experience-report-generics-for-functional-patterns/functional-programming-in-go.jpeg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-experience-report-generics-for-functional-patterns/functional-programming-in-go.jpeg)
 
 > 函数式编程在 Go 是可以实现，只是不明显
 
@@ -145,6 +147,6 @@ via: https://medium.com/go-in-5-minutes/go-experience-report-generics-for-functi
 
 作者：[Aaron Schlesinger](https://medium.com/@arschles)
 译者：[lightfish-zhang](https://github.com/lightfish-zhang)
-校对：[xxx](https://github.com/xxx)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
