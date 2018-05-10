@@ -1,5 +1,6 @@
-# Go 语言中 append 导致内存不足
+已发布：https://studygolang.com/articles/12929
 
+# Go 语言中 append 导致内存不足
 
 这是一篇简短的笔记，关于你或许会遇上的 Go 语言的内存不足的问题。
 
@@ -22,7 +23,7 @@ numbers := []User{ User{ Name: "Thuc"}, User{Name: "Mr Vu"} }
 
 当你创建一个 slice, 将会定义三个重要的信息，包含这个数组的指针 pointer，堆栈的已使用长度 length ，以及容量 capacity （堆栈的最大长度）
 
-![](https://github.com/studygolang/gctt-images/raw/master/out-of-memory-with-append-in-golang/slice_memory.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/out-of-memory-with-append-in-golang/slice_memory.png)
 
 > 长度是切片引用的元素的数量
 
@@ -108,6 +109,6 @@ via: https://blog.siliconstraits.com/out-of-memory-with-append-in-golang-956e7eb
 
 作者：[Thuc Le](https://blog.siliconstraits.com/@thuc)
 译者：[lightfish-zhang](https://github.com/lightfish-zhang)
-校对：[xxx](https://github.com/xxx)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
