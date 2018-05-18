@@ -24,8 +24,7 @@ import (
 func main() {
 	http.HandleFunc("/home", func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, "Hello! Your request was processed.")
-	},
-	)
+	})
 	http.ListenAndServe(":8000", nil)
 }
 ```
@@ -43,8 +42,7 @@ func main() {
 
 	http.HandleFunc("/home", func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, "Hello! Your request was processed.")
-	},
-	)
+	})
 
 	log.Print("The service is ready to listen and serve.")
 	log.Fatal(http.ListenAndServe(":8000", nil))
