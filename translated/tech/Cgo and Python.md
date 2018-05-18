@@ -272,8 +272,8 @@ go func() {
 via: https://www.datadoghq.com/blog/engineering/cgo-and-python/
 
 作者：[Massimiliano Pippi](https://www.datadoghq.com/blog/engineering/cgo-and-python/)
-译者：[译者ID](https://github.com/sunzhaohao
-校对：[校对者ID](https://github.com/rxcai)
+译者：[sunzhaohao](https://github.com/sunzhaoha
+校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 ```
