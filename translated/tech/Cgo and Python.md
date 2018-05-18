@@ -18,7 +18,7 @@
 
 在本文中我们会介绍一些简单的代码示例，并且在与 Python 交互的时候，我们会着力于保证 Go 代码仍符合语言习惯。但在开始之前我们需要先标记一处小障碍：内嵌的 API 是 C 但我们的主应用却是 Go ，这又是怎么能完成的呢？
 
-![Introducing cgo]( )
+![Introducing cgo](https://datadog-prod.imgix.net/img/blog/engineering/cgo-and-python/cgo_python_divider_1.png?auto=format&fit=max&w=847)
 
 ## Cgo 简介
 
@@ -45,7 +45,7 @@ func main() {
 
 既然我们已经知道了 Cgo 可以帮助我们做哪些工作，接下来就来看看我们如何借助该机制来运行 Python 代码。
 
-![Embedding CPython]( )
+![Embedding CPython](https://datadog-prod.imgix.net/img/blog/engineering/cgo-and-python/cgo_python_divider_2.png?auto=format&fit=max&w=847)
 
 ## 内嵌 CPython : 入门
 
@@ -131,11 +131,11 @@ func main() {
 $ go build main.go && PYTHONPATH=. ./main hello, world!
 ```
 
-![The dreadful Global Interpreter Lock]( )
+![The dreadful Global Interpreter Lock](https://datadog-prod.imgix.net/img/blog/engineering/cgo-and-python/cgo_python_divider_3.png?auto=format&fit=max&w=847)
 
 ## 糟糕的全局解释器锁（ GIL ）
 
- 为了内嵌 Python 引入 Cgo 是一个妥协：build 过程会变慢，垃圾回收器不会帮我们管理外部系统使用的内存，并且交叉编译也会有难度。是否为一个特定项目引入可能会引发争论，但有一点我认为是无需讨论的： Go 并发模型。如果我们不能在一个 goroutine 里面运行 Python，这一切就毫无意义。
+为了内嵌 Python 引入 Cgo 是一个妥协：build 过程会变慢，垃圾回收器不会帮我们管理外部系统使用的内存，并且交叉编译也会有难度。是否为一个特定项目引入可能会引发争论，但有一点我认为是无需讨论的： Go 并发模型。如果我们不能在一个 goroutine 里面运行 Python，这一切就毫无意义。
 
 在用 Python 和 cgo 实现并发之前 ，有一点我们需要了解：就是全局解释器锁，简称 GIL 。GIL 是一个被语言解释器（ CPython 只是一种）广泛采用的机制，目的是防止同一时刻有超过一个以上的线程运行。这意味着被 CPython 执行的 Python 程序不可能在同一个进程中并行。并发倒是仍然有可能，锁是在速度，安全性和实现难度上的一个较好权衡。那么它为什么会在内嵌的时候引出问题？
 
@@ -213,7 +213,7 @@ func main() {
 
 在 goroutine 中，我们则是在一个 Go 上下文环境中运行，并且我们不需要显式的创建和删除状态， `PyGILState_Ensure()` 和 `PyGILState_Release()` 负责完成这些工作。
 
-![Unleash the Gopher]( )
+![Unleash the Gopher](https://datadog-prod.imgix.net/img/blog/engineering/cgo-and-python/cgo_python_divider_4.png?auto=format&fit=max&w=600&dpr=2)
 
 ## 解放 Go 爱好者
 
@@ -272,7 +272,7 @@ go func() {
 via: https://www.datadoghq.com/blog/engineering/cgo-and-python/
 
 作者：[Massimiliano Pippi](https://www.datadoghq.com/blog/engineering/cgo-and-python/)
-译者：[译者ID](https://github.com/sunzhaohao)
+译者：[译者ID](https://github.com/sunzhaohao
 校对：[校对者ID](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
