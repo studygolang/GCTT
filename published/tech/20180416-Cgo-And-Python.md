@@ -1,10 +1,8 @@
-## Cgo 和 Python
+已发布：https://studygolang.com/articles/13019
 
-​																	Massimiliano Pippi
+# Cgo 和 Python
 
 如果你研究过 [新近的 Datadog Agent](https://github.com/DataDog/datadog-agent/) ，你可能会注意到大部分代码库是用 Go 语言编写，而我们用来收集指标的检查工具仍然是用的 Python 。这是有可能的，因为  Datadog Agent（一个标准的 Go 二进制程序），内嵌了一个 CPython 解释器，在需要运行 Python 代码的时候就会调用这个解释器。通过使用一个抽象层可以让整个过程是透明的，由此，你尽可以编写惯用的 Go 代码，即使底层同时运行着 Python 代码。  
-
-​      
 
 想要在 Go 应用中嵌入 Python 的原因有很多种：
 
@@ -18,7 +16,7 @@
 
 在本文中我们会介绍一些简单的代码示例，并且在与 Python 交互的时候，我们会着力于保证 Go 代码仍符合语言习惯。但在开始之前我们需要先标记一处小障碍：内嵌的 API 是 C 但我们的主应用却是 Go ，这又是怎么能完成的呢？
 
-![Introducing cgo](https://datadog-prod.imgix.net/img/blog/engineering/cgo-and-python/cgo_python_divider_1.png?auto=format&fit=max&w=847)
+![Introducing cgo](https://raw.githubusercontent.com/studygolang/gctt-images/master/cgo-python/cgo_python_divider_1.png)
 
 ## Cgo 简介
 
@@ -33,7 +31,7 @@ import "C"
 import "fmt" 
 
 func main() { 
-  fmt.Println("Max float value of float is", C.FLT_MAX)
+	fmt.Println("Max float value of float is", C.FLT_MAX)
 }
  ```
 
@@ -45,7 +43,7 @@ func main() {
 
 既然我们已经知道了 Cgo 可以帮助我们做哪些工作，接下来就来看看我们如何借助该机制来运行 Python 代码。
 
-![Embedding CPython](https://datadog-prod.imgix.net/img/blog/engineering/cgo-and-python/cgo_python_divider_2.png?auto=format&fit=max&w=847)
+![Embedding CPython](https://raw.githubusercontent.com/studygolang/gctt-images/master/cgo-python/cgo_python_divider_2.png)
 
 ## 内嵌 CPython : 入门
 
@@ -58,9 +56,9 @@ package main
 import "C"
 import "fmt"
 func main() {
-  C.Py_Initialize()
-  fmt.Println(C.GoString(C.Py_GetVersion())) 
-  C.Py_Finalize() 
+	C.Py_Initialize()
+	fmt.Println(C.GoString(C.Py_GetVersion())) 
+	C.Py_Finalize() 
 }
 ```
 
@@ -80,12 +78,12 @@ print(sys.version)
 ```go
 package main 
 import ( 
-  python "github.com/sbinet/go-python" 
+	python "github.com/sbinet/go-python" 
 ) 
 func main() { 
-  python.Initialize()
-  python.PyRun_SimpleString("print 'hello, world!'") 
-  python.Finalize()
+	python.Initialize()
+	python.PyRun_SimpleString("print 'hello, world!'") 
+	python.Finalize()
 }
 ```
 
@@ -96,8 +94,8 @@ func main() {
 ```python
 # foo.py
 def hello(): 
-    """ Print hello world for fun and profit. """
-    print "hello, world!"
+		""" Print hello world for fun and profit. """
+		print "hello, world!"
 ```
 
 Go 代码稍微复杂点，但依然容易阅读：
@@ -107,19 +105,19 @@ Go 代码稍微复杂点，但依然容易阅读：
 package main
 import "github.com/sbinet/go-python"
 func main() { 
-  python.Initialize() 
-  defer python.Finalize() 
-  fooModule := python.PyImport_ImportModule("foo")
-  if fooModule == nil { 
-    panic("Error importing module")
-  } 
-  helloFunc := fooModule.GetAttrString("hello") 
-  if helloFunc == nil { 
-    panic("Error importing function")
-  } 
-  // The Python function takes no params but when using the C api 
-  // we're required to send (empty) *args and **kwargs anyways. 
-  helloFunc.Call(python.PyTuple_New(0), python.PyDict_New()) 
+	python.Initialize() 
+	defer python.Finalize() 
+	fooModule := python.PyImport_ImportModule("foo")
+	if fooModule == nil { 
+		panic("Error importing module")
+	} 
+	helloFunc := fooModule.GetAttrString("hello") 
+	if helloFunc == nil { 
+		panic("Error importing function")
+	} 
+	// The Python function takes no params but when using the C api 
+	// we're required to send (empty) *args and **kwargs anyways. 
+	helloFunc.Call(python.PyTuple_New(0), python.PyDict_New()) 
 }
 ```
 
@@ -131,7 +129,7 @@ func main() {
 $ go build main.go && PYTHONPATH=. ./main hello, world!
 ```
 
-![The dreadful Global Interpreter Lock](https://datadog-prod.imgix.net/img/blog/engineering/cgo-and-python/cgo_python_divider_3.png?auto=format&fit=max&w=847)
+![The dreadful Global Interpreter Lock](https://raw.githubusercontent.com/studygolang/gctt-images/master/cgo-python/cgo_python_divider_3.png)
 
 ## 糟糕的全局解释器锁（ GIL ）
 
@@ -164,46 +162,44 @@ def print_even(limit=10):
 ```go
 package main 
 import ( "sync"
-        "github.com/sbinet/go-python"
-       ) 
+				"github.com/sbinet/go-python"
+			 ) 
 func main() { 
-  //  下面代码会通过调用PyEval_InitThreads()显式调用 GIL ，
-  //  无需等待解释器去执行 python.Initialize() 
-  var wg sync.WaitGroup
-  wg.Add(2) 
-  fooModule := python.PyImport_ImportModule("foo") 
-  odds := fooModule.GetAttrString("print_odds") 
-  even := fooModule.GetAttrString("print_even")
-  // Initialize() 已经锁定 GIL ，但这时我们并不需要它。
-  // 我们保存当前状态和释放锁，从而让 goroutine 能获取它
-  state := python.PyEval_SaveThread()
-  go func() { 
-    _gstate := python.PyGILState_Ensure() 
-    odds.Call(python.PyTuple_New(0), python.PyDict_New())           
-    python.PyGILState_Release(_gstate)
-    wg.Done()
-  }()
-  go func() {
-    _gstate := python.PyGILState_Ensure()
-    even.Call(python.PyTuple_New(0), python.PyDict_New())
-    python.PyGILState_Release(_gstate)
-    wg.Done() 
-  }()
-  wg.Wait() 
-  // 在这里我们知道程序不会再需要运行 Python 代码了，
-  // 我们可以恢复状态和 GIL 锁，执行退出前的最后操作。
-  python.PyEval_RestoreThread(state)
-  python.Finalize()
+	//  下面代码会通过调用PyEval_InitThreads()显式调用 GIL ，
+	//  无需等待解释器去执行 python.Initialize() 
+	var wg sync.WaitGroup
+	wg.Add(2) 
+	fooModule := python.PyImport_ImportModule("foo") 
+	odds := fooModule.GetAttrString("print_odds") 
+	even := fooModule.GetAttrString("print_even")
+	// Initialize() 已经锁定 GIL ，但这时我们并不需要它。
+	// 我们保存当前状态和释放锁，从而让 goroutine 能获取它
+	state := python.PyEval_SaveThread()
+	go func() { 
+		_gstate := python.PyGILState_Ensure() 
+		odds.Call(python.PyTuple_New(0), python.PyDict_New())           
+		python.PyGILState_Release(_gstate)
+		wg.Done()
+	}()
+	go func() {
+		_gstate := python.PyGILState_Ensure()
+		even.Call(python.PyTuple_New(0), python.PyDict_New())
+		python.PyGILState_Release(_gstate)
+		wg.Done() 
+	}()
+	wg.Wait() 
+	// 在这里我们知道程序不会再需要运行 Python 代码了，
+	// 我们可以恢复状态和 GIL 锁，执行退出前的最后操作。
+	python.PyEval_RestoreThread(state)
+	python.Finalize()
 }
 ```
 
 在阅读示例的时候你可能注意到了一个模式，这个模式将会是我们运行内嵌 Python 的准则
 
-1.保存状态并锁住 GIL。
-
-2.执行 Python 。
-
-3.恢复状态，解锁 GIL。
+1. 保存状态并锁住 GIL。
+2. 执行 Python 。
+3. 恢复状态，解锁 GIL。
 
 代码可以说得上简洁明了，但仍有一处细节需要指出：注意，即使是遵循 GIL 模式，在一个例子里面我们运行 GIL 时是通过调用`PyEval_SaveThread()`  和  `PyEval_RestoreThread()` ,在另一个例子里（请看 goroutines 里面的代码）我们是通过调用  `PyGILState_Ensure()` 和 `PyGILState_Release()` 。
 
@@ -213,7 +209,7 @@ func main() {
 
 在 goroutine 中，我们则是在一个 Go 上下文环境中运行，并且我们不需要显式的创建和删除状态， `PyGILState_Ensure()` 和 `PyGILState_Release()` 负责完成这些工作。
 
-![Unleash the Gopher](https://datadog-prod.imgix.net/img/blog/engineering/cgo-and-python/cgo_python_divider_4.png?auto=format&fit=max&w=600&dpr=2)
+![Unleash the Gopher](https://raw.githubusercontent.com/studygolang/gctt-images/master/cgo-python/cgo_python_divider_4.png)
 
 ## 解放 Go 爱好者
 
@@ -224,11 +220,8 @@ func main() {
 考虑到这些，让我们来看看当一个正在运行 Python 代码的 goroutine 被移动到一个新的线程时， goroutine 都会发生什么：
 
 1. 我们的 goroutine 启动后，执行一个 C 函数调用，然后挂起。GIL 被锁住。
-
 2. 当 C 函数调用返回，当前线程试图唤醒该 goroutine，但它失败了。
-
 3. 当前线程告诉 Go 运行时去查找另一个线程来唤醒我们的 goroutine。
-
 4. Go 调度器找到一个可用的线程，并且 goroutine 也被唤醒。
 5. goroutine 基本完成，并且尝试在返回前解锁 GIL。
 6. 当前状态存储的线程 ID 是初始线程的ID，和当前线程的 ID 不一致。
@@ -238,17 +231,17 @@ func main() {
 
 ```go
 go func() { 
-    runtime.LockOSThread()
-    _gstate := python.PyGILState_Ensure()
-    odds.Call(python.PyTuple_New(0), python.PyDict_New()) 
-    python.PyGILState_Release(_gstate) 
-    wg.Done()
+	runtime.LockOSThread()
+	_gstate := python.PyGILState_Ensure()
+	odds.Call(python.PyTuple_New(0), python.PyDict_New()) 
+	python.PyGILState_Release(_gstate) 
+	wg.Done()
 }()
 ```
 
 这将会干扰调度器并可能带来一些间接损耗，但为了避免随机的 panic 我们愿意付出这种代价。
 
-### 结论
+## 结论
 
 顾及到内嵌 Python ， Datadog  Agent 做出了以下取舍：
 
@@ -266,7 +259,6 @@ go func() {
 
 你是一个掌握并且喜欢混合不同语言编程的爱好者吗？你热爱学习语言的内部工作机制来保证你的代码更加健壮吗？ [请加入 Datadog](https://www.datadoghq.com/careers/ ) !
 
-```
 ----------------
 
 via: https://www.datadoghq.com/blog/engineering/cgo-and-python/
@@ -276,17 +268,3 @@ via: https://www.datadoghq.com/blog/engineering/cgo-and-python/
 校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
