@@ -501,3 +501,14 @@ func TestSumAllTails(t *testing.T) {
 
 另一种练习 Go 的方式是在 Go 的在线编译器中写代码。几乎所有东西都可以写在上面，而且如果你想问问题，它可以让你的代码很容易分享给其他人。
 
+```
+----------------
+
+via:https://dev.to/quii/learn-go-by-writing-tests-arrays-and-slices-ahm
+
+作者：[Chris James](https://dev.to/quii)
+译者：[saberuster](https://github.com/saberuster)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
+```
