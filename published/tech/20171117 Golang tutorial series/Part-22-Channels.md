@@ -173,7 +173,7 @@ func main() {
 ```
 squares = (1 * 1) + (2 * 2) + (3 * 3) 
 cubes = (1 * 1 * 1) + (2 * 2 * 2) + (3 * 3 * 3) 
-output = squares + cubes = 49
+output = squares + cubes = 50
 ```
 
 我们会这样去构建程序：在一个单独的 Go 协程计算平方和，而在另一个协程计算立方和，最后在 Go 主协程把平方和与立方和相加。  
