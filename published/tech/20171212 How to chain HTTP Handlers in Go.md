@@ -14,7 +14,7 @@
 
 ```go
 type Handler interface {
-    ServeHTTP(ResponseWriter，*Request)
+	ServeHTTP(ResponseWriter，*Request)
 }
 ```
 
@@ -70,7 +70,7 @@ func (a *APIV1Handler) Start() {
 	colorsHandler.Start()
 }
 func (c *ColorsHandler) Start() {
-    gosplitter.Match("/black", c.mux, c.HandleBlack())
+	gosplitter.Match("/black", c.mux, c.HandleBlack())
 }
 /**
  * 简单的HTTP处理器方法
@@ -88,19 +88,20 @@ func (c *ColorsHandler) HandleBlack() func(w http.ResponseWriter, r *http.Reques
 }
 
 func main() {
-    var mux = http.NewServeMux()
-    var apiV1 = APIV1Handler{
-	mux: mux,
-  }
+	var mux = http.NewServeMux()
+	var apiV1 = APIV1Handler{
+		mux: mux,
+	}
 
-  /**
-   * 绑定api处理器到根目录
-   */
-  gosplitter.Match("/api/v1", mux, apiV1)
-  /**
-   * 开始api的处理
-   */
-  apiV1.Start()
+	/**
+	* 绑定api处理器到根目录
+	*/
+	gosplitter.Match("/api/v1", mux, apiV1)
+	
+	/**
+	* 开始api的处理
+	*/
+	apiV1.Start()
 }
 ```
 
