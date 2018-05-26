@@ -8,6 +8,14 @@
 <font face='微软雅黑' size=3><b><p align='right'>GCTT 翻译组</p></b></font>
 ****************************************************
 
+## E
+
+### execution tracer : 执行追踪器
+
 ## F
 
 ### f.ex. : for example 的缩写。
+
+## I
+
+### instrumentation / instrument : 插桩
