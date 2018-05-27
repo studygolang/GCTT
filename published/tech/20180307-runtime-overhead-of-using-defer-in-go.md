@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/13035
+
 # 使用 defer 的运行时开销
 
 在 Go 语言中有一个特殊的关键字 `defer`。对于它更多的介绍请看[这里](https://blog.golang.org/defer-panic-and-recover)。`defer` 语句会把一个函数追加到函数调用列表。这个列表会在函数返回的时候依次调用。`defer` 常用来进行各种清理操作。
@@ -9,14 +11,14 @@
 ```go
 package main
 func doNoDefer(t *int) {
-  func() {
-    *t++
-  }()
+	func() {
+		*t++
+	}()
 }
 func doDefer(t *int) {
-  defer func() {
-    *t++
-  }()
+	defer func() {
+		*t++
+	}()
 }
 ```
 
@@ -25,19 +27,19 @@ func doDefer(t *int) {
 ```go
 package main
 import (
-  "testing"
+	"testing"
 )
 func BenchmarkDeferYes(b *testing.B) {
-  t := 0
-  for i := 0; i < b.N; i++ {
-    doDefer(&t)
-  }
+	t := 0
+	for i := 0; i < b.N; i++ {
+		doDefer(&t)
+	}
 }
 func BenchmarkDeferNo(b *testing.B) {
-  t := 0
-  for i := 0; i < b.N; i++ {
-    doNoDefer(&t)
-  }
+	t := 0
+	for i := 0; i < b.N; i++ {
+		doNoDefer(&t)
+	}
 }
 ```
 
@@ -118,14 +120,12 @@ main.go:9    JMP main.doDefer(SB)
 
 `deferproc` 和 `deferreturn` 都是比较复杂的函数，它们会在进入和退出函数时进行一系列的配置和计算。所以，不要在热代码中使用 `defer` 关键字，因为它的开销很大的而且很难被侦测到。
 
-```
 ----------------
 
 via: https://medium.com/i0exception/runtime-overhead-of-using-defer-in-go-7140d5c40e32
 
 作者：[Aniruddha](https://medium.com/@i0exception)
-译者：[译者ID](https://github.com/saberuster)
-校对：[校对者ID](https://github.com/校对者ID)
+译者：[saberuster](https://github.com/saberuster)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-```
