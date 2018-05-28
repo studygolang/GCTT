@@ -252,7 +252,7 @@ type Sleeper interface {
 ```
 
 我做了一个设计的决定，我们的 `Countdown` 函数将不会负责 `sleep` 的时间长度。
-这至少简化了我们的代码，也就是说，我们函数的使用者可以根据喜好配置 sleepiness。
+这至少简化了我们的代码，也就是说，我们函数的使用者可以根据喜好配置休眠的时长。
 
 现在我们需要为我们使用的测试生成它的 *mock* 。
 
@@ -552,6 +552,6 @@ via: https://dev.to/quii/learn-go-by-writing-tests-mocking-fl4
 
 作者：[Chris James](https://dev.to/quii)
 译者：[Donng](https://github.com/Donng)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[rxcai](https://github.com/rx)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
