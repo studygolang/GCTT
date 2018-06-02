@@ -292,9 +292,9 @@ func sendData(sendch chan<- int) {
 }
 
 func main() {  
-	chnl := make(chan int)
-	go sendData(chnl)
-	fmt.Println(<-chnl)
+	cha1 := make(chan int)
+	go sendData(cha1)
+	fmt.Println(<-cha1)
 }
 ```
 [在线运行程序](https://play.golang.org/p/aqi_rJ1U8j)  
