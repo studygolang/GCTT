@@ -122,7 +122,7 @@ File: 00000001-X009741H/00/000/001/00000001.pdf
 via：https://blog.gopheracademy.com/advent-2017/seekable-http/
 
 作者：[Jeff R. Allen](https://github.com/jeffallen)
-译者：[deadvia](https://github.com/deadvia)
+译者：[yuhanle](https://github.com/yuhanle)
 校对：[Unknwon](https://github.com/Unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出

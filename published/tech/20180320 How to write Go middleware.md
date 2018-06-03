@@ -1,6 +1,9 @@
-# 如何用 go 编写中间件
+已发布：https://studygolang.com/articles/12931
 
-用 go 编写中间件看起来挺简单的，但是有些情况下我们可能会遇到一些麻烦。
+# 如何写 go 中间件
+
+编写 go 中间件看起来挺简单的，但是有些情况下我们可能会遇到一些麻烦。
+
 让我们来看一些例子。
 
 ## 读取请求
@@ -10,11 +13,11 @@
 
 ```go
 func X(h http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        // Something here...
-        // 这里还有一些其他信息
-        h.ServeHTTP(w, r)
-    })
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Something here...
+		// 这里还有一些其他信息
+		h.ServeHTTP(w, r)
+	})
 }
 ```
 
