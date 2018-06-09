@@ -1,3 +1,5 @@
+# 通过写测试学习 Go 语言 第一篇：Hello World
+
 这是出自 WIP 项目的第一篇文章，该项目叫做 [Learn Go by writing tests](https://github.com/quii/learn-go-with-tests)。
 
 以下内容来自 README
@@ -86,7 +88,7 @@ func TestHello(t *testing.T) {
 
 `if`
 
-Go 的 `if` 语句非常类似于其他编程语言。 
+Go 的 `if` 语句非常类似于其他编程语言。
 
 **声明变量**
 
@@ -289,7 +291,7 @@ func Hello(name string) string {
 
 如果我们运行测试，应该看到它满足了新的要求，并且我们没有意外地破坏其他功能。
 
-#### 规律
+### 规律
 
 让我们再次回顾一下这个周期
 
@@ -513,6 +515,6 @@ func greetingPrefix(language string) (prefix string) {
 
 作者：[Chris James](https://dev.to/quii)
 译者：[Donng](https://github.com/Donng)
-校对：[polaris1119](https://github.com/polaris1119)  
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
