@@ -1,8 +1,4 @@
-
-  2016/9/26 Go中的“简单声明”概念
-
-
-  Go中的“简单声明”概念
+Go中的“简单语句”概念
   =================
   在Golang[规范](https://golang.org/ref/spec)中有一个术语简单声明， 这个在整个文档中可能不常使用但Go的语法只允许在几个重要的地方使用这些声明。这篇短文的目的是介绍简单声明和可以使用它的地方。
 ![](https://cdn-images-1.medium.com/max/1600/1*Sh2PTmHloYTNWptEXj4FrA.jpeg)
@@ -14,7 +10,7 @@ SimpleStmt = EmptyStmt | ExpressionStmt | SendStmt | IncDecStmt | Assignment | S
 ```
 让我们通过介绍6种简单的类型声明来开始吧
   ### 1. 空白声明
-  很自然的可以知道在被标记为“简单声明”的jar中声明肯定什么都不会做
+  显然在简单声明中，空白声明什么都不会做
   ### 2.增加或减少声明
 ```go
 x++  // 语义上等价于赋值x + = 1
