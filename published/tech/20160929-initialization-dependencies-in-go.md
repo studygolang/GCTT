@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/13158
+
 # Go 语言中的初始化依赖项
 
 让我们直接从两个 Go 语言小程序开始：
