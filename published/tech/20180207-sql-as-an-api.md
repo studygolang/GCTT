@@ -13,9 +13,9 @@
 但是，你是否知道，这种能力早就在 CGI 中存在？参考维基百科，1993，并且在 1997 正式以 RFC 规范定下来的定义。所有旧的东西又卷土重来了。 CGI(Common Gateway Interface) 的目的是:
 
 > 在计算上，通用网关接口 (CGI)  为网站服务器提供一个标准的协议，用以在动态网页服务器上像执行控制台应用（也称为命令行接口程序）一样执行应用程序。
-> 
+>
 > 来源: [维基百科](https://en.wikipedia.org/wiki/Common_Gateway_Interface)
-> 
+>
 
 对 Go 语言来说，最简单的 Fass/CGI 服务程序只需要 10 行左右的代码就能实现。Go 语言的标准库中已经包含了  [net/http/cgi](https://golang.org/pkg/net/http/cgi/) 来完成所有的困难工作。实现一个 PHP CGI 只需要如下寥寥数行：
 
@@ -43,21 +43,21 @@ http.HandleFunc("/api/", phpHandler())
 这就是为什么 CGI 进化为了 FastCGI。
 
 > FastCGI 是通用网关接口 （CGI） 早期的一种变化； FastCGI 的主要目的是减少网页服务器和 CGI 程序之间的过度的联系，让服务器能一次性处理更多的网页请求
-> 
+>
 > 来源：[维基百科](https://en.wikipedia.org/wiki/FastCGI)
- 
+
 我现在不想实现一个 FastCGI 程序（在标准库中也有一个  [net/http/fcgi](https://golang.org/pkg/net/http/fcgi/)） ,但我想要演示这种实现会带来的性能陷阱。当然，你在 AWS 上运行你的程序时，你可能不怎么关心这个，因为它们有能力按照你的访问量来扩容硬件。
 
 ## CGI 的解决办法
- 
+
 如果这几年我有学到点东西的话，那一定是大多数的服务是数据驱动的。这意味着，一定有某种数据库保存着至关重要的数据。根据一个 [Quora上的回答](https://www.quora.com/Which-database-system-s-does-Twitter-use) ， Twitter 使用了至少8种不同类型的数据库，从 MySQL,Cassandra 和 Redis，到其他更复杂的数据库。
 
 实际上，我的大部分工作大概是这样的，从数据库中读取员工数据，然后把它变成 json 格式并且通过 REST 调用提供出去，这些查询通常不能仅仅用一条 SQL 语句来实现，当然在很多情况下也是可以的。那么，不如我们写一些不会有 `os.Exec` 调用成本的  SQL 脚本来实现一些功能，而不是用 CGI 程序来实现它们？
- 
+
 挑战接受了。
- 
+
 ## 以 SQL 作为 API
- 
+
 我并不想把这个变成庞然大物，虽然 以 SQL 作为 API 是有能力成为的，但我确实想要实现一个远程可用的版本。我希望通过在磁盘上创建一个 .sql  文件来实现 API 调用，并且我还希望这个 API 可以调用 http 请求中的任意参数。这意味着我们可以通过传递给 API 的参数来过滤结果集。我选择了 MySQL 和 sqlx 来实现这个任务。
 
 最近我为 Twitch，Slack，Yotube，Discord 写了一些聊天机器人，看起来很快我要写一个 Teleganm 的版本了。其实他们的目的是对各种通道进行相似的连接，记录消息，加总一些统计信息并且对一些命令或者问题进行反馈。对于用 Vue.js 写成的前端网站，我们需要通过 API 来向他们传递一些数据。虽然不是所有的 API 都能用 SQL 来实现，但还是有很大一部分是可以的。比如：
@@ -141,7 +141,6 @@ for name, val := range row {
 ```
 这里我们有一个 `rowStrings`  对象表示每个返回的 SQL 行，它可以轻松的编码到 JSON 中。我们需要做的就是把它们添加到一个返回结果中，对它编码并且返回编码后的值。完整（相对短小）的代码可以在 [titpetric/sql-as-a-service](https://github.com/titpetric/sql-as-an-api) 这里获取。
 
-
 ### 使用须知
 
 虽然这种方法以数据库作为 API 层的实现有独特的好处，但是为了让它适合被更广泛的调用，还有许多用户场景需要考虑。比如：
@@ -199,7 +198,7 @@ SQL 数据库并不是蠢笨的野兽，实际上它们非常强大，强大的�
 
 如果你想预约我的 顾问/作家 服务欢迎[给我发送邮件](black@scene-si.org)，我擅长 APIs，Go，Docker，VueJs 和系统扩容，[以及很多其他的事情](https://scene-si.org/about)
 
-----------------
+---
 
 via: https://scene-si.org/2018/02/07/sql-as-an-api/
 

@@ -18,11 +18,11 @@ https://docs.google.com/document/d/1CxgUBPlx9iJzkz9JWkb6tIpTe5q32QDmz8l0BouG0Cw/
 
 我很好奇，自这篇文章以来，当中有多少提及的缺陷被修复了，然后，我发现，迄今为止，只有少数一些缺陷得到了解决。也就是说，有五个特定的缺陷尚未被修复，而我很乐意看到在 Go 不久的将来发布的版本中能有所改善。我将这些缺陷标记为：
 
-  * 间接赋值（Indirect Assignment）
-  * 间接调用（Indirect Call）
-  * 切片和 Map 赋值（Slice and Map Assignments）
-  * 接口（Interfaces）
-  * 未知缺陷（Unknown）
+* 间接赋值（Indirect Assignment）
+* 间接调用（Indirect Call）
+* 切片和 Map 赋值（Slice and Map Assignments）
+* 接口（Interfaces）
+* 未知缺陷（Unknown）
 
 我认为，探索这些缺陷是很有趣的，所以，你可以看到它们被修复后对现有 Go 程序的积极影响。下面你所看到的所有东西都基于 1.9 编译器。
 
@@ -30,7 +30,7 @@ https://docs.google.com/document/d/1CxgUBPlx9iJzkz9JWkb6tIpTe5q32QDmz8l0BouG0Cw/
 
 “间接赋值（Indirect Assignment）”缺陷与通过间接分配值时发生的分配有关。这是一个代码示例：
 
-**代码清单 1**  
+**代码清单 1**
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example1/example1_test.go>
 
 ```go
@@ -95,7 +95,7 @@ ROUTINE ========================
 		.          .     17:       x2 := &X{}
 		.          .     18:       x2.p = &i2 // BAD: Cause of i2 escape
 		.          .     19:   }
-		.          .     20:}	
+		.          .     20:}
 ```
 
 在逃逸分析报告中，`i2` 逃逸给出的理由是，`(star-dot-equals)`。我想这是指编译器需要执行诸如以下的操作来完成此赋值。
@@ -112,7 +112,7 @@ pprof 输出清晰地显示，`i2` 是在堆上分配的，而 `i1` 不是。我
 
 “间接调用（Indirect Call）”缺陷与和通过间接调用的函数共享一个值时发生的分配有关。下面是一个代码示例：
 
-**代码清单 2.1**  
+**代码清单 2.1**
 
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example2/example2_test.go>
 
@@ -140,7 +140,7 @@ func BenchmarkLiteralFunctions(b *testing.B) {
 func foo(p *int, x int) {
 	*p = x
 }
-	
+
 ```
 
 在代码清单 2.1 中，在第 21 行声明了一个名为 `foo` 的命名函数。这个函数接受一个整型的地址和一个整型值作为参数。然后，这个函数将传递的整型值赋值给 `p` 指针指向的位置。
@@ -154,7 +154,7 @@ func foo(p *int, x int) {
 **基准测试输出**
 ```
 $ go test -gcflags "-m -m" -run none -bench BenchmarkLiteralFunctions -benchmem -memprofile mem.out
-	
+
 BenchmarkLiteralFunctions-8     50000000 	       30.7 ns/op        16 B/op	      2 allocs/op
 ```
 
@@ -200,7 +200,7 @@ ROUTINE ========================
 
 这里是一个你会在许多 web 服务应用中找到的例子。
 
-**代码清单 2.2**  
+**代码清单 2.2**
 
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example2/example2_http_test.go>
 
@@ -285,7 +285,7 @@ ROUTINE ========================
 
 “切片和 Map 赋值（Slice and Map Assignments）”缺陷与值在切片或者 Map 中共享时发生的分配有关。这里是一个代码示例：
 
-**代码清单 3**  
+**代码清单 3**
 
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example3/example3_test.go>
 
@@ -369,7 +369,7 @@ ROUTINE ========================
 
 “接口（Interfaces）”缺陷与之前看到的“间接调用”缺陷有关。这是一个使用接口产生实际成本的缺陷。下面是一个代码示例：
 
-**代码清单 4**  
+**代码清单 4**
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example4/example4_test.go>
 
 ```go
@@ -421,7 +421,7 @@ func foo(i Iface) {
 
 ```
 $ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
-	
+
 BenchmarkInterfaces-8     10000000         126 ns/op        64 B/op        4 allocs/op
 ```
 
@@ -454,7 +454,7 @@ BenchmarkInterfaces-8     10000000         126 ns/op        64 B/op        4 all
 ```
 $ go tool pprof -alloc_space mem.out
 
-ROUTINE ======================== 
+ROUTINE ========================
  658.01MB   658.01MB (flat, cum)   100% of Total
 		.          .     12:
 		.          .     13:func (x X) Method() {}
@@ -492,7 +492,7 @@ ROUTINE ========================
 
 下面是代码示例。
 
-**代码清单 5**  
+**代码清单 5**
 <https://github.com/ardanlabs/gotraining/blob/master/topics/go/language/pointers/flaws/example5/example5_test.go>
 
 ```go
@@ -536,7 +536,7 @@ Benchmark-8     20000000 	       50.8 ns/op       112 B/op	      1 allocs/op
 ```
 $ go tool pprof -alloc_space mem.out
 
-ROUTINE ======================== 
+ROUTINE ========================
    2.19GB     2.19GB (flat, cum)   100% of Total
 		.          .      8:func BenchmarkUnknown(b *testing.B) {
 		.          .      9:   for i := 0; i < b.N; i++ {
@@ -573,7 +573,7 @@ _这可能与 `Buffer` 类型的引导数组有关。它意味着一种优化，
 
 我试图指出 1.9 版本至今存在的一些更有趣的逃逸分析缺陷。接口缺陷可能是一旦修复就会对当今的 Go 程序产生最大影响的缺陷。我觉得最有意思的是，我们所有人都能从这些缺陷的修复中获益，而不需要有这方面的个人专长。编译器执行的静态代码分析提供了诸多好处，例如优化你随时写入的代码的能力。也许最大的好处是，消除或减少你不得不维持的认知负担。
 
-----------------
+---
 
 via: https://www.ardanlabs.com/blog/2018/01/escape-analysis-flaws.html
 

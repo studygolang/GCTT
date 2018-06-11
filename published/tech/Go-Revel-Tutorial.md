@@ -95,7 +95,7 @@ $ go get github.com/go-sql-driver/mysql
 
 你可以用 `revel new` 命令来创建 Go/Revel 应用。
 
-在 [PaizaCloud Cloud IDE](https://paiza.cloud/)，你可以在浏览器中，使用 PaizaCloud 的应用程序 `Terminal `来运行命令。
+在 [PaizaCloud Cloud IDE](https://paiza.cloud/)，你可以在浏览器中，使用 PaizaCloud 的应用程序 `Terminal` 来运行命令。
 
 在页面的左边，点击 `Terminal` 按钮。
 
@@ -389,7 +389,7 @@ func (c Post) Create() revel.Result {
 	if ret.Error != nil {
 		return c.RenderError(errors.New("Record Create failure." + ret.Error.Error()))
 	}
-	return c.Redirect("/posts")    
+	return c.Redirect("/posts")
 }
 func (c Post) Delete() revel.Result {
 	id := c.Params.Route.Get("id")
@@ -398,11 +398,11 @@ func (c Post) Delete() revel.Result {
 	if ret.Error != nil {
 		return c.RenderError(errors.New("Record Delete failure." + ret.Error.Error()))
 	}
-	return c.Redirect("/posts")    
+	return c.Redirect("/posts")
 }
 
 func (c Post) RedirectToPosts() revel.Result {
-	return c.Redirect("/posts")    
+	return c.Redirect("/posts")
 }
 ```
 
@@ -461,7 +461,7 @@ func (c Post) RedirectToPosts() revel.Result {
 					<button type="submit" class="btn btn-success">
 						<i class="fa fa-plus"></i> Add Todo
 					</button>
-				</div>            
+				</div>
 			</div>
 		</div>
 	</form>
@@ -487,7 +487,7 @@ func (c Post) RedirectToPosts() revel.Result {
 			{{ end }}
 		</tbody>
 	</table>
-	
+
 </div>
 
 
@@ -532,7 +532,7 @@ func (c Post) RedirectToPosts() revel.Result {
 
 通过 [PaizaCloud Cloud IDE](https://paiza.cloud/)，只需在浏览器上，你就能灵活、轻松地开发和发布 web 应用或服务器应用。
 
-----------------
+---
 
 via: http://engineering.paiza.io/entry/paizacloud_golang_revel
 

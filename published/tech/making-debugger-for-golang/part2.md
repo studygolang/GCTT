@@ -45,7 +45,7 @@ func main() {
 		log.Fatal(err)
 	}
 	steps := 1
-	
+
 	for {
 		var ws syscall.WaitStatus
 		wpid, err = syscall.Wait4(-1*pgid, &ws, syscall.WALL, nil)
@@ -66,7 +66,7 @@ func main() {
 	log.Printf("Steps: %d\n", steps)
 }
 ```
-	
+
 构建并运行这个段代码，输出应该像下面这样（每次调用显示的步数可能不一样）
 
 ```
@@ -77,14 +77,14 @@ func main() {
 hello world
 2017/06/09 19:54:49 Steps: 297583
 ```
-	
+
 程序的前半部分和上一篇文章里的一样，新加的地方是对 [ syscall.PtraceSingleStep](https://golang.org/pkg/syscall/#PtraceSingleStep) 的调用，它使被调试的程序（在这里是 hello )执行完一条指令后停止。
 
 PTRACE_O_TRACECLONE 选项也被设定了
 
 > PTRACE_O_TRACECLONE (since Linux 2.5.46)
 > Stop the tracee at the next clone(2) and automatically start tracing the newly cloned process...
-	
+
 (http://man7.org/linux/man-pages/man2/ptrace.2.html)
 
 由于我们的调试器知道新线程什么时间开始并且可以跳过它，所以最后显示的步数是通过所有进程执行的指令总数
@@ -108,8 +108,8 @@ _start:
 	mov rax, 60 ; exit syscall (https://linux.die.net/man/2/exit)
 	mov rdi, 0 ; exit code
 	syscall
-```	
-	
+```
+
 在容器中构建我们的 "hello world" 程序，看一下执行了多少条指令
 
 ```shell
@@ -124,7 +124,7 @@ hello, world!
 hello, world!
 2017/06/17 17:58:43 Steps: 8
 ```
-	
+
 输出结果很好，正好等于 hello.asm 中指令的数量
 
 到目前为止，我们已经知道怎样让程序在一开始停止，如何一步一步的执行代码并查看 进程/线程 的状态，现在是在需要的地方设置断点，监视像变量值这样的进程状态的时候了。
@@ -140,7 +140,7 @@ func main() {
 	fmt.Println("hello world")
 }
 ```
-	
+
 怎样在这个函数的一开始设置断点呢？我们的程序经过编译链接后，最终生成的是一系列机器指令。怎样在只包含了一些二进制代码（只有 CPU 能理解的格式）的源文件里表示我们要设置一个断点呢？
 
 ## lineTable
@@ -184,7 +184,7 @@ func main() {
 	log.Printf("lineno: %v\n", lineno)
 }
 ```
-	
+
 如果传递给上面程序的文件中包含以下代码
 
 ```go
@@ -196,7 +196,7 @@ func main() {
 	fmt.Println("hello world")
 }
 ```
-	
+
 那么输出应该是这样的
 
 ```shell
@@ -206,7 +206,7 @@ func main() {
 2017/06/30 18:47:38 filename: /go/src/github.com/mlowicki/hello/hello.go
 2017/06/30 18:47:38 lineno: 5
 ```
-	
+
 ELF 是 [Executable and Linkable Format](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format) 的缩写，是一种可执行文件的格式
 
 ```shell

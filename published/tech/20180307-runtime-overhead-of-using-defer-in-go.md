@@ -120,7 +120,7 @@ main.go:9    JMP main.doDefer(SB)
 
 `deferproc` 和 `deferreturn` 都是比较复杂的函数，它们会在进入和退出函数时进行一系列的配置和计算。所以，不要在热代码中使用 `defer` 关键字，因为它的开销很大的而且很难被侦测到。
 
-----------------
+---
 
 via: https://medium.com/i0exception/runtime-overhead-of-using-defer-in-go-7140d5c40e32
 

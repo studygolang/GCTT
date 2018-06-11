@@ -26,8 +26,8 @@ func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
 
 它实现了一个请求路由器和一个调度器。 它允许您创建具有命名参数的路由，限制 HTTP 动词（译注：即限制为 GET、POST 等）和主机或域名管理。
 
-![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/Golang-HTTP-server-for-pro/Gorilla-Routing-in-action.gif)  
-Gorilla Routing in action!  
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/Golang-HTTP-server-for-pro/Gorilla-Routing-in-action.gif)
+Gorilla Routing in action!
 大猩猩路由在行动！
 
 通过简单的配置就可以轻松管理更多路由
@@ -115,7 +115,7 @@ func recoverHandler(next http.Handler) http.Handler {
 
 Alice 使中间件无处不在！
 
-***
+---
 
 ## HTTP 服务器不错，但 HTTPS 服务器更好！
 
@@ -147,7 +147,7 @@ log.Fatal("ListenAndServe: ", err) }
 
 完成了！
 
-----------------
+---
 
 via: https://medium.com/@ScullWM/golang-http-server-for-pro-69034c276355
 
