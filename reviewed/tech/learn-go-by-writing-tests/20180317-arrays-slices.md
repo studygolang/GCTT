@@ -1,32 +1,32 @@
-## 通过写测试学习 Go 语言：数组与切片
+# 通过写测试学习 Go 语言：数组与切片篇
 
 这是出自 WIP 项目的第二篇文章，该项目叫做 *[Learn Go by writing tests](https://quii.gitbook.io/learn-go-with-tests/)*，旨在熟悉 Go 语言并学习 TDD(Test-Driven Development) 相关的技巧。
 
 [第一篇文章可以带你快速了解 TDD](https://dev.to/quii/learn-go-by-writing-tests--m63)。
 
-#### 数组和切片
+## 数组和切片
 
 你可以使用数组按照指定顺序将多个相同类型的变量保存起来。
 
-对于数组来说，最常用的就是迭代数组中的元素。我们创建一个 `Sum` 函数，它使用 `for` 来循环获取数组中的元素并返回所有元素的总和。
+对于数组来说，最常用的就是迭代数组中的元素。我们创建一个 `Sum` 函数，它使用 [`for`](https://github.com/quii/learn-go-with-tests/blob/master/iteration.md) 来循环获取数组中的元素并返回所有元素的总和。
 
 让我们使用 TDD 思想。
 
-#### 先写测试函数
+## 先写测试函数
 
-`sum_test.go`:
+在 `sum_test.go` 中:
 
 ```go
 func TestSum(t *testing.T) {
 
-    numbers := [5]int{1, 2, 3, 4, 5}
+	numbers := [5]int{1, 2, 3, 4, 5}
 
-    got := Sum(numbers)
-    want := 15
+	got := Sum(numbers)
+	want := 15
 
-    if want != got {
-        t.Errorf("got %d want %d given, %v", got, want, numbers)
-    }
+	if want != got {
+		t.Errorf("got %d want %d given, %v", got, want, numbers)
+	}
 }
 ```
 
@@ -34,17 +34,17 @@ func TestSum(t *testing.T) {
 
 [了解更多关于格式化字符串的信息](https://golang.org/pkg/fmt/)
 
-#### 运行测试
+## 运行测试
 
 使用 `go test` 运行测试将会报编译时错误：`./sum_test.go:10:15: undefined: Sum`。
 
-####先使用最少的代码来让失败的测试先跑起来：
+## 先使用最少的代码来让失败的测试先跑起来：
 
 `Sum.go`
 
 ```go
 func Sum(numbers [5]int) (sum int) {
-    return
+	return
 }
 ```
 
@@ -52,45 +52,45 @@ func Sum(numbers [5]int) (sum int) {
 
 `sum_test.go:13: got 0 want 15 given, [1 2 3 4 5]`
 
-####把代码补充完整，使得它能够通过测试：
+## 把代码补充完整，使得它能够通过测试：
 
 ```go
 func Sum(numbers [5]int) (sum int) {
-    for i := 0; i < 5; i++ {
-        sum += numbers[i]
-    }
-    return
+	for i := 0; i < 5; i++ {
+		sum += numbers[i]
+	}
+	return
 }
 ```
 
 可以使用 `array[index]` 语法来获取数组中指定索引对应的值。在本例中我们使用 `for` 循环分 5 次取出数组中的元素并与 `sum` 变量求和。
 
-###### 一个源码版本控制的小贴士
+### 一个源码版本控制的小贴士
 
 如果在使用源码的版本控制工具，我会在此刻先提交一次代码。因为我们已经拥有了一个有测试支持的程序。
 
 但我不会将它推送到远程的 master 分支，因为我马上就会重构它。在此时提交一次代码是一种很好的习惯。因为你可以在之后重构导致的代码乱掉时回退到当前版本。
 
-#### 重构
+## 重构
 
 我们可以使用 `range` 语法来让函数变得更加整洁。
 
 ```go
 func Sum(numbers [5]int) (sum int) {
-    for _, number := range numbers {
-        sum += number
-    }
-    return
+	for _, number := range numbers {
+		sum += number
+	}
+	return
 }
 ```
 
 `range` 会迭代数组，每次迭代都会返回数组元素的索引和值。可以使用 `_` 忽略掉索引。
 
-###### 回到版本控制
+### 回到版本控制
 
 现在我们已经重构了之前版本的代码，我们只需要使用之前版本的测试来检查它是否能够通过测试。
 
-#### 数组和它的类型
+### 数组和它的类型
 
 数组的长度会保存在它的类型中，所以 `[4]int` 和 `[5]int` 不是同种类型，所以将 `[4]int` 作为 `[5]int` 类型的参数是不能通过编译的，它就像 `string` 不能作为 `int` 的参数一样。
 
@@ -100,7 +100,7 @@ Go 的切片(`slice`)类型不会将集合的长度保存在类型中，因此�
 
 下面我们会完成一个动态长度的 `Sum` 函数。
 
-#### 先写测试
+## 先写测试
 
 我们会使用切片类型，它可以接收不同大小的切片集合。语法上和数组非常相似，只是在声明的时候不指定长度：
 
@@ -109,40 +109,38 @@ Go 的切片(`slice`)类型不会将集合的长度保存在类型中，因此�
 ```go
 func TestSum(t *testing.T) {
 
-    t.Run("collection of 5 numbers", func(t *testing.T) {
-        numbers := [5]int{1, 2, 3, 4, 5}
+	t.Run("collection of 5 numbers", func(t *testing.T) {
+		numbers := [5]int{1, 2, 3, 4, 5}
 
-        got := Sum(numbers)
-        want := 15
+		got := Sum(numbers)
+		want := 15
 
-        if got != want {
-            t.Errorf("got %d want %d given, %v", got, want, numbers)
-        }
-    })
+		if got != want {
+			t.Errorf("got %d want %d given, %v", got, want, numbers)
+		}
+	})
 
-    t.Run("collection of any size", func(t *testing.T) {
-        numbers := []int{1, 2, 3}
+	t.Run("collection of any size", func(t *testing.T) {
+		numbers := []int{1, 2, 3}
 
-        got := Sum(numbers)
-        want := 6
+		got := Sum(numbers)
+		want := 6
 
-        if got != want {
-            t.Errorf("got %d want %d given, %v", got, want, numbers)
-        }
-    })
+		if got != want {
+			t.Errorf("got %d want %d given, %v", got, want, numbers)
+		}
+	})
 
 }
 ```
 
-
-
-#### 运行测试
+## 运行测试
 
 编译出错：
 
 `./sum_test.go:22:13: cannot use numbers (type []int) as type [5]int in argument to Sum`。
 
-#### 先使用最少的代码来让失败的测试先跑起来
+## 先使用最少的代码来让失败的测试先跑起来
 
 这时我们可以选择一种解决方案：
 
@@ -153,47 +151,47 @@ func TestSum(t *testing.T) {
 
 ```go
 func Sum(numbers []int) (sum int) {
-    for _, number := range numbers {
-        sum += number
-    }
-    return
+	for _, number := range numbers {
+		sum += number
+	}
+	return
 }
 ```
 
 如果你你运行测试，它们还是不能编译通过，你必须把之前测试代码中的数组换成切片。
 
-####把 `Sum` 补充完整，使得它能够通过测试：
+## 把 `Sum` 补充完整，使得它能够通过测试：
 
 修复编译错误并让函数测试通过。
 
-#### 重构
+## 重构
 
 我们已经修改了 `Sum` 函数把参数从数组改为切片。注意不要在重构以后忘记维护你的测试代码。
 
 ```go
 func TestSum(t *testing.T) {
 
-    t.Run("collection of 5 numbers", func(t *testing.T) {
-        numbers := []int{1, 2, 3, 4, 5}
+	t.Run("collection of 5 numbers", func(t *testing.T) {
+		numbers := []int{1, 2, 3, 4, 5}
 
-        got := Sum(numbers)
-        want := 15
+		got := Sum(numbers)
+		want := 15
 
-        if got != want {
-            t.Errorf("got %d want %d given, %v", got, want, numbers)
-        }
-    })
+		if got != want {
+			t.Errorf("got %d want %d given, %v", got, want, numbers)
+		}
+	})
 
-    t.Run("collection of any size", func(t *testing.T) {
-        numbers := []int{1, 2, 3}
+	t.Run("collection of any size", func(t *testing.T) {
+		numbers := []int{1, 2, 3}
 
-        got := Sum(numbers)
-        want := 6
+		got := Sum(numbers)
+		want := 6
 
-        if got != want {
-            t.Errorf("got %d want %d given, %v", got, want, numbers)
-        }
-    })
+		if got != want {
+			t.Errorf("got %d want %d given, %v", got, want, numbers)
+		}
+	})
 
 }
 ```
@@ -204,7 +202,7 @@ func TestSum(t *testing.T) {
 
 运行：
 
-`go test -cover` 
+`go test -cover`
 
 你会看到：
 
@@ -231,29 +229,27 @@ SumAll([]int{1,2}, []int{0,9}) would return []int{3, 9}
 SumAll([]int{1,1,1}) would return []int{3}
 ```
 
-
-
-#### 先写测试
+## 先写测试
 
 ```go
 func TestSumAll(t *testing.T)  {
 
-    got := SumAll([]int{1,2}, []int{0,9})
-    want := []int{3, 9}
+	got := SumAll([]int{1,2}, []int{0,9})
+	want := []int{3, 9}
 
-    if got != want {
-        t.Errorf("got %v want %v", got, want)
-    }
+	if got != want {
+		t.Errorf("got %v want %v", got, want)
+	}
 }
 ```
 
-#### 运行测试
+## 运行测试
 
 ```
 ./sum_test.go:23:9: undefined: SumAll
 ```
 
-#### 先使用最少的代码来让失败的测试先跑起来
+## 先使用最少的代码来让失败的测试先跑起来
 
 我们需要定义满足测试要求的 `SumAll`。
 
@@ -261,7 +257,7 @@ func TestSumAll(t *testing.T)  {
 
 ```go
 func SumAll(numbersToSum ...[]int) (sums []int) {
-    return
+	return
 }
 ```
 
@@ -274,12 +270,12 @@ func SumAll(numbersToSum ...[]int) (sums []int) {
 ```go
 func TestSumAll(t *testing.T)  {
 
-    got := SumAll([]int{1,2}, []int{0,9})
-    want := []int{3, 9}
+	got := SumAll([]int{1,2}, []int{0,9})
+	want := []int{3, 9}
 
-    if !reflect.DeepEqual(got, want) {
-        t.Errorf("got %v want %v", got, want)
-    }
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v want %v", got, want)
+	}
 }
 ```
 
@@ -290,12 +286,12 @@ func TestSumAll(t *testing.T)  {
 ```go
 func TestSumAll(t *testing.T)  {
 
-    got := SumAll([]int{1,2}, []int{0,9})
-    want := "bob"
+	got := SumAll([]int{1,2}, []int{0,9})
+	want := "bob"
 
-    if !reflect.DeepEqual(got, want) {
-        t.Errorf("got %v want %v", got, want)
-    }
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v want %v", got, want)
+	}
 }
 ```
 
@@ -307,20 +303,20 @@ func TestSumAll(t *testing.T)  {
 sum_test.go:30: got [] want [3 9]
 ```
 
-#### 将代码补充完整使函数能够测试通过
+## 将代码补充完整使函数能够测试通过
 
 我们需要做的就是迭代可变参数，使用 `Sum` 计算每个参数的总和并把结果放入函数返回的切片中。
 
 ```go
 func SumAll(numbersToSum ...[]int) (sums []int) {
-    lengthOfNumbers := len(numbersToSum)
-    sums = make([]int, lengthOfNumbers)
+	lengthOfNumbers := len(numbersToSum)
+	sums = make([]int, lengthOfNumbers)
 
-    for i, numbers := range numbersToSum {
-        sums[i] = Sum(numbers)
-    }
+	for i, numbers := range numbersToSum {
+		sums[i] = Sum(numbers)
+	}
 
-    return
+	return
 }
 ```
 
@@ -332,7 +328,7 @@ func SumAll(numbersToSum ...[]int) (sums []int) {
 
 现在应该可以测试通过。
 
-#### 重构
+## 重构
 
 顺便说一下，切片有容积的概念。如果你有一个容积为 2 的切片，但使用 `mySlice[10]=1` 进行赋值，会报运行时错误。
 
@@ -340,11 +336,11 @@ func SumAll(numbersToSum ...[]int) (sums []int) {
 
 ```go
 func SumAll(numbersToSum ...[]int) (sums []int) {
-    for _, numbers := range numbersToSum {
-        sums = append(sums, Sum(numbers))
-    }
+	for _, numbers := range numbersToSum {
+		sums = append(sums, Sum(numbers))
+	}
 
-    return
+	return
 }
 ```
 
@@ -352,137 +348,135 @@ func SumAll(numbersToSum ...[]int) (sums []int) {
 
 接下来的工作是把 `SumAll` 变成 `SumAllTails`。它会把每个切片的尾部元素想加（尾部的意思就是出去第一个元素以外的其他元素）。
 
-#### 先写测试
+## 先写测试
 
 ```go
 func TestSumAllTails(t *testing.T)  {
-    got := SumAllTails([]int{1,2}, []int{0,9})
-    want := []int{2, 9}
+	got := SumAllTails([]int{1,2}, []int{0,9})
+	want := []int{2, 9}
 
-    if !reflect.DeepEqual(got, want) {
-        t.Errorf("got %v want %v", got, want)
-    }
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v want %v", got, want)
+	}
 }
 ```
 
-#### 运行测试
+## 运行测试
 
 `./sum_test.go:26:9: undefined: SumAllTails`
 
-#### 先使用最少的代码来让失败的测试先跑起来
+## 先使用最少的代码来让失败的测试先跑起来
 
 把函数名称改为 `SumAllTails` 并重新运行测试
 
 `sum_test.go:30: got [3 9] want [2 9]`
 
-#### 将代码补充完整使函数能够测试通过
+## 将代码补充完整使函数能够测试通过
 
 ```go
 func SumAllTails(numbersToSum ...[]int) (sums []int) {
-    for _, numbers := range numbersToSum {
-        tail := numbers[1:]
-        sums = append(sums, Sum(tail))
-    }
+	for _, numbers := range numbersToSum {
+		tail := numbers[1:]
+		sums = append(sums, Sum(tail))
+	}
 
-    return
+	return
 }
 ```
 
 我们可以使用语法 `slice[low:high]` 获取部分切片。如果在冒号的一侧没有数字就会一直取到最边缘的元素。在我们的函数中，我们使用 `numbers[1:]` 取到从索引 1 到最后一个元素。你可能需要花费一些时间才能熟悉切片的操作。
 
-#### 重构
+## 重构
 
 这次并不需要重构
 
-
-
 如果传入一个空切片会怎样？空切片的尾部是什么呢，如果我们在空数组上使用 `myEmptySlice[1:]` 会发生什么？
 
-#### 先写测试
+## 先写测试
 
 ```go
 func TestSumAllTails(t *testing.T)  {
 
-    t.Run("make the sums of some slices", func(t *testing.T) {
-        got := SumAllTails([]int{1,2}, []int{0,9})
-        want := []int{2, 9}
+	t.Run("make the sums of some slices", func(t *testing.T) {
+		got := SumAllTails([]int{1,2}, []int{0,9})
+		want := []int{2, 9}
 
-        if !reflect.DeepEqual(got, want) {
-            t.Errorf("got %v want %v", got, want)
-        }
-    })
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v want %v", got, want)
+		}
+	})
 
-    t.Run("safely sum empty slices", func(t *testing.T) {
-        got := SumAllTails([]int{}, []int{3, 4, 5})
-        want :=[]int{0, 9}
+	t.Run("safely sum empty slices", func(t *testing.T) {
+		got := SumAllTails([]int{}, []int{3, 4, 5})
+		want :=[]int{0, 9}
 
-        if !reflect.DeepEqual(got, want) {
-            t.Errorf("got %v want %v", got, want)
-        }
-    })
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v want %v", got, want)
+		}
+	})
 
 }
 ```
 
-#### 运行测试
+## 运行测试
 
 ```
 panic: runtime error: slice bounds out of range [recovered]
-    panic: runtime error: slice bounds out of range
+	panic: runtime error: slice bounds out of range
 ```
 
 值得注意的是，该函数编译通过了，但是在运行时出现错误。
 
 编译时错误是我们的朋友，因为它帮助我们让程序可以工作。运行时错误是我们的敌人，因为它影响我们的用户。
 
-#### 将代码补充完整使函数能够测试通过
+## 将代码补充完整使函数能够测试通过
 
 ```go
 func SumAllTails(numbersToSum ...[]int) (sums []int) {
-    for _, numbers := range numbersToSum {
-        if len(numbers) == 0 {
-            sums = append(sums, 0)
-        } else {
-            tail := numbers[1:]
-            sums = append(sums, Sum(tail))
-        }
-    }
+	for _, numbers := range numbersToSum {
+		if len(numbers) == 0 {
+			sums = append(sums, 0)
+		} else {
+			tail := numbers[1:]
+			sums = append(sums, Sum(tail))
+		}
+	}
 
-    return
+	return
 }
 ```
 
-### 重构
+## 重构
 
 我们的测试代码有一部分是重复的，我们可以把它放到另一个函数中复用。
 
 ```go
 func TestSumAllTails(t *testing.T) {
 
-    checkSums := func(t *testing.T, got, want []int) {
-        if !reflect.DeepEqual(got, want) {
-            t.Errorf("got %v want %v", got, want)
-        }
-    }
+	checkSums := func(t *testing.T, got, want []int) {
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v want %v", got, want)
+		}
+	}
 
-    t.Run("make the sums of tails of", func(t *testing.T) {
-        got := SumAllTails([]int{1, 2}, []int{0, 9})
-        want := []int{2, 9}
-        checkSums(t, got, want)
-    })
+	t.Run("make the sums of tails of", func(t *testing.T) {
+		got := SumAllTails([]int{1, 2}, []int{0, 9})
+		want := []int{2, 9}
+		checkSums(t, got, want)
+	})
 
-    t.Run("safely sum empty slices", func(t *testing.T) {
-        got := SumAllTails([]int{}, []int{3, 4, 5})
-        want := []int{0, 9}
-        checkSums(t, got, want)
-    })
+	t.Run("safely sum empty slices", func(t *testing.T) {
+		got := SumAllTails([]int{}, []int{3, 4, 5})
+		want := []int{0, 9}
+		checkSums(t, got, want)
+	})
 
 }
 ```
 
 这样使用起来更加方便，而且还能增加代码的类型安全性。如果一个粗心的开发者使用 `checkSums(t,got,"dave")` 是不能通过编译的。
 
-#### 总结
+## 总结
 
 我们学习了：
 
@@ -499,16 +493,14 @@ func TestSumAllTails(t *testing.T) {
 
 [Go 官网博客中关于切片的文章](https://blog.golang.org/go-slices-usage-and-internals) 可以让你更加深入的了解切片。尝试写更多的测试来从中学到东西。
 
-另一种练习 Go 的方式是在 Go 的在线编译器中写代码。几乎所有东西都可以写在上面，而且如果你想问问题，它可以让你的代码很容易分享给其他人。
+另一种练习 Go 的方式是在 Go 的在线编译器中写代码。几乎所有东西都可以写在上面，而且如果你想问问题，它可以让你的代码很容易分享给其他人。[为了你方便试验，我已经在 go playground 中写好了一个 slice 的示例](https://play.golang.org/p/ICCWcRGIO68)
 
-```
-----------------
+---
 
 via:https://dev.to/quii/learn-go-by-writing-tests-arrays-and-slices-ahm
 
 作者：[Chris James](https://dev.to/quii)
 译者：[saberuster](https://github.com/saberuster)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-```

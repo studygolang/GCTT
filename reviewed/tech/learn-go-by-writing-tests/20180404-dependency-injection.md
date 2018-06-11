@@ -3,11 +3,8 @@
 这是来自 WIP 项目的第五篇文章，该项目叫做 [Learn Go by writing Tests](https://quii.gitbook.io/learn-go-with-tests/)，旨在让读者熟悉 Go 语言，并学习 TDD（Test-Driven Development）相关的技术。
 
 - [第一篇文章让你快速上手 TDD](https://dev.to/quii/learn-go-by-writing-tests--m63)
-
 - [第二篇文章讨论了数组和切片](https://dev.to/quii/learn-go-by-writing-tests-arrays-and-slices-ahm)
-
 - [第三篇文章讲解了结构体、方法、接口和表格驱动测试](https://dev.to/quii/learn-go-by-writing-tests-structs-methods-interfaces--table-driven-tests-1p01)
-
 - [第四篇文章展示了如何处理错误，以及为什么指针很管用](https://dev.to/quii/learn-go-by-writing-tests-pointers-and-errors-2kp6)
 
 ## 依赖注入
@@ -17,9 +14,9 @@
 在编程社区里，对于**依赖注入**（dependency injection）存在诸多误解。我们希望本篇会向你展示为什么：
 
 - 你不需要一个框架
-- 依赖注入不会过度复杂化你的设计
-- 依赖注入易于测试
-- 依赖注入能让你编写优秀和通用的函数
+- 它不会过度复杂化你的设计
+- 它易于测试
+- 它能让你编写优秀和通用的函数
 
 就像我们在 hello-world 篇做的那样，我们想要编写一个欢迎某人的函数，只不过这次我们希望测试实际的打印（actual printing）。
 
@@ -27,7 +24,7 @@
 
 ```go
 func Greet(name string) {
-    fmt.Printf("Hello, %s", name)
+	fmt.Printf("Hello, %s", name)
 }
 ```
 
@@ -44,7 +41,7 @@ func Greet(name string) {
 ```go
 // It returns the number of bytes written and any write error encountered.
 func Printf(format string, a ...interface{}) (n int, err error) {
-    return Fprintf(os.Stdout, format, a...)
+	return Fprintf(os.Stdout, format, a...)
 }
 ```
 
@@ -54,11 +51,11 @@ func Printf(format string, a ...interface{}) (n int, err error) {
 
 ```go
 func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error) {
-    p := newPrinter()
-    p.doPrintf(format, a)
-    n, err = w.Write(p.buf)
-    p.free()
-    return
+	p := newPrinter()
+	p.doPrintf(format, a)
+	n, err = w.Write(p.buf)
+	p.free()
+	return
 }
 ```
 
@@ -66,7 +63,7 @@ func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error) {
 
 ```go
 type Writer interface {
-    Write(p []byte) (n int, err error)
+	Write(p []byte) (n int, err error)
 }
 ```
 
@@ -78,15 +75,15 @@ type Writer interface {
 
 ```go
 func TestGreet(t *testing.T) {
-    buffer := bytes.Buffer{}
-    Greet(&buffer,"Chris")
+	buffer := bytes.Buffer{}
+	Greet(&buffer,"Chris")
 
-    got := buffer.String()
-    want := "Hello, Chris"
+	got := buffer.String()
+	want := "Hello, Chris"
 
-    if got != want {
-        t.Errorf("got '%s' want '%s'", got, want)
-    }
+	if got != want {
+		t.Errorf("got '%s' want '%s'", got, want)
+	}
 }
 ```
 
@@ -100,8 +97,8 @@ func TestGreet(t *testing.T) {
 
 ```bash
 ./di_test.go:10:7: too many arguments in call to Greet
-    have (*bytes.Buffer, string)
-    want (string)
+	have (*bytes.Buffer, string)
+	want (string)
 ```
 
 ## 编写最小化代码供测试运行，并检查失败的测试输出
@@ -110,7 +107,7 @@ func TestGreet(t *testing.T) {
 
 ```go
 func Greet(writer *bytes.Buffer, name string) {
-    fmt.Printf("Hello, %s", name)
+	fmt.Printf("Hello, %s", name)
 }
 ```
 
@@ -126,7 +123,7 @@ Hello, Chris di_test.go:16: got '' want 'Hello, Chris'
 
 ```go
 func Greet(writer *bytes.Buffer, name string) {
-    fmt.Fprintf(writer, "Hello, %s", name)
+	fmt.Fprintf(writer, "Hello, %s", name)
 }
 ```
 
@@ -140,7 +137,7 @@ func Greet(writer *bytes.Buffer, name string) {
 
 ```go
 func main() {
-    Greet(os.Stdout, "Elodie")
+	Greet(os.Stdout, "Elodie")
 }
 ```
 
@@ -156,17 +153,17 @@ func main() {
 package main
 
 import (
-    "fmt"
-    "os"
-    "io"
+	"fmt"
+	"os"
+	"io"
 )
 
 func Greet(writer io.Writer, name string) {
-    fmt.Fprintf(writer, "Hello, %s", name)
+	fmt.Fprintf(writer, "Hello, %s", name)
 }
 
 func main() {
-    Greet(os.Stdout, "Elodie")
+	Greet(os.Stdout, "Elodie")
 }
 ```
 
@@ -182,21 +179,21 @@ func main() {
 package main
 
 import (
-    "fmt"
-    "io"
-    "net/http"
+	"fmt"
+	"io"
+	"net/http"
 )
 
 func Greet(writer io.Writer, name string) {
-    fmt.Fprintf(writer, "Hello, %s", name)
+	fmt.Fprintf(writer, "Hello, %s", name)
 }
 
 func MyGreeterHandler(w http.ResponseWriter, r *http.Request) {
-    Greet(w, "world")
+	Greet(w, "world")
 }
 
 func main() {
-    http.ListenAndServe(":5000", http.HandlerFunc(MyGreeterHandler))
+	http.ListenAndServe(":5000", http.HandlerFunc(MyGreeterHandler))
 }
 ```
 
@@ -228,17 +225,14 @@ func main() {
 
 随着你越来越熟悉标准库，你会越来越了解，这些在代码中重用的通用接口，会使得你的软件在许多场景都可以重用。
 
-本例深深受到 [The Go Programming language](https://www.amazon.co.uk/Programming-Language-Addison-Wesley-Professional-Computing/dp/0134190440) 中一个章节的启发，如果你喜欢的话，去它买吧！
+本例深深受到 [The Go Programming language](https://www.amazon.co.uk/Programming-Language-Addison-Wesley-Professional-Computing/dp/0134190440) 中一个章节的启发，如果你喜欢的话，去买它吧！
 
+---
 
-```
-----------------
-
-via:https://dev.to/quii/learn-go-by-writing-tests-dependency-injection-n7j
+via：https://dev.to/quii/learn-go-by-writing-tests-dependency-injection-n7j
 
 作者：[Chris James](https://dev.to/quii)
 译者：[Noluye](https://github.com/Noluye)
 校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-```

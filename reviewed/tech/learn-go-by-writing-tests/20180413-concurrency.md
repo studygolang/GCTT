@@ -1,15 +1,12 @@
+# 通过写测试学习 Go 语言：并发篇
+
 这是出自 WIP 项目的第六篇文章，该项目叫做 *[Learn Go by writing tests](https://quii.gitbook.io/learn-go-with-tests/)*，旨在熟悉 Go 语言并学习 TDD(Test-Driven Development) 相关的技巧。
 
-
-[第一篇文章让你快速上手 TDD](https://dev.to/quii/learn-go-by-writing-tests--m63)
-
-[第二篇文章讨论了数组和切片](https://dev.to/quii/learn-go-by-writing-tests-arrays-and-slices-ahm)
-
-[第三篇文章教授了结构、方法、接口和表驱动测试](https://dev.to/quii/learn-go-by-writing-tests-structs-methods-interfaces--table-driven-tests-1p01)
-
-[第四篇文章展示了如何执行错误以及解释为什么指针是有用的](https://dev.to/quii/learn-go-by-writing-tests-pointers-and-errors-2kp6)
-
-[第五篇文章展示了如何以及为什么要进行依赖注入](https://dev.to/quii/learn-go-by-writing-tests-dependency-injection-n7j)
+- [第一篇文章让你快速上手 TDD](https://dev.to/quii/learn-go-by-writing-tests--m63)
+- [第二篇文章讨论了数组和切片](https://dev.to/quii/learn-go-by-writing-tests-arrays-and-slices-ahm)
+- [第三篇文章教授了结构、方法、接口和表驱动测试](https://dev.to/quii/learn-go-by-writing-tests-structs-methods-interfaces--table-driven-tests-1p01)
+- [第四篇文章展示了如何执行错误以及解释为什么指针是有用的](https://dev.to/quii/learn-go-by-writing-tests-pointers-and-errors-2kp6)
+- [第五篇文章展示了如何以及为什么要进行依赖注入](https://dev.to/quii/learn-go-by-writing-tests-dependency-injection-n7j)
 
 此章节都是关于并发的。
 
@@ -17,98 +14,99 @@
 
 这是我们的计划：同事已经写了一个 `CheckWebsites` 的函数检查 URL 列表的状态。
 
-```
+```go
 package concurrency
 
 type WebsiteChecker func(string) bool
 
 func CheckWebsites(wc WebsiteChecker, urls []string) map[string]bool {
-    results := make(map[string]bool)
+	results := make(map[string]bool)
 
-    for _, url := range urls {
-        results[url] = wc(url)
-    }
+	for _, url := range urls {
+		results[url] = wc(url)
+	}
 
-    return results
+	return results
 }
 ```
 
 它返回一个 map，由每个 url 检查后的得到的布尔值组成，成功响应的值为 `true`，错误响应的值为 `false`。
 
-你还必须传入一个 `WebsiteChecker` 处理单个 URL 并返回
-一个布尔值。 它会被函数调用以检查所有的网站。
+你还必须传入一个 `WebsiteChecker` 处理单个 URL 并返回一个布尔值。 它会被函数调用以检查所有的网站。
 
-使用 [依赖注入](https://dev.to/quii/learn-go-by-writing-tests-dependency-injection-n7j) ，允许在不发起真实 HTTP 请求的情况下测试函数，这使测试变得可靠和快速。
+使用 [依赖注入](zh-CN/dependency-injection.md) ，允许在不发起真实 HTTP 请求的情况下测试函数，这使测试变得可靠和快速。
 
 这是他们写的测试：
-```
+
+```go
 package concurrency
 
 import (
-    "reflect"
-    "testing"
+	"reflect"
+	"testing"
 )
 
 func mockWebsiteChecker(url string) bool {
-    if url == "waat://furhurterwe.geds" {
-        return false
-    }
-    return true
+	if url == "waat://furhurterwe.geds" {
+		return false
+	}
+	return true
 }
 
 func TestCheckWebsites(t *testing.T) {
-    websites := []string{
-        "http://google.com",
-        "http://blog.gypsydave5.com",
-        "waat://furhurterwe.geds",
-    }
+	websites := []string{
+		"http://google.com",
+		"http://blog.gypsydave5.com",
+		"waat://furhurterwe.geds",
+	}
 
-    actualResults := CheckWebsites(mockWebsiteChecker, websites)
+	actualResults := CheckWebsites(mockWebsiteChecker, websites)
 
-    want := len(websites)
-    got := len(actualResults)
-    if want != got {
-        t.Fatalf("Wanted %v, got %v", want, got)
-    }
+	want := len(websites)
+	got := len(actualResults)
+	if want != got {
+		t.Fatalf("Wanted %v, got %v", want, got)
+	}
 
-    expectedResults := map[string]bool{
-        "http://google.com":          true,
-        "http://blog.gypsydave5.com": true,
-        "waat://furhurterwe.geds":    false,
-    }
+	expectedResults := map[string]bool{
+		"http://google.com":          true,
+		"http://blog.gypsydave5.com": true,
+		"waat://furhurterwe.geds":    false,
+	}
 
-    if !reflect.DeepEqual(expectedResults, actualResults) {
-        t.Fatalf("Wanted %v, got %v", expectedResults, actualResults)
-    }
+	if !reflect.DeepEqual(expectedResults, actualResults) {
+		t.Fatalf("Wanted %v, got %v", expectedResults, actualResults)
+	}
 }
 ```
 该功能在生产环境中被用于检查数百个网站。但是你的同事开始抱怨它速度很慢，所以他们请你帮忙为程序提速。
 
-### 写一个测试
+## 写一个测试
 
 首先我们对 `CheckWebsites` 做一个基准测试，这样就能看到我们修改的影响。
-```
+
+```go
 package concurrency
 
 import (
-    "testing"
-    "time"
+	"testing"
+	"time"
 )
 
 func slowStubWebsiteChecker(_ string) bool {
-    time.Sleep(20 * time.Millisecond)
-    return true
+	time.Sleep(20 * time.Millisecond)
+	return true
 }
 
 func BenchmarkCheckWebsites(b *testing.B) {
-    urls := make([]string, 100)
-    for i := 0; i < len(urls); i++ {
-        urls[i] = "a url"
-    }
+	urls := make([]string, 100)
+	for i := 0; i < len(urls); i++ {
+		urls[i] = "a url"
+	}
 
-    for i := 0; i < b.N; i++ {
-        CheckWebsites(slowStubWebsiteChecker, urls)
-    }
+	for i := 0; i < b.N; i++ {
+		CheckWebsites(slowStubWebsiteChecker, urls)
+	}
 }
 ```
 
@@ -126,7 +124,7 @@ ok      github.com/gypsydave5/learn-go-with-tests/concurrency/v0        2.268s
 
 让我们尝试去让它运行得更快。
 
-### 编写足够的代码让它通过
+## 编写足够的代码让它通过
 
 现在我们终于可以谈论并发了，以下内容是为了说明「不止一件事情正在进行中」。这是我们每天很自然在做的事情。
 
@@ -140,21 +138,21 @@ ok      github.com/gypsydave5/learn-go-with-tests/concurrency/v0        2.268s
 
 要告诉 Go 开始一个新的 goroutine，我们把一个函数调用变成 `go` 声明，通过把关键字 `go` 放在它前面：`go doSomething()`。
 
-```
+```go
 package concurrency
 
 type WebsiteChecker func(string) bool
 
 func CheckWebsites(wc WebsiteChecker, urls []string) map[string]bool {
-    results := make(map[string]bool)
+	results := make(map[string]bool)
 
-    for _, url := range urls {
-        go func() {
-            results[url] = wc(url)
-        }()
-    }
+	for _, url := range urls {
+		go func() {
+			results[url] = wc(url)
+		}()
+	}
 
-    return results
+	return results
 }
 ```
 
@@ -168,23 +166,25 @@ func CheckWebsites(wc WebsiteChecker, urls []string) map[string]bool {
 
 ```
 -------- FAIL: TestCheckWebsites (0.00s)
-        CheckWebsites_test.go:31: Wanted map[http://google.com:true http://blog.gypsydave5.com:true waat://furhurterwe.geds:false], got map[]
+		CheckWebsites_test.go:31: Wanted map[http://google.com:true http://blog.gypsydave5.com:true waat://furhurterwe.geds:false], got map[]
 FAIL
 exit status 1
 FAIL    github.com/gypsydave5/learn-go-with-tests/concurrency/v1        0.010s
 ```
 
-### 快速进入平行宇宙......
+## 快速进入平行宇宙......
+
 你可能不会得到这个结果。 你可能会得到一个 panic 信息，这个稍后再谈。如果你得到的是那些结果，不要担心，只要继续运行测试，直到你得到上述结果。 或假装你得到了，这取决于你。 欢迎来到并发编程的世界：如果处理不正确，很难预测会发生什么。 别担心 -- 这就是我们编写测试的原因，当处理并发时，测试帮助我们预测可能发生的情况。
 
-### ...重新回到这些问题。
+## ...重新回到这些问题。
+
 让我们困惑的是，原来的测试 `WebsiteChecker` 现在返回空的 map。 哪里出问题了？
 
 我们 `for` 循环开始的 `goroutines` 没有足够的时间将结果添加结果到 `results` map 中; `WebsiteChecker` 函数对于它们来说太快了，以至于它返回时仍为空的 map。
 
 为了解决这个问题，我们可以等待所有的 goroutine 完成他们的工作，然后返回。 两秒钟应该能完成了，对吧？
 
-```
+```go
 package concurrency
 
 import "time"
@@ -192,17 +192,17 @@ import "time"
 type WebsiteChecker func(string) bool
 
 func CheckWebsites(wc WebsiteChecker, urls []string) map[string]bool {
-    results := make(map[string]bool)
+	results := make(map[string]bool)
 
-    for _, url := range urls {
-        go func() {
-            results[url] = wc(url)
-        }()
-    }
+	for _, url := range urls {
+		go func() {
+			results[url] = wc(url)
+		}()
+	}
 
-    time.Sleep(2 * time.Second)
+	time.Sleep(2 * time.Second)
 
-    return results
+	return results
 }
 ```
 
@@ -210,7 +210,7 @@ func CheckWebsites(wc WebsiteChecker, urls []string) map[string]bool {
 
 ```
 -------- FAIL: TestCheckWebsites (0.00s)
-        CheckWebsites_test.go:31: Wanted map[http://google.com:true http://blog.gypsydave5.com:true waat://furhurterwe.geds:false], got map[waat://furhurterwe.geds:false]
+		CheckWebsites_test.go:31: Wanted map[http://google.com:true http://blog.gypsydave5.com:true waat://furhurterwe.geds:false], got map[waat://furhurterwe.geds:false]
 FAIL
 exit status 1
 FAIL    github.com/gypsydave5/learn-go-with-tests/concurrency/v1        0.010s
@@ -219,25 +219,25 @@ FAIL    github.com/gypsydave5/learn-go-with-tests/concurrency/v1        0.010s
 
 解决这个问题：
 
-```
+```go
 import (
-    "time"
+	"time"
 )
 
 type WebsiteChecker func(string) bool
 
 func CheckWebsites(wc WebsiteChecker, urls []string) map[string]bool {
-    results := make(map[string]bool)
+	results := make(map[string]bool)
 
-    for _, url := range urls {
-        go func(u string) {
-            results[u] = wc(u)
-        }(url)
-    }
+	for _, url := range urls {
+		go func(u string) {
+			results[u] = wc(u)
+		}(url)
+	}
 
-    time.Sleep(2 * time.Second)
+	time.Sleep(2 * time.Second)
 
-    return results
+	return results
 }
 ```
 通过给每个匿名函数一个参数 url(`u`) ，然后用 `url` 作为参数调用匿名函数，我们确保 `u` 的值固定为循环迭代的 `url` 值， 重新启动 `goroutine`。`u` 是 `url` 值的副本，因此无法更改。
@@ -256,17 +256,17 @@ fatal error: concurrent map writes
 
 goroutine 8 [running]:
 runtime.throw(0x12c5895, 0x15)
-        /usr/local/Cellar/go/1.9.3/libexec/src/runtime/panic.go:605 +0x95 fp=0xc420037700 sp=0xc4200376e0 pc=0x102d395
+		/usr/local/Cellar/go/1.9.3/libexec/src/runtime/panic.go:605 +0x95 fp=0xc420037700 sp=0xc4200376e0 pc=0x102d395
 runtime.mapassign_faststr(0x1271d80, 0xc42007acf0, 0x12c6634, 0x17, 0x0)
-        /usr/local/Cellar/go/1.9.3/libexec/src/runtime/hashmap_fast.go:783 +0x4f5 fp=0xc420037780 sp=0xc420037700 pc=0x100eb65
+		/usr/local/Cellar/go/1.9.3/libexec/src/runtime/hashmap_fast.go:783 +0x4f5 fp=0xc420037780 sp=0xc420037700 pc=0x100eb65
 github.com/gypsydave5/learn-go-with-tests/concurrency/v3.WebsiteChecker.func1(0xc42007acf0, 0x12d3938, 0x12c6634, 0x17)
-        /Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker.go:12 +0x71 fp=0xc4200377c0 sp=0xc420037780 pc=0x12308f1
+		/Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker.go:12 +0x71 fp=0xc4200377c0 sp=0xc420037780 pc=0x12308f1
 runtime.goexit()
-        /usr/local/Cellar/go/1.9.3/libexec/src/runtime/asm_amd64.s:2337 +0x1 fp=0xc4200377c8 sp=0xc4200377c0 pc=0x105cf01
+		/usr/local/Cellar/go/1.9.3/libexec/src/runtime/asm_amd64.s:2337 +0x1 fp=0xc4200377c8 sp=0xc4200377c0 pc=0x105cf01
 created by github.com/gypsydave5/learn-go-with-tests/concurrency/v3.WebsiteChecker
-        /Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker.go:11 +0xa1
+		/Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker.go:11 +0xa1
 
-        ... many more scary lines of text ...
+		... many more scary lines of text ...
 ```
 
 这看上去冗长、可怕，我们需要深呼吸并阅读错误：`fatal error: concurrent map writes`。 有时候，当我们运行我们的测试时，两个 goroutines 完全同时写入 `results` map。 Go 的 Maps 不喜欢多个事物试图一次性写入，所以就导致了 `fatal error`。
@@ -282,31 +282,31 @@ Go可以帮助我们通过其内置的 [race detector](https://blog.golang.org/r
 WARNING: DATA RACE
 Write at 0x00c420084d20 by goroutine 8:
   runtime.mapassign_faststr()
-      /usr/local/Cellar/go/1.9.3/libexec/src/runtime/hashmap_fast.go:774 +0x0
+	  /usr/local/Cellar/go/1.9.3/libexec/src/runtime/hashmap_fast.go:774 +0x0
   github.com/gypsydave5/learn-go-with-tests/concurrency/v3.WebsiteChecker.func1()
-      /Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker.go:12 +0x82
+	  /Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker.go:12 +0x82
 
 Previous write at 0x00c420084d20 by goroutine 7:
   runtime.mapassign_faststr()
-      /usr/local/Cellar/go/1.9.3/libexec/src/runtime/hashmap_fast.go:774 +0x0
+	  /usr/local/Cellar/go/1.9.3/libexec/src/runtime/hashmap_fast.go:774 +0x0
   github.com/gypsydave5/learn-go-with-tests/concurrency/v3.WebsiteChecker.func1()
-      /Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker.go:12 +0x82
+	  /Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker.go:12 +0x82
 
 Goroutine 8 (running) created at:
   github.com/gypsydave5/learn-go-with-tests/concurrency/v3.WebsiteChecker()
-      /Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker.go:11 +0xc4
+	  /Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker.go:11 +0xc4
   github.com/gypsydave5/learn-go-with-tests/concurrency/v3.TestWebsiteChecker()
-      /Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker_test.go:27 +0xad
+	  /Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker_test.go:27 +0xad
   testing.tRunner()
-      /usr/local/Cellar/go/1.9.3/libexec/src/testing/testing.go:746 +0x16c
+	  /usr/local/Cellar/go/1.9.3/libexec/src/testing/testing.go:746 +0x16c
 
 Goroutine 7 (finished) created at:
   github.com/gypsydave5/learn-go-with-tests/concurrency/v3.WebsiteChecker()
-      /Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker.go:11 +0xc4
+	  /Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker.go:11 +0xc4
   github.com/gypsydave5/learn-go-with-tests/concurrency/v3.TestWebsiteChecker()
-      /Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker_test.go:27 +0xad
+	  /Users/gypsydave5/go/src/github.com/gypsydave5/learn-go-with-tests/concurrency/v3/websiteChecker_test.go:27 +0xad
   testing.tRunner()
-      /usr/local/Cellar/go/1.9.3/libexec/src/testing/testing.go:746 +0x16c
+	  /usr/local/Cellar/go/1.9.3/libexec/src/testing/testing.go:746 +0x16c
 ==================
 ```
 
@@ -334,31 +334,31 @@ Goroutine 7 (finished) created at:
 
 在这种情况下，我们想要考虑父进程和每个 goroutine 之间的通信，goroutine 使用 url 来执行 `WebsiteChecker` 函数。
 
-```
+```go
 package concurrency
 
 type WebsiteChecker func(string) bool
 type result struct {
-    string
-    bool
+	string
+	bool
 }
 
 func CheckWebsites(wc WebsiteChecker, urls []string) map[string]bool {
-    results := make(map[string]bool)
-    resultChannel := make(chan result)
+	results := make(map[string]bool)
+	resultChannel := make(chan result)
 
-    for _, url := range urls {
-        go func(u string) {
-            resultChannel <- result{u, wc(u)}
-        }(url)
-    }
+	for _, url := range urls {
+		go func(u string) {
+			resultChannel <- result{u, wc(u)}
+		}(url)
+	}
 
-    for i := 0; i < len(urls); i++ {
-        result := <-resultChannel
-        results[result.string] = result.bool
-    }
+	for i := 0; i < len(urls); i++ {
+		result := <-resultChannel
+		results[result.string] = result.bool
+	}
 
-    return results
+	return results
 }
 ```
 
@@ -417,12 +417,12 @@ ok      github.com/gypsydave5/learn-go-with-tests/concurrency/v2        2.377s
 > [过早的优化是万恶之源](http://wiki.c2.com/?PrematureOptimization)
 > -- Donald Knuth
 
-----------------
+---
 
 via: https://dev.to/gypsydave5/learn-go-by-writing-tests-concurrency--2ebk
 
 作者：[David Wickes](https://dev.to/gypsydave5)
 译者：[Donng](https://github.com/Donng)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

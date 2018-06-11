@@ -1,11 +1,10 @@
+# 通过写测试学习 Go 语言：指针和错误篇
+
 这是出自 WIP 项目的第四篇文章，该项目叫做 *[Learn Go by writing tests](https://quii.gitbook.io/learn-go-with-tests/)*，旨在熟悉 Go 语言并学习 TDD(Test-Driven Development) 相关的技巧。
 
-
-[第一篇文章让你快速上手 TDD](https://dev.to/quii/learn-go-by-writing-tests--m63)
-
-[第二篇文章讨论了数组和切片](https://dev.to/quii/learn-go-by-writing-tests-arrays-and-slices-ahm)
-
-[第三篇文章教授了结构、方法、接口和表驱动测试](https://dev.to/quii/learn-go-by-writing-tests-structs-methods-interfaces--table-driven-tests-1p01)
+- [第一篇文章让你快速上手 TDD](https://dev.to/quii/learn-go-by-writing-tests--m63)
+- [第二篇文章讨论了数组和切片](https://dev.to/quii/learn-go-by-writing-tests-arrays-and-slices-ahm)
+- [第三篇文章教授了结构、方法、接口和表驱动测试](https://dev.to/quii/learn-go-by-writing-tests-structs-methods-interfaces--table-driven-tests-1p01)
 
 ## 指针和错误
 
@@ -18,6 +17,7 @@
 首先声明一个 `Wallet（钱包）` 结构体，我们可以利用它存放 `Bitcoin（比特币）`。
 
 ### 首先写测试
+
 ```
 func TestWallet(t *testing.T) {
 
@@ -366,19 +366,25 @@ t.Run("Withdraw insufficient funds", func(t *testing.T) {
 如果你尝试访问一个值为 `nil` 的值，它将会引发 **运行时的 panic**。这很糟糕!你应该确保你检查了 `nil` 的值。
 
 ### 尝试运行测试
+
 `./wallet_test.go:31:25: wallet.Withdraw(Bitcoin(100)) used as value`
 
 错误信息可能不太清楚，但我们之前对于 `Withdraw` 的意图只是调用它，它永远不会返回一个值。为了使它编译通过，我们需要更改它，以便它有一个返回类型。
+
 ### 为测试的运行编写最少量的代码并检查失败测试的输出
-```
+
+```go
 func (w *Wallet) Withdraw(amount Bitcoin) error {
     w.balance -= amount
     return nil
 }
 ```
+
 再次强调，编写足够的代码来满足编译器的要求是非常重要的。我们纠正了自己的 `Withdraw` 方法返回 `error`，现在我们必须返回 *一些东西*，所以我们就返回 `nil` 好了。
+
 ### 编写足够的代码使其通过
-```
+
+```go
 func (w *Wallet) Withdraw(amount Bitcoin) error {
 
     if amount > w.balance {
@@ -421,9 +427,10 @@ t.Run("Withdraw insufficient funds", func(t *testing.T) {
 假设错误最终会返回给用户，让我们更新测试以断言某种错误消息，而不只是让错误存在。
 
 ### 先写测试
+
 更新一个 `string` 的助手方法来比较。
 
-```
+```go
 assertError := func(t *testing.T, got error, want string) {
     if got == nil {
         t.Fatal("didn't get an error but wanted one")
@@ -434,8 +441,10 @@ assertError := func(t *testing.T, got error, want string) {
     }
 }
 ```
+
 同时再更新调用者
-```
+
+```go
 t.Run("Withdraw insufficient funds", func(t *testing.T) {
     startingBalance := Bitcoin(20)
     wallet := Wallet{startingBalance}
@@ -452,7 +461,8 @@ t.Run("Withdraw insufficient funds", func(t *testing.T) {
 `wallet_test.go:61: got err 'oh no' want 'cannot withdraw, insufficient funds'`
 
 ### 编写足够的代码使其通过
-```
+
+```go
 func (w *Wallet) Withdraw(amount Bitcoin) error {
 
     if amount > w.balance {
@@ -472,7 +482,7 @@ func (w *Wallet) Withdraw(amount Bitcoin) error {
 
 在Go中，错误是值，因此我们可以将其重构为一个变量，并为其提供一个单一的事实来源。
 
-```
+```go
 var InsufficientFundsError = errors.New("cannot withdraw, insufficient funds")
 
 func (w *Wallet) Withdraw(amount Bitcoin) error {
@@ -492,7 +502,7 @@ func (w *Wallet) Withdraw(amount Bitcoin) error {
 
 接下来，我们可以重构我们的测试代码来使用这个值而不是特定的字符串。
 
-```
+```go
 func TestWallet(t *testing.T) {
 
     t.Run("Deposit", func(t *testing.T) {
@@ -559,7 +569,7 @@ func assertError(t *testing.T, got error, want error) {
 
 这是最终的测试代码。
 
-```
+```go
 func TestWallet(t *testing.T) {
 
     t.Run("Deposit", func(t *testing.T) {
@@ -614,34 +624,36 @@ func assertError(t *testing.T, got error, want error) {
 ## 总结
 
 ### 指针
- - 当你传值给函数或方法时，Go 会复制这些值。因此，如果你写的函数需要更改状态，你就需要用指针指向你想要更改的值
- - Go 取值的副本在大多数时候是有效的，但是有时候你不希望你的系统只使用副本，在这种情况下你需要传递一个引用。例如，非常庞大的数据或者你只想有一个实例（比如数据库连接池）
+
+- 当你传值给函数或方法时，Go 会复制这些值。因此，如果你写的函数需要更改状态，你就需要用指针指向你想要更改的值
+- Go 取值的副本在大多数时候是有效的，但是有时候你不希望你的系统只使用副本，在这种情况下你需要传递一个引用。例如，非常庞大的数据或者你只想有一个实例（比如数据库连接池）
 
 ### nil
- - 指针可以是 nil
- - 当函数返回一个的指针，你需要确保检查过它是否为 nil，否则你可能会抛出一个执行异常，编译器在这里不能帮到你
- - nil 非常适合描述一个可能丢失的值
+
+- 指针可以是 nil
+- 当函数返回一个的指针，你需要确保检查过它是否为 nil，否则你可能会抛出一个执行异常，编译器在这里不能帮到你
+- nil 非常适合描述一个可能丢失的值
 
 ### 错误
- - 错误是在调用函数或方法时表示失败的
- - 通过测试我们得出结论，在错误中检查字符串会导致测试不稳定。因此，我们用一个有意义的值重构了，这样就更容易测试代码，同时对于我们 API 的用户来说也更简单。
- - 错误处理的故事远远还没有结束，你可以做更复杂的事情，这里只是抛砖引玉。后面的部分将介绍更多的策略。
- - [不要只是检查错误，要优雅地处理它们](https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully)
+
+- 错误是在调用函数或方法时表示失败的
+- 通过测试我们得出结论，在错误中检查字符串会导致测试不稳定。因此，我们用一个有意义的值重构了，这样就更容易测试代码，同时对于我们 API 的用户来说也更简单。
+- 错误处理的故事远远还没有结束，你可以做更复杂的事情，这里只是抛砖引玉。后面的部分将介绍更多的策略。
+- [不要只是检查错误，要优雅地处理它们](https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully)
 
 ### 从现有的类型中创建新的类型。
 
- - 用于为值添加更多的领域内特定的含义
- - 可以让你实现接口
-
+- 用于为值添加更多的领域内特定的含义
+- 可以让你实现接口
 
 指针和错误是 Go 开发中重要的组成部分，你需要适应这些。幸运的是，如果你做错了，编译器通常会帮你解决问题，你只需要花点时间读一下错误信息。
 
-----------------
+---
 
 via: https://dev.to/quii/learn-go-by-writing-tests-pointers-and-errors-2kp6
 
 作者：[Chris James](https://dev.to/quii)
 译者：[Donng](https://github.com/Donng)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
