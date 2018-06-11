@@ -306,3 +306,12 @@ func mapaccess1(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer {
 1. 你可以在这里找到更多关于 runtime.hmap 结构的内容。[https://dave.cheney.net/2017/04/30/if-a-map-isnt-a-reference-variable-what-is-it](https://dave.cheney.net/2017/04/30/if-a-map-isnt-a-reference-variable-what-is-it)
 
 
+----------------
+
+via: https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-efficiently-without-generics
+
+作者：[Dave Cheney](https://dave.cheney.net/about)
+译者：[alfred-zhong](https://github.com/alfred-zhong)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
