@@ -12,9 +12,9 @@
 
 这个项目需要提供基于 `GO` 语言的用于转换 `ADEXP` 格式信息的两种实现( `ICAO` 格式的转换并没有体现在这次对比中)：
 
-- 不好的实现方式（ `package` 包名：[bad](https://github.com/teivah/golang-good-code-bad-code/tree/master/bad)）  
+- 不好的实现方式（ `package` 包名：[bad](https://github.com/teivah/golang-good-code-bad-code/tree/master/bad)）
 
-- 重构之后的实现方式（ `package` 包名：[good](https://github.com/teivah/golang-good-code-bad-code/tree/master/good)）  
+- 重构之后的实现方式（ `package` 包名：[good](https://github.com/teivah/golang-good-code-bad-code/tree/master/good)）
 
 - `ADEXP` 格式的信息例子可以在[这里](https://raw.githubusercontent.com/teivah/golang-good-code-bad-code/master/resources/tests/adexp.txt)找到。
 
@@ -32,14 +32,14 @@
 
 - 循环的
 
-> -EETFIR EHAA 0853  
+> -EETFIR EHAA 0853
 > -EETFIR EBBU 0908
 
 这个例子代表的是一个 `FIR` (飞行情报区)列表，第一个航班是 `EHAA 0853`,第二个 `EBBU 0908`。
 
 - 复杂的
 
-> -GEO -GEOID GEO01 -LATTD 490000N -LONGTD 0500000W  
+> -GEO -GEOID GEO01 -LATTD 490000N -LONGTD 0500000W
 > -GEO -GEOID GEO02 -LATTD 500000N -LONGTD 0400000W
 
 一个循环的 `tokens` 列表，每一行包含一个子 `token` 列表（在这个例子中是 `GEOID`， `LATTD`， `LONGTD`）。
@@ -166,7 +166,7 @@ if err == nil {
 		return b, nil
 	} else {
 		return nil, err
-	} 
+	}
 } else {
 	return nil, err
 }
@@ -233,7 +233,7 @@ for i := 0; i < len(lines); i++ {
 
 传递共享的变量有两个主要的缺点：
 
--  缺点 #1：分割一致的修饰
+- 缺点 #1：分割一致的修饰
 
 因为结构中包含一些切片可以被同时修改（同时被两个或者更多的协程）我们得处理互斥的问题。
 
@@ -296,13 +296,13 @@ for range in {
 ch <- "ok"
 ```
 
-因为父级协程并不会检查通道传过来的结果，较好的处理是通过`chan struct{}`使用`ch <- struct{}{} `，或者更好的选择(`GC`会更差)是通过`chan interface{}`使用`ch <- nil`处理。
+因为父级协程并不会检查通道传过来的结果，较好的处理是通过 `chan struct{}`使用`ch <- struct{}{}`，或者更好的选择( `GC` 会更差)是通过 `chan interface{}` 使用 `ch <- nil` 处理。
 
-另一个类似的方法（在我看来甚至会更简洁）是使用`sync.WaitGroup`，因为当每一个`mapLine()`执行完了，父级的协程还需继续运行。
+另一个类似的方法（在我看来甚至会更简洁）是使用 `sync.WaitGroup`，因为当每一个 `mapLine()` 执行完了，父级的协程还需继续运行。
 
 ## If条件判断
 
-在`Go`的条件判断语句中，允许在条件前进行赋值。
+在 `Go` 的条件判断语句中，允许在条件前进行赋值。
 
 一个改进版的代码：
 
@@ -333,7 +333,7 @@ case tokenTitle:
 case tokenAdep:
 	msg.Adep = value
 case tokenAltnz:
-	msg.Alternate = value 
+	msg.Alternate = value
 // Other cases
 }
 ```
@@ -348,7 +348,7 @@ case tokenAdep:
 	msg.Adep = value
 case tokenAltnz:
 	msg.Alternate = value
-// Other cases    
+// Other cases
 default:
 	log.Errorf("unexpected token type %v", simpleToken.token)
 	return Message{}, fmt.Errorf("unexpected token type %v", simpleToken.token)
@@ -362,7 +362,7 @@ default:
 `parseComplexLines()`是一个解析复杂`token`的方法，在不好的代码中是使用递归来处理：
 
 ```go
-func parseComplexLines(in string, currentMap map[string]string, 
+func parseComplexLines(in string, currentMap map[string]string,
 	out []map[string]string) []map[string]string {
 
 	match := regexpSubfield.Find([]byte(in))
@@ -430,13 +430,13 @@ const (
 	IcaoType  = 1
 )
 
-``` 
+```
 反之，利用`Go`的`iota`（常量计数器）能写出更优雅的代码：
 
 ```go
 const (
 	AdexpType = iota
-	IcaoType 
+	IcaoType
 )
 ```
 输出的结果是一致的，但是规避了可能存在的错误。
@@ -502,7 +502,7 @@ for range in {
 在注释中提供一个另外的例子也会提供很大的帮助：
 
 ```go
-// Parse a line by returning the header (token name) and the value. 
+// Parse a line by returning the header (token name) and the value.
 // Example: -COMMENT TEST must returns COMMENT and TEST (in byte slices)
 func parseLine(in []byte) ([]byte, []byte) {
 	// ...

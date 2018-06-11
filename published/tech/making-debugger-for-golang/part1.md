@@ -214,7 +214,7 @@ hello world
 
 给我们点个赞吧，让更多人能看到这篇文章。如果你想获得新博文的更新或者在工作中获得提高，请关注我们吧。
 
-----------------
+---
 
 via: https://medium.com/golangspec/making-debugger-for-golang-part-i-53124284b7c8
 

@@ -111,7 +111,7 @@ for job := range jobChan {...}
 这看起来很容易，不过 `close(jobChan)` 不会等待 goroutine 完成就会退出。因此我们还需使用 sync.WaitGroup：
 
 ```go
-// use a WaitGroup 
+// use a WaitGroup
 var wg sync.WaitGroup
 
 func worker(jobChan <-chan Job) {
@@ -265,7 +265,7 @@ cancel()
 // create a cancel channel
 cancelChan := make(chan struct{})
 
-// start the goroutine passing it the cancel channel 
+// start the goroutine passing it the cancel channel
 go worker(jobChan, cancelChan)
 
 func worker(jobChan <-chan Job, cancelChan <-chan struct{}) {

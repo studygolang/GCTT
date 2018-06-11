@@ -1,6 +1,6 @@
 已发布：https://studygolang.com/articles/12703
 
-# 探索 Go 中的对象（object） 
+# 探索 Go 中的对象（object）
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-object/goexplorer.png)
 
@@ -237,7 +237,7 @@ func main() {
 
 这个例子是完全状态无关的。Object 通常会有状态和副作用，Go 的函数也有状态和副作用吗？
 
-## 函数和状态 ##
+## 函数和状态
 
 为了让函数和 object 之间的差距更小一点，我们用个最原始的/最简单的例子，一个 iterator：
 
@@ -388,7 +388,7 @@ func main() {
 
 为了完成这部分，我们写几个函数，操作一个共享状态（这就是 object 所做的）：
 
-```go 
+```go
 package main
 
 import "fmt"
@@ -431,7 +431,7 @@ dec 2: 1
 dec 3: 0
 ```
 
-可以清楚看到，两个函数共享同一个状态，都能管理状态，就像你用含有两个方法的 object 做的一样。 
+可以清楚看到，两个函数共享同一个状态，都能管理状态，就像你用含有两个方法的 object 做的一样。
 
 当然我不是鼓励大家随便用带一些变量的函数，struct 的存在就是为了给不同类型组合命名，赋予含义的。
 
@@ -563,7 +563,7 @@ Go 的解决方案是用接口，在我看来这是 Go 里最棒的特性。
 
 感谢诸位花时间帮我 review 并且指出了一些低级的错误。
 
-----------------
+---
 
 via: https://katcipis.github.io/blog/exploring-go-objects/
 

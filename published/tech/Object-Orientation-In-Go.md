@@ -142,7 +142,7 @@ useFileProtocol(func() (ReadCloser, error) {
 
 当我尝试为 nash 上的内置函数 exit 编写测试代码时，第一次了解到 go 的 interfaces 是多么的强大。主要的问题是，似乎我们必须为每个平台实现不同的测试，因为在某些平台上，退出状态代码的处理方式不同。我现在不记得所有的细节，但在 plan9 上，退出状态是一个 string 类型，而不是一个 integer 类型。
 
-基本上在一个错误上，我想要的是状态代码，而不仅仅是错误，就像在 Cmd.run 上提供的。(文件 Cmd.run : https://golang.org/pkg/os/exec/#Cmd.Run) 
+基本上在一个错误上，我想要的是状态代码，而不仅仅是错误，就像在 Cmd.run 上提供的。(文件 Cmd.run : https://golang.org/pkg/os/exec/#Cmd.Run)
 
 有 ExitError 类型，我可以这样做: (ExitError 类型： https://golang.org/pkg/os/exec/#ExitError)
 
@@ -200,7 +200,7 @@ syscall % grep -R ExitStatus .
 ./syscall_solaris.go:func (w WaitStatus) ExitStatus() int {
 ./syscall_linux.go:func (w WaitStatus) ExitStatus() int {
 ./syscall_windows.go:func (w WaitStatus) ExitStatus() int { return int(w.ExitCode) }
-./syscall_plan9.go:func (w Waitmsg) ExitStatus() int { 
+./syscall_plan9.go:func (w Waitmsg) ExitStatus() int {
 ```
 
 看起来像公共协议被足够多的平台所实现，这对我来说至少是足够的(windows + linux + plan9 是足够的。)。现在我们有一个共同的协议所有的平台我们可以这样做:
@@ -284,7 +284,7 @@ Go 和 Java 都有 interfaces 的概念，这是似乎具有误导性的，因�
 
 花时间回顾并指出很多愚蠢的错误。
 
-----------------
+---
 
 via: https://katcipis.github.io/blog/object-orientation-go/
 

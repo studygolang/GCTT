@@ -76,13 +76,13 @@
 你的库很棒，但是终有一天我会想要将其淘汰出去。Go 的类型系统[有时会造成阻碍](https://medium.com/statuscode/go-experience-report-gos-type-system-c4d4dfcc964c)。然而，总的来说，隐式接口胜于过于强大的静态类型。如果有可能的话，最好将标准库类型作为函数参数类型和返回值类型，这样，用户就可以根据你的结构创建接口，以便于后面进行库替换。
 
 ```go
-type AvoidThis struct {}  
-type Key string  
+type AvoidThis struct {}
+type Key string
 func (a *AvoidThis) Convert(k Key) {... }
 ```
 
 ```go
-type PreferThis struct {}  
+type PreferThis struct {}
 func (p *PreferThis) Convert(k string) { ... }
 ```
 
@@ -91,12 +91,12 @@ func (p *PreferThis) Convert(k string) { ... }
 CPU 通常是避无可避的，但是，重新考虑你的 API 会使得最小化 API 调用期间的垃圾回收成为可能。例如，创建不强制垃圾回收的 API。**事后优化实现很容易，但是事后优化 API 则几乎不可能**。
 
 ```go
-type AvoidThis struct {}  
+type AvoidThis struct {}
 func (a *AvoidThis) Bytes() []byte { ... }
 ```
 
 ```go
-type PreferThis struct {}  
+type PreferThis struct {}
 func (p *PreferThis) WriteTo(w Writer) (n int64, err error) { ... }
 ```
 
@@ -181,18 +181,18 @@ Go 简单的语法和优秀的标准库函数允许广泛的静态代码检查�
 100% 测试覆盖率是极端的，而 0% 测试覆盖率几乎不是什么好事。这是一项难以量化的规则，所以我已经决定“没有任何函数应该具备 0% 的测试覆盖率”是最低限度了。你可以使用 Go 的 cover 工具获取每个函数测试覆盖率。
 
 ```console
-# go test -coverprofile=cover.out context  
+# go test -coverprofile=cover.out context
 ok   context 2.651s coverage: 97.0% of statements
 ```
 
 ```console
-# go tool cover -func=cover.out  
-context/context.go:162: Error  100.0%  
-context/context.go:163: Timeout  100.0%  
-context/context.go:164: Temporary 100.0%  
-context/context.go:170: Deadline 100.0%  
-context/context.go:174: Done  100.0%  
-context/context.go:178: Err  100.0%  
+# go tool cover -func=cover.out
+context/context.go:162: Error  100.0%
+context/context.go:163: Timeout  100.0%
+context/context.go:164: Temporary 100.0%
+context/context.go:170: Deadline 100.0%
+context/context.go:174: Done  100.0%
+context/context.go:178: Err  100.0%
     ...
 ```
 
@@ -206,7 +206,7 @@ Go 允许你把一个结构的函数放到多个文件中。这在使用[构建�
 
 /internal 包严重使用不足。我推荐二进制文件和库都利用 /internal 来隐藏不打算导入的公共函数。隐藏你的公共导入空间也使得用户更清楚应该导入哪些包，以及要到哪里寻找有用的逻辑。
 
-----------------
+---
 
 via: https://medium.com/@cep21/aspects-of-a-good-go-library-7082beabb403
 

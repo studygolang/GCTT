@@ -43,7 +43,7 @@ log.Printf("Cool module is: %s\n", isEnabledString)
 Go 语言的专家们，我衷心感谢你们分享的代码以及我每天阅读的时候学习到的这些东西，但是我不认为他们有什么用处：
 
 ```go
-// this function adds two integers 
+// this function adds two integers
 // -put captain obvious meme here-
 func addTwoNumbers(a, b int) int {
 	return a + b
@@ -75,7 +75,7 @@ import "github.com/bettercap/bettercap"
 
 如你所见，Go 事实上直接使用了 Git 仓库来管理这些包，应用或者任何与 Go 有关的东西……从某方面来说确实很方便，但是这会引起一个很大的问题：只要你不使用其他工具或者基于这个问题做一些难看的规避方案，那么你每次在一个新系统上编译你的软件时，只要缺失了某个依赖包，这个依赖包所在仓库的主分支就会被克隆下来。这意味着，**尽管你应用的代码完全没有修改，但是你每次在新电脑上编译时都很可能会产生代码差异**（只要你任何一个依赖包在主分支上有改动）。
 
-![](https://raw.githubusercontent.com/studygolang/gctt-images/master/amazing/mgc.gif)  
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/amazing/mgc.gif)
 [via GIPHY](https://giphy.com/gifs/shia-labeouf-12NUbkX6p4xOO4)
 
 当用户在使用源码编译他们自己版本的软件时开始针对第三方库报告问题，而你完全不清楚是哪一个提交引起的时候，请尽情享受吧 ^\_^
@@ -134,7 +134,7 @@ type BaseInterface interface {
 type Derived struct {
 	// I just swallowed my base object and got its methods
 	BaseObjectForMethods
-}   
+}
 // and here we implement the interface method instead
 func (d Derived) interfaceMethod() {
 	// whatever, i'm a depressed object model anyway ... :/
@@ -173,13 +173,13 @@ func (d Derived) interfaceMethod() {
 
 愿世界和平
 
-----------------
+---
 
 ![](https://blockchain.info/Resources/buttons/donate_64.png)
 保持联系！
 [关注 @evilsocket](https://twitter.com/evilsocket)
 
-----------------
+---
 
 via: https://www.evilsocket.net/2018/03/14/Go-is-amazing-so-here-s-what-i-don-t-like-about-it/
 

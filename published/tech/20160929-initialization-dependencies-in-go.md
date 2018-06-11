@@ -165,7 +165,7 @@ func f() int {
 
 如果你喜欢上面的内容，请关注我，来加速未来故事的发展。
 
-----------------
+---
 
 via: https://medium.com/golangspec/initialization-dependencies-in-go-51ae7b53f24c
 
