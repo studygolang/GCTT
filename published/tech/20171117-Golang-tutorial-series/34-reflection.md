@@ -1,12 +1,14 @@
+已发布：https://studygolang.com/articles/13178
+
 # 反射
 
-![reflection](https://golangbot.com/content/images/2018/05/reflection-golang-3.png)
+![reflection](https://raw.githubusercontent.com/studygolang/gctt-images/master/golang-series/reflection-golang-3.png)
 
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 34 篇。
 
 反射是 Go 语言的高级主题之一。我会尽可能让它变得简单易懂。
 
-本教程分为分为如下小节。
+本教程分为如下小节。
 
 - 什么是反射？
 - 为何需要检查变量，确定变量的类型？
@@ -479,6 +481,6 @@ via: https://golangbot.com/reflection/
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[Noluye](https://github.com/Noluye)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12291
+
 # Go 中的位运算
 
 ![cover](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-bits/cover.png)
