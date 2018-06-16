@@ -4,7 +4,7 @@
 
 最近几年，Go 语言变得非常流行。我是 Python 的狂热粉丝，三年前我的第一个业余项目也是用 Python 实现的。而现在我开始使用 Go 语言来取代 Python，因为不管是业余爱好的小项目还是公司里的大项目，Go 语言能让我的编码效率更高。
 
-与此同时，以为机器学习以及大数据变得越来越重要，也带动了 Python ，使它更加的流行。在机器学习中首选 Python 有很多原因，其中一个原因是 Python 是为交互式代码编写和评估而设计的。另一个重要的原因是 Python 中有一个很好的交互式编程工具：Jupyter Notebook。
+与此同时，随着机器学习和数据科学（data science）变得越来越重要，Python 也更加流行。在机器学习中首选 Python 有很多原因，其中一个原因是 Python 是为交互式代码编写和计算而设计的。另一个重要的原因是 Python 中有一个很好的交互式编程工具：[Jupyter Notebook](http://jupyter.org/)。
 
 虽然我现在在许多以前使用 Python 的项目中使用 Go 语言，但我仍然需要使用 Python 进行机器学习研究和数据分析。Python 中的交互式编程和 Jupyter Notebook 的能力对我来说仍然非常有吸引力。我希望有一个真正有用的 Go 语言的 Jupyter 环境以及能够验证 Go 语言正确性的 Jupyter 内核。但现在还没有这样的项目，有些类似的项目已经终止。虽然其中有一些比较流行，但不适合实际使用，因为它们不支持类型安全、代码取消、代码完成、检查或显示非文本内容。
 
@@ -32,7 +32,7 @@
 * Jupyter Notebook 功能
 * 完全符合 Go 语言规范，同时 100% 兼容 Go 语言编译器。
 * 拥有 Jupyter Notebook 一样的代码补全，检查和代码格式化。
-* 显示图像，HTML，JavaScript，SVG等。
+* 显示图像，HTML，JavaScript，SVG 等。
 * 控制台上的交互式解释器
 * 完全支持 goroutine 以及 channel
 
@@ -48,15 +48,12 @@
 
 有两种方法可以将 Go 语言的 Jupyter 环境安装到你的计算机中。
 
-* [使用预先构建的Docker映像](https://github.com/yunabe/lgo#quick-start-with-docker)
-
+* [使用预先构建的 Docker 镜像](https://github.com/yunabe/lgo#quick-start-with-docker)
 * [源码安装（目前仅支持 Linux）](https://github.com/yunabe/lgo#install)
-
 
 如果您想在计算机上快速尝试 Go 语言的 Jupyter环境，请先尝试 Docker 版本。 如果你使用 Linux 并且想要将 Jupyter 环境与 Go 环境集成到你的计算机中，那么你可以选择源码安装。 由于使用了 [`-buildmode = shared` 进行回归](https://github.com/golang/go/issues/24034)，lgo 的代码在 go1.10 中运行起来很慢。 在 go1.10 修正 bug 之前，请使用 go1.9 来尝试 lgo 。 目前 lgo 在 go1.9 以及 go1.8 完美运行。
 
 Windows 和 Mac 用户，请使用 Docker 版本，因为 lgo 不支持 Windows 和 Mac。你可以在 Windows 或 Mac 上的 Docker 来运行 lgo。
-
 
 ## 使用
 
