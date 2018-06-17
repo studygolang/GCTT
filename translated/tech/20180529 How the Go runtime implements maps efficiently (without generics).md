@@ -201,7 +201,8 @@ v := m["key"]
 
 到
 
-```go runtime.mapaccess(m, "key", &v)
+```go
+runtime.mapaccess(m, "key", &v)
 ```
 
 却没有使用 `interface{}` 的呢？要解释 Go 中的 map 类型是如何工作的最简单的函数是给你看一下 `runtime.mapaccess1` 的定义。
@@ -221,7 +222,7 @@ func mapaccess1(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer
 C++ 中，对于每一个独立的 map 定义都有一个完整的实现。而 Go 并非如此，它在编译期间创建了一个 `maptype` 并在调用 runtime 的 map 函数的时候使用了它。
 
 ```go
-type maptype struct {     
+type maptype struct {
     typ           _type
     key           *_type
     elem          *_type
@@ -305,7 +306,6 @@ func mapaccess1(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer {
 
 1. 你可以在这里找到更多关于 runtime.hmap 结构的内容。[https://dave.cheney.net/2017/04/30/if-a-map-isnt-a-reference-variable-what-is-it](https://dave.cheney.net/2017/04/30/if-a-map-isnt-a-reference-variable-what-is-it)
 
-
 ----------------
 
 via: https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-efficiently-without-generics
@@ -315,5 +315,4 @@ via: https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-effic
 校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
 
