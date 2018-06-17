@@ -1,22 +1,22 @@
-# Map 在 Go Runtime 中的高效实现（不使用范型）
+# Map 在 Go runtime 中的高效实现（不使用范型）
 
 这篇文章基于我在日本东京 [GoCon Spring 2018](https://gocon.connpass.com/event/82515/) 上的演讲讨论了 Go 语言中的 map 是如何实现的。
 
-## 什么是一个 map 方法
+## 什么是映射函数
 
-要明白 map 是如何工作的的，我们需要先讨论一下 *map 方法*。一个 map 方法用以将一个值映射到另一个值。给定一个值，我们叫 *key*，它就会返回另外一个值，称为 *value*。
+要明白 map 是如何工作的的，我们需要先讨论一下 *map 函数*。一个 map 函数用以将一个值映射到另一个值。给定一个值，我们叫 *key*，它就会返回另外一个值，称为 *value*。
 
 ```
 map(key) → value
 ```
 
-现在，map 还没什么用，除非我们放入一些数据。我们需要一个方法来将数据添加到 map 中
+现在，map 还没什么用，除非我们放入一些数据。我们需要一个函数来将数据添加到 map 中
 
 ```
 insert(map, key, value)
 ```
 
-和一个方法从 map 中移除数据
+和一个函数从 map 中移除数据
 
 ```
 delete(map, key)
@@ -26,13 +26,13 @@ delete(map, key)
 
 ## Go 中的 map 是一个 hashmap
 
-Hashmap 是我要讨论的的 map 的一种特定实现，因为这也是 Go Runtime 中所采用的实现方式。Hashmap 是一种经典的数据结构，提供了平均 O(1) 的查询时间复杂度，即使在最糟的情况下也有 O(n) 的复杂度。也就是说，正常情况下，执行 map 方法的时间是个常量。
+Hashmap 是我要讨论的的 map 的一种特定实现，因为这也是 Go Runtime 中所采用的实现方式。Hashmap 是一种经典的数据结构，提供了平均 O(1) 的查询时间复杂度，即使在最糟的情况下也有 O(n) 的复杂度。也就是说，正常情况下，执行 map 函数的时间是个常量。
 
-这个常量的大小部分取决于 hashmap 的设计方式，而 map 存取时间从 O(1) 到 O(n) 的变化则取决于它的 *hash 方法*。
+这个常量的大小部分取决于 hashmap 的设计方式，而 map 存取时间从 O(1) 到 O(n) 的变化则取决于它的 *hash 函数*。
 
-### hash 方法
+### hash 函数
 
-什么是 *hash 方法* ？一个 hash 方法用以接收一个未知长度的 key 然后返回一个固定长度的 value。
+什么是 *hash 函数* ？一个 hash 函数用以接收一个未知长度的 key 然后返回一个固定长度的 value。
 
 ```
 hash(key) → integer
@@ -40,15 +40,15 @@ hash(key) → integer
 
 这个 *hash value* 大多数情况下都是一个整数，原因我们后边会说到。
 
-Hash 方法和 map 方法是相似的。它们都接收一个 key 然后返回一个 value。然而 hash 方法的不同之处在于，它返回的 value 来源于 key，而不是关联于 key。
+Hash 函数和 map 函数是相似的。它们都接收一个 key 然后返回一个 value。然而 hash 函数的不同之处在于，它返回的 value 来源于 key，而不是关联于 key。
 
-### hash 方法的重要特点
+### hash 函数的重要特点
 
-很有必要讨论一下一个好的 hash 方法的特点，因为 hash 方法的质量决定了其 map 方法运行复杂度是否接近于 O(1)。
+很有必要讨论一下一个好的 hash 函数的特点，因为 hash 函数的质量决定了其 map 函数运行复杂度是否接近于 O(1)。
 
-Hashmap 的使用方面有两个重要的特点。第一个是*稳定性*。Hash 方法必须是稳定的。给定相同的 key，你的 hash 方法必须返回相同的值。否则你无法查找到你放入 map 中的数据。
+Hashmap 的使用方面有两个重要的特点。第一个是*稳定性*。Hash 函数必须是稳定的。给定相同的 key，你的 hash 函数必须返回相同的值。否则你无法查找到你放入 map 中的数据。
 
-第二个特点是*良好的分布*。给定两个相类似的 key，结果应该是极其不同的。这很重要，因为有两点原因。第一，跟我们稍后会看到的一样，hashmap 中的 value 值应当均匀地分布于 buckets 之间，否则存取的复杂度不会是 O(1)。第二，由于用户一定程度上可以控制 hash 方法的输入，它们也就能控制 hash 方法的输出。这就会导致糟糕的分布，在某些语言中是 DDoS 攻击的一种方式。这项特点也被叫做 *碰撞抵抗性（collision resistance）*。
+第二个特点是*良好的分布*。给定两个相类似的 key，结果应该是极其不同的。这很重要，因为有两点原因。第一，跟我们稍后会看到的一样，hashmap 中的 value 值应当均匀地分布于 buckets 之间，否则存取的复杂度不会是 O(1)。第二，由于用户一定程度上可以控制 hash 函数的输入，它们也就能控制 hash 函数的输出。这就会导致糟糕的分布，在某些语言中是 DDoS 攻击的一种方式。这项特点也被叫做 *碰撞抵抗性（collision resistance）*。
 
 ### hashmap 的数据结构
 
@@ -58,23 +58,23 @@ Hashmap 的使用方面有两个重要的特点。第一个是*稳定性*。Hash
 
 经典的 hashmap 结构是一个 bucket 数组，其中的每项包含一个指针指向一个 key/value entry 数组。在当前例子中我们的 hashmap 中有 8 个 bucket（Go 语言即如此实现），并且每个 bucket 最多持有 8 个 key/value entry（同样也是 Go 语言的实现）。使用 2 的次方便于做位掩码和移位，而不必做昂贵的除法操作。
 
-因为 entry 被添加到 map 中，假定有一个良好分布的 hash 方法，那么 buckets 大致会被均匀地填充。一旦 bucket 中的 entry 数量超过总数的某个百分比，也就是所说的 *负载因子（load factor）*，那么 map 就会翻倍 bucket 的数量并重新分配原先的 entry。
+因为 entry 被添加到 map 中，假定有一个良好分布的 hash 函数，那么 buckets 大致会被均匀地填充。一旦 bucket 中的 entry 数量超过总数的某个百分比，也就是所说的 *负载因子（load factor）*，那么 map 就会翻倍 bucket 的数量并重新分配原先的 entry。
 
 记住这个数据结构。假设我们现在有一个 map 用以存储项目名和对应的 Github star 数目，那么我们要如何往 map 中插入一个 value 呢？
 
 ![insert-project-stars](https://dave.cheney.net/wp-content/uploads/2018/05/Screen-Shot-2018-05-20-at-20.25.36-624x351.png)
 
-我们从 key 开始，把它传入 hash 方法，然后做掩码操作只取最低的几位来获取到 bucket 数组正确位置的偏移量。这也是要放入的 entry 所在的 bucket，它的 hash 值以 3（二进制 011） 结束。最终我们遍历这个 bucket 的 entry 列表直到我们找到一个空的位置，然后插入我们的 key 和 value。如果 key 已经存在了，我们就覆盖 value。
+我们从 key 开始，把它传入 hash 函数，然后做掩码操作只取最低的几位来获取到 bucket 数组正确位置的偏移量。这也是要放入的 entry 所在的 bucket，它的 hash 值以 3（二进制 011） 结束。最终我们遍历这个 bucket 的 entry 列表直到我们找到一个空的位置，然后插入我们的 key 和 value。如果 key 已经存在了，我们就覆盖 value。
 
 ![map(moby/moby)](https://dave.cheney.net/wp-content/uploads/2018/05/Screen-Shot-2018-05-20-at-20.25.44-624x351.png)
 
-现在，我们仍然用这个示意图来从 map 中查找 value。过程很相似。我们先将 key 做 hash 操作。因为我们的 bucket 数组包含 8 个元素，所以我们取最低 3 位，也就是第 5 号 bucket （二进制 101）。如果我们的 hash 方法是正确的，那么字符串 "moby/moby" 做 hash 操作之后得到的值永远是相同的。所以我们知道 key 不会存在于其他 bucket 中。现在我们再从 bucket 的 entry 列表中通过比较 key 做一次线性查找就能得到结果了。
+现在，我们仍然用这个示意图来从 map 中查找 value。过程很相似。我们先将 key 做 hash 操作。因为我们的 bucket 数组包含 8 个元素，所以我们取最低 3 位，也就是第 5 号 bucket （二进制 101）。如果我们的 hash 函数是正确的，那么字符串 "moby/moby" 做 hash 操作之后得到的值永远是相同的。所以我们知道 key 不会存在于其他 bucket 中。现在我们再从 bucket 的 entry 列表中通过比较 key 做一次线性查找就能得到结果了。
 
 ### hashmap 的四个要点
 
 这是个经典 hashmap 结构的比较高层的解释。我们已经看到了，要实现一个 hashmap 有四个要点；
 
-1. 你需要一个给 key 做计算的 hash 方法。
+1. 你需要一个给 key 做计算的 hash 函数。
 2. 你需要一个判断 key 相等的算法。
 3. 你需要知道 key 的大小。
 4. 你需要知道 value 的大小，因为这同样影响了 bucket 结构的大小。编译器需要知道 bucket 结构的大小，这决定了当你遍历或者新增数据时内存中的步进值。
@@ -102,14 +102,14 @@ template<
 可以讲的有很多，但比较重要的有以下几点：
 
 * 模版接收了 key 和 value 的类型作为参数，所以知道它们的大小。
-* 模版有一个 key 类型的 `std::hash` 方法，所以它知道如何 hash 传给它的 key 值。
-* 模版还有一个 key 类型的 `std::equal_to` 方法，所以知道怎么比较两个 key 值。
+* 模版有一个 key 类型的 `std::hash` 函数，所以它知道如何 hash 传给它的 key 值。
+* 模版还有一个 key 类型的 `std::equal_to` 函数，所以知道怎么比较两个 key 值。
 
 现在我们知道了在 C++ 的 `std::unordered_map` 中 hashmap 的四个要点是如何传达给编译器的了，所以我们来看一下它是如何实际工作的。
 
 ![std::unordered_map](https://dave.cheney.net/wp-content/uploads/2018/05/Gocon-2018-Maps.030-624x351.png)
 
-首先我们将 key 传给 `std::hash` 方法以得到 key 的 hash 值。然后做掩码并取到 bucket 数组中的序号，接着再遍历对应 bucket 的 entry 列表并用 `std::equal_to` 方法来比较 key。
+首先我们将 key 传给 `std::hash` 函数以得到 key 的 hash 值。然后做掩码并取到 bucket 数组中的序号，接着再遍历对应 bucket 的 entry 列表并用 `std::equal_to` 函数来比较 key。
 
 ### Java
 
@@ -156,13 +156,13 @@ std::unordered_map
 
 * 所有东西必须是对象，即使它不是。这意味着基本类型的 map 必须用通过装箱操作转化为对象。装箱操作会增加垃圾回收的压力，并且额外的指针引用会增加缓存压力（每个对象都必须通过另外的指针来查找）。
 * Buckets 是以 linked lists 而不是顺序数组的方式存储的。这会导致在对象比较期间产生大量的指针追踪操作。
-* Hash 和 equals 方法需要代码编写者来实现。不正确的 hash 和 equals 方法会减慢 map 的运行速度，甚至导致 map 的行为错误。
+* Hash 和 equals 函数需要代码编写者来实现。不正确的 hash 和 equals 函数会减慢 map 的运行速度，甚至导致 map 的行为错误。
 
 ## Go 中 hashmap 的实现
 
 现在，我们来讨论一下 Go 中 map 的实现。它保留了许多我们刚才讨论的实现中的优点，却没有那些缺点。
 
-和 C++ 和 Java 一样， Go 中的 hashmap 是使用 Go语言编写的。但是 Go 不支持范型，所以我们要如何来编写一个 hashmap 能够服务于（几乎）任何类型呢？
+和 C++ 和 Java 一样， Go 中的 hashmap 是使用 Go 语言编写的。但是 Go 不支持范型，所以我们要如何来编写一个 hashmap 能够服务于（几乎）任何类型呢？
 
 ### Go runtime 使用了 interface{} 吗？
 
@@ -179,10 +179,10 @@ std::unordered_map
 第一部分我们需要先理解 runtime 包中对于 map 的实现是如何做查找，插入和删除操作的。在编译期间 map 的操作被重写去调用了 runtime。例如。
 
 ```
-v := m["key"]     → runtime.mapaccess1(m, ”key", &v)
-v, ok := m["key"] → runtime.mapaccess2(m, ”key”, &v, &ok)
-m["key"] = 9001   → runtime.mapinsert(m, ”key", 9001)
-delete(m, "key")  → runtime.mapdelete(m, “key”)
+v := m["key"]     → runtime.mapaccess1(m, "key", &v)
+v, ok := m["key"] → runtime.mapaccess2(m, "key", &v, &ok)
+m["key"] = 9001   → runtime.mapinsert(m, "key", 9001)
+delete(m, "key")  → runtime.mapdelete(m, "key")
 ```
 
 值得注意的是，channel 中也做了相同的事，slice 却没有。
@@ -191,7 +191,7 @@ delete(m, "key")  → runtime.mapdelete(m, “key”)
 
 ### map 代码解释
 
-现在我们知道编译器重写了 map 的操作去调用了 runtime。我们也知道了在 runtime 内部，有一个叫 `mapaccess1` 的方法，一个叫 `mapaccess2` 的方法等等。
+现在我们知道编译器重写了 map 的操作去调用了 runtime。我们也知道了在 runtime 内部，有一个叫 `mapaccess1` 的函数，一个叫 `mapaccess2` 的函数等等。
 
 所以，编译器是如何重写
 
@@ -204,7 +204,7 @@ v := m["key"]
 ```go runtime.mapaccess(m, "key", &v)
 ```
 
-却没有使用 `interface{}` 的呢？要解释 Go 中的 map 类型是如何工作的最简单的方法是给你看一下 `runtime.mapaccess1` 的定义。
+却没有使用 `interface{}` 的呢？要解释 Go 中的 map 类型是如何工作的最简单的函数是给你看一下 `runtime.mapaccess1` 的定义。
 
 ```go
 func mapaccess1(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer
@@ -218,7 +218,7 @@ func mapaccess1(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer
 
 为什么我们已经有了 `*hmap` 之后还需要一个 `*maptype`？`*maptype` 是个特殊的东西，使得通用的 `*hmap` 可以服务于（几乎）任意 key 和 value 类型的组合。在你的程序中对于每一个独立的 map 定义都会有一个特定的 `maptype` 值。例如，有一个 `maptype` 值描述了从 `strings` 到 `ints` 的映射，另一个描述了 `strings` 到 `http.Headers` 的映射，等等。
 
-C++ 中，对于每一个独立的 map 定义都有一个完整的实现。而 Go 并非如此，它在编译期间创建了一个 `maptype` 并在调用 runtime 的 map 方法的时候使用了它。
+C++ 中，对于每一个独立的 map 定义都有一个完整的实现。而 Go 并非如此，它在编译期间创建了一个 `maptype` 并在调用 runtime 的 map 函数的时候使用了它。
 
 ```go
 type maptype struct {     
@@ -273,7 +273,7 @@ type typeAlg struct {
 
 在你的程序中这就是一个服务于特定类型的 `typeAlg` 值。
 
-放在一起来看，这就是（轻微修改，便于理解） `runtime.mapaccess1` 方法。
+放在一起来看，这就是（轻微修改，便于理解） `runtime.mapaccess1` 函数。
 
 ```go
 // mapaccess1 returns a pointer to h[key].  Never returns nil, instead
@@ -289,9 +289,9 @@ func mapaccess1(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer {
     b := (*bmap)(add(h.buckets, (hash&m)*uintptr(t.bucketsize)))
 ```
 
-值得关注的一点是传递给 `alg.hash` 方法的 `h.hash0` 参数。`h.hash0` 是一个在 map 创建时生成的随机种子，为了防止在 Go runtime 中产生 hash 碰撞。
+值得关注的一点是传递给 `alg.hash` 函数的 `h.hash0` 参数。`h.hash0` 是一个在 map 创建时生成的随机种子，为了防止在 Go runtime 中产生 hash 碰撞。
 
-任何人都可以阅读 Go 语言的源码，所以可以找到一系列值，使得其使用 Go 语言中的 hash 方法计算后，得到的 hash 值会被放入同一个 bucket 中。种子的存在就为 hash 方法增加了很多随机性，为碰撞攻击提供了一些保护措施。
+任何人都可以阅读 Go 语言的源码，所以可以找到一系列值，使得其使用 Go 语言中的 hash 函数计算后，得到的 hash 值会被放入同一个 bucket 中。种子的存在就为 hash 函数增加了很多随机性，为碰撞攻击提供了一些保护措施。
 
 ## 结论
 
@@ -312,6 +312,8 @@ via: https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-effic
 
 作者：[Dave Cheney](https://dave.cheney.net/about)
 译者：[alfred-zhong](https://github.com/alfred-zhong)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
+
+
