@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/12293
+
 # Go 的大门已经打开
 
 Go 在近 10 年间已经快速的成为了非常流行并且成功的系统编程语言。
