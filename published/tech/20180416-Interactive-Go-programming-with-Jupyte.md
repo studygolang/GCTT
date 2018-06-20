@@ -1,6 +1,8 @@
+已发布：https://studygolang.com/articles/13235
+
 # 与 Jupyter 交互的 Go 编程
 
-![](./go_jupyter_1.jpeg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/jupyte/go_jupyter_1.jpeg)
 
 最近几年，Go 语言变得非常流行。我是 Python 的狂热粉丝，三年前我的第一个业余项目也是用 Python 实现的。而现在我开始使用 Go 语言来取代 Python，因为不管是业余爱好的小项目还是公司里的大项目，Go 语言能让我的编码效率更高。
 
@@ -10,7 +12,7 @@
 
 因此，我决定开发一个新的环境，从头开始在 Jupyter Notebook 上交互式运行 Go 语言。在这，我向大家介绍我构建的软件，以及像 Python 一样交互式编写和执行 Go 的新方法。
 
-![](./go_jupyter_2.gif)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/jupyte/go_jupyter_2.gif)
 
 ## GitHub 上项目主页
 
@@ -36,13 +38,13 @@
 * 控制台上的交互式解释器
 * 完全支持 goroutine 以及 channel
 
-![](./go_jupyter_3.jpeg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/jupyte/go_jupyter_3.jpeg)
 
-![](./go_jupyter_4.jpeg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/jupyte/go_jupyter_4.jpeg)
 
-![](./go_jupyter_5.jpeg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/jupyte/go_jupyter_5.jpeg)
 
-![](./go_jupyter_6.jpeg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/jupyte/go_jupyter_6.jpeg)
 
 ## 安装
 
@@ -61,7 +63,7 @@ Windows 和 Mac 用户，请使用 Docker 版本，因为 lgo 不支持 Windows 
 
 在 lgo 中，你可以通过将光标移动到标识符和按 `Shift-Tab` 来显示变量、函数和类型的相关文档。您可以通过按 `Tab` 来补全代码。如果要显示非文本数据，你可以参考[这个例子](http://nbviewer.jupyter.org/github/yunabe/lgo/blob/master/examples/basics.ipynb#Display)来使用 `DataDisplayer` 类型。
 
-![](./go_jupyter_7.jpeg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/jupyte/go_jupyter_7.jpeg)
 
 ### 像控制台的解释器环境那样使用
 
@@ -85,18 +87,18 @@ sum(3, 4) = 7
 
 对于那些了解其他现有的 golang Jupyter 内核的人，这里是与竞争对手的比较表。你可以阅读 [`READNE.MD` 中的这部分](https://github.com/yunabe/lgo#comparisons-with-similar-projects)获取更多细节。
 
-![](./go_jupyter_8.jpeg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/jupyte/go_jupyter_8.jpeg)
 
 ## 了解更多
 
 如果你想了解更多，请浏览[本项目的主页](https://github.com/yunabe/lgo)并阅读 `README.md` 中的介绍。此外，你还可以通过这些[示例笔记](https://nbviewer.jupyter.org/github/yunabe/lgo/blob/master/examples/basics.ipynb)中了解更多 Go 语言的Jupyter环境的真正用途。尽情享受 Go 语言的交互式编程吧!
 
-----------------
+---
 
 via: https://medium.com/@yunabe/interactive-go-programming-with-jupyter-93fbf089aff1
 
 作者：[Yu Watanabe](https://medium.com/@yunabe)
 译者：[7Ethan](https://github.com/7Ethan)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
