@@ -1,6 +1,8 @@
+已发布：https://studygolang.com/articles/13226
+
 # Map 在 Go runtime 中的高效实现（不使用范型）
 
-这篇文章基于我在日本东京 [GoCon Spring 2018](https://gocon.connpass.com/event/82515/) 上的演讲讨论了 Go 语言中的 map 是如何实现的。
+这篇文章基于我在日本东京 [GoCon Spring 2018](https://gocon.connpass.com/event/82515/) 上的演讲讨论了，Go 语言中的 map 是如何实现的。
 
 ## 什么是映射函数
 
@@ -26,7 +28,7 @@ delete(map, key)
 
 ## Go 中的 map 是一个 hashmap
 
-Hashmap 是我要讨论的的 map 的一种特定实现，因为这也是 Go Runtime 中所采用的实现方式。Hashmap 是一种经典的数据结构，提供了平均 O(1) 的查询时间复杂度，即使在最糟的情况下也有 O(n) 的复杂度。也就是说，正常情况下，执行 map 函数的时间是个常量。
+Hashmap 是我要讨论的的 map 的一种特定实现，因为这也是 Go runtime 中所采用的实现方式。Hashmap 是一种经典的数据结构，提供了平均 O(1) 的查询时间复杂度，即使在最糟的情况下也有 O(n) 的复杂度。也就是说，正常情况下，执行 map 函数的时间是个常量。
 
 这个常量的大小部分取决于 hashmap 的设计方式，而 map 存取时间从 O(1) 到 O(n) 的变化则取决于它的 *hash 函数*。
 
@@ -40,7 +42,7 @@ hash(key) → integer
 
 这个 *hash value* 大多数情况下都是一个整数，原因我们后边会说到。
 
-Hash 函数和 map 函数是相似的。它们都接收一个 key 然后返回一个 value。然而 hash 函数的不同之处在于，它返回的 value 来源于 key，而不是关联于 key。
+Hash 函数和映射函数是相似的。它们都接收一个 key 然后返回一个 value。然而 hash 函数的不同之处在于，它返回的 value 来源于 key，而不是关联于 key。
 
 ### hash 函数的重要特点
 
@@ -54,7 +56,7 @@ Hashmap 的使用方面有两个重要的特点。第一个是*稳定性*。Hash
 
 关于 hashmap 的第二部分来说说数据是如何存储的。
 
-![hashmap-data-structure](https://dave.cheney.net/wp-content/uploads/2018/05/Gocon-2018-Maps.021-624x351.png)
+![hashmap-data-structure](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-hashmap/Gocon-2018-Maps.021-624x351.png)
 
 经典的 hashmap 结构是一个 bucket 数组，其中的每项包含一个指针指向一个 key/value entry 数组。在当前例子中我们的 hashmap 中有 8 个 bucket（Go 语言即如此实现），并且每个 bucket 最多持有 8 个 key/value entry（同样也是 Go 语言的实现）。使用 2 的次方便于做位掩码和移位，而不必做昂贵的除法操作。
 
@@ -62,11 +64,11 @@ Hashmap 的使用方面有两个重要的特点。第一个是*稳定性*。Hash
 
 记住这个数据结构。假设我们现在有一个 map 用以存储项目名和对应的 Github star 数目，那么我们要如何往 map 中插入一个 value 呢？
 
-![insert-project-stars](https://dave.cheney.net/wp-content/uploads/2018/05/Screen-Shot-2018-05-20-at-20.25.36-624x351.png)
+![insert-project-stars](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-hashmap//Screen-Shot-2018-05-20-at-20.25.36-624x351.png)
 
 我们从 key 开始，把它传入 hash 函数，然后做掩码操作只取最低的几位来获取到 bucket 数组正确位置的偏移量。这也是要放入的 entry 所在的 bucket，它的 hash 值以 3（二进制 011） 结束。最终我们遍历这个 bucket 的 entry 列表直到我们找到一个空的位置，然后插入我们的 key 和 value。如果 key 已经存在了，我们就覆盖 value。
 
-![map(moby/moby)](https://dave.cheney.net/wp-content/uploads/2018/05/Screen-Shot-2018-05-20-at-20.25.44-624x351.png)
+![map(moby/moby)](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-hashmap//Screen-Shot-2018-05-20-at-20.25.44-624x351.png)
 
 现在，我们仍然用这个示意图来从 map 中查找 value。过程很相似。我们先将 key 做 hash 操作。因为我们的 bucket 数组包含 8 个元素，所以我们取最低 3 位，也就是第 5 号 bucket （二进制 101）。如果我们的 hash 函数是正确的，那么字符串 "moby/moby" 做 hash 操作之后得到的值永远是相同的。所以我们知道 key 不会存在于其他 bucket 中。现在我们再从 bucket 的 entry 列表中通过比较 key 做一次线性查找就能得到结果了。
 
@@ -93,9 +95,9 @@ Hashmap 的使用方面有两个重要的特点。第一个是*稳定性*。Hash
 template<
     class Key,                             // the type of the key
     class T,                               // the type of the value
-    class Hash = std::hash<Key>,            // the hash function
-    class KeyEqual = std::equal_to<Key>,    // the key equality function
-    class Allocator = std::allocator< std::pair<const Key, T> > 
+    class Hash = std::hash<Key>,            // the hash function
+    class KeyEqual = std::equal_to<Key>,    // the key equality function
+    class Allocator = std::allocator< std::pair<const Key, T> >
 > class unordered_map;
 ```
 
@@ -107,7 +109,7 @@ template<
 
 现在我们知道了在 C++ 的 `std::unordered_map` 中 hashmap 的四个要点是如何传达给编译器的了，所以我们来看一下它是如何实际工作的。
 
-![std::unordered_map](https://dave.cheney.net/wp-content/uploads/2018/05/Gocon-2018-Maps.030-624x351.png)
+![std::unordered_map](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-hashmap//Gocon-2018-Maps.030-624x351.png)
 
 首先我们将 key 传给 `std::hash` 函数以得到 key 的 hash 值。然后做掩码并取到 bucket 数组中的序号，接着再遍历对应 bucket 的 entry 列表并用 `std::equal_to` 函数来比较 key。
 
@@ -121,7 +123,7 @@ template<
 
 先把这种限制放一边，让我们来看一下在 Java 的 hashmap 中查找是怎样的。
 
-![java_hashmap](https://dave.cheney.net/wp-content/uploads/2018/05/Gocon-2018-Maps.034-624x351.png)
+![java_hashmap](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-hashmap//Gocon-2018-Maps.034-624x351.png)
 
 首先我们调用 key 的 `hashCode` 方法来获取它的 hash 值。然后做掩码操作，获取到 bucket 数组中的对应位置，里面存放了一个指向 `Entry` 的指针。`Entry` 中有一个 key，一个 value，还有一个指向下一个 `Entry` 的指针，形成了一个 linked list。
 
@@ -306,7 +308,7 @@ func mapaccess1(t *maptype, h *hmap, key unsafe.Pointer) unsafe.Pointer {
 
 1. 你可以在这里找到更多关于 runtime.hmap 结构的内容。[https://dave.cheney.net/2017/04/30/if-a-map-isnt-a-reference-variable-what-is-it](https://dave.cheney.net/2017/04/30/if-a-map-isnt-a-reference-variable-what-is-it)
 
-----------------
+---
 
 via: https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-efficiently-without-generics
 
@@ -315,4 +317,3 @@ via: https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-effic
 校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
