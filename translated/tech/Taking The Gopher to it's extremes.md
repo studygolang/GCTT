@@ -83,6 +83,16 @@ func apInt(functions []p, numbers []int) []int{
 
 我刚为 [lori](https://github.com/radicalrafi/lori) 工作，它是一个 Golang 库，目标是为开发者提供这些有用的东西，并使 function 变得有趣和可能。
 
+----------------
+
+via: https://radicalrafi.github.io/posts/functional-go/
+
+作者：[radicalrafi ](https://github.com/radicalrafi)
+译者：[gogeof](https://github.com/gogeof)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
+
 
 
 
