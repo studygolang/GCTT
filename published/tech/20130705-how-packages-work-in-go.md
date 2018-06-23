@@ -1,5 +1,8 @@
-# Go语言中的包是怎么工作的
-自从我开始用 Go 写代码以来，如何组织好代码并用好 package 关键字对我来说一直是个迷样的难题。 package 关键字类似与 C# 中的命名空间，但是它的约定却是将 package 名字与目录结构绑定在一起。
+已发布：https://studygolang.com/articles/13285
+
+# Go 语言中的包是怎么工作的
+
+自从我开始用 Go 写代码以来，如何组织好代码并用好 package 关键字对我来说一直是个迷样的难题。package 关键字类似于 C# 中的命名空间，但是它的约定却是将 package 名字与目录结构绑定在一起。
 
 Go 语言有一个网页试图解释如何编写 Go 代码。
 
@@ -11,7 +14,7 @@ http://golang.org/doc/code.html
 
 在我的机器上，我创建了一个工作空间叫 Test ，在其下建立了必要的 src 子目录。这是创建项目的第一步。
 
-![image](https://www.ardanlabs.com/blog/images/goinggo/Screen+Shot+2013-07-28+at+10.03.44+AM.png)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/package-work/Screen+Shot+2013-07-28+at+10.03.44+AM.png)
 
 然后在 LiteIDE 中打开Test目录（也就是我的工作空间），然后创建如下的子目录以及空的 Go 源文件。
 
@@ -21,11 +24,11 @@ http://golang.org/doc/code.html
 
 下一步，创建好同名的包文件夹和空的 Go 源文件。
 
-![image](https://www.ardanlabs.com/blog/images/goinggo/Screen+Shot+2013-07-28+at+10.10.42+AM.png)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/package-work/Screen+Shot+2013-07-28+at+10.10.42+AM.png)
 
 如果你不把工作空间所属文件夹加入 GOPATH 我们会碰到一些问题。
 
-![image](https://www.ardanlabs.com/blog/images/goinggo/Screen+Shot+2013-07-28+at+10.07.09+AM.png)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/package-work/Screen+Shot+2013-07-28+at+10.07.09+AM.png)
 
 我花了点时间才意识到自定义文件夹（ Custom Directory ）是一个文本框，所以你可以直接编辑那些文件夹的值，系统的 GOPATH 是只读的。
 
@@ -33,25 +36,26 @@ Go 的设计者在命名他们的包和源文件时已经做了一些事情。�
 
 看看 Go 源码目录中的一些标准库包：
 
-![image](https://www.ardanlabs.com/blog/images/goinggo/Screen+Shot+2013-07-28+at+10.09.25+AM.png)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/package-work/Screen+Shot+2013-07-28+at+10.09.25+AM.png)
 
-bufio 和 builtin 的目录是目录命名约定最好的例子。它们其实也可能被名称为 buf_io 和 built_in 的。
+`bufio` 和 `builtin` 的目录是目录命名约定最好的例子。它们其实也可能被命名为 `buf_io` 和 `built_in`。
 
 再看看 Go 源码目录中源文件的名字。
+
 注意到有些文件的名字中使用了下划线。当文件包含测试代码或者特定为某种平台使用时，就需要使用下划线。
 
-![image](https://www.ardanlabs.com/blog/images/goinggo/Screen+Shot+2013-07-28+at+10.17.49+AM.png)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/package-work/Screen+Shot+2013-07-28+at+10.17.49+AM.png)
 
 一个不常用的约定是，将文件命名为目录的名字。在 bufio 包中是遵守了这个约定的，但是这是一个不常被遵循的约定。
 
 在 fmt 包中你会发现并没有一个叫 fmt.go 的源文件。我个人也喜欢把源文件的命名和目录的命名区分开来。
 
-![image](https://www.ardanlabs.com/blog/images/goinggo/Screen+Shot+2013-07-28+at+10.20.36+AM.png)
-
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/package-work/Screen+Shot+2013-07-28+at+10.20.36+AM.png)
 
 最后，打开 doc.go，format.go，print.go 和 scan.go，它们都在 fmt 包中被声明。
 
 让我们看看sample。go的代码：
+
 ```go
 package samplepkg
 
@@ -76,6 +80,7 @@ func (sample * Sample) Print() {
 这段代码没啥用处，但是却可以让我们看到两个重要的约定。首先，注意这个包的名称与目录的名称相同。第二，有一个叫 New 的函数。
 
 在 Go 的约定中，用于创建一个核心类型或者给应用开发者使用的不同类型的函数就命名为 New。我们看看在 log.go，bufio.go 和 cypto.go 文件中 New 函数是如何定义和实现的。
+
 ```go
 log.go
 // New creates a new Logger. The out variable sets the
@@ -105,9 +110,11 @@ func (h Hash) New() hash.Hash {
     panic("crypto: requested hash function is unavailable")
 }
 ```
-因为每个包起到了命名空间的作用，每个包可以由他们自己版本的 New 函数实现。在 bufio.go 中可以创建多种类型，所以并没有一个单独的 New 函数，你可以看到类似  NewReader 和 NewWriter 这样的函数。
+
+因为每个包起到了命名空间的作用，每个包可以有它们自己版本的 New 函数实现。在 bufio.go 中可以创建多种类型，所以并没有一个单独的 New 函数，你可以看到类似 NewReader 和 NewWriter 这样的函数。
 
 再看看 sub.go 的代码：
+
 ```go
 package subpkg
 
@@ -129,11 +136,13 @@ func (sub * Sub) Print() {
     fmt.Println("Sub Name:", sub.Name)
 }
 ```
+
 代码是基本相同的，除了我们的核心类型改名成了 Sub 。包的名称与子目录名相同，并且 New 返回一个 Sub 类型的引用。
 
 现在我们可以使用这个已经定义好，并且实现好了的包了。
 
 再看看 main.go 中的代码：
+
 ```go
 package main
 
@@ -150,9 +159,10 @@ func main() {
     sub.Print()
 }
 ```
-因为我们的 GOPATH 指向了工作空间目录，这个项目中是  /User/bill/Spaces/Test，我们的 import 指令就是从这个目录开始引用其他包的。这里我们引用了当前目录结构下两个包
 
-![image](https://www.ardanlabs.com/blog/images/goinggo/Screen+Shot+2013-07-28+at+10.23.25+AM.png)
+因为我们的 GOPATH 指向了工作空间目录，这个项目中是 /User/bill/Spaces/Test，我们的 import 指令就是从这个目录开始引用其他包的。这里我们引用了当前目录结构下两个包
+
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/package-work/Screen+Shot+2013-07-28+at+10.23.25+AM.png)
 
 接下来，我们分别调用每个包中的 New 函数，并创建对应的变量。
 
@@ -166,8 +176,7 @@ install 命令会在工作空间中创建 bin 和 pkg 文件夹。注意最终�
 
 这些编译好的包都存在，于是go工具可以避免不必要的重新编译。
 
-![image](https://www.ardanlabs.com/blog/images/goinggo/Screen+Shot+2013-07-28+at+10.24.16+AM.png)
-
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/package-work/Screen+Shot+2013-07-28+at+10.24.16+AM.png)
 
 在“如何编写Go代码”文章中最后部分讲的问题是，Go 工具在以后编译代码时会忽略所有的 .a 文件。没有源文件你没法编译你的应用。我还没有找到任何文档解释这些 .a 文件如何直接参与 Go 程序构建的。如果有人知道还请不吝赐教。
 
@@ -175,10 +184,12 @@ install 命令会在工作空间中创建 bin 和 pkg 文件夹。注意最终�
 
 一如既往的，我希望这篇文章能帮助你更好的理解 Go 语言。
 
+---
+
 via: https://www.ardanlabs.com/blog/2013/07/how-packages-work-in-go-language.html
 
 作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
 译者：[MoodWu](https://github.com/MoodWu)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
