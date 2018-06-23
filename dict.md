@@ -1,4 +1,4 @@
-<img src="https://avatars0.githubusercontent.com/t/2566037?s=280&v=4" align="right" width="100" height="100"></img>
+# <img src="https://avatars0.githubusercontent.com/t/2566037?s=280&v=4" align="right" width="100" height="100"></img>
 <font face='黑体' size=6><b><center>Go中文网术语词典</center></b></font>
 <br />
 <font face='微软雅黑' size=3><b><center>[Go中文网](https://studygolang.com)出品</center></b></font>
@@ -8,6 +8,14 @@
 <font face='微软雅黑' size=3><b><p align='right'>GCTT 翻译组</p></b></font>
 ****************************************************
 
+## E
+
+### execution tracer : 执行追踪器
+
 ## F
 
 ### f.ex. : for example 的缩写。
+
+## I
+
+### instrumentation / instrument : 插桩
