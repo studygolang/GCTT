@@ -26,7 +26,7 @@ func reverse(str string) string {
 	if str == "" {
 		return str
 	} else {
-		return reverse(str[1:]) + string(str[0]) // a string is a byte array in golang 
+		return reverse(str[1:]) + string(str[0]) // a string is a byte array in golang
 	}
 }
 ```
