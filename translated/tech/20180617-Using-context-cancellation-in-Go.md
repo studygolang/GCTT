@@ -13,7 +13,6 @@
 
 ![耗时图](https://raw.githubusercontent.com/nelsonken/pictures/master/using-context-cancellation-in-go/2.svg)
 
-
 但是，如果客户端中途中断请求会发生什么？会发生，比如： 请求中途，客户端关闭了浏览器。如果没有取消操作，application server 和 数据库 会继续他们的工作，尽管工作的结果会被浪费。
 
 ![异常耗时图](https://raw.githubusercontent.com/nelsonken/pictures/master/using-context-cancellation-in-go/3.svg)
@@ -21,7 +20,6 @@
 理想条件下，如果我们知道流程（例子中的 http request）的话， 我们想要下游操作也会停止：
 
 ![理想耗时图](https://raw.githubusercontent.com/nelsonken/pictures/master/using-context-cancellation-in-go/4.svg)
-
 
 ## go context包的取消操作
 
