@@ -253,7 +253,7 @@ func main() {
 
 Ps. 如果你来自C / C ++中奇妙的指针世界......老实说，你已经遇到了这个错误（并从中学习）！ ;)
 
-----------------
+---------------- 
 
 via: https://medium.com/@nitishmalhotra/uh-ohs-in-go-slice-of-pointers-c0a30669feee
 
