@@ -37,7 +37,7 @@ func main() {
 	for _, n := range listOfNumberStrings {
 		fmt.Printf("%s\n", *n)
     }
-} 
+}
 // 原文章代码有 Bug ，译者做了修改。
 ```
 上面的示例代码生成了从 0 到 9 的数字。我们使用 `strconv.Itoa` 函数将每一个数字都转换成对应的字符串表达。然后将 `#` 字符添加至字符串的头部，最后利用 `append` 函数添加目标切片中。
@@ -58,10 +58,10 @@ func main() {
 #9
 ```
 
-> 这是什么情况? 
-> 
-> 为什么我只看到最后数字 `#9` 被输出??? 我非常确定我把其他的数字也加到了这个列表中! 
-> 
+> 这是什么情况?
+>
+> 为什么我只看到最后数字 `#9` 被输出??? 我非常确定我把其他的数字也加到了这个列表中!
+>
 > 让我在这个示例程序中添加调试代码。
 
 ```go
@@ -110,26 +110,26 @@ Adding number #8 to the slice
 Adding number #9 to the slice
 ```
 
-> 我看到他们被添加到... 
-> 
+> 我看到他们被添加到...
+>
 > 这种事情怎么发生到我头上了？
-> 
-> $@#! 啊啊啊啊啊 !!
+>
+> $@#! 啊啊啊啊啊!!
 
 朋友，放轻松，让我们看看到底发生了什么。
 
 ```go
-var numberString string 
+var numberString string
 ```
 
 numberString 在这里会被分配到堆，让我们假设，它的内存地址为 `0x3AF1D234`。
 
 ![numberString on the stack at address 0x3AF1D234](https://github.com/studygolang/gctt-images/blob/master/uh-oh-is-in-go-slice-of-pointers/2.png?raw=true")
 
-```go 
-for i := 0; i < 10; i++ {                         
+```go
+for i := 0; i < 10; i++ {                        
     numberString = fmt.Sprintf("#%s", strconv.Itoa(i))
-	listOfNumberStrings = append(listOfNumberStrings, &numberString)                        
+	listOfNumberStrings = append(listOfNumberStrings, &numberString)
 }
 ```
 
@@ -177,7 +177,7 @@ https://github.com/studygolang/gctt-images/blob/master/uh-oh-is-in-go-slice-of-p
 现在让我们看一下，当我们通过 `*` 操作符以解引用的方式， 尝试输出存储在切片中的每一个元素的时候，会发生什么？
 ```
 for _, n := range listOfNumberStrings {
-    fmt.Printf("%s\n", *n)                        
+    fmt.Printf("%s\n", *n)
 }
 ```
 因为切片中存储的每一个变量的值都是 `0x3AF1D234` (像我们上面的例子中展示的)，解引用该元素将返回存在该内存地址上的值。
@@ -198,7 +198,7 @@ for _, n := range listOfNumberStrings {
 #9
 ```
 
-## Solution 
+## Solution
 
 有一个相当简单的方法来解决这个问题：修改变量 `numberString` 声明的位置。
 
