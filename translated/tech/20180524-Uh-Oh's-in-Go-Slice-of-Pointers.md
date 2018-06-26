@@ -1,7 +1,5 @@
 # Go 语言的指针切片
 
-
-
 ![Image courtesy — https://xkcd.com/138/](https://github.com/studygolang/gctt-images/blob/master/uh-oh-is-in-go-slice-of-pointers/1.png?raw=true)
 
 Go 让操作 Slice 和其他基本数据结构成为一件很简单的事情。对于来自 C/C++ 令人畏惧的指针世界的人来说，在大部分情况下使用 Golang 是一件令人幸福的事情。对于 JS/Python 的使用者来说，Golang 没有除了语法之外，没有什么区别。
@@ -41,10 +39,11 @@ func main() {
     }
 } 
 // 原文章代码有 Bug ，译者做了修改。
-``` 
+```
 上面的示例代码生成了从 0 到 9 的数字。我们使用 `strconv.Itoa` 函数将每一个数字都转换成对应的字符串表达。然后将 `#` 字符添加至字符串的头部，最后利用 `append` 函数添加目标切片中。
 
 运行上面的代码片段，你得到的输出是
+
 ```
 ➜ sample go run main.go
 #9
@@ -58,6 +57,7 @@ func main() {
 #9
 #9
 ```
+
 > 这是什么情况? 
 > 
 > 为什么我只看到最后数字 `#9` 被输出??? 我非常确定我把其他的数字也加到了这个列表中! 
@@ -114,7 +114,7 @@ Adding number #9 to the slice
 > 
 > 这种事情怎么发生到我头上了？
 > 
->$@#! 啊啊啊啊啊 !!
+> $@#! 啊啊啊啊啊 !!
 
 朋友，放轻松，让我们看看到底发生了什么。
 
@@ -132,6 +132,7 @@ for i := 0; i < 10; i++ {
 	listOfNumberStrings = append(listOfNumberStrings, &numberString)                        
 }
 ```
+
 现在让我们从 0 循环至 9。
 
 ### 第一次迭代[i=0]
@@ -142,7 +143,7 @@ https://github.com/studygolang/gctt-images/blob/master/uh-oh-is-in-go-slice-of-p
 
 接下来，我们获取 `numberString` 变量的地址(`&numberString`), 该地址为 `0x3AF1D234`，然后把它添加到 `listOfNumberStrings` 的切片中。
 
-`listOfNumberStrings`	 现在应该像下图一样
+`listOfNumberStrings` 现在应该像下图一样
 
 ![listOfNumberStrings slice with value 0x3AF1D234](
 https://github.com/studygolang/gctt-images/blob/master/uh-oh-is-in-go-slice-of-pointers/4.png?raw=true)
@@ -183,7 +184,6 @@ for _, n := range listOfNumberStrings {
 
 从最后一个迭代，我们知道最后被存储的值是 `"#9"`, 因此输出才像下面那样。
 
-
 ```
 ➜  sample go run main.go
 #9
@@ -197,8 +197,11 @@ for _, n := range listOfNumberStrings {
 #9
 #9
 ```
+
 ## Solution 
+
 有一个相当简单的方法来解决这个问题：修改变量 `numberString` 声明的位置。
+
 ```
 package main
 
@@ -249,6 +252,7 @@ func main() {
 我希望这篇文章能够帮助到一些人。我起写这篇文章的念头是因为我与一名公司初级工程师的经历，他遇到了相似的场景，并且完全绕不出来。这让我想到了我掉进类似陷阱的情况，那时候我是一名前公司的 C 语言初级工程师。
 
 Ps. 如果你来自C / C ++中奇妙的指针世界......老实说，你已经遇到了这个错误（并从中学习）！ ;)
+
 ----------------
 
 via: https://medium.com/@nitishmalhotra/uh-ohs-in-go-slice-of-pointers-c0a30669feee
