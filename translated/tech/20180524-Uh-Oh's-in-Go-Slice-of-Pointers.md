@@ -127,8 +127,8 @@ numberString 在这里会被分配到堆，让我们假设，它的内存地址�
 ![numberString on the stack at address 0x3AF1D234](https://github.com/studygolang/gctt-images/blob/master/uh-oh-is-in-go-slice-of-pointers/2.png?raw=true")
 
 ```go
-for i := 0; i < 10; i++ {                        
-    numberString = fmt.Sprintf("#%s", strconv.Itoa(i))
+for i := 0; i < 10; i++ {
+	numberString = fmt.Sprintf("#%s", strconv.Itoa(i))
 	listOfNumberStrings = append(listOfNumberStrings, &numberString)
 }
 ```
@@ -259,6 +259,6 @@ via: https://medium.com/@nitishmalhotra/uh-ohs-in-go-slice-of-pointers-c0a30669f
 
 作者：[Nitish Malhotra](https://medium.com/@nitishmalhotra?source=post_header_lockup)
 译者：[magichan](https://github.com/magichan)
-校对：[](https://github.com/)
+校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
