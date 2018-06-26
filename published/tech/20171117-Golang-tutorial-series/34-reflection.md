@@ -1,12 +1,14 @@
+已发布：https://studygolang.com/articles/13178
+
 # 反射
 
-![reflection](https://golangbot.com/content/images/2018/05/reflection-golang-3.png)
+![reflection](https://raw.githubusercontent.com/studygolang/gctt-images/master/golang-series/reflection-golang-3.png)
 
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 34 篇。
 
 反射是 Go 语言的高级主题之一。我会尽可能让它变得简单易懂。
 
-本教程分为分为如下小节。
+本教程分为如下小节。
 
 - 什么是反射？
 - 为何需要检查变量，确定变量的类型？
@@ -33,11 +35,11 @@
 ```go
 package main
 
-import (  
+import (
     "fmt"
 )
 
-func main() {  
+func main() {
     i := 10
     fmt.Printf("%d %T", i, i)
 }
@@ -54,16 +56,16 @@ func main() {
 ```go
 package main
 
-import (  
+import (
     "fmt"
 )
 
-type order struct {  
+type order struct {
     ordId      int
     customerId int
 }
 
-func main() {  
+func main() {
     o := order{
         ordId:      1234,
         customerId: 567,
@@ -77,7 +79,7 @@ func main() {
 在上面的程序中，我们需要编写一个函数，接收结构体变量 `o` 作为参数，返回下面的 SQL 插入查询。
 
 ```
-insert into order values(1234, 567)  
+insert into order values(1234, 567)
 ```
 
 这个函数写起来很简单。我们现在编写这个函数。
@@ -85,21 +87,21 @@ insert into order values(1234, 567)
 ```go
 package main
 
-import (  
+import (
     "fmt"
 )
 
-type order struct {  
+type order struct {
     ordId      int
     customerId int
 }
 
-func createQuery(o order) string {  
+func createQuery(o order) string {
     i := fmt.Sprintf("insert into order values(%d, %d)", o.ordId, o.customerId)
     return i
 }
 
-func main() {  
+func main() {
     o := order{
         ordId:      1234,
         customerId: 567,
@@ -113,7 +115,7 @@ func main() {
 在第 12 行，`createQuery` 函数用 `o` 的两个字段（`ordId` 和 `customerId`），创建了插入查询。该程序会输出：
 
 ```bash
-insert into order values(1234, 567)  
+insert into order values(1234, 567)
 ```
 
 现在我们来升级这个查询生成器。如果我们想让它变得通用，可以适用于任何结构体类型，该怎么办呢？我们用程序来理解一下。
@@ -121,12 +123,12 @@ insert into order values(1234, 567)
 ```go
 package main
 
-type order struct {  
+type order struct {
     ordId      int
     customerId int
 }
 
-type employee struct {  
+type employee struct {
     name string
     id int
     address string
@@ -134,7 +136,7 @@ type employee struct {
     country string
 }
 
-func createQuery(q interface{}) string {  
+func createQuery(q interface{}) string {
 }
 
 func main() {
@@ -147,7 +149,7 @@ func main() {
 例如，如果我们传入下面的结构体：
 
 ```go
-o := order {  
+o := order {
     ordId: 1234,
     customerId: 567
 }
@@ -156,7 +158,7 @@ o := order {
 `createQuery` 函数应该返回：
 
 ```
-insert into order values (1234, 567)  
+insert into order values (1234, 567)
 ```
 
 类似地，如果我们传入：
@@ -174,7 +176,7 @@ insert into order values (1234, 567)
 该函数会返回：
 
 ```
-insert into employee values("Naveen", 565, "Science Park Road, Singapore", 90000, "Singapore")  
+insert into employee values("Naveen", 565, "Science Park Road, Singapore", 90000, "Singapore")
 ```
 
 由于 `createQuery` 函数应该适用于任何结构体，因此它接收 `interface{}` 作为参数。为了简单起见，我们只处理包含 `string` 和 `int` 类型字段的结构体，但可以扩展为包含任何类型的字段。
@@ -194,17 +196,17 @@ insert into employee values("Naveen", 565, "Science Park Road, Singapore", 90000
 ```go
 package main
 
-import (  
+import (
     "fmt"
     "reflect"
 )
 
-type order struct {  
+type order struct {
     ordId      int
     customerId int
 }
 
-func createQuery(q interface{}) {  
+func createQuery(q interface{}) {
     t := reflect.TypeOf(q)
     v := reflect.ValueOf(q)
     fmt.Println("Type ", t)
@@ -212,7 +214,7 @@ func createQuery(q interface{}) {
 
 
 }
-func main() {  
+func main() {
     o := order{
         ordId:      456,
         customerId: 56,
@@ -229,8 +231,8 @@ func main() {
 上述程序会打印：
 
 ```
-Type  main.order  
-Value  {456 56}  
+Type  main.order
+Value  {456 56}
 ```
 
 从输出我们可以看到，程序打印了接口的具体类型和具体值。
@@ -244,17 +246,17 @@ Value  {456 56}
 ```go
 package main
 
-import (  
+import (
     "fmt"
     "reflect"
 )
 
-type order struct {  
+type order struct {
     ordId      int
     customerId int
 }
 
-func createQuery(q interface{}) {  
+func createQuery(q interface{}) {
     t := reflect.TypeOf(q)
     k := t.Kind()
     fmt.Println("Type ", t)
@@ -262,7 +264,7 @@ func createQuery(q interface{}) {
 
 
 }
-func main() {  
+func main() {
     o := order{
         ordId:      456,
         customerId: 56,
@@ -277,8 +279,8 @@ func main() {
 上述程序会输出：
 
 ```
-Type  main.order  
-Kind  struct  
+Type  main.order
+Kind  struct
 ```
 
 我想你应该很清楚两者的区别了。`Type` 表示 `interface{}` 的实际类型（在这里是 **`main.Order`**)，而 `Kind` 表示该类型的特定类别（在这里是 **`struct`**）。
@@ -290,17 +292,17 @@ Kind  struct
 ```go
 package main
 
-import (  
+import (
     "fmt"
     "reflect"
 )
 
-type order struct {  
+type order struct {
     ordId      int
     customerId int
 }
 
-func createQuery(q interface{}) {  
+func createQuery(q interface{}) {
     if reflect.ValueOf(q).Kind() == reflect.Struct {
         v := reflect.ValueOf(q)
         fmt.Println("Number of fields", v.NumField())
@@ -310,7 +312,7 @@ func createQuery(q interface{}) {
     }
 
 }
-func main() {  
+func main() {
     o := order{
         ordId:      456,
         customerId: 56,
@@ -324,9 +326,9 @@ func main() {
 在上面的程序中，因为 `NumField` 方法只能在结构体上使用，我们在第 14 行首先检查了 `q` 的类别是 `struct`。程序的其他代码很容易看懂，不作解释。该程序会输出：
 
 ```
-Number of fields 2  
-Field:0 type:reflect.Value value:456  
-Field:1 type:reflect.Value value:56  
+Number of fields 2
+Field:0 type:reflect.Value value:456
+Field:1 type:reflect.Value value:56
 ```
 
 ### Int() 和 String() 方法
@@ -336,12 +338,12 @@ Field:1 type:reflect.Value value:56
 ```go
 package main
 
-import (  
+import (
     "fmt"
     "reflect"
 )
 
-func main() {  
+func main() {
     a := 56
     x := reflect.ValueOf(a).Int()
     fmt.Printf("type:%T value:%v\n", x, x)
@@ -357,8 +359,8 @@ func main() {
 在上面程序中的第 10 行，我们取出 `reflect.Value`，并转换为 `int64`，而在第 13 行，我们取出 `reflect.Value` 并将其转换为 `string`。该程序会输出：
 
 ```
-type:int64 value:56  
-type:string value:Naveen  
+type:int64 value:56
+type:string value:Naveen
 ```
 
 ## 完整的程序
@@ -368,17 +370,17 @@ type:string value:Naveen
 ```go
 package main
 
-import (  
+import (
     "fmt"
     "reflect"
 )
 
-type order struct {  
+type order struct {
     ordId      int
     customerId int
 }
 
-type employee struct {  
+type employee struct {
     name    string
     id      int
     address string
@@ -386,7 +388,7 @@ type employee struct {
     country string
 }
 
-func createQuery(q interface{}) {  
+func createQuery(q interface{}) {
     if reflect.ValueOf(q).Kind() == reflect.Struct {
         t := reflect.TypeOf(q).Name()
         query := fmt.Sprintf("insert into %s values(", t)
@@ -418,7 +420,7 @@ func createQuery(q interface{}) {
     fmt.Println("unsupported type")
 }
 
-func main() {  
+func main() {
     o := order{
         ordId:      456,
         customerId: 56,
@@ -450,15 +452,15 @@ func main() {
 该程序会输出：
 
 ```
-insert into order values(456, 56)  
-insert into employee values("Naveen", 565, "Coimbatore", 90000, "India")  
-unsupported type  
+insert into order values(456, 56)
+insert into employee values("Naveen", 565, "Coimbatore", 90000, "India")
+unsupported type
 ```
 
 至于向输出的查询中添加字段名，我们把它留给读者作为练习。请尝试着修改程序，打印出以下格式的查询。
 
 ```
-insert into order(ordId, customerId) values(456, 56)  
+insert into order(ordId, customerId) values(456, 56)
 ```
 
 ## 我们应该使用反射吗？
@@ -479,6 +481,6 @@ via: https://golangbot.com/reflection/
 
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[Noluye](https://github.com/Noluye)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
