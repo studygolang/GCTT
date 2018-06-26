@@ -172,7 +172,7 @@ https://github.com/studygolang/gctt-images/blob/master/uh-oh-is-in-go-slice-of-p
 
 最后一次迭代的后，存储在 `numberString` 的字符串是 `"#9"`。
 
----
+
 
 现在让我们看一下，当我们通过 `*` 操作符以解引用的方式， 尝试输出存储在切片中的每一个元素的时候，会发生什么？
 ```
