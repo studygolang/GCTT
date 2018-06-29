@@ -35,7 +35,7 @@ deferred.addCallback(myfunc)                       # Python with Twisted
 future.add_done_callback(myfunc)                   # Python with asyncio
 ```
 
-再说，虽然语法不一样，但是它们都完成同样的事情：它们定好（arrange)，从现在起，如果某一事件发生了，则 myfunc 会运行。，`myfunc` 就会执行。注册了事件回调函数就立即返回，调用者可以继续做其他事情。（有时候回调可以被巧妙地封装成 helper，例如 [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) [combinators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race)，或者 [Twisted-style protocols/transports](https://twistedmatrix.com/documents/current/core/howto/servers.html) ，但核心思路是一样的）
+再说，虽然语法不一样，但是它们都完成同样的事情：它们安排好任务（arrange)，之后，直到某一事件发生了，myfunc 就会运行。注册“事件回调”成功，以上的函数就立即返回，调用者可以继续做其他事情。（有时候回调可以被巧妙地封装成 helper，例如 [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) [combinators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race)，或者 [Twisted-style protocols/transports](https://twistedmatrix.com/documents/current/core/howto/servers.html) ，但核心思路是一样的）
 
 还有其他方式吗？你使用的任何的现实上的并发的 API ，你可能会发现他们都是殊途同归的，例如 python 的 asyncio 。
 
@@ -384,6 +384,6 @@ via: https://vorpus.org/blog/notes-on-structured-concurrency-or-go-statement-con
 
 作者：[Nathaniel J. Smith](https://vorpus.org)
 译者：[lightfish-zhang](https://github.com/lightfish-zhang)
-校对：[polaris1119](https://github.com/polaris1119)
+校对：[polaris1119](https://github.com/polaris1119)，[magichan](https://github.com/magichan)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
