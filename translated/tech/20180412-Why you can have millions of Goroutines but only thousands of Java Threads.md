@@ -1,4 +1,6 @@
 # 为什么可以go语言允许百万级别的goroutines，而java只允许数千级别的threads?
+原文链接：[https://rcoh.me/posts/why-you-can-have-a-million-go-routines-but-only-1000-java-threads/
+](https://rcoh.me/posts/why-you-can-have-a-million-go-routines-but-only-1000-java-threads/)
 
 很多有过JVM相关语言工作经验的程序员或许都遇到过如下问题：
 
