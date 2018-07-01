@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/13382
+
 # Go 功能：将 Go 程序员带向极限（Functional Go: Taking The Gopher to it's extremes）
 
 ## 功能范式（The Functional Paradigm）
@@ -35,7 +37,7 @@ func reverse(str string) string {
 
 ```go
 func isPalindrome (str string) {
-    return str == reverse(str)
+	return str == reverse(str)
 }
 ```
 
@@ -43,7 +45,7 @@ func isPalindrome (str string) {
 
 ```go
 isPalindrome := func (str string) {
-    return str == reverse(str)
+	return str == reverse(str)
 }
 
 isPalindrome("radar")
@@ -61,15 +63,15 @@ type p func(int) int
 
 func apInt(functions []p, numbers []int) []int{
 	j := 0
-    output := make([]int,0)
+	output := make([]int,0)
 	for _,f := range functions {
 		for j < len(numbers) {
 			fmt.Println(f(numbers[j]))
 			output = append(output,f(numbers[j]))
-            j++
+			j++
 		}
 	}
-    return output
+	return output
 }
 ```
 
@@ -83,16 +85,12 @@ func apInt(functions []p, numbers []int) []int{
 
 我刚为 [lori](https://github.com/radicalrafi/lori) 工作，它是一个 Golang 库，目标是为开发者提供这些有用的东西，并使 function 变得有趣和可能。
 
-----------------
+---
 
 via: https://radicalrafi.github.io/posts/functional-go/
 
-作者：[radicalrafi ](https://github.com/radicalrafi)
+作者：[radicalrafi](https://github.com/radicalrafi)
 译者：[gogeof](https://github.com/gogeof)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
-
-
-
