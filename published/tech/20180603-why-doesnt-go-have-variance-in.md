@@ -188,10 +188,10 @@ func main() {
 
 ---
 
-via: https://blog.merovius.de/2018/06/03/why-doesnt-Go-have-variance-in.html
+via: https://blog.merovius.de/2018/06/03/why-doesnt-go-have-variance-in.html
 
 作者：[Axel Wagner](https://github.com/Merovius)
 译者：[Alan](https://github.com/althen)
 校对：[rxcai](https://github.com/rxcai)
 
-本文由 [GCTT](https://github.com/studyGolang/GCTT) 原创编译，[Go 中文网](https://studyGolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
