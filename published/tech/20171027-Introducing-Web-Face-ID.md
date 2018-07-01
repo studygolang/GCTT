@@ -32,10 +32,11 @@
 ```html
 <div class='options'>
    <button id="snap">
-   <i class='camera icon'></i>
-</button>
-<video id="video" width="100%" autoplay></video>
-<canvas id="canvas" width="400" height="225" style="display:none;"></canvas>
+    <i class='camera icon'></i>
+    </button>
+    <video id="video" width="100%" autoplay></video>
+    <canvas id="canvas" width="400" height="225" style="display:none;"></canvas>
+</div>
 ```
 
 我们将使用 video 标签去捕捉摄像头，并使用 canvas 标签拍摄照片，然后发送到服务器端，下面是 Javascript 代码
