@@ -1,11 +1,11 @@
 # Go中的init函数
 main标识符是随处可见的，每一个GO程序都是从一个叫main的包中的main函数开始的，当main函数返回时，程序执行结束，init函数也这这之中扮演者特殊的角色，接下来我们将描述下init函数的属性并介绍下怎么使用它们。
 
-init函数在包级别被定义，主要用于：    
->- 初始化那些不能被初始化表达式完成初始化的变量  
->- 检查或者修复程序的状态  
->- 注册  
->- 仅执行一次的计算  
+init函数在包级别被定义，主要用于：
+>- 初始化那些不能被初始化表达式完成初始化的变量
+>- 检查或者修复程序的状态
+>- 注册
+>- 仅执行一次的计算
 >- 更多其它场合
 
 除了下面将要讨论到的一些差异外，你还可以在正则函数中放置任何[有效](https://golang.org/ref/spec#FunctionBody)的内容。
@@ -13,8 +13,8 @@ init函数在包级别被定义，主要用于：
 ## 包的初始化
 
 要想使用导入的包首先需要初始化它，这是由golang的运行系统完成的，主要包括(顺序很重要)：
-1. 初始化导入的包（递归的定义）  
-2. 在包级别为声明的变量计算并分配初始值  
+1. 初始化导入的包（递归的定义）
+2. 在包级别为声明的变量计算并分配初始值
 3. 在包内执行init函数（下面的空白标识符就是一个例子）
 
 ## 顺序
@@ -109,9 +109,9 @@ func main() {
 }
 ```
 在编译时这里会给出一个“undefined：init”错误。（init函数不能被引用）
-> 正式的来讲init标示符不会引入绑定，就像空白标示符('-')表现的一样。  
+> 正式的来讲init标示符不会引入绑定，就像空白标示符('-')表现的一样。
 
-在同一个包或者文件当中可以定义很多的init函数：  
+在同一个包或者文件当中可以定义很多的init函数：
 ### sandbox.go
 ```go
 package main
@@ -147,7 +147,7 @@ init 2
 init 3
 main
 ```
-init函数在标准库中也被频繁的使用，例如：[*main*](https://github.com/golang/go/blob/2878cf14f3bb4c097771e50a481fec43962d7401/src/math/pow10.go#L33), [*bzip2*](https://github.com/golang/go/blob/2878cf14f3bb4c097771e50a481fec43962d7401/src/compress/bzip2/bzip2.go#L479)还有 [*image*](https://github.com/golang/go/blob/2d573eee8ae532a3720ef4efbff9c8f42b6e8217/src/image/gif/reader.go#L511)包。 
+init函数在标准库中也被频繁的使用，例如：[*main*](https://github.com/golang/go/blob/2878cf14f3bb4c097771e50a481fec43962d7401/src/math/pow10.go#L33), [*bzip2*](https://github.com/golang/go/blob/2878cf14f3bb4c097771e50a481fec43962d7401/src/compress/bzip2/bzip2.go#L479)还有 [*image*](https://github.com/golang/go/blob/2d573eee8ae532a3720ef4efbff9c8f42b6e8217/src/image/gif/reader.go#L511)包。
 
 ...
 
@@ -174,14 +174,13 @@ import _ "image/png"
 
 如果上面的内容对你有所帮助请跟随我一起续写未来的故事吧，那也将成为我的动力。
 
-***
+---
 ## 参考资料
-[The Go Programming Language Specification - The Go Programming Language](https://golang.org/ref/spec#Package_initialization)  
-[Blocks in Go](https://medium.com/golangspec/blocks-in-go-2f68768868f6)  
-[Initialization dependencies in Go](https://medium.com/golangspec/initialization-dependencies-in-go-51ae7b53f24c)
+- [The Go Programming Language Specification - The Go Programming Language](https://golang.org/ref/spec#Package_initialization)
+- [Blocks in Go](https://medium.com/golangspec/blocks-in-go-2f68768868f6)
+- [Initialization dependencies in Go](https://medium.com/golangspec/initialization-dependencies-in-go-51ae7b53f24c)
 
-----------------
-
+---
 via: https://medium.com/golangspec/init-functions-in-go-eac191b3860a
 
 作者：[Michał Łowicki](https://medium.com/@mlowicki)
