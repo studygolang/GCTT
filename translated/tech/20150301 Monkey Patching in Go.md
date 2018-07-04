@@ -3,7 +3,7 @@
 
 很多人认为 monkey 补丁只能在动态语言，比如 Ruby 和 Python 中才存在。但是，这并不对。因为计算机只是很笨的机器，我们总能让它做我们想让它做的事儿！让我们看看 Go 中的函数是怎么工作的，并且，我们如何在运行时修改它们。本文会用到大量的 Intel 汇编，所以，我假设你可以读汇编代码，或者在读本文时正拿着[参考手册](https://software.intel.com/en-us/articles/introduction-to-x64-assembly).
 
-** 如果你对monkey补丁是怎么工作的不感兴趣，你只是想使用它的话，你可以在[这里](https://github.com/bouk/monkey)找到对应的库文件 **
+**如果你对monkey补丁是怎么工作的不感兴趣，你只是想使用它的话，你可以在[这里](https://github.com/bouk/monkey)找到对应的库文件**
 
 让我们看看一下代码产生的汇编码：
 ```go
