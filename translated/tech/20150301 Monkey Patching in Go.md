@@ -3,9 +3,7 @@
 
 很多人认为 monkey 补丁只能在动态语言，比如 Ruby 和 Python 中才存在。但是，这并不对。因为计算机只是很笨的机器，我们总能让它做我们想让它做的事儿！让我们看看 Go 中的函数是怎么工作的，并且，我们如何在运行时修改它们。本文会用到大量的 Intel 汇编，所以，我假设你可以读汇编代码，或者在读本文时正拿着[参考手册](https://software.intel.com/en-us/articles/introduction-to-x64-assembly).
 
-
-##### 如果你对monkey补丁是怎么工作的不感兴趣，你只是想使用它的话，你可以在[这里](https://github.com/bouk/monkey)找到对应的库文件 
-
+** 如果你对monkey补丁是怎么工作的不感兴趣，你只是想使用它的话，你可以在[这里](https://github.com/bouk/monkey)找到对应的库文件 **
 
 让我们看看一下代码产生的汇编码：
 ```go
@@ -65,14 +63,14 @@ func main() {
 啊哈！main.a.f 的地址是 0x102c38，并且保存的值是 0x2000，而这个正是 main.a 的地址。看起来 f 并不是一个函数指针，而是一个指向函数指针的指针。让我们修改一下代码，以消除其中的偏差。
 ```go
 package main
- 
+
 import (
   "fmt"
   "unsafe"
 )
- 
+
 func a() int { return 1 }
- 
+
 func main() {
   f := a
   fmt.Printf("0x%x\n", **(**uintptr)(unsafe.Pointer(&f)))
@@ -174,7 +172,7 @@ func replace(orig, replacement func() int) {
 	bytes := assembleJump(replacement)
 	functionLocation := **(**uintptr)(unsafe.Pointer(&orig))
 	window := rawMemoryAccess(functionLocation)
-	
+
 	copy(window, bytes)
 }
 
@@ -222,10 +220,10 @@ func replace(orig, replacement func() int) {
 	bytes := assembleJump(replacement)
 	functionLocation := **(**uintptr)(unsafe.Pointer(&orig))
 	window := rawMemoryAccess(functionLocation)
-	
+
 	page := getPage(functionLocation)
 	syscall.Mprotect(page, syscall.PROT_READ|syscall.PROT_WRITE|syscall.PROT_EXEC)
-	
+
 	copy(window, bytes)
 }
 
@@ -239,7 +237,6 @@ func main() {
 ## 包装成一个很好的库
 
 我将上述代码包装为一个[易用的库](https://github.com/bouk/monkey)。它支持32位，取消补丁，以及对实例方法进行补丁,并且我在 README 中写了几个使用示例。
-
 
 ## 总结
 有志者事竟成！让一个程序在运行期修改自身是可能的，这让我们可以实现一些很酷的事儿，比如monkey补丁。
