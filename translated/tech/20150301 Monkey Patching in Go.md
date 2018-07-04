@@ -28,7 +28,6 @@ func main() {
 
 我们的代码从 main.main 过程开始，从 0x2010 到 0x2026 的指令构建堆栈。你可以在[这儿](http://dave.cheney.net/2013/06/02/why-is-a-goroutines-stack-infinite)获得更多的相关知识，本文后续的篇幅里，我将忽略这部分代码。
 
-
 0x202a 行是调用 0x2000 行的 main.a 函数，这个函数只是简单的将 0x1 压入堆栈然后就返回了。0x202f 到 0x2037这几行 将这个值传递给 runtime.printint.
 
 足够简单！现在让我们看看在 Go 语言中 函数的值是怎么实现的。
@@ -122,7 +121,7 @@ mov rdx, main.b.f ; 48 C7 C2 ?? ?? ?? ??
 jmp [rdx] ; FF 22
 ```
 > replacement.asm 由 GitHub 托管 [查看源文件](https://gist.github.com/bouk/713f3df2115e1b5e554d/raw/65335f4e7d9d0e11a5f72e78d617ec51249c577b/replace.go)
-    
+
 我将上述代码编译后产生的对应的机器码列出来了（用在线编译器，比如[这个](https://defuse.ca/online-x86-assembler.htm),你可以随意尝试编译）.很明显，我们需要写一个能产生这样机器码的函数，它应该看起来像这样：
 ```go
 func assembleJump(f func() int) []byte {
