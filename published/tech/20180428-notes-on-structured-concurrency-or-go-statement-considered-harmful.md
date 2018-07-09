@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/13514
+
 # 关于结构化并发的笔记 —— Go 语言中有害的声明语句
 
 ## 前言
@@ -87,21 +89,21 @@ async with trio.open_nursery() as nursery:
 
 FLOW-MATIC当时非常雄心勃勃。你可以把它看作是Python的曾曾曾祖父母：第一种语言，首先为人类设计，其次是计算机。以下是一些FLOW-MATIC代码，让您体验它的外观：
 
-![](https://github.com/studygolang/gctt-images/raw/master/go-statement-considered-harmful/flow-matic-code-0.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-statement-considered-harmful/flow-matic-code-0.png)
 
 你注意到它不像现代语言，没有 `if` 代码段，`loop` 循环语句，或者 function 函数调用，实际上根本没有块分隔符或缩进。这只是一个简单的语句（操作符）列表。并不是因为这个程序太短而无法使用更高级的控制语法，而是因为”块语法“还没有发明出来！
 
-![](https://github.com/studygolang/gctt-images/raw/master/go-statement-considered-harmful/compare-sequential-to-goto.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-statement-considered-harmful/compare-sequential-to-goto.png)
 
 反而， FLOW-MATIC 有两种控制流的方式，比较通常的是顺序（sequential），如你所想，从头到尾一句一句地、串行地执行语句，但如果你执行一句特殊的语句 `JUMP TO`，它会立马直接跳转到其他控制语句。例如，下图的语句13跳转到语句2：
 
-![](https://github.com/studygolang/gctt-images/raw/master/go-statement-considered-harmful/flow-matic-code-1.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-statement-considered-harmful/flow-matic-code-1.png)
 
 就好像一开始的并发原语，对于如何称呼这个“进行跳转动作”的操作，有一些意见分歧。这里是 `JUMP TO` ，但是这里叫做 `goto` (就好像 "go to")，于是我们在这里使用这个称呼。
 
 这个小程序使用的完整的 `goto` 跳转路径:
 
-![](https://github.com/studygolang/gctt-images/raw/master/go-statement-considered-harmful/flow-matic-code-2.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-statement-considered-harmful/flow-matic-code-2.png)
 
 如果你感到这看起来很费解，你不是一个人！这个跳转风格的程序是 `FLOW-MATIC` 非常直接地继承汇编语言而来。这很功能强大，非常适合计算机硬件的实际工作方式，但直接使用会让人感到非常困惑。乱七八糟的箭头让人发明了“意大利面代码”这个词。显然，我们需要更好的东西。
 
@@ -118,7 +120,7 @@ go myfunc();
 
 我们可以绘制其控制流程图吗？这不同于我们上面看到，因为控制流实际上是分裂的。我们可以这样画：
 
-![](https://github.com/studygolang/gctt-images/raw/master/go-statement-considered-harmful/go-myfunc.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-statement-considered-harmful/go-myfunc.png)
 
 这里的颜色被分成两条路径。从主线（绿线）的角度来看，控制流按顺序走：它出现在顶部，然后立即出现在底部。与此同时，从支线（淡紫色线）的角度看，控制流进入顶部，然后跳转到myfunc的主体。与常规函数调用不同，这种跳转是单向的：当运行myfunc时，我们切换到一个全新的堆栈，并且运行时立即忘记了我们来自哪里。
 
@@ -132,7 +134,7 @@ go myfunc();
 
 令人烦恼的是，这类控制流结构没有标准名称。因此，就像 `goto语句` 成为所有不同类似 goto 结构的总称一样，我将使用 `go语句` 作为这些术语的总称。为什么这么做？ 一个原因是 Go 语言给了我们一个特别纯粹的形式例子。另一个是......好吧，你可能已经猜到了我说什么了。看看这两个图。注意任何相似之处：
 
-![](https://github.com/studygolang/gctt-images/raw/master/go-statement-considered-harmful/compare-go-to-goto.png.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-statement-considered-harmful/compare-go-to-goto.png.png)
 
 没错：go语句是goto语句的一种形式。
 
@@ -158,11 +160,11 @@ print("Hello world!")
 
 至此，块语法已经被发明出来，像ALGOL这样的语言已经积累了5种不同类型的控制结构：它们仍然具有顺序流和 `goto` ：
 
-![](https://github.com/studygolang/gctt-images/raw/master/go-statement-considered-harmful/compare-sequential-to-goto.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-statement-considered-harmful/compare-sequential-to-goto.png)
 
 并且还获得了if / else，循环和函数调用的变体：
 
-![](https://github.com/studygolang/gctt-images/raw/master/go-statement-considered-harmful/if-loop-functioncall.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-statement-considered-harmful/if-loop-functioncall.png)
 
 你可以使用goto来实现这些更高层次的结构，并且在早期，人们就会想到它们：作为一个方便的简写。但是Dijkstra指出的是，如果你看这些图表，goto和其他人之间有很大的区别。对于除goto以外的所有内容，流量控制位于顶部→[有问题]→流量控制位于底部。我们可以称之为“黑盒子规则”：如果一个控制结构具有这种形状，那么在你不关心内部发生的细节的上下文中，你可以忽略[stuff happen]部分，并把整个作为规则的顺序流程。而且更好的是，任何由这些部分组成的代码也是如此。当我看这个代码时：
 
@@ -180,7 +182,7 @@ print("Hello world!")
 
 从2018年起，这似乎显而易见。但是当你试图拿走他们的玩具时，你有没有看过程序员的反应，因为他们不够聪明，无法安全使用它们？是的，有些事情永远不会改变。 1969年，这个提议令人难以置信地引起争议。[Donald Knuth](https://en.wikipedia.org/wiki/Donald_Knuth) 为 `goto` [辩护](https://scholar.google.com/scholar?cluster=17147143327681396418&hl=en&as_sdt=0,5) 。曾经成为编写代码专家的人非常不满，他们基本上不得不基本学会如何重新编程，以便使用更新，更有约束的构造来表达自己的想法。当然，它需要建立一套全新的语言。
 
-![](https://github.com/studygolang/gctt-images/raw/master/go-statement-considered-harmful/goto-change.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-statement-considered-harmful/goto-change.png)
 
 最后，现代语言比 Dijkstra 的原始公式稍逊一筹。他们会让你使用 `break`，`continue` 或 `return` 等构造立即跳出多个嵌套结构。但基本上，他们都是围绕 Dijkstra 的想法而设计的；即使这些推动边界的构造只能以严格有限的方式进行。特别是，`function` - 这是在黑匣子内部封装控制流程的基本工具 - 被认为是不可侵犯的。你不能从一个函数中跳出另一个函数，并且返回可以将你从当前函数中取出，但不能再进一步。无论控制流程如何，一个函数在内部起作用，其他函数不必关心。
 
@@ -245,23 +247,23 @@ Go语句打破错误处理。就像我们上面讨论的那样，现代语言提
 
 以下是核心思想：每次我们的控制分裂成多个并发路径时，我们都要确保他们再次归纳起来。例如，如果我们想同时做三件事情，我们的控制流程应该如下所示：
 
-![](https://github.com/studygolang/gctt-images/raw/master/go-statement-considered-harmful/control-flow.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-statement-considered-harmful/control-flow.png)
 
 注意，这只有一个箭头出现在顶部，一个出现在底部，所以它遵循 Dijkstra 的黑盒子规则。现在，我们怎样才能把这个草图变成一个具体的语言结构呢？有一些现有的构造可以满足这个约束，但是（a）我的提议与我所知道的并且比它们有优势（特别是在想要使其成为独立原语的情况下）略有不同，并且（b）并发性是庞大而复杂的，试图把所有的历史和权衡分开将会使论证完全失败，所以我将把它推迟到另一篇单独的文章。在这里，我只关注解释我的解决方案。但请注意，我并不是说自己喜欢，发明了并发或某种东西，我是站在巨人的肩膀上，从很多来源吸取灵感。
 
 无论如何，下面是我们要做的事情：首先，我们声明父任务不能启动任何子任务，除非它首先为子任务创建一个地方： Nurseries 。它通过打开一个 Nurseries 块来实现这一点; 在Trio中，我们使用 Python 的 `async with` 语法来执行此操作：
 
-![](https://github.com/studygolang/gctt-images/raw/master/go-statement-considered-harmful/python-async-with.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-statement-considered-harmful/python-async-with.png)
 
 打开一个nursery块会自动创建一个代表这个 Nurseries 的对象，并且 nursery 语法将这个对象赋给名为 nursery 的变量。然后我们可以使用 nursery 对象的 start_soon 方法来启动并发任务：在这种情况下，一个任务调用函数 myfunc，另一个调用函数 anotherfunc。从概念上讲，这些任务在 Nurseries 区内执行。实际上，将 nursery 块内写入的代码视为创建块时自动启动的初始任务通常很方便。
 
-![](https://github.com/studygolang/gctt-images/raw/master/go-statement-considered-harmful/python-nursery.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-statement-considered-harmful/python-nursery.png)
 
 最重要的是，在 Nurseries 区块内的所有任务都已经退出之前， Nurseries 区块不会退出 - 如果父任务在所有子任务完成之前到达该区块的末尾，那么它会在那里暂停并等待它们。 Nurseries 自动扩展以容纳子任务。
 
 以下是控制流程：您可以看到它与我们在本节开头展示的基本模式的匹配情况：
 
-![](https://github.com/studygolang/gctt-images/raw/master/go-statement-considered-harmful/python-nursery-control-flow.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-statement-considered-harmful/python-nursery-control-flow.png)
 
 这种设计有许多后果，并非全部都是显而易见的。我们来看看其中的一些。
 
