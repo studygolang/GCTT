@@ -1,8 +1,8 @@
 已发布：https://studygolang.com/articles/12799
 
-# Microservices in Golang - Part 7 - Terraform a Cloud
+# Golang 下的微服务 - 第 7 部分 - Terraform a Cloud
 
-在之前的文章中，我们简要介绍了用户界面和Web客户端以及如何使用微工具包rpc代理与我们新创建的rpc服务进行交互。
+在之前的文章中，我们简要介绍了用户界面和 Web 客户端以及如何使用微工具包rpc代理与我们新创建的rpc服务进行交互。
 
 本文将讨论如何创建云环境来托管我们的服务。 我们将使用 Terraform 在 Google Cloud 平台上构建我们的云群集。这应该是一篇相当短的文章，但它也很重要。
 
