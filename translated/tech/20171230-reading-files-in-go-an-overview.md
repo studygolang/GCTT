@@ -1,11 +1,12 @@
 
-# 概述 go 中读取文件的方式
+# 概述 Go 中读取文件的方式
 
-当我开始学习 go 时，我很难掌握各种用于读取文件的 API 和技术。我尝试编写支持多核的单词计数程序（[KGRZ/KWC](https://github.com/kgrz/kwc)），通过在一个程序中使用多种读取文件方式来展示我初始的困惑。
+当我开始学习 Go 时，我很难掌握各种用于读取文件的 API 和技术。我尝试编写支持多核的单词计数程序（[KGRZ/KWC](https://github.com/kgrz/kwc)），通过在一个程序中使用多种读取文件方式来展示我初始的困惑。
 
 在今年的 [Advent of Code](http://adventofcode.com/2017) 中，有些问题需要采用不同的方式来读取输入。我最终每种技术都至少使用过一次，现在我将对这些技术的理解写在本文中。我列出的方法是按照我使用的顺序，并不一定按照难度递减的顺序。
 
 ## 一些基本的假设
+
 * 所有的代码示例都被封装在一个 `main()` 函数中
 * 大多数情况下，我会经常会交替使用“数组 `array`”和“切片 `slice`”来指代切片，但它们是不一样的。这些[博客](https://blog.golang.org/go-slices-usage-and-internals)[文章](https://blog.golang.org/slices)是了解差异的两个很好的资源。
 * 我把所有的实例上传到[kgrz/reading-files-in-go](https://github.com/kgrz/reading-files-in-go)。
@@ -50,8 +51,8 @@ if err != nil {
 
 fmt.Println("bytes read: ", bytesread)
 fmt.Println("bytestream to string: ", string(buffer))
-
 ```
+
 [basic.go](https://github.com/kgrz/reading-files-in-go/blob/master/basic.go) on Github
 
 ### 以块读取文件
