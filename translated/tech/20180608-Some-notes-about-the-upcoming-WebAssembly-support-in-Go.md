@@ -164,7 +164,7 @@ func main() {
 Go 对 wasm 的支持刚刚开始，但正大力发展。许多功能现在都可运行。我甚至可以在浏览器运行一个完整的递归神经网络，这归功于 Gorgonia。我将稍后讲解这些。
 ----------------
 
-via: https://medium.com/@parikshit/understanding-the-context-package-in-golang-b1392c821d14
+via: https://blog.owulveryck.info/2018/06/08/some-notes-about-the-upcoming-webassembly-support-in-go.html
 
 作者：[Parikshit Agnihotry](https://medium.com/@parikshit)
 译者：[themoonbear](https://github.com/themoonbear)
