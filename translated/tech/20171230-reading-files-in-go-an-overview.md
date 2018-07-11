@@ -1,5 +1,5 @@
 
-# 概述 go 中读取文件的方式
+# 概述 Go 中读取文件的方式
 
 当我开始学习 go 时，我很难掌握各种用于读取文件的 API 和技术。我尝试编写支持多核的单词计数程序（[KGRZ/KWC](https://github.com/kgrz/kwc)），通过在一个程序中使用多种读取文件方式来展示我初始的困惑。
 
@@ -102,13 +102,13 @@ while readstring = f.read(bufsize)
     puts readstring
 end
 ```
-在每个循环中，都对内部文件指针位置进行更新。当下一次读取时，数据从文件指针偏移开始，读取并返回缓冲区大小的数据。这个指针不是由编程语言创建的，而是操作系统创建的。在Linux上，这个指针是操作系统创建的文件描述符。所有 `read/Read` 调用（分别在 Ruby/Go 中）被内部翻译成系统调用,并发送到内核，由内核管理这个指针。
+在每个循环中，都对内部文件指针位置进行更新。当下一次读取时，数据从文件指针偏移开始，读取并返回缓冲区大小的数据。这个指针不是由编程语言创建的，而是操作系统创建的。在Linux上，这个指针是操作系统创建的文件描述符。所有 `read/Read` 调用（分别在 Ruby/Go 中）被内部翻译成系统调用，并发送到内核，由内核管理这个指针。
 
 ### 并发读取文件块
 
-如果我们想加快上面提到的对数据块的处理速度呢？一个方法就是使用多个 `go routine`！相对于顺序读取数据块，我们需要一个额外的操作就是要知道每个 `routine` 读取数据的偏移量。注意，`ReadAt` 函数和 `Read` 函数在缓存容量大于剩余需要读取字节的时，处理方式略有不同。
+如果我们想加快上面提到的对数据块的处理速度呢？一个方法就是使用多个 `goroutine`！相对于顺序读取数据块，我们需要一个额外的操作就是要知道每个 `routine` 读取数据的偏移量。注意，`ReadAt` 函数和 `Read` 函数在缓存容量大于剩余需要读取字节的时，处理方式略有不同。
 
-还要注意的是，我并没有限制 `go routine` 的数量，它只是由缓冲区大小决定的。事实上，这个数字可能有一个上限。
+还要注意的是，我并没有限制 `goroutine` 的数量，它只是由缓冲区大小决定的。事实上，这个数字可能有一个上限。
 
 ```go
 const BufferSize = 100
@@ -126,10 +126,10 @@ fileinfo, err := file.Stat()
 }
 
 filesize := int(fileinfo.Size())
-// Number of go routines we need to spawn.
+// Number of goroutines we need to spawn.
 concurrency := filesize / BufferSize
 
-// check for any left over bytes. Add one more go routine if required.
+// check for any left over bytes. Add one more goroutine if required.
 if remainder := filesize % BufferSize; remainder != 0 {
     concurrency++
 }
@@ -176,7 +176,7 @@ wg.Wait()
 
 你可以一直使用 `Read()` 来读取文件，但有时你需要更方便的方法。在 Ruby 中有一些经常用到的 IO 函数，比如 `each_line`，`each_char`，`each_codepoint` 等。我们可以使用 `Scanner` 类型和 `bufio` 包中提供的相关函数来实现类似的功能。
 
-`bufio.Scanner` 类型实现了一个参数为“分割”函数的函数，并基于此函数推进指针。例如，内置的 `bufio.ScanLines` 分割函数,在每次迭代中都会推进指针，直到指针推进到下一个换行符。在每个步骤中，`bufio.Scanner` 类型提供了获取在起始位置和结束位置之间的字节数组/字符串的函数。例如：
+`bufio.Scanner` 类型实现了一个参数为“分割”函数的函数，并基于此函数推进指针。例如，内置的 `bufio.ScanLines` 分割函数，在每次迭代中都会推进指针，直到指针推进到下一个换行符。在每个步骤中，`bufio.Scanner` 类型提供了获取在起始位置和结束位置之间的字节数组/字符串的函数。例如：
 ```
 file, err := os.Open("filetoread.txt")
 if err != nil {
@@ -458,6 +458,6 @@ via: https://kgrz.io/reading-files-in-go-an-overview.html
 
 作者：[Kashyap Kondamudi](http://github.com/kgrz/)
 译者：[alan](https://github.com/althen)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
