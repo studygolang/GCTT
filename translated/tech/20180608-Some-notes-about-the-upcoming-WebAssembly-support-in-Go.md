@@ -97,7 +97,7 @@ func main() {
 
 让我们和世界互动。
 
-#### 解决 DOM 问题
+### 解决 DOM 问题
 
 *syscall/js* 包中包含允许通过 javascript API 与 DOM 交互的函数。要获取此包的文档，只需运行：
 `GOROOT=~/gowasm godoc -http=:6060`
@@ -162,6 +162,7 @@ func main() {
 ## 结论
 
 Go 对 wasm 的支持刚刚开始，但正大力发展。许多功能现在都可运行。我甚至可以在浏览器运行一个完整的递归神经网络，这归功于 Gorgonia。我将稍后讲解这些。
+
 ----------------
 
 via: https://blog.owulveryck.info/2018/06/08/some-notes-about-the-upcoming-webassembly-support-in-go.html
