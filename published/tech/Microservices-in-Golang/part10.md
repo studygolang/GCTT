@@ -1,4 +1,6 @@
-# 用 Go 实现微服务 - 第 10 部分 -总结
+首发于：https://studygolang.com/articles/13519
+
+# Golang 下的微服务 - 第 10 部分 - 总结
 
 一路走来，多么奇妙的一段旅程啊！完成这些文章花了好几个月的时间。第一篇文章发布于 2017 年底，现在 2018 年已经过去快一半了，我才刚刚在写本系列最后一篇文章。
 
@@ -60,30 +62,22 @@
 
 ## 最终的文章列表
 
-[Getting started, gRPC](https://ewanvalentine.io/microservices-in-golang-part-1)
-
-[Docker and micro](https://ewanvalentine.io/microservices-in-golang-part-2)
-
-[Docker compose and datastores](https://ewanvalentine.io/microservices-in-golang-part-3)
-
-[Authentication and JWT](https://ewanvalentine.io/microservices-in-golang-part-4)
-
-[Event brokering](https://ewanvalentine.io/microservices-in-golang-part-5)
-
-[Web Clients](https://ewanvalentine.io/microservices-in-golang-part-6)
-
-[Terraform](https://ewanvalentine.io/microservices-in-golang-part-7)
-
-[Kubernetes](https://ewanvalentine.io/microservices-in-golang-part-8)
-
-[CircleCI](https://ewanvalentine.io/microservices-in-golang-part-9)
+- [Getting started, gRPC](https://ewanvalentine.io/microservices-in-golang-part-1) [《GCTT 中译文》](https://studygolang.com/articles/12060)
+- [Docker and micro](https://ewanvalentine.io/microservices-in-golang-part-2) [《GCTT 中译文》](https://studygolang.com/articles/12094)
+- [Docker compose and datastores](https://ewanvalentine.io/microservices-in-golang-part-3) [《GCTT 中译文》](https://studygolang.com/articles/12452)
+- [Authentication and JWT](https://ewanvalentine.io/microservices-in-golang-part-4) [《GCTT 中译文》](https://studygolang.com/articles/12485)
+- [Event brokering](https://ewanvalentine.io/microservices-in-golang-part-5) [《GCTT 中译文》](https://studygolang.com/articles/12488)
+- [Web Clients](https://ewanvalentine.io/microservices-in-golang-part-6) [《GCTT 中译文》](https://studygolang.com/articles/12798)
+- [Terraform](https://ewanvalentine.io/microservices-in-golang-part-7) [《GCTT 中译文》](https://studygolang.com/articles/12799)
+- [Kubernetes](https://ewanvalentine.io/microservices-in-golang-part-8) [《GCTT 中译文》](https://studygolang.com/articles/12836)
+- [CircleCI](https://ewanvalentine.io/microservices-in-golang-part-9) [《GCTT 中译文》](https://studygolang.com/articles/13515)
 
 如果你发现这篇文章有价值，并且你也在用 ad-blocker（谁能责怪你呢）。请为了我花费的时间和精力提供一些赞助，非常感谢！
 [https://monzo.me/ewanvalentine](https://monzo.me/ewanvalentine)
 
 或者，在 [Patreon](https://www.patreon.com/ewanvalentine) 赞助我，好让我写出更多的像这样的文章
 
-----------------
+---
 
 via: https://ewanvalentine.io/microservices-in-golang-part-10/
 
@@ -92,4 +86,3 @@ via: https://ewanvalentine.io/microservices-in-golang-part-10/
 校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
