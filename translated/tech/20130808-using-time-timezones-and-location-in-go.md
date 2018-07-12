@@ -355,9 +355,7 @@ func RetrieveGoogleTimezone(latitude float64, longitude float64) (googleTimezone
 via: https://www.ardanlabs.com/blog/2013/08/using-time-timezones-and-location-in-go.html
 
 作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
-
 译者：[themoonbear](https://github.com/themoonbear)
-
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
