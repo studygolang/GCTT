@@ -36,7 +36,7 @@ https://maps.googleapis.com/maps/api/timezone/json?location=38.85682,-92.991714&
 }
 ```
 
-它限制一天只能访问2500次。对于我的潮汐站初始加载，我知道我将超过这个限制，而且我不想等几天再加载所有数据。所有我的商业伙伴从 GeoNames 发现了这个 timezone API。
+它限制一天只能访问2500次。对于我的潮汐站初始加载，我知道我将达到这个限制，而且我不想等几天再加载所有数据。所有我的商业伙伴从 GeoNames 发现了这个 timezone API。
 
 如果您打开这个网页您就能读到这个 GeoNames's API 文档：
 
