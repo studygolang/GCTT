@@ -187,8 +187,3 @@ via: https://blog.owulveryck.info/2018/06/08/some-notes-about-the-upcoming-webas
 校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
-
-
-
-
