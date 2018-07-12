@@ -109,7 +109,7 @@ ctx, cancel := context.TODO()
 ```
 var (
   background = new(emptyCtx)
-  todo = new(emptyCtx) 
+  todo = new(emptyCtx)
 )
 ```
 
