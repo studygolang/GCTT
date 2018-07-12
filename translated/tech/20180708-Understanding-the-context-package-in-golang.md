@@ -83,7 +83,7 @@ func main() {
 
 在 Go 语言中 context 包允许您传递一个 "context" 到您的程序。 Context 如超时或截止日期（deadline）或通道，来指示停止运行和返回。例如，如果您正在执行一个 web 请求或运行一个系统命令，定义一个超时对生产级系统通常是个好主意。因为，如果您依赖的API运行缓慢，你不希望在系统上备份（back up）请求，因为它可能最终会增加负载并降低所有请求的执行效率。导致级联效应。这是超时或截止日期 context 派上用场的地方。
 
-## 创建 context 
+## 创建 context
 
  context 包允许以下方式创建和获得 context ：
 
@@ -107,8 +107,8 @@ ctx, cancel := context.TODO()
 来自 https://golang.org/src/context/context.go:
 
 ```
-var ( 
-  background = new(emptyCtx) 
+var (
+  background = new(emptyCtx)
   todo = new(emptyCtx) 
 )
 ```
@@ -147,7 +147,7 @@ ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(2 * tim
 ctx, cancel := context.WithTimeout(context.Background(), 2 * time.Second)
 ```
 
-## 函数接收和使用 context 
+## 函数接收和使用 Context
 
 现在我们知道了如何创建 context （Background 和 TODO）以及如何派生 context （WithValue，WithCancel，Deadline 和 Timeout），让我们讨论如何使用它们。
 
@@ -195,11 +195,11 @@ func sleepRandomContext(ctx context.Context, ch chan bool) {
 到目前为止，我们已经看到使用 context 可以设置截止日期，超时或调用取消函数来通知所有使用任何派生 context 的函数来停止运行并返回。以下是它如何工作的示例：
 
 ***main*** 函数
-* 用 cancel 创建一个 context 
+* 用 cancel 创建一个 context
 * 随机超时后调用取消函数
 
 ***doWorkContext*** 函数
-* 派生一个超时 context 
+* 派生一个超时 context
 * 这个 context 将被取消当
   *  main 调用取消函数或
   * 超时到或
@@ -338,13 +338,13 @@ func main() {
 
 ### 最佳实践
 
-1. context.Background 只应用在最高等级，作为所有派生 context 的根
-2. context.TODO 应用在不确定要使用什么的地方，或者当前函数以后会更新以便使用 context 
-3.  context 取消是建议性的，这些函数可能需要一些时间来清理和退出
+1. context.Background 只应用在最高等级，作为所有派生 context 的根。
+2. context.TODO 应用在不确定要使用什么的地方，或者当前函数以后会更新以便使用 context。
+3. context 取消是建议性的，这些函数可能需要一些时间来清理和退出。
 4. context.Value 应该很少使用，它不应该被用来传递可选参数。这使得 API 隐式的并且可以引起错误。取而代之的是，这些值应该作为参数传递。
 5. 不要将 context 存储在结构中，在函数中显式传递它们，最好是作为第一个参数。
-6. 永远不要传递不存在的 context 。相反，如果您不确定使用什么，使用一个 ToDo  context 。
-7.  Context 结构没有取消方法，因为只有派生 context 的函数才应该取消 context 。
+6. 永远不要传递不存在的 context 。相反，如果您不确定使用什么，使用一个 ToDo context。
+7. Context 结构没有取消方法，因为只有派生 context 的函数才应该取消 context。
 
 ----------------
 

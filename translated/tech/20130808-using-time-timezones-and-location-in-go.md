@@ -92,7 +92,7 @@ type GoogleTimezone struct {
 }
 ```
 
-Go 对 JSON 和 XML 有非常好的支持。如果您看 GoogleTimezone 结构，您会看到每个字段都包含一个"标签"。标签是额外的数据附加在每个字段，它能通过使用反射获取到。要了解标签的更多信息可以读这个文档。  
+Go 对 JSON 和 XML 有非常好的支持。如果您看 GoogleTimezone 结构，您会看到每个字段都包含一个"标签"。标签是额外的数据附加在每个字段，它能通过使用反射获取到。要了解标签的更多信息可以读这个文档。
 
 http://golang.org/pkg/reflect/#StructTag
 
@@ -182,7 +182,7 @@ err = json.Unmarshal(rawDocument, googleTimezone)
 ```
 func main() {
     // Call to get the timezone for this lat and lng position
-    googleTimezone, err := RetrieveGoogleTimezone(38.85682, -92.991714) 
+    googleTimezone, err := RetrieveGoogleTimezone(38.85682, -92.991714)
     if err != nil {
         fmt.Printf("ERROR : %s", err)
         return
@@ -274,11 +274,11 @@ type GoogleTimezone struct {
     Status       string  bson:&quot;status&quot;
     TimezoneID   string  bson:&quot;timeZoneId&quot;
     TimezoneName string  bson:&quot;timeZoneName&quot;
-} 
+}
 
 func main() {
     // Call to get the timezone for this lat and lng position
-    googleTimezone, err := RetrieveGoogleTimezone(38.85682, -92.991714) 
+    googleTimezone, err := RetrieveGoogleTimezone(38.85682, -92.991714)
     if err != nil {
         fmt.Printf("ERROR : %s", err)
         return
@@ -306,7 +306,7 @@ func main() {
     fmt.Printf("Timezone:\t%s\n", googleTimezone.TimezoneID)
     fmt.Printf("Local Time: %v\n", localTime)
     fmt.Printf("UTC Time: %v\n", utcTime)
-} 
+}
 
 func RetrieveGoogleTimezone(latitude float64, longitude float64) (googleTimezone *GoogleTimezone, err error) {
     defer func() {
