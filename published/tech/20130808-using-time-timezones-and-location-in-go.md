@@ -1,8 +1,10 @@
+首发于：https://studygolang.com/articles/13609
+
 # 在 Go 中使用 Time, Timezones 和 Location
 
 今天我遇到个问题。我在编写代码处理 NOAA 的潮汐站 XML 文档时，很快意识到我遇到了麻烦。这是一小段 XML 文档：
 
-```
+```xml
 <timezone>LST/LDT</timezone>
 <item>
 <date>2013/01/01</date>
@@ -70,7 +72,7 @@ http://api.geonames.org/timezoneJSON?lat=47.01&lng=10.2&username=demo
 
 首先，我们需要定义一个新的类型来包含从 API 返回的信息。
 
-```
+```go
 package main
 
 import (
@@ -106,7 +108,7 @@ http://golang.org/pkg/encoding/json/
 
 让我们来看下这个函数，它能访问 Google API 并将 JSON 文档 Unmarshal 到我们的新类型上：
 
-```
+```go
 func RetrieveGoogleTimezone(latitude float64, longitude float64) (googleTimezone *GoogleTimezone, err error) {
     defer func() {
         if r := recover(); r != nil {
@@ -151,7 +153,7 @@ func RetrieveGoogleTimezone(latitude float64, longitude float64) (googleTimezone
 
 这个 web 请求和错误处理是相当的模式化，所以让我们只简单的谈论下 Unmarshal 调用。
 
-```
+```go
 rawDocument, err = ioutil.ReadAll(resp.Body)
 
 err = json.Unmarshal(rawDocument, googleTimezone)
@@ -165,7 +167,7 @@ err = json.Unmarshal(rawDocument, googleTimezone)
 
 让我们再看一下 feed 文档：
 
-```
+```xml
 <timezone>LST/LDT</timezone>
 <item>
 <date>2013/01/01</date>
@@ -179,7 +181,7 @@ err = json.Unmarshal(rawDocument, googleTimezone)
 
 假设我们已经从文档提取了数据，我们怎样使用 timezoneid 是我们摆脱困境？看一下我在 main 函数里写的代码。它使用 time.LoadLocation 函数和我们从 API 调用获得的时区 ID 来解决这个问题。
 
-```
+```go
 func main() {
     // Call to get the timezone for this lat and lng position
     googleTimezone, err := RetrieveGoogleTimezone(38.85682, -92.991714)
@@ -253,7 +255,7 @@ The time zone database needed by LoadLocation may not be present on all systems,
 
 如果您想要这两个API 都被调的代码可重用副本的话，我已经在 Github 的 GoingGo 库中添加了一个名为 timezone 的新包。以下是整个工作示例程序：
 
-```
+```go
 package main
 
 import (
