@@ -1,10 +1,12 @@
-# 什么是优雅重启
+# 无停机优雅重启 Go 程序
+
+## 什么是优雅重启
 
 在不停机的情况下，就地部署一个应用程序的新版本或者修改其配置的能力已经成为现代软件系统的门槛。这篇文章讨论能够优雅重启一个应用的不同方法，并且提供一个功能独立的案例来深挖实现细节。，如果你不熟悉 Teleport 话，Teleport 是我们使用 Golang 针对弹性架构设计的 [SHH 和 Kubernetes 堡垒机解决方案](https://gravitational.com/teleport/)。使用 Go 建立和维护服务的开发者和网站可靠性工程师(SRE)应该对这篇文章有兴趣。
 
 > For Proofreader: privileged access management solution -> 堡垒机解决方案
 
-# SO_REUSEPORT vs 复制套接字的背景
+## SO_REUSEPORT vs 复制套接字的背景
 
 为了推进 Teleport 高可用的工作，我们最近花了些时间研究如何优雅重启 Teleport 的 TLS 和 SSH 的端口监听器[(GitHub issue #1679)](https://github.com/gravitational/teleport/pull/1679)。我们的目标是能够更新一个 Teleport 二进制文件而不需要让实例停止服务。
 
@@ -17,7 +19,7 @@ Marek Majkowski 在他的博客文章[《为什么一个 NGINX 工作线程会�
 
 第二种方法也很吸引人，因为它的简单性以及大多数开发人员熟悉的传统Unix 的 fork/exec 产生模型，即将所有打开文件传递给子进程的约定。需要注意的一点，`os/exec` 包实际上不赞同这种用法。主要是出于安全上的考量，它只传递 `stdin` , `stdout` 和 `stderr` 给子进程。然而， os 包确实提供较低级的原语，可用于将文件传递给子程序，这就是我们想做的。
 
-# 使用信号切换套接字进程所有者
+## 使用信号切换套接字进程所有者
 
 在我们看源码之前，了解一些这个方法如何工作的细节是值得的。
 
@@ -25,13 +27,13 @@ Marek Majkowski 在他的博客文章[《为什么一个 NGINX 工作线程会�
 
 应该注意的是，当一个套接字被复制时，入栈流量会在两个套接字之间以轮询的方式进行负载均衡。如下图所示，这就意味着有一段时间，两个 Teleport 进程都会接受新的连接。
 
-![](https://github.com/studygolang/gctt-images/blob/master/gracefully-restart-a-go-program-without-downtime/graceful-restart-diag-1.png?raw=true) 
+![](https://github.com/studygolang/gctt-images/blob/master/gracefully-restart-a-go-program-without-downtime/graceful-restart-diag-1.png?raw=true)
 
 父进程的关闭是相同的事情，但是反过来做。一旦 Teleport 进程接受到 SIGOUIT 信号，他会开始关闭这个进程，停止接受新的连接，等待所有的现有连接断开或是超时发生。一旦入站流量被清空，这个濒死进程就会关闭它的监听套接字并且退出。这种情况下，新的进程会接管内核发送过来的所有请求。
 
 ![](https://github.com/studygolang/gctt-images/blob/master/gracefully-restart-a-go-program-without-downtime/graceful-restart-diag-2.png?raw=true)
 
-# 优雅重启演练
+## 优雅重启演练
 
 我们基于上面的方法写了一个简单的程序，你可以自己尝试使用一下。源代码在文章的最后，你可以按照以下步骤尝试这个例子。
 
@@ -80,7 +82,7 @@ $ curl http://localhost:8080/hello
 curl: (7) Failed to connect to localhost port 8080: Connection refused
 ```
 
-# 总结和示例源代码
+## 总结和示例源代码
 
 像你看到，一旦你了解了他是如何工作的，增加优雅重启功能到 Go 写的服务中是相当简单的事情，并且有效地提高服务使用者的用户体验。如果你想在 Teleport 中看到这一点，我们邀请你瞧瞧我们的参考 [AWS SSH 和 Kubernetes 堡垒机部署](https://github.com/gravitational/teleport/tree/master/examples/aws)，里面包含了一个 ansible 脚本，该脚本利用就地优雅重启实现无停机更新 Teleport 二进制文件。
 
@@ -310,7 +312,7 @@ func main() {
 }
 ```
 
-# 如果你读到了这里
+## 如果你读到了这里
 
 Teleport 是一个开源软件，你可以免费地在 [GitHub](https://github.com/gravitational/teleport) 上深入了解它。如果你对 Teleport 或是其他类似的分布式系统软件的工作有兴趣，我们时刻期待着[优秀的软件工程师](https://gravitational.com/careers/systems-engineer/)。
 
