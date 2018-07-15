@@ -2,7 +2,7 @@
 
 ## 什么是优雅重启
 
-在不停机的情况下，就地部署一个应用程序的新版本或者修改其配置的能力已经成为现代软件系统的门槛。这篇文章讨论能够优雅重启一个应用的不同方法，并且提供一个功能独立的案例来深挖实现细节。，如果你不熟悉 Teleport 话，Teleport 是我们使用 Golang 针对弹性架构设计的 [SHH 和 Kubernetes 堡垒机解决方案](https://gravitational.com/teleport/)。使用 Go 建立和维护服务的开发者和网站可靠性工程师(SRE)应该对这篇文章有兴趣。
+在不停机的情况下，就地部署一个应用程序的新版本或者修改其配置的能力已经成为现代软件系统的门槛。这篇文章讨论优雅重启一个应用的不同方法，并且提供一个功能独立的案例来深挖实现细节。如果你不熟悉 Teleport 话，Teleport 是我们使用 Golang 针对弹性架构设计的 [SHH 和 Kubernetes 堡垒机解决方案](https://gravitational.com/teleport/)。使用 Go 建立和维护服务的开发者和网站可靠性工程师(SRE)应该对这篇文章有兴趣。
 
 > For Proofreader: privileged access management solution -> 堡垒机解决方案
 
