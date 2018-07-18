@@ -2,7 +2,7 @@
 
 你很可能从某种途径听说过 Go 语言。它越来越受欢迎，并且有充分的理由可以证明。 Go 快速、简单，有强大的社区支持。学习这门语言最令人兴奋的一点是它的并发模型。 Go 的并发原语使创建多线程并发程序变得简单而有趣。我将通过插图介绍 Go 的并发原语，希望能点透相关概念以方便后续学习。本文是写给 Go 语言编程新手以及准备开始学习 Go 并发原语 (go routines 和 channels) 的同学。
 
-### 单线程程序 vs. 多线程程序
+## 单线程程序 vs. 多线程程序
 
 你可能已经写过一些单线程程序。一个常用的编程模式是组合多个函数来执行一个特定任务，并且只有前一个函数准备好数据，后面的才会被调用。
 
@@ -41,7 +41,7 @@ From Smelter: [smeltedOre smeltedOre smeltedOre]
 
 为了将这种并发特性引入我们的代码，我们需要创建独立运行的 gophers 的方法以及它们之间彼此通信 (传送矿石) 的方法。这就需要用到 Go 的并发原语：  goroutines 和 channels。
 
-### Go routines
+## Go routines
 
 Go routines 可以看作是轻量级线程。创建一个 Go routine 非常简单，只需要把 *go* 关键字放在函数调用语句前。为了说明这有多么简单，我们创建两个 finder 函数，并用 *go* 调用，让它们每次找到 “矿石” 就打印出来。
 
@@ -71,7 +71,7 @@ Finder 2 found ore!
 
 这是一个很大的进步！现在我们有一个简单的方法来创建多线程 (multi-gopher) 程序，但是当我们需要独立的 go routines 之间彼此通信会发生什么呢？欢迎来到神奇的 *channels* 世界。
 
-### Channels
+## Channels
 
 ![communication](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/communication.jpeg)
 
@@ -102,14 +102,14 @@ myVariable := <- myFirstChannel // Receive
 func main() {
  theMine := [5]string{"ore1", "ore2", "ore3"}
  oreChan := make(chan string)
- 
+
  // Finder
  go func(mine [5]string) {
   for _, item := range mine {
    oreChan <- item //send
   }
  }(theMine)
- 
+
  // Ore Breaker
  go func() {
   for i := 0; i < 3; i++ {
@@ -133,17 +133,17 @@ Miner: Received ore3 from finder
 
 太棒了，现在我们能在程序的 go routines(gophers) 之间发送数据了。在开始用 channels 写复杂的程序之前，我们先来理解它的一些关键特性。
 
-#### Channel Blocking
+### Channel Blocking
 
 Channels 阻塞 go routines 发生在各种情形下。这能在 go routines 各自欢快地运行之前，实现彼此之间的短暂同步。
 
-#### Blocking on a Send
+### Blocking on a Send
 
 ![blocking on send](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/blocking-on-send.jpeg)
 
 一旦一个 go routine(gopher) 向一个 channel 发送数据，它就被阻塞了，直到另一个 go routine 从该 channel 取走数据。
 
-#### Blocking on a Receive
+### Blocking on a Receive
 
 ![blocking on receive](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/blocking-on-receive.jpeg)
 
@@ -153,13 +153,13 @@ Channels 阻塞 go routines 发生在各种情形下。这能在 go routines 各
 
 既然已经了解 go routine 通过 channel 通信可能发生阻塞的不同情形，让我们讨论两种不同类型的 channels: *unbuffered* 和 *buffered* 。选择使用哪一种 channel 可能会改变程序的运行表现。
 
-#### Unbuffered Channels
+### Unbuffered Channels
 
 ![unbuffered channel](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/unbuffered-channel.jpeg)
 
 在前面的例子中我们一直在用 unbuffered channels，它们与众不同的地方在于每次只有一份数据可以通过。
 
-#### Buffered Channels
+### Buffered Channels
 
 ![buffered channel](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/buffered-channel.jpeg)
 
@@ -214,7 +214,7 @@ third
 
 > 注意: 使用 buffered channels 并不会避免阻塞发生。例如，如果寻矿 gopher 比开矿 gopher 执行速度快 10 倍，并且它们通过一个容量为 2 的 buffered channel 进行通信，那么寻矿 gopher 仍会发生多次阻塞。
 
-### 把这些都放到一起
+## 把这些都放到一起
 
 现在凭借 go routines 和 channels 的强大功能，我们可以使用 Go 的并发原语编写一个充分发挥多线程优势的程序了。
 
@@ -281,9 +281,9 @@ From Smelter: Ore is smelted
 
 为了专注于理解 go routines 和 channel 的基本概念，上文有些重要的信息我没有提，如果不知道的话，当你开始编程时它们可能会造成一些麻烦。既然你已经理解了 go routines 和 channel 的工作原理，在开始用它们编写代码之前，让我们先了解一些你应该知道的其他信息。
 
-### 在开始之前，你应该知道...
+## 在开始之前，你应该知道...
 
-#### 匿名的 Go routines
+### 匿名的 Go routines
 
 ![anonymous go routine](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/anonymous-go-routine.jpeg)
 
@@ -298,7 +298,7 @@ go func() {
 
 如果只需要调用一次函数，通过这种方式我们可以让它在自己的 go routine 中运行，而不需要创建一个正式的函数声明。
 
-#### main 函数是一个 go routine
+### main 函数是一个 go routine
 
 ![main func](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/main-func.jpeg)
 
@@ -317,17 +317,17 @@ main 函数确实运行在自己的 go routine 中！更重要的是要知道，
 ```go
 func main() {
  doneChan := make(chan string)
- 
+
  go func() {
   // Do some work…
   doneChan <- "I'm all done!"
  }()
- 
+
  <-doneChan // block until go routine signals work is done
 }
 ```
 
-#### 你可以遍历 channel
+### 你可以遍历 channel
 
 在前面的例子中我们让 miner 在 for 循环中迭代 3 次从 channel 中读取数据。如果我们不能确切知道将从 finder 接收多少块矿石呢？
 好吧，类似于对集合数据类型 (注: 如 slice) 进行遍历，你也可以遍历一个 channel。
@@ -347,17 +347,17 @@ func main() {
 
 > 遍历 channel 会阻塞，直到有新数据被发送到 channel。在所有数据发送完之后避免 go routine 阻塞的唯一方法就是用 "close(channel)" 关掉 channel。
 
-#### 对 channel 进行非阻塞读
+### 对 channel 进行非阻塞读
 
 但你刚刚告诉我们 channel 如何阻塞 go routine 的各种情形？！没错，不过还有一个技巧，利用 Go 的 *select case* 语句可以实现对 channel 的非阻塞读。通过使用这这种语句，如果 channel 有数据，go routine 将会从中读取，否则就执行默认的分支。
 
 ```go
 myChan := make(chan string)
- 
+
 go func(){
  myChan <- "Message!"
 }()
- 
+
 select {
  case msg := <- myChan:
   fmt.Println(msg)
@@ -380,7 +380,7 @@ No Msg
 Message!
 ```
 
-#### 对 channel 进行非阻塞写
+### 对 channel 进行非阻塞写
 
 非阻塞写也是使用同样的 *select case* 语句来实现，唯一不同的地方在于，case 语句看起来像是发送而不是接收。
 
@@ -393,16 +393,16 @@ select {
 }
 ```
 
-### 接下来去哪儿学
+## 接下来去哪儿学
 
 ![where go](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/where-go.jpeg)
 
 有许多讲座和博客更详细地介绍了 channels 和 go routines。 既然已经对这些工具的目的和应用有了深刻的理解，那么你应该能够充分利用下面的文章和演讲了。
 
 > [*Google I/O 2012 — Go Concurrency Patterns*](https://www.youtube.com/watch?v=f6kdp27TYZs&t=938s)
-> 
+>
 > [*Rob Pike — 'Concurrency Is Not Parallelism'*](https://www.youtube.com/watch?v=cN_DpYBzKso)
-> 
+>
 > [*GopherCon 2017: Edward Muller — Go Anti-Patterns*](https://www.youtube.com/watch?v=ltqV6pDKZD8&t=1315s)
 
 谢谢您花时间阅读本文。我希望你能够理解 go routines 和 channels 基本概念，以及使用它们给编写并发程序带来的好处。
