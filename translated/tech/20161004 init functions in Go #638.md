@@ -1,7 +1,7 @@
 # Go中的init函数
-main标识符是随处可见的，每一个GO程序都是从一个叫main的包中的main函数开始的，当main函数返回时，程序执行结束，init函数也这这之中扮演者特殊的角色，接下来我们将描述下init函数的属性并介绍下怎么使用它们。
+main 标识符是随处可见的，每一个GO程序都是从一个叫 main 的包中的 main 函数开始的，当 main 函数返回时，程序执行结束。 init 函数也扮演着特殊的角色，接下来我们将描述下 init 函数的属性并介绍下怎么使用它们。
 
-init函数在包级别被定义，主要用于：
+init 函数在包级别被定义，主要用于：
 >- 初始化那些不能被初始化表达式完成初始化的变量
 >- 检查或者修复程序的状态
 >- 注册
@@ -15,17 +15,15 @@ init函数在包级别被定义，主要用于：
 要想使用导入的包首先需要初始化它，这是由golang的运行系统完成的，主要包括(顺序很重要)：
 1. 初始化导入的包（递归的定义）
 2. 在包级别为声明的变量计算并分配初始值
-3. 在包内执行init函数（下面的空白标识符就是一个例子）
+3. 执行包内的 init 函数（下面的空白标识符就是一个例子）
+> 不管包被导入多少次，都只会被初始化一次。
 
 ## 顺序
 
-Go的包中有很多的文件，如果变量和函数在包的多个文件当中，那么变量的初始化和init函数的调用顺序又是什么样的呢？首先，初始化依赖机制会启动（更多[Go中的初始化依赖](https://medium.com/golangspec/initialization-dependencies-in-go-51ae7b53f24c)）
-当初始化依赖机制完成的时候，就需要决定a.go和z.go中的初始化变量谁会被更早的处理，而这要取决于呈现给编译器的文件顺序。
-如果z.go先被传递到构建系统那么变量的初始化就会比在a.go中先一步完成，这也同样适用于init函数的触发。Go语言规范建议我们始终使用相同的顺序传递，及按照词法顺序传递包中的文件名：
+Go的包中有很多的文件，如果变量和函数在包的多个文件当中，那么变量的初始化和 init 函数的调用顺序又是什么样的呢？首先，初始化依赖机制会启动（更多[Go中的初始化依赖](https://medium.com/golangspec/initialization-dependencies-in-go-51ae7b53f24c)）当初始化依赖机制完成的时候，就需要决定a.go和z.go中的初始化变量谁会被更早的处理，而这要取决于呈现给编译器的文件顺序。如果 z.go 先被传递到构建系统那么变量的初始化就会比在 a.go 中先一步完成，这也同样适用于init函数的触发。Go语言规范建议我们始终使用相同的顺序传递，及按照词法顺序传递包中的文件名：
 > 为了保证可重复的初始化行为，构建系统鼓励按照词法文件名的顺序将属于同一个包中的多个文件呈现给编译器。
 
-但是依赖一定顺序对提高程序的可移植性是一种不错方式。
-让我们来看一个例子，看看它们是如何一起工作的：
+但依赖特定顺序对于不关注可移植性的程序是一种方式。让我们来看一个例子，看看它们是如何一起工作的：
 
 ### sandbox.go
 ```go
@@ -94,7 +92,7 @@ main
 ```
 
 ## 属性
-init函数不需要参数并且也不返回任何值，与main相比，标识符init没有被声明所以也就不能被引用：
+init 函数不需要参数并且也不返回任何值，与 main 相比，标识符 init 没有被声明所以也就不能被引用：
 ```go
 package main
 
@@ -108,10 +106,10 @@ func main() {
     init()
 }
 ```
-在编译时这里会给出一个“undefined：init”错误。（init函数不能被引用）
-> 正式的来讲init标示符不会引入绑定，就像空白标示符('-')表现的一样。
+在编译时这里会给出一个 “undefined：init” 错误。（ init 函数不能被引用）
+> 正式的来讲 init 标示符不会引入绑定，就像空白标示符('_')表现的一样。
 
-在同一个包或者文件当中可以定义很多的init函数：
+在同一个包或者文件当中可以定义很多的 init 函数：
 ### sandbox.go
 ```go
 package main
@@ -147,11 +145,11 @@ init 2
 init 3
 main
 ```
-init函数在标准库中也被频繁的使用，例如：[*main*](https://github.com/golang/go/blob/2878cf14f3bb4c097771e50a481fec43962d7401/src/math/pow10.go#L33), [*bzip2*](https://github.com/golang/go/blob/2878cf14f3bb4c097771e50a481fec43962d7401/src/compress/bzip2/bzip2.go#L479)还有 [*image*](https://github.com/golang/go/blob/2d573eee8ae532a3720ef4efbff9c8f42b6e8217/src/image/gif/reader.go#L511)包。
+init 函数在标准库中也被频繁的使用，例如：[*main*](https://github.com/golang/go/blob/2878cf14f3bb4c097771e50a481fec43962d7401/src/math/pow10.go#L33), [*bzip2*](https://github.com/golang/go/blob/2878cf14f3bb4c097771e50a481fec43962d7401/src/compress/bzip2/bzip2.go#L479)还有 [*image*](https://github.com/golang/go/blob/2d573eee8ae532a3720ef4efbff9c8f42b6e8217/src/image/gif/reader.go#L511)包。
 
 ...
 
-init函数最常见的用法就是为初始化表达式中不能被计算的那部分分配一个值：
+init 函数最常见的用法就是为初始化表达式中不能被计算的那部分分配一个值：
 ```go
 var precomputed = [20]float64{}
 
@@ -163,10 +161,10 @@ func init() {
     }
 }
 ```
-使用for循环作为[*表达式*](https://golang.org/ref/spec#Expression)（Go语言中的语句）是不可能的，所以将这些放到init函数中就能够很好的解决这些问题。
+使用 for 循环作为[*表达式*](https://golang.org/ref/spec#Expression)（Go语言中的语句）是不可能的，所以将这些放到 init 函数中就能够很好的解决这些问题。
 
-## 仅仅为了使用包的边际效应而导入包
-Go语言对没有使用的导入是非常严格的。有时候程序员导入一个包可能只想要使用init函数的功能例如一些引导工作。空白标示符就是一个不错的方式：
+## 仅仅为了使用包的副作用（包的初始化）而导入包
+Go语言对没有使用的导入是非常严格的。有时候程序员导入一个包可能只想要使用 init 函数的功能例如一些引导工作。空白标示符就是一个不错的方式：
 ```go
 import _ "image/png"
 ```
@@ -185,6 +183,6 @@ via: https://medium.com/golangspec/init-functions-in-go-eac191b3860a
 
 作者：[Michał Łowicki](https://medium.com/@mlowicki)
 译者：[flexiwind](https://github.com/flexiwind)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
