@@ -115,8 +115,8 @@ func TestRacer(t *testing.T) {
 语法可能看上去有些乱，但根据你的时间进行调整。
 `httptest.NewServer` 需要一个`http.HandlerFunc` 方法，这个方法我们使用匿名函数进行发送。
 
-`http.HandlerFunc` 是一种类型类似于：`type HandlerFunc func(ResponseWriter, *Request)`
-这一切都指明需要一个 `ResponseWriter ` 和一个`Request`方法，这些在HTTP服务中并不稀奇。
+`http.HandlerFunc` 是一种类型类似于: `type HandlerFunc func(ResponseWriter, * Request)`。
+这一切都指明需要一个 `ResponseWriter` 和一个 `Request` 方法，这些在HTTP服务中并不稀奇。
 事实证明，没有什么特别神奇的地方，这也是你如何使用go语言编写一个真正的HTTP服务。唯一的区别是我们将其包装成了`httptest.NewServer`，这也使得测试更加容易，因为它找到了一个开放的端口来监听请求，当你完成测试后可以将其关闭。
 
 在我们的两个服务中，我们使其中一个慢的休眠一小段时间，当我们得到返回信息的时候让它比另一个相比慢一点。两个服务后边都会返回给请求者一个OK的响应，使用`w.WriteHeader(http.StatusOK)`。
@@ -173,7 +173,7 @@ func makeDelayedServer(delay time.Duration) *httptest.Server {
 }
 ```
 
-接下来，我们重构了名为`makeDelayedServer ` 的方法，用来构造我们的虚拟服务。并将一些多余的代码移除测试从而减少冗余。
+接下来，我们重构了名为`makeDelayedServer` 的方法，用来构造我们的虚拟服务。并将一些多余的代码移除测试从而减少冗余。
 ### defer
 通过在延迟函数前增加一个前置的函数调用， 它将包含在函数中的末尾进行调用。
 
@@ -214,13 +214,13 @@ func ping(url string) chan bool {
 
 在我们这个案例中，我们并不真正关心通道中发出的信号类型，我们发送信号仅仅表示我们完成了而且状态良好。
 
-在同样的方法里，我们开始一个go程，用来发送一个信号通道，代表我们完成了一个`http get `请求。
+在同样的方法里，我们开始一个go程，用来发送一个信号通道，代表我们完成了一个`http get`请求。
 ## select
 如果你翻回“并发”那个章节中，你可以用`myVar := <-ch`发送一个信号进行等待回值。这是一个阻塞的请求，你可以用来等待返回值。
 
 `select` 让你可以等待多个信道的消息。第一个选项得到值`成功`，该case下的代码将被执行。
 
-我们使用  `ping` 在我们的`select `中为我们的**URL**创建两个信道。无论哪个首先写入到信道，都会执行相应的`select `的代码，及会导致URL的返回（成为获胜的一方）。
+我们使用  `ping` 在我们的 `select` 中为我们的 **URL** 创建两个信道。无论哪个首先写入到信道，都会执行相应的 `select`的代码，及会导致URL的返回（成为获胜的一方）。
 
 在这些修改后，我们的意图在代码中已经非常明确，实际实现上更简单。
 ### Timeout
