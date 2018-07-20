@@ -48,7 +48,7 @@ func Racer(a, b string) (winner string) {
 }
 ```
 
-` racer_test.go:25: got '', want 'http://www.quii.co.uk'`
+`racer_test.go:25: got '', want 'http://www.quii.co.uk'`
 
 ### 进一步编写代码进行完善
 ```
@@ -76,7 +76,7 @@ func Racer(a, b string) (winner string) {
 
 一旦我们完成了这一步，我们只需比较返回的时间，看哪个最快
 
-###  疑问
+### 疑问
 这个测试也许并不适用于你，因为我们使用的是真实的网站进行测试自己的逻辑。
 对于使用HTTP请求这种很常用的测试，Go有一个标准库工具可以帮助我们测试。
 在mocking和依赖注入章节中，我们介绍了在理想情况下，我们不需要依赖外部服务测试我们的代码，因为它们经常有以下问题：
@@ -116,15 +116,14 @@ func TestRacer(t *testing.T) {
 `httptest.NewServer` 需要一个`http.HandlerFunc` 方法，这个方法我们使用匿名函数进行发送。
 
 `http.HandlerFunc` 是一种类型类似于：`type HandlerFunc func(ResponseWriter, *Request)`
-
 这一切都指明需要一个 `ResponseWriter ` 和一个`Request`方法，这些在HTTP服务中并不稀奇。
 事实证明，没有什么特别神奇的地方，这也是你如何使用go语言编写一个真正的HTTP服务。唯一的区别是我们将其包装成了`httptest.NewServer`，这也使得测试更加容易，因为它找到了一个开放的端口来监听请求，当你完成测试后可以将其关闭。
 
 在我们的两个服务中，我们使其中一个慢的休眠一小段时间，当我们得到返回信息的时候让它比另一个相比慢一点。两个服务后边都会返回给请求者一个OK的响应，使用`w.WriteHeader(http.StatusOK)`。
 
 当你重新运行测试的时候，肯定会更加快速的通过。使用休眠故意去打破测试。
- 
-###  重构
+
+### 重构
 在实际测试和生产的代码中，我们经常会有一些重复的代码。
 ```
 func Racer(a, b string) (winner string) {
@@ -175,8 +174,7 @@ func makeDelayedServer(delay time.Duration) *httptest.Server {
 ```
 
 接下来，我们重构了名为`makeDelayedServer ` 的方法，用来构造我们的虚拟服务。并将一些多余的代码移除测试从而减少冗余。
-
-###  defer
+### defer
 通过在延迟函数前增加一个前置的函数调用， 它将包含在函数中的末尾进行调用。
 
 有些时候，你可能需要清理资源，例如关闭文件读取或关闭某些服务以关闭端口监听。
@@ -185,7 +183,7 @@ func makeDelayedServer(delay time.Duration) *httptest.Server {
 
 我们的重构是一种改进，并且是迄今为止涵盖go属性的最合理的方案，但是我们可以使解决方案更加简单。
 
-###  进程同步
+### 进程同步
 - go是十分擅长处理并发的，那我们为什么还要一个接一个的测试网站响应速度呢？我们可以同时测试两者。
 
 我们并不需要关心确切的响应时间，只需要知道哪一个是第一个返回的。
@@ -211,28 +209,23 @@ func ping(url string) chan bool {
     return ch
 }
 ```
-##  ping
+## ping
 我们定义一个函数`ping` 用来创建一个`chan bool`并且返回它。
 
 在我们这个案例中，我们并不真正关心通道中发出的信号类型，我们发送信号仅仅表示我们完成了而且状态良好。
 
 在同样的方法里，我们开始一个go程，用来发送一个信号通道，代表我们完成了一个`http get `请求。
-
-##  select
+## select
 如果你翻回“并发”那个章节中，你可以用`myVar := <-ch`发送一个信号进行等待回值。这是一个阻塞的请求，你可以用来等待返回值。
 
 `select` 让你可以等待多个信道的消息。第一个选项得到值`成功`，该case下的代码将被执行。
 
-我们使用  `ping` 在我们的` select `中为我们的**URL**创建两个信道。无论哪个首先写入到信道，都会执行相应的`select `的代码，及会导致URL的返回（成为获胜的一方）。
+我们使用  `ping` 在我们的`select `中为我们的**URL**创建两个信道。无论哪个首先写入到信道，都会执行相应的`select `的代码，及会导致URL的返回（成为获胜的一方）。
 
 在这些修改后，我们的意图在代码中已经非常明确，实际实现上更简单。
-
-###  Timeout
-
+### Timeout
 我们最后一个需求是实现当`Racer` 超过10秒未响应的时候返回一个错误提示。
-
-###  编写第一个测试
-
+### 编写第一个测试
 ```
 t.Run("returns an error if a server doesn't respond within 10s", func(t *testing.T) {
     serverA := makeDelayedServer(11 * time.Second)
@@ -251,7 +244,7 @@ t.Run("returns an error if a server doesn't respond within 10s", func(t *testing
 
 我们已经使我们的测试服务做了针对脚本的超过10秒的训练，并且我们预期的`Racer` 现在返回了两个值，“胜利”的URL（在此次测试忽略）和一个错误提示。
 
-###  试着运行测试
+### 试着运行测试
 `./racer_test.go:37:10: assignment mismatch: 2 variables but 1 values`
 
 ### 编写尽可能少的代码作测试并且检查失败的输出
