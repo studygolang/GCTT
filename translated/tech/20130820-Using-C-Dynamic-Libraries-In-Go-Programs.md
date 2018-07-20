@@ -1,4 +1,4 @@
-## 在Go中使用C语言的动态库
+# 在Go中使用C语言的动态库
 
 我和我的儿子在上周末干了一件非常有意思的事情，我们开发了一个用Go编写的命令行游戏，最近我正在重写一款曾经在年轻时开发的游戏，当时用的还是Kaypro II。
 
@@ -18,7 +18,7 @@
 
 在Mac系统下ncurse库的路径是/usr/lib，这有个关于库的文档：
 
-[https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man3/ncurses.3x.html](https://www.ardanlabs.com/blog/broken-link.html)  
+[https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man3/ncurses.3x.html](https://www.ardanlabs.com/blog/broken-link.html)
 
 下面是C语言的测试程序头文件：
 
@@ -117,9 +117,9 @@ gcc -lncurses -r/usr/lib -o test test.o
 
 非常幸运的是我找到了一些非常棒的文章，里面包含了动态库给Go使用的方法：
 
-<http://www.adp-gmbh.ch/cpp/gcc/create_lib.html> 
+<http://www.adp-gmbh.ch/cpp/gcc/create_lib.html>
 
-<http://stackoverflow.com/questions/3532589/how-to-build-a-dylib-from-several-o-in-mac-os-x-using-gcc> 
+<http://stackoverflow.com/questions/3532589/how-to-build-a-dylib-from-several-o-in-mac-os-x-using-gcc>
 
 让我们在Go中实现这一切吧，先来建立一个新的工程：
 
@@ -236,8 +236,6 @@ func main() {
 }
 ```
 
-
-
 Go开发小组提供了两篇文章来解释Go是如何和C语言的动态库进行交互的，对于理解上面的代码拥有非常重要的作用：
 
 <http://golang.org/cmd/cgo/>
@@ -291,7 +289,7 @@ C.CloseKeyboard()
 
 如果你想浏览和获取这些代码，我已经把项目放到了github仓库的Keyboard下，好好享用！！
 
-阅读第二章：[Using CGO with Pkg-Config And Custom Dynamic Library Locations](http://www.goinggo.net/2013/08/using-cgo-with-pkg-config-and-custom.html) 
+阅读第二章：[Using CGO with Pkg-Config And Custom Dynamic Library Locations](http://www.goinggo.net/2013/08/using-cgo-with-pkg-config-and-custom.html)
 
 ---
 
