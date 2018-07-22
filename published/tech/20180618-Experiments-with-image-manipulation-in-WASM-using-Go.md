@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/13727
+
 # 使用 Go 在 WASM 中进行图像处理的实验
 
 Go 的主分支最近完成了一个 WebAssembly 的工作原型实现。作为 WASM 的爱好者，我自然要把玩一下。
@@ -10,7 +12,7 @@ Go 的主分支最近完成了一个 WebAssembly 的工作原型实现。作为 
 
 它看起像这样 -
 
-```
+```go
 js.NewEventCallback(js.PreventDefault, func(ev js.Value) {
 	// handle event
 })
@@ -20,7 +22,7 @@ js.NewEventCallback(js.PreventDefault, func(ev js.Value) {
 
 为了规范，我把所有回调作为我的主结构的方法并在一个地方关联它们。类似于你把 URL 处理器声明在不同的文件里并在一个地方设置所有路由一样。
 
-```
+```go
 // Setup callbacks
 s.setupOnImgLoadCb()
 js.Global.Get("document").
@@ -40,7 +42,7 @@ js.Global.Get("document").
 
 然后在一个单独文件里编写您的回调 -
 
-```
+```go
 func (s *Shimmer) setupHueCb() {
 	s.hueCb = js.NewEventCallback(js.PreventDefault, func(ev js.Value) {
 		// quick return if no source image is yet uploaded
@@ -79,7 +81,7 @@ func (s *Shimmer) setupHueCb() {
 
 附：- 请注意，图像变换不会应用于另一个图像之上。就是说如果您更改亮度然后更改色调，则生成的图像将仅改变原始图像的色调。这是现在的待办项目。
 
-----------------
+---
 
 via: http://agniva.me/wasm/2018/06/18/shimmer-wasm.html
 
