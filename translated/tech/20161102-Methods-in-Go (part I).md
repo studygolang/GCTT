@@ -212,14 +212,12 @@ func (T) G(string) {}
 
 G 的声明省略无用标识符。
 
----
+----------------
 
-如果以上内容让您有所收获，请关注我以获取新内容的更新。点击下方❤ 把这篇文章分享给其他人。
+via: https://medium.com/golangspec/methods-in-go-part-i-a4e575dff860
 
-## 资源
+作者：[Michał Łowicki](https://medium.com/@mlowicki)
+译者：[themoonbear](https://github.com/themoonbear)
+校对：[polaris1119](https://github.com/polaris1119)
 
-> [Go 语言中的方法 (第二部)](https://medium.com/@mlowicki/methods-in-go-part-ii-2b4cc42c5cb6)
-> 
-> [常见问题 (FAQ) - Go 编程语言](https://golang.org/doc/faq#methods_on_values_or_pointers)
-> 
-> [Go 编程语言规范 - Go 编程语言](https://golang.org/ref/spec#Method_sets)
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
