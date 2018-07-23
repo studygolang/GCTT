@@ -4,8 +4,6 @@
 
 在不停机的情况下，就地部署一个应用程序的新版本或者修改其配置的能力已经成为现代软件系统的标配。这篇文章讨论优雅重启一个应用的不同方法，并且提供一个功能独立的案例来深挖实现细节。如果你不熟悉 Teleport 话，Teleport 是我们使用 Golang 针对弹性架构设计的 [SHH 和 Kubernetes 特权访问管理解决方案](https://gravitational.com/teleport/)。使用 Go 建立和维护服务的开发者和网站可靠性工程师(SRE)应该对这篇文章有兴趣。
 
-> For Proofreader: privileged access management solution -> 堡垒机解决方案
-
 ## SO_REUSEPORT vs 复制套接字的背景
 
 为了推进 Teleport 高可用的工作，我们最近花了些时间研究如何优雅重启 Teleport 的 TLS 和 SSH 的端口监听器[(GitHub issue #1679)](https://github.com/gravitational/teleport/pull/1679)。我们的目标是能够更新一个 Teleport 二进制文件而不需要让实例停止服务。
