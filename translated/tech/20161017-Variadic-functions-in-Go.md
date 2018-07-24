@@ -84,7 +84,7 @@ src/github.com/mlowicki/lab/lab.go:17: cannot use func literal (type func([]int)
 
 ## 把三个点放到另一侧
 
-下面的代码段无法被成功编译: 
+下面的代码段无法被成功编译:
 
 ```go
 package main
