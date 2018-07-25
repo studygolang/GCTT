@@ -21,7 +21,7 @@ func main() {
 ./lab.go:6: invalid operation: 1 + "2" (mismatched types int and string)
 ```
 
-JavaScript 是弱类型语言的一种，让我们看看他的实际效果: 
+JavaScript 是弱类型语言的一种，让我们看看他的实际效果:
 
 ```js
 var monster = 1 + "foo" + function() {};
@@ -49,7 +49,7 @@ func main() {
 
 函数调用的表达式是类型转换的常见情况, 下面我们会多次看到类似的转换。上面的代码是能够正常运行的，但是如果移除类型转换:
 
-```go 
+```go
 f(65)
 ```
 
@@ -102,7 +102,7 @@ func main() {
 > ```
 > type A string             // string
 > type B A                  // string
-> type S string             // string 
+> type S string             // string
 > type T map[S]float64      // map[S]float64
 > type U T                  // map[S]float64
 > ```
@@ -119,7 +119,7 @@ var _ map[string]float64 = make(T)
 上面的程序会在编译期间报错:
 
 ```
-cannot use make(T) (type T) as type map[string]float64 in assignment 
+cannot use make(T) (type T) as type map[string]float64 in assignment
 ```
 
 赋值错误的发生，是因为 *T* 的底层类型不是 `map[string]float64` 而是 `map[S]float64`。类型转换也会报错:
@@ -181,7 +181,7 @@ k := string(65)
 
 对于常量更深入的介绍可以在[官方博客](https://medium.com/golangspec/conversions-in-go-4301e8d84067)中找到。
 
-## 数字类型 
+## 数字类型
 
 ### 浮点数(floating-point number) -> 整数(integer)
 
@@ -193,12 +193,12 @@ fmt.Println(m)
 
 小数部分被移除，因此代码输出 ”1“。
 
-对于其他转换: 
+对于其他转换:
 * 浮点数 -> 浮点数，
 * 整数 -> 整数，
 * 整数 -> 浮点数，
 * 复数 -> 复数。
-  
+
 变量会被四舍五入至目标精度:
 
 ```go
@@ -214,8 +214,8 @@ b = 2 << 10
 a = int64(b)
 fmt.Println(a)         // 2048
 fmt.Println(b)         // 2048
-``` 
- 
+```
+
 ## 指针
 
 *可赋值性(Assignability)* 以和处理其他类型一样的方式处理指针类型。
@@ -236,7 +236,7 @@ func main() {
 
 程序正常工作并且输出 ”2“，这依赖于已经被讨论过的*可赋值性规则(assignability rule)*。**int64* 和 *T* 的底层类型是相同的，并且 **int64* 是 unnamed 类型。类型转换则更宽松一些。对于 unnamed 指针类型，指针的基类型(base type)具有相同的底层类型即可转换。
 
-> 译按: 指针的基类型(base type)为指针所指向变量的类型，例如 p *int, p 的基类型为 int。 
+> 译按: 指针的基类型(base type)为指针所指向变量的类型，例如 p *int, p 的基类型为 int。
 
 ```go
 package main
@@ -279,7 +279,7 @@ func main() {
 ```
 
 *U* 和 *W* 的声明已经被改变。思考一下，会发生什么?
- 
+
 编译器在以下位置报一个错误 “cannot convert q (type U) to type T”(无法将 q (类型 U) 转换为类型 T):
 
 ```go
@@ -352,11 +352,11 @@ for _, s := range text {
 'ł' 322
 ```
 
-> 想了解更多类似 *%q* 和 *%v* 这样的占位符，可以看 [fmt](https://golang.org/pkg/fmt/) 包的文档 
+> 想了解更多类似 *%q* 和 *%v* 这样的占位符，可以看 [fmt](https://golang.org/pkg/fmt/) 包的文档
 
 更多的讨论可在 [《Golang的字符串，字节，rune 和字符》](https://blog.golang.org/strings)。在这个快速解释之后，在字符串和字节切片之间的转换应该不会再难以理解。
 
-### string ↔ slice of bytes 
+### string ↔ slice of bytes
 
 ```go
 bytes := []byte("abł")
