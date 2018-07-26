@@ -393,7 +393,7 @@ fmt.Printf("%#v\n", string(runes)) // "abł"
 
 via: https://medium.com/golangspec/conversions-in-go-4301e8d84067
 
-作者：[golangspec](https://medium.com/golangspec)
+作者：[Michał Łowicki](https://medium.com/@mlowicki)
 译者：[magichan](https://github.com/magichan)
 校对：[校对者ID](https://github.com/校对者ID)
 
