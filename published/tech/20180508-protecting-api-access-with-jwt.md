@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/13876
+
 # 使用 JWT 保护 API 访问
 
 APIs 的一个常见用例是提供一个授权中间件，允许客户端向 APIs 发送授权请求。通常来说，客户端会执行一些授权逻辑，产生一个「会话标识」。最近比较流行的 JWT ( JSON Web Tokens ) 提供了一个带超时时间的「会话标识」，使用它不需要额外的空间来执行验证逻辑。
@@ -13,9 +15,7 @@ APIs 的一个常见用例是提供一个授权中间件，允许客户端向 AP
 「JWT」由三部分构成
 
 1. 信息头：指定了使用的签名算法
-
 2. 声明部分：其中也可以包含超时时间
-
 3. 基于指定的算法生成的签名
 
 通过这三部分信息，API 服务端可以根据「JWT」信息头和声明部分的信息重新生成签名。之所以可以这样做，是因为生成签名需要的秘钥存放在服务器端。
@@ -121,7 +121,7 @@ mux.Group(func(mux chi.Router) {
 
 现在 /time 和 /say 必需有一个合法的「JWT」才能访问，/time 不直接检验「JWT」，而是把检验工作交给了「授权器」。比如，我们用一个过期了的「JWT」访问 /time ，会得到如下的信息：
 
-```go
+```json
 {
     "error": {
         "message": "Error validating JWT: jwtauth: token is expired"
@@ -131,7 +131,7 @@ mux.Group(func(mux chi.Router) {
 
 但是如果我们请求的是 /info，我们会收到如下的信息：
 
-```go
+```json
 {
     "response": "1"
 }
@@ -139,7 +139,7 @@ mux.Group(func(mux chi.Router) {
 
 用一个过期的「JWT」访问 /info，则会返回：
 
-```go
+```json
 {
     "error": {
         "message": "Not logged in"
@@ -184,16 +184,14 @@ func (jwt *JWT) Authenticator() func(http.Handler) http.Handler {
 }
 ```
 
-以上授权微服务的完整代码可以从 [GitHub](https://github.com/titpetric/books/tree/master/api-foundations/chapter4b-jwt) 上获取，可以免费下载和体验
+以上授权微服务的完整代码可以从 [GitHub](https://github.com/titpetric/books/tree/master/api-foundations/chapter4b-jwt) 上获取，可以免费下载和体验。
 
-----------------
+---
 
-via: <https://scene-si.org/2018/05/08/protecting-api-access-with-jwt/>
+via: https://scene-si.org/2018/05/08/protecting-api-access-with-jwt/
 
 作者：[Tit Petric](https://scene-si.org/about)
 译者：[jettyhan](https://github.com/jettyhan)
 校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，
-[Go 中文网](https://studygolang.com/) 荣誉推出
-
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
