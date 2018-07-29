@@ -1,11 +1,11 @@
 
-# 概述go中读取文件的方式
+# 概述 Go 中读取文件的方式
 
 当我开始学习 go 时，我很难掌握各种用于读取文件的 API 和技术。我尝试编写支持多核的单词计数程序（[KGRZ/KWC](https://github.com/kgrz/kwc)），通过在一个程序中使用多种读取文件方式来展示我初始的困惑。
 
-在今年的 [Advent of Code](http://adventofcode.com/2017) 中，有些问题需要采用不同的方式来读取输入。我最终每种技术都至少使用过一次，现在我对这些技术都有所理解。我将对这些技术的理解写在本文中。我列出的方法是按照我使用的顺序，并不一定按照难度递减的顺序。
+在今年的 [Advent of Code](http://adventofcode.com/2017) 中，有些问题需要采用不同的方式来读取输入。我最终每种技术都至少使用过一次，现在我将对这些技术的理解写在本文中。我列出的方法是按照我使用的顺序，并不一定按照难度递减的顺序。
 
-### 一些基本的假设
+## 一些基本的假设
 * 所有的代码示例都被封装在一个 `main()` 函数中
 * 大多数情况下，我会经常会交替使用“数组 `array`”和“切片 `slice`”来指代切片，但它们是不一样的。这些[博客](https://blog.golang.org/go-slices-usage-and-internals)[文章](https://blog.golang.org/slices)是了解差异的两个很好的资源。
 * 我把所有的实例上传到[kgrz/reading-files-in-go](https://github.com/kgrz/reading-files-in-go)。
@@ -53,7 +53,6 @@ fmt.Println("bytestream to string: ", string(buffer))
 
 ```
 [basic.go](https://github.com/kgrz/reading-files-in-go/blob/master/basic.go) on Github
-
 
 ### 以块读取文件
 
@@ -103,13 +102,13 @@ while readstring = f.read(bufsize)
     puts readstring
 end
 ```
-在每个循环中，都对内部文件指针位置进行更新。当下一次读取时，数据从文件指针偏移开始，读取并返回缓冲区大小的数据。这个指针不是由编程语言创建的，而是操作系统创建的。在Linux上，这个指针是操作系统创建的文件描述符。所有 `read/Read` 调用（分别在 Ruby/Go 中）被内部翻译成系统调用,并发送到内核，由内核管理这个指针。
+在每个循环中，都对内部文件指针位置进行更新。当下一次读取时，数据从文件指针偏移开始，读取并返回缓冲区大小的数据。这个指针不是由编程语言创建的，而是操作系统创建的。在Linux上，这个指针是操作系统创建的文件描述符。所有 `read/Read` 调用（分别在 Ruby/Go 中）被内部翻译成系统调用，并发送到内核，由内核管理这个指针。
 
 ### 并发读取文件块
 
-如果我们想加快上面提到的对数据块的处理速度呢？一个方法就是使用多个 `go routine`!相对于顺序读取数据快，我们需要一个额外的操作就是要知道每个 `routine` 读取数据的偏移量。注意，`ReadAt` 函数和 `Read` 函数在缓存容量大于剩余需要读取字节的时，处理方式略有不同。
+如果我们想加快上面提到的对数据块的处理速度呢？一个方法就是使用多个 `goroutine`！相对于顺序读取数据块，我们需要一个额外的操作就是要知道每个 `routine` 读取数据的偏移量。注意，`ReadAt` 函数和 `Read` 函数在缓存容量大于剩余需要读取字节的时，处理方式略有不同。
 
-还要注意的是，我并没有限制 `go routine` 的数量，它只是由缓冲区大小决定的。事实上，这个数字可能有一个上限。
+还要注意的是，我并没有限制 `goroutine` 的数量，它只是由缓冲区大小决定的。事实上，这个数字可能有一个上限。
 
 ```go
 const BufferSize = 100
@@ -127,10 +126,10 @@ fileinfo, err := file.Stat()
 }
 
 filesize := int(fileinfo.Size())
-// Number of go routines we need to spawn.
+// Number of goroutines we need to spawn.
 concurrency := filesize / BufferSize
 
-// check for any left over bytes. Add one more go routine if required.
+// check for any left over bytes. Add one more goroutine if required.
 if remainder := filesize % BufferSize; remainder != 0 {
     concurrency++
 }
@@ -177,7 +176,7 @@ wg.Wait()
 
 你可以一直使用 `Read()` 来读取文件，但有时你需要更方便的方法。在 Ruby 中有一些经常用到的 IO 函数，比如 `each_line`，`each_char`，`each_codepoint` 等。我们可以使用 `Scanner` 类型和 `bufio` 包中提供的相关函数来实现类似的功能。
 
-`bufio.Scanner` 类型实现了一个参数为“分割”函数的函数，并基于此函数推进指针。例如，内置的 `bufio.ScanLines` 分割函数,在每次迭代中都会推进指针，直到指针推进到下一个换行符。在每个步骤中，`bufio.Scanner` 类型提供了获取在起始位置和结束位置之间的字节数组/字符串的函数。例如：
+`bufio.Scanner` 类型实现了一个参数为“分割”函数的函数，并基于此函数推进指针。例如，内置的 `bufio.ScanLines` 分割函数，在每次迭代中都会推进指针，直到指针推进到下一个换行符。在每个步骤中，`bufio.Scanner` 类型提供了获取在起始位置和结束位置之间的字节数组/字符串的函数。例如：
 ```
 file, err := os.Open("filetoread.txt")
 if err != nil {
@@ -312,7 +311,7 @@ fmt.Println(word)
 
 `bufio.NewScanner` 需要满足 `io.Reader` 接口的类型作为参数，这意味着它可以接受任何有 `Read` 方法的类型作为参数。标准库中字符串实用方法 `strings.NewReader` 函数返回一个 “reader” 类型。我们可以把两者结合起来，实现长字符串分割成单词：
 
-```
+```go
 file, err := os.Open("_config.yml")
 longstring := "This is a very long string. Not."
 handle(err)
@@ -333,19 +332,19 @@ for _, word := range words {
 ```
 ### 扫描逗号分隔字符串
 
-用基本的 `Read()` 函数或 `Scanner` 类型手动解析 CSV 文件/字符串是比较繁琐的，因为上述分割函数 `bufio.ScanWords` 将一个“单词”定义为一组由空格分割的字符。读取单个字符，并记录缓冲区大小和位置（像词法分析/解析工作）需要太多的工作和操作。
+用基本的 `Read()` 函数或 `Scanner` 类型手动解析 CSV 文件/字符串是比较繁琐的，因为上述分割函数 `bufio.ScanWords` 将一个“单词”定义为一组由空格分割的字符。读取单个字符并记录缓冲区大小和位置（像词法分析/解析工作）需要太多的工作和操作。
 
-我们可以通过定义新的分割函数来省去这些繁琐的操作。分割函数顺序读取每个字符直到遇到逗号，然后在 Text() 或 Bytes() 函数被调用时返回检测到的单词。bufio.SplitFunc 函数签名应该是这样的：
-```
+我们可以通过定义新的分割函数来省去这些繁琐的操作。分割函数顺序读取每个字符直到遇到逗号，然后在 `Text()` 或 `Bytes()` 函数被调用时返回检测到的单词。`bufio.SplitFunc` 函数签名应该是这样的：
+```go
 (data []byte, atEOF bool) -> (advance int, token []byte, err error)
 ```
 1. `data` 是输入的字节串
 2. `atEOF` 是表示输入数据是否结束的标志
-3. `advance` 用于根据当前读的长度来确定前进值，使用这个值在循环扫描完成后更新数据指针的位置。
+3. `advance` 用于根据当前读的长度来确定指针推进值，使用这个值在循环扫描完成后更新数据指针的位置。
 4. `token` 是扫描操作后得到的数据
 5. `err` 用于返回错误信息
 
-为了简单起见，我展示了一个读取字符串的例子。实现上述函数签名的简单读取器来读取CSV字符串：
+为了简单起见，我展示了一个读取字符串的例子。实现上述函数签名的简单读取器来读取 CSV 字符串：
 
 ```go
 csvstring := "name, age, occupation"
@@ -426,11 +425,11 @@ for _, fileinfo := range filelist {
 1. `ioutil.ReadAll()` 输入一个类似 `io` 对象，将整个数据作为字节数组返回
 2. `io.ReadFull()`
 3. `io.ReadAtLeast()`
-4. `io.MultiReader` 组合多个类似 `io` 对象是非常有用。如果你有一个需要读取的文件列表，可以将它们视为单个连续的数据块，而无需管理复杂的前后文件之间的切换。
+4. `io.MultiReader` 组合多个类似 `io` 对象时非常有用。如果你有一个需要读取的文件列表，可以将它们视为单个连续的数据块，而无需管理复杂的前后文件之间的切换。
 
 ### 更新
 
-为了突出显示“`read`”函数，我选择了使用错误处理函数来打印错误并关闭文件：
+为了突出显示 “read” 函数，我选择了使用错误处理函数来打印错误并关闭文件：
 
 ```go
 func handleFn(file *os.File) func(error) {
@@ -458,7 +457,7 @@ handle(err)
 via: https://kgrz.io/reading-files-in-go-an-overview.html
 
 作者：[Kashyap Kondamudi](http://github.com/kgrz/)
-译者：[译者ID](https://github.com/译者ID)
-校对：[校对者ID](https://github.com/校对者ID)
+译者：[alan](https://github.com/althen)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

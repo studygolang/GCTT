@@ -1,6 +1,6 @@
 已发布：https://studygolang.com/articles/12452
 
-# golang 中的微服务 - 第3部分 - docker compose 和 datastores
+# golang 中的微服务 - 第 3 部分 - docker compose 和 datastores
 
 在[之前的文章](https://studygolang.com/articles/12094)中，我们介绍了 [go-micro](https://github.com/micro/go-micro) 和 [Docker](https://www.docker.com/) 的一些基础知识。在推出了这两项服务之后我们将在本文介绍 [docker-compose](https://docs.docker.com/compose/)、教大家如何更便捷地在本地运行多个服务，还会列述一些在本系列微服务教程中可以使用的数据库类型，最后引出本系列的第三项服务 —— User service。
 
