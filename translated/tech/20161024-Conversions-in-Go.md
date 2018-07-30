@@ -178,7 +178,7 @@ j := complex128(0.0 + 1.0i)
 k := string(65)
 ```
 
-对于常量更深入的介绍可以在[博客](https://medium.com/golangspec/conversions-in-go-4301e8d84067)中找到。
+对于常量更深入的介绍可以在[官方博客](https://blog.golang.org/constants)中找到。
 
 ## 数字类型
 
