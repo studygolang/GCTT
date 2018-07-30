@@ -1,9 +1,8 @@
 # Go 的类型转换
 
-有时候你可能需要将变量转换为其他类型。Golang 不容许随意处理这种转换，
-转换是由类型系统的强制保证的某些规则。在这篇文章中，我们将讨论那些转换是可能的，那些事不可能，以及什么时候进行转换是有价值的。
+有时候你可能需要将变量转换为其他类型。Golang 不容许随意处理这种转换，转换是由类型系统的强制保证的某些规则。在这篇文章中，我们将讨论哪些转换是可能的，哪些是不可能，以及什么时候进行转换是有价值的。
 
-Go 是一种强类型语言。它在类型上是严格的，编译期间会报告类型错误。
+Go 是一门强类型语言。它在类型上是严格的，编译期间会报告类型错误。
 
 ```go
 package main
@@ -21,7 +20,7 @@ func main() {
 ./lab.go:6: invalid operation: 1 + "2" (mismatched types int and string)
 ```
 
-JavaScript 是弱类型语言的一种，让我们看看他的实际效果:
+JavaScript 是弱类型语言的一种，让我们看看它的实际效果:
 
 ```js
 var monster = 1 + "foo" + function() {};
@@ -31,7 +30,7 @@ console.info("value:", monster);
 
 我将数字，字符串甚至函数加在一起，这似乎是件奇怪的事情。但不用担心，JavaScript 会无报错地为你处理这些事情。
 
-```js
+```
 type: string
 value: 1foofunction () {}
 ```
@@ -179,7 +178,7 @@ j := complex128(0.0 + 1.0i)
 k := string(65)
 ```
 
-对于常量更深入的介绍可以在[官方博客](https://medium.com/golangspec/conversions-in-go-4301e8d84067)中找到。
+对于常量更深入的介绍可以在[博客](https://medium.com/golangspec/conversions-in-go-4301e8d84067)中找到。
 
 ## 数字类型
 
@@ -335,7 +334,7 @@ for i := 0; i < len(text); i++ {
 
 97 和 98 是 UTF-8 编码的 “a” 和 “b“ 字符。第三和第四行的输出是字符 “ł” 的 UTF8 编码，该编码占据了两个字节的空间。
 
-*range* 循环有助于迭代Unicode定义的码位( 码位在 Golang 中被称为 *rune* )
+*range* 循环有助于迭代 Unicode 定义的码位( 码位在 Golang 中被称为 *rune* )
 
 ```go
 text := "abł"
