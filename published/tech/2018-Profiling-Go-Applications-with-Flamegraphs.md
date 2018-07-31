@@ -1,4 +1,7 @@
+首发于：https://studygolang.com/articles/13540
+
 # 使用 Flamegraphs 对 Go 程序进行性能分析
+
 2018 年 2 月 28 日
 
 应用的性能问题生来就是无法预料的 —— 而且他们总是在最坏的时间露头。让情况更糟的是，很多性能分析工具都是冷冰冰的，复杂难懂的，用起来彻头彻尾令人困惑的 —— 来自于 `valgrind` 和 `gdp` 这样最受推崇的性能分析工具的用户体验。
@@ -146,19 +149,19 @@ echo "GET http://localhost:8080/ping" | vegeta attack -rate 250 -duration=60s | 
 open -a `Google Chrome` torch.svg
 ```
 
-![](flamegraphs/1.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/flamegraphs/1.png)
 
 ## 读懂 Flamegraph
 
 flamegraph 中的每一个水平区段代表一个栈帧，决定它的宽度的是采样过程中你的程序被观察到在对这个帧进行求值的相对（%）时间。这些区段在垂直方向上根据在调用栈中的位置被组织成一个个的 "flame"，也就是说在图的 y轴方向上位于上方的函数是被位于下方的函数调用的 —— 自然地，在上方的函数比下方的函数占用了更小片的 CPU 时间。如果你想深入视图中的某一部分，很简单，只需要点击某一帧，这样位于这帧下方的帧都会消失，而且界面会自己调整尺寸。
 
-![](flamegraphs/2.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/flamegraphs/2.png)
 
 *注：栈帧的颜色是无意义的，完全随机——色调和色度的区分是为了让图更易读。*
 
 通过直接查看或是点击几个帧来缩小范围——有没有性能问题及问题是什么应该会即刻变得显而易见。记住 [80/20 规律](https://en.wikipedia.org/wiki/Pareto_principle) ，你的大部分性能问题都会出现在做了比它该做的多得多的少部分代码上——别把你的时间花在flamegraph图表中那些薄小的穗上。
 
-![](flamegraphs/3.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/flamegraphs/3.png)
 
 举例来说，在我们的程序中，我们可以深入到那些较大片的区段，看到我们花了10%(!) 的时间在将结果通过网络 socket 刷到我们的统计服务器！幸运的是，修复这个很简单——通过在我们的代码中添加一个小的buffer，我们可以解决这个问题，然后产生一个新的，更纤细的图。
 
@@ -184,7 +187,7 @@ func (sc *SimpleClient) send(s string) error {
 
 ### New flamegraph
 
-![](flamegraphs/4.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/flamegraphs/4.png)
 
 就是它了！Flamegraph是个窥测你的应用性能的简单且强大的工具。试着为你的应用产生一个 flamegraph——你的发现可能会给你带来惊喜：）
 
@@ -197,7 +200,7 @@ func (sc *SimpleClient) send(s string) error {
 - [The Mature Optimization Handbook](https://www.facebook.com/notes/facebook-engineering/the-mature-optimization-handbook/10151784131623920/)
 - [Profiling and Optimizing go Applications](https://www.youtube.com/watch?v=N3PWzBeLX2M)
 
-----------------
+---
 
 via: http://brendanjryan.com/golang/profiling/2018/02/28/profiling-go-applications.html
 
@@ -206,4 +209,3 @@ via: http://brendanjryan.com/golang/profiling/2018/02/28/profiling-go-applicatio
 校对：[rxcai](https://github.com/rxcai)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-

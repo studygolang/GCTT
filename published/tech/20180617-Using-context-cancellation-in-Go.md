@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/13676
+
 # 在 Go 中用 Context 取消操作
 
 许多使用 Go 的人都会遇到 context 包。大多数时候 context 用在下游操作， 比如发送 Http 请求、查询数据库、或者开 go-routines 执行异步操作。最普通用法是通过它向下游操作传递数据。很少人知道，但是非常有用的context功能是在执行中取消或者停止操作。
@@ -8,19 +10,19 @@
 
 简单来说，我们需要取消来避免系统做无用的操作。想像一下，一般的http应用，用户请求 Http Server， 然后 Http Server查询数据库并返回数据给客户端：
 
-![http 应用](https://raw.githubusercontent.com/nelsonken/pictures/master/using-context-cancellation-in-go/1.png)
+![http 应用](https://raw.githubusercontent.com/studygolang/gctt-images/master/using-context-cancellation-in-go/1.png)
 
 如果每一步都很完美，耗时时图会像下面这样：
 
-![耗时图](https://raw.githubusercontent.com/nelsonken/pictures/master/using-context-cancellation-in-go/2.png)
+![耗时图](https://raw.githubusercontent.com/studygolang/gctt-images/master/using-context-cancellation-in-go/2.png)
 
 但是，如果客户端中途中断请求会发生什么？会发生，比如： 请求中途，客户端关闭了浏览器。如果没有取消操作，Application Server 和 数据库 会继续他们的工作，尽管工作的结果会被浪费。
 
-![异常耗时图](https://raw.githubusercontent.com/nelsonken/pictures/master/using-context-cancellation-in-go/3.png)
+![异常耗时图](https://raw.githubusercontent.com/studygolang/gctt-images/master/using-context-cancellation-in-go/3.png)
 
 理想条件下，如果我们知道流程（例子中的 http request）的话， 我们想要下游操作也会停止：
 
-![理想耗时图](https://raw.githubusercontent.com/nelsonken/pictures/master/using-context-cancellation-in-go/4.png)
+![理想耗时图](https://raw.githubusercontent.com/studygolang/gctt-images/master/using-context-cancellation-in-go/4.png)
 
 ## go context包的取消操作
 
@@ -171,7 +173,7 @@ Request failed: Get http://google.com: context deadline exceeded
 
 另一个要记住的是，一个 context 实例会贯穿所有你想使用取消操作的方法和 go-routines 。要避免使用一个已取消的 context 作为 _WithTimeout_ 或者 _WithCancel_ 的参数，这可能导致不确定的事情发生。
 
-----------------
+---
 
 via: https://www.sohamkamani.com/blog/golang/2018-06-17-golang-using-context-cancellation/
 
