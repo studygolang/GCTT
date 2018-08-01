@@ -147,7 +147,7 @@ Go 规范描述了明确的情况:
 
 ### 唯一性
 
-类型 T 定义的方法集不能有俩个名字一样的方法。 有相同的方法名但不同类型的参数，在 Go 中是不可能的。 ( Go 中没有 [ad hoc polymorphism](https://en.wikipedia.org/wiki/Ad_hoc_polymorphism) ).
+类型 T 定义的方法集不能有俩个名字一样的方法。 有相同的方法名但不同类型的参数，在 Go 中是不可能的。 ( Go 中没有 [ad hoc polymorphism](https://en.wikipedia.org/wiki/Ad_hoc_polymorphism) )。
 
 >类型 T 定义的方法集由 T 实现.
 
