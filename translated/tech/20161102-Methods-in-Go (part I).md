@@ -29,7 +29,7 @@ func (T) F() {}
 func (*T) F() {}
 ```
 
-上面的代码不能被编译. 第一个 F 方法被绑到 T 上. 第二各方法被邦到 *T 上. 对于一个单独的基类，方法名必须唯一，所以编译将报错:
+上面的代码无法编译. 第一个 F 方法被绑到 T 上. 第二各方法被邦到 *T 上. 对于单个基类型，方法名必须唯一，所以编译将报错:
 
 ```
 > go install github.com/mlowicki/lab && ./spec/bin/lab
@@ -39,7 +39,7 @@ spec/src/github.com/mlowicki/lab/lab.go:103: method redeclared: T.F
         method(*T) func()
 ```
 
-如果基类是一个 struct 类型，那么字段名不能和方法名重叠。
+如果基类是一个 struct 类型，那么字段名不能和方法名重复。
 
 ```
 type T struct {
@@ -54,7 +54,7 @@ func (t T) M() {}
 type T has both field and method named M
 ```
 
-Go 的类型系统限制了哪些类型可以作为接收器. 它不能是接口类型或指针，因此它不可能为一个空接口（interface{}）定义方法来满足所有类型。 只允许使用类型名称，因此类型文字会导致编译错误：
+Go 的类型系统限制了哪些类型可以作为接收器. 它不能是接口类型或指针，因此它不可能为一个空接口（interface{}）定义方法来满足所有类型。 只允许使用类型名称，所以，类型字面值会导致编译错误：
 
 ```
 func (v map[string]float64) M() {}
@@ -64,7 +64,7 @@ func (v map[string]float64) M() {}
 
 ## 方法集
 
-调用一个 T 类型的变量上的 m 方法, 方法 m 必须在与 T 关联的方法集上. 作为方法集的成员是什么意思呢?
+调用一个 T 类型的变量上的 m 方法, 方法 m 必须在与 T 关联的方法集上. 方法集中的一个成员是什么意思?
 
 ### 接口类型
 
@@ -143,7 +143,7 @@ Go 规范描述了明确的情况:
 
 >如果 x 是可寻址的，并且 x 的方法集包含 m ，x.M() 是 (&x).M() 的速记。
 
-使用 值或指针接收器时，通常提示在官方[FAQ](https://golang.org/doc/faq#methods_on_values_or_pointers).
+何时使用值还是指针接收器的建议放在了官方的[FAQ](https://golang.org/doc/faq#methods_on_values_or_pointers)中。
 
 ### 唯一性
 
