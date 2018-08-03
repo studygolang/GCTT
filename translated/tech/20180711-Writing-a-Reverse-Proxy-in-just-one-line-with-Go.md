@@ -1,4 +1,4 @@
-#  1 行 Go 代码实现反向代理
+# 1 行 Go 代码实现反向代理
 
 暂且放下你的编程语言来瞻仰下我所见过的最棒的标准库。
 
@@ -22,7 +22,6 @@
 * 如何解析请求体
 * 如何通过反向代理将流量转发到另一台服务器
 
-
 ## 我们的反向代理项目
 
 我们来实际写一下项目。我们需要一个 Web 服务器能够提供以下功能：
@@ -33,12 +32,10 @@
 4. 如果代理域为 `B`，则转发到 URL 2
 5. 如果代理域都不是以上，则转发到默认的 URL
 
-
 ### 准备工作
 
 * [Go](https://golang.org) 语言环境。
 * [http-server](https://www.npmjs.com/package/http-server) 用来创建简单的服务。
-
 
 ### 环境配置
 
@@ -64,7 +61,6 @@ source .env
 ```
 
 在任何时候都可以运行该指令来将配置加载进环境变量。
-
 
 ### 项目基础工作
 
@@ -133,7 +129,6 @@ func main() {
 
 现在你就可以运行代码了。
 
-
 ### 解析请求体
 
 有了项目的基本架构之后，我们需要添加逻辑来处理解析请求的请求体部分。更新 `handleRequestAndRedirect` 函数来从请求体中解析出 `proxy_condition` 字段。
@@ -180,7 +175,6 @@ func handleRequestAndRedirect(res http.ResponseWriter, req *http.Request) {
 }
 ```
 
-
 ### 通过 proxy_condition 判断将流量发往何处
 
 现在我们从请求中取得了 `proxy_condition` 的值，可以根据它来判断我们要反向代理到何处。记住上文我们提到的三种情形：
@@ -222,7 +216,6 @@ func handleRequestAndRedirect(res http.ResponseWriter, req *http.Request) {
   // more still to come...
 }
 ```
-
 
 ### 反向代理到 URL
 
@@ -266,7 +259,6 @@ func handleRequestAndRedirect(res http.ResponseWriter, req *http.Request) {
 }
 ```
 
-
 ### 全部启动
 
 好了，现在启动我们的反向代理程序让其监听 `1330` 端口。让其他的 3 个简单的服务分别监听 `1331–1333` 端口（在各自的终端中）。
@@ -293,7 +285,6 @@ curl --request GET \
 
 ![Its alive!!!](https://cdn-images-1.medium.com/max/1600/1*TcyJh0qtYv2N3UOBVVfd0Q.gif)
 
-
 ### 总结
 
 Go 为此提供了很多，但真正支撑起它的在于这些低级的网络管道任务，没有更好的语言了。我们写的这个程序简单，高性能，可靠并且随时可用于生产环境。
@@ -302,7 +293,6 @@ Go 为此提供了很多，但真正支撑起它的在于这些低级的网络�
 
 > 🧞‍ 代码是开源的，你可以在 [Github](https://github.com/bechurch/reverse-proxy-demo) 上找到。
 > ❤️ 在 [Twitter](https://www.twitter.com/bnchrch) 上我只聊关于编程和远程工作相关的东西。如果关注我，你不会后悔的。
-
 
 ----------------
 
