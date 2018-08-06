@@ -1,6 +1,9 @@
 ## Go接口（第三部分）  
 本文是golang接口相关主题的另一部分，讲解的内容包括接口类型中的方法，接口类型可以作为map的key或者
 
+
+
+
 ## 方法和接口
 Go 是有方法的概念的，可以通过在调用结构体中的方法而获取一个函数，此函数和普通的函数不同的它具有此结构体的一些参数。
 >
@@ -19,11 +22,54 @@ func main() {
     f(t) // Hi, my name is foo
 }
 ```
+golang的语言规范同样允许接口类型使用方法表达式
+>
+ 从接口类型的函数中得到它的实现是不允许的。
 
-## 接口接口类型
+让我们来看一个例子：
+>
+``` golang
+
+type I interface {
+    M(name string)
+}
+type T struct {
+    name string
+}
+func (t *T) M(name string) {
+    t.name = name
+}
+func main() {
+    f := I.M
+    var i I = &T{"foo"}
+    f(i, "bar")
+    fmt.Println(i.(*T).name) // bar
+}
+
+```
+
+
+## 接受接口类型
+Go允许定义方法——一个接受了特定类型参数的函数
+（源码）：
+``` golang
+
+type T struct {
+    name string
+}
+func (t *T) SayHi() {
+    fmt.Printf("Hi, my name is %s\n", t.name)
+}
+func main() {
+    t1 := T{"foo"}
+    t1.SayHi() // Hi, my name is foo
+    t2 := &T{"bar"}
+    t2.SayHi() // Hi, my name is bar
+
+```
 
 ## 接口中“继承"
-
+方法被添加了一个接受类型（上面的代码片段的类型时*T）.
 ## type 可做map中的key或者value
 
 ## 无所不在的类型
