@@ -78,6 +78,30 @@ func (I) M() {}
 这段代码将抛出一个错误`invalid receiver type I (I is an interface type)`.在第一部分和第二部分中有更多的方法进行介绍。
 ## 接口中“继承"
 
+``` golang
+
+
+
+type T1 struct {
+    field1 string
+}
+func (t *T1) M() {
+    t.field1 = t.field1 + t.field1
+}
+type T2 struct {
+    field2 string
+    T1
+}
+type I interface {
+    M()
+}
+func main() {
+    var i I = &T2{"foo", T1{field1: "bar"}}
+    i.M() 
+    fmt.Println(i.(*T2).field1) // barbar
+}
+
+```
 ## type 可做map中的key或者value
 
 ## 无所不在的类型
