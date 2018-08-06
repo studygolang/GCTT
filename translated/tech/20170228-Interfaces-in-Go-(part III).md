@@ -75,6 +75,7 @@ type I interface {}
 func (I) M() {}
 
 ``` 
+这段代码将抛出一个错误`invalid receiver type I (I is an interface type)`.
 ## 接口中“继承"
 
 ## type 可做map中的key或者value
