@@ -52,7 +52,6 @@ func main() {
 
 ```
 
-
 ## 接口作为接收者
 Go允许定义方法 —— 接受了特定类型的函数：
 
@@ -68,17 +67,15 @@ func main() {
     t1.SayHi() // Hi, my name is foo
     t2 := &T{"bar"}
     t2.SayHi() // Hi, my name is bar
-
 ```
 
 方法被添加了一个接受类型（上面的代码片段的接受类型是*T）。
-这个方法可以被类型为*T或者T的调用。
+这个方法可以被类型为*T或者T的调用
 在这里顺便提一下，接口类型是不可以作为函数的接受者：
 
 ``` golang
 type I interface {}
 func (I) M() {}
-
 ```
 
 这段代码将抛出一个编译期错误`invalid receiver type I (I is an interface type)`。
@@ -107,15 +104,14 @@ func main() {
     i.M() 
     fmt.Println(i.(*T2).field1) // barbar
 }
-
 ```
 
 在这个实例中，类型*T2实现了接口I.
 被*T1实现的方法M作为了T2的一个内置的字段。
 在过去的文章里有更多关于字段和方法的详细介绍
 
-## type 可做map中的key或者value
-map 是一个由key-value组成的数据结构。(在go1.8之前，map底层是通过哈系表实现的)
+##  接口类型作为map中的key或者value
+map 是一个由key-value组成的数据结构。(在go1.8之前，map底层是通过哈希表实现的)
 
 ```go
 counters := make(map[string]int64)
@@ -157,10 +153,9 @@ func main() {
     m[i2] = 2
     fmt.Println(m) // map[{foo}:1 {bar}:2]
 }
-
 ```
 
-## 无所不在的类型
+## 无所不在的接口
 ### error
 go中内置的error是一个接口类型：
 
@@ -168,7 +163,6 @@ go中内置的error是一个接口类型：
 type error interface {
 	Error() string
 }
-
 ```
 
 任何类型实现了Error方法，此方法没有参数且返回一个string类型的值，那么这个类型就实现了error接口：
@@ -195,18 +189,15 @@ io.Writer接口仅仅含有一个方法 —— Write:
 
 ``` go
 Write(p []byte) (n int, err error)
-
 ```
 
 如果有任何异常发生，返回的error就将不会是nil。
 error接口在前一节同样做了描述。
 Writer接口在标准库中到处都有被用到，比如MultiWriter、TeeReader、net/http，还有很多其他用到的地方。
 
-
 点赞以帮助别人发现这篇文章。如果你想得到新文章的更新，请关注我。
 
 ## 资源
-
 - [GO程序语言规范——GO程序设计语言](https://golang.org/ref/spec#Method_expressions)
 >Go is a general-purpose language designed with systems programming in mind. It is strongly typed and garbage-collected…
 <br>*golang.org*
