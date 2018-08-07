@@ -1,23 +1,17 @@
-## Go接口（第三部分）Interfaces in Go (part III)
-This story introduces another set of interfaces-related topics in Golang.
-It explains things like method expression derived from interface types,
-interface type values as map keys or interfaces of embedded fields.
-本文是golang接口相关主题的另一部分。
-讲解的内容包括接口类型中的方法，
-接口类型的值作为map结构中的key,或者作为结构体的内置字段。
+![image](https://cdn-images-1.medium.com/max/800/1*LjLr800nNrw4G7Z_NCN1Tw.jpeg)
+
+# Go接口（第三部分）
+本文介绍的是golang接口主题的另一部分。
+主要内容包括接口中的方法，
+接口类型的值作为map结构中的key,或者作为内置字段。
 
 
-## 方法和接口 Method expression and interface type
-Go has the concept of method expressions.
-It’s a way to get function from method set of type T.
-Such function has additional,
-explicit parameter of type T (source code):
+## 方法和接口
 Go 是有方法的概念的。
-可以通过在调用类型T中的方法来获的一个函数，
-这个函数可以从类型T中额外地获得明确的参数。
+可以通过在调用类型T中的方法来获得一个函数，
+此函数可以从类型T中额外地获得明确的参数。(源码：)
 
 ```go
-
 type T struct {
     name string
 }
@@ -32,20 +26,14 @@ func main() {
     f(t) // Hi, my name is foo
 }
 ```
-Language specification allows to use method expressions also for interface types:
->It is legal to derive a function value from a method of an interface type.
-The resulting function takes an explicit receiver of that interface type.
-
-Let’s see an example (source code):
-
 
 golang语言规范同样允许接口类型使用方法：
 >在一个接口类型中，通过方法来获取函数是符合规范的。
 从中获得的函数拥有一个明确的接受者。
 
-让我们来看一个例子：
-``` go
+让我们来看一个例子（源码）：
 
+``` go
 type I interface {
     M(name string)
 }
@@ -66,10 +54,9 @@ func main() {
 
 
 ## 接受接口类型 Receiver of interface type
-Go allows to define methods — functions with receiver of particular type (source code):
-Go允许定义方法 —— 接受了特定类型的函数（源代码）：
-``` go
+Go允许定义方法 —— 接受了特定类型的函数（源码）：
 
+``` go
 type T struct {
     name string
 }
@@ -83,28 +70,25 @@ func main() {
     t2.SayHi() // Hi, my name is bar
 
 ```
-Method is added to receiver’s type (in above snippet this type is *T).
-Such method can be called on values of type *T (or T).
-The takeaway from this section is the fact that interfaces cannot be used as receiver’s type (source code):
-方法被添加了一个接受类型（上面的代码片段的类型时*T）。
-这个方法可以被类型为*T或者T的调用。
-在这里顺便提一下，接口类型是不可以作为函数的接受者。
-（源代码):
-``` golang
 
+方法被添加了一个接受类型（上面的代码片段的接受类型是*T）。
+这个方法可以被类型为*T或者T的调用。
+在这里顺便提一下，接口类型是不可以作为函数的接受者（源码）:
+
+``` golang
 type I interface {}
 func (I) M() {}
 
 ```
-It throws a compile-time error invalid receiver type I (I is an interface type).
-More on methods in two stories introducing this topic thoroughly — part I and part II.
-这段代码将抛出一个错误`invalid receiver type I (I is an interface type)`.
+
+这段代码将抛出一个编译期错误`invalid receiver type I (I is an interface type)`。
 在第一部分和第二部分中有更多的方法进行介绍。
+
+
 ## 接口中“继承"
 Interface is satisfied by struct type even if implemented method(s) is promoted so it comes from embedded (anonymous) field (source code):
 
 ``` go
-
 type T1 struct {
     field1 string
 }
@@ -125,17 +109,18 @@ func main() {
 }
 
 ```
+
 In this case type *T2 implements interface I.
 Method M is implemented by type *T1 which is an embedded field of type T2.
 More on promoted fields and methods in older post.
 在这个实例中，类型*T2实现了接口I.
-被*T1实现的方法M作为了T2的一个内置的一部分。
-在过去的文章里有更多关于
-## type 可做map中的key或者value
-Map (hash table under the hood as of Go ≤ 1.8) is a data structure which for defined keys holds some values (source code):
-map 是一个由key-value组成的数据结构。(go1.8之前版本，map底层是通过哈系表实现的)
-```go
+被*T1实现的方法M作为了T2的一个内置的字段。
+在过去的文章里有更多关于 //TODO
 
+## type 可做map中的key或者value
+map 是一个由key-value组成的数据结构。(在go1.8之前，map底层是通过哈系表实现的)
+
+```go
 counters := make(map[string]int64)
 counters["foo"] = 1
 counters["bar"] += 2
@@ -151,8 +136,9 @@ for key, value := range counters {
     fmt.Printf("%s: %v\n", key, value) // order is randomized!
 }
 ```
-Interface type values can be used as both keys and values inside maps (source code):
-接口类型的值作为map中的key和value来使用。
+
+接口类型的值可以作为map中的key或者value来使用（源码）:
+
 ```go
 
 type T1 struct {
@@ -177,20 +163,19 @@ func main() {
 
 ```
 
-
 ## 无所不在的类型
-
 ### error
-在go中内置的error是一个接口类型：
-The built-in error in Go is an interface:
+go中内置的error是一个接口类型：
+
 ```go
 type error interface {
 	Error() string
 }
 
 ```
-任何类型实现了Error方法，并且此方法没有参数且返回一个string类型的值，那么这个方法就实现了这个接口
-Every type implementing Error method not taking any parameters and returning string value as a result, satisfies this interface (source code):
+
+任何类型实现了Error方法，此方法没有参数且返回一个string类型的值，那么这个类型就实现了error接口（源码）：
+
 ```go
 
 import "fmt"
@@ -210,34 +195,53 @@ func main() {
 
 ### io.Writer
 io.Writer接口仅仅含有一个方法 —— Write:
-``` go
 
+``` go
 Write(p []byte) (n int, err error)
 
 ```
 
-If anything abnormal will happen then error won’t be nil.
-Interface error is the same interface described in preceding section.
-Writer interface is used throughout the standard library for things like MultiWriter,TeeReader, net/http and many more.
 如果有任何异常发生，返回的error就将不会是nil。
-error接口在前一节也同样做了描述。
-Writer接口在标准库中到处都有被用到，比如MultiWriter、TeeReder、net/http，还有很多其他的地方。
+error接口在前一节同样做了描述。
+Writer接口在标准库中到处都有被用到，比如MultiWriter、TeeReader、net/http，还有很多其他用到的地方。
 
 
+点赞以帮助别人发现这篇文章。如果你想得到新文章的更新，请关注我。
 
-Click ❤ below to help others discover this story.
- Please follow me if you want to get updates about new posts or boost work on future stories.
-点击下面的 ❤ 去帮助其他人发现这篇文章。
+## 资源
 
-## 资料
+- [GO程序语言规范——GO程序设计语言](https://golang.org/ref/spec#Method_expressions)
+>Go is a general-purpose language designed with systems programming in mind. It is strongly typed and garbage-collected…
+<br>*golang.org*
 
-* [Golang 语言规范](https://golang.org/ref/spec#Conversions)
-* [Go 的 Strings, bytes, runes 和字符](https://blog.golang.org/strings)
-* [Go 的赋值性](https://medium.com/golangspec/assignability-in-go-27805bcd5874)
-* [Go 的常量](https://blog.golang.org/constants)
+- [GO程序语言规范——GO程序设计语言](https://golang.org/ref/spec#Errors)
+>Go is a general-purpose language designed with systems programming in mind. It is strongly typed and garbage-collected…
+<br>*golang.org*
 
->
-###
+- [Go语言中提取字段和方法](https://medium.com/golangspec/promoted-fields-and-methods-in-go-4e8d7aefb3e3)
+>Struct is a sequence of fields each with name and type. Usually it looks like:
+<br>*medium.com*
+
+- [Go方法（第一部分）](https://medium.com/golangspec/methods-in-go-part-i-a4e575dff860)
+>Type defined in Golang program can have methods associated with it. Let’s see an example:
+<br>*medium.com*
+
+- [Go方法（第二部分）](https://medium.com/golangspec/methods-in-go-part-ii-2b4cc42c5cb6)
+>This story explains remaining content from language specification touching methods. It’s strongly advised to read 1st…
+<br>*medium.com*
+
+
+*[保留部分版权](http://creativecommons.org/licenses/by/4.0/)*
+
+*[Golang](https://medium.com/tag/golang?source=post)*
+*[Programming](https://medium.com/tag/programming?source=post)*
+*[Software Development](https://medium.com/tag/software-development?source=post)*
+*[Education](https://medium.com/tag/education?source=post)*
+*[Polymorphism](https://medium.com/tag/polymorphism?source=post)*
+
+**喜欢读吗？给 Michał Łowicki 一些掌声吧。**
+
+简单鼓励下还是大喝采，根据你对这篇文章的喜欢程度鼓掌吧。
 
 
 ---
