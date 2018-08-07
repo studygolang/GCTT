@@ -5,7 +5,6 @@
 主要内容包括接口中的方法，
 接口类型的值作为map中的key,或者作为内置字段。
 
-
 ## 方法和接口
 Go 是有方法的概念的。
 可以通过调用类型T中的方法来获得一个函数，
@@ -81,7 +80,6 @@ func (I) M() {}
 这段代码将抛出一个编译期错误`invalid receiver type I (I is an interface type)`。
 在第一部分和第二部分中有更多的方法进行介绍。
 
-
 ## 接口中“继承"
 结构体的内嵌字段使其实现了接口的方法，于是这个这个结构体继承这个接口
 
@@ -101,7 +99,7 @@ type I interface {
 }
 func main() {
     var i I = &T2{"foo", T1{field1: "bar"}}
-    i.M() 
+    i.M()
     fmt.Println(i.(*T2).field1) // barbar
 }
 ```
@@ -218,7 +216,6 @@ Writer接口在标准库中到处都有被用到，比如MultiWriter、TeeReader
 >This story explains remaining content from language specification touching methods. It’s strongly advised to read 1st…
 <br>*medium.com*
 
-
 *[保留部分版权](http://creativecommons.org/licenses/by/4.0/)*
 
 *[Golang](https://medium.com/tag/golang?source=post)*
@@ -231,7 +228,6 @@ Writer接口在标准库中到处都有被用到，比如MultiWriter、TeeReader
 
 简单鼓励下还是大喝采，根据你对这篇文章的喜欢程度鼓掌吧。
 
-
 ---
 
 via: https://medium.com/golangspec/interfaces-in-go-part-iii-61f5e7c52fb5
@@ -241,4 +237,3 @@ via: https://medium.com/golangspec/interfaces-in-go-part-iii-61f5e7c52fb5
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
