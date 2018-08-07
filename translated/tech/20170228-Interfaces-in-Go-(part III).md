@@ -220,7 +220,7 @@ If anything abnormal will happen then error won’t be nil.
 Interface error is the same interface described in preceding section.
 Writer interface is used throughout the standard library for things like MultiWriter,TeeReader, net/http and many more.
 如果有任何异常发生，返回的error就将不会是nil。
-error接口在前一节同样做了描述。
+error接口在前一节也同样做了描述。
 Writer接口在标准库中到处都有被用到，比如MultiWriter、TeeReder、net/http，还有很多其他的地方。
 
 
