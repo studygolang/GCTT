@@ -86,7 +86,7 @@ func (I) M() {}
 
 
 ## 接口中“继承"
-Interface is satisfied by struct type even if implemented method(s) is promoted so it comes from embedded (anonymous) field (source code):
+结构体的内嵌字段使其实现了接口的方法，于是这个这个结构体继承这个接口
 
 ``` go
 type T1 struct {
@@ -110,12 +110,9 @@ func main() {
 
 ```
 
-In this case type *T2 implements interface I.
-Method M is implemented by type *T1 which is an embedded field of type T2.
-More on promoted fields and methods in older post.
 在这个实例中，类型*T2实现了接口I.
 被*T1实现的方法M作为了T2的一个内置的字段。
-在过去的文章里有更多关于 //TODO
+在过去的文章里有更多关于字段和方法的详细介绍
 
 ## type 可做map中的key或者value
 map 是一个由key-value组成的数据结构。(在go1.8之前，map底层是通过哈系表实现的)
