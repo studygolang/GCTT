@@ -53,7 +53,7 @@ func main() {
 ```
 
 
-## 接受接口类型 Receiver of interface type
+## 接口作为接收者
 Go允许定义方法 —— 接受了特定类型的函数：
 
 ``` go
