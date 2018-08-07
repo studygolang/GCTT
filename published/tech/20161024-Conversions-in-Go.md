@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/14018
+
 # Go 的类型转换
 
 有时候你可能需要将变量转换为其他类型。Golang 不容许随意处理这种转换，转换是由类型系统的强制保证的某些规则。在这篇文章中，我们将讨论哪些转换是可能的，哪些是不可能，以及什么时候进行转换是有价值的。
@@ -22,7 +24,7 @@ func main() {
 
 JavaScript 是弱类型语言的一种，让我们看看它的实际效果:
 
-```js
+```javascript
 var monster = 1 + "foo" + function() {};
 console.info("type:", typeof monster)
 console.info("value:", monster);
@@ -94,8 +96,8 @@ func main() {
 
 **译按**:
 
->关于底层类型的定义不能是递归的情况，译者对这种说法保持怀疑。
->底层类型的定义要么解释到内置类型(int, int64, float, string, bool...), 要么递归解释到 unnamed type 的。例如
+> 关于底层类型的定义不能是递归的情况，译者对这种说法保持怀疑。
+> 底层类型的定义要么解释到内置类型(int, int64, float, string, bool...), 要么递归解释到 unnamed type 的。例如
 > * B->A->string, string 为内置类型，解释停止, B 的底层类型为 string;
 > * U->T->map[S]float64, map[S]float64 为 unnamed type, 解释停止，U 的底层类型为 map[S]float64。
 > ```
@@ -156,7 +158,7 @@ func main() {
 f([2]int(v))
 ```
 
-上面的调用方法会和之前的得到一样的结果。关于可赋值性更多信息可以在[之前的文章](https://medium.com/golangspec/assignability-in-go-27805bcd5874)中找到。
+上面的调用方法会和之前的得到一样的结果。关于可赋值性更多信息可以在[之前的文章](https://studygolang.com/articles/12381)中找到。
 
 > 类型转换的第一个规则(具有相同的底层类型)和可赋值规则的一条规则是重合的 - 当底层类型是相同的时候，至少有一个的类型是 unnmaed 类型(这一节的第一个例子)。较弱的规则会影响更严格的规则。因此当类型转换时，只需要底层类型保持一致，是否是 named/unnamed 类型并不重要。
 
@@ -193,6 +195,7 @@ fmt.Println(m)
 小数部分被移除，因此代码输出 ”1“。
 
 对于其他转换:
+
 * 浮点数 -> 浮点数，
 * 整数 -> 整数，
 * 整数 -> 浮点数，
@@ -385,15 +388,15 @@ fmt.Printf("%#v\n", string(runes)) // "abł"
 
 * [Golang 语言规范](https://golang.org/ref/spec#Conversions)
 * [Go 的 Strings, bytes, runes 和字符](https://blog.golang.org/strings)
-* [Go 的赋值性](https://medium.com/golangspec/assignability-in-go-27805bcd5874)
+* [Go 的赋值性](https://studygolang.com/articles/12381)
 * [Go 的常量](https://blog.golang.org/constants)
 
-----------------
+---
 
 via: https://medium.com/golangspec/conversions-in-go-4301e8d84067
 
 作者：[Michał Łowicki](https://medium.com/@mlowicki)
 译者：[magichan](https://github.com/magichan)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

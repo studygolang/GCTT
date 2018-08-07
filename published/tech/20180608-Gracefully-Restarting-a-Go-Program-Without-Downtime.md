@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/14038
+
 # 无停机优雅重启 Go 程序
 
 ## 什么是优雅重启
@@ -25,17 +27,18 @@ Marek Majkowski 在他的博客文章[《为什么一个 NGINX 工作线程会�
 
 应该注意的是，当一个套接字被复制时，入栈流量会在两个套接字之间以轮询的方式进行负载均衡。如下图所示，这就意味着有一段时间，两个 Teleport 进程都会接受新的连接。
 
-![](https://github.com/studygolang/gctt-images/blob/master/gracefully-restart-a-go-program-without-downtime/graceful-restart-diag-1.png?raw=true)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/gracefully-restart-a-go-program-without-downtime/graceful-restart-diag-1.png)
 
 父进程的关闭是相同的事情，但是反过来做。一旦 Teleport 进程接受到 SIGOUIT 信号，他会开始关闭这个进程，停止接受新的连接，等待所有的现有连接断开或是超时发生。一旦入站流量被清空，这个濒死进程就会关闭它的监听套接字并且退出。这种情况下，新的进程会接管内核发送过来的所有请求。
 
-![](https://github.com/studygolang/gctt-images/blob/master/gracefully-restart-a-go-program-without-downtime/graceful-restart-diag-2.png?raw=true)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/gracefully-restart-a-go-program-without-downtime/graceful-restart-diag-2.png)
 
 ## 优雅重启演练
 
 我们基于上面的方法写了一个简单的程序，你可以自己尝试使用一下。源代码在文章的最后，你可以按照以下步骤尝试这个例子。
 
 首先，编译和启动程序。
+
 ```
 $ go build restart.go
 $ ./restart &
@@ -314,12 +317,12 @@ func main() {
 
 Teleport 是一个开源软件，你可以免费地在 [GitHub](https://github.com/gravitational/teleport) 上深入了解它。如果你对 Teleport 或是其他类似的分布式系统软件的工作有兴趣，我们时刻期待着[优秀的软件工程师](https://gravitational.com/careers/systems-engineer/)。
 
-------
+---
 
 via: https://gravitational.com/blog/golang-ssh-bastion-graceful-restarts/
 
-作者：[gravitational team](https://gravitational.com/about/)
+作者：[RUSSELL JONES](https://gravitational.com/about/)
 译者：[magichan](https://github.com/magichan)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
