@@ -228,7 +228,14 @@ Writer接口在标准库中到处都有被用到，比如MultiWriter、TeeReder�
 Click ❤ below to help others discover this story.
  Please follow me if you want to get updates about new posts or boost work on future stories.
 点击下面的 ❤ 去帮助其他人发现这篇文章。
-## Resources
+
+## 资料
+
+* [Golang 语言规范](https://golang.org/ref/spec#Conversions)
+* [Go 的 Strings, bytes, runes 和字符](https://blog.golang.org/strings)
+* [Go 的赋值性](https://medium.com/golangspec/assignability-in-go-27805bcd5874)
+* [Go 的常量](https://blog.golang.org/constants)
+
 >
 ###
 
