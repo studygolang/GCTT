@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/14062
+
 # 在 Go 语言中自动插入分号
 
 正式的语法指定什么是在 Go 语言（或者其他的语言）中依据语法构成有效的程序。
@@ -9,7 +11,7 @@ StatementList = { Statement ";" } .
 
 以上定义取自 Go 规范。它使用[扩展的 Backus-Naur](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form) 形式（EBNF）。这意味着代码块是用分号分隔的一个或多个语句。函数调用是一个表达的例子。我们可以创建一个简单的代码块：
 
-```
+```go
 {
     fmt.Println(1);
     fmt.Println(2);
@@ -29,7 +31,7 @@ StatementList = { Statement ";" } .
 
 ## 根源
 
-![](https://github.com/studygolang/gctt-images/blob/master/automatic-semicolon-insertion-in-go/1_tbQhdh99N--_cNatvuD5yQ(1).jpeg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/automatic-semicolon-insertion-in-go/1.jpeg)
 
 语言设计者们开始摆脱分号之类的标记的原因是什么呢？这个答案相当简单。都是关于可读性。人造代码越少，它就越容易使用。这是很重要的，因为一旦写下一段代码很可能会被不同的人阅读。
 
@@ -42,7 +44,7 @@ StatementList = { Statement ";" } .
 
 让我们看个例子：
 
-```
+```go
 func g() int {
     return 1
 }
@@ -55,31 +57,31 @@ func f() func(int) {
 
 有这样的定义，我们可以分析俩种情况：
 
-```
+```go
 f()
 (g())
 ```
 
 和：
 
-```
+```go
 f()(g())
 ```
 
 第一个片段没有打印任何东西，但是第二个给出内部函数调用。这是因为前面提到的第4条规则：因为最后的记号都是圆括号，所以两行后面都加了分号。
 
-```
+```go
 f();
 (g());
 ```
 
 ## 在底层
 
-![](https://github.com/studygolang/gctt-images/blob/master/automatic-semicolon-insertion-in-go/1_wgGPRZWRD3bNEJdBE2Bs1A(1).jpeg)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/automatic-semicolon-insertion-in-go/2.jpeg)
 
-Golang 在语法分析（扫描）时加入分号。在处理 .go 文件开始的时，字符被转换为标识符，数字，关键字等。扫码器时用 Go 实现的，所以我们可以很容易使用它：
+Golang 在语法分析（扫描）时加入分号。在处理 `.go` 文件开始的时，字符被转换为标识符，数字，关键字等。扫码器时用 Go 实现的，所以我们可以很容易使用它：
 
-```
+```go
 package main
 import (
     "fmt"
@@ -128,16 +130,16 @@ func main() {
 
 行打印 ; "\n" 是扫描器（lexer）为丞相添加分号的地方：
 
-```
+```go
 n := 1
 fmt.Println(n)
 ```
 
-golangspec 已有300多关注者。这并不是它的目标，但有越来越多的人认为它是一个有用的出版物时是非常有动力的。
+golangspec 已有 300 多关注者。这并不是它的目标，但有越来越多的人认为它是一个有用的出版物时是非常有动力的。
 
-喜欢加关注，双击666。
+喜欢加关注，双击 666。
 
-----------------
+---
 
 via: https://medium.com/golangspec/automatic-semicolon-insertion-in-go-1990338f2649
 
@@ -146,4 +148,3 @@ via: https://medium.com/golangspec/automatic-semicolon-insertion-in-go-1990338f2
 校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
