@@ -1,10 +1,13 @@
+首发于：https://studygolang.com/articles/14044
+
 # Go 中的匿名函数和反射
 
-我最近在浏览 Hacker News 时看到一篇吸引我眼球的文章《[Python中的Lambdas和函数](http://www.thepythoncorner.com/2018/05/lambdas-and-functions-in-python.html?m=1)》，这篇文章--我推荐你自己阅读一下--详细讲解了如何运用 Python 的 lambda 函数，并举了一个例子展示如何使用 Lambda 函数实现干净，[DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) 风格的代码。
+我最近在浏览 Hacker News 时看到一篇吸引我眼球的文章《[Python中的Lambdas和函数](http://www.thepythoncorner.com/2018/05/lambdas-and-functions-in-python.html?m=1)》，这篇文章 —— 我推荐你自己阅读一下 —— 详细讲解了如何运用 Python 的 lambda 函数，并举了一个例子展示如何使用 Lambda 函数实现干净，[DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) 风格的代码。
 
 读这篇文章，我大脑中喜欢设计模式的部分对文章里精巧的设计模式兴奋不已，然而同时，我大脑中讨厌动态语言的部分说，“呃~”。一点简短的题外话来表达一下我对动态语言的厌恶（如果你没有同感，请略过）：
 
 我曾经是一个动态语言的狂热粉丝（对某些任务我仍然喜欢动态语言并且几乎每天都会使用到它）。Python 是我大学一直选择的语言，我用它做科学计算并且做小的，概念验证的项目（我的个人网站曾经使用Flask）。但是当我在现实世界（[Qadium](https://www.qadium.com/)）中开始为我的第一个大型 Python 项目做贡献时，一切都变了。这些项目包含了收集，处理并且增强各种定义好的数据类型的系统职责。
+
 最开始我们选择 Python 基于两个原因：1）早期的员工都习惯使用 2）它是一门快速开发语言。
 
 当我开始项目时，我们刚启动了我们最早的 B2B 产品，并且有几个很早就使用 Python 的开发者参与进来。留下来的代码有几个问题：1）代码很难读 2）代码很难调试 3）代码在不破坏些东西的前提下几乎无法改变/重构。而且，代码只经过了非常少的测试。这些就是快速搭建原型系统来验证我们第一个产品价值的代价了。上述提到的问题太严重了，以至于后来大部分的开发时间都用来定位解决问题，很少有宝贵的时间来开发新功能或者修改系统来满足我们不断增长的收集和处理数据的欲望和需要。
@@ -22,7 +25,8 @@
 
 如果你对逆波兰表达式（RPN）不是很熟悉，可以在维基上或者找找它最开始的论文。
 
-现在开始解决问题，之前的文章作者提供一个可用但是极度冗余的代码。把它一直到Go中，就是这样的
+现在开始解决问题，之前的文章作者提供一个可用但是极度冗余的代码。把它移植到 Go 中，就是这样的
+
 ```go
 package main
 
@@ -127,7 +131,8 @@ func (e *RPMEngine) sqrtANumber() {
 ```
 > rpn_calc_solution1.go 由 GitHub  托管，[查看源文件](https://gist.github.com/jholliman/3f2461466ca1bc8e6b2d5c497de6c198/raw/179966bf7309e625ae304151937eedc9d3f2d067/rpn_calc_solution1.go)
 
-注：Go并没有一个自带的堆栈，所以，我自己创建了一个。
+注：Go 并没有一个自带的堆栈，所以，我自己创建了一个。
+
 ```go
 package main
 
@@ -144,11 +149,13 @@ func (s stack) Pop() (stack, int) {
 ```
 > simple_stack.go 由 GitHub 托管，[查看源文件](https://gist.github.com/jholliman/f1c8ce62ce2fbeb5ec4bc48f9326266b/raw/08e0c5df28eb0c527e0d4f0b2e85c1d381f7bc7c/simple_stack.go)
 
-(另外，这个堆栈不是线程安全的，并且对空堆栈进行 `Pop` 操作会引发 panic，除此之外，这个堆栈工作的很好)
-以上的方案是可以工作的，但是有大堆的代码重复--特别是获取提供给运算符的参数/操作的代码。
+（另外，这个堆栈不是线程安全的，并且对空堆栈进行 `Pop` 操作会引发 panic，除此之外，这个堆栈工作的很好）
+
+以上的方案是可以工作的，但是有大堆的代码重复 —— 特别是获取提供给运算符的参数/操作的代码。
 
 Python-lambda 文章对这个方案做了一个改进，将运算函数写为 lambda 表达式并且放入一个字典中，这样它们可以通过名称来引用，在运行期查找一个运算所需要操作的数值，并用普通的代码将这些操作数提供给运算函数。最终的python代码如下：
-```
+
+```python
 """
 Engine class of the RPN Calculator
 """
@@ -236,6 +243,7 @@ class rpn_engine:
 这个方案比原来的方案只增加了一点点复杂度，但是现在增加一个新的运算符简直就像增加一条线一样简单！我看到这个的第一个想法就是：我怎么在 Go 中实现？
 
 我知道在 Go 中有[函数字面量](https://golang.org/ref/spec#Function_literals)，它是一个很简单的东西，就像在 Python 的方案中，创建一个运算符的名字与运算符操作的 map。它可以这么被实现：
+
 ```go
 package main
 
@@ -257,9 +265,10 @@ view rawrpn_operations_map.go hosted with ❤ by GitHub
 ```
 > rpn_operations_map.go 由gitHub托管 [查看源文件](https://gist.github.com/jholliman/9108b105be6ab136c2f163834b9e5e32/raw/bcd7634a1336b464a9957ea5f32a4868071bef6e/rpn_operations_map.go)
 
-注意：在Go语言中，为了将我们所有的匿名函数保存在同一个map中，我们需要使用空接口类型，`interfa{}`。在 Go 中所有类型都实现了空接口（它是一个没有任何函数的接口；所有类型都至少有 0 个函数）。在底层，Go 用两个指针来表示一个接口：一个指向值，另一个指向类型。
+注意：在 Go 语言中，为了将我们所有的匿名函数保存在同一个 map 中，我们需要使用空接口类型，`interfa{}`。在 Go 中所有类型都实现了空接口（它是一个没有任何方法的接口；所有类型都至少有 0 个函数）。在底层，Go 用两个指针来表示一个接口：一个指向值，另一个指向类型。
 
-识别接口实际保存的类型的一个方法是用 `.(type)` 来做判读，比如：
+识别接口实际保存的类型的一个方法是用 `.(type)` 来做断言，比如：
+
 ```go
 package main
 
@@ -269,7 +278,7 @@ import (
 )
 
 func main() {
-	catalog := map[string]interface{}{
+	catalog := map[string]interface{} {
 		"+":    func(x, y int) int { return x + y },
 		"-":    func(x, y int) int { return x - y },
 		"*":    func(x, y int) int { return x * y },
@@ -295,6 +304,7 @@ func main() {
 > rpn_operations_map2.go 由GitHub托管    [查看源文件](https://gist.github.com/jholliman/497733a937fa5949148a7160473b7742/raw/7ec842fe18026bfc1c4d801eca566b4c0541008b/rpn_operations_map2.go)
 
 这段代码会产生如下输出（请原谅语法上的瑕疵）：
+
 ```
 SQRT takes one operands
 AC takes zero operands
@@ -305,13 +315,15 @@ AC takes zero operands
 * takes two operands
 C takes zero operands
 ```
-这就揭示了一种方法，可以获得一个运算符需要多少个操作数，以及如何复制 Python 的解决方案。但是我们如何能做到更好？我们能否为提取运算符所需参数抽象出一个更通用的逻辑？我们能否在不用 `if` 或者 `switch` 语句的情况下，查找一个函数所需要的操作数的个数并且调用它？实际上通过Go中的 `relect` 包提供的反射功能，我们是可以做到的。
+
+这就揭示了一种方法，可以获得一个运算符需要多少个操作数，以及如何复制 Python 的解决方案。但是我们如何能做到更好？我们能否为提取运算符所需参数抽象出一个更通用的逻辑？我们能否在不用 `if` 或者 `switch` 语句的情况下，查找一个函数所需要的操作数的个数并且调用它？实际上通过 Go 中的 `relect` 包提供的反射功能，我们是可以做到的。
 
 对于 Go 中的反射，一个简要的说明如下：
 
-在 Go 中，通常来讲，如果你需要一个变量，类型或者函数，你可以定义它然后使用它。然而，如果你发现你是在运行时需要它们，或者你在设计一个系统需要使用多种不同类型（比如，实现运算符的函数--它们接受不同数量的变量，因此是不同的类型），那么你可以就需要使用反射。反射给你在运行时检查，创建和修改不同类型的能力。如果需要更详尽的 Go 的反射说明以及一些使用 `reflect` 包的基础知识，请参阅[反射的规则](https://blog.golang.org/laws-of-reflection)这篇博客。
+在 Go 中，通常来讲，如果你需要一个变量，类型或者函数，你可以定义它然后使用它。然而，如果你发现你是在运行时需要它们，或者你在设计一个系统需要使用多种不同类型（比如，实现运算符的函数 —— 它们接受不同数量的变量，因此是不同的类型），那么你可以就需要使用反射。反射给你在运行时检查，创建和修改不同类型的能力。如果需要更详尽的 Go 的反射说明以及一些使用 `reflect` 包的基础知识，请参阅[反射的规则](https://blog.golang.org/laws-of-reflection)这篇博客。
 
 下列代码演示了另一种解决方法，通过反射来实现查找我们匿名函数需要的操作数的个数：
+
 ```go
 package main
 
@@ -343,6 +355,7 @@ func main() {
 > rpn_operations_map3.go 由GitHub托管 [查看源文件](https://gist.github.com/jholliman/e3d7abd71b9bf6cb71eb55d49c40b145/raw/ed64e1d3f718e4219c68d189a8149d8179cdc90c/rpn_operations_map3.go)
 
 类似与用 `.(type)` 来切换的方法，代码输出如下：
+
 ```
 ^2 has 1 operands
 SQRT has 1 operands
@@ -353,11 +366,13 @@ C has 0 operands
 + has 2 operands
 - has 2 operands
 ```
+
 现在我不再需要根据函数的签名来硬编码参数的数量了！
 
-注意：如果值的种类（[种类（Kind）](https://golang.org/pkg/reflect/#Kind) 不要与类型弄混了））不是 `Func`，调用 `toNumIn` 会触发 `panic`，所以小心使用，因为panic只有在运行时才会发生。
+注意：如果值的种类（[种类（Kind）](https://golang.org/pkg/reflect/#Kind) 不要与类型弄混了））不是 `Func`，调用 `toNumIn` 会触发 `panic`，所以小心使用，因为 panic 只有在运行时才会发生。
 
 通过检查 Go 的 `reflect` 包，我们知道，如果一个值的种类(Kind)是 Func 的话，我们是可以通过调用 [`Call`](https://golang.org/pkg/reflect/#Value.Call) 方法，并且传给它一个 值对象的切片来调用这个函数。比如，我们可以这么做：
+
 ```go
 package main
 
@@ -392,6 +407,7 @@ func main() {
 > rpn_operations_map4.go 由GitHub托管 [查看源文件](https://gist.github.com/jholliman/96bccb0c73c75a165211892da87cd676/raw/e4b420f77350e3f7e081dddb20c0d2a7232cc071/rpn_operations_map4.go)
 
 就像我们期待的那样，这段代码会输出：
+
 ```
 The result is  5
 ```
@@ -399,6 +415,7 @@ The result is  5
 酷！
 
 现在我们可以写出我们的终极解决方案了：
+
 ```go
 package main
 
@@ -485,17 +502,16 @@ func (e *RPMEngine) Compute(operation string) error {
 ```
 > rpn_calc_solution2.go 由 GitHub托管 [查看源文件](https://gist.github.com/jholliman/c636340cac9253da98efdbfcfde56282/raw/b5f80bb79164b5250b088c6df094ca4ec9840009/rpn_calc_solution2.go)
 
-我们确定操作数的个数（第64行），从堆栈中获得操作数（第69-72行），然后调用需要的运算函数，而且对不同参数个数的运算函数的调用都是一样的（第74行）。而且与 Python 的解决方案一样，增加新的运算函数，只需要往 map 中增加一个匿名函数的条目就可以了（第30行）。
+我们确定操作数的个数（第 64 行），从堆栈中获得操作数（第 69-72 行），然后调用需要的运算函数，而且对不同参数个数的运算函数的调用都是一样的（第 74 行）。而且与 Python 的解决方案一样，增加新的运算函数，只需要往 map 中增加一个匿名函数的条目就可以了（第 30 行）。
 
-总结一下，我们已经知道如果使用匿名函数和反射将一个 Python 中有趣的设计模式复制到 Go 语言中来。对反射的过度使用我会保持警惕，反射增加了代码的复杂度，而且我经常看到反射用于绕过一些坏的设计。另外，它会将一些本该在编译期发生的错误变成运行期错误，而且它还会显著拖慢程序（即将推出：两种方案的基准检查）--通过[检查源码](https://golang.org/src/reflect/value.go?s=9676:9715#L295)，看起来
-  `reflect.Value.Call` 执行了很多的准备工作，并且对每一次调用 都为它的 `[]reflect.Value`  返回结果参数分配了新的切片。也就是说，如果性能不需要关注--在 Python 中通常都不怎么关注性能;)，有足够的测试，而且我们的目标是优化代码的长度，并且想让它易于加入新的运算，那么反射是一个值得推荐的方法。
+总结一下，我们已经知道如果使用匿名函数和反射将一个 Python 中有趣的设计模式复制到 Go 语言中来。对反射的过度使用我会保持警惕，反射增加了代码的复杂度，而且我经常看到反射用于绕过一些坏的设计。另外，它会将一些本该在编译期发生的错误变成运行期错误，而且它还会显著拖慢程序（即将推出：两种方案的基准检查） —— 通过[检查源码](https://golang.org/src/reflect/value.go?s=9676:9715#L295)，看起来 `reflect.Value.Call` 执行了很多的准备工作，并且对每一次调用 都为它的 `[]reflect.Value` 返回结果参数分配了新的切片。也就是说，如果性能不需要关注 —— 在 Python 中通常都不怎么关注性能;)，有足够的测试，而且我们的目标是优化代码的长度，并且想让它易于加入新的运算，那么反射是一个值得推荐的方法。
 
-----------------
+---
 
 via: https://medium.com/@jhh3/anonymous-functions-and-reflection-in-go-71274dd9e83a
 
 作者：[John Holliman](https://medium.com/@jhh3)
-译者：[译者ID](https://github.com/译者ID)
-校对：[MoodWu](https://github.com/MoodWu)
+译者：[MoodWu](https://github.com/MoodWu)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
