@@ -130,10 +130,10 @@ fileinfo, err := file.Stat()
 }
 
 filesize := int(fileinfo.Size())
-// Number of go routines we need to spawn.
+// Number of goroutines we need to spawn.
 concurrency := filesize / BufferSize
 
-// check for any left over bytes. Add one more go routine if required.
+// check for any left over bytes. Add one more goroutine if required.
 if remainder := filesize % BufferSize; remainder != 0 {
     concurrency++
 }
