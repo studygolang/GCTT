@@ -1,8 +1,6 @@
-#    Go语言接口（第一部分）
+# Go语言接口（第一部分）
 
 <!--![avatar](https://cdn-images-1.medium.com/max/800/1*gTWySSARxfkaQVxCBSOKoA.jpeg)-->
-
-
 
 接口提升了代码的弹性与拓展性，同时它也是 Go 语言实现多态的一种方式。接口允许通过一些必要的行为来实现，而不再要求设置特定类型。而这个行为就是通过一些方法设置来定义的：
 
@@ -237,7 +235,7 @@ type ReadWriter interface {
 
 </br>
 
-##接口类型的值
+## 接口类型的值
 
 </br>
 
@@ -311,7 +309,7 @@ fmt.Printf("%T\n", i)
 
 </br>
 
-### 空的接口值
+### 空接口值
 
 </br>
 
@@ -448,7 +446,7 @@ func main() {
 
 </br>
 
-### 行为抽象
+## 行为抽象
 
 接口类型值<font face="黑体">只</font>允许访问它自己的接口类型的方法。
 如果它是 struct, array, scalar等，便会隐藏有关确切值的详情（[源代码](https://play.golang.org/p/kCjgQFCsL_)）：
@@ -473,7 +471,6 @@ func main() {
 </br>
 
 <!--点击下面的❤以帮助其他人发现这篇文章。 如果您想获得有关新帖子的更新或推动未来文章的工作，请关注我。-->
-
 
 via: https://medium.com/golangspec/interfaces-in-go-part-i-4ae53a97479c
 
