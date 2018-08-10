@@ -16,7 +16,7 @@
 
 为什么这很有用？因为反向代理的概念是如此简单以至于它可以被应用于许多不同的场景：负载均衡，A/B 测试，高速缓存，验证等等。
 
-与读完这篇文章之后，你会学到：
+当读完这篇文章之后，你会学到：
 
 * 如何响应 HTTP 请求
 * 如何解析请求体
@@ -131,7 +131,7 @@ func main() {
 
 ### 解析请求体
 
-有了项目的基本架构之后，我们需要添加逻辑来处理解析请求的请求体部分。更新 `handleRequestAndRedirect` 函数来从请求体中解析出 `proxy_condition` 字段。
+有了项目的基本骨架之后，我们需要添加逻辑来处理解析请求的请求体部分。更新 `handleRequestAndRedirect` 函数来从请求体中解析出 `proxy_condition` 字段。
 
 ```go
 type requestPayloadStruct struct {
@@ -300,6 +300,6 @@ via: https://hackernoon.com/writing-a-reverse-proxy-in-just-one-line-with-go-c1e
 
 作者：[Ben Church](https://hackernoon.com/@bnchrch)
 译者：[alfred-zhong](https://github.com/alfred-zhong)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
