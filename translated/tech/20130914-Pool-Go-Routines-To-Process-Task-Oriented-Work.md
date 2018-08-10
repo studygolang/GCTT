@@ -154,7 +154,7 @@ func (mt *MyTask) DoWork(workRoutine int) {
     fmt.Println(mt.Name)
 
     fmt.Printf("*******> WR: %d QW: %d AR: %d\n",
-        workRoutine,     
+        workRoutine,
         mt.WP.QueuedWork(),
         mt.WP.ActiveRoutines())
 
@@ -263,7 +263,7 @@ func (wp *WorkPool) queueRoutine() {
            wp.shutdownQueueChannel <- "Down"
            return
 
-        case queueItem := <-wp.queuechannel: 
+        case queueItem := <-wp.queuechannel:
             if atomic.AddInt32(&wp.queuedWork, 0) == wp.queueCapacity {
                 queueItem.ResultChannel <- fmt.Errorf("Thread Pool At Capacity")
                 continue
