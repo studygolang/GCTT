@@ -1,4 +1,4 @@
-# GCTT Go中文网翻译组
+# GCTT Go 中文网翻译组
 
 [![Build Status](https://travis-ci.org/studygolang/GCTT.svg?branch=master)](https://travis-ci.org/studygolang/GCTT)
 
@@ -6,7 +6,7 @@
 
 ![](logo.png)
 
-GCTT (Go Chinese Translation Team) 是 Go中文网（https://studygolang.com) 翻译组，负责从国外优秀媒体翻译 Go 相关的技术、教程、资讯、杂文等内容。
+GCTT (Go Chinese Translation Team) 是 Go 中文网（https://studygolang.com) 翻译组，负责从国外优秀媒体翻译 Go 相关的技术、教程、资讯、杂文等内容。
 
 ![](banner.jpg)
 
@@ -28,6 +28,10 @@ GCTT (Go Chinese Translation Team) 是 Go中文网（https://studygolang.com) �
 
 加入的成员，请先阅读 [WIKI 如何开始](https://github.com/studygolang/GCTT/wiki)。
 
+为了让大家更好地参与 GCTT，翻译组成员 [jarry](https://github.com/cureking) 录制了一套教学视频：
+
+* [GCTT 翻译流程（Part I-准备工作，获取任务)](https://www.bilibili.com/video/av29042507)
+
 ## 历史
 
 * 2017/11/16 倡议并得到了大家的积极响应，成立翻译组。有人提到 LCTT 做的不错，因此仿照 LCTT，创立了 GCTT。
@@ -39,7 +43,9 @@ GCTT (Go Chinese Translation Team) 是 Go中文网（https://studygolang.com) �
 * 2017/11/24 待校对文章积压，提升 rxcai 为校对，主导校对工作。
 * 2017/12/04 根据大家的建议，选题采用提 issue + label 的方式，解决不好找以及冲突等问题。
 * 2017/12/07 根据 rxcai 的建议，提升 QueShengyao 为校对。
-* 2018/03/01 提升 gogeof 为核心成员
+* 2018/03/01 提升 gogeof 为核心成员。
+* 2018/03/23 提升 alfred-zhong 为核心成员。
+* 2018/07/22 提升 magichan 为核心成员。
 
 ## Inspire By LCTT
 
