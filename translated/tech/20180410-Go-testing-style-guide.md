@@ -191,5 +191,3 @@ via: https://arp242.net/weblog/go-testing-style.html
 校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出 
-
-  
