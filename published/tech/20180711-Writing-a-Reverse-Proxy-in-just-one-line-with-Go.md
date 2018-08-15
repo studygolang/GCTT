@@ -1,8 +1,10 @@
+首发于：https://studygolang.com/articles/14246
+
 # 1 行 Go 代码实现反向代理
 
 暂且放下你的编程语言来瞻仰下我所见过的最棒的标准库。
 
-![This is all the code you actually require…](https://cdn-images-1.medium.com/max/1600/1*y3GxXdKfZlqa95bl19Rytg.png)
+![This is all the code you actually require…](https://raw.githubusercontent.com/studygolang/gctt-images/master/reverse-proxy/1_y3GxXdKfZlqa95bl19Rytg.png)
 
 为项目选择编程语言和挑选你最爱的球队不一样。应该从实用主义出发，根据特定的工作选择合适的工具。
 
@@ -12,7 +14,7 @@
 
 反向代理是什么？**有个很棒的说法是流量转发**。我获取到客户端来的请求，将它发往另一个服务器，从服务器获取到响应再回给原先的客户端。反向的意义简单来说在于这个代理自身决定了何时将流量发往何处。
 
-![Just beautiful](https://cdn-images-1.medium.com/max/1600/0*R_W7P1UV4jQEf1j5.gif)
+![Just beautiful](https://raw.githubusercontent.com/studygolang/gctt-images/master/reverse-proxy/0_R_W7P1UV4jQEf1j5.gif)
 
 为什么这很有用？因为反向代理的概念是如此简单以至于它可以被应用于许多不同的场景：负载均衡，A/B 测试，高速缓存，验证等等。
 
@@ -283,7 +285,7 @@ curl --request GET \
 
 然后我们就会看到我们的反向代理将流量转发给了我们根据 `proxy_condition` 字段配置的 3 台服务中的其中一台。
 
-![Its alive!!!](https://cdn-images-1.medium.com/max/1600/1*TcyJh0qtYv2N3UOBVVfd0Q.gif)
+![Its alive!!!](https://raw.githubusercontent.com/studygolang/gctt-images/master/reverse-proxy/1_TcyJh0qtYv2N3UOBVVfd0Q.gif)
 
 ### 总结
 
@@ -294,7 +296,7 @@ Go 为此提供了很多，但真正支撑起它的在于这些低级的网络�
 > 🧞‍ 代码是开源的，你可以在 [Github](https://github.com/bechurch/reverse-proxy-demo) 上找到。
 > ❤️ 在 [Twitter](https://www.twitter.com/bnchrch) 上我只聊关于编程和远程工作相关的东西。如果关注我，你不会后悔的。
 
-----------------
+---
 
 via: https://hackernoon.com/writing-a-reverse-proxy-in-just-one-line-with-go-c1edfa78c84b
 
