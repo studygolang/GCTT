@@ -359,7 +359,7 @@ func main() {
 
 ## 行为抽象
 
-接口类型值<font face="黑体">只</font>允许访问它自己的接口类型的方法。
+接口类型值**只**允许访问它自己的接口类型的方法。
 如果它是 struct, array, scalar等，便会隐藏有关确切值的详情（[源代码](https://play.golang.org/p/kCjgQFCsL_)）：
 ```
 type I interface {
