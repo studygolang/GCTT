@@ -1,6 +1,8 @@
-![image](https://cdn-images-1.medium.com/max/1600/1*_0WaPaMu9Cd99sU3fr7a2Q.jpeg)
+首发于：https://studygolang.com/articles/14118
 
 # goroutine 的同步（第一部分）
+
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/sync-goroutine/part1.jpeg)
 
 假设 Go 程序启动了两个 goroutine：
 
@@ -30,7 +32,7 @@ func main() {
 
 两个 goroutine 都对共享变量 *v* 进行操作。其中一个赋新值（写操作）而另一个打印变量的值（读操作）。
 
->*sync 包中的 [WaitGroup](https://golang.org/pkg/sync/#WaitGroup) 被用来等待两个非 main 的 goroutine 结束。否则，我们甚至都不能确保其中任意一个 goroutine 有被启动。*
+> *sync 包中的 [WaitGroup](https://golang.org/pkg/sync/#WaitGroup) 被用来等待两个非 main 的 goroutine 结束。否则，我们甚至都不能确保其中任意一个 goroutine 有被启动。*
 
 由于不同的 goroutine 是相互独立的任务，它们进行的操作之间没有任何隐含的顺序。在上面的例子中，我们不清楚会打印出 `0` 还是 `1`。如果在 `fmt.Println` 被触发时，另一个 goroutine 已经执行了赋值语句 `v = 1`，那么输出会是 `1`。然而，在程序真正被执行之前一切都是未知的。换句话说，赋值语句和调用 `fmt.Println` 是无序的 —— 它们是并发的。
 
@@ -109,7 +111,7 @@ wg.Wait()
 <br>*golang.org*
 
 - [像个 Gopher 一样使用 *panic*](https://medium.com/golangspec/panicking-like-a-gopher-367a9ce04bb8)
->Errors while executing program in Go (after successful compilation and when OS process has been started) take the form…
+> Errors while executing program in Go (after successful compilation and when OS process has been started) take the form…
 <br>*medium.com*
 
 *[保留部分版权](http://creativecommons.org/licenses/by/4.0/)*
@@ -130,6 +132,6 @@ via: https://medium.com/golangspec/synchronized-goroutines-part-i-4fbcdd64a4ec
 
 作者：[Michał Łowicki](https://medium.com/@mlowicki)
 译者：[krystollia](https://github.com/krystollia)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
