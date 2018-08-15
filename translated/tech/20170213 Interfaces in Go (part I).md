@@ -166,7 +166,7 @@ type K interface {
 }
 ```
 
-编译器会提出一个错误 `interface type loop involving I `（译注：有关I的接口类型循环）。
+编译器会提出一个错误 `interface type loop involving I`（译注：有关I的接口类型循环）。
 
 接口方法必须有唯一名字（[源代码](https://play.golang.org/p/zt3t-GUrYU)）:
 ```
@@ -281,7 +281,6 @@ i is not nil
 
 第一次看，会觉得很惊讶。变量 i 的值，我们明明设置为 nil，但是这里的值却不等于 nil。其实接口类型值包含两个组件：
 
-
 * 动态类型
 * 动态值
 
@@ -387,6 +386,3 @@ via: https://medium.com/golangspec/interfaces-in-go-part-i-4ae53a97479c
 校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
-
-# https://www.jianshu.com/p/8c69d1021d98
