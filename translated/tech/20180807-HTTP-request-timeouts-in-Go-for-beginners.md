@@ -51,7 +51,7 @@ resp, err := http.DefaultClient.Do(req.WithContext(ctx))
 
 ```go
 transport := &http.Transport{
-    DialContext: (&net.Dialer{   
+    DialContext: (&net.Dialer{
         Timeout: timeout,
     }).DialContext,
 }
