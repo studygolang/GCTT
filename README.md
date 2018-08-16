@@ -31,6 +31,7 @@ GCTT (Go Chinese Translation Team) 是 Go 中文网（https://studygolang.com) �
 为了让大家更好地参与 GCTT，翻译组成员 [jarry](https://github.com/cureking) 录制了一套教学视频：
 
 * [GCTT 翻译流程（Part I-准备工作，获取任务)](https://www.bilibili.com/video/av29042507)
+* [GCTT 翻译流程（Part II-打开文章，翻译注意)](https://www.bilibili.com/video/av29292296)
 
 ## 历史
 
