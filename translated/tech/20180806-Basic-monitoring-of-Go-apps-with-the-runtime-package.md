@@ -115,7 +115,7 @@ func BenchmarkStringReverseBetter(b *testing.B) {
 这个糟糕的函数做了不必要的分配，即：
 
 1. 我们创建了一个空 slice 存储结果字符串，
-2. 我们填充 这个 slice （ append 分配内存是必要的，但不是最优的） 
+2. 我们填充 这个 slice（append 分配内存是必要的，但不是最优的）
 
 由于调用 b.reportAllocs() 这个基准测试和相关的输出绘制了一幅精准的图片：
 
@@ -212,11 +212,11 @@ Go 实际上有两个内置插件，帮助我们监控生产中的应用程序�
 
 几分钟后，我注册了 expvar 的 HTTP 处理程序，我意识到完整的 MemStats 结构已经在上面了。那太好了！
 
->除了添加HTTP处理程序外，此包还记录以下变量：
->+ cmdline os.Args
->+ memstats runtime.Memstats
+除了添加HTTP处理程序外，此包还记录以下变量：
++ cmdline os.Args
++ memstats runtime.Memstats
 
->该包有时仅用于注册其HTTP处理程序和上述变量的副作用。要这样使用，把这个包链接到你的程序中：`import _ "expvar"`
+该包有时仅用于注册其HTTP处理程序和上述变量的副作用。要这样使用，把这个包链接到你的程序中：`import _ "expvar"`
 
 由于度量现在已经导出，您只需要在应用程序上指向监视系统，并在那里导入 memstats 输出。我知道，我们仍然没有 goroutine 计数，但这很容易添加。导入 expvar 包并添加以下几行：
 
