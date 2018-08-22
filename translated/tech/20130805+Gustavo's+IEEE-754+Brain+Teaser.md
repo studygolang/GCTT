@@ -1,4 +1,4 @@
-在Go中探索IEEE-754标准
+# 在Go中探索IEEE-754标准
 
 在六月份时，Gustavo Niemeyer 在他的博客 [Labix.org](http://blog.labix.org/) 上提出了下面这个问题：
 
