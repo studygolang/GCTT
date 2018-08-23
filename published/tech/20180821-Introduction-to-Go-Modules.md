@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/14389
+
 # Go 语言的 Modules 系统介绍
 
-即将发布的Go 语言 1.11 版本将会给我们带来对 *modules*（模块）的实验性支持，这是 Go 语言新的一套依赖管理系统。
+即将发布的 Go 语言 1.11 版本将会给我们带来对 *modules*（模块）的实验性支持，这是 Go 语言新的一套依赖管理系统。
 
 （译注：很多编程语言中，把 modules 译作「模块」，但由于目前该机制在 Go 语言还没正式发布，因此尚未有非常普及的译法。而类似的 vendor 一词的翻译，大多中文文章都是采取保留英文原文的方式处理，因此本文对 modules 的翻译参考 vendor 的处理：保留英文原文）
 
@@ -168,7 +170,7 @@ $ git push --tags origin v1
 
 ## 更新 modules
 
-默认情况下，Go 不会自己更新模块，这是一个好事因为我们希望我们的构建是有可预见性（predictability）的。如果每次依赖的包一有更新发布，Go 的 module 就自动更新，那么我们宁愿回到 Go v1.11 之前没有 Go module的荒莽时代了。所以，我们需要更新 module 的话，我们要显式地告诉 Go。
+默认情况下，Go 不会自己更新模块，这是一个好事因为我们希望我们的构建是有可预见性（predictability）的。如果每次依赖的包一有更新发布，Go 的 module 就自动更新，那么我们宁愿回到 Go v1.11 之前没有 Go module 的荒莽时代了。所以，我们需要更新 module 的话，我们要显式地告诉 Go。
 
 我们可以使用我们的老朋友 `go get` 来更新 module:
 
@@ -180,7 +182,7 @@ $ git push --tags origin v1
 
 上述列举的情况，似乎没有提到如何更新到最新的主要版本的方法。这么做是有原因的，我们之后会说到。
 
-因为我们的程序使用包的是 1.0.0 的版本，并且我们刚刚创建了 1.0.1 版本，下面任意一条命令都可以让我们程序使用的包更新到 1.0.1 版本：
+因为我们的程序使用的是包 1.0.0 的版本，并且我们刚刚创建了 1.0.1 版本，下面任意一条命令都可以让我们程序使用的包更新到 1.0.1 版本：
 
 ```bash
 $ go get -u
@@ -356,9 +358,6 @@ via: https://roberto.selbach.ca/intro-to-go-modules
 
 作者：[Roberto Selbach](https://roberto.selbach.ca/author/robteix/)
 译者：[Alex-liutao](https://github.com/Alex-liutao)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
-
-
