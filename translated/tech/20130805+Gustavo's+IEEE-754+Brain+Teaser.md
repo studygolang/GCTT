@@ -243,7 +243,7 @@ INTEGER
     intTest := coefficient & ((1 << uint32(-exponent)) - 1)
 ```
 
-系数的计算需要向尾数部分增加1， 因此我们有了基于2进制的系数值。 
+系数的计算需要向尾数部分增加1， 因此我们有了基于2进制的系数值。
 
 当我们查看系数计算的第一部分时，会看到下面的位模式：
 
@@ -284,7 +284,7 @@ intTest:                     00000000000000000000000000000000
 
 我们通过测试函数计算出的指数值通常用来 确定 下一步中用来比较系数值。在这个例子中指数值为 -6，这个值是使用所储存的指数值（144）减去偏移值（127），再减去指数的开始位置（23）所计算出来的。-6 表示的位模式是 6 个 1（1‘s），最后的操作是将这个 6 个比特位对系数的最右边6位进行位与计算，最终就得到了intTest的值。
 
-第二个测试函数是在initTest值不为0的情况下寻找小于零 (0) 的指数值，表明这个数字中储存的不是整型。在值为 234523 的这个示例中，指数小数零 (0) 但是intTest的值大于零 (0)，说明这是一个整型。 
+第二个测试函数是在initTest值不为0的情况下寻找小于零 (0) 的指数值，表明这个数字中储存的不是整型。在值为 234523 的这个示例中，指数小数零 (0) 但是intTest的值大于零 (0)，说明这是一个整型。
 
 我将示例程序放在了官网的 Go Playground 上面，你可以方便地运行它。
 
@@ -404,10 +404,10 @@ func ShowBits(bits uint32, bias int, exponent int) {
 
 ---
 
-via: https://www.ardanlabs.com/blog/2013/08/gustavos-ieee-754-brain-teaser.html
+via: <https://www.ardanlabs.com/blog/2013/08/gustavos-ieee-754-brain-teaser.html>
 
 作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
-译者：[huwei365](https://github.com/huwei365)
+译者：[Maxwell Hu](https://github.com/maxwell365)
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
