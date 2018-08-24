@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/14410
+
 # 用 runtime 包做 Go 应用的基本监控
 
-您可能想知道——特别是如果您刚开始使用 Go，该如何给您的微服务应用添加监控。正如那些有跟踪记录的人告诉您——监控是很困难的。那么我要告诉您的是至少基本的监控不是那样的。您不需要为您的简单应用启动一个[Prometheus](https://prometheus.io/)集群去获得报告，事实上，您甚至不需要额外的服务去添加一个您的应用统计的简单输出。
+您可能想知道——特别是如果您刚开始使用 Go，该如何给您的微服务应用添加监控。正如那些有跟踪记录的人告诉您——监控是很困难的。那么我要告诉您的是至少基本的监控不是那样的。您不需要为您的简单应用启动一个 [Prometheus](https://prometheus.io/) 集群去获得报告，事实上，您甚至不需要额外的服务去添加一个您的应用统计的简单输出。
 
 但是我们的应用程序的哪些特性是我们感兴趣的呢？这个 Go 的 [runtime](https://golang.org/pkg/runtime/) 包包含了一些和 Go 的运行系统交互的函数——像这个调度器和内存管理器等。这意味着我们能够访问一些内部的应用程序：
 
@@ -126,13 +128,13 @@ BenchmarkStringReverseBetter-4            775 ns/op             480 B/op        
 
 由于在 Go 中实现的虚拟内存，内存分配的另个方面是垃圾收集暂停或简称 GC 。关于 GC 暂停的一个常用语是“停止世界”，注意在 GC 暂停期间您的应用程序将完全停止响应。google 团队不断提升 [GC 的性能](https://groups.google.com/forum/?fromgroups#!topic/golang-dev/Ab1sFeoZg_8)，但将来那些经验不足的开发者仍然会面对内存管理不良的问题。
 
-这个 runtime 包暴露了 runtime.ReadMemStats(m *MemStats)函数用于填充一个 MemStats 对象。这个对象有很多字段可以作为内存分配策略和性能相关问题的良好指示器。
+这个 runtime 包暴露了 runtime.ReadMemStats(m *MemStats) 函数用于填充一个 MemStats 对象。这个对象有很多字段可以作为内存分配策略和性能相关问题的良好指示器。
 
-+ Alloc -当前在堆中分配字节数，
++ Alloc -当前在堆中分配字节数，
 + TotalAlloc -在堆中累计分配最大字节数（不会减少），
 + Sys -从系统获得的总内存，
-+ Mallocs 和 Frees -分配，释放和存活对象数（mallocs - frees），
-+ PauseTotalNs -从应用开始总GC暂停，
++ Mallocs 和 Frees - 分配，释放和存活对象数（mallocs - frees），
++ PauseTotalNs -从应用开始总GC暂停，
 + NumGC - GC 循环完成数
 
 ## 方法
@@ -208,11 +210,12 @@ func NewMonitor(duration int) {
 
 ## 使用 expvar
 
-Go 实际上有两个内置插件，帮助我们监控生产中的应用程序。其中一个内置的是包 expvar。该包为公共变量提供了标准化接口，例如服务器中的操作计数器。默认情况下，这些变量将在`/debug/vars`上可用。让我们把度量放在 expvar 中存储。
+Go 实际上有两个内置插件，帮助我们监控生产中的应用程序。其中一个内置的是包 expvar。该包为公共变量提供了标准化接口，例如服务器中的操作计数器。默认情况下，这些变量将在 `/debug/vars` 上可用。让我们把度量放在 expvar 中存储。
 
 几分钟后，我注册了 expvar 的 HTTP 处理程序，我意识到完整的 MemStats 结构已经在上面了。那太好了！
 
 除了添加HTTP处理程序外，此包还记录以下变量：
+
 + cmdline os.Args
 + memstats runtime.Memstats
 
@@ -220,18 +223,18 @@ Go 实际上有两个内置插件，帮助我们监控生产中的应用程序�
 
 由于度量现在已经导出，您只需要在应用程序上指向监视系统，并在那里导入 memstats 输出。我知道，我们仍然没有 goroutine 计数，但这很容易添加。导入 expvar 包并添加以下几行：
 
-```
+```go
 // The next line goes at the start of NewMonitor()
 var goroutines = expvar.NewInt("num_goroutine")
 // The next line goes after the runtime.NumGoroutine() call
 goroutines.Set(int64(m.NumGoroutine))
 ```
 
-这个 “num_goroutine” 字段现在在`/debug/vars output`可用, 仅此于完整的内存统计。
+这个 “num_goroutine” 字段现在在 `/debug/vars output` 可用, 仅此于完整的内存统计。
 
 ## 超越基础监测
 
-Go 标准库中的另外一个强大的补充是 [net/http/pprof](https://golang.org/pkg/net/http/pprof/) 包。这个包有很多函数，但主要目的是为`go pprof`工具提供运行时的分析数据，该工具已捆绑在 Go 工具链中。使用它，您可以进一步检查您的应用程序在生产中的操作。如果您想了解更多关于 pprof 和代码优化的内容，您可以查看我以前的文章：
+Go 标准库中的另外一个强大的补充是 [net/http/pprof](https://golang.org/pkg/net/http/pprof/) 包。这个包有很多函数，但主要目的是为 `go pprof` 工具提供运行时的分析数据，该工具已捆绑在 Go 工具链中。使用它，您可以进一步检查您的应用程序在生产中的操作。如果您想了解更多关于 pprof 和代码优化的内容，您可以查看我以前的文章：
 
 + [Go 程序基准测试](https://scene-si.org/2017/06/06/benchmarking-go-programs/),
 + [Go 程序基准测试，第二部](https://scene-si.org/2017/07/07/benchmarking-go-programs-part-2/)
@@ -248,9 +251,9 @@ Go 标准库中的另外一个强大的补充是 [net/http/pprof](https://golang
 
 我保证如果您买任何一本的话您可以学到很多东西。购买副本支持我写更多关于相同的主题。感谢您买我的书。
 
-如果您想和我约时间为了咨询/外包服务可以发[电子邮件](black@scene-si.org)给我。我很擅长API，Go，Docker，VueJS 和 扩展服务等等。
+如果您想和我约时间为了咨询/外包服务可以发[电子邮件](black@scene-si.org)给我。我很擅长 API，Go，Docker，VueJS 和 扩展服务等等。
 
-----------------
+---
 
 via: https://scene-si.org/2018/08/06/basic-monitoring-of-go-apps-with-the-runtime-package/
 
