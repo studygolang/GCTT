@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/14405
+
 # Go 语言 HTTP 请求超时入门
 
 在分布式系统中，超时是基本可靠性概念之一。就像这条 [tweet](https://twitter.com/copyconstruct/status/1025241837034860544) 中提到的，它可以缓和分布式系统中不可避免出现的失败所带来的影响。
@@ -121,12 +123,12 @@ func TestClientTimeout(t *testing.T) {
 
 也许 Go 语言初学者对于理解 http 超时高层次的原理是比较有用的。但如果你想知道更多关于 Go 中 `http timeouts` 的细节，这篇 [Cloudflare](https://blog.cloudflare.com/the-complete-guide-to-golang-net-http-timeouts/) 上的文章值得一读。
 
-----------------
+---
 
 via: https://medium.com/@addityasingh/http-request-timeouts-in-go-for-beginners-fe6445137c90
 
 作者：[Aditya pratap singh](https://medium.com/@addityasingh)
 译者：[alfred-zhong](https://github.com/alfred-zhong)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
