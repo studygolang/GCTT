@@ -2,11 +2,11 @@
 
 您可能想知道——特别是如果您刚开始使用 Go，该如何给您的微服务应用添加监控。正如那些有跟踪记录的人告诉您——监控是很困难的。那么我要告诉您的是至少基本的监控不是那样的。您不需要为您的简单应用启动一个[Prometheus](https://prometheus.io/)集群去获得报告，事实上，您甚至不需要额外的服务去添加一个您的应用统计的简单输出。
 
-但是我们的应用程序的哪些特性时我们感兴趣的呢？这个 Go 的 [runtime](https://golang.org/pkg/runtime/) 包b包含了一些和 Go 的运行系统交互的函数——像这个调度器和内存管理器等。这意味着我们能够访问一些内部的应用程序：
+但是我们的应用程序的哪些特性是我们感兴趣的呢？这个 Go 的 [runtime](https://golang.org/pkg/runtime/) 包包含了一些和 Go 的运行系统交互的函数——像这个调度器和内存管理器等。这意味着我们能够访问一些内部的应用程序：
 
 ## Goroutines
 
-goroutine 是 Go 的 调度管理器为我们准备的非常轻量级的线程。在任何代码中可能会出现的一个典型问题被称为“ goroutines 泄露”。这个问题的原因有很多种，如忘记设置默认的 http 请求超时，SQL 超时，缺乏对上下文包取消的支持，向已关闭的通道发数据等。当这个问题发生时，一个 goroutine 可能无限期当存活，并且永远不释放它所使用当资源。
+goroutine 是 Go 的调度管理器为我们准备的非常轻量级的线程。在任何代码中可能会出现的一个典型问题被称为“ goroutines 泄露”。这个问题的原因有很多种，如忘记设置默认的 http 请求超时，SQL 超时，缺乏对上下文包取消的支持，向已关闭的通道发数据等。当这个问题发生时，一个 goroutine 可能无限期的存活，并且永远不释放它所使用的资源。
 
 我们可能会对 [runtime.NumGoroutine() int](https://golang.org/pkg/runtime/#NumGoroutine) 这个很基本当函数感兴趣，它会返回当前存在的 goroutines 数量。我们只要打印这个数字并在一段时间内检查它，就可以合理的确认我们可能 goroutines 泄漏，然后调查这些问题。
 
@@ -14,7 +14,7 @@ goroutine 是 Go 的 调度管理器为我们准备的非常轻量级的线程�
 
 在 Go 的世界里内存占用问题是很普遍的。当大多数人倾向于使用高效的指针时（比在 Node.js 中的任何东西都高效），一个经常遇到的与性能相关的问题是关于内存分配。演示一个简单的，但低效的反转字符串的方式：
 
-```
+```go
 package main
 
 import (
@@ -63,7 +63,7 @@ func BenchmarkStringReverseBetter(b *testing.B) {
 }
 ```
 
-```
+```go
 package main
 
 import (
@@ -124,7 +124,7 @@ BenchmarkStringReverseBad-4              1413 ns/op             976 B/op        
 BenchmarkStringReverseBetter-4            775 ns/op             480 B/op          3 allocs/op
 ```
 
-由于在 Go 中实现的虚拟内存，内存分配的另个方面是垃圾收集暂停或简称 GC 。关于 GC 暂停的一个常用语是“停止世界”，注意在 GC 暂停期间您的应用程序将完全停止响应。google 团队不断提升 [GC 的性能](https://groups.google.com/forum/?fromgroups#!topic/golang-dev/Ab1sFeoZg_8)，但将来哪些经验不足的开发者仍然会面对内存管理不良的问题。
+由于在 Go 中实现的虚拟内存，内存分配的另个方面是垃圾收集暂停或简称 GC 。关于 GC 暂停的一个常用语是“停止世界”，注意在 GC 暂停期间您的应用程序将完全停止响应。google 团队不断提升 [GC 的性能](https://groups.google.com/forum/?fromgroups#!topic/golang-dev/Ab1sFeoZg_8)，但将来那些经验不足的开发者仍然会面对内存管理不良的问题。
 
 这个 runtime 包暴露了 runtime.ReadMemStats(m *MemStats)函数用于填充一个 MemStats 对象。这个对象有很多字段可以作为内存分配策略和性能相关问题的良好指示器。
 
@@ -139,7 +139,7 @@ BenchmarkStringReverseBetter-4            775 ns/op             480 B/op        
 
 因此，我们开始的前提是，我们不希望使用外部服务来提供简单的应用程序监控。我的目标是每隔一段时间将收集到的度量指标打印到控制台上。我们应该启动一个 goroutine，每隔X秒就可以得到这个数据，然后把它打印到控制台。
 
-```
+```go
 package main
 
 import (
