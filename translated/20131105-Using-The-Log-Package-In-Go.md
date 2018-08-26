@@ -91,7 +91,7 @@ flags:  The flag argument defines the logging properties. //译注 flag 参数�
 
 Flags:
 const (
-// Bits or’ed together to control what’s printed. There is no control over the 
+// Bits or’ed together to control what’s printed. There is no control over the
 // order they appear (the order listed here) or the format they present (as
 // described in the comments). A colon appears after these items:
 // 2009/01/23 01:23:23.123123 /a/b/c/d.go:23: message
