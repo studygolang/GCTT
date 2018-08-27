@@ -21,43 +21,43 @@
 让我们创建一些简单的值并将它们放在切片中。然后我们将迭代切片，看看会发生什么。
 
 ```go
-1   package main
-2   
-3   import (
-4       "fmt"
-5   )
-6   
-7   type Dog struct {
-8       Name string
-9       Age int
-10  }
-11  
-12  func main() {
-13      jackie := Dog{
-14          Name: "Jackie",
-15          Age: 19,
-16      }
-17  
-18      fmt.Printf("Jackie Addr: %p\n", &jackie)
-19  
-20      sammy := Dog{
-21          Name: "Sammy",
-22          Age: 10,
-23      }
-24  
-25      fmt.Printf("Sammy Addr: %p\n", &sammy)
-26  
-27      dogs := []Dog{jackie, sammy}
-28  
-29      fmt.Println("")
-30  
-31      for _, dog := range dogs {
-32          fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)
-33          fmt.Printf("Addr: %p\n", &dog)
-34  
-35          fmt.Println("")
-36      }
-37  }
+package main
+
+import (
+    "fmt"
+)
+
+type Dog struct {
+    Name string
+    Age int
+}
+
+func main() {
+    jackie := Dog{
+        Name: "Jackie",
+        Age: 19,
+    }
+
+    fmt.Printf("Jackie Addr: %p\n", &jackie)
+
+    sammy := Dog{
+        Name: "Sammy",
+        Age: 10,
+    }
+
+    fmt.Printf("Sammy Addr: %p\n", &sammy)
+
+    dogs := []Dog{jackie, sammy}
+
+    fmt.Println("")
+
+    for _, dog := range dogs {
+        fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)
+        fmt.Printf("Addr: %p\n", &dog)
+
+        fmt.Println("")
+    }
+}
 ```
 
 该程序创建两只类型为狗的对象，并将它们放入狗类型的切片 dogs 中。我们显示每只狗的地址。然后我们迭代显示每只狗的名字，年龄和地址的切片。
@@ -81,22 +81,22 @@ Addr: 0x2101bc060
 每个 Dog 的初始存在是使用复合字段创建的：
 
 ```go
-1	jackie := Dog{
-2	    Name: "Jackie",
-3	    Age: 19,
-4	}
+jackie := Dog{
+    Name: "Jackie",
+    Age: 19,
+}
 ```
 
 将值放入切片时，将创建值的第一个副本： 
 
 ```go
-1	dogs := []Dog{jackie, sammy}
+dogs := []Dog{jackie, sammy}
 ```
 
 当我们遍历切片时，会创建值的第二个副本：
 
 ```go
-1	dog := range dogs
+dog := range dogs
 ```
 
 现在我们可以看到为什么循环中变量狗的地址总是相同的。我们正在显示变量狗的地址，该变量恰好是 Dog 类型的局部变量，包含切片的每个索引的 Dog 的副本。对于切片的每次迭代，变量狗的地址是相同的。变量狗的值正在改变。
@@ -104,15 +104,15 @@ Addr: 0x2101bc060
 我之前谈到的那个令人讨厌的错误与我认为变量狗的地址可以用作指向切片内每个 Dog 值的指针。像这样的东西：
 
 ```go
-1	allDogs := []*Dog{}
-2	
-3	for _, dog := range dogs {
-4	    allDogs = append(allDogs, &dog)
-5	}
-6	
-7	for _, dog := range allDogs {
-8	    fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)
-9	}
+allDogs := []*Dog{}
+
+for _, dog := range dogs {
+    allDogs = append(allDogs, &dog)
+}
+
+for _, dog := range allDogs {
+    fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)
+}
 ```
 
 我创建了一个新的切片，用于保存指向 Dog 值的指针。然后我遍历 dogs ，存储每个 Dog 值的地址的放入新切片 allDogs 中。至少我认为我存储了每个 Dog 值的地址。
@@ -129,39 +129,39 @@ Name: Sammy Age: 10
 如果制作所有这些副本不是您想要的，您可以使用指针。以下是使用指针的示例程序：
 
 ```go
-1	package main
-2	
-3	import (
-4	    "fmt"
-5	)
-6	
-7	type Dog struct {
-8	    Name string
-9	    Age int
-10	}
-11	
-12	func main() {
-13	    jackie := &Dog{
-14	        Name: "Jackie",
-15	        Age: 19,
-16	    }
-17	
-18	    fmt.Printf("Jackie Addr: %p\n", jackie)
-19	
-20	    sammy := &Dog{
-21	        Name: "Sammy",
-22	        Age: 10,
-23	    }
-24	
-25	    fmt.Printf("Sammy Addr: %p\n\n", sammy)
-26	
-27	    dogs := []*Dog{jackie, sammy}
-28	
-29	    for _, dog := range dogs {
-30	        fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)
-31	        fmt.Printf("Addr: %p\n\n", dog)
-32	    }
-33	}
+package main
+
+import (
+    "fmt"
+)
+
+type Dog struct {
+    Name string
+    Age int
+}
+
+func main() {
+    jackie := &Dog{
+        Name: "Jackie",
+        Age: 19,
+    }
+
+    fmt.Printf("Jackie Addr: %p\n", jackie)
+
+    sammy := &Dog{
+        Name: "Sammy",
+        Age: 10,
+    }
+
+    fmt.Printf("Sammy Addr: %p\n\n", sammy)
+
+    dogs := []*Dog{jackie, sammy}
+
+    for _, dog := range dogs {
+        fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)
+        fmt.Printf("Addr: %p\n\n", dog)
+    }
+}
 ```
 
 这是输出：
@@ -182,9 +182,9 @@ Addr: 0x2101bb040
 当切片是 Dog 值的集合或 Dog 值的指针集合时，范围循环是相同的。
 
 ```go
-1	for _, dog := range dogs {
-2	    fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)
-3	}
+for _, dog := range dogs {
+    fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)
+}
 ```
 
 无论我们是否使用指针， Go 都会处理对 Dog 值的访问。这很棒，但有时会导致一些混乱。至少这对我来说开始的时候是这样的。
@@ -196,51 +196,51 @@ Addr: 0x2101bb040
 [http://ewencp.org/blog/golang-iterators/](http://ewencp.org/blog/golang-iterators/)
 
 ```go
-1	package main
-2	
-3	import (
-4	    "fmt"
-5	)
-6	
-7	type Dog struct {
-8	    Name string
-9	    Age int
-10	}
-11	
-12	type DogCollection struct {
-13	    Data []*Dog
-14	}
-15	
-16	func (this *DogCollection) Init() {
-17	    cloey := &Dog{"Cloey", 1}
-18	    ralph := &Dog{"Ralph", 5}
-19	    jackie := &Dog{"Jackie", 10}
-20	    bella := &Dog{"Bella", 2}
-21	    jamie := &Dog{"Jamie", 6}
-22	
-23	    this.Data = []*Dog{cloey, ralph, jackie, bella, jamie}
-24	}
-25	
-26	func (this *DogCollection) CollectionChannel() chan *Dog {
-27	    dataChannel := make(chan *Dog, len(this.Data))
-28	
-29	    for _, dog := range this.Data {
-30	        dataChannel <- dog
-31	    }
-32	
-33	    close(dataChannel)
-34	
-35	    return dataChannel
-36	}
-37	
-38	func main() {
-39	    dc := DogCollection{}
-40	    dc.Init()
-41	
-42	    for dog := range dc.CollectionChannel() {
-43	        fmt.Printf("Channel Name: %s\n", dog.Name)
-44	    }
-45	}
+package main
+
+import (
+    "fmt"
+)
+
+type Dog struct {
+    Name string
+    Age int
+}
+
+type DogCollection struct {
+    Data []*Dog
+}
+
+func (this *DogCollection) Init() {
+    cloey := &Dog{"Cloey", 1}
+    ralph := &Dog{"Ralph", 5}
+    jackie := &Dog{"Jackie", 10}
+    bella := &Dog{"Bella", 2}
+    jamie := &Dog{"Jamie", 6}
+
+    this.Data = []*Dog{cloey, ralph, jackie, bella, jamie}
+}
+
+func (this *DogCollection) CollectionChannel() chan *Dog {
+    dataChannel := make(chan *Dog, len(this.Data))
+
+    for _, dog := range this.Data {
+        dataChannel <- dog
+    }
+
+    close(dataChannel)
+
+    return dataChannel
+}
+
+func main() {
+    dc := DogCollection{}
+    dc.Init()
+
+    for dog := range dc.CollectionChannel() {
+        fmt.Printf("Channel Name: %s\n", dog.Name)
+    }
+}
 ```
 
 如果您运行该程序，您将获得以下输出：
