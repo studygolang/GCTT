@@ -182,3 +182,12 @@ func (wm *_WorkManager) PerformTheWork() {
 
 [](http://www.goinggo.net/2013/09/pool-go-routines-to-process-task.html)
 
+---
+
+via: https://www.ardanlabs.com/blog/2013/09/timer-routines-and-graceful-shutdowns.html
+
+作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
+译者：[Alex-liutao](https://github.com/Alex-liutao)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
