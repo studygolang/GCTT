@@ -12,14 +12,13 @@
 
 在命令式编程语言中，我们可以创建可变或可更改的变量和值。我们可以将任何变量或值的指针传递给函数，而函数又可以根据需要更改状态。函数式编程语言希望您根据输入并产生结果的数学函数方式来进行思考。在命令式编程语言中，我们可以构建类似的函数，但是我们也可以构建对可以存在于内存中的任何位置的状态执行操作的函数。
 
-能够使用指针有优势，但也可以让你陷入困境。使用指针可以减轻内存约束并尽可能的提高性能。但它会创造同步问题，例如对值和资源的共享访问。找到每个用例最适合的解决方案。对于你的 Go 程序，我建议在安全和实用的时候使用指针。 Go 是一种命令式编程语言，所以利用好它的这些优势。
+能够使用指针有优势，但也可以让你陷入困境。使用指针可以减轻内存约束并尽可能的提高性能。但它会创造同步问题，例如对值和资源的共享访问。找到每个用例最适合的解决方案。对于你的 Go 程序，我建议在安全和实用的时候使用指针。Go 是一种命令式编程语言，所以利用好它的这些优势。
 
-在 Go 中，一切都是按值传递的，记住这一点非常重要。我们可以通过值传递对象的地址，或者通过值传递对象的副本。当我们在 Go 中使用指针时，它有时会令人混淆，因为 Go 处理我们的所有引用。不要误会我的意思， Go 做到这一点非常棒，但有时候你可以忘记变量的实际值。
+在 Go 中，一切都是按值传递的，记住这一点非常重要。我们可以通过值传递对象的地址，或者通过值传递对象的副本。当我们在 Go 中使用指针时，它有时会令人混淆，因为 Go  处理我们的所有引用。不要误会我的意思，Go做到这一点非常棒，但有时候你可以忘记变量的实际值。
 
 在每个程序的某个时刻，我需要迭代一个切片来执行一些工作。在 Go 中，我们使用 for 循环结构来迭代切片。在开始时，我在迭代切片时犯了一些非常严重的错误，因为我误解了 range 关键字是如何工作的。我将向您展示一个令人讨厌的错误，我创建了一个让我困惑的迭代切片的功能。现在对我来说很明显为什么代码执行结果不催，但当时并不知道原因。
 
 让我们创建一些简单的值并将它们放在切片中。然后我们将迭代切片，看看会发生什么。
-
 
 ```go
 1   package main
@@ -79,29 +78,41 @@ Addr: 0x2101bc060
 
 ![](https://github.com/studygolang/GCTT/blob/master/iterating-over-slices-in-go/iterating-over-slices-in-go.png?raw=true)
 
-
 每个 Dog 的初始存在是使用复合字段创建的：
 
 ```go
-1	jackie := Dog{2	    Name: "Jackie",3	    Age: 19,4	}
+1	jackie := Dog{
+2	    Name: "Jackie",
+3	    Age: 19,
+4	}
 ```
 
 将值放入切片时，将创建值的第一个副本： 
 
 ```go
-1	dogs := []Dog{jackie, sammy}```
+1	dogs := []Dog{jackie, sammy}
+```
 
 当我们遍历切片时，会创建值的第二个副本：
 
 ```go
-1	dog := range dogs```
+1	dog := range dogs
+```
 
 现在我们可以看到为什么循环中变量狗的地址总是相同的。我们正在显示变量狗的地址，该变量恰好是 Dog 类型的局部变量，包含切片的每个索引的 Dog 的副本。对于切片的每次迭代，变量狗的地址是相同的。变量狗的值正在改变。
 
 我之前谈到的那个令人讨厌的错误与我认为变量狗的地址可以用作指向切片内每个 Dog 值的指针。像这样的东西：
 
 ```go
-1	allDogs := []*Dog{}2	3	for _, dog := range dogs {4	    allDogs = append(allDogs, &dog)5	}6	7	for _, dog := range allDogs {8	    fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)9	}
+1	allDogs := []*Dog{}
+2	
+3	for _, dog := range dogs {
+4	    allDogs = append(allDogs, &dog)
+5	}
+6	
+7	for _, dog := range allDogs {
+8	    fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)
+9	}
 ```
 
 我创建了一个新的切片，用于保存指向 Dog 值的指针。然后我遍历 dogs ，存储每个 Dog 值的地址的放入新切片 allDogs 中。至少我认为我存储了每个 Dog 值的地址。
@@ -118,7 +129,39 @@ Name: Sammy Age: 10
 如果制作所有这些副本不是您想要的，您可以使用指针。以下是使用指针的示例程序：
 
 ```go
-1	package main2	3	import (4	    "fmt"5	)6	7	type Dog struct {8	    Name string9	    Age int10	}11	12	func main() {13	    jackie := &Dog{14	        Name: "Jackie",15	        Age: 19,16	    }17	18	    fmt.Printf("Jackie Addr: %p\n", jackie)19	20	    sammy := &Dog{21	        Name: "Sammy",22	        Age: 10,23	    }24	25	    fmt.Printf("Sammy Addr: %p\n\n", sammy)26	27	    dogs := []*Dog{jackie, sammy}28	29	    for _, dog := range dogs {30	        fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)31	        fmt.Printf("Addr: %p\n\n", dog)32	    }33	}
+1	package main
+2	
+3	import (
+4	    "fmt"
+5	)
+6	
+7	type Dog struct {
+8	    Name string
+9	    Age int
+10	}
+11	
+12	func main() {
+13	    jackie := &Dog{
+14	        Name: "Jackie",
+15	        Age: 19,
+16	    }
+17	
+18	    fmt.Printf("Jackie Addr: %p\n", jackie)
+19	
+20	    sammy := &Dog{
+21	        Name: "Sammy",
+22	        Age: 10,
+23	    }
+24	
+25	    fmt.Printf("Sammy Addr: %p\n\n", sammy)
+26	
+27	    dogs := []*Dog{jackie, sammy}
+28	
+29	    for _, dog := range dogs {
+30	        fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)
+31	        fmt.Printf("Addr: %p\n\n", dog)
+32	    }
+33	}
 ```
 
 这是输出：
@@ -139,7 +182,9 @@ Addr: 0x2101bb040
 当切片是 Dog 值的集合或 Dog 值的指针集合时，范围循环是相同的。
 
 ```go
-1	for _, dog := range dogs {2	    fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)3	}
+1	for _, dog := range dogs {
+2	    fmt.Printf("Name: %s Age: %d\n", dog.Name, dog.Age)
+3	}
 ```
 
 无论我们是否使用指针， Go 都会处理对 Dog 值的访问。这很棒，但有时会导致一些混乱。至少这对我来说开始的时候是这样的。
@@ -150,9 +195,52 @@ Addr: 0x2101bb040
 
 [http://ewencp.org/blog/golang-iterators/](http://ewencp.org/blog/golang-iterators/)
 
-
 ```go
-1	package main2	3	import (4	    "fmt"5	)6	7	type Dog struct {8	    Name string9	    Age int10	}11	12	type DogCollection struct {13	    Data []*Dog14	}15	16	func (this *DogCollection) Init() {17	    cloey := &Dog{"Cloey", 1}18	    ralph := &Dog{"Ralph", 5}19	    jackie := &Dog{"Jackie", 10}20	    bella := &Dog{"Bella", 2}21	    jamie := &Dog{"Jamie", 6}22	23	    this.Data = []*Dog{cloey, ralph, jackie, bella, jamie}24	}25	26	func (this *DogCollection) CollectionChannel() chan *Dog {27	    dataChannel := make(chan *Dog, len(this.Data))28	29	    for _, dog := range this.Data {30	        dataChannel <- dog31	    }32	33	    close(dataChannel)34	35	    return dataChannel36	}37	38	func main() {39	    dc := DogCollection{}40	    dc.Init()41	42	    for dog := range dc.CollectionChannel() {43	        fmt.Printf("Channel Name: %s\n", dog.Name)44	    }45	}
+1	package main
+2	
+3	import (
+4	    "fmt"
+5	)
+6	
+7	type Dog struct {
+8	    Name string
+9	    Age int
+10	}
+11	
+12	type DogCollection struct {
+13	    Data []*Dog
+14	}
+15	
+16	func (this *DogCollection) Init() {
+17	    cloey := &Dog{"Cloey", 1}
+18	    ralph := &Dog{"Ralph", 5}
+19	    jackie := &Dog{"Jackie", 10}
+20	    bella := &Dog{"Bella", 2}
+21	    jamie := &Dog{"Jamie", 6}
+22	
+23	    this.Data = []*Dog{cloey, ralph, jackie, bella, jamie}
+24	}
+25	
+26	func (this *DogCollection) CollectionChannel() chan *Dog {
+27	    dataChannel := make(chan *Dog, len(this.Data))
+28	
+29	    for _, dog := range this.Data {
+30	        dataChannel <- dog
+31	    }
+32	
+33	    close(dataChannel)
+34	
+35	    return dataChannel
+36	}
+37	
+38	func main() {
+39	    dc := DogCollection{}
+40	    dc.Init()
+41	
+42	    for dog := range dc.CollectionChannel() {
+43	        fmt.Printf("Channel Name: %s\n", dog.Name)
+44	    }
+45	}
 ```
 
 如果您运行该程序，您将获得以下输出：
@@ -178,4 +266,3 @@ via: https://www.ardanlabs.com/blog/2013/09/iterating-over-slices-in-go.html
 校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
