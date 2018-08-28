@@ -32,6 +32,7 @@ GCTT (Go Chinese Translation Team) 是 Go 中文网（https://studygolang.com) �
 
 * [GCTT 翻译流程（Part I-准备工作，获取任务)](https://www.bilibili.com/video/av29042507)
 * [GCTT 翻译流程（Part II-打开文章，翻译注意)](https://www.bilibili.com/video/av29292296)
+* [GCTT 翻译流程（Part III-提交任务，修改错误)](https://www.bilibili.com/video/av30494605)
 
 ## 历史
 
