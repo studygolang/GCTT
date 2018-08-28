@@ -1,14 +1,14 @@
 # Go 语言中的定时 routine 与优雅退出
 
-在我的 Outcast（译注：作者自己做的一款天气预告 App） 数据服务器中，有几个数据检索任务要用到不同的 Go routine 来运行, 每个 routine 在设定的时间间隔内唤醒。 其中最复杂的工作是下载雷达图像。 它复杂的原因在于：美国有 155个 雷达站，它们每 120 秒拍摄一张新照片， 我们要把所有的雷达图像拼接在一起形成一张大的拼接图。（译注：有点像我们用手机拍摄全景图片时，把多张边缘有重叠的图片拼接成一张大图片） 当 go routine 被唤醒去下载新图像时，它必须尽快为所有155个站点都执行这个操作。 如果不够及时的话，得到拼接图将不同步，每个雷达站重叠的边界部分会对不齐。
+在我的 Outcast（译注：作者自己做的一款天气预告 App） 数据服务器中，有几个数据检索任务要用到不同的 Go routine 来运行, 每个 routine 在设定的时间间隔内唤醒。 其中最复杂的工作是下载雷达图像。 它复杂的原因在于：美国有 155 个雷达站，它们每 120 秒拍摄一张新照片， 我们要把所有的雷达图像拼接在一起形成一张大的拼接图。（译注：有点像我们用手机拍摄全景图片时，把多张边缘有重叠的图片拼接成一张大图片） 当 go routine 被唤醒去下载新图像时，它必须尽快为所有 155 个站点都执行这个操作。 如果不够及时的话，得到拼接图将不同步，每个雷达站重叠的边界部分会对不齐。
 
-()[https://raw.githubusercontent.com/studygolang/gctt-images/master/Timer-Routines-And-Graceful-Shutdowns-In-Go/radar-img-1.png]
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Timer-Routines-And-Graceful-Shutdowns-In-Go/radar-img-1.png)
 
-左边的雷达图是坦帕湾雷达站在下午 4:51 的拍摄的，你可以看到，这个雷达站覆盖了佛罗里达州的大部分范围，事实上，这个雷达站的甚至涵盖了其它雷达站的范围，比如说迈阿密的。
+左边的雷达图是坦帕湾雷达站在下午 4:51 拍摄的，你可以看到，这个雷达站覆盖了佛罗里达州的大部分范围，事实上，这个雷达站甚至涵盖了其它雷达站的范围，比如说迈阿密的。
 
-右边的雷达图是迈阿密雷达站在下午 4:53 的拍摄的，跟右图存在了两分钟的差异，（我把这种情况称之为 glare）当我们把这两个雷达图铺叠在地图上的时候，你不会发现有什么不对的地方，但是，如果这两个图片之前的延迟不止几分钟的时候，我们裸眼就能看出有很大的区别。
+右边的雷达图是迈阿密雷达站在下午 4:53 拍摄的，跟右图存在了两分钟的差异，（我把这种情况称之为 glare）当我们把这两个雷达图铺叠在地图上的时候，你不会发现有什么不对的地方，但是，如果这两个图片之前的延迟不止几分钟的时候，我们裸眼就能看出有很大的区别。
 
-()[https://raw.githubusercontent.com/studygolang/gctt-images/master/Timer-Routines-And-Graceful-Shutdowns-In-Go/radar-img-2.png]
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Timer-Routines-And-Graceful-Shutdowns-In-Go/radar-img-2.png)
 
 蓝色是雷达的噪点，我们会把它给过滤掉，所以我们剩下绿色、红色和黄色的色块来表示真正的天气状况。上面的图片是在下午 4:46 下载并处理好的，你可以看到他们很接近，能够很好的拼接在一起。
 
@@ -136,7 +136,7 @@ wm.PerformTheWork()
 
 我们使用了 `select` 语句。这个语句在官方文档的解释在这里：
 
-[](http://golang.org/ref/spec#Select_statements)
+http://golang.org/ref/spec#Select_statements
 
 我们使用 `select` 语句来保证定时 routine 只有到了工作时间或者收到退出指令的时候才会被唤醒。`Select` 语句使得定时 routine 在所有通道都没有收到信号的时候阻塞。每次只有其中一个分支会执行，这让我们的代码保持同步。`select` 语句让我们用简洁的代码在多个 channel 间实现原子的、“routine 安全”的操作（只要我们把这几个 channel 都放在同一个 `select` 语句里面）。
 
@@ -180,7 +180,7 @@ func (wm *_WorkManager) PerformTheWork() {
 
 阅读下面的文章可以学习到怎么实现一个能够处理多个 go routine 的工作池，正如我上述的处理雷达图像的那个工作池一样：
 
-[](http://www.goinggo.net/2013/09/pool-go-routines-to-process-task.html)
+http://www.goinggo.net/2013/09/pool-go-routines-to-process-task.html
 
 ---
 
@@ -188,6 +188,6 @@ via: https://www.ardanlabs.com/blog/2013/09/timer-routines-and-graceful-shutdown
 
 作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
 译者：[Alex-liutao](https://github.com/Alex-liutao)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
