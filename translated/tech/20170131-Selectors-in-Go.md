@@ -1,10 +1,8 @@
 # Go 语言中的选择器
 
-在 go 语言中，表达式 `foo.bar` 可能表示两件事。
-如果 *foo* 是一个包名，那么表达式就是一个所谓的`限定标识符`，用来引用包 *foo* 中的导出的标识符。
-由于它只用来处理导出的标识符，*bar* 必须以大写字母开头(译注：如果首字母大写，则可以被其他的包访问；如果首字母小写，则只能在本包中使用）：
+在 go 语言中，表达式 `foo.bar` 可能表示两件事。如果 *foo* 是一个包名，那么表达式就是一个所谓的`限定标识符`，用来引用包 *foo* 中的导出的标识符。由于它只用来处理导出的标识符，*bar* 必须以大写字母开头(译注：如果首字母大写，则可以被其他的包访问；如果首字母小写，则只能在本包中使用）：
 
-```
+```go
 package foo
 import "fmt"
 func Foo() {
@@ -20,15 +18,11 @@ func main() {
 }
 ```
 
-这样的程序会工作正常。
-但是（译注：主函数）调用 `foo.bar()` 会在编译时出发错误-`cannot refer to unexported name foo.bar(译注：无法引用未导出的名称 foo.bar)`。
+这样的程序会工作正常。但是（译注：主函数）调用 `foo.bar()` 会在编译时出发错误-`cannot refer to unexported name foo.bar(译注：无法引用未导出的名称 foo.bar)`。
 
-如果 *foo* 不是 一个包名，那么 `foo.bar` 就是一个选择器表达式。
-它访问 *foo* 表达式的字段或方法。
-点之后的标识符被称为 *selector*（译注：选择器）。关于首字母大写的规则并不适用于这里。
-它允许从定义了 *foo* 类型的包中选择未导出的字段或方法：
+如果 *foo* 不是 一个包名，那么 `foo.bar` 就是一个选择器表达式。它访问 *foo* 表达式的字段或方法。点之后的标识符被称为 *selector*（译注：选择器）。关于首字母大写的规则并不适用于这里。它允许从定义了 *foo* 类型的包中选择未导出的字段或方法：
 
-```
+```go
 package main
 import "fmt"
 type T struct {
@@ -43,11 +37,9 @@ func main() {
 
 ## 选择器的深度
 
-语言规范定义了选择器的 *depth*（译注：深度）。
-让我们来看看它是如何工作的吧。
-选择器表达式 `foo.bar` 可以表示定义在 *foo* 类型的字段或方法或者定义在 *foo* 类型中的匿名字段：
+语言规范定义了选择器的 *depth*（译注：深度）。让我们来看看它是如何工作的吧。选择器表达式 `foo.bar` 可以表示定义在 *foo* 类型的字段或方法或者定义在 *foo* 类型中的匿名字段：
 
-```
+```go
 type E struct {
     name string
 }
@@ -70,22 +62,18 @@ func main() {
 }
 ```
 
-在上面的[代码](https://play.golang.org/p/GWbEzILDdg)中，我们可以看到可以调用方法或者访问定义在嵌入字段中字段。
-字段 t.*name* 和方法 t.*SayHi* 都被提升了，这是因为类型 *E* 嵌套在 *T* 的定义中：
+在上面的[代码](https://play.golang.org/p/GWbEzILDdg)中，我们可以看到可以调用方法或者访问定义在嵌入字段中字段。字段 t.*name* 和方法 t.*SayHi* 都被提升了，这是因为类型 *E* 嵌套在 *T* 的定义中：
 
-```
+```go
 type T struct {
     age byte
     E
 }
 ```
 
-定义在类型 *T* 中表示字段或类型的选择器深度为 0（译注：表示在类型 T 中定义的字段或方法的选择器的深度为 0）。
-如果字段或方法定义在嵌入（也就是 匿名）字段，那么深度等于匿名字段遍历这样字段或方法的数量。
-在上一个片段中，*age*字段深度是 0，因为它在 *T* 中声明，但是因为 *E* 是放在 *T* 中，*name* 或者 *SayHi* 的深度是 1.
-让我们来看看更复杂的[例子](https://play.golang.org/p/8-8xi_JpaU)：
+定义在类型 *T* 中表示字段或类型的选择器深度为 0（译注：表示在类型 T 中定义的字段或方法的选择器的深度为 0）。如果字段或方法定义在嵌入（也就是 匿名）字段，那么深度等于匿名字段遍历这样字段或方法的数量。在上一个片段中，*age*字段深度是 0，因为它在 *T* 中声明，但是因为 *E* 是放在 *T* 中，*name* 或者 *SayHi* 的深度是 1.让我们来看看更复杂的[例子](https://play.golang.org/p/8-8xi_JpaU)：
 
-```
+```go
 package main
 import "fmt"
 type A struct {
@@ -117,11 +105,9 @@ go 语言中有关哪些选择器有效，哪些无效有着明确规则。让�
 
 ### 唯一性+最浅深度
 
-当 *T* 不是指针或者接口类型，第一条规则适用于类型 *T* 与 **T*。
-选择器 *foo.bar* 表示字段和方法在定义了 *bar* 的类型 *T* 中的最浅深度。
-在这样的深度,恰好可以定义一个（唯一的）这样的字段或者方法（[源代码](https://play.golang.org/p/mGtRxnrAQR)）：
+当 *T* 不是指针或者接口类型，第一条规则适用于类型 *T* 与 **T*。选择器 *foo.bar* 表示字段和方法在定义了 *bar* 的类型 *T* 中的最浅深度。在这样的深度,恰好可以定义一个（唯一的）这样的字段或者方法（[源代码](https://play.golang.org/p/mGtRxnrAQR)）：
 
-```
+```go
 type A struct {
     B
     C
@@ -159,7 +145,7 @@ B   C
 
 当被提升的字段或方法模糊时，Gopher仍然可以使用完整的选择器。
 
-```
+```go
 fmt.Println(a.B.name)   // b
 fmt.Println(a.C.D.name) // d
 fmt.Println(a.C.name)   // d
@@ -169,7 +155,7 @@ fmt.Println(a.C.name)   // d
 
 ### 空指针
 
-```
+```go
 package main
 import "fmt"
 type T struct {
@@ -189,7 +175,7 @@ func main() {
 
 如果 *foo* 是一个接口类型值，那么 *foo.bar* 实际上是 *foo* 的动态值的一个方法：
 
-```
+```go
 type I interface {
     m()
 }
@@ -208,7 +194,7 @@ func main() {
 
 如果 *foo* 为 *nil*，那么它将会导致一个运行时错误：
 
-```
+```go
 type I interface {
     f()
 }
@@ -224,12 +210,12 @@ func main() {
 
 除了到现在为止关于有效选择器的描述外，这还有一个场景：假设这里有一个命名指针类型：
 
-```
+```go
 type P *T
 ```
 
 类型 *P* 的[方法集](https://golang.org/ref/spec#Method_sets)不包含类型 *T* 的任何方法。如果有类型 *P* 的变量，则无法调用任何 *T* 的方法。但是，规范允许选择类型 *T*的字段（非方法）（[源代码](https://play.golang.org/p/7wJI4F34ij)）：
-```
+```go
 type T struct {
     num int
 }
@@ -247,14 +233,18 @@ func main() {
 
 ## 在hood下
 
+
+
 如果你对选择器朝朝和验证的实际实现感兴趣的话，请查看 [selector](https://github.com/golang/go/blob/6bdb0c11c73ecf2337918d784c54f9dda2207ca7/src/go/types/call.go#L341) 和 [LookupFieldOrMethod](https://github.com/golang/go/blob/6bdb0c11c73ecf2337918d784c54f9dda2207ca7/src/go/types/lookup.go) 函数。[这里](https://play.golang.org/p/hjGWpBor2l)是最后一个使用的例子。
 
 <div style="text-align:center;font-weight:800;">.  &nbsp&nbsp . &nbsp&nbsp .</div>
 
-via: https://medium.com/golangspec/selectors-in-go-c53a016702cf
+---
+
+via：https://medium.com/golangspec/selectors-in-go-c53a016702cf
 
 作者：[Michał Łowicki](https://medium.com/@mlowicki)
 译者：[cureking](https://github.com/cureking)
 校对：[校对者ID](https://github.com/校对者ID)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
