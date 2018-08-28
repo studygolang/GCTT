@@ -1,9 +1,11 @@
-# Goroutine 的同步（第二部分）
-Channel通信
+首发于：https://studygolang.com/articles/14478
+
+# goroutine 的同步（第二部分）
+> Channel 通信
 
 第一部分介绍了发送与接收操作之间最直观的顺序关系：
 
->*向一个 Channel 中发送数据先于接收数据。*
+> *向一个 Channel 中发送数据先于接收数据。*
 
 于是，我们能够控制分布于两个 goroutine 中的操作的顺序。
 
@@ -35,7 +37,7 @@ wg.Wait()
 
 ## 发送 ↔ 接收
 
-![image](https://cdn-images-1.medium.com/max/1600/1*4__lB_g3MbX8-mtmRvaXEg.jpeg)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/sync-goroutine/part2-1.jpeg)
 
 除了上述规则，还有一条规则来补充它，这条规则说接收发生于发送完成之前：
 
@@ -86,7 +88,7 @@ go func() {
 
 ## 关闭 channel
 
-![image](https://cdn-images-1.medium.com/max/1600/1*IgK32r3hJwVm_kQZ9CpkRQ.jpeg)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/sync-goroutine/part2-2.jpeg)
 
 当 channel 被关闭时，接收操作会立即返回 channel 中的数据类型的[零值](https://golang.org/ref/spec#The_zero_value)。
 
@@ -164,16 +166,16 @@ wg.Wait()
 
 ## 资源
 - [goroutine 的同步（第一部分）](https://medium.com/golangspec/synchronized-goroutines-part-i-4fbcdd64a4ec)
->Suppose that Go program starts two goroutines:
-<br>medium.com
+> Suppose that Go program starts two goroutines:
+> medium.com
 
 - [go 的内存模型 —— go 编程语言](https://golang.org/ref/mem)
 >The Go memory model specifies the conditions under which reads of a variable in one goroutine can be guaranteed to…
-<br>golang.org
+> golang.org
 
 - [go 语言规范 —— go 编程语言](https://golang.org/ref/spec)
 >Go is a general-purpose language designed with systems programming in mind. It is strongly typed and garbage-collected…
-<br>golang.org
+> golang.org
 
 *[保留部分版权](http://creativecommons.org/licenses/by/4.0/)*
 
@@ -193,6 +195,6 @@ via: https://medium.com/golangspec/synchronized-goroutines-part-ii-b1130c815c9d
 
 作者：[Michał Łowicki](https://medium.com/@mlowicki)
 译者：[krystollia](https://github.com/krystollia)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
