@@ -9,9 +9,9 @@
 本教程分为如下小节。
 
 - 将整个文件读取到内存
-    - 使用绝对文件路径
-    - 使用命令行标记来传递文件路径
-    - 将文件绑定在二进制文件中
+  - 使用绝对文件路径
+  - 使用命令行标记来传递文件路径
+  - 将文件绑定在二进制文件中
 - 分块读取文件
 - 逐行读取文件
 
@@ -22,7 +22,7 @@
 让我们在 Go 程序所在的目录中，读取一个文件。我已经在 GOROOT 中创建了文件夹，在该文件夹内部，有一个文本文件 `test.txt`，我们会使用 Go 程序 `filehandling.go` 来读取它。`test.txt` 包含文本 “Hello World. Welcome to file handling in Go”。我的文件夹结构如下：
 
 ```
-src  
+src
     filehandling
                 filehandling.go
                 test.txt
@@ -33,12 +33,12 @@ src
 ```go
 package main
 
-import (  
+import (
     "fmt"
     "io/ioutil"
 )
 
-func main() {  
+func main() {
     data, err := ioutil.ReadFile("test.txt")
     if err != nil {
         fmt.Println("File reading error", err)
@@ -67,13 +67,13 @@ $ workspacepath/bin/filehandling
 ```bash
 > cd C:\Users\naveen.r\go\src\filehandling
 > go install filehandling
-> workspacepath\bin\filehandling.exe 
+> workspacepath\bin\filehandling.exe
 ```
 
 该程序会输出：
 
 ```bas
-Contents of file: Hello World. Welcome to file handling in Go.  
+Contents of file: Hello World. Welcome to file handling in Go.
 ```
 
 如果在其他位置运行这个程序（比如 `/home/userdirectory`），会打印下面的错误。
@@ -99,12 +99,12 @@ File reading error open test.txt: The system cannot find the file specified.
 ```go
 package main
 
-import (  
+import (
     "fmt"
     "io/ioutil"
 )
 
-func main() {  
+func main() {
     data, err := ioutil.ReadFile("/home/naveen/go/src/filehandling/test.txt")
     if err != nil {
         fmt.Println("File reading error", err)
@@ -137,13 +137,13 @@ $ workspacepath/bin/filehandling
 让我们来编写程序，从命令行读取文件名。将 `filehandling.go` 的内容替换如下：
 
 ```go
-package main  
-import (  
+package main
+import ( 
     "flag"
     "fmt"
 )
 
-func main() {  
+func main() {
     fptr := flag.String("fpath", "test.txt", "file path to read from")
     flag.Parse()
     fmt.Println("value of fpath is", *fptr)
@@ -159,7 +159,7 @@ func main() {
 使用下面命令运行程序。
 
 ```bash
-wrkspacepath/bin/filehandling -fpath=/path-of-file/test.txt  
+wrkspacepath/bin/filehandling -fpath=/path-of-file/test.txt
 ```
 
 我们传入 `/path-of-file/test.txt`，赋值给了 `fpath` 标记。
@@ -175,14 +175,14 @@ value of fpath is /path-of-file/test.txt
 现在我们知道如何从命令行读取文件路径了，让我们继续完成我们的文件读取程序。
 
 ```go
-package main  
-import (  
+package main
+import (
     "flag"
     "fmt"
     "io/ioutil"
 )
 
-func main() {  
+func main() {
     fptr := flag.String("fpath", "test.txt", "file path to read from")
     flag.Parse()
     data, err := ioutil.ReadFile(*fptr)
@@ -197,13 +197,13 @@ func main() {
 在上述程序里，命令行传入文件路径，程序读取了该文件的内容。使用下面命令运行该程序。
 
 ```bash
-wrkspacepath/bin/filehandling -fpath=/path-of-file/test.txt  
+wrkspacepath/bin/filehandling -fpath=/path-of-file/test.txt
 ```
 
 请将 `/path-of-file/` 替换为 `test.txt` 的真实路径。该程序将打印：
 
 ```txt
-Contents of file: Hello World. Welcome to file handling in Go.  
+Contents of file: Hello World. Welcome to file handling in Go.
 ```
 
 ### 3. 将文件绑定在二进制文件中
@@ -217,7 +217,7 @@ Contents of file: Hello World. Welcome to file handling in Go.
 在命令提示符中输入下面命令，安装 `packr` 包。
 
 ```bash
-go get -u github.com/gobuffalo/packr/... 
+go get -u github.com/gobuffalo/packr/...
 ```
 
 `packr` 会把静态文件（例如 `.txt` 文件）转换为 `.go` 文件，接下来，`.go` 文件会直接嵌入到二进制文件中。`packer` 非常智能，在开发过程中，可以从磁盘而非二进制文件中获取静态文件。在开发过程中，当仅仅静态文件变化时，可以不必重新编译。
@@ -227,13 +227,13 @@ go get -u github.com/gobuffalo/packr/...
 ```go
 package main
 
-import (  
+import (
     "fmt"
 
     "github.com/gobuffalo/packr"
 )
 
-func main() {  
+func main() {
     box := packr.NewBox("../filehandling")
     data := box.String("test.txt")
     fmt.Println("Contents of file:", data)
@@ -247,8 +247,8 @@ func main() {
 使用下面命令来运行程序。
 
 ```bash
-go install filehandling  
-workspacepath/bin/filehandling  
+go install filehandling
+workspacepath/bin/filehandling
 ```
 
 该命令可以在其他位置运行。`packr` 很聪明，可以获取传递给 `NewBox` 命令的目录的绝对路径。
@@ -256,7 +256,7 @@ workspacepath/bin/filehandling
 该程序会输出：
 
 ```txt
-Contents of file: Hello World. Welcome to file handling in Go. 
+Contents of file: Hello World. Welcome to file handling in Go.
 ```
 
 你可以试着改变 `test.txt` 的内容，然后再运行 `filehandling`。可以看到，无需再次编译，程序打印出了 `test.txt` 的更新内容。完美！:)
@@ -266,19 +266,19 @@ Contents of file: Hello World. Welcome to file handling in Go.
 运行下面的命令：
 
 ```bash
-packr install -v filehandling  
+packr install -v filehandling
 ```
 
 它会打印：
 
 ```bash
-building box ../filehandling  
-packing file filehandling.go  
-packed file filehandling.go  
-packing file test.txt  
-packed file test.txt  
-built box ../filehandling with ["filehandling.go" "test.txt"]  
-filehandling  
+building box ../filehandling
+packing file filehandling.go
+packed file filehandling.go
+packing file test.txt
+packed file test.txt
+built box ../filehandling with ["filehandling.go" "test.txt"]
+filehandling
 ```
 
 该命令将静态文件绑定到了二进制文件中。
@@ -296,7 +296,7 @@ filehandling
 ```go
 package main
 
-import (  
+import (
     "bufio"
     "flag"
     "fmt"
@@ -304,7 +304,7 @@ import (
     "os"
 )
 
-func main() {  
+func main() {
     fptr := flag.String("fpath", "test.txt", "file path to read from")
     flag.Parse()
 
@@ -348,22 +348,22 @@ $ wrkspacepath/bin/filehandling -fpath=/path-of-file/test.txt
 会得到以下输出：
 
 ```bash
-Hel  
-lo  
-Wor  
-ld.  
+Hel
+lo
+Wor
+ld.
  We
-lco  
-me  
-to  
-fil  
-e h  
-and  
-lin  
-g i  
-n G  
-o.  
-Error reading file: EOF  
+lco
+me
+to
+fil
+e h
+and
+lin
+g i
+n G
+o.
+Error reading file: EOF
 ```
 
 ## 逐行读取文件
@@ -373,9 +373,9 @@ Error reading file: EOF
 请将 `test.txt` 替换为以下内容。
 
 ```txt
-Hello World. Welcome to file handling in Go.  
-This is the second line of the file.  
-We have reached the end of the file.  
+Hello World. Welcome to file handling in Go.
+This is the second line of the file.
+We have reached the end of the file.
 ```
 
 逐行读取文件涉及到以下步骤。
@@ -389,7 +389,7 @@ We have reached the end of the file.
 ```go
 package main
 
-import (  
+import (
     "bufio"
     "flag"
     "fmt"
@@ -397,7 +397,7 @@ import (
     "os"
 )
 
-func main() {  
+func main() {
     fptr := flag.String("fpath", "test.txt", "file path to read from")
     flag.Parse()
 
@@ -435,9 +435,9 @@ $ workspacepath/bin/filehandling -fpath=/path-of-file/test.txt
 程序会输出：
 
 ```bash
-Hello World. Welcome to file handling in Go.  
-This is the second line of the file.  
-We have reached the end of the file.  
+Hello World. Welcome to file handling in Go.
+This is the second line of the file.
+We have reached the end of the file.
 ```
 
 本教程到此结束。希望你能喜欢，祝你愉快。
