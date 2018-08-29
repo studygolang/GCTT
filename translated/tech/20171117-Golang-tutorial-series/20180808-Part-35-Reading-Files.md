@@ -138,7 +138,7 @@ $ workspacepath/bin/filehandling
 
 ```go
 package main
-import ( 
+import (
     "flag"
     "fmt"
 )
