@@ -19,7 +19,7 @@
 
 将整个文件读取到内存是最基本的文件操作之一。这需要使用 [`ioutil`](https://golang.org/pkg/io/ioutil/) 包中的 [`ReadFile`](https://golang.org/pkg/io/ioutil/#ReadFile) 函数。
 
-让我们在 Go 程序所在的目录中，读取一个文件。我已经在 GOROOT 中创建了文件夹，在该文件夹内部，有一个文本文件 `test.txt`，我们会使用 Go 程序 `filehandling.go` 来读取它。`test.txt` 包含文本 “Hello World. Welcome to file handling in Go”。我的文件夹结构如下：
+让我们在 Go 程序所在的目录中，读取一个文件。我已经在 GOPATH（译注：原文是 GOROOT，应该是笔误）中创建了文件夹，在该文件夹内部，有一个文本文件 `test.txt`，我们会使用 Go 程序 `filehandling.go` 来读取它。`test.txt` 包含文本 “Hello World. Welcome to file handling in Go”。我的文件夹结构如下：
 
 ```
 src
@@ -54,7 +54,7 @@ func main() {
 
 请在 **test.txt** 所在的位置运行该程序。
 
-例如，对于 **linux/mac**，如果 **test.txt** 位于 **home/naveen/go/src/filehandling**，可以使用下列步骤来运行程序。
+例如，对于 **linux/mac**，如果 **test.txt** 位于 **/home/naveen/go/src/filehandling**，可以使用下列步骤来运行程序。
 
 ```bash
 $ cd /home/naveen/go/src/filehandling/
@@ -450,6 +450,6 @@ via: https://golangbot.com/read-files/
 
 作者：[Naveen Ramanathan](https://golangbot.com/about/)
 译者：[Noluye](https://github.com/Noluye)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
