@@ -164,7 +164,7 @@ fmt.Errorf("Something went wrong") 应该写成 fmt.Errorf("something went wrong
 
 在 Go 编程中最好用短的变量名，尤其是那些作用域比较有限的局部变量
 
-用 `c` 而不是 `lineCount`  
+用 `c` 而不是 `lineCount`
 
 用 `i` 而不是 `sliceIndex`
 
@@ -223,7 +223,7 @@ import (
    “io”
    “log”
 
-  
+
 
  “golang.org/x/net/websocket”
 )
@@ -245,7 +245,6 @@ import (
 ```
 
 这样的情况下，测试代码不能放在 foo 包中，因为它引入了 bar/testutil包，而它导入了 foo。所以我们用点导入 的形式让文件假装是包的一部分，而实际上它并不是。除了这个使用情形外，最好不要用点导入。因为它会让读者阅读代码时更加困难，因为很难确定像 Quux 这样的名字是当前包的顶层声明还是引入的包。
-
 
 ## 11、注释代码
 
@@ -280,7 +279,7 @@ func (p *Author) TextElem() (elems []Elem) {
 // Request represents a request to run a command.
 type Request struct { …
 
- 
+
 
 // Encode writes the JSON encoding of req to w.
 func Encode(w io.Writer, req *Request) { … and so on.
