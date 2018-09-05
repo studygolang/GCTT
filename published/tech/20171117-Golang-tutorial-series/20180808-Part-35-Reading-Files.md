@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/14669
+
 # 读取文件
 
-![reading files](https://golangbot.com/content/images/2018/07/golang-read-files.png)
+![reading files](https://raw.githubusercontent.com/studygolang/gctt-images/master/golang-series/golang-read-files.png)
 
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 35 篇。
 
@@ -24,8 +26,8 @@
 ```
 src
     filehandling
-                filehandling.go
-                test.txt
+        filehandling.go
+        test.txt
 ```
 
 接下来我们来看看代码。
@@ -372,7 +374,7 @@ Error reading file: EOF
 
 请将 `test.txt` 替换为以下内容。
 
-```txt
+```
 Hello World. Welcome to file handling in Go.
 This is the second line of the file.
 We have reached the end of the file.
