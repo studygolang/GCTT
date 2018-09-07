@@ -1,4 +1,6 @@
-# Go 语言中的定时 routine 与优雅退出
+首发于：https://studygolang.com/articles/14714
+
+# Go 语言中的 Timer Routines 与优雅退出
 
 在我的 Outcast（译注：作者自己做的一款天气预告 App） 数据服务器中，有几个数据检索任务要用到不同的 Go routine 来运行, 每个 routine 在设定的时间间隔内唤醒。 其中最复杂的工作是下载雷达图像。 它复杂的原因在于：美国有 155 个雷达站，它们每 120 秒拍摄一张新照片， 我们要把所有的雷达图像拼接在一起形成一张大的拼接图。（译注：有点像我们用手机拍摄全景图片时，把多张边缘有重叠的图片拼接成一张大图片） 当 go routine 被唤醒去下载新图像时，它必须尽快为所有 155 个站点都执行这个操作。 如果不够及时的话，得到拼接图将不同步，每个雷达站重叠的边界部分会对不齐。
 
@@ -180,7 +182,7 @@ func (wm *_WorkManager) PerformTheWork() {
 
 阅读下面的文章可以学习到怎么实现一个能够处理多个 go routine 的工作池，正如我上述的处理雷达图像的那个工作池一样：
 
-http://www.goinggo.net/2013/09/pool-go-routines-to-process-task.html
+https://studygolang.com/articles/14481
 
 ---
 
