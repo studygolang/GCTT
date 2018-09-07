@@ -1,10 +1,12 @@
+首发于：https://studygolang.com/articles/14713
+
 # Go 迭代切片 （Iterating Over Slices In Go）
 
 切片在我的代码中随处可用。如果我正在使用 MongoDB 中的数据，它将存储在切片中。如果我需要在运行操作后跟踪一系列问题，它将存储在一个切片中。如果你还不了解切片是如何工作的，或者像我在开始时一样避免使用切片，请阅读下面这两篇文章以了解更多信息。
 
-[http://www.goinggo.net/2013/08/understanding-slices-in-go-programming.html](http://www.goinggo.net/2013/08/understanding-slices-in-go-programming.html)
+[理解 Go 中的 slice](http://www.goinggo.net/2013/08/understanding-slices-in-go-programming.html)
 
-[http://www.goinggo.net/2013/08/collections-of-unknown-length-in-go.html](http://www.goinggo.net/2013/08/collections-of-unknown-length-in-go.html)
+[Go 中不定长度集合](https://studygolang.com/articles/14132)
 
 我在编码时经常问自己的一个问题是，“我想使用指向这个值的指针还是我想制作一个副本？” 虽然 Go 可以用作函数式编程语言，但它本质上却是一种命令式编程语言。这有什么不同？
 
@@ -76,7 +78,7 @@ Addr: 0x2101bc060
 
 那么为什么狗的值在循环内是不同的，为什么同一个地址出现两次呢？这一切都与 Go 的值传递的事实有关。在这个代码示例中，我们实际上在内存中创建了每个 Dog 的2个额外副本。
 
-![](https://github.com/studygolang/GCTT/blob/master/iterating-over-slices-in-go/iterating-over-slices-in-go.png?raw=true)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/iterating-over-slices-in-go/iterating-over-slices-in-go.png)
 
 每个 Dog 的初始存在是使用复合字段创建的：
 
