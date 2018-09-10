@@ -196,7 +196,7 @@ Writer接口在标准库中到处都有被用到，比如MultiWriter、TeeReader
 简单鼓励下还是大喝采，根据你对这篇文章的喜欢程度鼓掌吧。
 ---
 via: https://medium.com/golangspec/interfaces-in-go-part-iii-61f5e7c52fb5
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
-译者：[译者ID](https://github.com/xmge)
-校对：[校对者ID](https://github.com/校对者ID)
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
+作者：[Michał Łowicki](https://medium.com/@mlowicki)  
+译者：[译者ID](https://github.com/xmge)   
+校对：[校对者ID](https://github.com/校对者ID)   
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出   
