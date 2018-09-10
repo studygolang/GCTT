@@ -7,7 +7,6 @@
 
 ## 方法和接口
 Go 是有方法的概念的。可以通过调用类型T中的方法来获得一个函数，此函数可以从类型T中额外地获得明确的参数。
-
 ```go
 type T struct {
     name string
@@ -57,7 +56,7 @@ func main() {
     t2 := &T{"bar"}
     t2.SayHi() // Hi, my name is bar
 ```
-方法被添加了一个接受类型（上面的代码片段的接受类型是\*T）。这个方法可以被类型为\*T或者T的调用在这里顺便提一下，接口类型是不可以作为函数的接受者：
+方法被添加了一个接受类型（上面的代码片段的接受类型是`*T`）。这个方法可以被类型为`*T`或者T的调用在这里顺便提一下，接口类型是不可以作为函数的接受者：
 
 ``` golang
 type I interface {}
@@ -86,7 +85,7 @@ func main() {
     fmt.Println(i.(*T2).field1) // barbar
 }
 ```
-在这个实例中，类型\*T2实现了接口I.被\*T1实现的方法M作为了T2的一个内置的字段。在过去的文章里有更多关于字段和方法的详细介绍。
+在这个实例中，类型\*T2实现了接口I。被`*T1实现的方法M作为了T2的一个内置的字段。在过去的文章里有更多关于字段和方法的详细介绍。
 
 ## 接口类型作为map中的key或者value
 map 是一个由key-value组成的数据结构。(在go1.8之前，map底层是通过哈希表实现的)
@@ -193,16 +192,11 @@ Writer接口在标准库中到处都有被用到，比如MultiWriter、TeeReader
 *[Software Development](https://medium.com/tag/software-development?source=post)*
 *[Education](https://medium.com/tag/education?source=post)*
 *[Polymorphism](https://medium.com/tag/polymorphism?source=post)*
-
 **喜欢读吗？给 Michał Łowicki 一些掌声吧。**
-
 简单鼓励下还是大喝采，根据你对这篇文章的喜欢程度鼓掌吧。
 ---
-
 via: https://medium.com/golangspec/interfaces-in-go-part-iii-61f5e7c52fb5
-
 作者：[Michał Łowicki](https://medium.com/@mlowicki)
 译者：[译者ID](https://github.com/xmge)
 校对：[校对者ID](https://github.com/校对者ID)
-
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
