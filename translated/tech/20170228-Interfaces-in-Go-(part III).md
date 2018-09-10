@@ -192,7 +192,9 @@ Writer接口在标准库中到处都有被用到，比如MultiWriter、TeeReader
 *[Software Development](https://medium.com/tag/software-development?source=post)*
 *[Education](https://medium.com/tag/education?source=post)*
 *[Polymorphism](https://medium.com/tag/polymorphism?source=post)*
+
 **喜欢读吗？给 Michał Łowicki 一些掌声吧。**
+
 简单鼓励下还是大喝采，根据你对这篇文章的喜欢程度鼓掌吧。
 
 ----------------
