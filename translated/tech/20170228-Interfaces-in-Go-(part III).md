@@ -6,9 +6,7 @@
 接口类型的值作为map中的key,或者作为内置字段。
 
 ## 方法和接口
-Go 是有方法的概念的。
-可以通过调用类型T中的方法来获得一个函数，
-此函数可以从类型T中额外地获得明确的参数。
+Go 是有方法的概念的。可以通过调用类型T中的方法来获得一个函数，此函数可以从类型T中额外地获得明确的参数。
 
 ```go
 type T struct {
@@ -25,13 +23,8 @@ func main() {
     f(t) // Hi, my name is foo
 }
 ```
-
 golang语言规范同样允许接口类型使用方法：
->在一个接口类型中，通过方法来获取函数是符合规范的。
-从中获得的函数拥有一个明确的接受者。
-
-让我们来看一个例子：
-
+>在一个接口类型中，通过方法来获取函数是符合规范的。从中获得的函数拥有一个明确的接受者。让我们来看一个例子：
 ``` go
 type I interface {
     M(name string)
@@ -48,12 +41,9 @@ func main() {
     f(i, "bar")
     fmt.Println(i.(*T).name) // bar
 }
-
 ```
-
 ## 接口作为接收者
 Go允许定义方法 —— 接受了特定类型的函数：
-
 ``` go
 type T struct {
     name string
@@ -67,22 +57,15 @@ func main() {
     t2 := &T{"bar"}
     t2.SayHi() // Hi, my name is bar
 ```
-
-方法被添加了一个接受类型（上面的代码片段的接受类型是\*T）。
-这个方法可以被类型为\*T或者T的调用
-在这里顺便提一下，接口类型是不可以作为函数的接受者：
+方法被添加了一个接受类型（上面的代码片段的接受类型是\*T）。这个方法可以被类型为\*T或者T的调用在这里顺便提一下，接口类型是不可以作为函数的接受者：
 
 ``` golang
 type I interface {}
 func (I) M() {}
 ```
-
-这段代码将抛出一个编译期错误`invalid receiver type I (I is an interface type)`。
-在第一部分和第二部分中有更多的方法进行介绍。
-
+这段代码将抛出一个编译期错误`invalid receiver type I (I is an interface type)`。在第一部分和第二部分中有更多的方法进行介绍。
 ## 接口中“继承"
 结构体的内嵌字段使其实现了接口的方法，于是这个这个结构体继承这个接口
-
 ``` go
 type T1 struct {
     field1 string
@@ -103,14 +86,10 @@ func main() {
     fmt.Println(i.(*T2).field1) // barbar
 }
 ```
-
-在这个实例中，类型\*T2实现了接口I.
-被\*T1实现的方法M作为了T2的一个内置的字段。
-在过去的文章里有更多关于字段和方法的详细介绍。
+在这个实例中，类型\*T2实现了接口I.被\*T1实现的方法M作为了T2的一个内置的字段。在过去的文章里有更多关于字段和方法的详细介绍。
 
 ## 接口类型作为map中的key或者value
 map 是一个由key-value组成的数据结构。(在go1.8之前，map底层是通过哈希表实现的)
-
 ```go
 counters := make(map[string]int64)
 counters["foo"] = 1
@@ -127,9 +106,7 @@ for key, value := range counters {
     fmt.Printf("%s: %v\n", key, value) // order is randomized!
 }
 ```
-
 接口类型的值可以作为map中的key或者value来使用：
-
 ```go
 
 type T1 struct {
@@ -152,19 +129,15 @@ func main() {
     fmt.Println(m) // map[{foo}:1 {bar}:2]
 }
 ```
-
 ## 无所不在的接口
 ### error
 go中内置的error是一个接口类型：
-
 ```go
 type error interface {
 	Error() string
 }
 ```
-
 任何类型实现了Error方法，此方法没有参数且返回一个string类型的值，那么这个类型就实现了error接口：
-
 ```go
 
 import "fmt"
@@ -181,14 +154,11 @@ func main() {
     fmt.Printf("%v\n", f()) // error: foo
 }
 ```
-
 ### io.Writer
 io.Writer接口仅仅含有一个方法 —— Write:
-
 ``` go
 Write(p []byte) (n int, err error)
 ```
-
 如果有任何异常发生，返回的error就将不会是nil。
 error接口在前一节同样做了描述。
 Writer接口在标准库中到处都有被用到，比如MultiWriter、TeeReader、net/http，还有很多其他用到的地方。
@@ -227,7 +197,6 @@ Writer接口在标准库中到处都有被用到，比如MultiWriter、TeeReader
 **喜欢读吗？给 Michał Łowicki 一些掌声吧。**
 
 简单鼓励下还是大喝采，根据你对这篇文章的喜欢程度鼓掌吧。
-
 ---
 
 via: https://medium.com/golangspec/interfaces-in-go-part-iii-61f5e7c52fb5
