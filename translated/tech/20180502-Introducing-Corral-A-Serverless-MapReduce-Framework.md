@@ -114,12 +114,12 @@ Corroal 让我最兴奋的一点是，它能够自我部署到 AWS Lambda。我�
 但是，如果您的函数耗尽内存或时间，您看到的是这样：
 
 ```
-REPORT RequestId: 16e55aa5-4a87-11e8-9c63-3f70efb9da7e  Duration: 1059.94 ms    Billed Duration: 1100 ms Memory Size: 1500 MB   Max Memory Used: 1500 MB   
+REPORT RequestId: 16e55aa5-4a87-11e8-9c63-3f70efb9da7e  Duration: 1059.94 ms    Billed Duration: 1100 ms Memory Size: 1500 MB Max Memory Used: 1500 MB
 ```
 
-在本地，像 [pprof](https://golang.org/pkg/runtime/pprof/) 这样的工具非常适合了解内存泄露的来源。但在 Lambda 你就没那么好运了。 
+在本地，像 [pprof](https://golang.org/pkg/runtime/pprof/) 这样的工具非常适合了解内存泄露的来源。但在 Lambda 你就没那么好运了。
 
-在 corral 早期的版本中，我花了几个小时追踪由 [s3gof3r](https://github.com/rlmcpherson/s3gof3r) 引起的内存泄露。由于 [Lambda 容器](https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/)可以重复使用，即使很小的内存泄露也会导致最终的故障。换句话说，内存使用在调用中持续存在——漏洞抽象（没有双关语）。 
+在 corral 早期的版本中，我花了几个小时追踪由 [s3gof3r](https://github.com/rlmcpherson/s3gof3r) 引起的内存泄露。由于 [Lambda 容器](https://aws.amazon.com/blogs/compute/container-reuse-in-lambda/)可以重复使用，即使很小的内存泄露也会导致最终的故障。换句话说，内存使用在调用中持续存在——漏洞抽象（没有双关语）。
 
 能看到为 AWS Lambda 的分析工具真是太棒了，特别是因为 Golang 是一个对分析非常容易的运行环境。
 
