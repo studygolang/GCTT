@@ -156,3 +156,13 @@ Amplab 基准测试可测高达大约 125GB 的输入数据。我很好奇用大
 就个人而言，我发现这个项目对工作相当有益。构建 MapReduce 系统的在线资源要少于使用它的，因此有一些实现细节需要解决。
 
 随意在 [corral 库](https://github.com/bcongdon/corral)中提出问题。我很想知道这个项目是否有足够上的市场来证明有必要持续发展。:smile:
+
+----------------
+
+via: https://benjamincongdon.me/blog/2018/05/02/Introducing-Corral-A-Serverless-MapReduce-Framework/
+
+作者：[Benjamin Congdon](https://benjamincongdon.me/)
+译者：[themoonbear](https://github.com/themoonbear)
+校对：[polaris1119](https://github.com/polaris1119)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
