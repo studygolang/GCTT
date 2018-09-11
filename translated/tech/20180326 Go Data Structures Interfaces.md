@@ -72,8 +72,6 @@ if 语句中的 ok 查看 any 变量是否可以转化为 Stringer 类型 (包�
 其实也不需要完全实现 Stringer 类，运行时可以看到 Binary 有一个 String 方法，所以就人为它实现了 Stringer，即使 Binary 的作者从来没有听过 Stringer。
 这些例子表明，即使在编译时检查所有隐式转换，显式的 interface-to-interface 的转换也可以在运行时通过查询方法集实现。[《Effective Go》](http://golang.org/doc/effective_go.htm)中有更多关于如何使用接口的详细信息和示例。
 
-
-
 ## Interface的值
 
 带有方法的语言通常会有两种选择：
@@ -85,12 +83,10 @@ Go 选择了一种混合的方式：它的确有静态调用表，不过是在�
 
 ![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/Go-Data-Structures-Interfaces/gointer1.png)
 
-
 对于任何一个 interface, 它的值也是由两个 32-bit 的字组成，第一个字它提供了一个指向 interface 中数据类型的信息的指针，第二个字是一个指向相关数据的指针。
 s := Stringer(b) 将 b 分配给 Stringer 类型 s，会设置 interface 的这两个字的指针。
 
 ![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/Go-Data-Structures-Interfaces/gointer2.png)
-
 
 interface 值中的第一个指针指向了一个表（itable 或者 itab）。
 Itable 的由两部分组成，第一部分是指向原始数据的数据类型，第二部分是一个函数指针的列表。
@@ -115,7 +111,6 @@ interface 值中的第二个指针指向了实际的数据，也就是 b 的一�
 
 这个例子是一个只有一个方法的 interface。一个具有更多方法的 interface 将在 itable 底部有更多条记录。
 
-
 ## 计算 Itable
 
 现在，我们已经描述了 itable 的结构，可是它是怎么生成的呢？
@@ -129,7 +124,6 @@ Go 的动态类型转换使编译器不可能对所有的 interface 到具体类
 假设 interface 类型 ni个方法，具体类型有 nt 个方法，那么通常来说，检索的复杂度为 O(ni * nt)。
 但是 go 采用了一种更好的方法，通过对两个表的函数进行排序，并且对其进行同步遍历，检索的复杂度可以降为 O(ni + nt)。
 
-
 ## 内存优化
 
 上述的实现方法所占用的空间可以使用两种互补的方法来优化。
@@ -140,7 +134,6 @@ Go 的动态类型转换使编译器不可能对所有的 interface 到具体类
 
 ![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/Go-Data-Structures-Interfaces/gointer3.png)
 
-
 第二，如果与 interface 值相关联的值可以单个字标识，那么就不需要分配堆空间并使用指针。
 如果我们使用 Binary32 而不是 Binary, 那么它的数据就可以直接存储在 interface 的值中，而不需要再分配堆空间了。
 interface 的值是堆的指针还是实际的值完全取决于值类型的大小。
@@ -149,12 +142,9 @@ interface 的值是堆的指针还是实际的值完全取决于值类型的大�
 
 ![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/Go-Data-Structures-Interfaces/gointer4.png)
 
-
 当然，如果一个空的 interface 并且传入了一个字的数据，可以使用上面两种方法同时进行优化。
 
 ![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/Go-Data-Structures-Interfaces/gointer5.png)
-
-
 
 ## 方法查询性能
 
@@ -178,9 +168,6 @@ Smalltalk 和许多其他的动态语言在每次调用方法时都会执行方�
 
 当然，这是一篇博客文章，我没有任何数字来支持这个讨论，但是像 Go 语言这样减少内存竞争可以很好的提高性能。
 另外，本文主要是介绍体系结构，而不是实现的细节，在实现的过程中可能会使用一些常量的优化。
-
-
-
 
 via: https://research.swtch.com/interfaces
 
