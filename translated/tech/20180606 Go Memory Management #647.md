@@ -13,12 +13,14 @@ func main() {
     http.ListenAndServe(":8080", nil)
 }
 ```
+
 编译并且运行：
 
 ```bash
 go build main.go
 ./main
 ```
+
 接着我们通过 `ps` 命令观察这个正在运行的程序：
 
 ```bash
@@ -46,7 +48,7 @@ povilasv 16609 0.0 0.0 388496 5236 pts/9 Sl+ 17:21 0:00 ./main
 
 我们可以将将物理内存看作是一个槽/单元的数组，其中槽可以容纳 8 个位信息<sup>1</sup>。每个内存槽都有一个地址，在你的程序中你会告诉 CPU：“喂，CPU，你能在地址 0 处的内存中取出那个字节的信息吗？”，或者“喂，CPU，你能把这个字节的信息放在内存为地址 1 的地方吗？”。
 
-![](Go_Memory_Management_1.png)
+![物理内存](Go_Memory_Management_1.png)
 
 由于计算机通常要运行多个任务，所以直接从物理内存中读写是并不明智。想象一下，编写一个程序是一个很容易的事情，它会从内存中读取所有的东西(包括你的密码)，或者编写一个程序，它会在不同的程序的内存地址中写入内容。那将是很荒唐的事情。
 
@@ -55,7 +57,6 @@ povilasv 16609 0.0 0.0 388496 5236 pts/9 Sl+ 17:21 0:00 ./main
 ![](Go_Memory_Management_2.png)
 
 虚拟内存可以使用基于CPU体系结构和操作系统的段或页表来实现。我不会详细讲段，因为页表更常见，但你可以在附录<sup>3</sup>中读到更多关于段的内容。
-
 
 在*分页虚拟内存*中，我们将虚拟内存划分为块，称为*页*。页的大小可以根据硬件的不同而有所不同，但是页的大小通常是 4-64 KB，此外，通常还能够使用从 2MB 到 1GB 的巨大的页。分块很有用，因为单独管理每个内存槽需要更多的内存，而且会降低计算机的性能。
 
@@ -128,7 +129,7 @@ func main() {
 
 输出如下：
 
-```
+```bash
 2018/05/06 14:26:08 &{{ SHT_NULL 0x0 0 0 0 0 0 0 0 0} 0xc4200803f0 0xc4200803f0 0 0}
 2018/05/06 14:26:08 &{{.text SHT_PROGBITS SHF_ALLOC+SHF_EXECINSTR 4198400 4096 3373637 0 0 16 0 3373637} 0xc420080420 0xc420080420 0 0}
 2018/05/06 14:26:08 &{{.plt SHT_PROGBITS SHF_ALLOC+SHF_EXECINSTR 7572064 3377760 560 0 0 16 16 560} 0xc420080450 0xc420080450 0 0}
@@ -224,6 +225,7 @@ free (buffer);
 return 0;
 }
 ```
+
 这个例子说明了动态分配数据的需要，因为我们要求用户输入字符串长度，然后根据它分配字节并生成随机字符串。另外，请注意对 `free()` 的显式调用。
 
 ## 内存分配器
@@ -316,7 +318,7 @@ Go 语言的内存分配器与 TCMalloc 类似，它在页运行（spans/mspan �
 
 下面描述极小对象是如何工作的：
 
-#### *当分配极小对象*:
+*当分配极小对象*:
 
 1. 查看这个 P 的 mcache 中对应的小槽对象。
 2. 根据新对象的大小，将现有子对象的大小(如果存在的话)四舍五入为 8、4 或 2 个字节。
@@ -445,12 +447,12 @@ func main() {
 
 注意：
 
-- MemStats.Sys 是从系统获得的内存总字节数。Sys 测量 Go 语言的运行时给堆，堆栈和其他内部数据结构保留的虚拟地址空间。
-- MemStats.HeapAlloc 是为堆对象分配的字节数。
+* MemStats.Sys 是从系统获得的内存总字节数。Sys 测量 Go 语言的运行时给堆，堆栈和其他内部数据结构保留的虚拟地址空间。
+* MemStats.HeapAlloc 是为堆对象分配的字节数。
 
 不，看起来不像：
 
-```
+```bash
 2018/05/08 18:00:34 4.064689636230469
 2018/05/08 18:00:34 0.5109481811523438
 ```
@@ -472,14 +474,15 @@ int main (){
 ```
 
 （译者注：编译，运行）
-```
+
+```bash
 gcc main.c
 ./a.out
 ```
 
 不对，C 程序只花了 10Mb：
 
-```
+```bash
 ps -u --pid 25074
 
 USER PID %CPU %MEM VSZ RSS TTY STAT START TIME COMMAND
@@ -488,11 +491,11 @@ povilasv 25074 0.0 0.0 10832 908 pts/6 S+ 17:48 0:00 ./a.out
 
 ### 让我们试着看看 `/proc`
 
-```
+```bash
 cat /proc/30376/status
 ```
 
-```
+```bash
 Name: main
 State: S (sleeping)
 Pid: 30376
@@ -522,13 +525,13 @@ Threads: 6
 
 ### 让我们看看 `/proc/maps`
 
-```
+```bash
 cat /proc/31086/maps
 ```
 
 结果如下：
 
-```
+```bash
 00400000-0060e000 r-xp 00000000 fd:01 1217120 /main
 0060e000-007e5000 r--p 0020e000 fd:01 1217120 /main
 007e5000-0081b000 rw-p 003e5000 fd:01 1217120 /main
@@ -599,12 +602,12 @@ func main() {
 
 编译运行:
 
-```
+```bash
 go build main.go
 ./main
 ```
 
-```
+```bash
 $ ps -u --pid 3642
 
 USER PID %CPU %MEM VSZ RSS TTY STAT START TIME COMMAND
@@ -633,7 +636,7 @@ povilasv 3642 0.0 0.0 4900 948 pts/10 Sl+ 09:07 0:00 ./main
 * https://wiki.osdev.org/ELF_Tutorial
 * https://stackoverflow.com/questions/610682/do-bss-section-zero-initialized-variables-occupy-space-in-elf-file
   
-1. 实际上说每个内存插槽保持8位并不是真的，因为有架构，你可以存储少于或多于8位，你可以阅读更多参考：https://www.reddit.com/r/askscience/comments/3b6lkz/why_is_it_that_the_de_facto_standard_for_the/ 还有https://softwareengineering.stackexchange.com/questions/91230/addressable-memory-unit#91263 
+1. 实际上说每个内存插槽保持8位并不是真的，因为有架构，你可以存储少于或多于8位，你可以阅读更多参考：https://www.reddit.com/r/askscience/comments/3b6lkz/why_is_it_that_the_de_facto_standard_for_the/ 还有https://softwareengineering.stackexchange.com/questions/91230/addressable-memory-unit#91263.
 2. 实际上有一个称为共享内存的概念，因此多个应用程序可以访问同一个内存。 更多信息，请访问http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/shm/what-is-shm.htm
 3. https://littleosbook.github.io/#a-short-introduction-to-virtual-memory and https://en.wikipedia.org/wiki/Virtual_memory  ↩
 4. 更多请参考 https://en.wikipedia.org/wiki/Memory_management_unit and https://wiki.osdev.org/Paging ↩
@@ -642,13 +645,5 @@ povilasv 3642 0.0 0.0 4900 948 pts/10 Sl+ 09:07 0:00 ./main
 7. 你可以在以下网址阅读有关可执行文件的更多信息：https：//en.wikipedia.org/wiki/Portable_Executable,https：//wiki.osdev.org/ELF_Tutorial,https://www.quora.com/Where-does-elf -file-sits-inside-a-microcontroller↩
 8. 你可以通过在文本编辑器中打开二进制文件并在开头seeing中查看文本ELF字符串来验证您的程序是否在ELF中。
 9. https://www.gnu.org/software/libc/manual/html_node/Memory-Concepts.html#Memory-Concepts↩
-10. 函数定义在https://github.com/golang/go/blob/master/src/runtime/mem_linux.go中，汇编在https://github.com/golang/go/blob/master/src/runtime/sys_linux_amd64.s＃L449。 关于一个bug的帖子真的很有意思，因为 Go 不使用libc 包装器：https：//marcan.st/2017/12/debugging-an-evil-go-runtime-bug/。↩
-11. 在http://goog-perftools.sourceforge.net/doc/tcmalloc.html中阅读tcmalloc设计↩
-
-
-
-
-
-
-
-
+10. 函数定义在https://github.com/golang/go/blob/master/src/runtime/mem_linux.go中，汇编在https://github.com/golang/go/blob/master/src/runtime/sys_linux_amd64.s＃L449。关于一个bug的帖子真的很有意思，因为 Go 不使用libc 包装器：https：//marcan.st/2017/12/debugging-an-evil-go-runtime-bug/。↩
+11. 在 http://goog-perftools.sourceforge.net/doc/tcmalloc.html 中阅读 tcmalloc 设计↩
