@@ -1,4 +1,5 @@
 # Go 中的 import 声明
+
 Go 中的程序由各种包组成。通常，包依赖于其它包，这些包内置于标准库或者第三方。包首先需要被导入才能使用包中的导出标识符。这是通过结构体调用 *import 声明* 来实现的：
 ```go
 package main
@@ -25,10 +26,12 @@ import (
 ```
 这四个导入格式都有各自不同的行为，在这篇文章中我们将分析这些差异。
 > 导入包只能引用导入包中的导出标识符。 导出标识符是以Unicode大写字母开头的
-> - https://golang.org/ref/spec#Exported_identifiers。
+> - [https://golang.org/ref/spec#Exported_identifiers](https://golang.org/ref/spec#Exported_identifiers)。
 
 ## 基础
+
 ### Import 声明剖析
+
 ```go
 ImportDeclaration = "import" ImportSpec
 ImportSpec        = [ "." | "_" | Identifier ] ImportPath
@@ -45,6 +48,7 @@ import m "math"
 ```
 
 ### 合并 Import 声明
+
 导入两个或者更多的包可以有两种写法。一个是，我们可以写多个 import 声明：
 ```go
 import "io"
@@ -61,11 +65,13 @@ import (
 第二种导入方式在导入很多个包的时候非常实用，然后多次重复的用 import 关键字导入包会降低可读性。如果你不使用自动导入之类的工具，例如： [https://github.com/bradfitz/goimports](https://github.com/bradfitz/goimports "https://github.com/bradfitz/goimports")，这种方式还可以减少按键次数。
 
 ### （短）导入路径
+
 导入规范中使用的字符串文字（每个导入声明包含一个或多个导入规范）告诉导入哪个包。这个字符串称为导入路径。根据语言规范，它取决于如何解释导入路径（字符串）的实现方式，但在现实运用中它的路径相对包的第三方库目录或 `go env GOPATH / src` 目录（更多内容参考 [GOPATH](https://golang.org/doc/code.html#GOPATH "GOPATH") ）。
 
 内置的包导入使用 “math” 或 “fmt” 等短导入路径。
 
 ### .go 文件剖析
+
 每个 .go 文件的结构是相同的。首先是 package 语句，可选地在其前面加上通常是描述包的作用的注释。然后零个或多个导入声明。 接着包含零个或多个顶级声明。
 ```go
 // description...
@@ -84,6 +90,7 @@ func main() {
 强制组织 (Enforced organisation) 不允许引入不必要的混乱，这简化了解析和基本的代码库跳转（导入声明不能放在 package 子句之前，也不能与顶级声明交错，所以它总是很容易找到）。
 
 ### 导入作用域
+
 导入的作用域是文件块级别。这意味着它可以从整个文件中访问，但不能在整个包中被访问：
 ```go
 // github.com/mlowicki/a/main.go
@@ -108,7 +115,9 @@ func hi() {
 更多的关于作用域的内容参考之前发表的文章：[Scopes in Go](https://medium.com/golangspec/scopes-in-go-a6042bb4298c "Scopes in Go")
 
 ## 导入的类型
+
 ### 自定义包名
+
 按照约定，导入路径的最后一个部分同时也是导入包的包名。当然，我们也可以不遵循这个约定：
 ```go
 # github.com/mlowicki/main.go
@@ -156,6 +165,7 @@ import log "github.com/sirupsen/logrus"
 如果我们只使用内置日志包中的 API ，那么用导入 “log” 替换这样的导入不需要对源代码进行任何更改。它也有点短（但仍然有意义）所以可能会节省一些按键次数。
 
 ### 导入所有的导出标识符
+
 例如：
 ```go
 import m "math"
@@ -203,6 +213,7 @@ func main() {
 ```
 
 ### 使用空标识符
+
 如果导入了包但是不使用，Golang的编译器将无法编译通过。
 ```go
 package main
@@ -217,6 +228,7 @@ import _ "math"
 > 如果一个包被导入没有被使用或者没有使用空标识符，那将编译失败
 
 ### 循环导入
+
 Go 规范明确禁止循环导入 - 当包间接导入自身时。 最明显的情况是包 a 导入包 b 然后包 b 中也导入包 a：
 ```go
 # github.com/mlowicki/a/main.go
