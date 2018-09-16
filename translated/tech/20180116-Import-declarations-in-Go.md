@@ -1,5 +1,5 @@
 # Go 中的 import 声明
-Go 中的程序由各种包组成。通常，包依赖于其它包，这些包内置于标准库或者第三方。包首先需要被导入才能使用包中的导出标识符。这是通过结构体调用 * import 声明 * 来实现的：
+Go 中的程序由各种包组成。通常，包依赖于其它包，这些包内置于标准库或者第三方。包首先需要被导入才能使用包中的导出标识符。这是通过结构体调用 *import 声明* 来实现的：
 ```go
 package main
 import (
@@ -61,7 +61,7 @@ import (
 第二种导入方式在导入很多个包的时候非常实用，然后多次重复的用 import 关键字导入包会降低可读性。如果你不使用自动导入之类的工具，例如： [https://github.com/bradfitz/goimports](https://github.com/bradfitz/goimports "https://github.com/bradfitz/goimports")，这种方式还可以减少按键次数。
 
 ### （短）导入路径
-导入规范中使用的字符串文字（每个导入声明包含一个或多个导入规范）告诉导入哪个包。这个字符串称为导入路径。根据语言规范，它取决于如何解释导入路径（字符串）的实现方式，但在现实运用中它的路径相对包的第三方库目录或`go env GOPATH / src ` 目录（更多内容参考 [GOPATH](https://golang.org/doc/code.html#GOPATH "GOPATH") ）。
+导入规范中使用的字符串文字（每个导入声明包含一个或多个导入规范）告诉导入哪个包。这个字符串称为导入路径。根据语言规范，它取决于如何解释导入路径（字符串）的实现方式，但在现实运用中它的路径相对包的第三方库目录或 `go env GOPATH / src` 目录（更多内容参考 [GOPATH](https://golang.org/doc/code.html#GOPATH "GOPATH") ）。
 
 内置的包导入使用 “math” 或 “fmt” 等短导入路径。
 
@@ -135,11 +135,11 @@ func main() {
 ```
 也可以自定义一个包名称进行导入：
 ```go
-# github.com/mlowicki/b/b.go
+// github.com/mlowicki/b/b.go
 package b
 var B = "b"
 
-# github.com/mlowicki/main.go (依据原文含义，译者添加)
+// github.com/mlowicki/main.go (依据原文含义，译者添加)
 package main
 import (
     "fmt"
