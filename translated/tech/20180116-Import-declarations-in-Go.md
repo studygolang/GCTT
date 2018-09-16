@@ -73,7 +73,7 @@ import (
 ### .go 文件剖析
 
 每个 .go 文件的结构是相同的。首先是 package 语句，可选地在其前面加上通常是描述包的作用的注释。然后零个或多个导入声明。 接着包含零个或多个顶级声明。
-```go
+```
 // description...
 package main // package clause
 // zero or more import declarations
