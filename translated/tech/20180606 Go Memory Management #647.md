@@ -620,30 +620,3 @@ povilasv 3642 0.0 0.0 4900 948 pts/10 Sl+ 09:07 0:00 ./main
 未完待续。。。
 
 感谢你阅读本文。一如既往的，我期待你的评论。同时请不要破坏我在评论中的搜索😀
-
-<!-- ## 参考附录 -->
-<!-- 
-* https://samypesse.gitbooks.io/how-to-create-an-operating-system/content/Chapter-8/
-* https://chortle.ccsu.edu/AssemblyTutorial/Chapter-04/ass04_1.html
-* http://brokenthorn.com/Resources/OSDev18.html
-* Libc man pages on memory: https://www.gnu.org/software/libc/manual/html_node/Memory.html#Memory
-* TcMalloc: http://goog-perftools.sourceforge.net/doc/tcmalloc.html
-* https://mcuoneclipse.com/2013/04/14/text-data-and-bss-code-and-data-size-explained/
-* https://stackoverflow.com/questions/24973973/is-exe-made-of-pure-machine-code-only
-* http://brokenthorn.com/Resources/OSDev18.html
-* https://www.win.tue.nl/~aeb/linux/lk/lk.html
-* https://samypesse.gitbooks.io/how-to-create-an-operating-system/content/chapter9/
-* https://wiki.osdev.org/ELF_Tutorial
-* https://stackoverflow.com/questions/610682/do-bss-section-zero-initialized-variables-occupy-space-in-elf-file
-  
-1. 实际上说每个内存插槽保持8位并不是真的，因为有架构，你可以存储少于或多于8位，你可以阅读更多参考：https://www.reddit.com/r/askscience/comments/3b6lkz/why_is_it_that_the_de_facto_standard_for_the/ 还有https://softwareengineering.stackexchange.com/questions/91230/addressable-memory-unit#91263.
-2. 实际上有一个称为共享内存的概念，因此多个应用程序可以访问同一个内存。 更多信息，请访问http://www.csl.mtu.edu/cs4411.ck/www/NOTES/process/shm/what-is-shm.htm
-3. https://littleosbook.github.io/#a-short-introduction-to-virtual-memory and https://en.wikipedia.org/wiki/Virtual_memory  ↩
-4. 更多请参考 https://en.wikipedia.org/wiki/Memory_management_unit and https://wiki.osdev.org/Paging ↩
-5. libc 手册：http://www.gnu.org/software/libc/manual/html_node/Memory.html ↩
-6. 这些步骤适用于Linux，取自https://en.wikipedia.org/wiki/Loader_(computing)↩
-7. 你可以在以下网址阅读有关可执行文件的更多信息：https：//en.wikipedia.org/wiki/Portable_Executable,https：//wiki.osdev.org/ELF_Tutorial,https://www.quora.com/Where-does-elf -file-sits-inside-a-microcontroller↩
-8. 你可以通过在文本编辑器中打开二进制文件并在开头seeing中查看文本ELF字符串来验证您的程序是否在ELF中。
-9. https://www.gnu.org/software/libc/manual/html_node/Memory-Concepts.html#Memory-Concepts↩
-10. 函数定义在https://github.com/golang/go/blob/master/src/runtime/mem_linux.go中，汇编在https://github.com/golang/go/blob/master/src/runtime/sys_linux_amd64.s＃L449。关于一个bug的帖子真的很有意思，因为 Go 不使用libc 包装器：https：//marcan.st/2017/12/debugging-an-evil-go-runtime-bug/。↩
-11. 在 http://goog-perftools.sourceforge.net/doc/tcmalloc.html 中阅读 tcmalloc 设计↩ -->
