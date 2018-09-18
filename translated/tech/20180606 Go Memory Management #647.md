@@ -48,13 +48,13 @@ povilasv 16609 0.0 0.0 388496 5236 pts/9 Sl+ 17:21 0:00 ./main
 
 我们可以将将物理内存看作是一个槽/单元的数组，其中槽可以容纳 8 个位信息<sup>1</sup>。每个内存槽都有一个地址，在你的程序中你会告诉 CPU：“喂，CPU，你能在地址 0 处的内存中取出那个字节的信息吗？”，或者“喂，CPU，你能把这个字节的信息放在内存为地址 1 的地方吗？”。
 
-![物理内存](Go_Memory_Management_1.png)
+![物理内存](./Go_Memory_Management_1.png)
 
 由于计算机通常要运行多个任务，所以直接从物理内存中读写是并不明智。想象一下，编写一个程序是一个很容易的事情，它会从内存中读取所有的东西(包括你的密码)，或者编写一个程序，它会在不同的程序的内存地址中写入内容。那将是很荒唐的事情。
 
 因此，除了使用实际物理内存去处理任务我们还有*虚拟内训*的概念。当你的程序运行时，它只看到它的内存，它认为它在这里唯一的<sup>2</sup>。另外，程序中存储的内存字节也不可能都放在 RAM 中。如果不经常访问特定的内存块，操作系统可能会将一些内存块放入较慢的存储空间(比如磁盘)，从而节省宝贵的 RAM。操作系统甚至不会承认对你的程序是这样操作的，但实际上，我们知道操作系统确实是那样运作的。
 
-![](Go_Memory_Management_2.png)
+![虚拟内存->物理内存](./Go_Memory_Management_2.png)
 
 虚拟内存可以使用基于CPU体系结构和操作系统的段或页表来实现。我不会详细讲段，因为页表更常见，但你可以在附录<sup>3</sup>中读到更多关于段的内容。
 
@@ -62,7 +62,7 @@ povilasv 16609 0.0 0.0 388496 5236 pts/9 Sl+ 17:21 0:00 ./main
 
 为了实现分页虚拟内存，计算机通常有一个称为*内存管理单元(MMU)*<sup>4</sup>的芯片，它位于 CPU 和内存之间。MMU 在一个名为*页表*的表(它存储在内存中)中保存了从虚拟地址到物理地址的映射，其中每页包含一个*页表项(PTE)*。MMU 还有一个物理缓存*旁路转换缓冲(TLB)*，用来存储最近从虚拟内存到物理内存的转换。大致是这样的:
 
-![](Go_Memory_Management_3.png)
+![虚拟内存到物理内存转换](./Go_Memory_Management_3.png)
 
 因此，假设操作系统决定将一些虚拟内存页放入磁盘，程序会尝试访问它。 此过程如下所示：
 
@@ -74,7 +74,7 @@ povilasv 16609 0.0 0.0 388496 5236 pts/9 Sl+ 17:21 0:00 ./main
 
 操作系统通常管理多个应用程序（进程），因此整个内存管理位如下所示：
 
-![](Go_Memory_Management_4.png)
+![内存管理位](./Go_Memory_Management_4.png)
 
 每个进程都有一个线性虚拟地址空间，地址从 0 到最大值。虚拟地址空间不需要是连续的，因此并非所有这些虚拟地址实际上都用于存储数据，并且它们不占用RAM或磁盘中的空间。很酷的一点是，真实内存的同一帧可以支持属于多个进程的多个虚拟页面。通常就是这种情况，虚拟内存占用 GNU C 库代码（libc），如果使用 `go build` 进行编译，则默认包含该代码。你可以通过添加 ldflags 参数来设置编译时不带 libc 的代码<sup>5</sup>：
 
@@ -171,9 +171,9 @@ func main() {
 
 你也可以通过一些 linux 工具来查看 ELF 文件信息，如： `size --format=sysv main` 或 `readelf -l main`（这里的 `main` 是指输出的二进制文件）。
 
-显而易见，可执行文件只是具有某种预定义格式的文件。通常，可执行格式具有段，这些段是在运行映像之前映射的数据内存。下面是段的一个常见视图，流程如下:
+显而易见，可执行文件只是具有某种预定义格式的文件。通常，可执行格式具有段，这些段是在运行映像之前映射的数据内存。下面是 segment 的一个常见视图，流程如下:
 
-![](Go_Memory_Management_5.png)
+![segment](./Go_Memory_Management_5.png)
 
 *文本段*包含程序指令、文字和静态常量。
 
@@ -247,11 +247,11 @@ return 0;
 
 TCMalloc 性能背后的秘密在于它使用线程本地缓存来存储一些预先分配的内存“对象”，以便从线程本地缓存<sup>11</sup>中满足小分配。一旦线程本地缓存耗尽空间，内存对象就会从中心数据结构移动到线程本地缓存。
 
-![](Go_Memory_Management_6.png)
+![中心数据结构->线程本地缓存](./Go_Memory_Management_6.png)
 
 TCMalloc 对小对象(大小<= 32K)分配的处理与大对象不同。使用页级分配器直接从中心堆分配大型对象。同时，小对象被映射到大约 *170* 个可分配大小类中的一个。
 
-![](Go_Memory_Management_7.png)
+![大小类](./Go_Memory_Management_7.png)
 
 一下是它如何适用于小对象：
 
@@ -276,7 +276,7 @@ TCMalloc 对小对象(大小<= 32K)分配的处理与大对象不同。使用页
 
 大对象(大小为> 32K)四舍五入到一个页面大小(4K)，由一个中心页面堆处理。中心页面堆又是一个自由列表数组:
 
-![](Go_Memory_Management_8.png)
+![中心页面堆](./Go_Memory_Management_8.png)
 
 对于 i < 256，第 k 个项是由 k 个页组成的运行的空闲列表。第256项是长度 > = 256 页的运行的空闲列表。
 
@@ -297,7 +297,7 @@ TCMalloc 对小对象(大小<= 32K)分配的处理与大对象不同。使用页
 * 如果空闲，则 span 是页堆链接列表中的条目之一。
 * 如果已分配，则它是一个已移交给应用程序的大对象，或者是已分割成一系列小对象的一组页面。
 
-![](Go_Memory_Management_9.png)
+![span](./Go_Memory_Management_9.png)
 
 在这个例子中，span 1 占 2 页，span 2 占 4 页，span 3 占 1 页。可以使用按页码索引的中心数组来查找页面所属的跨度。
 
@@ -307,7 +307,7 @@ Go 语言的内存分配器与 TCMalloc 类似，它在页运行（spans/mspan �
 
 1. *空闲* - span，没有对象，可以释放回操作系统，或重用于堆分配，或重用于堆栈内存。
 2. *正在使用* - span，至少有一个堆对象，可能有更多的空间。
-3. *栈* - span，用于 goroutine 堆栈。此跨度可以存在于堆栈中或堆中，但不能同时存在。 
+3. *栈* - span，用于 goroutine 堆栈。此跨度可以存在于堆栈中或堆中，但不能同时存在。
 
 当分配发生时，我们将对象映射到 3 个大小的类：对于小于 16 字节的对象的极小类，对于达到 32 kB 的对象的小类，以及对于其他对象的大类。小的分配大小被四舍五入到大约 *70* 个大小的类中的一个，每个类都有它自己的恰好大小的自由对象集。我在 runtime/malloc.go 中发现了一些有趣的注释:小分配器的主要目标是小字符串和独立转义变量。
 
@@ -340,7 +340,7 @@ Go 语言的内存分配器与 TCMalloc 类似，它在页运行（spans/mspan �
 1. 从操作系统分配一组新的页(至少 1MB)。
 2. 分配大量的页会平摊与操作系统对话的成本。
 
-#### *对于小对象，它非常相似，但我们跳过了第一部分*:
+对于小对象，它非常相似，但我们跳过了第一部分*:
 
 *当分配小对象*:
 
@@ -386,7 +386,7 @@ go build main.go
 ./main
 ```
 
-```
+```bash
 ps -u --pid 16609
 USER PID %CPU %MEM VSZ RSS TTY STAT START TIME COMMAND
 povilasv 16609 0.0 0.0 388496 5236 pts/9 Sl+ 17:21 0:00 ./main
@@ -394,7 +394,7 @@ povilasv 16609 0.0 0.0 388496 5236 pts/9 Sl+ 17:21 0:00 ./main
 
 Which gives us ~380 MiB of virtual memory size.
 
-### So maybe it’s runtime?
+### So maybe it’s runtime
 
 Let’s read memstats:
 
@@ -621,8 +621,8 @@ povilasv 3642 0.0 0.0 4900 948 pts/10 Sl+ 09:07 0:00 ./main
 
 感谢你阅读本文。一如既往的，我期待你的评论。同时请不要破坏我在评论中的搜索😀
 
-## 参考附录
-
+<!-- ## 参考附录 -->
+<!-- 
 * https://samypesse.gitbooks.io/how-to-create-an-operating-system/content/Chapter-8/
 * https://chortle.ccsu.edu/AssemblyTutorial/Chapter-04/ass04_1.html
 * http://brokenthorn.com/Resources/OSDev18.html
@@ -646,4 +646,4 @@ povilasv 3642 0.0 0.0 4900 948 pts/10 Sl+ 09:07 0:00 ./main
 8. 你可以通过在文本编辑器中打开二进制文件并在开头seeing中查看文本ELF字符串来验证您的程序是否在ELF中。
 9. https://www.gnu.org/software/libc/manual/html_node/Memory-Concepts.html#Memory-Concepts↩
 10. 函数定义在https://github.com/golang/go/blob/master/src/runtime/mem_linux.go中，汇编在https://github.com/golang/go/blob/master/src/runtime/sys_linux_amd64.s＃L449。关于一个bug的帖子真的很有意思，因为 Go 不使用libc 包装器：https：//marcan.st/2017/12/debugging-an-evil-go-runtime-bug/。↩
-11. 在 http://goog-perftools.sourceforge.net/doc/tcmalloc.html 中阅读 tcmalloc 设计↩
+11. 在 http://goog-perftools.sourceforge.net/doc/tcmalloc.html 中阅读 tcmalloc 设计↩ -->
