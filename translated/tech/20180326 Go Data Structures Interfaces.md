@@ -175,7 +175,6 @@ Smalltalk 和许多其他的动态语言在每次调用方法时都会执行方�
 当然，这是一篇博客文章，我没有任何数字来支持这个讨论，但是像 Go 语言这样减少内存竞争可以很好的提高性能。
 另外，本文主要是介绍体系结构，而不是实现的细节，在实现的过程中可能会使用一些常量的优化。
 
-
 via: https://research.swtch.com/interfaces
 
 作者：[Russ Cox](https://swtch.com/~rsc/)
