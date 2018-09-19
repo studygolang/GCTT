@@ -121,7 +121,7 @@ func hi() {
 上述代码无法被成功编译：
 ```
 > go build
-# github.com/mlowicki/a
+// github.com/mlowicki/a
 ./foo.go:6:2: undefined: fmt
 ```
 更多的关于作用域的内容参考之前发表的文章：[Scopes in Go](https://medium.com/golangspec/scopes-in-go-a6042bb4298c "Scopes in Go")
@@ -132,7 +132,7 @@ func hi() {
 
 按照约定，导入路径的最后一个部分同时也是导入包的包名。当然，我们也可以不遵循这个约定：
 ```go
-# github.com/mlowicki/main.go
+// github.com/mlowicki/main.go
 package main
 
 import (
@@ -144,7 +144,7 @@ func main() {
     fmt.Println(c.B)
 }
 
-# github.com/mlowicki/b/b.go
+// github.com/mlowicki/b/b.go
 package c
 
 var B = "b"
@@ -210,16 +210,16 @@ import . "a"
 然后引用包 a 中的导出标识符就不需要带上包名（就像测试是在同一个包中一样，但是那些非导出的标识符是不能访问的）
 如果导入的包中存在至少一个同名的导出标识符，则无法使用点作为包名导入两个包：
 ```go
-# github.com/mlowicki/c
+// github.com/mlowicki/c
 package c
 
 var V = "c"
-# github.com/mlowkci/b
+// github.com/mlowkci/b
 package b
 
 var V = "b"
 
-# github.com/mlowicki/a
+// github.com/mlowicki/a
 package main
 
 import (
@@ -233,7 +233,7 @@ func main() {
 }
 
 > go run main.go
-# command-line-arguments
+// command-line-arguments
 ./main.go:6:2: V redeclared during import "github.com/mlowicki/c"
     previous declaration during import "github.com/mlowicki/b"
 ./main.go:6:2: imported and not used: "github.com/mlowicki/c"
@@ -260,13 +260,18 @@ import _ "math"
 
 Go 规范明确禁止循环导入 - 当包间接导入自身时。 最明显的情况是包 a 导入包 b 然后包 b 中也导入包 a：
 ```go
-# github.com/mlowicki/a/main.go
+// github.com/mlowicki/a/main.go
 package a
+
 import "github.com/mlowicki/b"
+
 var A = b.B
-# github.com/mlowicki/b/main.go
+
+// github.com/mlowicki/b/main.go
 package b
+
 import "github.com/mlowicki/a"
+
 var B = a.A
 ```
 尝试构建这两个包中的任何一个都会导致错误：
