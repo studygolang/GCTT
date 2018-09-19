@@ -3,10 +3,12 @@
 Go 中的程序由各种包组成。通常，包依赖于其它包，这些包内置于标准库或者第三方。包首先需要被导入才能使用包中的导出标识符。这是通过结构体调用 *import 声明* 来实现的：
 ```go
 package main
+
 import (
     "fmt"
     "math"
 )
+
 func main() {
     fmt.Println(math.Exp2(10))  // 1024
 }
@@ -77,13 +79,17 @@ import (
 ```
 // description...
 package main // package clause
+
 // zero or more import declarations
 import (
     "fmt"
     "strings"
 )
+
 import "strconv"
+
 // top-level declarations
+
 func main() {
     fmt.Println(strings.Repeat(strconv.FormatInt(15, 16), 5))
 }
@@ -96,13 +102,18 @@ func main() {
 ```go
 // github.com/mlowicki/a/main.go
 package main
+
 import "fmt"
+
 func main() {
     fmt.Println(a)
 }
+
 // github.com/mlowicki/a/foo.go
 package main
+
 var a int = 1
+
 func hi() {
     fmt.Println("Hi!")
 }
@@ -123,15 +134,19 @@ func hi() {
 ```go
 # github.com/mlowicki/main.go
 package main
+
 import (
     "fmt"
     "github.com/mlowicki/b"
 )
+
 func main() {
     fmt.Println(c.B)
 }
+
 # github.com/mlowicki/b/b.go
 package c
+
 var B = "b"
 ```
 这个输出很明显是 *b* 。当然尽可能的遵循这些约定是更好的 — 很多工具也是依赖这个约定。
@@ -147,14 +162,17 @@ func main() {
 ```go
 // github.com/mlowicki/b/b.go
 package b
+
 var B = "b"
 
 // github.com/mlowicki/main.go (依据原文含义，译者添加)
 package main
+
 import (
     "fmt"
     c "github.com/mlowicki/b"
 )
+
 func main() {
     fmt.Println(c.B)
 }
@@ -175,10 +193,12 @@ import "fmt"
 可以使用指定的包的别名 (m.Exp) 或者导入的包名 (fmt.Prinln) 实现引用导出标识符。还有另一个方式不用通过限定标识符就可以访问导出标识符：
 ```go
 package main
+
 import (
     "fmt"
     . "math"
 )
+
 func main() {
     fmt.Println(Exp2(6))  // 64
 }
@@ -192,20 +212,26 @@ import . "a"
 ```go
 # github.com/mlowicki/c
 package c
+
 var V = "c"
 # github.com/mlowkci/b
 package b
+
 var V = "b"
+
 # github.com/mlowicki/a
 package main
+
 import (
     "fmt"
     . "github.com/mlowicki/b"
     . "github.com/mlowicki/c"
 )
+
 func main() {
     fmt.Println(V)
 }
+
 > go run main.go
 # command-line-arguments
 ./main.go:6:2: V redeclared during import "github.com/mlowicki/c"
@@ -218,7 +244,9 @@ func main() {
 如果导入了包但是不使用，Golang的编译器将无法编译通过。
 ```go
 package main
+
 import "fmt"
+
 func main() {}
 ```
 使用点导入，其中所有导出的标识符都直接添加到导入文件块中，在编译时也会出现失败。唯一的绕过方式是使用空白标识符。需要知道init函数是什么，以便理解为什么我们需要导入空白标识符。参考之前init的介绍文章 [https://medium.com/golangspec/init-functions-in-go-eac191b3860a](https://medium.com/golangspec/init-functions-in-go-eac191b3860a) 我鼓励从上到下阅读这篇文章，但本质上，像如下的导入方式：
@@ -249,20 +277,23 @@ package github.com/mlowicki/a
     imports github.com/mlowicki/b
     imports github.com/mlowicki/a
 ```
-当然，比如 a -> b -> c -> d -> a 这种情况更加的复杂（x -> y 指包 x 导入 包 y）。
+当然，比如 a -> b -> c -> d -> a 这种情况更加的复杂（x -> y 指包 x 导入包 y）。
 包也是不能导入自己的：
 ```go
 package main
+
 import (
     "fmt"
     "github.com/mlowicki/a"
 )
+
 var A = "a"
+
 func main() {
     fmt.Println(a.A)
 }
 ```
-编译上述代码将会提示错误：*can’t load package: import cycle not allowed.*
+编译上述代码将会提示错误：*can’t load package: import cycle not allowed*。
 
 (完)
 
@@ -272,6 +303,6 @@ via：[https://medium.com/golangspec/import-declarations-in-go-8de0fd3ae8ff](htt
 
 作者：[Michał Łowicki](https://medium.com/@mlowicki)
 译者：[iloghyr](https://github.com/iloghyr)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[无闻](https://github.com/Unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
