@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/14889
+
 # 我们必须遵循的 12 个 Go 语言最佳实践
 
 本文旨在提供一个切实的指导，在 Go 语言中实现最佳实践和设计模式。这些编程技巧可以帮助开发者编写出较好的代码。你一定已经读过了 [Go Tutorial](https://tour.golang.org/welcome/1) 和 [Effective Go](https://golang.org/doc/effective_go.html)。
@@ -44,7 +46,7 @@ gofmt 文件名 - 输出格式化后的代码
 
 gofmt -w 文件名 - 重新格式化代码并更新文件
 
-gofmt -r‘rule’ 文件名 - 格式化代码前执行指定的规则
+gofmt -r'rule' 文件名 - 格式化代码前执行指定的规则
 
 gofmt 包所在的路径 - 格式化整个包下的源文件
 
@@ -54,14 +56,14 @@ gofmt 包所在的路径 - 格式化整个包下的源文件
 
 ```go
 package main
-         import “fmt”
+         import "fmt"
 // this is demo to format code
            // with gofmt command
 var a int=10;
             var b int=15;
-                           var c string= “Welcome to Agira”;
+                           var c string= "Welcome to Agira";
       func print(){
-                  fmt.Println(“Value for a,b and c is : “);
+                  fmt.Println("Value for a,b and c is : ");
                        fmt.Println(a);
                                 fmt.Println((b));
                                         fmt.Println(c);
@@ -75,7 +77,7 @@ var a int=10;
 ```go
 package main
 
-import “fmt”
+import "fmt"
 
 // this is demo to format code
 // with gofmt command
@@ -84,7 +86,7 @@ var b int = 15
 var c string =  “Welcome to Agira”
 
 func print() {
-       fmt.Println(“Value for a,b and c is : “)
+       fmt.Println("Value for a,b and c is : ")
        fmt.Println(a)
        fmt.Println((b))
        fmt.Println(c)
@@ -219,13 +221,10 @@ func Write(v interface{}) {
 
 ```go
 import (
-   “fmt”
-   “io”
-   “log”
-
-
-
- “golang.org/x/net/websocket”
+  "fmt"
+  "io"
+  "log"
+  "golang.org/x/net/websocket"
 )
 ```
 
@@ -239,8 +238,8 @@ import (
 package foo_test
 
 import (
-“bar/testutil” // also imports “foo”
-. “foo”
+  "bar/testutil" // also imports "foo"
+  . "foo"
 )
 ```
 
@@ -262,7 +261,7 @@ package playground
 ```go
 // Author represents the person who wrote and/or is presenting the document.
 type Author struct {
-Elem []Elem
+  Elem []Elem
 }
 
 // TextElem returns the first text elements of the author details.
@@ -279,20 +278,18 @@ func (p *Author) TextElem() (elems []Elem) {
 // Request represents a request to run a command.
 type Request struct { …
 
-
-
 // Encode writes the JSON encoding of req to w.
 func Encode(w io.Writer, req *Request) { … and so on.
 ```
 
 希望这些 Go 语言最佳实践可以帮助你提高代码质量。我们也列出了其它许多技术的最佳实践，可以在 [largest blog repository](http://www.agiratech.com/blog/) 找到。有其它问题可以通过 [info@agiratech.com](info@agiratech.com) 联系我们
 
-----------------
+---
 
 via: http://www.agiratech.com/12-best-golang-agile-practices-we-must-follow/
 
 作者：[Reddy Sai](http://www.agiratech.com/author/reddysai/)
 译者：[jettyhan](https://github.com/jettyhan)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

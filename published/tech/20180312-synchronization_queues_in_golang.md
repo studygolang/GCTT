@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/14892
+
 # Go 语言中的同步队列
 
 ## 问题
@@ -327,7 +329,7 @@ if q.waitP > 0 && q.waitT > 0 && !q.playP && !q.playT {
 ## 参考资料
 
 - “The Little Book of Semaphores” by Allen B. Downey（译注：[PDF版地址](http://greenteapress.com/semaphores/LittleBookOfSemaphores.pdf)）
-- https://medium.com/golangspec/reusable-barriers-in-golang-156db1f75d0b（译文：https://studygolang.com/articles/12718）
+- https://medium.com/golangspec/reusable-barriers-in-golang-156db1f75d0b (译文： https://studygolang.com/articles/12718)
 - https://blog.golang.org/share-memory-by-communicating
 
 ---
@@ -336,6 +338,6 @@ via: https://medium.com/golangspec/synchronization-queues-in-golang-554f8e3a31a4
 
 作者：[Michał Łowicki](https://medium.com/@mlowicki)
 译者：[Alex-liutao](https://github.com/Alex-liutao)
-校对：[polaris1119](https://github.com/polaris1119)
+校对：[Unknwon](https://github.com/Unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
