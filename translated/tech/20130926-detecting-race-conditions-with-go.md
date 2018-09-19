@@ -118,7 +118,6 @@ Goroutine 5 (running) created at:
         go Routine(routine)
 ```
 
-
 你能发现竞争检测器指出两行读和写全局变量 Counter 的代码。同时也指出生成协程的代码。
 
 让我们对代码进行简单修改，让竞争情况更容易暴露出来。
@@ -172,7 +171,6 @@ Final Counter: 2
 在没有暂停的情况下，代码运行如下图：
 
 ![](https://github.com/studygolang/gctt-images/blob/master/detecting-race-conditions-with-go/1.png?raw=true)
-
 
 没有暂停的情况下，第一个协程被生成，并且完成执行，紧接着第二个协程才开始运行。这就是为什么程序看起来像正确运行的原因，因为它在我的电脑上运行速度非常快，以至于代码自行排队运行。
 
@@ -383,3 +381,13 @@ Final Counter: 4
 [http://blog.golang.org/race-detector](http://blog.golang.org/race-detector)
 
 如果你使用了多个协程，那么使用竞态检测器测试你的代码是个不错的建议。它会在单元测试和质量保证测试中，为你节省大量的时间和麻烦。Go 开发人员能有这样的工具是很幸运地，所以值得学习一下。
+
+----------------
+
+via: https://www.ardanlabs.com/blog/2013/09/detecting-race-conditions-with-go.html
+
+作者：[William Kennedy](https://twitter.com/goinggodotnet)
+译者：[magichan](https://github.com/magichan)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
