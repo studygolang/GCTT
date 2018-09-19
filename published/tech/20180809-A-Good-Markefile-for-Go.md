@@ -1,12 +1,14 @@
+首发于：https://studygolang.com/articles/14919
+
 # 一个好的 Go 语言 Makefile 是怎样的
 
-精简的Makefile，用于简化构建和管理用Go编写的Web服务器。
+精简的 Makefile，用于简化构建和管理用 Go 编写的 Web 服务器。
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/a-good-makefile-for-go/makefile-process.gif)
 
 我偶然调整我的 Makefiles 来加快我的开发过程，一天早上有点时间，我决定与大家分享其中诀窍。
 
-总而言之，我使用Go构建Web服务器，我对Makefile的期望如下：
+总而言之，我使用 Go 构建 Web 服务器，我对 Makefile 的期望如下：
 
 - 高级，简单的命令。比如：`compile` `start` `stop` `watch` 等等
 - 管理具体项目环境的变量，它应该包含 `.env` 文件
@@ -27,20 +29,20 @@ src/
 vendor/
 ```
 
-在此文件结构中键入make命令将提供以下输出：
+在此文件结构中键入 make 命令将提供以下输出：
 
 ```shell
- $  make
+$ make
 
- Choose a command run in my-web-server:
+Choose a command run in my-web-server:
 
- install   Install missing dependencies. Runs `go get` internally.
- start     Start in development mode. Auto-starts when code changes.
- stop      Stop development mode.
- compile   Compile the binary.
- watch     Run given command when code changes. e.g; make watch run="go test ./..."
- exec      Run given command, wrapped with custom GOPATH. e.g; make exec run="go test ./..."
- clean     Clean build files. Runs `go clean` internally.
+install   Install missing dependencies. Runs `go get` internally.
+start     Start in development mode. Auto-starts when code changes.
+stop      Stop development mode.
+compile   Compile the binary.
+watch     Run given command when code changes. e.g; make watch run="go test ./..."
+exec      Run given command, wrapped with custom GOPATH. e.g; make exec run="go test ./..."
+clean     Clean build files. Runs `go clean` internally.
 ```
 
 ## 1、一步一步开始
@@ -53,7 +55,7 @@ vendor/
 include .env
 ```
 
-在具体项目的环境变量文件的头部，我们将定义这些：项目名，Go目录/文件，进程id的路径...
+在具体项目的环境变量文件的头部，我们将定义这些：项目名，Go 目录/文件，进程 id 的路径...
 
 ```makefile
 PROJECTNAME=$(shell basename "$(PWD)")
@@ -74,7 +76,7 @@ PID=/tmp/.$(PROJECTNAME)-api-server.pid
 MAKEFLAGS += --silent
 ```
 
-在 Makefile 文件的其余部分，我们将使用特别的 GOPATH 变量。我们所有的命令都应该包含项目特定的GOPATH，否则它们将无法工作。这为我们的Go项目提供了明确的隔离，并带来了一些复杂性。为了简化操作，我们可以添加一个 `exec` 命令，该命令执行任何给定的命令，并使用上面定义的自定义GOPATH。
+在 Makefile 文件的其余部分，我们将使用特别的 GOPATH 变量。我们所有的命令都应该包含项目特定的 GOPATH，否则它们将无法工作。这为我们的 Go 项目提供了明确的隔离，并带来了一些复杂性。为了简化操作，我们可以添加一个 `exec` 命令，该命令执行任何给定的命令，并使用上面定义的自定义 GOPATH。
 
 ```makefile
 ## exec: Run given command, wrapped with custom GOPATH. e.g; make exec run="go test ./..."
@@ -129,9 +131,9 @@ compile:
 
 ### 开启/停止服务
 
-`start-server` 基本上运行它在后台编译的二进制文件，将其PID保存到临时文件中。
+`start-server` 基本上运行它在后台编译的二进制文件，将其 PID 保存到临时文件中。
 
-`stop-server` 读取PID并在需要时终止进程。
+`stop-server` 读取 PID 并在需要时终止进程。
 
 ```makefile
 start-server:
@@ -181,7 +183,7 @@ make watch run="go test ./..."
 yolo -i . -e vendor -e bin -c "go run foobar.go" -a localhost:9001
 ```
 
-然后，您可以在浏览器中打开 `localhost：9001` 并立即开始在浏览器中查看结果：
+然后，您可以在浏览器中打开 `localhost:9001` 并立即开始在浏览器中查看结果：
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/a-good-makefile-for-go/yolo-process.gif)
 
@@ -236,7 +238,7 @@ go-clean:
 
 ### 帮助
 
-最后，我们需要一个help命令来查看可用命令的概述。我们可以使用自动生成优雅的格式的命令 `sed` 与 `column` ， 如下：
+最后，我们需要一个 help 命令来查看可用命令的概述。我们可以使用自动生成优雅的格式的命令 `sed` 与 `column` ， 如下：
 
 ```makefile
 help: Makefile
@@ -262,13 +264,13 @@ stop: stop-server
 我们可以执行：
 
 ```shell
- $  make help
+$ make help
 
- Choose a command run in my-web-server:
+Choose a command run in my-web-server:
 
- install   Install missing dependencies. Runs `go get` internally.
- start     Start in development mode. Auto-starts when code changes.
- stop      Stop development mode.
+install   Install missing dependencies. Runs `go get` internally.
+start     Start in development mode. Auto-starts when code changes.
+stop      Stop development mode.
 ```
 
 ## 终极版本
@@ -377,6 +379,6 @@ via: http://azer.bike/journal/a-good-makefile-for-go/
 
 作者：[Azer Koçulu](http://azer.bike)
 译者：[lightfish-zhang](https://github.com/lightfish-zhang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
