@@ -1,4 +1,4 @@
-# 介绍 Corral：一个无服务的 MapReduce 框架
+# 介绍 Corral：一个无服务器的 MapReduce 框架
 
 这篇文章给出了一个我们最新项目的技术概述和架构设计理由，corral—— 一个无服务的 MapReduce 框架。
 
@@ -52,11 +52,11 @@ Hadoop MapReduce 架构为其带来以下好处……
 + 数据局部性在工作节点
 + 通过 YARN/Mesos 等作为抽象的，容错的主节点和工作节点容器。
 
-使用 AWS 堆栈可以很容易地复制最后俩方面。S3 和 Lambda 之间的带宽相对不错（至少对我而言），而 Lambda 的构建使得开发人员“不必考虑服务器”。
+使用 AWS 堆栈可以很容易地复制最后两方面。S3 和 Lambda 之间的带宽相对不错（至少对我而言），而 Lambda 的构建使得开发人员“不必考虑服务器”。
 
 在 Lambda 上复制最棘手的事情是持久工作节点。Lambda 有最大5分钟的超时时限。因此，Hadoop 使用 MapReduce 的很多方式都不再适用。例如，在 mapper worker 和 reducer worker 之间直接传输数据是不可行的，因为 mapper 需要“尽快”完成。否则，在 reducer 仍在工作时，您可能会冒 mapper 超时的风险。
 
-这种限制在 shuffle/partition 阶段最明显。理想情况下，mappers 将“生存”足够长的时间以按需将数据传输到 reducers（即使在 map 阶段），并且 reducers 将“活”足够长时间去做一个完整的二级排序，使用它们的磁盘当对一个较大的合并排序溢出时。5分钟的上线使得这些方法难以实现。
+这种限制在 shuffle/partition 阶段最明显。理想情况下，mappers 将“生存”足够长的时间以按需将数据传输到 reducers（即使在 map 阶段），并且 reducers 将“活”足够长时间去做一个完整的二级排序，使用它们的磁盘当对一个较大的合并排序溢出时。5分钟的上限使得这些方法难以实现。
 
 最后，我决定使用 S3 作为无状态 partition/shuffle 的后端。
 
@@ -127,7 +127,7 @@ REPORT RequestId: 16e55aa5-4a87-11e8-9c63-3f70efb9da7e  Duration: 1059.94 ms    
 
 显然，corral 的目标是对 Hadoop MapReduce 提供一个便宜，快速的选择。AWS Lambda 是便宜的，所以这是一个大扣篮，对吧？
 
-是，不是。Lambda 的免费等级每月为您提供 400,000 GB 秒。这听起来很多，但是长时间运行的应用程序很快就会用完。
+是，不是。Lambda 的免费等级每月为您提供 400,000 GB/秒。这听起来很多，但是长时间运行的应用程序很快就会用完。
 
 ![](https://github.com/studygolang/gctt-images/blob/master/introducing-corral-a-serverless-mapreduce-framework/lambda_pricing.png)
 
@@ -155,7 +155,7 @@ Amplab 基准测试可测高达大约 125GB 的输入数据。我很好奇用大
 
 就个人而言，我发现这个项目对工作相当有益。构建 MapReduce 系统的在线资源要少于使用它的，因此有一些实现细节需要解决。
 
-随意在 [corral 库](https://github.com/bcongdon/corral)中提出问题。我很想知道这个项目是否有足够上的市场来证明有必要持续发展。:smile:
+随意在 [corral 库](https://github.com/bcongdon/corral)中提出问题。我很想知道这个项目是否有足够的市场来证明有必要持续发展。:smile:
 
 ----------------
 
