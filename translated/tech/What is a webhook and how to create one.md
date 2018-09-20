@@ -4,11 +4,12 @@
 
 ![](https://cdn-images-1.medium.com/max/800/1*eyc16Ydypz4g8Y4WJMbSHA.png)
 
-那么，webhook 究竟是什么呢？webhook 是应用给其它应用提供实时信息的一种方式。信息一产生，webhook 就会把它发送给已经注册的应用，这就意味着你能实时得到数据。不像传统的 APIs 方式，你需要用轮询的方式来获得尽可能实时的数据。这一点使得 webhook 不管是在发送端还是接收端都非常高效。由于大部分服务提供商对 API 的访问有一定限制，所以要么采用 webhook 方式，要么采传统的轮训方式，不过这样会客户端数据有一些（或者比较多的）滞后。上面的图是用户发起的一个典型的支付流程的示例。
+那么，webhook 究竟是什么呢？webhook 是应用给其它应用提供实时信息的一种方式。信息一产生，webhook 就会把它发送给已经注册的应用，这就意味着你能实时得到数据。不像传统的 APIs 方式，你需要用轮询的方式来获得尽可能实时的数据。这一点使得 webhook 不管是在发送端还是接收端都非常高效。由于大部分服务提供商对 API 的访问有一定限制，所以要么采用 webhook 方式，要么采用传统的轮询方式，不过这样客户端数据会有一些（或者比较多的）滞后。上面的图是用户发起的一个典型的支付流程的示例。
 
 Webhook 有时被叫做「反向 APIs」，因为它返回的信息和正常 API 返回的差不多，并且你还得设计一个 webhook 可以使用的 API。webhook 会向你的应用发送一个 HTTP 请求（通常使用 POST 方式），然后你的应用负责解析这个请求。你可以把它当成一个客户端发来的常规 API 请求，不过这时候它是一个你依赖的一个第三方的服务。
 
-现在许多开发者都在使用比较流行的服务（比如 Strip、GitHub）提供的 webhook，你可能也想让用户接收你的应该产生的 webhook。这篇文章里，我们就是要创建这样一个简单的应用，让其它用户可以注册并且接收这个应用产生的事件。
+
+现在许多开发者都在使用比较流行的服务（比如 Strip、GitHub）提供的 webhook，你可能也想让用户接收你的应用产生的 webhook。这篇文章里，我们就是要创建这样一个简单的应用，让其它用户可以注册并且接收这个应用产生的事件。
 
 ## 创建一个 webhhook 分发应用
 
@@ -137,14 +138,14 @@ curl --request POST \
 
 ### 要成功实现一个 webhook 需要考虑以下几点：
 
-1、用户应该可以指定 webhook 的地址
+- 用户应该可以指定 webhook 的地址
 
-2、大多数系统只允许连接到一个 webhook, 你可能需要允许链接到多个
+- 大多数系统只允许连接到一个 webhook, 你可能需要允许链接到多个
 
-3、如果请求的返回码大于 500， 则重新请求。可能有人认为当请求返回的是
+- 如果请求的返回码大于 500， 则重新请求。可能有人认为当请求返回的是
 4 开头的值时，才应该重新请求，因为这说明刚才的请求是无效的
 
-如果对 webhook 感兴趣，可以看一个我们写的一些 [例子](https://webhookrelay.com/v1/examples/receiving-webhooks-on-localhost.html)，从这些例子里你可以学会如何接收本地或者局域网 webhook 服务的信息。webhook 非常灵活。
+如果对 webhook 感兴趣，可以看一下我们写的一些 [例子](https://webhookrelay.com/v1/examples/receiving-webhooks-on-localhost.html)，从这些例子里你可以学会如何接收本地或者局域网 webhook 发送的信息。总之 webhook 非常灵活。
 
 2018 年 7 月 13 号发表于 [webhookrelay.com](https://webhookrelay.com/blog/2018/07/13/how-to-create-webhook/)
 
@@ -154,6 +155,6 @@ via: https://itnext.io/what-is-a-webhook-and-how-to-create-one-f7057d2cc0a
 
 作者：[Karolis Rusenas](https://itnext.io/@karolis.rusenas)
 译者：[jettyhan](https://github.com/jettyhan)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
