@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/14956
+
 # Go 语言的内存管理
 
 这篇博客是我在维尔纽斯的 [Go Meetup](https://www.meetup.com/Vilnius-Golang/events/249897910/) 演讲的总结。如果你在维尔纽斯并且喜欢 Go 语言，欢迎加入我们并考虑作演讲
@@ -48,13 +50,13 @@ povilasv 16609 0.0 0.0 388496 5236 pts/9 Sl+ 17:21 0:00 ./main
 
 我们可以将物理内存看作是一个槽/单元的数组，其中槽可以容纳 8 个位信息<sup>1</sup>。每个内存槽都有一个地址，在你的程序中你会告诉 CPU：“喂，CPU，你能在地址 0 处的内存中取出那个字节的信息吗？”，或者“喂，CPU，你能把这个字节的信息放在内存为地址 1 的地方吗？”。
 
-![物理内存](./Go_Memory_Management_1.png)
+![物理内存](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-memory-management/Go_Memory_Management_1.png)
 
 由于计算机通常要运行多个任务，所以直接从物理内存中读写是并不明智。想象一下，编写一个程序是一个很容易的事情，它会从内存中读取所有的东西(包括你的密码)，或者编写一个程序，它会在不同的程序的内存地址中写入内容。那将是很荒唐的事情。
 
 因此，除了使用实际物理内存去处理任务我们还有*虚拟内存*的概念。当你的程序运行时，它只看到它的内存，它认为它独占了内存<sup>2</sup>。另外，程序中存储的内存字节也不可能都放在 RAM 中。如果不经常访问特定的内存块，操作系统可能会将一些内存块放入较慢的存储空间(比如磁盘)，从而节省宝贵的 RAM。操作系统甚至不会承认对你的程序是这样操作的，但实际上，我们知道操作系统确实是那样运作的。
 
-![虚拟内存->物理内存](./Go_Memory_Management_2.png)
+![虚拟内存->物理内存](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-memory-management/Go_Memory_Management_2.png)
 
 虚拟内存可以使用基于CPU体系结构和操作系统的段或页表来实现。我不会详细讲段，因为页表更常见，但你可以在附录<sup>3</sup>中读到更多关于段的内容。
 
@@ -62,7 +64,7 @@ povilasv 16609 0.0 0.0 388496 5236 pts/9 Sl+ 17:21 0:00 ./main
 
 为了实现分页虚拟内存，计算机通常有一个称为*内存管理单元(MMU)*<sup>4</sup>的芯片，它位于 CPU 和内存之间。MMU 在一个名为*页表*的表(它存储在内存中)中保存了从虚拟地址到物理地址的映射，其中每页包含一个*页表项(PTE)*。MMU 还有一个物理缓存*旁路转换缓冲(TLB)*，用来存储最近从虚拟内存到物理内存的转换。大致是这样的:
 
-![虚拟内存到物理内存转换](./Go_Memory_Management_3.png)
+![虚拟内存到物理内存转换](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-memory-management/Go_Memory_Management_3.png)
 
 因此，假设操作系统决定将一些虚拟内存页放入磁盘，程序会尝试访问它。 此过程如下所示：
 
@@ -74,7 +76,7 @@ povilasv 16609 0.0 0.0 388496 5236 pts/9 Sl+ 17:21 0:00 ./main
 
 操作系统通常管理多个应用程序（进程），因此整个内存管理位如下所示：
 
-![内存管理位](./Go_Memory_Management_4.png)
+![内存管理位](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-memory-management/Go_Memory_Management_4.png)
 
 每个进程都有一个线性虚拟地址空间，地址从 0 到最大值。虚拟地址空间不需要是连续的，因此并非所有这些虚拟地址实际上都用于存储数据，并且它们不占用RAM或磁盘中的空间。很酷的一点是，真实内存的同一帧可以支持属于多个进程的多个虚拟页面。通常就是这种情况，虚拟内存占用 GNU C 库代码（libc），如果使用 `go build` 进行编译，则默认包含该代码。你可以通过添加 ldflags 参数来设置编译时不带 libc 的代码<sup>5</sup>：
 
@@ -101,7 +103,7 @@ go build -ldflags '-libgcc=none'
 
 我们通常用 Go 语言等高级语言编写程序，这些语言被编译成可执行的机器代码文件或不可执行的机器代码目标文件（库）。 这些可执行或不可执行的目标文件通常采用容器格式，例如[可执行文件和可链接格式](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format)（ELF）（通常在 Linux 中），[可执行文件](https：//en.wikipedia.org/wiki/Portable_Executable)（通常在Windows 中）。但有时候，你并不能用你喜欢的 Go 语言来编写所有程序。在这种情况下，一种选择是手工制作你自己的 ELF 二进制文件并将机器代码放入正确的 ELF 结构中。另一种选择是用汇编语言开发一个程序，该程序在与机器代码指令更紧密地联系，同时仍然是便于人们阅读的。
 
-目标文件是直接在处理器上执行的程序的二进制表示。这些目标文件不仅包含机器代码，还包含有关应用程序的元数据，如操作系统体系结构，调试信息。目标文件还携带应用程序数据，如全局变量或常量。 通常，目标文件由以下段（section）组成，如：*`.text`（可执行代码)*，*`.data`（全局变量）*和 *`.rodata`（全局常量）*等<sup>7</sup>。
+目标文件是直接在处理器上执行的程序的二进制表示。这些目标文件不仅包含机器代码，还包含有关应用程序的元数据，如操作系统体系结构，调试信息。目标文件还携带应用程序数据，如全局变量或常量。 通常，目标文件由以下段（section）组成，如：*.text（可执行代码）*，*.data（全局变量）* 和 *.rodata（全局常量）* 等<sup>7</sup>。
 
 我在 linux(Ubuntu) 系统上把程序编译成可执行和可链接形式的文件（也就是执行 `go build` 命令后的输出文件）<sup>8</sup>。在 Go 语言中，我们可以轻松编写一个读取 ELF 可执行文件的程序，因为 Go 语言在标准库中有一个 `debug/elf` 包。以下是一个例子：
 
@@ -172,7 +174,7 @@ func main() {
 
 显而易见，可执行文件只是具有某种预定义格式的文件。通常，可执行格式具有段，这些段是在运行映像之前映射的数据内存。下面是 segment 的一个常见视图，流程如下:
 
-![segment](./Go_Memory_Management_5.png)
+![segment](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-memory-management/Go_Memory_Management_5.png)
 
 *文本段*包含程序指令、字面量和静态常量。
 
@@ -192,10 +194,10 @@ Libc 手册解释是<sup>9</sup>，程序可以使用 `exec` 系列函数和编�
 
 要动态分配内存，你有几个选择。其中一个选项是调用操作系统（syscall 或通过 libc）。操作系统提供各种功能，如：
 
-`mmap / munmap` - 分配/解除分配固定块内存页面。
-`brk / sbrk` - 更改/获取数据分段大小。
-`madvise` - 提供操作系统如何管理内存的建议。
-`set_thread_area / get_thread_area` - 适用于线程本地存储。
+* `mmap/munmap` - 分配/解除分配固定块内存页面。
+* `brk/sbrk` - 更改/获取数据分段大小。
+* `madvise` - 提供操作系统如何管理内存的建议。
+* `set_thread_area/get_thread_area` - 适用于线程本地存储。
 
 我认为 Go 语言的运行时只使用 `mmap`、 `madvise`、 `munmap` 与 `sbrk`，并且它们都是在操作系统下通过汇编或者 cgo 直接调用的，也就是说它不会调用 libc<sup>10</sup>。这些内存分配是低级别的，通常程序员不使用它们。更常见的是使用 libc 的 `malloc` 系列函数，当你向系统申请 n 个字节的内存时，libc 将为你分配内存。同时，你不需要这些内存的时候，要调用 free 来释放这些内存。
 
@@ -205,23 +207,23 @@ Libc 手册解释是<sup>9</sup>，程序可以使用 `exec` 系列函数和编�
 #include /* printf, scanf, NULL */
 #include /* malloc, free, rand */
 int main (){
-int i,n;
-char * buffer;
+    int i,n;
+    char * buffer;
 
-printf ("How long do you want the string? ");
-scanf ("%d", &i);
+    printf ("How long do you want the string? ");
+    scanf ("%d", &i);
 
-buffer = (char*) malloc (i+1);
-if (buffer==NULL) exit (1);
+    buffer = (char*) malloc (i+1);
+    if (buffer==NULL) exit (1);
 
-for (n=0; n<i; n++)
-buffer[n]=rand()%26+'a';
-buffer[i]='\0';
+    for (n=0; n<i; n++)
+        buffer[n]=rand()%26+'a';
+    buffer[i]='\0';
 
-printf ("Random string: %s\n",buffer);
-free (buffer);
+    printf ("Random string: %s\n",buffer);
+    free (buffer);
 
-return 0;
+    return 0;
 }
 ```
 
@@ -239,18 +241,18 @@ return 0;
 
 *TCMalloc* 还减少了多线程程序的锁争用：
 
-*对于小型对象，几乎没有争用。
-*对于大型对象，TCMalloc 尝试使用细粒度和高效的自旋锁。
+* 对于小型对象，几乎没有争用。
+* 对于大型对象，TCMalloc 尝试使用细粒度和高效的自旋锁。
 
 ### TCMalloc
 
 TCMalloc 性能背后的秘密在于它使用线程本地缓存来存储一些预先分配的内存“对象”，以便从线程本地缓存<sup>11</sup>中满足小分配。一旦线程本地缓存耗尽空间，内存对象就会从中心数据结构移动到线程本地缓存。
 
-![中心数据结构->线程本地缓存](./Go_Memory_Management_6.png)
+![中心数据结构->线程本地缓存](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-memory-management/Go_Memory_Management_6.png)
 
-TCMalloc 对小对象(大小<= 32K)分配的处理与大对象不同。使用页级分配器直接从中心堆分配大型对象。同时，小对象被映射到大约 *170* 个可分配大小类中的一个。
+TCMalloc 对小对象(大小 <= 32K)分配的处理与大对象不同。使用页级分配器直接从中心堆分配大型对象。同时，小对象被映射到大约 *170* 个可分配大小类中的一个。
 
-![大小类](./Go_Memory_Management_7.png)
+![大小类](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-memory-management/Go_Memory_Management_7.png)
 
 以下是它如何适用于小对象：
 
@@ -273,9 +275,9 @@ TCMalloc 对小对象(大小<= 32K)分配的处理与大对象不同。使用页
 3. 将新对象放在中央自由列表中。
 4. 与前面一样，将这些对象中的一些移动到线程本地自由列表中。
 
-大对象(大小为> 32K)四舍五入到一个页面大小(4K)，由一个中心页面堆处理。中心页面堆又是一个自由列表数组:
+大对象(大小为 > 32K)四舍五入到一个页面大小(4K)，由一个中心页面堆处理。中心页面堆又是一个自由列表数组:
 
-![中心页面堆](./Go_Memory_Management_8.png)
+![中心页面堆](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-memory-management/Go_Memory_Management_8.png)
 
 对于 i < 256，第 k 个项是由 k 个页组成的运行的空闲列表。第256项是长度 > = 256 页的运行的空闲列表。
 
@@ -296,7 +298,7 @@ TCMalloc 对小对象(大小<= 32K)分配的处理与大对象不同。使用页
 * 如果空闲，则 span 是页堆链接列表中的条目之一。
 * 如果已分配，则它是一个已移交给应用程序的大对象，或者是已分割成一系列小对象的一组页面。
 
-![span](./Go_Memory_Management_9.png)
+![span](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-memory-management/Go_Memory_Management_9.png)
 
 在这个例子中，span 1 占 2 页，span 2 占 4 页，span 3 占 1 页。可以使用按页码索引的中心数组来查找页面所属的跨度。
 
@@ -310,10 +312,7 @@ Go 语言的内存分配器与 TCMalloc 类似，它在页运行（spans/mspan �
 
 当分配发生时，我们将对象映射到 3 个大小的类：对于小于 16 字节的对象的极小类，对于达到 32 kB 的对象的小类，以及对于其他对象的大类。小的分配大小被四舍五入到大约 *70* 个大小的类中的一个，每个类都有它自己的恰好大小的自由对象集。我在 runtime/malloc.go 中发现了一些有趣的注释:小分配器的主要目标是小字符串和独立转义变量。
 
->在json基准测试中，分配器将分配数量减少了大约12％，并将堆大小减少了大约20％。
-微型分配器将几个微小的分配请求组合成一个16字节的单个内存块。
-当所有子对象都无法访问时，将释放生成的内存块。
-子对象不能有指针。
+> 在json基准测试中，分配器将分配数量减少了大约12％，并将堆大小减少了大约20％。微型分配器将几个微小的分配请求组合成一个16字节的单个内存块。当所有子对象都无法访问时，将释放生成的内存块。子对象不能有指针。
 
 下面描述极小对象是如何工作的：
 
@@ -372,11 +371,11 @@ Go 语言的内存分配器与 TCMalloc 类似，它在页运行（spans/mspan �
 
 ```go
 func main() {
-http.HandleFunc("/bar", func(w http.ResponseWriter, r *http.Request) {
-fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
-})
+    http.HandleFunc("/bar", func(w http.ResponseWriter, r *http.Request) {
+        fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+    })
 
-http.ListenAndServe(":8080", nil)
+    http.ListenAndServe(":8080", nil)
 }
 ```
 
@@ -565,8 +564,8 @@ func main() {
             log.Println(float64(m.Sys) / 1024 / 1024)
             log.Println(float64(m.HeapAlloc) / 1024 / 1024)
             time.Sleep(10 * time.Second)
-            }
-        }()
+        }
+    }()
 
     fmt.Println("hello")
     time.Sleep(1 * time.Hour)
@@ -593,3 +592,13 @@ povilasv 3642 0.0 0.0 4900 948 pts/10 Sl+ 09:07 0:00 ./main
 未完待续。。。
 
 感谢你阅读本文。一如既往的，我期待你的评论。同时请不要破坏我在评论中的搜索😀
+
+---
+
+via: https://povilasv.me/go-memory-management/
+
+作者：[Povilas](https://povilasv.me/author/versockas/)
+译者：[7Ethan](https://github.com/7Ethan)
+校对：[polaris1119](https://github.com/polaris1119)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
