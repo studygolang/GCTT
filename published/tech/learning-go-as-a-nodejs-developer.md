@@ -115,9 +115,9 @@ func main() {
 - *import* —— 有了 import 关键字，你可以引入项目依赖的包文件，就像 Node.js 中的 *require*
 - func main —— 应用程序的入口
 - ioutil.ReadFile —— 该函数尝试去读取文件，并由两个返回值：
-	- datFile1 如果读操作成功，
-	- errFile1 如果读取过程中有错
-		- 你可以在这里处理错误，或者直接让程序崩溃
+  - datFile1 如果读操作成功，
+  - errFile1 如果读取过程中有错
+    - 你可以在这里处理错误，或者直接让程序崩溃
 - fmt.Print 仅仅是打印结果到标准输出
 
 上面的例子是可以正常运行的，但是读取文件是一个接一个读取。—— 让我们来稍加改进，将它异步化吧！
@@ -207,7 +207,7 @@ func main() {
 - https://gobyexample.com
 - https://www.golang-book.com/
 
-----------------
+---
 
 via: https://nemethgergely.com/learning-go-as-a-nodejs-developer/
 

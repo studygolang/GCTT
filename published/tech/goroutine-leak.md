@@ -15,41 +15,41 @@ Go 中的并发性是以 goroutine（独立活动）和 channel（用于通信�
 ```go
 package main
 
-import (  
-	"fmt"  
-	"math/rand"  
-	"runtime"  
-	"time"  
+import (
+	"fmt"
+	"math/rand"
+	"runtime"
+	"time"
 )
 
-func query() int {  
-	n := rand.Intn(100)  
-	time.Sleep(time.Duration(n) * time.Millisecond)  
-	return n  
+func query() int {
+	n := rand.Intn(100)
+	time.Sleep(time.Duration(n) * time.Millisecond)
+	return n
 }
 
-func queryAll() int {  
-	ch := make(chan int)  
-	go func() { ch <- query() }()  
-	go func() { ch <- query() }()  
-	go func() { ch <- query() }()  
-	return <-ch  
+func queryAll() int {
+	ch := make(chan int)
+	go func() { ch <- query() }()
+	go func() { ch <- query() }()
+	go func() { ch <- query() }()
+	return <-ch
 }
 
-func main() {  
-	for i := 0; i < 4; i++ {  
-		queryAll()  
-		fmt.Printf("#goroutines: %d", runtime.NumGoroutine())  
-	}  
+func main() {
+	for i := 0; i < 4; i++ {
+		queryAll()
+		fmt.Printf("#goroutines: %d", runtime.NumGoroutine())
+	}
 }
 ```
 
 输出：
 
 ```
-#goroutines: 3  
-#goroutines: 5  
-#goroutines: 7  
+#goroutines: 3
+#goroutines: 5
+#goroutines: 7
 #goroutines: 9
 ```
 
@@ -68,9 +68,9 @@ func main() {
 ```go
 package main
 
-func main() {  
-	var ch chan struct{}  
-	ch <- struct{}{}  
+func main() {
+	var ch chan struct{}
+	ch <- struct{}{}
 }
 ```
 
@@ -79,15 +79,15 @@ func main() {
 ```
 fatal error: all goroutines are asleep - deadlock!
 
-goroutine 1 [chan send (nil chan)]:  
-main.main()  
+goroutine 1 [chan send (nil chan)]:
+main.main()
 ...
 ```
 
 当从 _nil_ channel 读取数据时，同样的事情发生了：
 
 ```go
-var ch chan struct{}  
+var ch chan struct{}
 <-ch
 ```
 
@@ -96,26 +96,26 @@ var ch chan struct{}
 ```go
 package main
 
-import (  
-	"fmt"  
-	"runtime"  
-	"time"  
+import (
+	"fmt"
+	"runtime"
+	"time"
 )
 
-func main() {  
-	var ch chan int  
-	if false {  
-		ch = make(chan int, 1)  
-		ch <- 1  
-	}  
-	go func(ch chan int) {  
-		<-ch  
+func main() {
+	var ch chan int
+	if false {
+		ch = make(chan int, 1)
+		ch <- 1
+	}
+	go func(ch chan int) {
+		<-ch
 	}(ch)
 
-	c := time.Tick(1 * time.Second)  
-	for range c {  
-		fmt.Printf("#goroutines: %d", runtime.NumGoroutine())  
-	}  
+	c := time.Tick(1 * time.Second)
+	for range c {
+		fmt.Printf("#goroutines: %d", runtime.NumGoroutine())
+	}
 }
 ```
 
@@ -136,10 +136,10 @@ goroutine 泄露不仅仅是因为 channel 的错误使用造成的。泄露的�
 ### net/http/pprof
 
 ```go
-import (  
-	"log"  
-	"net/http"  
-	_ "net/http/pprof"  
+import (
+	"log"
+	"net/http"
+	_ "net/http/pprof"
 )
 
 ...
@@ -154,9 +154,9 @@ log.Println(http.ListenAndServe("localhost:6060", nil))
 要将现有的 goroutine 的堆栈跟踪打印到标准输出，请执行以下操作：
 
 ```go
-import (  
-	"os"  
-	"runtime/pprof"  
+import (
+	"os"
+	"runtime/pprof"
 )
 
 ...
@@ -177,20 +177,20 @@ import "github.com/google/gops/agent"
 
 ...
 
-if err := agent.Start(); err != nil {  
-	log.Fatal(err)  
-}  
+if err := agent.Start(); err != nil {
+	log.Fatal(err)
+}
 time.Sleep(time.Hour)
 ```
 
 ```
-> ./bin/gops  
-12365   gops    (/Users/mlowicki/projects/golang/spec/bin/gops)  
-12336*  lab     (/Users/mlowicki/projects/golang/spec/bin/lab)  
-> ./bin/gops vitals -p=12336  
-goroutines: 14  
-OS threads: 9  
-GOMAXPROCS: 4  
+> ./bin/gops
+12365   gops    (/Users/mlowicki/projects/golang/spec/bin/gops)
+12336*  lab     (/Users/mlowicki/projects/golang/spec/bin/lab)
+> ./bin/gops vitals -p=12336
+goroutines: 14
+OS threads: 9
+GOMAXPROCS: 4
 num CPU: 4
 ```
 
@@ -204,10 +204,10 @@ num CPU: 4
 
 点击原文中的 ❤ 以帮助其他人发现这个问题。如果你想实时获得新的更新，请关注原作者哦~
 
-
 ## 资源
+
 * [包 —— Go 编程语言](https://golang.org/pkg/)
-	
+
 	bufio 包实现了缓存 I/O。它封装一个 io.Reader 或者 io.Writer 对象，创建其他对象（Reader 或者……）
 
 * [google/gops](https://github.com/google/gops)
@@ -222,7 +222,7 @@ num CPU: 4
 
 	leaktest - goroutine 泄露检测器。
 
-----------------
+---
 
 via: https://medium.com/golangspec/goroutine-leak-400063aef468
 

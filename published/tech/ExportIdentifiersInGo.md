@@ -181,7 +181,7 @@ record.walk()
 record.walk undefined (cannot refer to unexported field or method library.Record."".walk)
 ```
 
-----------------
+---
 
 via: https://medium.com/golangspec/exported-identifiers-in-go-518e93cc98af
 

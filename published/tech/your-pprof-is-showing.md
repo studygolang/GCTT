@@ -95,7 +95,7 @@ $ zmap -p 6060 | zgrab --port 6060 --http="/debug/pprof/"
 
 ## 预防
 
-Farsight Security [警告过这个问题，并且提供了建议](https://www.farsightsecurity.com/2016/10/28/cmikk-go-remote-profiling/) 
+Farsight Security [警告过这个问题，并且提供了建议](https://www.farsightsecurity.com/2016/10/28/cmikk-go-remote-profiling/)
 
 > 一个简单而有效的方式是将pprof http服务器放在本地主机上的一个单独的端口上，与应用程序http服务器分开。
 

@@ -1,0 +1,16 @@
+language: go
+
+go:
+  - "1.10.x"
+
+install: true
+
+stages:
+  - markdownlint
+
+jobs:
+  include:
+    - stage: markdownlint
+      script:
+        - gem install mdl
+        - mdl .

@@ -12,20 +12,17 @@
 
 在今年的 [Advent of Code](http://adventofcode.com/2017/) 中遇到了一些需要多种读取输入源的方式的问题。最终我把每种方法都至少使用了一次，因此现在我对这些技术有了一个清晰的认识。我会在这篇文章中将这些记录下来。我会按照我遇到这些技术的顺序列出来，而不是按照从易到难的顺序。
 
-* 按字节读取 
-	* 将整个文件读入内存中
-	* 分批读取文件
-	* 并行分批读取文件
-
+* 按字节读取
+  * 将整个文件读入内存中
+  * 分批读取文件
+  * 并行分批读取文件
 * 扫描
-	* 按单词扫描
-	* 将一个长字符串分割成多个单词
-	* 扫描用逗号分割的字符串
-
+  * 按单词扫描
+  * 将一个长字符串分割成多个单词
+  * 扫描用逗号分割的字符串
 * Ruby 风格
-	* 读取整个文件
-	* 读取目录下的所有文件
-
+  * 读取整个文件
+  * 读取目录下的所有文件
 * 更多帮助方法
 * 更新
 
@@ -108,7 +105,7 @@ for {
 	fmt.Println("bytestream to string: ", string(buffer[:bytesread]))
 }
 ```
-在 Github 中查看源文件 [reading-chunkwise.go](https://github.com/kgrz/reading-files-in-go/blob/master/reading-chunkwise.go) 
+在 Github 中查看源文件 [reading-chunkwise.go](https://github.com/kgrz/reading-files-in-go/blob/master/reading-chunkwise.go)
 
 与读取整个文件的区别在于：
 
@@ -324,7 +321,7 @@ for scanner.Scan() {
 }
 
 fmt.Println("word list:")
-// 由于我们会按固定大小扩充缓冲区，缓冲区容量可能比实际的单词数量大， 因此我们只有在 "pos" 
+// 由于我们会按固定大小扩充缓冲区，缓冲区容量可能比实际的单词数量大， 因此我们只有在 "pos"
 // 有效时才进行迭代。否则扫描器可能会因为遇到错误而提前终止。在这个例子中，"pos" 包含了
 // 最后一次更新的索引。
 for _, word := range words[:pos] {
@@ -488,9 +485,9 @@ handle(err)
 
 我已经在更新了的例子中使用了 `defer`，并用 `return` 取代了 `os.Exit()`。
 
-----------------
+---
 
-via: [原文链接](http://kgrz.io/reading-files-in-go-an-overview.html)
+via: http://kgrz.io/reading-files-in-go-an-overview.html
 
 作者：[Kashyap Kondamudi](http://github.com/kgrz)
 译者：[Killernova](https://github.com/killernova)

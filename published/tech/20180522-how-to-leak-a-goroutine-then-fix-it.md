@@ -160,7 +160,7 @@ NumGoroutine = 53
 
 多谢 Jean de Kelerk 和 Jason Keene，他们读了这篇文章的草稿。
 
-----------------
+---
 
 via: https://commandercoriander.net/blog/2018/05/22/how-to-leak-a-goroutine-then-fix-it/
 

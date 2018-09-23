@@ -132,7 +132,7 @@ Privoxy 是一个易用的正向代理。相比而言，Nginx 和 Haproxy 都不
 	/etc/privoxy/user.action
 	2018-03-18 17:28:05.611 7fbbf41dab88 Info: Listening on port 8118 on IP address
 	0.0.0.0
-	
+
 第二步，编译`whoyare`并且把可执行文件用scp传送到服务器，可使用以下命令：
 
 	$ CGO_ENABLED=0 GOOS=linux go build -o bin/server_linux -a ./whoyare
@@ -142,7 +142,7 @@ Privoxy 是一个易用的正向代理。相比而言，Nginx 和 Haproxy 都不
 直接发送请求如下：
 
 	$ curl -v http://your-ip:8080/whoyare
-	
+
 cURL 使用环境变量`http_proxy`来配置代理进行请求转发：
 
 	$ http_proxy=http://167.99.41.79:8118 curl -v http://188.166.17.88:8080/whoyare
@@ -163,52 +163,52 @@ cURL 使用环境变量`http_proxy`来配置代理进行请求转发：
 	<
 	* Connection #0 to host 167.99.41.79 left intact
 	{"addr":"167.99.41.79:58920"}
-	
+
 如你所见，我设置了 `http_proxy=http://167.99.41.79:8118` 之后，响应不再包含我的公网 IP 了，而是代理的 IP。
 
 privoxy 处应该会留下如下的请求日志：
 
 	2018-03-18 17:28:22.886 7fbbf41d5ae8 Request: 188.166.17.88:8080/whoyare
-	2018-03-18 17:32:29.495 7fbbf41d5ae8 Request: 188.166.17.88:8080/whoyare 
-	
+	2018-03-18 17:32:29.495 7fbbf41d5ae8 Request: 188.166.17.88:8080/whoyare
+
 你之前运行的客户端默认连接到 `localhost:8080`，但可以通过设置环境变量 `URL=http://188.166.17.88:8080` 来覆盖目标地址。运行以下命令可以直接到达 `whoyare`。
 
 	$ URL=http://188.166.17.88:8080 ./bin/client_linux
 	2018/03/18 18:37:59 Target http://188.166.17.88:8080.
 	You are {"addr":"95.248.202.252:38620"}
-	
+
 Go语言的 `HTTP.Client` 包支持一组和代理相关的环境变量，设置这些环境变量可以对运行期间的服务立刻生效，十分灵活。
 
 	export HTTP_PROXY=http://http_proxy:port/
 	export HTTPS_PROXY=http://https_proxy:port/
 	export NO_PROXY=127.0.0.1, localhost
-	
+
 前两个环境变量很简单，一个是 HTTP 代理，一个是 HTTPS 代理。`NO_PROXY` 排除了一组主机名，当要访问的主机在这个清单里的时候，请求不经过代理。我这里配置的是 `localhost` 和 127.0.0.1。
-	
+
 	HTT_PROXY=http://forwardproxy:8118
-	     +--------------+           +----------------+         +----------------+
+	     +--------------+           +---+         +---+
 	     |              |           |                |         |                |
 	     |   client     +----------^+ forward proxy  +--------^+    whoyare     |
 	     |              |           |                |         |                |
-	     +--------------+           +----------------+         +----^-----------+
+	     +--------------+           +---+         +----^-----------+
 	                                                                |
 	                                                                |
 	    +---------------+                                           |
 	    |               |                                           |
-	    |   client      +-------------------------------------------+
+	    |   client      +-----------------+
 	    |               |
 	    +---------------+
 	   HTTP_PROXY not configured
-	   
+
 配置了环境变量的客户端将会通过代理访问，其他客户端将直接访问。
 
 这个控制粒度很重要。你不仅可以按进程去控制是否经过代理，还可以按请求去控制，十分灵活。
-	
+
 	$ HTTP_PROXY=http://167.99.41.79:8118 URL=http://188.166.17.88:8080
 	./bin/client_linux
 	2018/03/18 18:39:18 Target http://188.166.17.88:8080.
-	You are {"addr":"167.99.41.79:58922"}	 
-	
+	You are {"addr":"167.99.41.79:58922"}
+
 可以看到，我们通过代理到达了 `whoyare`，响应中的 `addr` 是代理的地址。
 
 最后一个命令有些怪异，但它只是为了展示 `NO_PROXY` 是如何工作的。我们在设置访问代理的同时，排除了 `whoyare` 的 URL。正如我们期望的那样，请求没有经过代理：
@@ -216,10 +216,10 @@ Go语言的 `HTTP.Client` 包支持一组和代理相关的环境变量，设置
 	$ HTTP_PROXY=http://167.99.41.79:8118 URL=http://188.166.17.88:8080 NO_PROXY=188.166.17.88 ./bin/client_linux
 	2018/03/18 18:42:03 Target http://188.166.17.88:8080.
 	You are {"addr":"95.248.202.252:38712"}
-	
+
 本文应作为 Go 语言和正向代理的实用介绍来阅读。你可以订阅我的 [rss](https://gianarb.it/atom.xml)，或者在 [twitter](https://twitter.com/gianarb)上关注我。兴许我以后还会介绍如何用 Go 替代 privoxy 以及如何在 Kubernetes 集群上部署。所以，快告诉我先写哪部分吧！
 
-----------------
+---
 
 via: https://gianarb.it/blog/golang-forwarding-proxy
 

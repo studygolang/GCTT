@@ -2,7 +2,7 @@
 
 # Cgo 和 Python
 
-如果你研究过 [新近的 Datadog Agent](https://github.com/DataDog/datadog-agent/) ，你可能会注意到大部分代码库是用 Go 语言编写，而我们用来收集指标的检查工具仍然是用的 Python 。这是有可能的，因为  Datadog Agent（一个标准的 Go 二进制程序），内嵌了一个 CPython 解释器，在需要运行 Python 代码的时候就会调用这个解释器。通过使用一个抽象层可以让整个过程是透明的，由此，你尽可以编写惯用的 Go 代码，即使底层同时运行着 Python 代码。  
+如果你研究过 [新近的 Datadog Agent](https://github.com/DataDog/datadog-agent/) ，你可能会注意到大部分代码库是用 Go 语言编写，而我们用来收集指标的检查工具仍然是用的 Python 。这是有可能的，因为  Datadog Agent（一个标准的 Go 二进制程序），内嵌了一个 CPython 解释器，在需要运行 Python 代码的时候就会调用这个解释器。通过使用一个抽象层可以让整个过程是透明的，由此，你尽可以编写惯用的 Go 代码，即使底层同时运行着 Python 代码。
 
 想要在 Go 应用中嵌入 Python 的原因有很多种：
 
@@ -25,19 +25,19 @@
 当我们提到 “Cgo” 时，我们实际指的是底层 Go 工具链使用的一系列工具，库，函数，以及类型，所以我们依然可以用  `go build` 获取 Go 的二进制程序。一个使用 Cgo 的极简代码示例如下所示：
 
  ```go
-package main 
-// #include <float.h> 
+package main
+// #include <float.h>
 import "C"
-import "fmt" 
+import "fmt"
 
-func main() { 
+func main() {
 	fmt.Println("Max float value of float is", C.FLT_MAX)
 }
  ```
 
 在 `import "C"` 上方的注释块可以预先调用，并且能包含实际的 C 代码，在这个例子里包含了一个头文件。一旦被导入，“C” 伪库就会让程序跳转到外部代码，访问 `FLT_MAX` 宏。你可以通过调用 `go build` 来 build 该示例，就跟普通的 Go 代码一样。
 
-如果你想要了解一下底层 Cgo 所做的全部工作，就运行 `go build -x ` 。你将会看到 “Cgo” 工具被调用去生成一些 C 和 Go 的模块，然后 C 和 Go 编译器会被调用以建立目标模块，最终链接器会把一切都安排好。
+如果你想要了解一下底层 Cgo 所做的全部工作，就运行 `go build -x` 。你将会看到 “Cgo” 工具被调用去生成一些 C 和 Go 的模块，然后 C 和 Go 编译器会被调用以建立目标模块，最终链接器会把一切都安排好。
 
 你可以在 [Go 博客](https://blog.golang.org/c-go-cgo) 中阅读更多 Cgo 的内容。这篇文章包含更多示例，以及一些深入细节的有用链接。
 
@@ -51,14 +51,14 @@ func main() {
 
 ```go
 package main
-// #cgo pkg-config: python-2.7 
-// #include <Python.h> 
+// #cgo pkg-config: python-2.7
+// #include <Python.h>
 import "C"
 import "fmt"
 func main() {
 	C.Py_Initialize()
-	fmt.Println(C.GoString(C.Py_GetVersion())) 
-	C.Py_Finalize() 
+	fmt.Println(C.GoString(C.Py_GetVersion()))
+	C.Py_Finalize()
 }
 ```
 
@@ -76,13 +76,13 @@ print(sys.version)
 如果你有疑问，所有我们需要整合来调用 C Python API 的 Cgo 部分都是样板代码。这也是  Datadog Agent 依赖 [go-python](https://github.com/sbinet/go-python) 来执行所有内嵌操作的原因所在； go-python 库提供了 Go 风格的对 C API 的简单封装，并且隐藏了 Cgo 的细节。这是另一个简单的嵌入示例，这次使用 go-python：
 
 ```go
-package main 
-import ( 
-	python "github.com/sbinet/go-python" 
-) 
-func main() { 
+package main
+import (
+	python "github.com/sbinet/go-python"
+)
+func main() {
 	python.Initialize()
-	python.PyRun_SimpleString("print 'hello, world!'") 
+	python.PyRun_SimpleString("print 'hello, world!'")
 	python.Finalize()
 }
 ```
@@ -93,7 +93,7 @@ func main() {
 
 ```python
 # foo.py
-def hello(): 
+def hello():
 		""" Print hello world for fun and profit. """
 		print "hello, world!"
 ```
@@ -101,27 +101,27 @@ def hello():
 Go 代码稍微复杂点，但依然容易阅读：
 
 ```go
-// main.go 
+// main.go
 package main
 import "github.com/sbinet/go-python"
-func main() { 
-	python.Initialize() 
-	defer python.Finalize() 
+func main() {
+	python.Initialize()
+	defer python.Finalize()
 	fooModule := python.PyImport_ImportModule("foo")
-	if fooModule == nil { 
+	if fooModule == nil {
 		panic("Error importing module")
-	} 
-	helloFunc := fooModule.GetAttrString("hello") 
-	if helloFunc == nil { 
+	}
+	helloFunc := fooModule.GetAttrString("hello")
+	if helloFunc == nil {
 		panic("Error importing function")
-	} 
-	// The Python function takes no params but when using the C api 
-	// we're required to send (empty) *args and **kwargs anyways. 
-	helloFunc.Call(python.PyTuple_New(0), python.PyDict_New()) 
+	}
+	// The Python function takes no params but when using the C api
+	// we're required to send (empty) *args and **kwargs anyways.
+	helloFunc.Call(python.PyTuple_New(0), python.PyDict_New())
 }
 ```
 
-完成之后，我们需要设置 `PYTHONPATH` 环境变量到当前工作目录，由此 import 语句就能够找到 
+完成之后，我们需要设置 `PYTHONPATH` 环境变量到当前工作目录，由此 import 语句就能够找到
 
 `foo.py` 模块。在 shell 中，命令类似下面：
 
@@ -160,24 +160,24 @@ def print_even(limit=10):
 我们会在 Go 中尝试并发的打印奇数和事件编号，使用两个不同的 goroutine （由此引入线程）：
 
 ```go
-package main 
+package main
 import ( "sync"
 				"github.com/sbinet/go-python"
-			 ) 
-func main() { 
+			 )
+func main() {
 	//  下面代码会通过调用PyEval_InitThreads()显式调用 GIL ，
-	//  无需等待解释器去执行 python.Initialize() 
+	//  无需等待解释器去执行 python.Initialize()
 	var wg sync.WaitGroup
-	wg.Add(2) 
-	fooModule := python.PyImport_ImportModule("foo") 
-	odds := fooModule.GetAttrString("print_odds") 
+	wg.Add(2)
+	fooModule := python.PyImport_ImportModule("foo")
+	odds := fooModule.GetAttrString("print_odds")
 	even := fooModule.GetAttrString("print_even")
 	// Initialize() 已经锁定 GIL ，但这时我们并不需要它。
 	// 我们保存当前状态和释放锁，从而让 goroutine 能获取它
 	state := python.PyEval_SaveThread()
-	go func() { 
-		_gstate := python.PyGILState_Ensure() 
-		odds.Call(python.PyTuple_New(0), python.PyDict_New())           
+	go func() {
+		_gstate := python.PyGILState_Ensure()
+		odds.Call(python.PyTuple_New(0), python.PyDict_New())
 		python.PyGILState_Release(_gstate)
 		wg.Done()
 	}()
@@ -185,9 +185,9 @@ func main() {
 		_gstate := python.PyGILState_Ensure()
 		even.Call(python.PyTuple_New(0), python.PyDict_New())
 		python.PyGILState_Release(_gstate)
-		wg.Done() 
+		wg.Done()
 	}()
-	wg.Wait() 
+	wg.Wait()
 	// 在这里我们知道程序不会再需要运行 Python 代码了，
 	// 我们可以恢复状态和 GIL 锁，执行退出前的最后操作。
 	python.PyEval_RestoreThread(state)
@@ -215,7 +215,7 @@ func main() {
 
 现在我们已经知道怎么处理多线程 Go 代码在一个内嵌解释器中执行 Python 的过程了，但是在 GIL 之后，我们又面临着一个新的挑战：Go 调度器。
 
-当一个 goroutine 启动时，它会被调度运行在 `GOMAXPROCS ` 个可用线程中的其中一个线程——[点击这里](https://morsmachine.dk/go-scheduler)  可以了解更多细节。当一个 goroutine 执行系统调用或者调用 C 代码时，当前线程会把等待运行线程队列中的其它 goroutine 移交给另一个线程，从而让这些 goroutine 有更多机会执行；当前 goroutine 被挂起，直到系统调用或是 C 函数返回。如果有返回发生，线程就会试图唤醒被终止的 goroutine ，但如果没有返回的可能性，那该线程就会请求 Go 运行时去查找另一个线程来完成该 goroutine ，并且进入睡眠状态。 goroutine 最终被调度给另一个线程，然后结束。
+当一个 goroutine 启动时，它会被调度运行在 `GOMAXPROCS` 个可用线程中的其中一个线程——[点击这里](https://morsmachine.dk/go-scheduler)  可以了解更多细节。当一个 goroutine 执行系统调用或者调用 C 代码时，当前线程会把等待运行线程队列中的其它 goroutine 移交给另一个线程，从而让这些 goroutine 有更多机会执行；当前 goroutine 被挂起，直到系统调用或是 C 函数返回。如果有返回发生，线程就会试图唤醒被终止的 goroutine ，但如果没有返回的可能性，那该线程就会请求 Go 运行时去查找另一个线程来完成该 goroutine ，并且进入睡眠状态。 goroutine 最终被调度给另一个线程，然后结束。
 
 考虑到这些，让我们来看看当一个正在运行 Python 代码的 goroutine 被移动到一个新的线程时， goroutine 都会发生什么：
 
@@ -230,11 +230,11 @@ func main() {
 幸运的是，我们可用强制要求 Go 运行时保证我们的 goroutine 一直运行在同一个线程上，只要通过 goroutine 调用 runtime 包里的 LockOSThread 函数就行。
 
 ```go
-go func() { 
+go func() {
 	runtime.LockOSThread()
 	_gstate := python.PyGILState_Ensure()
-	odds.Call(python.PyTuple_New(0), python.PyDict_New()) 
-	python.PyGILState_Release(_gstate) 
+	odds.Call(python.PyTuple_New(0), python.PyDict_New())
+	python.PyGILState_Release(_gstate)
 	wg.Done()
 }()
 ```
@@ -259,7 +259,7 @@ go func() {
 
 你是一个掌握并且喜欢混合不同语言编程的爱好者吗？你热爱学习语言的内部工作机制来保证你的代码更加健壮吗？ [请加入 Datadog](https://www.datadoghq.com/careers/ ) !
 
-----------------
+---
 
 via: https://www.datadoghq.com/blog/engineering/cgo-and-python/
 
