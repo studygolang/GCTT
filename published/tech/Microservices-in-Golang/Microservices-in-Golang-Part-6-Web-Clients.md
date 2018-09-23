@@ -1,6 +1,6 @@
 已发布：https://studygolang.com/articles/12798
 
-# Microservices in Golang - Part 6 - Web Clients
+# Golang 下的微服务 - 第 6 部分 - Web Clients
 
 在之前的文章中，我们看了一些使用 go-micro 和 go 语言的生成的各种事件驱动的方法。 在本篇文章，我们将深入到客户端，探究一下如何创建一个能够与我们之前创建的平台交互的 Web 客户端。
 
