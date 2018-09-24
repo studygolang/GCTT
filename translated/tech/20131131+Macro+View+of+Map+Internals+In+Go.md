@@ -28,7 +28,7 @@ fmt.Printf("Value: %s", colors["Coral"])
 
 当我们在遍历map的时候，所获得key的顺序并不是原来插入的顺序，事实上，我们每次运行下面的代码，key的顺序都会改变。
 
- ```go
+```go
 colors := map[string]string{}
 colors["AliceBlue"]   = "#F0F8FF"
 colors["Coral"]       = "#FF7F50"
@@ -60,15 +60,15 @@ Salmon:#FA8072
 
 Go语言中map的散列表是由一组bucket构建而成，bucket的数量会等于2的某次方。当一个map操作被执行时会根据key的名字来生成一个散列key，比如（**colors["Black"] = "#000000"**）会根据字符串 “Black” 来生成散列key，根据这个散列key的低阶位（LOB）来选择放入哪个bucket中。
 
-[![Screen Shot](https://raw.githubusercontent.com/Maxwell365/gctt-images/master/Macro-View-of-Map-Internals-In-Go/Screen%2BShot%2B2013-12-31%2Bat%2B6.35.43%2BPM.png)](https://github.com/studygolang/gctt-images/blob/master/Macro-View-of-Map-Internals-In-Go/Screen+Shot+2013-12-31+at+6.35.43+PM.png?raw=true)
+[![Screen Shot](https://raw.githubusercontent.com/studygolang/gctt-images/master/Macro-View-of-Map-Internals-In-Go/Screen%2BShot%2B2013-12-31%2Bat%2B6.35.43%2BPM.png)](https://github.com/studygolang/gctt-images/blob/master/Macro-View-of-Map-Internals-In-Go/Screen+Shot+2013-12-31+at+6.35.43+PM.png?raw=true)
 
 一旦确定了bucket，那么就可以对键值对进行相应的操作，比如储存、删除或查找。如果我们观察bucket的内部，那么会发现两个结构体。首先是一个数组，它从之前用来选择bucket的散列key中获取8个高阶位（HOB），这个数组区分了每一个被储存在bucket中的键值对，然后是一个储存键值对内容的byte数组，这个数组把键值对结合起来并储存到所在的bucket中。
 
-[![Screen Shot](https://raw.githubusercontent.com/Maxwell365/gctt-images/master/Macro-View-of-Map-Internals-In-Go/Screen%2BShot%2B2013-12-31%2Bat%2B7.01.15%2BPM.png)](https://github.com/studygolang/gctt-images/blob/master/Screen+Shot+2013-12-31+at+7.01.15+PM.png?raw=true)
+[![Screen Shot](https://raw.githubusercontent.com/studygolang/gctt-images/master/Macro-View-of-Map-Internals-In-Go/Screen%2BShot%2B2013-12-31%2Bat%2B7.01.15%2BPM.png)](https://github.com/studygolang/gctt-images/blob/master/Screen+Shot+2013-12-31+at+7.01.15+PM.png?raw=true)
 
 当我们迭代一个map时，迭代器会访问整个bucket的数组然后按顺序取出相应的键值对，这就是为什么map是无序集合的原因。这些hash key能决定map的访问顺序是因为它们决定了每一个键值最终储存在哪个bucket。
 
-**内存和bucket溢出** 
+**内存和bucket溢出**
 
 把键值对整合起来然后看上去像是一个单独的byte数组是有原因的，如果把key和values按key/value/key/value这样存放的话，那么每一个键值对的内存分配需要保持适当的内存对齐，下面举个例子：
 
@@ -82,11 +82,11 @@ http://www.goinggo.net/2013/07/understanding-type-in-go.html
 
 一个bucket被设定为只储存8个键值对，当向一个已满的bucket插入key时，就会创建出一个新的bucket和先前的bucket关联起来，并将key加入到这个新的bucket中。
 
-[![Screen Shot](https://raw.githubusercontent.com/Maxwell365/gctt-images/master/Macro-View-of-Map-Internals-In-Go/Screen%2BShot%2B2013-12-31%2Bat%2B7.12.06%2BPM.png)](https://github.com/studygolang/gctt-images/blob/master/Screen+Shot+2013-12-31+at+7.12.06+PM.png?raw=true)
+[![Screen Shot](https://raw.githubusercontent.com/studygolang/gctt-images/master/Macro-View-of-Map-Internals-In-Go/Screen%2BShot%2B2013-12-31%2Bat%2B7.12.06%2BPM.png)](https://github.com/studygolang/gctt-images/blob/master/Screen+Shot+2013-12-31+at+7.12.06+PM.png?raw=true)
 
 **Map是如何增长的**
 
-当我们从map中持续增加或者删除键值对时，map的查找效率就会降低。hash map增长的时机由装载阈值（load threshold values） 基于下面四个因素来确定：
+当我们从map中持续增加或者删除键值对时，map的查找效率就会降低。hash map增长的时机由装载阈值（load threshold values）基于下面四个因素来确定：
 
 ```go
 % overflow  : 已满的bucket在所有bucket中的所占比例
@@ -104,11 +104,11 @@ missprobe   : 寻找一个不存在的key所需要检查的项数量
 hash table 在开始增长时会先将名叫 “old bucket” 的指针指向当前的bucket数组，然后会分配一个比原来bucket大两倍的新 bucket 数组，这可能会涉及到大量的内存分配，不过这些分配的内存并不会马上进行初始化。
 当新的 bucket 数组内存可用时，旧的 bucket 数组中的键值对会被移动或者迁移到新的bucket数组中。迁移一般在map中的键值对增加或者删除时产生，在旧的 bucket 中作为一个整体的键值对可能会被移动到不同的新bucket数组中，迁移算法会让这些键值对均匀地分配。
 
-[![Screen Shot](https://raw.githubusercontent.com/Maxwell365/gctt-images/master/Macro-View-of-Map-Internals-In-Go/Screen%2BShot%2B2013-12-31%2Bat%2B7.22.39%2BPM.png)](https://github.com/studygolang/gctt-images/blob/master/Screen+Shot+2013-12-31+at+7.22.39+PM.png?raw=true) 
+[![Screen Shot](https://raw.githubusercontent.com/studygolang/gctt-images/master/Macro-View-of-Map-Internals-In-Go/Screen%2BShot%2B2013-12-31%2Bat%2B7.22.39%2BPM.png)](https://github.com/studygolang/gctt-images/blob/master/Screen+Shot+2013-12-31+at+7.22.39+PM.png?raw=true)
 
 迭代器在数据迁移期间依然需要遍历旧 bucket 中的数据，同时迁移还会影响遍历时键值对的返回方式，所以说这是一个非常优雅的处理方式，为了确保在map增长和扩展时迭代器能正常工作是需要花费大量精力的。
 
-**结论** 
+**结论**
 
 就如我在文章开始时说的那样，这只是从微观视角去了解map的构造以及增长，这些代码使用C编写（译者注：这只是作者当时的情况，现在都是Go写的）并且使用大量的内存和指针操作来保持map的快速，效率以及安全。
 
