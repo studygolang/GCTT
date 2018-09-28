@@ -188,7 +188,7 @@ value++
 Counter = value
 ```
 
-在每一次循环的迭代过程中，全局变量 Counter 的值都被暂存到本地变量 value，本地的副本自增后，最终写回全局变量 Counter。如果这三行代码在没有的中断的情况下，没有立即运行，那么程序就会出现问题。上面的图片展示了全局变量 Counter 的读取和上下文切换会是如何导致问题的。
+在每一次循环的迭代过程中，全局变量 Counter 的值都被暂存到本地变量 value，本地的副本自增后，最终写回全局变量 Counter。如果这三行代码在没有中断的情况下，没有立即运行，那么程序就会出现问题。上面的图片展示了全局变量 Counter 的读取和上下文切换是如何导致问题的。
 
 在这幅图中，在被协程 1 增加的变量被写回全局变量 Counter 之前，协程 2 被唤醒并读取全局变量 Counter。实质上，这两个协程对全局Counter变量执行完全相同的读写操作，因此最终的结果才是 2。
 
@@ -386,6 +386,6 @@ via: https://www.ardanlabs.com/blog/2013/09/detecting-race-conditions-with-go.ht
 
 作者：[William Kennedy](https://twitter.com/goinggodotnet)
 译者：[magichan](https://github.com/magichan)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
