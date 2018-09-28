@@ -2,7 +2,7 @@
 
 我们在网上做的工作，大部分其实就是事件，webhooks 已经成为了连接系统的主要方式，不管是用户创建、支付成功、DockerHub 镜像推送或者 Git 仓库上的合并请求，这些都是非常有用并且轻量级的共享信息的方式
 
-![](https://cdn-images-1.medium.com/max/800/1*eyc16Ydypz4g8Y4WJMbSHA.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/webhook/1.png)
 
 那么，webhook 究竟是什么呢？webhook 是应用给其它应用提供实时信息的一种方式。信息一产生，webhook 就会把它发送给已经注册的应用，这就意味着你能实时得到数据。不像传统的 APIs 方式，你需要用轮询的方式来获得尽可能实时的数据。这一点使得 webhook 不管是在发送端还是接收端都非常高效。由于大部分服务提供商对 API 的访问有一定限制，所以要么采用 webhook 方式，要么采用传统的轮询方式，不过这样客户端数据会有一些（或者比较多的）滞后。上面的图是用户发起的一个典型的支付流程的示例。
 
@@ -125,11 +125,11 @@ curl --request POST \
 
 注册完以后，我们应该很快看到日志信息：
 
-![](https://cdn-images-1.medium.com/max/800/1*6EAbArGwf9qwKJ1A0TkOAw.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/webhook/2.png)
 
 在网页终端里应该会看到应用发来的请求：
 
-![](https://cdn-images-1.medium.com/max/800/1*wyDj5tcydPq7KrJzBmEBAA.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/webhook/3.png)
 
 ## 总结
 
@@ -138,17 +138,14 @@ curl --request POST \
 ### 要成功实现一个 webhook 需要考虑以下几点：
 
 - 用户应该可以指定 webhook 的地址
-
 - 大多数系统只允许连接到一个 webhook, 你可能需要允许链接到多个
-
-- 如果请求的返回码大于 500， 则重新请求。可能有人认为当请求返回的是
-4 开头的值时，才应该重新请求，因为这说明刚才的请求是无效的
+- 如果请求的返回码大于 500， 则重新请求。可能有人认为当请求返回的是 4 开头的值时，才应该重新请求，因为这说明刚才的请求是无效的
 
 如果对 webhook 感兴趣，可以看一下我们写的一些 [例子](https://webhookrelay.com/v1/examples/receiving-webhooks-on-localhost.html)，从这些例子里你可以学会如何接收本地或者局域网 webhook 发送的信息。总之 webhook 非常灵活。
 
 2018 年 7 月 13 号发表于 [webhookrelay.com](https://webhookrelay.com/blog/2018/07/13/how-to-create-webhook/)
 
-----------------
+---
 
 via: https://itnext.io/what-is-a-webhook-and-how-to-create-one-f7057d2cc0a
 
