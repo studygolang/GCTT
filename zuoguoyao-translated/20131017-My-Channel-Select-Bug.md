@@ -180,7 +180,9 @@ Found 1 data race(s)
 我不用安全的方法访问该变量的初衷是实用的，但是是错的。我认为由于该变量只在必要时用以关闭程序，所以我不介意脏读，但是万一脏读恰好出现在读写该变量的一瞬间呢？如果脏读出现，我可以在下次循环捕获它，看起来没损失对吧？为什么要像这样增加一个复杂的 channel，或者为代码加锁呢。
 
 这就涉及到 Go 内存模型了。
+
 [Go Memory Model](https://golang.org/ref/mem)
+
 [Go语言中文网翻译 Go 内存模型](https://studygolang.com/articles/819)
 
 Go 内存模型不保证 Go routine 读取 Shutdown 变量时会察觉到 main routine 的写入操作，main routine 只写 Shutdown 变量一次并且该变量不会被读取回主内存，因为 main routine 永远不会去读 Shutdown 变量。
