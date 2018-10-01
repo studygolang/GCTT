@@ -29,21 +29,18 @@ type stringStruct struct {
 
 ## 创建一个新的字符串（Creating a New String）
 
-负责在运行时创建新字符串的函数为 rawstring。以下是它具体的实现（代码中的注视是我的）：
+负责在运行时创建新字符串的函数为 rawstring。以下是它具体的实现（代码中的注释是我的）：
 
 ```go
 func rawstring(size int) (s string, b []byte) {
-  // 1. Allocate memory block the size of the
-  //    string and return a pointer to it:
+  // 1. 分配符合字符串大小的内存块，并返回指针给它：
   p := mallocgc(uintptr(size), nil, false)
 
-  // 2. Make a stringStruct with the newly
-  //    created pointer and the size of the string.
+  // 2. 用刚返回的指针创建一个元数据（stringStruct），并指定该字符串的大小。
   stringStructOf(&s).str = p
   stringStructOf(&s).len = size
 
-  // 3. Prepare a byte slice where the string's
-  //    actual data will be stored.
+  // 3. 准备一个字节类型的切片，实际上会将字符串数据存储在这里。
   *(*slice)(unsafe.Pointer(&b)) = slice{p, size, size}
 }
 ```
@@ -96,7 +93,7 @@ via: https://boakye.yiadom.org/go/strings/
 
 作者：[Yaw Boakye](https://github.com/yawboakye)
 译者：[gogeof](https://github.com/gogeof)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[Unknwon](https://github.com/Unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
