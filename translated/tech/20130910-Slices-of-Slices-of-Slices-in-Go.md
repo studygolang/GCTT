@@ -7,11 +7,11 @@ William Kennedy 2013.9.10
 
 看了一会儿问题之后，我意识到我需要创建一个海洋预报区域的切片，每个区域包含一个多边形切片。为了存储每个多边形环，我需要一个地理坐标切片。最后，每个坐标需要存储在二维的float数组中。
 
-一张图片胜过千言万语：
-![polygons](https://www.ardanlabs.com/images/goinggo/Screen+Shot+2013-09-04+at+5.02.55+PM.png)
+一张图片胜过千言万语：   
+![polygons](https://www.ardanlabs.com/images/goinggo/Screen+Shot+2013-09-04+at+5.02.55+PM.png)    
 
-存储在mongodb中的数据应该是如下格式的：
-![pattern](https://www.ardanlabs.com/images/goinggo/Screen+Shot+2013-09-10+at+3.46.19+PM.png)
+存储在mongodb中的数据应该是如下格式的：   
+![pattern](https://www.ardanlabs.com/images/goinggo/Screen+Shot+2013-09-10+at+3.46.19+PM.png)  
 
 
 
