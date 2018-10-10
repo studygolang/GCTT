@@ -71,7 +71,7 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 	}
 
 ```
-这很容易，因为程序运行得很好。第三种 [可转换](https://golang.org/ref/spec#Assignability) 的情况在这里： 
+这很容易，因为程序运行得很好。第三种 [可转换](https://golang.org/ref/spec#Assignability) 的情况在这里：
 
 　　　　<font size=3>***T 是一个接口并且 x 实现了接口 T***</font>
 
@@ -208,11 +208,11 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 	type I interface {
 	    M()
 	}
-	
+
 	type T struct {}
-	
+
 	func (T) M() {}
-	
+
 	func main() {
 	    var v I = T{}
 	    fmt.Println(T(v))
@@ -335,7 +335,7 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 程序将会 panic :
 
 ``
-	panic: interface conversion: main.I is main.T1, not main.T2	
+	panic: interface conversion: main.I is main.T1, not main.T2
 ``
 
 
