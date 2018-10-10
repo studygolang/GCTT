@@ -1,6 +1,7 @@
 ## https://www.ardanlabs.com/blog/2013/09/slices-of-slices-of-slices-in-go.html
 
 # go的多层切片
+
 William Kennedy 2013.9.10
 
 我在美国用程序为不同的地区的海洋天气预报做展示。这些多边形数据需要存储在mongodb中，而且还需要特殊的方式来处理。如果不是因为每个地区不只有一个多边形，那也没什么难的。在外部有个多边形，在其内部有0-n个多边形，并且它们之间需要维护一定的关系。
@@ -29,6 +30,29 @@ William Kennedy 2013.9.10
 
 http://www.goinggo.net/2013/08/understanding-slices-in-go-programming.html<br>
 http://www.goinggo.net/2013/08/collections-of-unknown-length-in-go.html
+
+让我们看一下在mongodb中数据是如何存储和维护的：
+
+```go
+// Polygon defines a set of points that complete a ring
+// around a geographic area
+type Polygon [][2]float64
+
+// PolygonRings defines a MongoDB Structure for storing multiple polygon rings
+type PolygonRings struct {
+    Type string           bson:&quot;type&quot;
+    Coordinates []Polygon bson:&quot;coordinates&quot;
+}
+
+// Represents a marine station and its polygons
+type MarineStation struct {
+    StationId string      bson:&quot;station_id&quot;
+    Polygons PolygonRings bson:&quot;polygons&quot;
+}
+```
+多边形类型表示2个浮点数的一个切片。这将表示构成多边形的每个点。
+
+
 
 
 ---
