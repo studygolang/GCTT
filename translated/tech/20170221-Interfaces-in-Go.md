@@ -36,7 +36,7 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 	type T struct {
 	    name string
 	}
-	
+
 	func main() {
 	    v1 := struct{ name string }{"foo"}
 	    fmt.Printf("%T\n", v1) // struct { name string }
@@ -71,14 +71,13 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 	}
 
 ```
-  
 这很容易，因为程序运行得很好。第三种 [可转换](https://golang.org/ref/spec#Assignability) 的情况在这里： 
- 
+
 　　　　<font size=3>***T 是一个接口并且 x 实现了接口 T***</font>
 
 这是因为当 *v1* 的类型实现了 *I2* 接口后，这些变量构造的时候是什么类型已经无所谓了（源代码）:
 ```
-	
+
 	type I1 interface {
 	    M1()
 	    M2()
@@ -198,11 +197,11 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 	}
 
 ```
-这不能正常运行并且会抛出一个错误 <code> cannot use v1 (type I1) as type T in assignment: need type assertion </code> 。这就是类型断言涉入的地方……  
+这不能正常运行并且会抛出一个错误 <code> cannot use v1 (type I1) as type T in assignment: need type assertion </code> 。这就是类型断言涉入的地方……
 
 只有Go编译器能够检查其正确性时才能进行转换。 在编译时无法通过的情况如下：
 
-1. 接口类型→具体类型（源代码）：  
+1. 接口类型→具体类型（源代码）：
 
 ```
 
@@ -266,7 +265,7 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 
 ##具体类型
 先让我们来看一下它是如何作用在具体类型上的（源代码）:
- 
+
 ```
 
 	type I interface {
@@ -652,11 +651,9 @@ case 语句中制定的类型必须是唯一的（[源代码](https://play.golan
 
 ```
 程序会打印 <code> T1 1 </code> 。此外，不管卫兵是否是变量简短声明的形式，这个简单的语句都可以使用。
-
-<br/><br/><br/>
+<br/><br/>
 
 点击下面的 ❤ 让更多的人看到这篇文章。如果你想获得有关最新帖子的更新或则推进后续文章的工作，请关注我。
-
 
 ---
 
