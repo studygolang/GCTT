@@ -1,5 +1,7 @@
 ## https://www.ardanlabs.com/blog/2013/09/slices-of-slices-of-slices-in-go.html
 
+# Go切片
+William Kennedy 2013.9.10
 
 
 ---
