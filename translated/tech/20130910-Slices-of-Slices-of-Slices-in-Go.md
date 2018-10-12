@@ -73,20 +73,15 @@ marineStation := MarineStation{
 }
 ```
 
-第一行代码创建了一个存储海洋预报区域的空切片。然后我们用复合字面量的方式的方式创建了一个海洋预报区域对象。
-
- Within the composite literal we have another composite literal to create an object of type PolygonRings for the Polygons property
- 在这个复合字面量中我们需要为这个PolygonRings创建另一个复合字面量对象Polygons。
- Then within the creation of the PolygonRings object we create an empty slice that can hold Polygon objects for the Coordinates property.
- 在创建的PolygonRings对象中我们为Coordinates字段创建空的slice来存储Polygon对象。
+第一行代码创建了一个存储海洋预报区域的空切片。然后我们用复合字面量的方式的方式创建了一个海洋预报区域对象。在这个复合字面量中我们需要为这个PolygonRings创建另一个复合字面量对象Polygons。在创建的PolygonRings对象中我们为Coordinates字段创建空的slice来存储Polygon对象。
  
- 若要了解复合文本的更多信息，请查看此文档：
+若要了解复合文本的更多信息，请查看此文档：
  
- http://golang.org/ref/spec#Composite_literals
+http://golang.org/ref/spec#Composite_literals
  
- 现在是时候向station添加几个多边形：
+现在是时候向station添加几个多边形：
  
- ```go
+```go
  // Create the points for the second polygon ring
 point1 = [2]float64{-80.4370117189999, 27.7877197270001}
 point2 = [2]float64{-80.4376220699999, 27.7885131840001}
@@ -145,6 +140,10 @@ Point: -80.437622,27.788513
 Point: -80.438416,27.788513
 Point: -80.437012,27.787720
 ```
+
+使用slice去解决这个问题是快速的、容易的、高效的。我将这份测试代码复制了一份放在了go存储/分享平台上。
+
+http://play.golang.org/p/UYO2HIKggy
 
 
 
