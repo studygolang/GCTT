@@ -56,6 +56,23 @@ type MarineStation struct {
 
 一个海洋预报区域当成一个与很多多边形有关系的站。
 
+测试代码将创建一个带有两个多边形的站。然后它会显示一切。让我们来看看如何用slice创建一个海洋站，并创建一个单一的海洋站进行测试：
+
+```go
+// Create a nil slice to store the polygon rings
+// for the different marine stations
+var marineStations []MarineStation
+
+// Create a marine station for AMZ123
+marineStation := MarineStation{
+    StationId: "AMZ123",
+    Polygons: PolygonRings{
+        Type: "Polygon",
+        Coordinates: []Polygon{},
+    },
+}
+```
+
 
 
 
