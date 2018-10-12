@@ -99,7 +99,17 @@ polygon = Polygon{point1, point2, point3, point4}
 // Add the polygon to the slice of polygon coordinates
 marineStation.Polygons.Coordinates = append(marineStation.Polygons.Coordinates, polygon)
  ```
+ 
+在第二个polygon中有4个点而不是5个，剩下的最后一件事就是将polygon加入到stations切片中，并且展示出来：
+  
+```go
+// Add the marine station
+marineStations = append(marineStations, marineStation)
 
+Display(marineStations)
+```
+
+  
 
 
  
