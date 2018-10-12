@@ -141,7 +141,7 @@ Point: -80.438416,27.788513
 Point: -80.437012,27.787720
 ```
 
-使用slice去解决这个问题是快速的、容易的、高效的。我将这份测试代码复制了一份放在了go存储/分享平台上。
+使用slice去解决这个问题是快速的、容易的、高效的。我将这份测试代码复制了一份放在了[The Go Playground](https://play.golang.org/)。
 
 http://play.golang.org/p/UYO2HIKggy
 
