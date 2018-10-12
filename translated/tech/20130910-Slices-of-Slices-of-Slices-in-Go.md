@@ -78,6 +78,30 @@ marineStation := MarineStation{
  Within the composite literal we have another composite literal to create an object of type PolygonRings for the Polygons property
  在这个复合字面量中我们需要为这个PolygonRings创建另一个复合字面量对象Polygons。
  Then within the creation of the PolygonRings object we create an empty slice that can hold Polygon objects for the Coordinates property.
+ 在创建的PolygonRings对象中我们为Coordinates字段创建空的slice来存储Polygon对象。
+ 
+ 若要了解复合文本的更多信息，请查看此文档：
+ 
+ http://golang.org/ref/spec#Composite_literals
+ 
+ 现在是时候向station添加几个多边形：
+ 
+ ```go
+ // Create the points for the second polygon ring
+point1 = [2]float64{-80.4370117189999, 27.7877197270001}
+point2 = [2]float64{-80.4376220699999, 27.7885131840001}
+point3 = [2]float64{-80.4384155269999, 27.7885131840001}
+point4 = [2]float64{-80.4370117189999, 27.7877197270001}
+
+// Create a polygon for this ring
+polygon = Polygon{point1, point2, point3, point4}
+
+// Add the polygon to the slice of polygon coordinates
+marineStation.Polygons.Coordinates = append(marineStation.Polygons.Coordinates, polygon)
+ ```
+
+
+
  
 
 
