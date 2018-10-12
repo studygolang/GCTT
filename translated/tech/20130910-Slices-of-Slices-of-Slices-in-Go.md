@@ -26,7 +26,7 @@ William Kennedy 2013.9.10
 
 我一直在想，我需要传递是切片的引用，这样就不会在堆栈上复制数据结构。我记得，数据结构是24字节，我不需要复制抽象层次较低一级的所有数据。
 
-阅读下面两篇文章可以学习到更多关于slice的知识
+阅读下面两篇文章可以学习到更多关于slice的知识：
 
 http://www.goinggo.net/2013/08/understanding-slices-in-go-programming.html<br>
 http://www.goinggo.net/2013/08/collections-of-unknown-length-in-go.html
@@ -50,6 +50,7 @@ type MarineStation struct {
     Polygons PolygonRings bson:&quot;polygons&quot;
 }
 ```
+
 多边形类型表示2个浮点数的一个切片。这将表示构成多边形的每个点。
 
 如果你要是想通过mongodb来执行不同区域的地理空间搜索，那么在mongodb中存储多边形接口是必须的。
@@ -74,9 +75,9 @@ marineStation := MarineStation{
 ```
 
 第一行代码创建了一个存储海洋预报区域的空切片。然后我们用复合字面量的方式的方式创建了一个海洋预报区域对象。在这个复合字面量中我们需要为这个PolygonRings创建另一个复合字面量对象Polygons。在创建的PolygonRings对象中我们为Coordinates字段创建空的slice来存储Polygon对象。
- 
+
 若要了解复合文本的更多信息，请查看此文档：
- 
+
 http://golang.org/ref/spec#Composite_literals
  
 现在是时候向station添加几个多边形：
@@ -96,7 +97,7 @@ marineStation.Polygons.Coordinates = append(marineStation.Polygons.Coordinates, 
  ```
  
 在第二个polygon中有4个点而不是5个，剩下的最后一件事就是将polygon加入到stations切片中，并且展示出来：
-  
+
 ```go
 // Add the marine station
 marineStations = append(marineStations, marineStation)
@@ -145,12 +146,7 @@ Point: -80.437012,27.787720
 
 http://play.golang.org/p/UYO2HIKggy
 
-
-
-
-
-
-
+通过快速的构建这个测试应用让我深深的感觉到slices具有很大的优点。它可以使你更加高效，代码也更加健壮。你不必担心内存管理,你可以通过引用在函数数据传递时传递较大的数据。花一些时间去学习如何在代码中使用slices，学完后你将感谢你自己。
 
 ---
 
