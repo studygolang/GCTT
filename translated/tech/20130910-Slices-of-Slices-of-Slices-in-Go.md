@@ -54,6 +54,10 @@ type MarineStation struct {
 
 如果你要是想通过mongodb来执行不同区域的地理空间搜索，那么在mongodb中存储多边形接口是必须的。
 
+一个海洋预报区域当成一个与很多多边形有关系的站。
+
+
+
 
 
 
