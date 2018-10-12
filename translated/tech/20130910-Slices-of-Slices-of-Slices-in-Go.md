@@ -109,10 +109,44 @@ marineStations = append(marineStations, marineStation)
 Display(marineStations)
 ```
 
-  
+展示函数使用关键字`range`来进行遍历所有的切片。
+
+```go
+func Display(marineStations []MarineStation) {
+    for _, marineStation := range marineStations {
+        fmt.Printf("\nStation: %s\n", marineStation.StationId)
+
+        for index, rings := range marineStation.Polygons.Coordinates {
+            fmt.Printf("Ring: %d\n", index)
+
+            for _, coordinate := range rings {
+                fmt.Printf("Point: %f,%f\n", coordinate[0], coordinate[1])
+            }
+        }
+    }
+}
+```
+
+这个方法需要传入一个MarineStation切片作为参数。记住slice结构仅仅在栈上被拷贝，并不是传入slice对象。
+
+当我们迭代MarineStation对象和组成它的所有切片时，我们得到以下结果：
+
+```
+Station: AMZ123
+Ring: 0
+Point: -79.729119,26.972940
+Point: -80.079953,26.969269
+Point: -80.080363,26.970533
+Point: -80.081051,26.975004
+Point: -79.729119,26.972940
+Ring: 1
+Point: -80.437012,27.787720
+Point: -80.437622,27.788513
+Point: -80.438416,27.788513
+Point: -80.437012,27.787720
+```
 
 
- 
 
 
 
