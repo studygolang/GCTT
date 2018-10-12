@@ -75,6 +75,11 @@ marineStation := MarineStation{
 
 第一行代码创建了一个存储海洋预报区域的空切片。然后我们用复合字面量的方式的方式创建了一个海洋预报区域对象。
 
+ Within the composite literal we have another composite literal to create an object of type PolygonRings for the Polygons property
+ 在这个复合字面量中我们需要为这个PolygonRings创建另一个复合字面量对象Polygons。
+ Then within the creation of the PolygonRings object we create an empty slice that can hold Polygon objects for the Coordinates property.
+ 
+
 
 
 
