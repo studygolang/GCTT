@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/15472
+
 # 在 Go 运行时中的 Strings
 
 ## 动机（Movivation）
@@ -20,8 +22,8 @@
 
 ```go
 type stringStruct struct {
-  str unsafe.Pointer
-  len int
+	str unsafe.Pointer
+	len int
 }
 ```
 
@@ -33,15 +35,15 @@ type stringStruct struct {
 
 ```go
 func rawstring(size int) (s string, b []byte) {
-  // 1. 分配符合字符串大小的内存块，并返回指针给它：
-  p := mallocgc(uintptr(size), nil, false)
+	// 1. 分配符合字符串大小的内存块，并返回指针给它：
+	p := mallocgc(uintptr(size), nil, false)
 
-  // 2. 用刚返回的指针创建一个元数据（stringStruct），并指定该字符串的大小。
-  stringStructOf(&s).str = p
-  stringStructOf(&s).len = size
+	// 2. 用刚返回的指针创建一个元数据（stringStruct），并指定该字符串的大小。
+	stringStructOf(&s).str = p
+	stringStructOf(&s).len = size
 
-  // 3. 准备一个字节类型的切片，实际上会将字符串数据存储在这里。
-  *(*slice)(unsafe.Pointer(&b)) = slice{p, size, size}
+	// 3. 准备一个字节类型的切片，实际上会将字符串数据存储在这里。
+	*(*slice)(unsafe.Pointer(&b)) = slice{p, size, size}
 }
 ```
 
@@ -96,5 +98,3 @@ via: https://boakye.yiadom.org/go/strings/
 校对：[Unknwon](https://github.com/Unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
-
