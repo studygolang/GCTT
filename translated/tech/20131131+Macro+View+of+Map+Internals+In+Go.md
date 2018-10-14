@@ -6,8 +6,6 @@ https://golang.org/src/runtime/map.go（译者注：因为最新1.11版本变更
 
 这些代码对于我来说很复杂，但是我觉得我们可以用一种宏观的形式去理解map是如何构建以及增长。这种方式也许可以解释map为什么无序，高效和快速。
 
-
-
 **创建和使用Map**
 
 让我们来看一下如何创建一个map实例然后储存几条数据：
@@ -56,8 +54,6 @@ Salmon:#FA8072
 
 现在我们已经知道了如何创建，设置键值对（key/value pairs）并且遍历整个map，接下来让我们去一窥它的真相。
 
-
-
 **Map是如何构建的**
 
 在Go语言中Map是以散列表（hash table）的形式实现的，如果你想了解一下散列表是什么，网上有许多相关的文章，你可以将这篇Wikipedia可以作为起点：
@@ -74,8 +70,6 @@ Go语言中map的散列表是由一组bucket构建而成，bucket的数量会等
 
 当我们迭代一个map时，迭代器会访问整个bucket的数组然后按顺序取出相应的键值对，这就是为什么map是无序集合的原因。这些hash key能决定map的访问顺序是因为它们决定了每一个键值最终储存在哪个bucket。
 
-
-
 **内存和bucket溢出**
 
 把键值对整合起来然后看上去像是一个单独的byte数组是有原因的，如果把key和values按key/value/key/value这样存放的话，那么每一个键值对的内存分配需要保持适当的内存对齐，下面举个例子：
@@ -91,8 +85,6 @@ http://www.goinggo.net/2013/07/understanding-type-in-go.html
 一个bucket被设定为只储存8个键值对，当向一个已满的bucket插入key时，就会创建出一个新的bucket和先前的bucket关联起来，并将key加入到这个新的bucket中。
 
 [![Screen Shot](https://raw.githubusercontent.com/studygolang/gctt-images/master/Macro-View-of-Map-Internals-In-Go/Screen%2BShot%2B2013-12-31%2Bat%2B7.12.06%2BPM.png)](https://github.com/studygolang/gctt-images/blob/master/Screen+Shot+2013-12-31+at+7.12.06+PM.png?raw=true)
-
-
 
 **Map是如何增长的**
 
@@ -118,15 +110,11 @@ hash table 在开始增长时会先将名叫 “old bucket” 的指针指向当
 
 迭代器在数据迁移期间依然需要遍历旧 bucket 中的数据，同时迁移还会影响遍历时键值对的返回方式，所以说这是一个非常优雅的处理方式，为了确保在map增长和扩展时迭代器能正常工作是需要花费大量精力的。
 
-
-
 **结论**
 
 就如我在文章开始时说的那样，这只是从宏观视角去了解map的构造以及增长，这些代码使用C编写（译者注：这只是作者当时的情况，现在都是Go写的）并且使用大量的内存和指针操作来保持map的快速，效率以及安全。
 
 很明显，目前的实现方式可能随时会改变，但这并不影响我们使用map的方式。如果你事先知道需要用到多少key，那么最好在初始化的时候就分配好这些空间，同时这也解释了为什么map是无序集合，为什么在遍历时迭代器看上去像是随机选择数据。
-
-
 
 **特别感谢**
 
