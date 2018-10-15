@@ -1,4 +1,6 @@
-# 在 Go 中发现竞态条件(Race Conditions)
+首发于：https://studygolang.com/articles/15349
+
+# 在 Go 中发现竞态条件 (Race Conditions)
 
 当我意识到我一直在处理和解决的问题有一个专有名词描述的时候，我总会觉得这事十分有趣。这次出现这种情况的是竞争条件(Race Conditions)。当你处理多个 routine 共享某类资源的时候，不可避免的需要考虑到这个。如果你未曾在你的代码中考虑过这个问题，现在就是一个不错的时候。
 
@@ -168,13 +170,13 @@ Final Counter: 2
 
 在没有暂停的情况下，代码运行如下图：
 
-![](https://github.com/studygolang/gctt-images/blob/master/detecting-race-conditions-with-go/1.png?raw=true)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/detecting-race-conditions-with-go/1.png)
 
 没有暂停的情况下，第一个协程被生成，并且完成执行，紧接着第二个协程才开始运行。这就是为什么程序看起来像正确运行的原因，因为它在我的电脑上运行速度非常快，以至于代码自行排队运行。
 
 让我们看看在有暂停的情况下，代码如何运行:
 
-![](https://github.com/studygolang/gctt-images/blob/master/detecting-race-conditions-with-go/2.png?raw=true)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/detecting-race-conditions-with-go/2.png)
 
 上图已经展示了所有必要的信息，因此我就没有把他全部画出来。这个暂停导致运行的两个协程之间进行了一次上下文切换。这次我们有一个完全不同的情况。让我们看看图中展示的代码:
 
@@ -376,11 +378,11 @@ Final Counter: 4
 
 你可以通过以下文章学习更多例子，更好地理解 Go 竞态检测器：
 
-[http://blog.golang.org/race-detector](http://blog.golang.org/race-detector)
+http://blog.golang.org/race-detector
 
 如果你使用了多个协程，那么使用竞态检测器测试你的代码是个不错的建议。它会在单元测试和质量保证测试中，为你节省大量的时间和麻烦。Go 开发人员能有这样的工具是很幸运地，所以值得学习一下。
 
-----------------
+---
 
 via: https://www.ardanlabs.com/blog/2013/09/detecting-race-conditions-with-go.html
 
