@@ -123,7 +123,7 @@ func Display(marineStations []MarineStation) {
 }
 ```
 
-这个方法需要传入一个MarineStation切片作为参数。记住slice结构仅仅在栈上被拷贝，并不是传入slice对象。
+这个方法需要传入一个MarineStation切片作为参数。记住slice结构仅仅是在栈上被拷贝，并不是传入slice对象。
 
 当我们迭代MarineStation对象和组成它的所有切片时，我们得到以下结果：
 
