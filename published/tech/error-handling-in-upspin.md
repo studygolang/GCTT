@@ -24,7 +24,7 @@
 
 这个包的中心是 [Error](https://godoc.org/upspin.io/errors#Error) 类型，这是一个 Upspin 错误的具体表示。它具有多个字段，任何一个字段都可以不做设置：
 
-```go 
+```go
 type Error struct {
     Path upspin.PathName
     User upspin.UserName
@@ -71,7 +71,7 @@ if err := authorize(user); err != nil {
 E 的 String 方法会将其整洁地格式化：
 
 ```
-server.Delete: user ann@example.com: permission denied: user not authorized  
+server.Delete: user ann@example.com: permission denied: user not authorized
 ```
 
 如果错误多级嵌套，那么会抑制冗余字段，并且使用缩进来格式化嵌套：
@@ -79,7 +79,7 @@ server.Delete: user ann@example.com: permission denied: user not authorized
 ```
 client.Lookup: ann@example.com/file: item does not exist:
     dir/remote("upspin.example.net:443").Lookup:
-    dir/server.Lookup  
+    dir/server.Lookup
 ```
 
 注意，这条错误信息中提到了多种操作（client.Lookup，dir/remote，dir/server）。在后面的部分，我们会讨论这种多重性。
@@ -220,7 +220,7 @@ errors 包的行为一定程度建立在底层系统内部的类型上的。这�
 
 _来自 Rob Pike 和 Andrew Gerrand_
 
-----------------
+---
 
 via: https://commandcenter.blogspot.co.uk/2017/12/error-handling-in-upspin.html
 
