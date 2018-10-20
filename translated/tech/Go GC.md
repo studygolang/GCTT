@@ -1,4 +1,4 @@
-Go GC
+# Go GC
 
 大家好，我是 Okada（[@ocadaruma](https://twitter.com/ocadaruma)）,LINE 广告平台团队的成员。我对 Go 的 GC （垃圾收集器）有点感兴趣，甚至还促使我专门写一篇关于它的博客。Go 是一门由 Google 开发，并且支持垃圾收集的编程语言。Go 通过[管道](https://tour.golang.org/concurrency/2)支持并发。很多的公司，包括 Google，都在使用 Go，LINE 也用 Go 来开发工具和服务。
 
