@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/15648
+
 # Go 程序到机器码的编译之旅
 
 在 [Stream](https://getstream.io/) 里，我们广泛地使用 Go，它也的确巨大地提高了我们的生产效率。我们也发现 Go 语言性能的确出众。自从使用了 Go 以后，我们也完成了类似于我们内部使用的基于 gRPC, Raft 和 RocksDB 存储引擎这类技术栈关键性部分的目标。
@@ -199,7 +201,7 @@ func main() {
 
 为了更加深入，我们看一下下述示意图。它就代表了上述的数据，但只包含了类型信息和红色的代码用以标识各个节点。
 
-![ast-diagram](https://getstream-blog.imgix.net/blog/wp-content/uploads/2018/09/image1-5.png?w=1024&h=1024&dpr=2)
+![ast-diagram](https://raw.githubusercontent.com/studygolang/gctt-images/master/compile-machine-code/image1-5.png)
 
 main 函数由三个部分组成：函数名，定义和函数体。函数名就是取值为 main 的标识符。Type 字段对应的就是定义，根据情况会包含一系列的参数和返回值。函数体就是一系列的程序语句。这边我们就一条语句。
 
@@ -299,7 +301,7 @@ $ GOSSAFUNC=main GOOS=linux GOARCH=amd64 go build -gcflags “-S” simple.go
 
 这会打印整个 SSA，并生成一个相关联的 ssa.html 文件。
 
-![ssa](https://getstream-blog.imgix.net/blog/wp-content/uploads/2018/09/image3-4.png?w=1024&h=1024&dpr=2)
+![ssa](https://raw.githubusercontent.com/studygolang/gctt-images/master/compile-machine-code/image3-4.png)
 
 当你打开 ssa.html，你会看到一系列的阶段，大部分被折叠了。最开始的阶段是从 AST 生成 SSA。再然后就是将非特定机器的 SSA 转换成特定机器的 SSA。最后生成最终的机器码 genssa。
 
@@ -401,6 +403,6 @@ via: https://getstream.io/blog/how-a-go-program-compiles-down-to-machine-code/
 
 作者：[Koen Vlaswinkel](https://getstream.io/blog/author/koen/)
 译者：[alfred-zhong](https://github.com/alfred-zhong)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
