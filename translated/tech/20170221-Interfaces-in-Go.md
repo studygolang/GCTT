@@ -1,5 +1,5 @@
 # Go语言中的接口(part II)
-## 类型断言 & 类型开关
+## 类型断言 & 类型转换
 
 有些时候，我们需要将数值转换成不同的类型。在编译的时候会进行类型转换的检查，整个机制已经在 [以前的文章](https://medium.com/golangspec/conversions-in-go-4301e8d84067) 中讲过。简而言之它就像下面这样（源代码）：
 ```
@@ -30,7 +30,7 @@
 
 ```
 
-Golang 有转换的规则，一些特定的情况下允许赋值给另一种类型值的变量（源代码）：
+Golang 有可转换的规则，一些特定的情况下允许赋值给另一种类型值的变量（源代码）：
 ```
 
 	type T struct {
@@ -47,8 +47,8 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 
 ```
 
-文章将重点来讲当涉及到接口类型时发生的这些转换。此外我们将引入新的结构——类型断言和类型开关。
-</br>
+文章将重点来讲当涉及到接口类型时发生的这些转换。此外我们将引入新的结构——类型断言和类型转换。
+
 假设我们有两种不同接口类型的变量，接着我们将其中一个赋值给另外一个（源代码）：
 ```
 
@@ -161,7 +161,7 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 
 ```
 
-因此，我们已经看到了涉及两种接口类型的情况。 当右侧值为具体类型（非接口类型）并实现接口时，前面列出的第3种可分配性也适用（源代码）：
+因此，我们已经看到了涉及两种接口类型的情况。 当右侧值为具体类型（非接口类型）并实现接口时，前面列出的第3种可转换性也适用（源代码）：
 ```
 
 	type I1 interface {
@@ -179,7 +179,7 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 
 ```
 
-当接口类型值需要分配给具体类型的变量时，它是如何工作的？（源代码）
+当接口类型值需要赋值给具体类型的变量时，它是如何工作的？（源代码）
 ```
 
 	type I1 interface {
@@ -197,7 +197,8 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 	}
 
 ```
-这不能正常运行并且会抛出一个错误 <code> cannot use v1 (type I1) as type T in assignment: need type assertion </code> 。这就是类型断言涉入的地方……
+这不能正常运行并且会抛出一个错误 ``` cannot use v1 (type I1) as type T in assignment: need type assertion 
+``` 。这就是类型断言涉入的地方……
 
 只有Go编译器能够检查其正确性时才能进行转换。 在编译时无法通过的情况如下：
 
@@ -220,7 +221,7 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 
 ```
 
-它会给出一个编译错误 <code> cannot convert v(type I) to type T: need type assertion </code> 。这是因为任何实现接口 *I* 的值都可以被赋值给变量 *v*，所以编译器不知道这种隐式转换是否有效。
+它会给出一个编译错误 ``` cannot convert v(type I) to type T: need type assertion ``` 。这是因为任何实现接口 *I* 的值都可以被赋值给变量 *v*，所以编译器不知道这种隐式转换是否有效。
 
 2. 接口类型→接口类型，当右边接口的方法集不是左边接口方法集的子集时（源代码）
 ```
@@ -250,7 +251,7 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 ```
 错误原因同上。如果 *I2* 方法集是 *I1* 方法集的子集，编译器在编译的阶段就能知道。但是这不一样，这样的转换在运行时才可能发生。
 
-这不是严格的类型转换，类型断言和类型开关允许检查/检索接口类型值的动态值甚至将接口的类型值转换成不同接口的类型值。
+这不是严格的类型转换，类型断言和类型转换允许检查/检索接口类型值的动态值甚至将接口的类型值转换成不同接口的类型值。
 
 # 类型断言
 类型断言的语法如下：
@@ -306,7 +307,7 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 
 ```
 
-这样的代码不可能成功编译，因为 <code> impossible type assertion </code> 错误。变量 *v1* 不能存放 *T2* 类型，因为 *T2* 类型不满足接口 *I* 而变量 *v1* 只能存放实现了接口 *I* 的类型的值。
+这样的代码不可能成功编译，因为 ``` impossible type assertion ``` 错误。变量 *v1* 不能存放 *T2* 类型，因为 *T2* 类型不满足接口 *I* 而变量 *v1* 只能存放实现了接口 *I* 的类型的值。
 
 编译器不知道在运行中变量 *v1* 会存放什么样的值。类型断言是一种从接口类型值中检验动态值的方法。但是当 *v1* 的动态类型与 *T* 不匹配会发生什么？（源代码）
 
@@ -451,13 +452,13 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 
 上述程序会 panic :
 
-<code>panic: interface conversion: main.I is nil, not main.T </code>
+``` panic: interface conversion: main.I is nil, not main.T ```
 
 当 *v* 是零值时，之前介绍的多返回值的形式会避免 panic —— [证明](https://play.golang.org/p/39nlRMfH-E)。
 
 
-#类型开关
-类型断言仅仅只是一个方法，用来判断一个接口类型值的动态类型是否实现了所需要的接口或则与传递的具体类型值相同。如果代码需要对单个变量进行多次的测试，Golang 提供了一个比一系列类型断言更简洁的结构，类似传统的 switch 语句：
+#类型转换
+类型断言仅仅只是一个方法，用来判断一个接口类型值的动态类型是否实现了所需要的接口或者与传递的具体类型值相同。如果代码需要对单个变量进行多次的测试，Golang 提供了一个比类型断言更简洁的结构，类似传统的 switch 语句：
 
 ```
 
@@ -495,11 +496,11 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 
 ```
 
-语法和类型断言很相似，但是使用关键字 *type* 。当借口类型值的值为 *nil* ，那么输出是 <code> nil </code> （[源代码](https://play.golang.org/p/IoOCtm5gaR)）,但当我们将 *v* 赋值：
+语法和类型断言很相似，但是使用关键字 *type* 。当接口类型值的值为 *nil* ，那么输出是 ``` nil ``` （[源代码](https://play.golang.org/p/IoOCtm5gaR)）,但当我们将 *v* 赋值：
 
-<code> var v I1 = T2{} </code>
+``` var v I1 = T2{} ```
 
-程序就会打印出 <code> T2 </code> ([源代码](https://play.golang.org/p/2LbRnZs0BU))。类型开关同样可以作用在借口类型上（[源代码](https://play.golang.org/p/2LbRnZs0BU)）：
+程序就会打印出 ``` T2 ``` ([源代码](https://play.golang.org/p/2LbRnZs0BU))。类型转换同样可以作用在借口类型上（[源代码](https://play.golang.org/p/2LbRnZs0BU)）：
 
 ```
 
@@ -518,7 +519,7 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 	}
 
 ```
-这会打印出 <code> T2 </code>。如果同时匹配多个接口类型会进入第一个（从上到下）。如果没有匹配的类型则什么都不会发生（源代码）:
+这会打印出 ``` T2 ```。如果同时匹配多个接口类型会进入第一个（从上到下）。如果没有匹配的类型则什么都不会发生（源代码）:
 
 ```
 
@@ -563,7 +564,7 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 	}
 
 ```
-当 *v* 的动态类型被 [卫兵](https://golang.org/ref/spec#TypeSwitchGuard) 判定为 *T2* 时会打印出 <code> T1 or T2 </code> 。
+当 *v* 的动态类型被 [卫兵](https://golang.org/ref/spec#TypeSwitchGuard) 判定为 *T2* 时会打印出 ``` T1 or T2 ``` 。
 
 ## default case
 这种情况和以前的 switch 语句很相似。它会被用在找不到任何匹配类型的时候（[源代码](https://play.golang.org/p/8nsUrsN9NS)）：
@@ -578,9 +579,9 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 
 ```
 ## 变量简短声明
-目前为止我们已经了解了类型开关，其中的 [卫兵](https://golang.org/ref/spec#TypeSwitchGuard) 有以下的语法：
+目前为止我们已经了解了类型转换，其中的 [卫兵](https://golang.org/ref/spec#TypeSwitchGuard) 有以下的语法：
 
-<code> v.(type) </code>
+``` v.(type) ```
 
 其中 *v* 是变量名。此外变量简短声明可以用在这里（[源代码](https://play.golang.org/p/AeFTeHSky0)）：
 
@@ -599,7 +600,7 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 
 ```
 
-这会打印 <code> *main.T2 is nil: true </code> ，所以 *t* 的类型 case 语句中的。如果一条语句中有多个类型， 那么 *t* 的类型将和 *v* 的类型一样（[源代码](https://play.golang.org/p/XMU8wC8X2h)）：
+这会打印 ``` *main.T2 is nil: true ``` ，所以 *t* 的类型 case 语句中的。如果一条语句中有多个类型， 那么 *t* 的类型将和 *v* 的类型一样（[源代码](https://play.golang.org/p/XMU8wC8X2h)）：
 
 ```
 
@@ -614,7 +615,7 @@ Golang 有转换的规则，一些特定的情况下允许赋值给另一种类�
 
 ```
 
-这个输出 <code> *main.T2 is nil: false </code> 。变量 *t* 是接口类型因它不是 *nil* 而是指向一个 *nil* 指针（ [part I](https://medium.com/golangspec/interfaces-in-go-part-i-4ae53a97479c) 中解释了接口类型什么时候为 *nil*）。
+这个输出 ``` *main.T2 is nil: false ``` 。变量 *t* 是接口类型因它不是 *nil* 而是指向一个 *nil* 指针（ [part I](https://medium.com/golangspec/interfaces-in-go-part-i-4ae53a97479c) 中解释了接口类型什么时候为 *nil*）。
 
 
 ##重复
@@ -633,7 +634,7 @@ case 语句中制定的类型必须是唯一的（[源代码](https://play.golan
 
 ```
 
-编译这段代码的话会以错误终止 <code> duplicate case T1 in type switch </code>。
+编译这段代码的话会以错误终止 ``` duplicate case T1 in type switch ```。
 
 ##可选的简单语句
 [卫兵](https://golang.org/ref/spec#TypeSwitchGuard) 的前面可以加上一条简单的语句，如另一条变量简短声明（[源代码](https://play.golang.org/p/NPXLEa6b8v)）：
@@ -650,8 +651,7 @@ case 语句中制定的类型必须是唯一的（[源代码](https://play.golan
 	}
 
 ```
-程序会打印 <code> T1 1 </code> 。此外，不管卫兵是否是变量简短声明的形式，这个简单的语句都可以使用。
-<br/><br/>
+程序会打印 ``` T1 1 ``` 。此外，不管卫兵是否是变量简短声明的形式，这个简单的语句都可以使用。
 
 点击下面的 ❤ 让更多的人看到这篇文章。如果你想获得有关最新帖子的更新或则推进后续文章的工作，请关注我。
 
