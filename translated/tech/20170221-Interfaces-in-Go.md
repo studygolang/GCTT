@@ -197,7 +197,7 @@ Golang 有可转换的规则，一些特定的情况下允许赋值给另一种�
 	}
 
 ```
-这不能正常运行并且会抛出一个错误 ``` cannot use v1 (type I1) as type T in assignment: need type assertion 
+这不能正常运行并且会抛出一个错误 ``` cannot use v1 (type I1) as type T in assignment: need type assertion
 ``` 。这就是类型断言涉入的地方……
 
 只有Go编译器能够检查其正确性时才能进行转换。 在编译时无法通过的情况如下：
