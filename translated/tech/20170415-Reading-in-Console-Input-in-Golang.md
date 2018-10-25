@@ -1,3 +1,5 @@
+# https://tutorialedge.net/golang/reading-console-input-golang/
+
 # Go 接口（第三部分）
 
 简单鼓励下还是大喝采，根据你对这篇文章的喜欢程度鼓掌吧。
