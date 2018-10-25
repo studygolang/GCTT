@@ -26,3 +26,47 @@ William Kennedy 2014年1月29日
 
 操作系统是根据当前机器的可用处理器个数来调度线程，Go 运行时是以一个操作系统级别的线程组成的逻辑处理器来执行协程调度的。默认情况下，Go 运行时会分配一个单核的逻辑处理器去处理所有在程序中创建的协程。即使是一个单核的逻辑处理器和操作系统线程，也可以以惊人的效率和性能来调度成千上万个协程并发运行。我是不建议添加逻辑处理器的，但是如果你想并行运行协程，你可以通过设置 GOMAXPROCS 环境变量或者 runtime 方法来完成。
 
+并发不是平行。并行是指当两个或两个以上的线程在不同的处理器同时执行的现象。如果你通过定义 runtime 去使用1个以上的逻辑处理器，调度器将会分配这些协程在不同的逻辑处理器上，这就会导致协程运行在不同的操作系统级别的线程上。然而，为了并行运行程序你需要一个多核处理器的机器。如果不是这样，即使你的 runtime 设置的是多核逻辑处理器，程序还是运行在一个单核的处理器上。 
+
+## 并发的例子
+
+让我们来创建一个小的程序来展示 Go 运行协程时的并发性。在这个例子中我们是在一个逻辑处理器上运行的：
+
+```package main
+
+import (
+    "fmt"
+    "runtime"
+    "sync"
+)
+
+func main() {
+    runtime.GOMAXPROCS(1)
+
+    var wg sync.WaitGroup
+    wg.Add(2)
+
+    fmt.Println("Starting Go Routines")
+    go func() {
+        defer wg.Done()
+
+        for char := ‘a’; char < ‘a’+26; char++ {
+            fmt.Printf("%c ", char)
+        }
+    }()
+
+    go func() {
+        defer wg.Done()
+
+        for number := 1; number < 27; number++ {
+            fmt.Printf("%d ", number)
+        }
+    }()
+
+    fmt.Println("Waiting To Finish")
+    wg.Wait()
+
+    fmt.Println("\nTerminating Program")
+}
+```
+
