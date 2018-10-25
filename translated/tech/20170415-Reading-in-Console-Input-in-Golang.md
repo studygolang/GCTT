@@ -87,8 +87,7 @@ func scanner() {
 
 我希望你这篇文章对你有所帮助，如果有任何疑问，可以在下面的评论区留言。
 
-> 如果你喜欢这篇文章，那么你应该也喜欢这篇 [Calling System Commands](https://tutorialedge.net/golang/executing-system-commands-with-
-golang/)。
+> 如果你喜欢这篇文章，那么你应该也喜欢这篇[Calling System Commands](https://tutorialedge.net/golang/executing-system-commands-with-golang)。
 
 ---
 
