@@ -77,9 +77,9 @@ marineStation := MarineStation{
 若要了解复合文本的更多信息，请查看此文档：
 
 http://golang.org/ref/spec#Composite_literals
- 
+
 现在是时候向 station 添加几个区域数据结构：
- 
+
 ```go
  // Create the points for the second polygon ring
 point1 = [2]float64{-80.4370117189999, 27.7877197270001}
@@ -93,7 +93,7 @@ polygon = Polygon{point1, point2, point3, point4}
 // Add the polygon to the slice of polygon coordinates
 marineStation.Polygons.Coordinates = append(marineStation.Polygons.Coordinates, polygon)
  ```
- 
+
 在第二个 polygon 中有4个点而不是5个，剩下的最后一件事就是将 polygon 加入到 stations 切片中，并且展示出来：
 
 ```go
