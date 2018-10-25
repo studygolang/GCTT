@@ -32,7 +32,8 @@ William Kennedy 2014年1月29日
 
 让我们来创建一个小的程序来展示 Go 运行协程时的并发性。在这个例子中我们是在一个逻辑处理器上运行的：
 
-```package main
+```go
+package main
 
 import (
     "fmt"
@@ -70,3 +71,142 @@ func main() {
 }
 ```
 
+这个程序通过 go 关键字和两个匿名函数创建了两个协程。第一个协程展示的是小写字母表，第二个协程展示的是1到26个数字，当我们运行这个程序时得到下面的输出：
+
+```
+Starting Go Routines
+Waiting To Finish
+a b c d e f g h i j k l m n o p q r s t u v w x y z 1 2 3 4 5 6 7 8 9 10 11
+12 13 14 15 16 17 18 19 20 21 22 23 24 25 26
+Terminating Program
+```
+
+通过看结果我们发现代码是并发运行的。一旦两个协程被启动后，这个主的协程需要等待两个协程执行完成，因为如果不等带它们执行完成就结束主线程的话，这个程序就结束了。使用`WaitGrout`是一个处理线程之间交流是否结束的好方法。
+
+我们可以发现在全部展示完啊 a-z 26个字母后才展示1-26个数字。这个是因为完成这些工作只需不到1ms的时间，我们并没有在第一个协程结束前看到协程的调度。我们可以在协程中使用 sleep 来使协程发生调度的现象：
+
+```
+package main
+
+import (
+    "fmt"
+    "runtime"
+    "sync"
+    "time"
+)
+
+func main() {
+    runtime.GOMAXPROCS(1)
+
+    var wg sync.WaitGroup
+    wg.Add(2)
+
+    fmt.Println("Starting Go Routines")
+    go func() {
+        defer wg.Done()
+
+        time.Sleep(1 * time.Microsecond)
+        for char := ‘a’; char < ‘a’+26; char++ {
+            fmt.Printf("%c ", char)
+        }
+    }()
+
+    go func() {
+        defer wg.Done()
+
+        for number := 1; number < 27; number++ {
+            fmt.Printf("%d ", number)
+        }
+    }()
+
+    fmt.Println("Waiting To Finish")
+    wg.Wait()
+
+    fmt.Println("\nTerminating Program")
+}
+```
+
+这次我们在第一个协程刚启动时添加了 sleep 函数，通过调用 sleep 函数调度器交换了协程的执行顺序。
+
+```
+Starting Go Routines
+Waiting To Finish
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 a
+b c d e f g h i j k l m n o p q r s t u v w x y z
+Terminating Program
+```
+
+这次数字的展示在字母表的前面了。这个 sleep 导致调度器停止了当前执行的第一个协程并开始执行第二个协程。
+
+## 并行的例子
+
+在刚刚我们运行的两个例子中，协程是并发运行的，而不是并行。让我们改变一下代码来允许他们并行运行。我们只需让调度器从使用一个逻辑处理器变为两个：
+
+```go
+package main
+
+import (
+    "fmt"
+    "runtime"
+    "sync"
+)
+
+func main() {
+    runtime.GOMAXPROCS(2)
+
+    var wg sync.WaitGroup
+    wg.Add(2)
+
+    fmt.Println("Starting Go Routines")
+    go func() {
+        defer wg.Done()
+
+        for char := ‘a’; char < ‘a’+26; char++ {
+            fmt.Printf("%c ", char)
+        }
+    }()
+
+    go func() {
+        defer wg.Done()
+
+        for number := 1; number < 27; number++ {
+            fmt.Printf("%d ", number)
+        }
+    }()
+
+    fmt.Println("Waiting To Finish")
+    wg.Wait()
+
+    fmt.Println("\nTerminating Program")
+}
+```
+
+这是这段程序的输出结果：
+
+```
+Starting Go Routines
+Waiting To Finish
+a b 1 2 3 4 c d e f 5 g h 6 i 7 j 8 k 9 10 11 12 l m n o p q 13 r s 14
+t 15 u v 16 w 17 x y 18 z 19 20 21 22 23 24 25 26
+Terminating Program
+```
+
+每次运行程序时我们都将得到不同的结果。调度器在每次运行中的调度过程是不确定的。我们可以看到两个协程确实并行运行了。两个协程在一个开始都立刻开始运行，并且他们都在争夺时间片来展示各自的结果。
+
+## 结论
+
+仅仅因为我们能过为调度器增加逻辑处理并不意味着我们需要它。这就是为什么 Go 组织会设置默认为一个单核逻辑处理器的原因。仅仅知道任意添加逻辑处理器和并行运行 goroutine 不一定会让程序拥有更好的性能。我们应该使用默认的配置，除非我们确实需要修改它们。
+
+如果两个协程在同时使用一个临界资源会导致死锁问题，所以对临界资源的读写必须是原子性的。换句话说，读写必须在同一个协程内，否则的话就会导致死锁问题，学习更多关于[死锁](http://www.goinggo.net/2013/09/detecting-race-conditions-with-go.html)的知识请阅读我们的文章。
+
+在 Go 使用 Channels 可以写出安全优雅的并发程序，并且可以消除死锁的问题，你会再次找到并发的乐趣。既然我们已经知道协程如何工作，如何被调度和如何并行的运行，下一个我们要学习的就是channels。
+
+---
+
+via: https://www.ardanlabs.com/blog/2014/01/concurrency-goroutines-and-gomaxprocs.html
+
+作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
+译者：[译者ID](https://github.com/xmge)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
