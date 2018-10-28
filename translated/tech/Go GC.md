@@ -8,7 +8,7 @@
 
 - 它是一个，并行标记，用一个写屏障（写的时候阻塞）的清理（程序）。它是非分代，非压缩的。 -- [mgc.go](https://github.com/golang/go/blob/4d7cf3fedbc382215df5ff6167ee9782a9cc9375/src/runtime/mgc.go)
 
-下面是 Java GC 和 Go GC 的对比。相比于 Java ，Go GC 看起来对于我来说有点简单，所以我决定深入进去，看下 Go GC 是怎么工作的。
+下面是 Java GC 和 Go GC 的对比。相比于 Java ，Go GC 对于我来说看起来有点简单，所以我决定深入进去，看下 Go GC 是怎么工作的。
 
 |    | Java(Java8 HotSpot VM) | Go
 | :- | :- | :- |
@@ -75,7 +75,7 @@ Java8 HotSpot Vm 的所有收集器都实现了分代 GC。
 写屏障速度很快，但简单来说，它还不够快。
 ```
 
-使用 Go，编译器的逃逸分析非常出色，如果需要，程序员可以控制到，不在堆上分配对象，因此短期对象通常分配在栈中而不是在堆中；这意味着不需要 GC。总的来说，你可以获得的好处，没有其他语言的运行时多。有一些用 Go 语言编写的库，跟速度一样出名的是，这些库恰好也是零内存分配。尽管如此，我们仍然有消耗，在每次 GC 循环中多次扫描长寿命的对象。来自 Google 的 Ian Lance Taylor 已经在 golang-nuts 中提到了这一点，[为什么垃圾收集器不实现分代 GC 功能？](https://groups.google.com/forum/#!topic/golang-nuts/KJiyv2mV2pU)
+使用 Go，编译器的逃逸分析非常出色，如果需要，程序员可以控制到，不在堆上分配对象，因此短期对象通常分配在栈中而不是在堆中；这意味着不需要 GC。总的来说，你从分代 GC 得到的（好处）比其他（语言）运行时少。有一些用 Go 语言编写的库，跟速度一样出名的是，这些库恰好也是零内存分配。尽管如此，我们仍然有消耗，在每次 GC 循环中多次扫描长寿命的对象。来自 Google 的 Ian Lance Taylor 已经在 golang-nuts 中提到了这一点，[为什么垃圾收集器不实现分代 GC 功能？](https://groups.google.com/forum/#!topic/golang-nuts/KJiyv2mV2pU)
 
 - 这是个很好的问题。Go 当前的 GC 显然做了一些额外的工作，但它也跟其他的工作并行执行，所以在具有备用 CPU 的系统上，Go 正在作出合理的选择。请看 [https://golang.org/issue/17969](https://golang.org/issue/17969)
 
@@ -88,6 +88,6 @@ via: https://engineering.linecorp.com/en/blog/detail/342
 
 作者：[Haruki Okada](https://twitter.com/ocadaruma)
 译者：[gogeof](https://github.com/gogeof)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
