@@ -1,15 +1,16 @@
+首发于：https://studygolang.com/articles/14132
 
 # Go 中不定长度集合
 
 如果你在使用像 C# 或 Java 这样的编程语言后来到 go，你发现的第一件事就是没有像 `List` 和 `Dictionary` 这样的传统集合类型。 这真让我困惑了好几个月。 我找到了一个名为 `container/list` 的软件包，并且几乎用它做所有的东西。
 
-我脑后一直有一个声音在唠叨。语言设计者不应该不直接支持对未知长度的集合管理的功能。每个人都在讨论切片是如何在语言中被广泛使用，但我只是在有明确定义的容量或者它们通过函数返回给我时，我才使用切片，这有点不对劲!!
+我脑后一直有一个声音在唠叨。语言设计者不应该不直接支持对未知长度的集合管理的功能。每个人都在讨论切片是如何在语言中被广泛使用，但我只是在有明确定义的容量或者它们通过函数返回时我才使用切片，这有点不对劲!!
 
-因此，我在本月早些时候写了一篇文章，揭开了切片的盖子，希望能找到一些我不知道的魔法。我现在知道切片是如何工作的，但最终我仍然需要一个必须进行长度增长的数组。我在学校学过，链表更有效率，是存储大量数据更好的方法。特别是当你需要的集合长度未知时。这对我来说很有意义。
+因此，我在本月早些时候写了一篇文章，揭开了切片的盖子，希望能找到一些我不知道的魔法。我现在知道切片是如何工作的，但最终我仍然需要一个不断进行长度增长的数组。我在学校学过，使用链表更有效率，是存储大量数据更好的方法。特别是当你需要的集合长度未知时。这对我来说很有意义。
 
 当我思考使用一个空切片时，我头脑中有一张非常**错误**的图片：
 
-![slicr-copy](https://raw.githubusercontent.com/studygolang/gctt-images/master/collections-of-unknown-length/slice-copy.png)
+![slice-copy](https://raw.githubusercontent.com/studygolang/gctt-images/master/Collections-Of-Unknown-Length-in-Go/slice-copy.png)
 
 我一直在想 go 是如何创建大量新的切片值和底层数组做大量内存分配，并且不断进行复制值。然后垃圾回收器会因为所有这些小变量被创建和销毁而过度工作。
 
@@ -91,11 +92,14 @@ func main() {
 var red []Record
 var blue []Record
 ```
+
 一个空切片长度和容量都是0，并且不存在底层数组。我们可以使用内置的 `append` 函数向切片中增加数据。
+
 ```go
 red = append(red, record)
 blue = append(blue, record)
 ```
+
 `append` 函数功能非常酷，为我们做了很多东西。
 
 Kevin Gillette 在我的小组讨论中进行了说明：
@@ -133,7 +137,9 @@ func main() {
     }
 }
 ```
+
 输出结果：
+
 ```
 Index[0] Len[1]  Cap[1]
 Index[1] Len[2]  Cap[2]
@@ -152,9 +158,11 @@ Index[1024] Len[1025] Cap[1280]  - Ran Out Of Room, Grow by a factor of 1.25
 如果我们观察容量值，我们可以看到 Kevin 是绝对正确的。容量正如他所说的那样在增长。在前1千的元素中，容量增加了一倍。然后容量以1.25或25％的系数增长。这意味着以这种方式使用切片将满足我们在大多数情况下所需的性能，并且内存不会成为问题。
 
 最初我认为会为每次调用 `append` 时都会创建一个新的切片值，但事实并非如此。当我们调用 `append` 时，在栈中复制了 `red` 副本。然后当 `append` 返回时，会再进行一次复制操作，但使用的我们已有的内存。
+
 ```go
 red = append(red, record)
 ```
+
 在这种情况下，垃圾收集器没有工作，所以我们根本没有性能或内存问题。我的 C# 和引用类型的思想再次打击了我。
 
 请坐好，因为下一个版本中的切片会有变化。
@@ -167,12 +175,12 @@ http://dominik.honnef.co/go-tip/2013-08-23/#slicing
 
 你可以用切片做很多的事情，甚至可以写一整本关于这个主题的书。就像我之前说的那样，切片就像国际象棋一样，易于学习但需要一辈子才能成为大师。如果您来自其他语言，如 C# 和 Java，那么请拥抱切片并使用它。这正是 go 中正确的方式。
 
-------
+---
 
 via: https://www.ardanlabs.com/blog/2013/08/collections-of-unknown-length-in-go.html
 
 作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
 译者：[Alan](https://github.com/althen)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
