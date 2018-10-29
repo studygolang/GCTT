@@ -3,11 +3,11 @@
 ## 目录
 - [入门指南](#入门指南)
 - [一个简单的示例](#一个简单的示例)
-    - [否定测试案例和 Nil 测试](#否定测试案例和-nil-测试)
-    - [将 Testify 与表驱动测试相结合](#将-testify-与表驱动测试相结合)
+    - [否定测试案例和 Nil 测试](#否定测试案例和-Nil-测试)
+    - [将 Testify 与表驱动测试相结合](#将-Testify-与表驱动测试相结合)
 - [模拟](#模拟)
     - [模拟示例](#模拟示例)
-    - [用 Mockery 生成模仿对象](#用-mockery-生成模仿对象)
+    - [用 Mockery 生成模仿对象](#用-Mockery-生成模仿对象)
 - [关键点](#关键点)
 - [总结](#总结)
 - [延伸阅读](#延伸阅读)
@@ -39,17 +39,17 @@
 ```
 
 	package main
-	
+
 	import (
 		"fmt"
 	)
-	
+
 	// 计算并返回 x + 2.
 	func Calculate(x int) (result int) {
 		result = x + 2
 		return result
 	}
-	
+
 	func main() {
 		fmt.Println("Hello World")
 	}
@@ -61,11 +61,11 @@
 ```
 
 	package main
-	
+
 	import (
 		"testing"
 	)
-	
+
 	func TestCalculate(t *testing.T) {
 		if Calculate(2) != 4 {
 			t.Error("Expected 2 + 2 to equal 4")
@@ -81,11 +81,11 @@
 ```
 
 	package main
-	
+
 	import (
 		"testing"
 	)
-	
+
 	func TestCalculate(t *testing.T) {
 	  assert.Equal(t, Calculate(2), 4)
 	}
@@ -117,16 +117,16 @@
 ```
 
 	package main
-	
+
 	import (
 		"testing"
-	
+
 		"github.com/stretchr/testify/assert"
 	)
-	
+
 	func TestCalculate(t *testing.T) {
 		assert := assert.New(t)
-	
+
 		var tests = []struct {
 			input    int
 			expected int
@@ -137,7 +137,7 @@
 			{-5, -3},
 			{99999, 100001},
 		}
-	
+
 		for _, test := range tests {
 			assert.Equal(Calculate(test.input), test.expected)
 		}
@@ -154,38 +154,37 @@
 
 那么，我们要如何使用 <font color=DeepPink>testify</font> 包来模拟呢？
 
-
 ### 模拟示例
 让我们来看一下如何将 <font color=DeepPink>mocks</font> 应用到一个相当简单的例子中。在这个例子中，我们有一个系统会尝试向客户收取产品或服务的费用。当 <font color=DeepPink>ChargeCustomer()</font> 被调用时，它将随后调用 Message Service，向客户发送 SMS 文本消息来通知他们已经被收取的金额。
 
 ```
 
 	package main
-	
+
 	import (
 		"fmt"
 	)
-	
+
 	// MessageService 通知客户被收取的费用
 	type MessageService interface {
 		SendChargeNotification(int) error
 	}
-	
+
 	// SMSService 是 MessageService 的实现
 	type SMSService struct{}
-	
+
 	// MyService 使用 MessageService 来通知客户
 	type MyService struct {
 		messageService MessageService
 	}
-	
+
 	// SendChargeNotification 通过 SMS 来告知客户他们被收取费用
 	// 这就是我们将要模拟的方法
 	func (sms SMSService) SendChargeNotification(value int) error {
 		fmt.Println("Sending Production Charge Notification")
 		return nil
 	}
-	
+
 	// ChargeCustomer 向客户收取费用
 	// 在真实系统中，我们会模拟这个
 	// 但是在这里，我想在每次运行测试时都赚点钱
@@ -194,11 +193,11 @@
 		fmt.Printf("Charging Customer For the value of %d\n", value)
 		return nil
 	}
-	
+
 	// 一个 "Production" 例子
 	func main() {
 		fmt.Println("Hello World")
-	
+
 		smsService := SMSService{}
 		myService := MyService{smsService}
 		myService.ChargeCustomer(100)
@@ -215,19 +214,19 @@
 ```
 
 	package main
-	
+
 	import (
 		"fmt"
 		"testing"
-	
+
 		"github.com/stretchr/testify/mock"
 	)
-	
+
 	// smsServiceMock
 	type smsServiceMock struct {
 		mock.Mock
 	}
-	
+
 	// 我们模拟的 smsService 方法
 	func (m *smsServiceMock) SendChargeNotification(value int) bool {
 		fmt.Println("Mocked charge notification function")
@@ -238,27 +237,27 @@
 	  // 这种情况下模拟一个 SMS Service Notification 被发送出去
 		return args.Bool(0)
 	}
-	
+
 	// 我们将实现 MessageService 接口
 	// 这就意味着我们不得不改写在接口中定义的所有方法
 	func (m *smsServiceMock) DummyFunc() {
 		fmt.Println("Dummy")
 	}
-	
+
 	// TestChargeCustomer 是个奇迹发生的地方
 	// 在这里我们将创建 SMSService mock
 	func TestChargeCustomer(t *testing.T) {
 		smsService := new(smsServiceMock)
-	
+
 	  // 然后我们将定义当 100 传递给 SendChargeNotification 时，需要返回什么
 	  // 在这里，我们希望它在成功发送通知后返回 true
 		smsService.On("SendChargeNotification", 100).Return(true)
-	
+
 	  // 接下来，我们要定义要测试的服务
 	  myService := MyService{smsService}
 	  // 然后调用方法
 		myService.ChargeCustomer(100)
-	
+
 	  // 最后，我们验证 myService.ChargeCustomer 调用了我们模拟的 SendChargeNotification 方法
 		smsService.AssertExpectations(t)
 	}
