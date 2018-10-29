@@ -1,8 +1,6 @@
-#用 Testify 来改善 GO 测试和模拟
+# 用 Testify 来改善 GO 测试和模拟
 
-##目录
-<!-- TOC -->
-
+## 目录
 - [入门指南](#入门指南)
 - [一个简单的示例](#一个简单的示例)
     - [否定测试案例和 Nil 测试](#否定测试案例和-nil-测试)
@@ -14,15 +12,13 @@
 - [总结](#总结)
 - [延伸阅读](#延伸阅读)
 
-<!-- /TOC -->
-
 断言是我感觉 Go 中的标准库真正缺失的东西。你绝对可以通过 <font color=DeepPink>if</font> 比较或者其他任何方式获得相同的结果，但那不是写测试文件最简洁的方法。
 
 这就需要诸如 [stretchr/testify](https://github.com/stretchr/testify) 之类的东西来挽救局面了。如果不是世界各地 Go 开发人员最受欢迎的测试包，这个软件包很快就会成为最流行的测试软件包之一。
 
 它优雅的语法使您能够编写简单得难以置信的断言。
 
-##入门指南
+## 入门指南
 想要启动和运行 testify 包，我们要做的第一件事就是安装它。如果你当前正在使用 Go 模块，那么在你导入第一个 <font color=DeepPink>*_test.go</font> 文件后，只需要执行 <font color=DeepPink>go test ...</font> 即可。
 
 但是，如果你仍然在使用较旧版本的 Go，你可以通过输入下面指令来获取包：
@@ -35,7 +31,7 @@
 
 完成此操作后，我们应该将它很好地并入到我们的各种测试套件中去。
 
-##一个简单的示例
+## 一个简单的示例
 让我们先看看传统上如何在 Go 中编写测试。这将让我们对提高可读性的 <font color=DeepPink>testify</font> 有所了解。
 
 我先来写一个简单的 Go 程序，它有一个输出函数，<font color=DeepPink>Calculate()</font>。
@@ -98,7 +94,7 @@
 
 很好，如你所见，我们使用 <font color=DeepPink>assert.Equal</font> 函数简单地测试了相等性。这看起来是一种改进，因为我们需要阅读的代码行数更少了，而且我们可以清楚地看到测试函数想要达到的效果。
 
-###否定测试案例和 Nil 测试
+### 否定测试案例和 Nil 测试
 我们已经看过了情况较好的测试，但否定断言和 Nil 检查怎么样呢。好吧，幸运的是，<font color=DeepPink>testify</font> 软件包有方法允许我们测试两者。
 
 假设我们想要测试一个用来返回指定应用程序状态的函数。例如，如果应用程序处于活动状态并等待请求，那么状态将返回 <font color=DeepPink>"waiting"</font>，如果它已崩溃，那么它将返回 <font color=DeepPink>"down"</font> 以及其服务请求时或其等待第三方时的各种其他状态等。
@@ -115,7 +111,7 @@
 
 如果我们想测试 <font color=DeepPink>"status"</font> 是否为 nil，那么我们可以使用 <font color=DeepPink>assert.Nil(status)</font> 或者 <font color=DeepPink>assert.NotNil(object)</font>，这取决于我们希望做何反应当它为 <font color=DeepPink>nil</font> 时。
 
-###将 Testify 与表驱动测试相结合
+### 将 Testify 与表驱动测试相结合
 将 <font color=DeepPink>testify</font> 并入到我们测试套件中并不会妨碍我们使用诸如表驱动测试之类的方法，事实上，它能使测试变得更简单。
 
 ```
@@ -151,7 +147,7 @@
 
 请注意我们在此示例中调用的 <font color=DeepPink>assert.Equal()</font> 与上面例子中的细微差别。我们用 <font color=DeepPink>assert using assert.New(t)</font> 初始化了断言，然后我们可以多次调用 <font color=DeepPink>assert.Equal()</font>，只需传入输入值和期望值，而不是每次都将 t 作为第一个参数传入。当然这不是什么大问题，但它确实使我们的测试看起来更简洁明了。
 
-##模拟
+## 模拟
 <font color=DeepPink>testify</font> 包另外一个优秀的功能就是它的模拟功能。有效的模拟允许我们在代码里创建一个替代的对象，用来模拟对象的某些行为，这样我们在运行测试用例时就不用每次都期望它能够触发。
 
 例如，一个是消息服务或电子邮件服务，无论何时被调用，都会向客户端发送电子邮件。如果我们正在积极地开发我们的代码库，可能每天会运行数百次测试，但我们不希望每天向客户发送数百封电子邮件或消息，因为那样他们可能会不高兴。
@@ -159,7 +155,7 @@
 那么，我们要如何使用 <font color=DeepPink>testify</font> 包来模拟呢？
 
 
-###模拟示例
+### 模拟示例
 让我们来看一下如何将 <font color=DeepPink>mocks</font> 应用到一个相当简单的例子中。在这个例子中，我们有一个系统会尝试向客户收取产品或服务的费用。当 <font color=DeepPink>ChargeCustomer()</font> 被调用时，它将随后调用 Message Service，向客户发送 SMS 文本消息来通知他们已经被收取的金额。
 
 ```
