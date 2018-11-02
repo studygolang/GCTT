@@ -116,7 +116,6 @@
 	ok      _/Users/elliot/Documents/Projects/tutorials/golang/go-testing-tutorial  0.007s
 ```
 
-
 ## 详细测试输出
 
 有时你可能希望知道具体运行了哪些测试以及运行花费的时间。值得庆幸的是，如果你像下面这样使用 `-v` 标志就可以看到。
@@ -143,7 +142,6 @@
 
 * [Advanced Testing in Go](https://tutorialedge.net/golang/advanced-go-testing-tutorial/)
 * [Improving Your Tests with Testify in Go](https://tutorialedge.net/golang/improving-your-tests-with-testify-go/)
-
 
 ---
 
