@@ -103,7 +103,7 @@ marineStations = append(marineStations, marineStation)
 Display(marineStations)
 ```
 
-展示函数使用关键字`range`来进行遍历所有的切片。
+Display 函数使用关键字 `range` 来进行遍历所有的切片。
 
 ```go
 func Display(marineStations []MarineStation) {
