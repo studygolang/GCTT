@@ -72,7 +72,7 @@ marineStation := MarineStation{
 }
 ```
 
-第一行代码创建了一个存储海洋预报区域的空切片。然后我们用复合字面量的方式的方式创建了一个海洋预报区域对象。在这个复合字面量中我们需要为这个 gePolygonRings 创建另一个复合字面量对象 Polygons 。在创建的 PolygonRings 对象中我们为 Coordinates 字段创建空的 slice 来存储 Polygon 对象。
+第一行代码创建了一个存储 MarineStation 对象的空切片。然后我们用复合字面量的方式，创建了一个 MarineStation 对象。在这个复合字面量中，我们需要为这个 PolygonRings，创建另一个复合字面量对象 Polygons。在创建的 PolygonRings 对象中，我们为 Coordinates 字段创建空的切片来存储 Polygon 对象。
 
 若要了解复合文本的更多信息，请查看此文档：
 
