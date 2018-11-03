@@ -94,7 +94,7 @@ polygon = Polygon{point1, point2, point3, point4}
 marineStation.Polygons.Coordinates = append(marineStation.Polygons.Coordinates, polygon)
  ```
 
-在第二个 polygon 中有4个点而不是5个，剩下的最后一件事就是将 polygon 加入到 stations 切片中，并且展示出来：
+在第二个 polygon 中，有 4 个点而不是 5 个，剩下的最后一件事，就是将 polygon 加入到 stations 切片中，并且展示出来：
 
 ```go
 // Add the marine station
