@@ -1,4 +1,4 @@
-# 中文文案排版指南
+# 中文文案排版指北
 
 [![devDependency Status](https://david-dm.org/mzlogin/chinese-copywriting-guidelines/dev-status.svg)](https://david-dm.org/mzlogin/chinese-copywriting-guidelines#info=devDependencies)
 

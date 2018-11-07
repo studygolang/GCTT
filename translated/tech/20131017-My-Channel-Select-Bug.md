@@ -2,7 +2,7 @@
 
 ![portrait](https://www.ardanlabs.com//img/avatar-william-Kennedy.jpg)
 Willian Kendedy October 17,2013
-<br>
+
 我当时正在测试一个已经上线运行的项目的新功能，忽然代码表现得非常糟糕。我看到后很惊讶，后来搞清楚了原因。
 接下来提供这份代码的简化版本，包含两个 bug。
 ```go
@@ -58,7 +58,7 @@ func LaunchProcessor(complete chan struct{}) {
 }
 ```
 这份代码的功能是运行一项任务然后中止它，它允许操作系统申请提前终止程序。我一向喜欢尽可能的彻底关闭一个程序。
-<br>
+
 上述代码创建了一个绑定到操作系统 signal 的 channel，并且在终端窗口查找 `ctrl + c`，如果它被按下，那么  `Shutdown` 就会被设置为 `true`，并且程序跳转回 `select` 语句。
 ## 第一个Bug
 观察如下代码
@@ -81,7 +81,7 @@ Doing Work
 End Work
 ```
 正如预期的那样，程序启动并生成 Go routine。一旦 Go routine 完成，程序就终止。
-<br>
+
 接下来我会在运行时按下 `ctrl + c`。
 ```go
 Start Work
@@ -93,7 +93,7 @@ Kill Early
 ```
 当我按下 `ctrl + c` 的时候 Go routine 又启动了一遍！
 我原以为在这个 `case` 下的函数只会被执行一次，然后一直等待 channel 继续运行，没想到每次函数运行到 `select`都会再执行。
-<br>
+
 要修复代码，我需要把生成 Go routine 部分从 `select` 语句中移出来，在循环外生成它。
 ```go
 func main() {
@@ -139,6 +139,7 @@ if Shutdown == true {
 }
 ```
 该代码使用包层变量通知运行的 Go routine 在 `ctrl + c` 按下时关闭。每当我按下它时，代码都在工作，那么为什么会有 bug 呢？
+
 首先让我们运行数据竞争检测：
 ```go
 go build -race
@@ -177,6 +178,7 @@ Kill Early
 Found 1 data race(s)
 ```
 我使用的 `Shutdown` 变量在数据竞争检测器中显现出来，这是由于有两个 Go routine 在尝试用不安全的方法访问它。
+
 我不用安全的方法访问该变量的初衷是实用的，但是是错的。我认为由于该变量只在必要时用以关闭程序，所以我不介意脏读，但是万一脏读恰好出现在读写该变量的一瞬间呢？如果脏读出现，我可以在下次循环捕获它，看起来没损失对吧？为什么要像这样增加一个复杂的 channel，或者为代码加锁呢。
 
 这就涉及到 Go 内存模型了。
@@ -186,6 +188,7 @@ Found 1 data race(s)
 [Go语言中文网翻译 Go 内存模型](https://studygolang.com/articles/819)
 
 Go 内存模型不保证 Go routine 读取 Shutdown 变量时会察觉到 main routine 的写入操作，main routine 只写 Shutdown 变量一次并且该变量不会被读取回主内存，因为 main routine 永远不会去读 Shutdown 变量。
+
 虽然这次不会出什么问题，但是随着 Go 语言编译器变得越来越复杂，有可能它会决定完全废止对 `Shutdown` 的写入。虽然这种行为被 Go 内存模型所允许，然而，我们不希望代码不能通过数据竞争检测。即使是出于实用的原因，这也不是一个好的例子。
 
 接下来是最终版本，修复了所有 bug。
