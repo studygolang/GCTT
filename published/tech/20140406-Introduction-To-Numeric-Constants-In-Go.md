@@ -1,8 +1,10 @@
+首发于：https://studygolang.com/articles/16055
+
 # 浅析 Go 语言的数字常量
 
 ## 概述
 
-Go 语言的常量的实现方法是 Go 的一个亮点。在 Go 的语言规范中的定义[常量规则](http://golang.org/ref/spec#Constants)是 Go 独有的。 它们在编译器级别提供 Go 所需要的灵活性，使我们编写的代码可读且直观，同时仍保持类型安全。
+Go 语言的常量的实现方法是 Go 的一个亮点。在 Go 的语言规范中的定义[常量规则](http://golang.org/ref/spec#Constants) 是 Go 独有的。 它们在编译器级别提供 Go 所需要的灵活性，使我们编写的代码可读且直观，同时仍保持类型安全。
 
 本文将会探讨”什么是数字常量“、”它们在最简单的情况下时有怎样的行为“以及”怎样去探讨它们才是最好的“这几个方面，其中会有很多吓人的细节问题、名词和概念，所以本文将会放慢速度慢慢的剖析之。
 
@@ -51,7 +53,7 @@ const typedFloatingPoint float64 = 3.141592
 以下是当代 Go 编译器使用的两种实现精确浮点型的策略：
 
 - 第一个是将所有浮点数表示为分数，并且对这些分数进行有理数运算，因此这些浮点数永远不会有精度损失的情况。
-- 另一个策略是使用精度非常高的浮点数来保存，精度高到足够满足任何用例的精度需求。当这个浮点数的是用几百位来保存的时候，这个浮点数基本上相当于是无损失的了。现在的 gc/gccgo 就是用这个方法来实现的。
+- 另一个策略是使用精度非常高的浮点数来保存，精度高到足够满足任何用例的精度需求。当这个浮点数是用几百位来保存的时候，这个浮点数基本上相当于是无损失的了。现在的 gc/gccgo 就是用这个方法来实现的。
 
 作为开发者，我们最好还是不要去关心编译器内部是怎么实现的，这个并不重要。只要知道，所有常量，不管他们声明的时候是否指定了类型，在内部都用同样的数据结构来保存他们的值，这点跟变量不一样。而且，常量是完全精确的。
 
@@ -138,7 +140,7 @@ var myInt int = 123
 var myInt int = 123.0
 ```
 
-我们还可以进行隐式的常量-变量转换时，省略变量的类型指定：
+我们还可以进行隐式的常量 - 变量转换时，省略变量的类型指定：
 
 ```go
 var myInt = 123
@@ -166,7 +168,7 @@ var myFloat float64 = 1
 
 ## 种类提升
 
-我们写程序是经常要执行一个常量与另一个常量或者变量的算术运算。它服从 Go 语言规范中[二元运算](http://golang.org/ref/spec#Operators)的规则。规则中指明操作符两边的操作数的类型必须相同，除非操作涉及移位或者无类型的常量。
+我们写程序是经常要执行一个常量与另一个常量或者变量的算术运算。它服从 Go 语言规范中[二元运算](http://golang.org/ref/spec#Operators) 的规则。规则中指明操作符两边的操作数的类型必须相同，除非操作涉及移位或者无类型的常量。
 
 我们来看看下面两个常量相乘的例子：
 
@@ -178,7 +180,7 @@ var answer = 3 * 0.333
 
 在 Go 语言规范中，有一条规则规定了这种操作：
 
-> ”除了移位运算，如果二元运算的操作数是不同种类的无类型常量，...，运算结果使用使用以下种类中最靠后的一个：整数、Unicode 字符、浮点数、复数。“
+> ”除了移位运算，如果二元运算的操作数是不同种类的无类型常量，...，运算结果使用以下种类中最靠后的一个：整数、Unicode 字符、浮点数、复数。“
 
 根据这个规则，例子中两个常量的乘法运算结果将会是浮点数类型的。浮点种类被提升到整数种类之前。
 
@@ -216,7 +218,7 @@ const One Numbers = 1
 const Two         = 2 * One
 ```
 
-这个例子中， 我们声明了一个名为 `Numbers` 的类型，这个类型的底层类型是 `int8` ，然后我们声明一个指定为 `Number` 类型的整数常量 `One` ，它的值为 `1`。然后我们声明一个名为 `Two` 的常量，它会在整数常量`2` 与 `One` 常量相乘之后提升为类型为 `Number` 的常量。
+这个例子中， 我们声明了一个名为 `Numbers` 的类型，这个类型的底层类型是 `int8` ，然后我们声明一个指定为 `Number` 类型的整数常量 `One` ，它的值为 `1`。然后我们声明一个名为 `Two` 的常量，它会在整数常量 `2` 与 `One` 常量相乘之后提升为类型为 `Number` 的常量。
 
 `Two` 的声明是个很好的例子，它演示了常量不仅可以被提升到用户定义类型，而且可以被提升为与某个基类型相关联的用户定义类型的常量。
 
@@ -251,12 +253,12 @@ const fiveSeconds = 5 * time.Second
 
 func main() {
     now := time.Now()
-    lessFiveNanoseconds := now.Add(-5)
-    lessFiveSeconds := now.Add(-fiveSeconds)
+    LessFiveNanoseconds := now.Add(-5)
+    LessFiveSeconds := now.Add(-fiveSeconds)
 
     fmt.Printf("Now     : %v\n", now)
-    fmt.Printf("Nano    : %v\n", lessFiveNanoseconds)
-    fmt.Printf("Seconds : %v\n", lessFiveSeconds)
+    fmt.Printf("Nano    : %v\n", LessFiveNanoseconds)
+    fmt.Printf("Seconds : %v\n", LessFiveSeconds)
 }
 
 // Output:
@@ -274,8 +276,8 @@ func (t Time) Add(d Duration) Time
 `Add` 方法接受一个类型为 `Duration` 的参数。我们再看看刚才我们的程序中调用到 `Add` 方法的地方：
 
 ```go
-var lessFiveNanoseconds = now.Add(-5)
-var lessFiveMinutes = now.Add(-fiveSeconds)
+var LessFiveNanoseconds = now.Add(-5)
+var LessFiveMinutes = now.Add(-fiveSeconds)
 ```
 
 编译器隐式地把常量 `-5` 转换成 `Duration` 类型的变量，使得方法能够成功的调用。常量 `fiveSeconds` 已经是 `Duration` 类型的常量了，这要归功于常量算术的规则：
@@ -290,7 +292,7 @@ const fiveSeconds = 5 * time.Second
 
 ```go
 var difference int = -5
-var lessFiveNano = now.Add(difference)
+var LessFiveNano = now.Add(difference)
 
 Compiler Error:
 ./const.go:16: cannot use difference (type int) as type time.Duration in function argument
