@@ -1,4 +1,6 @@
-# go的多层切片
+首发于：https://studygolang.com/articles/16129
+
+# Go 的多层切片
 
 William Kennedy 2013.9.10
 
@@ -6,13 +8,13 @@ William Kennedy 2013.9.10
 
 看了一会儿问题之后，我意识到我需要创建一个海洋预报地区的切片，每个地区包含一个多边形区域的切片。为了存储每一个多边形环线，我需要一个地理坐标切片。最后，每个坐标需要存储在二维的 float 数组中。
 
-一张图片胜过千言万语:
+一张图片胜过千言万语 :
 
-![polygons](https://www.ardanlabs.com/images/goinggo/Screen+Shot+2013-09-04+at+5.02.55+PM.png)
+![polygons](https://raw.githubusercontent.com/studygolang/gctt-images/master/slice-of-slice/1.png)
 
-存储在 Mongodb 中的数据应该是如下格式的:
+存储在 Mongodb 中的数据应该是如下格式的 :
 
-![pattern](https://www.ardanlabs.com/images/goinggo/Screen+Shot+2013-09-10+at+3.46.19+PM.png)
+![pattern](https://raw.githubusercontent.com/studygolang/gctt-images/master/slice-of-slice/2.png)
 
 只是看着图表和图片我就晕了。该图描述了如何将切片和对象组合在一起。
 
@@ -26,10 +28,10 @@ William Kennedy 2013.9.10
 
 阅读下面两篇文章可以学习到更多关于切片的知识：
 
-http://www.goinggo.net/2013/08/understanding-slices-in-go-programming.html<br>
-http://www.goinggo.net/2013/08/collections-of-unknown-length-in-go.html
+- https://www.ardanlabs.com/blog/2013/08/understanding-slices-in-go-programming.html
+- https://studygolang.com/articles/14132
 
-让我们看一下在 mongodb 中数据是如何存储和维护的：
+让我们看一下在 MongoDB 中数据是如何存储和维护的：
 
 ```go
 // Polygon defines a set of points that complete a ring
@@ -51,7 +53,7 @@ type MarineStation struct {
 
 Polygon 类型表示长度为 2 的 float 数组切片。切片中数组表示多边形的各个端点。
 
-如果你要是想通过 mongodb 来执行不同多边形区域的地理空间搜索，那么在 mongodb 中存储多边形区域数据的结构是必须的。
+如果你要是想通过 MongoDB 来执行不同多边形区域的地理空间搜索，那么在 MongoDB 中存储多边形区域数据的结构是必须的。
 
 MarineStation 结构体模拟一个单独的站点和对应的多边形区域。
 
@@ -140,7 +142,7 @@ Point: -80.438416,27.788513
 Point: -80.437012,27.787720
 ```
 
-使用切片去解决这个问题是快速的、容易的、高效的。我将这份测试代码复制了一份放在了 [The Go Playground](https://play.golang.org/)。
+使用切片去解决这个问题是快速的、容易的、高效的。我将这份测试代码复制了一份放在了 [The Go Playground]7 j7m(https://play.golang.org/)。
 
 http://play.golang.org/p/UYO2HIKggy
 
