@@ -1,6 +1,11 @@
+首发于：https://studygolang.com/articles/16139
+
 # Go 接口（第三部分）
 
 本文介绍的是 Golang 接口主题的另一部分。主要内容包括接口中的方法，接口类型的值作为 map 中的 key，或者作为内置字段。
+
+- 第一部分：https://studygolang.com/articles/14580
+- 第二部分：https://studygolang.com/articles/15975
 
 ## 方法和接口
 
@@ -72,7 +77,7 @@ func (I) M() {}
 
 这段代码将抛出一个编译期错误 `invalid receiver type I (I is an interface type)`。在第一部分和第二部分中有更多的方法进行介绍。
 
-## 接口中“继承"
+## 接口中“继承 "
 
 结构体的内嵌字段使其实现了接口的方法，于是这个这个结构体继承这个接口
 
@@ -101,7 +106,7 @@ func main() {
 
 ## 接口类型作为 map 中的 key 或者 value
 
-map 是一个由 key-value 组成的数据结构。(在 Go1.8 之前，map 底层是通过哈希表实现的)
+map 是一个由 key-value 组成的数据结构。( 在 Go1.8 之前，map 底层是通过哈希表实现的 )
 
 ```go
 counters := make(map[string]int64)
@@ -156,7 +161,7 @@ type error interface {
 }
 ```
 
-任何类型实现了 Error 方法，此方法没有参数且返回一个 strin g类型的值，那么这个类型就实现了 error 接口：
+任何类型实现了 Error 方法，此方法没有参数且返回一个 strin g 类型的值，那么这个类型就实现了 error 接口：
 
 ```go
 import "fmt"
@@ -182,29 +187,30 @@ io.Writer 接口仅仅含有一个方法 —— Write：
 Write(p []byte) (n int, err error)
 ```
 
-如果有任何异常发生，返回的 error 就将不会是 nil。error接口在前一节同样做了描述。Writer 接口在标准库中到处都有被用到，比如 MultiWriter、TeeReader、net/http，还有很多其他用到的地方。
+如果有任何异常发生，返回的 error 就将不会是 nil。error 接口在前一节同样做了描述。Writer 接口在标准库中到处都有被用到，比如 MultiWriter、TeeReader、net/http，还有很多其他用到的地方。
 
 点赞以帮助别人发现这篇文章。如果你想得到新文章的更新，请关注我。
 
 ## 资源
-- [GO程序语言规范——GO程序设计语言](https://golang.org/ref/spec#Method_expressions)
-> Go is a general-purpose language designed with systems programming in mind. It is strongly typed and garbage-collected…
+
+- [GO 程序语言规范—— GO 程序设计语言](https://golang.org/ref/spec#Method_expressions)
+> Go is a general-purpose language designed with systems programming in mind. It is strongly typed and garbage-collected …
 <br>*golang.org*
 
-- [GO程序语言规范——GO程序设计语言](https://golang.org/ref/spec#Errors)
-> Go is a general-purpose language designed with systems programming in mind. It is strongly typed and garbage-collected…
+- [GO 程序语言规范—— GO 程序设计语言](https://golang.org/ref/spec#Errors)
+> Go is a general-purpose language designed with systems programming in mind. It is strongly typed and garbage-collected …
 <br>*golang.org*
 
-- [Go语言中提取字段和方法](https://medium.com/golangspec/promoted-fields-and-methods-in-go-4e8d7aefb3e3)
+- [Go 语言中提取字段和方法](https://medium.com/golangspec/promoted-fields-and-methods-in-go-4e8d7aefb3e3)
 > Struct is a sequence of fields each with name and type. Usually it looks like:
 <br>*medium.com*
 
-- [Go方法（第一部分）](https://medium.com/golangspec/methods-in-go-part-i-a4e575dff860)
-> Type defined in Golang program can have methods associated with it. Let’s see an example:
+- [Go 方法（第一部分）](https://studygolang.com/articles/14061)
+> Type defined in Golang program can have methods associated with it. Let ’ s see an example...
 <br>*medium.com*
 
-- [Go方法（第二部分）](https://medium.com/golangspec/methods-in-go-part-ii-2b4cc42c5cb6)
-> This story explains remaining content from language specification touching methods. It’s strongly advised to read 1st…
+- [Go 方法（第二部分）](https://medium.com/golangspec/methods-in-go-part-ii-2b4cc42c5cb6)
+> This story explains remaining content from language specification touching methods. It ’ s strongly advised to read 1st …
 <br>*medium.com*
 
 *[保留部分版权](http://creativecommons.org/licenses/by/4.0/)*
