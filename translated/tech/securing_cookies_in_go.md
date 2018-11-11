@@ -24,7 +24,6 @@ func someHandler(w http.ResponseWriter,r *http.Request){
 ```
 
 > `SetCookie`不会返回错误
-> 
 > `http.SetCookie`不会返回一个错误值，但是会默默地将非法 cookie 丢弃掉。这不是什么好的体验，但现实已经是这样了，所以调用该函数时，一定要铭记此点。
 
 在代码中，表现出来是我们在设置一个 cookie，实际上，我们只是将想要设置的 cookie 放在一个响应体的"`Set-Cookie`"头中。我们不会把 cookie 存放到服务器上，而是依赖于终端用户的浏览器去创建、存储 cookie。
@@ -139,7 +138,6 @@ func ReadCookieHandler(w http.ResponseWriter, r *http.Request) {
 ```
 
 > 例子来源于[http://www.gorillatoolkit.org/pkg/securecookie](http://www.gorillatoolkit.org/pkg/securecookie)的示例。
-
 >这里并没有加密数据，只是编码了。在”数据泄露“部分我们会讨论如何加密数据。
 
 这里有个非常重要的警告：对于同时往数字签名的数据中添加用户信息和过期时间的情况，如果用上述方法保证可靠性，你必须非常小心，严格遵守 JWT 的使用模式。不能单单依赖 cookie 的过期时间，因为该日期未被加密，用户可以创建一个新的没有过期时间的 cookie，然后把 cookie 签名的部分拷贝过去，基本上就是创建了一个保证他们永久在线的 cookie。
@@ -252,8 +250,7 @@ c := Cookie{
 ```
 
 >更多有关 domain 解析的信息，请看[ https://tools.ietf.org/html/rfc6265#section-5.1.3]( https://tools.ietf.org/html/rfc6265#section-5.1.3)。也可以查看源代码里[https://golang.org/src/net/http/cookie.go#L157]( https://golang.org/src/net/http/cookie.go#L157)了解 cookie 如何获取其默认值。
-
-> 你也可以阅读这个[stack overflow 问题](https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain)获取更多信息，了解为什么现在无需像之前一样为子域名 cookie 设置句号前缀，Go 代码也显示如果你提供了句号前缀，它也会被裁剪掉。
+>你也可以阅读这个[stack overflow 问题](https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain)获取更多信息，了解为什么现在无需像之前一样为子域名 cookie 设置句号前缀，Go 代码也显示如果你提供了句号前缀，它也会被裁剪掉。
 
 除了指定域名外，你也可以对指定路径限制 cookie。
 
