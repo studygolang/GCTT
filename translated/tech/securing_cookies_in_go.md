@@ -197,6 +197,84 @@ var s = securecookie.New(hashKey, blockKey)
 
 其他和文章数字签名部分例子类似。
 
-还是要着重强调下，**不要**在 cookie 中保存任何敏感的数据；
+还是要着重强调下，**不要**在 cookie 中保存任何敏感的数据；尤其不要存密码。加密简单来说就是让内容更加安全一点的方法，防止有半敏感数据出现在 cookie 中。
+
+## 跨站脚本（Cross-site scripting（XSS））
+
+[跨站脚本](https://en.wikipedia.org/wiki/Cross-site_scripting)，通常写做 XSS，黑客尝试向你的网站注入你没有写的 Javascript，但是由于攻击起作用的方式浏览器不知道，所以会
+像运行你服务器提供的代码一样运行。
+
+通常，你需要尽最大的能力阻止 XSS 攻击，这里不会讨论 XSS 的过多细节，但以防蒙混过关，我建议不需要访问 cookie 的 JavaScript 代码就禁止其权限。之后如果有需要的话，可以在启用，所以这不是写低可靠性代码的理由。
+
+Go 里面实现这点比较简单。创建 cookie 时候，只需要简单地设置`HttpOnly`字段为 true。
+
+```go
+cookie := http.Cookie{
+	// true means no scripts, http requests only. This has
+  // nothing to do with https vs http
+  HttpOnly: true,
+}
+```
+
+## 跨站请求伪造（CSRF（Cross Site Request Forgery））
+
+当用户访问一个不是你的网站，但是那个网站有一个表单提交到你的 web 应用时候，可能会发生 CSRF。由于终端用户提交了表单且不是通过脚本提交的，浏览器会视为用户触发行为，在提交表单的同时传输 cookie 过去。
+
+开始，这看起来并不坏，但如果外部网站发送非用户想要的数据呢？例如，badsite.com 可能有一个表单提交一个要求转 ￥100 到他们银行账户的请求，该请求会被发到 chase.com，你可能会在那里登录银行账户，这可能导致钱在未经用户允许情况下被转移。
+
+cookie 本身并没有什么错，但是如果你用 cookie 做一些验证工作，你就需要 Gorilla 的[csrf](http://www.gorillatoolkit.org/pkg/csrf)包。
+
+该包提供了一个 CSRF token，你可以将它插入到每个 web 表单中，不论什么时候，只要提交的表单没有 token，那么`csrf`包的中间件就会拒绝这个表单，外部网站就不可能欺骗用户提交表单。
+
+有关 CSRF 的更多内容，请看如下内容：
+
+* [https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF))
+* [https://en.wikipedia.org/wiki/Cross-site_request_forgery
+](https://en.wikipedia.org/wiki/Cross-site_request_forgery
+)
+
+## 限制访问cookie
+
+最后要讨论的和特定的攻击没有关系，更多的是一种使用 cookie 的指导性原则：尽量限制对 cookie 的访问，只在给需要的地方提供访问权限。
+
+前面只在讨论 XSS 的地方简单的提及到了这一点，但是其实你应该在任何地方限制对 cookie 的访问。例如，如果你的 web 应用不使用子域名，那么就没有理由提供所有子域名访问 cookie 的权限。cookie 默认就是限制子域名的，所以实际上，你不需要做任何事情去限制特定的域名。
+
+另一方面，如果你确实要和子域名共享 cookie，那么可以这么做：
+
+```go
+c := Cookie{
+  // Defaults to host-only, which means exact subdomain
+  // matching. Only change this to enable subdomains if you
+  // need to! The below code would work on any subdomain for
+  // yoursite.com
+  Domain: "yoursite.com",
+}
+```
+
+>更多有关 domain 解析的信息，请看[ https://tools.ietf.org/html/rfc6265#section-5.1.3]( https://tools.ietf.org/html/rfc6265#section-5.1.3)。也可以查看源代码里[https://golang.org/src/net/http/cookie.go#L157]( https://golang.org/src/net/http/cookie.go#L157)了解 cookie 如何获取其默认值。
+
+> 你也可以阅读这个[stack overflow 问题](https://stackoverflow.com/questions/18492576/share-cookie-between-subdomain-and-domain)获取更多信息，了解为什么现在无需像之前一样为子域名 cookie 设置句号前缀，Go 代码也显示如果你提供了句号前缀，它也会被裁剪掉。
+
+除了指定域名外，你也可以对指定路径限制 cookie。
+
+```go
+c := Cookie{
+  // Defaults to any path on your app, but you can use this
+  // to limit to a specific subdirectory. Eg:
+  Path: "/app/",
+}
+```
+
+简单说就是，你可以设置路径前缀为`/blah`类似的东西，如果想了解更多这块如何实现的内容，你可以看[https://tools.ietf.org/html/rfc6265#section-5.1.4](https://tools.ietf.org/html/rfc6265#section-5.1.4)。
+
+## 为什么不直接用 JWT？
+
+这个问题没法逃避，这里简单的解释一下。
+
+尽管有很多人可能会告诉你，cookie 可以像 JWT 一样安全。实际上，JWT 和 cookie 解决的都不是一类问题，因为 JWT 可以存在 cookie 中，实质上和提供 header 的使用方式一样。
+
+不管怎样，cookie 可以用于非验证数据，即便在这些案例中，了解适当的安全措施也是有用的。
+
+
 
 
