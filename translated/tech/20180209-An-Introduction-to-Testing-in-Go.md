@@ -148,7 +148,7 @@
 via: https://tutorialedge.net/golang/intro-testing-in-go/
 
 作者：[Elliot Forbes](https://tutorialedge.net/about/)
-译者：[译者ID](https://github.com/tyrodw)
+译者：[Tyrodw](https://github.com/tyrodw)
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
