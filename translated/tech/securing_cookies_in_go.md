@@ -62,7 +62,7 @@ func someHandler(w http.ResponseWriter,r *http.Request){
 
 对于有"ahh，中间人攻击可能不常见。。。"想法的人，强烈推荐去看[firesheep](http://codebutler.com/firesheep)，是一个简单工具，用于展示通过公共 wifi 盗取未加密 cookie 有多简单。
 
-如果你想确保这种事情不发生在你用户身上，**配置 SSL!**。[Caddy 服务器](https://caddyserver.com/)通过 Let's Encrypt 让配置变得非常简单。使用它就好了。对于配置生产环境来说真的是非常的简单。例如，4行代码就可以简单了代理你的 Go 应用：
+如果你想确保这种事情不发生在你用户身上，**配置 SSL!**。[Caddy 服务器](https://caddyserver.com/)通过 Let's Encrypt 让配置变得非常简单。使用它就好了。对于配置生产环境来说真的是非常的简单。例如，4行代码就可以简单的代理你的 Go 应用：
 
 ```
 calhoun.io{
@@ -77,7 +77,7 @@ Caddy 会自动处理涉及 SSL 的一切。
 
 更有挑战的是，很难去发现这种情况。如果有人偷了你的手表，发现表不在你手腕上时候，你会意识到被偷。然而，Cookie 可能会在没有人意识到的情况下被拷贝，然后被使用。
 
-尽管不是一个安全模式，你可以使用一些技巧检测到丢失 cookie。例如，你可以追踪用户登录的设备，标记任何新的设备，要求他们重新输入密码。你也可以追踪 IP 地址，有可以登录地点时候警告用户。
+尽管不是一个安全模式，你可以使用一些技巧检测到丢失 cookie。例如，你可以追踪用户登录的设备，标记任何新的设备，要求他们重新输入密码。你也可以追踪 IP 地址，有可疑登录地点时候警告用户。
 
 所有这些方案需要额外的一些某段工作来跟踪数据，如果你的应用处理敏感数据、金钱或者正处在上升期，这也是你的工作的方向。
 
@@ -86,7 +86,7 @@ Caddy 会自动处理涉及 SSL 的一切。
 ## Cookie 篡改（tampering）（即用户假数据）
 我们需要面对一个现实——有些人比较”混蛋“，他们会尝试查看设置好的 cookie，让后改变其值。即便有时候只是出于好奇这么做，只要这种情况有发生的可能性，我们就必须做好准备（应对）。
 
-有些情况我们不太关心。例如，如果我们允许用户定义主题偏好，用户做了更改的话，我们一般不会关心。如果有非法的操作，我们就恢复成默认主题就好了，如果用户改成一个有效的主题，那么我们就直接用哪个主题就好了，也不会对系统有任何损害。
+有些情况我们不太关心。例如，如果我们允许用户定义主题偏好，用户做了更改的话，我们一般不会关心。如果有非法的操作，我们就恢复成默认主题就好了，如果用户改成一个有效的主题，那么我们就直接用那个主题就好了，也不会对系统有任何损害。
 
 而对于其他情况，会需要考虑的更多些。修改会话 cookie 并尝试冒充其他用户比改变主题性质要严重的多，我们肯定不希望 Joe 假扮成 Sally。
 
@@ -199,8 +199,7 @@ var s = securecookie.New(hashKey, blockKey)
 
 ## 跨站脚本（Cross-site scripting（XSS））
 
-[跨站脚本](https://en.wikipedia.org/wiki/Cross-site_scripting)，通常写做 XSS，黑客尝试向你的网站注入你没有写的 Javascript，但是由于攻击起作用的方式浏览器不知道，所以会
-像运行你服务器提供的代码一样运行。
+[跨站脚本](https://en.wikipedia.org/wiki/Cross-site_scripting)，通常写做 XSS，黑客尝试向你的网站注入你没有写的 Javascript，但是由于攻击起作用的方式浏览器不知道，所以会像运行你服务器提供的代码一样运行。
 
 通常，你需要尽最大的能力阻止 XSS 攻击，这里不会讨论 XSS 的过多细节，但以防蒙混过关，我建议不需要访问 cookie 的 JavaScript 代码就禁止其权限。之后如果有需要的话，可以在启用，所以这不是写低可靠性代码的理由。
 
@@ -272,6 +271,12 @@ c := Cookie{
 
 不管怎样，cookie 可以用于非验证数据，即便在这些案例中，了解适当的安全措施也是有用的。
 
+---
 
+via: https://www.calhoun.io/securing-cookies-in-go
 
+作者：[Jon Calhoun](https://www.calhoun.io/about)
+译者：[译者ID](https://github.com/dongfengkuayue)
+校对：[校对者ID](https://github.com/polaris1119)
 
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
