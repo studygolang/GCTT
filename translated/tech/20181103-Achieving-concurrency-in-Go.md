@@ -1,6 +1,6 @@
 # 在 Go 中实现并发性
 
-如果要我从 Go 的特性中选一个最棒的，那么必定是它内置的并发模型。Go 不仅支持并发，而且做的相当好。Go 语言并发模型和并发性的关系就好像是 Docker 和虚拟化一样。 
+如果要我从 Go 的特性中选一个最棒的，那么必定是它内置的并发模型。Go 不仅支持并发，而且做的相当好。Go 语言并发模型和并发性的关系就好像是 Docker 和虚拟化一样。
 
 ## 什么是并发？
 
@@ -66,7 +66,7 @@ Go 建议仅在一个核心上使用 `gorotuines` ，但我们可以修改 go �
 
 当多个线程串行或并行运行时，由于多个线程可能共享某些数据，因此线程需要协调工作，以便一次只能有一个线程访问特定数据。 以某种顺序执行多个线程称为调度。 Os 线程由内核调度，一些线程由编程语言的运行时环境管理，如 JRE 。 当多个线程试图同时访问相同数据导致数据被更改或导致意外结果时，则会出现竞争条件。
 
-> 在设计并发计划时，我们需要寻找在后面的课程中讨论的竞争条件。
+> 在设计并发计划时，我们需要查看在后面的课程中讨论的竞争条件。
 
 ![](https://cdn-images-1.medium.com/max/800/0*bZen0r9lH4jsFFCx.png)
 
@@ -91,12 +91,12 @@ Go 有一个 `M：N` 调度程序，也可以使用多个处理器。 在任何�
 | Os 线程由内核管理，并具有硬件依赖性。                        | goroutine 由 go 运行时管理，没有硬件依赖性。                 |
 | Os 线程通常具有 1-2 MB 的固定堆栈大小                        | goroutines 通常在较新版本的 go 中具有 8KB 的堆栈大小         |
 | 堆栈大小在编译期间确定，不能增长                             | go 的堆栈大小在运行时进行管理，并且可以通过分配和释放堆存储来增长到 1GB |
-| 线程之间没有简单的通信媒介。 线程间通信之间存在巨大的延迟。  | goroutine 使用通道与其他的低延迟 goroutine 进行通信（[阅读更多](https://blog.twitch.tv/gos-march-to-low-latency-gc-a6fa96f06eb7)）。 |
+| 线程之间没有简单的通信媒介。 线程间通信之间存在巨大的延迟。  | goroutine 使用 channel 与其他的低延迟 goroutine 进行通信（[阅读更多](https://blog.twitch.tv/gos-march-to-low-latency-gc-a6fa96f06eb7)）。 |
 | 线程有身份。 有一个 TID 标识进程中的每个线程。               | goroutine 没有任何身份。 go 实现了这个是因为 go 没有 TLS（[线程本地存储](https://docs.microsoft.com/zh-cn/windows/desktop/ProcThread/thread-local-storage)）。 |
 | 线程具有明显的设置和拆除成本，因为线程必须从 Os 请求大量资源并在完成后返回。 | goroutines 由 go 的运行时创建和释放。 与线程相比，这些操作非常简便，因为运行时已经  goroutine 维护了线程池。 在这种情况下，Os 不知道 goroutines。 |
 | 线程被预先安排（[阅读更多](https://stackoverflow.com/questions/4147221/preemptive-threads-vs-non-preemptive-threads)）。 由于调度程序需要保存/恢复 50 个以上的寄存器和状态，因此线程之间的切换成本很高。 当线程之间需要快速切换时，这可能非常重要。 | goroutines 是合作安排的（[阅读更多](https://stackoverflow.com/questions/37469995/goroutines-are-cooperatively-scheduled-does-that-mean-that-goroutines-that-don)）。 当发生goroutine 切换时，只需要保存或恢复 3 个寄存器就可以了。 |
 
-以上是一些重要的差异，但如果你深入了解，你会发现 go 的并发模型的惊人之处。 为了突出 go 的并发强度的一些功能点，假设您有一个 Web 服务器，您每分钟处理 1000 个请求。 如果必须同时运行每个请求，这意味着您需要创建 1000个 线程或在不同的进程下划分它们。 这就是 Apache 服务器管理传入请求的方式（[阅读跟多](https://httpd.apache.org/docs/2.4/mod/worker.html)）。 如果一个 Os 线程中每个线程消耗 1MB 的堆栈大小，这意味着你将会为该流量耗尽 1GB 的 RAM。 Apache 提供`ThreadStackSize`  指令来管理每个线程的堆栈大小，但是，您仍然不知道是否会因为这个问题而遇到新问题。
+以上是一些重要的差异，但如果你深入了解，你会发现 go 的并发模型的惊人之处。 为了突出 go 的并发强度的一些功能点，假设您有一个 Web 服务器，您每分钟处理 1000 个请求。 如果必须同时运行每个请求，这意味着您需要创建 1000个 线程或在不同的进程下划分它们。 这就是 Apache 服务器管理传入请求的方式（[阅读更多](https://httpd.apache.org/docs/2.4/mod/worker.html)）。 如果一个 Os 线程中每个线程消耗 1MB 的堆栈大小，这意味着你将会为该流量耗尽 1GB 的 RAM。 Apache 提供`ThreadStackSize`  指令来管理每个线程的堆栈大小，但是，您仍然不知道是否会因为这个问题而遇到新问题。
 
 对于 goroutines ，由于堆栈大小可以动态增长，因此可以毫无问题地生成 1000 个 goroutine。 由于 goroutine以 8KB 的堆栈空间开始，因此大多数堆栈空间通常不会变大。 但是如果存在需要更多内存的递归操作，那么可以将堆栈大小增加到 1GB，除了 `for{}` 这种几乎是一个 bug 之外，我认为几乎不会发生这种情况。
 
