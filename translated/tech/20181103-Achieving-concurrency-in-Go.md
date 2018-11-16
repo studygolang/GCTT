@@ -125,6 +125,6 @@ via: https://medium.com/rungo/achieving-concurrency-in-go-3f84cbf870ca
 
 作者：[Uday Hiwarale](https://medium.com/@thatisuday)
 译者：[wumansgy](https://github.com/wumansgy)
-校对：[alfred-zhong](https://github.com/alfred-zhong) 
+校对：[alfred-zhong](https://github.com/alfred-zhong)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
