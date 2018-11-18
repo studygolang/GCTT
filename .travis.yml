@@ -6,10 +6,17 @@ go:
 install: true
 
 stages:
+  - autocorrect
   - markdownlint
 
 jobs:
   include:
+    - stage: autocorrect
+      script:
+        - export GOPATH=$HOME/gopath
+        - export PATH=$PATH:$GOPATH/bin
+        - go get -v github.com/studygolang/autocorrect/...
+        - autocorrect convert translated
     - stage: markdownlint
       script:
         - gem install mdl
