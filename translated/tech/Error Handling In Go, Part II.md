@@ -161,7 +161,7 @@ http://golang.org/src/pkg/encoding/json/decode.go
 16     defer func() {
 17         if r := recover(); r != nil {
 18             if _, ok := r.(runtime.Error); ok {
-19                 panic®
+19                 panic
 20             }
 21             err = r.(error)
 22         }
