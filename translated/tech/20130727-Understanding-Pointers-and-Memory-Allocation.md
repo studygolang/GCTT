@@ -13,61 +13,61 @@
 
 在下图中，myVariable 的值是值本身，而不是像上图一样的对值的引用。
 
-![屏幕截图](https://www.ardanlabs.com/images/goinggo/Screen+Shot+2013-07-27+at+3.01.52+PM.png)要访问值的属性，我们可以使用选择器运算符来访问值的特定字段。选择器运算符的语法为 Value.FieldName，其中句点（.）是选择器运算符。
-在 C 语言中，我们需要使用不同的选择器运算符，如何选择取决于我们使用的变量类型。如果变量的“值”是一个单纯的值，我们使用句点（.）。如果变量的“值”是一个地址，我们使用箭头（ - >）。
+![屏幕截图](https://www.ardanlabs.com/images/goinggo/Screen+Shot+2013-07-27+at+3.01.52+PM.png)要访问值的属性，我们可以使用选择器运算符来访问值的特定字段。选择器运算符的语法为 Value.FieldName，其中句点(.)是选择器运算符。
+在 C 语言中，我们需要使用不同的选择器运算符，如何选择取决于我们使用的变量类型。如果变量的“值”是一个单纯的值，我们使用句点(.)。如果变量的“值”是一个地址，我们使用箭头( - >)。
 
-这一点在 Go 语言中变得非常方便，你不必担心要使用哪种类型的选择器运算符。我们只使用句点（.）就可以了，无论变量是值还是指针。编译器会帮你负责访问该值的一些具体细节。
+这一点在 Go 语言中变得非常方便，你不必担心要使用哪种类型的选择器运算符。我们只使用句点(.)就可以了，无论变量是值还是指针。编译器会帮你负责访问该值的一些具体细节。
 
 那么为什么我们还要理解指针和内存分配呢？当我们开始使用函数来抽象和分解逻辑时，这就变得很重要了。当你把这些变量传递给函数时，你需要知道你传递的是什么"值"，这一点很关键，下面我们来详谈。
 
 在 Go 中，每一个变量都以"值"的形式传递给函数。这意味着每个变量的“值”都是被复制到堆栈上以供该函数访问。来看一个例子你就能理解了，我们调用一个函数，该函数想要改变在 main 中的值的结果。
 
 ```go
-package main 
-import（
-    “fmt” 
-    “unsafe” 
-）
-type MyType struct { 
-    Value1 int 
-    Value2 string 
-} 
-func main（）{ 
+package main
+import(
+    “fmt”
+    “unsafe”
+)
+type MyType struct {
+    Value1 int
+    Value2 string
+}
+func main(){
     //实例化一个 myType 类型
-    myValue：= MyType {10，“Bill”} 
+    myValue：= MyType {10，“Bill”}
     //创建一个指针指向 myValue 的内存
-    pointer：= unsafe.Pointer（＆myValue）
+    pointer：= unsafe.Pointer(＆myValue)
     //打印出地址和值
-    fmt.Printf（“Addr：％v Value1：％d Value2：％s \ n”，
+    fmt.Printf(“Addr：％v Value1：％d Value2：％s \ n”,
         pointer，
-        myValue.Value1，
-        myValue.Value2）
+        myValue.Value1,
+        myValue.Value2)
     //给到一个更改 myValue 的函数
-    ChangeMyValue（myValue）
+    ChangeMyValue(myValue)
     //打印出地址和值
-    fmt.Printf（“pointer：％v值1：％d值2：％s \ n”，
-        pointer，
+    fmt.Printf(“pointer：％v值1：％d值2：％s \ n”，
+        pointer,
         myValue.Value1，
-        myValue.Value2）
-} 
-func ChangeMyValue（myValue MyType）{ 
+        myValue.Value2)
+}
+func ChangeMyValue(myValue MyType){
     //更改 myValue 的值
-    myValue.Value1 = 20 
-    myValue.Value2 =“Jill” 
-    //找到此 myValue 的地址 
-    pointer：= unsafe.Pointer（＆myValue）
+    myValue.Value1 = 20
+    myValue.Value2 =“Jill”
+    //找到此 myValue 的地址
+    pointer：= unsafe.Pointer(＆myValue)
     //打印出结果
-    fmt.Printf（“Addr：％v Value1：％d Value2： ％s \ n“，
-        pointer，
-        myValue.Value1，
-        myValue.Value2）
+    fmt.Printf(“Addr：％v Value1：％d Value2： ％s \ n“，
+        pointer,
+        myValue.Value1,
+        myValue.Value2)
 }
 ```
 
 此程序输出结果如下：
 
 ```go
-pointer：0x2101bc000 Value1：10 Value2：Bill 
+pointer：0x2101bc000 Value1：10 Value2：Bill
 Addr：0x2101bc040 Value1：20 Value2：Jill
 Addr：0x2101bc000 Value1：10 Value2：Bill
 ```
@@ -77,53 +77,53 @@ Addr：0x2101bc000 Value1：10 Value2：Bill
 为了解决这个问题，我们可以用另一种方式分配内存以获取引用操作。我们将main中 myValue 变量的地址给到函数中，此函数接收地址后操作此地址达到修改 main 中 myValue 的“值”的目的。
 
 ```go
-package main 
-import（
-    “fmt” 
-    “unsafe” 
-）
-type MyType struct { 
-    Value1 int 
-    Value2 string 
-} 
-func main（）{ 
-    //实例化一个 myType 类型 
-    myValue：= ＆MyType{10，“Bill”} 
+package main
+import(
+    “fmt”
+    “unsafe”
+)
+type MyType struct {
+    Value1 int
+    Value2 string
+}
+func main(){
+    //实例化一个 myType 类型
+    myValue：= ＆MyType{10，“Bill”}
     //开辟一个指针接收 myValue 的内存地址
-    pointer：= unsafe.Pointer（myValue）
+    pointer：= unsafe.Pointer(myValue)
     //打印出地址和值
-    fmt.Printf（“Addr：％v Value1：％d Value2：％s \ n”，
-       	pointer，
-        myValue.Value1，
-        myValue.Value2）
+    fmt.Printf(“Addr：％v Value1：％d Value2：％s \ n”，
+       	pointer,
+        myValue.Value1,
+        myValue.Value2)
     //更改myValue 的值的函数
-    ChangeMyValue（myValue）
+    ChangeMyValue(myValue)
     //打印出地址和值
-    fmt.Printf（“地址：％v值1：％d值2：％s \ n”，
+    fmt.Printf(“地址：％v值1：％d值2：％s \ n”，
         指针，
         myValue.Value1，
-        myValue.Value2）
-} 
-func ChangeMyValue（myValue *MyType）{ 
+        myValue.Value2)
+}
+func ChangeMyValue(myValue *MyType){
     //更改myValue的值
-    myValue.Value1 = 20 
-    myValue.Value2 =“Jill” 
-    //创建一个指向此myValue值的地址 
-    指针：= unsafe.Pointer（myValue）
+    myValue.Value1 = 20
+    myValue.Value2 =“Jill”
+    //创建一个指向此myValue值的地址
+    指针：= unsafe.Pointer(myValue)
     //打印出地址和值
-    fmt.Printf（“Addr：％ v Value1：％d Value2：％s \ n“，
+    fmt.Printf(“Addr：％ v Value1：％d Value2：％s \ n“，
         pointer，
         myValue.Value1，
-        myValue.Value2）
+        myValue.Value2)
 }
 ```
 
-当我们使用取地址符号（＆）运算符来分配值时，将返回一个可引用的地址值。这意味着 main 中 myValue 变量的“值”现在是一个指针变量，其值是新分配值的地址。当我们将 main 中的 myValue 变量的“值”传递给函数时，函数中名为 myValue 的变量现在包含的是地址，而不是副本。我们现在有两个指针指向同一块内存空间。main 中的 myValue 变量和函数中的 myValue 变量。
+当我们使用取地址符号(＆)运算符来分配值时，将返回一个可引用的地址值。这意味着 main 中 myValue 变量的“值”现在是一个指针变量，其值是新分配值的地址。当我们将 main 中的 myValue 变量的“值”传递给函数时，函数中名为 myValue 的变量现在包含的是地址，而不是副本。我们现在有两个指针指向同一块内存空间。main 中的 myValue 变量和函数中的 myValue 变量。
 
 如果我们再次运行程序，该函数现在会达到我们想要的目的，即它会更改 main 中分配的值的状态。
 
 ```go
-地址：0x2101bc000 Value1：10 Value2：Bill 
+地址：0x2101bc000 Value1：10 Value2：Bill
 Addr：0x2101bc000 Value1：20 Value2：Jill
 Addr：0x2101bc000 Value1：20 Value2：Jill
 ```
@@ -134,7 +134,7 @@ Addr：0x2101bc000 Value1：20 Value2：Jill
 
 [Effective Go](http://golang.org/doc/effective_go.html#allocation_new)
 
-接着让我们来谈谈关键字 new 和 make 。
+接着让我们来谈谈关键字 new 和 make。
 
 new 关键字用于在内存中分配指定类型的值。内存分配后被清零。在调用new时无法进一步初始化内存。换句话说，使用new时，不能为指定类型的属性赋值。
 
@@ -143,10 +143,10 @@ new 关键字用于在内存中分配指定类型的值。内存分配后被清�
 ```go
 //分配MyType类型的值
 //值的顺序必须是正确的
-myValue：= MyType {10，“Bill”} 
+myValue：= MyType {10，“Bill”}
 //分配MyType类型的值
 //使用标签指定对应的值
-myValue：= MyType { 
+myValue：= MyType {
     Value1 ：10，
     Value2：“Bill”，
 }
@@ -157,46 +157,46 @@ make 关键字仅用于分配和初始化 Slice， Map 和 Channel。它返回�
 我们将 Map 传递给函数就可以观察到和第一段代码不同的现象。看看这个示例代码：
 
 ```go
-package main 
-import（
-    “fmt” 
-    “unsafe” 
-）
-type MyType struct { 
-    Value1 int 
-    Value2 string 
-} 
-func main（）{ 
-    myMap：= make（map [string] string）
-    myMap [“Bill”] =“Jill” 
-    pointer：=unsafe.Pointer（＆myMap）
-    fmt.Printf（“地址：％v值：％s \ n”，pointer，myMap [“Bill”]）
-    ChangeMyMap（myMap）
-    fmt.Printf（“地址：％v值：％s \ n “，pointer，myMap [”Bill“]）
-    ChangeMyMapAddr（＆myMap）
-    fmt.Printf（”地址：％v值：％s \ n“，pointer，myMap [”Bill“]）
-} 
-func ChangeMyMap（myMap map [string]string）{ 
-    myMap [“Bill”] =“Joan” 
-    pointer：= unsafe.Pointer（＆myMap）
-    fmt.Printf（“地址：％v值：％s \ n”，pointer，myMap [“Bill”]）
-} 
+package main
+import(
+    “fmt”
+    “unsafe”
+)
+type MyType struct {
+    Value1 int
+    Value2 string
+}
+func main(){
+    myMap：= make(map [string] string)
+    myMap [“Bill”] =“Jill”
+    pointer：=unsafe.Pointer(＆myMap)
+    fmt.Printf(“地址：％v值：％s \ n”，pointer，myMap [“Bill”])
+    ChangeMyMap(myMap)
+    fmt.Printf(“地址：％v值：％s \ n “，pointer，myMap [”Bill“])
+    ChangeMyMapAddr(＆myMap)
+    fmt.Printf(”地址：％v值：％s \ n“，pointer，myMap [”Bill“])
+}
+func ChangeMyMap(myMap map [string]string){
+    myMap [“Bill”] =“Joan”
+    pointer：= unsafe.Pointer(＆myMap)
+    fmt.Printf(“地址：％v值：％s \ n”，pointer，myMap [“Bill”])
+}
 //不要这样做，只是在本文中使用作个实验
-func ChangeMyMapAddr（myMapPointer * map [string] string）{ 
-    （* myMapPointer）[“Bill”] =“Jenny” 
-    pointer：= unsafe.Pointer（myMapPointer）
-    fmt.Printf（“地址：％v值：％s \ n”，pointer，（* myMapPointer）[“Bill“]）
+func ChangeMyMapAddr(myMapPointer * map [string] string){
+    (* myMapPointer)[“Bill”] =“Jenny”
+    pointer：= unsafe.Pointer(myMapPointer)
+    fmt.Printf(“地址：％v值：％s \ n”，pointer，(* myMapPointer)[“Bill“])
 }
 
 ```
 
-这是该程序的输出：
+这是该程序的输出:
 
 ```go
-地址：0x21015b018 值：Jill 
+地址：0x21015b018 值：Jill
 地址：0x21015b028 值：Joan
-地址：0x21015b018 值：Joan 
-地址：0x21015b018 值：Jenny 
+地址：0x21015b018 值：Joan
+地址：0x21015b018 值：Jenny
 地址：0x21015b018 值:Jenny
 ```
 
