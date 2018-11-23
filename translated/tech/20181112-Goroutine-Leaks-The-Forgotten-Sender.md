@@ -18,7 +18,7 @@
 
 **清单 1**
 
-<https://play.golang.org/p/dsu3PARM24K> 
+<https://play.golang.org/p/dsu3PARM24K>
 
 ``` go
 // 泄漏是一个有 bug 程序。它启动了一个 goroutine
@@ -47,7 +47,7 @@ func leak() {
 
 **清单 2**
 
-<https://play.golang.org/p/o6_eMjxMVFv> 
+<https://play.golang.org/p/o6_eMjxMVFv>
 
 ```go
 // search 模拟成一个查找记录的函数
@@ -64,7 +64,7 @@ func search(term string) (string, error) {
 
 **清单 3**
 
-<https://play.golang.org/p/o6_eMjxMVFv> 
+<https://play.golang.org/p/o6_eMjxMVFv>
 
 ```go
 // process 函数是在该程序中搜索一条记录
@@ -88,7 +88,7 @@ func process(term string) error {
 
 **清单 4**
 
-<https://play.golang.org/p/m0DHuchgX0A> 
+<https://play.golang.org/p/m0DHuchgX0A>
 
 ```go
 // serach 函数得到的返回值用 result 结构体来保存
@@ -105,7 +105,7 @@ func process(term string) error {
      //创建一个在 100 ms 内取消上下文的 context
      ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
      defer cancel()
- 
+
      // 为 goroutine 创建一个传递结果的 channel
      ch := make(chan result)
 
@@ -149,7 +149,7 @@ func process(term string) error {
 
 **清单 5**
 
-<https://play.golang.org/p/u3xtQ48G3qK> 
+<https://play.golang.org/p/u3xtQ48G3qK>
 
 ```go
 // 为 goroutine 创建一个传递结果的 channel。
@@ -172,7 +172,7 @@ Go 让启动 Goroutines 变得简单，但我们有责任明智地使用它们�
 
 ------
 
-via: <https://www.ardanlabs.com/blog/2018/11/goroutine-leaks-the-forgotten-sender.html> 
+via: <https://www.ardanlabs.com/blog/2018/11/goroutine-leaks-the-forgotten-sender.html>
 
 作者：[Jacob Walker ](https://github.com/jcbwlkr)
 译者：[wumansgy](https://github.com/wumansgy)
