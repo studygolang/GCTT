@@ -9,8 +9,6 @@
 
 ![屏幕截图](https://www.ardanlabs.com/images/goinggo/Screen+Shot+2013-07-27+at+2.57.16+PM.png)
 
-
-
 在下图中，myVariable 的值是值本身，而不是像上图一样的对值的引用。
 
 ![屏幕截图](https://www.ardanlabs.com/images/goinggo/Screen+Shot+2013-07-27+at+3.01.52+PM.png)要访问值的属性，我们可以使用选择器运算符来访问值的特定字段。选择器运算符的语法为 Value.FieldName，其中句点(.)是选择器运算符。
