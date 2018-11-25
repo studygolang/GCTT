@@ -8,10 +8,12 @@
 
 ```go
 package main
+
 import (
 	"fmt"
 	"reflect"
 )
+
 func PrintFunction(val interface{}) {
 	t := reflect.TypeOf(val)
 	fmt.Printf("Is variadic: %v\n", t.IsVariadic())
@@ -19,7 +21,9 @@ func PrintFunction(val interface{}) {
 		fmt.Printf("Parameter #%v: %v\n", i, t.In(i))
 	}
 }
+
 type T struct{}
+
 func (t T) M(text string, number int) {}
 func (t *T) N(map[string]int)         {}
 func main() {
@@ -27,6 +31,7 @@ func main() {
 	PrintFunction((*T).M)
 	PrintFunction((*T).N)
 }
+
 ```
 
 输出：
@@ -51,20 +56,21 @@ Parameter #1: map[string]int
 
 ```go
 type T struct {
-    name string
+	name string
 }
+
 func (t T) M() {
-    t.name = "changed"
+	t.name = "changed"
 }
 func (t *T) N() {
-    t.name = "changed"
+	t.name = "changed"
 }
 func main() {
-    t := T{name: "Michał"}
-    (*T).M(&t)
-    fmt.Println(t.name)
-    (*T).N(&t)
-    fmt.Println(t.name)
+	t := T{name: "Michał"}
+	(*T).M(&t)
+	fmt.Println(t.name)
+	(*T).N(&t)
+	fmt.Println(t.name)
 }
 ```
 
@@ -79,23 +85,29 @@ changed
 
 ```go
 package main
+
 import "fmt"
+
 type T struct {
-    name string
+	name string
 }
+
 func (t T) M() {
-    fmt.Println(t.name)
+	fmt.Println(t.name)
 }
+
 type I interface {
-    M()
+	M()
 }
+
 func main() {
-    t1 := T{name: "Michał"}
-    t2 := T{name: "Tom"}
-    m := I.M
-    m(t1)
-    m(t2)
+	t1 := T{name: "Michał"}
+	t2 := T{name: "Tom"}
+	m := I.M
+	m(t1)
+	m(t2)
 }
+
 ```
 
 输出：
@@ -111,16 +123,17 @@ Tom
 
 ```go
 type T struct {
-    name string
+	name string
 }
+
 func (t *T) M(string) {}
 func (t T) N(float64) {}
 func main() {
-    t := T{name: "Michał"}
-    m := t.M
-    n := t.N
-    m("foo")
-    n(1.1)
+	t := T{name: "Michał"}
+	m := t.M
+	n := t.N
+	m("foo")
+	n(1.1)
 }
 ```
 
@@ -130,20 +143,26 @@ func main() {
 
 ```go
 package main
+
 import "fmt"
+
 type T struct {
-    name string
+	name string
 }
+
 func (t T) M() string {
-    return t.name
+	return t.name
 }
+
 type U struct {
-    T
+	T
 }
+
 func main() {
-    u := U{T{name: "Michał"}}
-    fmt.Println(u.M())
+	u := U{T{name: "Michał"}}
+	fmt.Println(u.M())
 }
+
 ```
 
 上面的 Go 程序输出 `Michał` 是完全正确的。说嵌入到结构类型中属性的方法属于该类型的方法集是有确切原因的：
@@ -154,32 +173,38 @@ func main() {
 
 ```go
 package main
+
 import (
-    "fmt"
-    "reflect"
+	"fmt"
+	"reflect"
 )
 
 func PrintMethodSet(val interface{}) {
-    t := reflect.TypeOf(val)
-    fmt.Printf("Method set count: %d\n", t.NumMethod())
-    for i := 0; i < t.NumMethod(); i++ {
-        m := t.Method(i)
-        fmt.Printf("Method: %s\n", m.Name)
-    }
+	t := reflect.TypeOf(val)
+	fmt.Printf("Method set count: %d\n", t.NumMethod())
+	for i := 0; i < t.NumMethod(); i++ {
+		m := t.Method(i)
+		fmt.Printf("Method: %s\n", m.Name)
+	}
 }
+
 type T struct {
-    name string
+	name string
 }
+
 func (t T) M()  {}
 func (t *T) N() {}
+
 type U struct {
-    T
+	T
 }
+
 func main() {
-    u := U{T{name: "Michał"}}
-    PrintMethodSet(u)
-    PrintMethodSet(&u)
+	u := U{T{name: "Michał"}}
+	PrintMethodSet(u)
+	PrintMethodSet(&u)
 }
+
 ```
 
 上面的程序输出：
@@ -204,17 +229,20 @@ Method: N
 
 ```go
 type T struct {
-    name string
+	name string
 }
+
 func (t T) M()  {}
 func (t *T) N() {}
+
 type U struct {
-    *T
+	*T
 }
+
 func main() {
-    u := U{&T{name: "Michał"}}
-    PrintMethodSet(u)
-    PrintMethodSet(&u)
+	u := U{&T{name: "Michał"}}
+	PrintMethodSet(u)
+	PrintMethodSet(&u)
 }
 ```
 
