@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/16505
+
 # Go 编译器 nil 指针检查
 
 ## 简介
@@ -36,9 +38,9 @@ runtime.goexit()
     /go/src/pkg/runtime/proc.c:1445
 ```
 
-让我们看看由 6g 编译器在 darwin/amd64 机器上的生成的汇编代码（译者注：6g 是 golang 在 amd64 架构机器上的编译器，由于 Go 语言的版本关系，1.5之后的版本中 6g/8g 已被取代，应该统一使用 `go tool compile -S main.go`）:
+让我们看看由 6g 编译器在 darwin/amd64 机器上的生成的汇编代码（译者注：6g 是 Golang 在 amd64 架构机器上的编译器，由于 Go 语言的版本关系，1.5 之后的版本中 6g/8g 已被取代，应该统一使用 `go tool compile -S main.go`）:
 
-```x86asm
+```asm
 go tool 6g -S main.go
 
 04  var p *int
@@ -73,7 +75,7 @@ go tool 6g -S main.go
 
 让我们看看由 6g 编译器在 darwin/amd64 机器上生成的第 9 行、第 10 行的汇编代码（译者注：同上译注）：
 
-```x86asm
+```asm
 go tool 6g -S main.go
 
 09  s := new(S)
@@ -94,9 +96,9 @@ go tool 6g -S main.go
 0x0061 00097 (main.go:10)  NOP ,
 ```
 
-在我们的示例中，第 10 行代码需要下面的指针运算才能使其工作:
+在我们的示例中，第 10 行代码需要下面的指针运算才能使其工作 :
 
-```x86asm
+```asm
 10  s.i++
 
 0x004a 00074 (main.go:10)  CMPQ BX,$0
@@ -108,11 +110,11 @@ go tool 6g -S main.go
 0x005a 00090 (main.go:10)  MOVQ BP,4096(BX)
 ```
 
-i 字段内存地址位于 S 类型的值内的 4096 字节偏移量。上面汇编代码中，BP 寄存器被分配到 BX (s 值) 的内存位置的值加上 4096 的偏移量（译者注：基地址加上偏移量）。之后 BP 的值增加1，新值分配在 BX + 4096 的内存地址中。（译者注：0x0050 0008 至 0x005a 00090 代码片段）
+i 字段内存地址位于 S 类型的值内的 4096 字节偏移量。上面汇编代码中，BP 寄存器被分配到 BX (s 值 ) 的内存位置的值加上 4096 的偏移量（译者注：基地址加上偏移量）。之后 BP 的值增加 1，新值分配在 BX + 4096 的内存地址中。（译者注：0x0050 0008 至 0x005a 00090 代码片段）
 
 在这个例子中，Go 编译器在自增代码之前添加一个 nil 指针检查：
 
-```x86asm
+```asm
 10  s.i++
 
 0x004a 00074 (main.go:10)  CMPQ BX,$0
@@ -133,7 +135,6 @@ i 字段内存地址位于 S 类型的值内的 4096 字节偏移量。上面汇
 让我们对先前的例子做一点小修改：
 
 ```go
-
 01 package main
 02
 03 type S struct {
@@ -149,7 +150,7 @@ i 字段内存地址位于 S 类型的值内的 4096 字节偏移量。上面汇
 
 我所做的只是交换结构中的字段顺序。这次 int 类型的 i 字段在 4096 个元素的字节数组类型的 b 字段之前。现在让我们生成汇编代码，看看 nil 指针检查是否仍然存在：
 
-```x86asm
+```asm
 09  s := new(S)
 0x0036 00054 (main.go:9)   LEAQ "".autotmp_0001+0(SP),DI
 0x003a 00058 (main.go:9)   MOVL $0,AX
@@ -169,7 +170,7 @@ i 字段内存地址位于 S 类型的值内的 4096 字节偏移量。上面汇
 
 如果将第 10 行的未修改的示例汇编代码与刚才修改了的（交换字段后的）示例进行比较，你会发现有很大的区别：
 
-```x86asm
+```asm
 First Example      |   Second Example
 CMPQ BX,$0         |   NOP
 JEQ $1,105         |   MOVQ (BX),BP
@@ -195,7 +196,7 @@ MOVQ BP,4096(BX)   |   NOP ,
 
 如果你想在标准库中阅读一些关于重新排序结构以消除字段的 nil 指针检查的示例，请看 Nigel Tao 的代码更改：https://codereview.appspot.com/6625058
 
-此外还有 Russ Cox 于 2013 年 7 月撰写的一份文档,"Go 1.2 字段选择器和 nil 检查"：http://golang.org/s/go12nil
+此外还有 Russ Cox 于 2013 年 7 月撰写的一份文档 ,"Go 1.2 字段选择器和 nil 检查 "：http://golang.org/s/go12nil
 
 ---
 
@@ -203,6 +204,6 @@ via: https://www.ardanlabs.com/blog/2014/09/go-compiler-nil-pointer-checks.html
 
 作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
 译者：[7Ethan](https://github.com/7Ethan)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
