@@ -1,6 +1,6 @@
-# Go方法（第二部分）
+# Go 方法（第二部分）
 
-这篇文章介绍了关于 go 语言中方法的剩余部分。强烈建议先阅读[第一部分](https://medium.com/golangspec/methods-in-go-part-i-a4e575dff860)的介绍部分。
+这篇文章介绍了关于 Go 语言中方法的剩余部分。强烈建议先阅读[第一部分](https://medium.com/golangspec/methods-in-go-part-i-a4e575dff860) 的介绍部分。
 
 ## 方法表达式
 
@@ -66,7 +66,7 @@ func (t *T) N() {
 	t.name = "changed"
 }
 func main() {
-	t := T{name: "Michał"}
+	t := T{name: "Micha ł "}
 	(*T).M(&t)
 	fmt.Println(t.name)
 	(*T).N(&t)
@@ -77,7 +77,7 @@ func main() {
 输出：
 
 ```go
-Michał
+Micha ł
 changed
 ```
 
@@ -101,7 +101,7 @@ type I interface {
 }
 
 func main() {
-	t1 := T{name: "Michał"}
+	t1 := T{name: "Micha ł "}
 	t2 := T{name: "Tom"}
 	m := I.M
 	m(t1)
@@ -113,7 +113,7 @@ func main() {
 输出：
 
 ```
-Michał
+Micha ł
 Tom
 ```
 
@@ -129,7 +129,7 @@ type T struct {
 func (t *T) M(string) {}
 func (t T) N(float64) {}
 func main() {
-	t := T{name: "Michał"}
+	t := T{name: "Micha ł "}
 	m := t.M
 	n := t.N
 	m("foo")
@@ -159,13 +159,13 @@ type U struct {
 }
 
 func main() {
-	u := U{T{name: "Michał"}}
+	u := U{T{name: "Micha ł"}}
 	fmt.Println(u.M())
 }
 
 ```
 
-上面的 Go 程序输出 `Michał` 是完全正确的。说嵌入到结构类型中属性的方法属于该类型的方法集是有确切原因的：
+上面的 Go 程序输出 `Micha ł` 是完全正确的。说嵌入到结构类型中属性的方法属于该类型的方法集是有确切原因的：
 
 ### #1
 
@@ -200,7 +200,7 @@ type U struct {
 }
 
 func main() {
-	u := U{T{name: "Michał"}}
+	u := U{T{name: "Micha ł "}}
 	PrintMethodSet(u)
 	PrintMethodSet(&u)
 }
@@ -240,7 +240,7 @@ type U struct {
 }
 
 func main() {
-	u := U{&T{name: "Michał"}}
+	u := U{&T{name: "Micha ł "}}
 	PrintMethodSet(u)
 	PrintMethodSet(&u)
 }
@@ -261,8 +261,8 @@ Method: N
 
 via: https://medium.com/golangspec/methods-in-go-part-ii-2b4cc42c5cb6
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[Tyrodw](https://github.com/tyrodw)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/ 校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
