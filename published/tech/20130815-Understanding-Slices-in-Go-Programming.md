@@ -50,7 +50,6 @@ newSlice := mySlice[2:4]
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Understanding-Slices-in-Go-Programming/3.png)
 
-
 新 slice 的指针变量的值与初始基础数组的索引位置 2 和 3 相关联。就这个新 slice 而言，我们现在有一个包含 3 个元素的基础数组，我们只使用这 3 个元素中的 2 个。这个 slice 无法访问初始底层数组的前两个元素。
 
 执行 slice 操作时，第一个参数指定 slice 指针变量位置的起始索引。在我们的例子中，我们说索引 2 是初始底层数组中的 3 个元素，我们从中获取 slice。第二个参数是最后一个索引位置加一（+1）。在我们的例子中，我们说索引 4 将包括索引 2（起始位置）和索引 3（最终位置）之间的所有索引。
