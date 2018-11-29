@@ -41,19 +41,19 @@ go协程总是在后台运行，当一个go协程执行的时候（在这个例�
 
 一旦`printHello协程`执行，它就会向控制台打印‘Hello World！’，然后该go协程（`printHello协程`）就会随之终止，接下来`主协程`就会被重新调度（因为main go协程已经睡够10ms了），并执行最后一条语句。因此，运行上面的程序就会得到以下的输出:
 
-```
+```shell
 main execution started
 Hello World!
 main execution stopped
 ```
 
-下面我稍微修改一下例子，我在`printHello`函数的输出语句之前添加了一条` time.Sleep(time.Millisecond)`。我们已经知道了如果我们在函数中调用了休眠（sleep）函数，这个函数就会告诉go调度器去调度其他可被调度的go协程。在上一课中提到，只有非休眠（`non-sleeping`）的go协程才会被认为是可被调度的，所以主协程在这休眠的10ms内是不会被再次调度的。因此`主协程`先打印出“main execution started” 接着就创建了一个 **printHello** 协程，*需要注意此时的`主协程`还是非休眠状态的*，在这之后主协程就要调用休眠函数去睡10ms，并且把这个控制权让出来给**printHello** 协程。**printHello** 协程会先休眠1ms告诉调度器看看有没有其他可调度的go协程，在这个例子里显然没有其他可调度的go协程了，所以在**printHello**协程结束了这1ms的休眠户就会被调度器调度，接着就输出了“Hello World”字符串，之后这个go协程运行结束。之后，主协程会在之后的几毫秒被唤醒，紧接着就会输出“main execution stopped”并且结束整个程序。
+下面我稍微修改一下例子，我在`printHello`函数的输出语句之前添加了一条`time.Sleep(time.Millisecond)`。我们已经知道了如果我们在函数中调用了休眠（sleep）函数，这个函数就会告诉go调度器去调度其他可被调度的go协程。在上一课中提到，只有非休眠（`non-sleeping`）的go协程才会被认为是可被调度的，所以主协程在这休眠的10ms内是不会被再次调度的。因此`主协程`先打印出“main execution started” 接着就创建了一个 **printHello** 协程，*需要注意此时的`主协程`还是非休眠状态的*，在这之后主协程就要调用休眠函数去睡10ms，并且把这个控制权让出来给**printHello** 协程。**printHello** 协程会先休眠1ms告诉调度器看看有没有其他可调度的go协程，在这个例子里显然没有其他可调度的go协程了，所以在**printHello**协程结束了这1ms的休眠户就会被调度器调度，接着就输出了“Hello World”字符串，之后这个go协程运行结束。之后，主协程会在之后的几毫秒被唤醒，紧接着就会输出“main execution stopped”并且结束整个程序。
 
 ![example-4](https://cdn-images-1.medium.com/max/1600/1*3lQnGP4JRuzDH2DEvFE2sw.png)
 
 上面的程序依旧和之前的例子一样，输出以下相同的结果：
 
-```
+```shell
 main execution started
 Hello World!
 main execution stopped
@@ -65,12 +65,10 @@ main execution stopped
 
 在这个例子中，与其他的例子最大的区别就是**printHello** 协程比主协程的休眠时间还要长，很明显，主协程要比printHello 协程唤醒要早，这样的结果就是主协程即使唤醒后执行完所有的语句，printHello协程还是在休眠状态。之前提到过，主协程比较特殊，如果主协程执行结束后整个程序就要退出，所以printHello协程得不到机会去执行下面的输出的语句了，所以以上的程序的数据结果如下：
 
-```
+```shell
 main execution started
 main execution stopped
 ```
-
-
 
 ## 使用多go协程
 
@@ -80,9 +78,9 @@ main execution stopped
 
 在上图中的程序中，我们连续地创建了两个go协程，程序输出的结果如下：
 
-```
+```shell
 main execution started
-H e l l o 1 2 3 4 5 
+H e l l o 1 2 3 4 5
 main execution stopped
 ```
 
@@ -94,17 +92,17 @@ main execution stopped
 
 我们在Windows上运行上面的程序，得到了以下的结果：
 
-```
+```shell
 main execution started at time 0s
 H at time 1.0012ms                         <-|
 1 at time 1.0012ms                           | almost at the same time
 e at time 11.0283ms                        <-|
-l at time 21.0289ms                          | ~10ms apart 
+l at time 21.0289ms                          | ~10ms apart
 l at time 31.0416ms
 2 at time 31.0416ms
 o at time 42.0336ms
 3 at time 61.0461ms                        <-|
-4 at time 91.0647ms                          | 
+4 at time 91.0647ms                          |
 5 at time 121.0888ms                         | ~30ms apart
 main execution stopped at time 200.3137ms    | exiting after 200ms
 ```
@@ -125,8 +123,6 @@ main execution stopped at time 200.3137ms    | exiting after 200ms
 
 *需要注意的是，所有的go协程都是匿名的，因为我们从`并发（concurrency）`一课中学到，go协程是不存在标识符的，在这里所谓的匿名go协程只是通过匿名函数来创建的go协程罢了*
 
-
-
 ---
 
 via: https://medium.com/rungo/anatomy-of-goroutines-in-go-concurrency-in-go-a4cb9272ff88
@@ -136,20 +132,3 @@ via: https://medium.com/rungo/anatomy-of-goroutines-in-go-concurrency-in-go-a4cb
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
