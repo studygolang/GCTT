@@ -31,15 +31,15 @@ main execution stopped
 
 go协程总是在后台运行，当一个go协程执行的时候（在这个例子中是 `go printHello()`）, go 并不会像在之前的那个例子中在执行`printHello`中的功能时阻塞main函数中剩下语句的执行，而是直接忽略了go协程的返回并继续执行main函数剩下的语句。**即便如此，我们为什么没法看到函数的输出呢？**
 
-在默认情况下，每个独立的go应用运行时就创建了一个go协程，其`main`函数就在这个go协程中运行，这个go协程就被称为`go主协程（main goroutine，下面简称主协程）`。在上面的例子中，`主协程`中又产生了一个`printHello`这个函数的go协程，我们暂且叫它`printHello协程`吧，因而我们在执行上面的程序的时候，就会存在两个go协程（`main` 和`printHello`）同时运行。正如同以前的程序那样，go协程们会进行协同调度。因此，当`主协程`运行的时候，Go调度器在`主协程`执行完之前并不会将控制权移交给`printHello 协程`。不幸的是，一旦`主协程`执行完毕，整个程序会立即终止，调度器再也没有时间留给`printHello 协程`去运行了。
+在默认情况下，每个独立的go应用运行时就创建了一个go协程，其`main`函数就在这个go协程中运行，这个go协程就被称为`go 主协程（main goroutine，下面简称主协程）`。在上面的例子中，`主协程`中又产生了一个`printHello`这个函数的go协程，我们暂且叫它`printHello协程`吧，因而我们在执行上面的程序的时候，就会存在两个go协程（`main` 和`printHello`）同时运行。正如同以前的程序那样，go协程们会进行协同调度。因此，当`主协程`运行的时候，Go调度器在`主协程`执行完之前并不会将控制权移交给`printHello 协程`。不幸的是，一旦`主协程`执行完毕，整个程序会立即终止，调度器再也没有时间留给`printHello协程`去运行了。
 
 但正如我们从其他课程所知，通过阻塞条件，我们可以手动将控制权转移给其他的go协程,也可以说是告诉调度器让它去调度其他可用空闲的go协程。让我们调用`time.Sleep()`函数去实现它吧。
 
 ![example-3](https://cdn-images-1.medium.com/max/1600/1*Vd4kxUcz1_CKC_hrY8_r-A.png)
 
-如上图所示，我们修改了程序，程序在main函数的最后一条语句之前调用了`time.Sleep(10 * time.Millisecond)`，使得`main go协程`在执行最后一条指令之前调度器就将控制权转移给了`printhello go协程`。在这个例子中，我们通过调用`time.Sleep(10 * time.Millisecond)`强行让`main go协程`休眠10ms并且在在这个10ms内不会再被调度器重新调度运行。
+如上图所示，我们修改了程序，程序在main函数的最后一条语句之前调用了`time.Sleep(10 * time.Millisecond)`，使得`主协程`在执行最后一条指令之前调度器就将控制权转移给了`printhello协程`。在这个例子中，我们通过调用`time.Sleep(10 * time.Millisecond)`强行让`主协程`休眠10ms并且在在这个10ms内不会再被调度器重新调度运行。
 
-一旦`printHello go协程`执行，它就会向控制台打印‘Hello World！’，然后该go协程（`printHello go协程`）就会随之终止，接下来main go协程就会被重新调度（因为main go协程已经睡够10ms了），并执行最后一条语句。因此，运行上面的程序就会得到以下的输出:
+一旦`printHello协程`执行，它就会向控制台打印‘Hello World！’，然后该go协程（`printHello协程`）就会随之终止，接下来`主协程`就会被重新调度（因为main go协程已经睡够10ms了），并执行最后一条语句。因此，运行上面的程序就会得到以下的输出:
 
 ```
 main execution started
@@ -47,7 +47,7 @@ Hello World!
 main execution stopped
 ```
 
-下面我稍微修改一下例子，我在printHello函数的输出语句之前添加了一条` time.Sleep(time.Millisecond)`。我们已经知道了如果我们在函数中调用了休眠（sleep）函数，这个函数就会告诉go调度器去调度其他可被调度的go协程。在上一课中提到，只有非休眠（`non-sleeping`）的go协程才会被认为是可被调度的，所以main go协程在这休眠的10ms内是不会被再次调度的。因此main go协程先打印出“main execution started” 接着就创建了一个 **printHello** go协程，*需要注意此时的main go协程还是非休眠状态的*，在这之后main go协程就要调用休眠函数去睡10ms，并且把这个控制权让出来给**printHello** go协程。**printHello** go协程会先休眠1ms告诉调度器看看有没有其他可调度的go协程，在这个例子里显然没有其他可调度的go协程了，所以在**printHello** go协程结束了这1ms的休眠户就会被调度器调度，接着就输出了“Hello World”字符串，之后这个go协程运行结束。之后，main go协程会在之后的几毫秒被唤醒，紧接着就会输出“main execution stopped”并且结束整个程序。
+下面我稍微修改一下例子，我在`printHello`函数的输出语句之前添加了一条` time.Sleep(time.Millisecond)`。我们已经知道了如果我们在函数中调用了休眠（sleep）函数，这个函数就会告诉go调度器去调度其他可被调度的go协程。在上一课中提到，只有非休眠（`non-sleeping`）的go协程才会被认为是可被调度的，所以主协程在这休眠的10ms内是不会被再次调度的。因此`主协程`先打印出“main execution started” 接着就创建了一个 **printHello** 协程，*需要注意此时的`主协程`还是非休眠状态的*，在这之后主协程就要调用休眠函数去睡10ms，并且把这个控制权让出来给**printHello** 协程。**printHello** 协程会先休眠1ms告诉调度器看看有没有其他可调度的go协程，在这个例子里显然没有其他可调度的go协程了，所以在**printHello**协程结束了这1ms的休眠户就会被调度器调度，接着就输出了“Hello World”字符串，之后这个go协程运行结束。之后，主协程会在之后的几毫秒被唤醒，紧接着就会输出“main execution stopped”并且结束整个程序。
 
 ![example-4](https://cdn-images-1.medium.com/max/1600/1*3lQnGP4JRuzDH2DEvFE2sw.png)
 
@@ -59,11 +59,11 @@ Hello World!
 main execution stopped
 ```
 
-要是，我把这个**printHello** go协程中的休眠1毫秒改成休眠15毫秒，这个结果又是如何呢？
+要是，我把这个**printHello** 协程中的休眠1毫秒改成休眠15毫秒，这个结果又是如何呢？
 
 ![example-5](https://cdn-images-1.medium.com/max/1600/1*m6IyoYmXTb4mocn_0-OqrQ.png)
 
-在这个例子中，与其他的例子最大的区别就是**printHello** go 协程比main 协程的休眠时间还要长，很明显，main go协程要比printHello go协程唤醒要早，这样的结果就是main go协程即使唤醒后执行完所有的语句，printHello go协程还是在休眠状态。之前提到过，main go协程比较特殊，如果main go协程执行结束后整个程序就要退出，所以printHello go协程得不到机会去执行下面的输出的语句了，所以以上的程序的数据结果如下：
+在这个例子中，与其他的例子最大的区别就是**printHello** 协程比主协程的休眠时间还要长，很明显，主协程要比printHello 协程唤醒要早，这样的结果就是主协程即使唤醒后执行完所有的语句，printHello协程还是在休眠状态。之前提到过，主协程比较特殊，如果主协程执行结束后整个程序就要退出，所以printHello协程得不到机会去执行下面的输出的语句了，所以以上的程序的数据结果如下：
 
 ```
 main execution started
@@ -86,11 +86,11 @@ H e l l o 1 2 3 4 5
 main execution stopped
 ```
 
-上面的结果证实了go协程是以合作式调度运作的。下面我们在每个函数中的输出语句的下面添加一行`time.Sleep`，让函数在输出每个字符或数字后休息一段时间，好让调度器调度其他可用的go协程。
+上面的结果证实了go协程是以合作式调度来运作的。下面我们在每个函数中的输出语句的下面添加一行`time.Sleep`，让函数在输出每个字符或数字后休息一段时间，好让调度器调度其他可用的go协程。
 
 ![example-2-2](https://cdn-images-1.medium.com/max/800/1*LbE_Ls0r-bWZIX-lr5jc9g.png)
 
-在上面的程序中，我又修改了一下输出语句使得我们可以看到每个字符或数字的输出时刻。理论上主协程会休眠200ms，因此其他go协程要赶在主协程唤醒之前做完自己的工作，因为main go协程唤醒之后就会导致程序退出。`getChars` go 协程每打印一个字符就会休眠10ms，之后控制权就会传给`getDigits`协程，`getDigits`协程每打印一个数字后就休眠30ms，若`getChars`协程唤醒，则会把控制权传回`getChars`协程，如此往复。在代码中可以看到，`getChars`协程会在其他协程休眠的时候多次进行打印字符以及休眠操作，所以我们预计可以看到输出的字符比数字更具有连续性。
+在上面的程序中，我又修改了一下输出语句使得我们可以看到每个字符或数字的输出时刻。理论上主协程会休眠200ms，因此其他go协程要赶在主协程唤醒之前做完自己的工作，因为主协程唤醒之后就会导致程序退出。`getChars` 协程每打印一个字符就会休眠10ms，之后控制权就会传给`getDigits`协程，`getDigits`协程每打印一个数字后就休眠30ms，若`getChars`协程唤醒，则会把控制权传回`getChars`协程，如此往复。在代码中可以看到，`getChars`协程会在其他协程休眠的时候多次进行打印字符以及休眠操作，所以我们预计可以看到输出的字符比数字更具有连续性。
 
 我们在Windows上运行上面的程序，得到了以下的结果：
 
@@ -113,7 +113,7 @@ main execution stopped at time 200.3137ms    | exiting after 200ms
 
 ![example-2-3](https://cdn-images-1.medium.com/max/800/0*4_Z0LRvi_DJR1JEr.jpg)
 
-现在我们已经知道了如何去创建go协程以及去如何去使用它。但是使用`time.Sleep`只是一个让我们获取理想结果的一个小技巧。在实际生产环境中，我们无法知晓一个go协程到底需要执行多长的时间，因而在main函数里面添加一个`time.Sleep`并不是一个解决问题的方法。我们希望go协程在执行完毕后告知main协程运行的结果。在目前阶段，我们还不知道如何向其他go协程传递以及获取数据，简而言之，就是与其他go协程进行通信。这就是channels引入的原因。我们会在下一次课中讨论这个东西。
+现在我们已经知道了如何去创建go协程以及去如何去使用它。但是使用`time.Sleep`只是一个让我们获取理想结果的一个小技巧。在实际生产环境中，我们无法知晓一个go协程到底需要执行多长的时间，因而在main函数里面添加一个`time.Sleep`并不是一个解决问题的方法。我们希望go协程在执行完毕后告知主协程运行的结果。在目前阶段，我们还不知道如何向其他go协程传递以及获取数据，简而言之，就是与其他go协程进行通信。这就是channels引入的原因。我们会在下一次课中讨论这个东西。
 
 ## 匿名go协程
 
