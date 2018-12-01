@@ -1,6 +1,6 @@
 # 使用Go（Golang）实现OAuth2.0
 
-2018年7月1日	
+2018年7月1日
 
 OAuth2是一种身份验证协议，用于使用其他服务提供商来对应用程序中的用户进行身份验证和授权。
 
@@ -200,8 +200,6 @@ type OAuthAccessResponse struct {
 2. 在将用户发送到授权URL时，可以在URL携带一个自定义的查询参数`state`。这个参数值应该是应用程序提供的随机不可猜测的字符串。当github调用重定向url时，它会将此`state`变量附加到请求参数。新网址现在看起来像： `https://github.com/login/oauth/authorize?client_id=myclientid123&redirect_uri=http://localhost:8080/oauth/redirect&state=somerandomstring`
 
 	应用程序现在可以将此值与其最初生成的值进行比较。如果它们不相同，则意味着请求来自某个第三方，并且应该被拒绝。有关此类型的安全问题的更多信息，您可以阅读我的[其他帖子](https://www.sohamkamani.com/blog/2017/01/14/web-security-cross-site-request-forgery/)
-
-
 
 ----------------
 
