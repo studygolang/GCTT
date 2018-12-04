@@ -137,7 +137,7 @@ $ go tool pprof -http=:12345 cpu.1000_reqs_sec_no_optimizations.prof
 
 在火焰图中的函数名上面停留会显示在跟踪期间，这个函数在栈中的时间总数。`HTTPServe` 在栈中占时为剖析时间的 65%，而各种 go 运行时方法 `runtime.mcall`, `mstart`, `gc` 构成了剩下的剖析时间。一个有趣的事情是程序总运行时间的 5% 被花费在 DNS 的查询中：
 
-![](https://cdn-images-1.medium.com/max/800/1*lP8axi7pLZWoljBrNhtbpQ.png) 
+![](https://cdn-images-1.medium.com/max/800/1*lP8axi7pLZWoljBrNhtbpQ.png)
 
 唯一的IP地址需要程序解析的是 Postgres 的地址。点击 `FindByAge` 显示：
 
