@@ -2,8 +2,6 @@
 
 ​	性能分析和调优是一种很强大的技术，用来验证是否满足客户关注的性能要求。性能分析常常被用来分析一个程序将大部分时间花在哪里了，并通过一个科学的方法来测试调优实践的效果。这个帖子使用一个 go 语言编写的 HTTP 服务作为一个例子来定义一种性能分析和调优的普遍方法。go 特别适合性能分析和调优，因为它在它的标准库中提供了 [pprof](https://golang.org/pkg/runtime/pprof/) 剖析工具链。
 
-
-
 ## 策略
 
 我们先尝试建立一个简单的框架来构建对程序的分析。我们将要尝试做的是使用数据引导我们得出结论，而不是基于直觉或者预感做出决定。为此我们将要：
@@ -123,8 +121,6 @@ $ curl http://localhost:8080/debug/pprof/profile?seconds=29 > cpu.1000_reqs_sec_
 $ go tool pprof -http=:12345 cpu.1000_reqs_sec_no_optimizations.prof
 ```
 
-
-
 ![](https://cdn-images-1.medium.com/max/800/1*DwpUf3vSxvFN9iBpisYHxg.png)
 
 火焰图展示了应用在哪些地方花费时间和在那里花费了多少时间！来自 [Brendan Gregg 的描述](http://www.brendangregg.com/flamegraphs.html)：
@@ -141,7 +137,7 @@ $ go tool pprof -http=:12345 cpu.1000_reqs_sec_no_optimizations.prof
 
 在火焰图中的函数名上面停留会显示在跟踪期间，这个函数在栈中的时间总数。`HTTPServe` 在栈中占时为剖析时间的 65%，而各种 go 运行时方法 `runtime.mcall`, `mstart`, `gc` 构成了剩下的剖析时间。一个有趣的事情是程序总运行时间的 5% 被花费在 DNS 的查询中：
 
-![](https://cdn-images-1.medium.com/max/800/1*lP8axi7pLZWoljBrNhtbpQ.png)  
+![](https://cdn-images-1.medium.com/max/800/1*lP8axi7pLZWoljBrNhtbpQ.png) 
 
 唯一的IP地址需要程序解析的是 Postgres 的地址。点击 `FindByAge` 显示：
 
@@ -150,8 +146,6 @@ $ go tool pprof -http=:12345 cpu.1000_reqs_sec_no_optimizations.prof
 有趣的是，这个图显示了 main 源码有 3 点造成了这个延迟：关闭/释放连接，查询数据，和连接。基于这个火焰图， DNS 查询和连接的关闭、打开数量大概占了总的服务时间的13%。
 
 假说：**使用连接池来重用连接可以减少 HTTP 交互时间，从而有更高的吞吐量和更低的延迟。**
-
-
 
 ## 应用优化——实践
 
@@ -165,8 +159,6 @@ if err != nil {
    return nil, err
 }
 ```
-
-
 
 ### 执行、观察、分析
 
@@ -231,8 +223,6 @@ p99 总是 < 60ms！而 3000 请求量每秒也有更低的 p100 了！
 
 ![](https://cdn-images-1.medium.com/max/800/1*_JYEYZtH9mhtE_bNhSb69w.png)
 
-
-
 仔细观察下面的火焰图，连接的 dial 不再出现了！仔细看 `pg(*conn).query` 那行，整个 dialing 不再存在了：
 
 ![](https://cdn-images-1.medium.com/max/800/1*InVKlU7WGXXzrR-yDnRbkw.png)
@@ -242,8 +232,6 @@ p99 总是 < 60ms！而 3000 请求量每秒也有更低的 p100 了！
 性能分析是理解是否满足客户期望和非功能需求的至关重要的手段。通过符合客户期望的审查分析性能能够帮助我们决定哪些是性能可接受的，哪些是不可接受的。Go 在标准库中提供了强大的组件，让这个分析的一系列方法变得简单易用。
 
 我对你阅读本文表示感谢，并希望你能反馈！
-
-
 
 ---
 
