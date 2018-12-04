@@ -4,9 +4,9 @@
 
 
 
-### 策略
+## 策略
 
-​	我们先尝试建立一个简单的框架来构建对程序的分析。我们将要尝试做的是使用数据引导我们得出结论，而不是基于直觉或者预感做出决定。为此我们将要：
+我们先尝试建立一个简单的框架来构建对程序的分析。我们将要尝试做的是使用数据引导我们得出结论，而不是基于直觉或者预感做出决定。为此我们将要：
 
 - 确定我们要优化的维度（要求）
 - 创建一个测试代码（harness）将事务负载到这个系统上
@@ -18,27 +18,19 @@
 
 ![](https://cdn-images-1.medium.com/max/800/1*gHcWRAf2lXH6QmRWikO9RA.png)
 
-
-
-### 简单的 HTTP 服务器架构
+## 简单的 HTTP 服务器架构
 
 关于这个贴，我们将使用一个 golang 编写的小型 HTTP 服务器。这个贴的所有代码都可以在 [这里](<https://github.com/dm03514/sre-tutorials/tree/master/performance/analysis-methodology-simple-http>) 找到。
-
-
 
 我们将要分析的这个应用是一个每次请求都查询 PostgreSQL 的HTTP服务器。此外，通过 Prometheus, node_exporter, 和 Grafana 来收集和可视化应用和系统级的指标：
 
 ![](https://cdn-images-1.medium.com/max/800/1*LtUiFFlpmQhUCny4WBX91A.png)
 
-
-
 为简单起见，本文假设为了横向扩展（并简化我们的计算），每个HTTP服务和Postgres数据库将一起部署：
 
 ![](https://cdn-images-1.medium.com/max/800/1*HnI5HsNzxrQEoRJ7aeuFag.png)
 
-
-
-### 确定目标（维度）
+## 确定目标（维度）
 
 这一步概述了特定的目标。我们将尝试分析什么？我们如何知道我们的努力已完成？
 
@@ -52,13 +44,11 @@
 
 延迟可能需要除了分析之外的优化，而吞吐量就只需要分析了。使用SRE SLO 处理的延迟需求可能来自客户端或者产品拥有者所代表的事务。真正值得一说的是，我们的服务能够在一开始就满足这种承诺而不需要任何调整！
 
-
-
-### 设置测试代码（test harness）
+## 设置测试代码（test harness）
 
 这个测试代码将应用一个固定总数的负载到我们的系统。为了分析 HTTP 服务的性能，数据将需要它来生成。
 
-#### 交互负载（transactional load）
+### 交互负载（transactional load）
 
 这个测试代码只使用了 [Vegeta](https://github.com/tsenart/vegeta) 以可配置的速率来产生 HTTP 请求直到停止：
 
@@ -71,19 +61,15 @@ echo "POST http://localhost:8080" | vegeta attack -body tests/fixtures/age_no_ma
 
 在执行一个”无止境“的交互负载期间（负载测试）。除了应用（请求速率，请求延迟）和系统级（内存，CPU，IOPS）的指标外，这时将通过剖析应用来理解它将时间花费在哪里了。
 
-#### 剖析（profiling）
+### 剖析（profiling）
 
 ***profiling*** 是度量中的一类，让我们了解应用将时间花费到哪里了。它能够报告应用将时间花费在哪。***Profileing*** 能够用来确定哪个函数正在被调用，并且应用在每个函数上花费了多少时间：
 
 ![](https://cdn-images-1.medium.com/max/800/1*c7k5Nb2oi3asMe5IOdhYog.png)
 
-
-
 这个数据可以用来可视化分析程序将时间花在哪些不必要的工作上。Go（pprof）可以用来生成 profiles，并使用 [标准工具链](https://golang.org/doc/diagnostics.html#profiling) 将它们可视化为 [火焰图](http://www.brendangregg.com/flamegraphs.html) 。在本文后面，我们将通过使用它们来引导调优的结论。
 
-
-
-### 执行、观察、分析
+## 执行、观察、分析
 
 我们开始执行这些实践。我们将执行，观察和分析直到我们的性能要求失效。先选择任意一个低的负载量来生成第一份观察报告和分析。如果每次的性能要求能够 hold 得住，我们就通过一个随机缩放因子（random-ish scaling factor）来增加负载。每次负载测试通过调整速率来执行：
 
@@ -91,7 +77,7 @@ echo "POST http://localhost:8080" | vegeta attack -body tests/fixtures/age_no_ma
 make load-test LOAD_TEST_RATE=X
 ```
 
-#### 50个请求/秒
+### 50个请求/秒
 
 ![](https://cdn-images-1.medium.com/max/800/1*Wp_6cWoGuq-Ufi7ZVuepDA.png)
 
@@ -103,7 +89,7 @@ make load-test LOAD_TEST_RATE=X
 
 我们就可以很好的支持了。
 
-#### 500 请求量/秒
+### 500 请求量/秒
 
 当我们的请求数达到 500 请求量每秒时，事情开始变得有趣：
 
@@ -117,15 +103,13 @@ make load-test LOAD_TEST_RATE=X
 
 就可以很好的支持！
 
-#### 1000 请求量/秒
+### 1000 请求量/秒
 
 ![](https://cdn-images-1.medium.com/max/800/1*8XLzAsU_8iRRhR6sof76pg.png)
 
 这个太大了！应用正在处理 1000 请求量/秒，但是延迟时间已经超过 SLO 的延迟量。这个可以看右上角（原文是左上角，可能打错了？）的图中的 P99 线。而尾部的 p100 max 远大于最大限制量的 60ms，P99 线也在 60ms 以上。是时候查看和剖析应用实际上正在做的事情了。
 
-
-
-#### 剖析（profile）
+### 剖析（profile）
 
 为了剖析，我们将使用 1000 请求量每秒的负载然后使用 `pprof` 来采样这些栈获得我们的程序将它的时间花费在哪些地方。这个可以在负载被使用时，通过 `pprof` 的HTTP 端点，并用 curl 来跟踪：
 
@@ -143,15 +127,11 @@ $ go tool pprof -http=:12345 cpu.1000_reqs_sec_no_optimizations.prof
 
 ![](https://cdn-images-1.medium.com/max/800/1*DwpUf3vSxvFN9iBpisYHxg.png)
 
-
-
 火焰图展示了应用在哪些地方花费时间和在那里花费了多少时间！来自 [Brendan Gregg 的描述](http://www.brendangregg.com/flamegraphs.html)：
 
 > x轴展示了栈的横截数量（profile population），按照字典序排列（注意，它不是通过调用时间长短排序的），y轴表示栈的深度，从顶层以0开始计数。每个矩形表示一个栈帧。**栈帧的宽度越宽，则它在栈中出现的次数越多。**最底层显示的是正在CPU 中运行的，在它上面的就是它的父函数。颜色通常没有意义，随机选择来区分不同的栈帧。
 
-
-
-### 分析——假说
+## 分析——假说
 
 为了引导优化，我们将重点放在查找那些”无用功“。**我们将尝试查找产生这些”无用功“的大部分源码，并删除它。**因为剖析可以揭露出这个服务把时间花费在哪里了，这就需要从中找出潜在的重复工作，修改代码来改进它， 重新运行测试，并观察性能是否接近目标值。
 
@@ -169,13 +149,11 @@ $ go tool pprof -http=:12345 cpu.1000_reqs_sec_no_optimizations.prof
 
 有趣的是，这个图显示了 main 源码有 3 点造成了这个延迟：关闭/释放连接，查询数据，和连接。基于这个火焰图， DNS 查询和连接的关闭、打开数量大概占了总的服务时间的13%。
 
-
-
 假说：**使用连接池来重用连接可以减少 HTTP 交互时间，从而有更高的吞吐量和更低的延迟。**
 
 
 
-### 应用优化——实践
+## 应用优化——实践
 
 更新这个应用，避免每次 postgres 请求都重建连接。一个解决方法是使用应用级的 [连接池](https://en.wikipedia.org/wiki/Connection_pool) 。这个实践将使用 go sql 驱动的[池配置选项](http://go-database-sql.org/connection-pool.html) 来配置一个连接池：
 
@@ -190,7 +168,7 @@ if err != nil {
 
 
 
-#### 执行、观察、分析
+### 执行、观察、分析
 
 重新运行 1000 测试负载，显示 99% 的HTTP 请求延迟都在 60ms SLO 以下！
 
@@ -210,8 +188,6 @@ if err != nil {
 
 **10k 请求量/秒 / 2000 请求量/机器 = 5 台机器 + 1**
 
-
-
 #### 3000 请求量/秒
 
 ![](https://cdn-images-1.medium.com/max/800/1*QAkf5NmLOMLj4VNqaBCFzQ.png)
@@ -220,29 +196,19 @@ if err != nil {
 
 **10k 请求量/秒 / 3000 请求量/机器 = 4 台机器 + 1**
 
-
-
 尝试更进一步的分析。
 
-
-
-### 分析——假说
+## 分析——假说
 
 生成并可视化 3000 请求量/秒 下应用的剖析情况如下：
 
 ![](https://cdn-images-1.medium.com/max/800/1*FiL_4e4jGFg7fxI-yJs8Jg.png)
 
-
-
 可以看出，***FindByAge*** 6%的交互时间是由 Dialing 连接造成的！！建立一个连接池提高了性能，但是可以观察到应用还是继续做创建新的数据库连接的重复工作！
-
-
 
 假说：**即使连接被放到池里了，但是他们一直被回收并清理导致应用必须重新连接。调整空闲连接数等于池的大小应该可以帮助减少延迟时间，最小化应用花在创建数据库连接的总时间。**
 
-
-
-### 应用优化——实践
+## 应用优化——实践
 
 我们尝试设置 [MaxIdleConns](https://golang.org/pkg/database/sql/#DB.SetMaxIdleConns) 等于池的大小（或者在 [这里](http://go-database-sql.org/connection-pool.html) 查看）：
 
@@ -255,9 +221,7 @@ if err != nil {
 }
 ```
 
-
-
-#### 执行、观察、分析
+### 执行、观察、分析
 
 #### 3000 请求量/秒
 
@@ -273,9 +237,7 @@ p99 总是 < 60ms！而 3000 请求量每秒也有更低的 p100 了！
 
 ![](https://cdn-images-1.medium.com/max/800/1*InVKlU7WGXXzrR-yDnRbkw.png)
 
-
-
-### 结论
+## 结论
 
 性能分析是理解是否满足客户期望和非功能需求的至关重要的手段。通过符合客户期望的审查分析性能能够帮助我们决定哪些是性能可接受的，哪些是不可接受的。Go 在标准库中提供了强大的组件，让这个分析的一系列方法变得简单易用。
 
