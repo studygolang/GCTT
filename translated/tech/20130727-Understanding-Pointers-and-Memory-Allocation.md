@@ -209,8 +209,8 @@ func ChangeMyMapAddr（myMapPointer * map [string] string）{
 
 Map，Slice 和 Channel 这些数据类型和普通的数据类型是不同的。你可以按值传递这些变量而无需担心。当我们将 map 变量传递给函数时，我们其实正在复制一个数据结构，而不是它所指向的整个哈希表。
 
-
 最后我建议你阅读上面提到的 [Effective Go](https://golang.org/doc/effective_go.html) 文档。自从我开始使用 Go 编程以来，我已多次阅读该文档。随着我的 Go 开发经验与日俱增，我还总是时不时回头温习之。总是有一种温故而知新的感觉！
+
 ------
 
 via: https://www.ardanlabs.com/blog/2013/07/understanding-pointers-and-memory.html
