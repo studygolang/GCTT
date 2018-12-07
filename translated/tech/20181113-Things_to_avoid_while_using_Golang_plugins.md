@@ -90,11 +90,11 @@
 
 你可以在此处找到用于测试问题＃2和＃3的源码：[https//github.com/alperkose/golangplugins](https://github.com/alperkose/golangplugins)
 
------
-via: https://medium.com/@alperkose/things-to-avoid-while-using-golang-plugins-f34c0a636e8
+------
+via: [https://medium.com/@alperkose/things-to-avoid-while-using-golang-plugins-f34c0a636e8](https://medium.com/@alperkose/things-to-avoid-while-using-golang-plugins-f34c0a636e8)
 
 作者：[Alper Köse](https://medium.com/@alperkose)
-译者：herowk(https://github.com/herowk)
+译者：[herowk](https://github.com/herowk)
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
