@@ -4,15 +4,15 @@
 
 并发编程允许开发人员使用多个执行路径解决问题，并且通常用于提高性能。并发并不意味着这些多路径是并行执行的；它意味着这些路径是无序执行的而不是顺序执行。从历史上看，使用由标准库或第三方开发人员提供的库可以促进这种类型的编程。
 
-在 Go 中，语言本身和程序运行时内置了 Goroutines 和 channel 等并发特性，以减少或消除对库的需求。这很容易在Go 中编写并发程序时造成错觉。在你决定使用并发时必须要谨慎，因为如果没有正确使用它那么就会带来一些独特的副作用或陷阱。如果你不小心，这些陷阱会产生复杂的问题和令人讨厌的 bug。
+在 Go 中，语言本身和程序运行时内置了 Goroutines 和 channel 等并发特性，以减少或消除对库的需求。这很容易在Go 中编写并发程序时造成错觉。在你决定使用并发时必须要谨慎，因为如果没有正确使用它那么就会带来一些稀罕的副作用或陷阱。如果你不小心，这些陷阱会产生复杂的问题和令人讨厌的 bug。
 
 我在这篇文章中讨论的陷阱会与 Goroutine 泄漏有关。
 
 ## Goroutines 泄露
 
-当涉及到内存管理时，Go 已经为您处理了许多细节。Go 在编译时使用**逃逸分析**来决定值在内存中的位置。程序运行时通过使用**垃圾回收器**跟踪和管理堆分配。虽然在应用程序中创建**内存泄漏**不是不可能的，但是这种可能性已经大大降低了。
+当涉及到内存管理时，Go 已经为您处理了许多细节。Go 在编译时使用[**逃逸分析**](<https://studygolang.com/articles/12444>)来决定值在内存中的位置。程序运行时通过使用[**垃圾回收器**](https://blog.golang.org/ismmkeynote)跟踪和管理堆分配。虽然在应用程序中创建[**内存泄漏**](https://en.wikipedia.org/wiki/Memory_leak)不是不可能的，但是这种可能性已经大大降低了。
 
-一种常见的内存泄漏类型就是 Goroutines 泄漏。如果你开始了一个你认为最终会终止但是它永远不会终止的Goroutine，那么它就会泄露了。它的生命周期为程序的生命周期，任何分配给 Goroutine 的内存都不能释放。所以在这里建议**“永远不要在不知道如何停止的情况下，就去开启一个 goroutine ”**。
+一种常见的内存泄漏类型就是 Goroutines 泄漏。如果你开始了一个你认为最终会终止但是它永远不会终止的Goroutine，那么它就会泄露了。它的生命周期为程序的生命周期，任何分配给 Goroutine 的内存都不能释放。所以在这里建议[**“永远不要在不知道如何停止的情况下，就去开启一个 goroutine ”**](<https://dave.cheney.net/2016/12/22/never-start-a-goroutine-without-knowing-how-it-will-stop>)。
 
 要弄明白基本的 Goroutine 泄漏，请查看以下代码：
 
@@ -21,7 +21,7 @@
 <https://play.golang.org/p/dsu3PARM24K>
 
 ``` go
-// 泄漏是一个有 bug 程序。它启动了一个 goroutine
+// leak 是一个有 bug 程序。它启动了一个 goroutine
 // 阻塞接收 channel。一切都将不复存在
 // 向那个 channel 发送数据，并且那个 channel 永远不会关闭
 // 那个 goroutine 会被永远锁死
@@ -84,7 +84,7 @@ func process(term string) error {
 
 对于某些应用程序来说，顺序调用 `search` 函数时产生的延迟可能是无法接受的。假设不能使 `search` 函数运行得更快，则可以将 `process` 函数更改为不消耗 `search` 所产生的总延迟成本。
 
-为此，我们可以像下面清单 4 中那种使用 Goroutine，不幸的是，这第一次尝试是错误的，因为它造成了潜在的Goroutine 泄漏。
+为此，我们可以像下面清单 4 中那种使用 Goroutine，不幸的是，这第一次尝试是错误的，因为它造成了潜在的 Goroutine 泄漏。
 
 **清单 4**
 
@@ -159,7 +159,7 @@ func process(term string) error {
 
 现在在超时情况下，在接收器继续运行之后，搜索 Goroutine 将通过将结果值放入 channel 来完成其发送，然后它将返回。Goroutine 的内存以及 channel 的内存最终将会被收回。一切都会自然而然地发挥作用。
 
-在 channel 的行为中，William Kennedy 提供了几个关于 channel 行为的很好的例子，并提供了有关其使用的哲学。该文章“清单 10 ”的最后一个示例显示了一个类似于此超时示例的程序。阅读该文章，获取有关何时使用缓冲channel 以及适当的容量级别的更多建议。
+在 [channel 的行为](https://www.ardanlabs.com/blog/2017/10/the-behavior-of-channels.html)中，William Kennedy 提供了几个关于 channel 行为的很好的例子，并提供了有关其使用的哲学。该文章“[清单 10](https://www.ardanlabs.com/blog/2017/10/the-behavior-of-channels.html#signal-without-data-context) ”的最后一个示例显示了一个类似于此超时示例的程序。阅读该文章，获取有关何时使用缓冲channel 以及适当的容量级别的更多建议。
 
 ## 结论
 
@@ -176,6 +176,6 @@ via: <https://www.ardanlabs.com/blog/2018/11/goroutine-leaks-the-forgotten-sende
 
 作者：[Jacob Walker ](https://github.com/jcbwlkr)
 译者：[wumansgy](https://github.com/wumansgy)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
