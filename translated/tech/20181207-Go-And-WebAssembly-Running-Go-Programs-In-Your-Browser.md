@@ -36,9 +36,9 @@ $GOOS=js GOARCH=wasm go build -o test.wasm test.go
 
 我们现在就生成了 wasm 二进制文件。但是与本机系统不同，我们需要在浏览器中运行它。为此，我们需要投入一些额外的东西来实现这一个目标：
 
-- 一个将为我们 web 应用程序提供服务的 webserver
-- 一个 index.html 文件，包含一些用于加载 wasm 二进制文件的js代码
-- 一个 js 文件，用于作为浏览器和我们的 wasm 二进制文件之间的通信接口
+* 一个将为我们 web 应用程序提供服务的 webserver
+* 一个 index.html 文件，包含一些用于加载 wasm 二进制文件的js代码
+* 一个 js 文件，用于作为浏览器和我们的 wasm 二进制文件之间的通信接口
 
 我喜欢把它想象成制作飞天小女警所需要的东西。
 
@@ -169,9 +169,9 @@ js.Global().Get("document").
 
 我的一些结束语：
 
-- 由于 Go 是一门垃圾回收的语言，因此整个运行周期都是在 wasm 二进制文件当中。正因为如此，这些二进制文件通常是MB级别的大小。与 C/Rust 语言相比，这是一个痛点；因为向浏览器发送 MB 级别的数据是不理想的。然而，要是 wasm 规范本身支持 GC，那么这可能会改变。
-- 在 Go 中对 wasm 进行支持官方在进行试验。`syscall/js` API 本身是在不断变化，将在可能还会变。如果你发现一个 bug，请在我们的 [issue tracker](https://github.com/golang/go/issues) 上提出 issue。
-- 与所有集数一样，WebAssembly 也不是一颗银弹。有时，简单的 js 更快更容易编写。然而，wasm 本身正在开发中，并将推出更多的功能。线程支持就是这样一个特性。
+* 由于 Go 是一门垃圾回收的语言，因此整个运行周期都是在 wasm 二进制文件当中。正因为如此，这些二进制文件通常是MB级别的大小。与 C/Rust 语言相比，这是一个痛点；因为向浏览器发送 MB 级别的数据是不理想的。然而，要是 wasm 规范本身支持 GC，那么这可能会改变。
+* 在 Go 中对 wasm 进行支持官方在进行试验。`syscall/js` API 本身是在不断变化，将在可能还会变。如果你发现一个 bug，请在我们的 [issue tracker](https://github.com/golang/go/issues) 上提出 issue。
+* 与所有集数一样，WebAssembly 也不是一颗银弹。有时，简单的 js 更快更容易编写。然而，wasm 本身正在开发中，并将推出更多的功能。线程支持就是这样一个特性。
 
 希望这篇文章展示了 WebAssembly 一些很酷的方面，以及如何使用 Go 编写一个功能齐全的 web 应用程序。如果你发现一个 bug，请尝试解决一下，并提出 issue。如果您需要任何帮助，请随时访问 [#webassembly](https://gophers.slack.com/) 频道。
 
