@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/15348
+
 # 介绍 Corral：一个无服务器的 MapReduce 框架
 
-这篇文章给出了一个我们最新项目的技术概述和架构设计理由，corral—— 一个无服务的 MapReduce 框架。
+这篇文章给出了一个我们最新项目的技术概述和架构设计理由，corral —— 一个无服务的 MapReduce 框架。
 
 我最近在用 Hadoop 和 Spark 为一个我帮助教学的班级工作。PySpark 的确很棒，但是 Hadoop MapReduce 我从来没有真正关注，直到我发现 [mrjob](https://pythonhosted.org/mrjob/)。MapReduce 的观念是极为强大的，但是大量的样板文件需要用 Java 编写，甚至是一个简单的 Hadoop 作业，在我看来那是不必要的。
 
@@ -12,7 +14,7 @@ Hadoop 和 Spark 也需要了解一些基础设施知识。一些服务像 [EMR]
 
 我的想法是：使用 Lambda 作为一个执行环境，类似 Hadoop MapReduce 使用 YARN。本地驱动程序协调函数调用，S3 用于数据存储。
 
-![](https://github.com/studygolang/gctt-images/blob/master/introducing-corral-a-serverless-mapreduce-framework/architecture.svg)
+![](https://static.studygolang.com/gctt/introducing-corral/architecture.svg)
 
 这是 [corral](https://github.com/bcongdon/corral) 的结果，一个用于编写可在 AWS Lambda 中执行的任意 MapReduce 应用程序框架。
 
@@ -20,7 +22,7 @@ Hadoop 和 Spark 也需要了解一些基础设施知识。一些服务像 [EMR]
 
 众所周知，Go 没有泛型，所以我不得不为 mappers 和 reducers 构建一个令人信服的接口而动些脑筋。Hadoop MapReduce 在指定输入/输出格式，分割记录的方式等方面有很大的灵活性。
 
-我之前考虑用 interface{} 类型做为健和值，但用 [Rob Pike的话](https://www.youtube.com/watch?v=PAAkCSZUG1c&t=7m36s)说，“interface{} 什么也没说”。所以我决定使用极简主义接口：keys 和 values 都用字符串，输入文件按换行符分割。这些简化假设使整个系统的实现更简单和清晰。Hadoop MapReduce 赢得可定制性，因此我决定采用易用性。
+我之前考虑用 interface{} 类型做为健和值，但用 [Rob Pike 的话](https://www.youtube.com/watch?v=PAAkCSZUG1c&t=7m36s)说，“interface{} 什么也没说”。所以我决定使用极简主义接口：keys 和 values 都用字符串，输入文件按换行符分割。这些简化假设使整个系统的实现更简单和清晰。Hadoop MapReduce 赢得可定制性，因此我决定采用易用性。
 
 我很满意 Map 和 Reduce 的最终接口（其中一些是受 Damian Gryski 的 [dmrgo](https://github.com/dgryski/dmrgo) 启发）：
 
@@ -48,9 +50,9 @@ type Emitter interface {
 
 Hadoop MapReduce 架构为其带来以下好处……
 
-+ 持久，长时间运行的工作节点
-+ 数据局部性在工作节点
-+ 通过 YARN/Mesos 等作为抽象的，容错的主节点和工作节点容器。
+- 持久，长时间运行的工作节点
+- 数据局部性在工作节点
+- 通过 YARN/Mesos 等作为抽象的，容错的主节点和工作节点容器。
 
 使用 AWS 堆栈可以很容易地复制最后两方面。S3 和 Lambda 之间的带宽相对不错（至少对我而言），而 Lambda 的构建使得开发人员“不必考虑服务器”。
 
@@ -60,13 +62,13 @@ Hadoop MapReduce 架构为其带来以下好处……
 
 最后，我决定使用 S3 作为无状态 partition/shuffle 的后端。
 
-![](https://github.com/studygolang/gctt-images/blob/master/introducing-corral-a-serverless-mapreduce-framework/intermediate.svg)
+![](https://static.studygolang.com/gctt/introducing-corral/intermediate.svg)
 
 对 mapper 输出使用友好的前缀名称，可以方便 reducers 轻松选择它们需要读取的文件。
 
 处理输入数据显然更为直接。与 Hadoop MapReduce 一样，输入文件被拆分为块。Corral 将这些文件块分组为“输入箱”，并且每个 mapper 读取/处理一个输入箱。输入拆分和容器大小是可以根据需要进行配置的。
 
-![](https://github.com/studygolang/gctt-images/blob/master/introducing-corral-a-serverless-mapreduce-framework/input_splits.svg)
+![](https://static.studygolang.com/gctt/introducing-corral/input_splits.svg)
 
 ## 自发布应用
 
@@ -91,7 +93,7 @@ Corroal 让我最兴奋的一点是，它能够自我部署到 AWS Lambda。我�
 
 一旦部署后，这个 corral 上传到 Lambda 的二进制文件有条件地表现为 Mapper 或 Reducer，具体取决于它的调用输入。您在本地执行的二进制文件在 Map/Reduce 阶段保持运行并调用 Lambda 函数。
 
-![](https://github.com/studygolang/gctt-images/blob/master/introducing-corral-a-serverless-mapreduce-framework/timeline.svg)
+![](https://static.studygolang.com/gctt/introducing-corral/timeline.svg)
 
 系统中的每个组件都运行相同的源，但有很多并行副本运行在 Lambda 上（由驱动协调）。这导致 MapReduce 快速的并行。
 
@@ -129,7 +131,7 @@ REPORT RequestId: 16e55aa5-4a87-11e8-9c63-3f70efb9da7e  Duration: 1059.94 ms    
 
 是，不是。Lambda 的免费等级每月为您提供 400,000 GB/秒。这听起来很多，但是长时间运行的应用程序很快就会用完。
 
-![](https://github.com/studygolang/gctt-images/blob/master/introducing-corral-a-serverless-mapreduce-framework/lambda_pricing.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/introducing-corral-a-serverless-mapreduce-framework/lambda_pricing.png)
 
 最终，corral 仍然能非常便宜。但是，您需要调整应该程序以尽可能少使用内存。在 corral 设置最大内存上限尽可能降低成本。
 
@@ -149,7 +151,7 @@ Amplab 基准测试可测高达大约 125GB 的输入数据。我很好奇用大
 
 就是这样：corral 让您编写一个简单的 MR 作业，无摩擦地将其发布到 Lambda ，并在 S3 的数据集上运行该作业。
 
-![](https://github.com/studygolang/gctt-images/blob/master/introducing-corral-a-serverless-mapreduce-framework/word_count.gif)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/introducing-corral-a-serverless-mapreduce-framework/word_count.gif)
 
 值得注意的是，我没有与 AWS 生态系统结合。Corral 与 Lambda 和 S3 毫无关系，因为将来可以添加 GCP 的云函数和数据存储的连接器（if/when GCP 添加 CF 支持 Go）。
 
@@ -157,7 +159,7 @@ Amplab 基准测试可测高达大约 125GB 的输入数据。我很好奇用大
 
 随意在 [corral 库](https://github.com/bcongdon/corral)中提出问题。我很想知道这个项目是否有足够的市场来证明有必要持续发展。:smile:
 
-----------------
+---
 
 via: https://benjamincongdon.me/blog/2018/05/02/Introducing-Corral-A-Serverless-MapReduce-Framework/
 
