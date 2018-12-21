@@ -6,7 +6,7 @@
 
 ## 声明一个 channel
 
-Go 提供 `chan` 关键字来创建一个 channel。channel 只能用于传输**一种数据类型**的数据。不允许从该 channel 传输其他数据类型。 
+Go 提供 `chan` 关键字来创建一个 channel。channel 只能用于传输**一种数据类型**的数据。不允许从该 channel 传输其他数据类型。
 
 ![](https://cdn-images-1.medium.com/max/1600/1*zAzzrOTw_BUo2BLzUNgxFA.png)
 
@@ -246,7 +246,7 @@ c := make(chan Type, n)
 - 然后我们将数据发送到 `squareChan` 和 `cubeVal`。主 goroutine 将被阻塞，直到这些 channel 读取它。一旦他们读了它，`main`  goroutine 将继续执行。
 - 当在 `main` goroutine中，我们试图从给定的 channel 读取数据时，程序将被阻塞，直到这些 channel 从它们的 goroutine 中写入一些数据。这里，我们使用了简写语法 `:=` 从多个 channel 接收数据。
 - 一旦这些 goroutine 将一些数据写入channel ，主 goroutine 将被阻塞。
--  channel 写操作完成后，`main` goroutine开始执行。然后我们计算总和并打印在控制台上。
+- channel 写操作完成后，`main` goroutine开始执行。然后我们计算总和并打印在控制台上。
 
 因此，上述程序将产生以下结果
 
@@ -564,7 +564,7 @@ main() stopped
 
 上面的结果看起来很整洁，因为在 main goroutine 中的 `result` channel 上的读取操作是非阻塞的，因为 `result` channel 已经由 result 填充，而 main goroutine 被 `wg.Wait()` 调用阻塞。使用 `waitGroup`，我们可以防止很多(不必要的)上下文切换(调度)，这里是 7，而前面的示例中是 9。**但这是有代价的，因为你必须等待所有的工作都完成。**
 
-##  Mutex
+## Mutex
 
 互斥是 Go 中最简单的概念之一。但是在我解释它之前，让我们先理解竞态条件是什么。goroutines 有独立的栈，因此它们之间不共享任何数据。但是在某些情况下，堆中的某些数据可能在多个 goroutine 之间共享。在这种情况下，多个 goroutine 试图在相同的内存位置操作数据，从而导致意想不到的结果。我将向您展示一个简单的示例。
 
@@ -588,7 +588,7 @@ value of i after 1000 operations is 937
 
 让我们设想一个场景，在这些步骤之间安排了不同的 goroutine。例如，让我们考虑 1000 个 goroutines 中的两个 goroutines，即 G1 和 G2。
 
-当 `i` 为 `0` 时，G1 首先开始，运行前两个步骤，`i` 现在是 `1`。但是在 G1 更新第 3 步中的 `i` 值之前，会调度新的 goroutine G2 并运行所有步骤。但是对于 G2，` i` 的值仍然是 `0`，因此在执行步骤 3 之后，`i` 将是 1。现在 G1 再次被安排完成步骤 3，并更新步骤 2 中 `i` 的值 1。在完美的世界里，goroutines 在完成所有的 3 个步骤后被调度，两个 goroutines 的成功操作会产生 `i` 为 2 的值，但这里不是这样。因此，我们可以推测为什么我们的程序没有将` i` 的值赋值为 `1000`。 
+当 `i` 为 `0` 时，G1 首先开始，运行前两个步骤，`i` 现在是 `1`。但是在 G1 更新第 3 步中的 `i` 值之前，会调度新的 goroutine G2 并运行所有步骤。但是对于 G2，`i` 的值仍然是 `0`，因此在执行步骤 3 之后，`i` 将是 1。现在 G1 再次被安排完成步骤 3，并更新步骤 2 中 `i` 的值 1。在完美的世界里，goroutines 在完成所有的 3 个步骤后被调度，两个 goroutines 的成功操作会产生 `i` 为 2 的值，但这里不是这样。因此，我们可以推测为什么我们的程序没有将 `i` 的值赋值为 `1000`。
 
 到目前为止，我们了解到 goroutines 是合作安排的。除非一个 goroutine 块具有并发性课程中提到的条件之一，否则另一个 goroutine 不会取代它。既然 `i = i + 1` 不是阻塞，为什么 Go 调度器计划另一个 goroutine？
 
@@ -604,7 +604,7 @@ value of i after 1000 operations is 937
 
 <https://play.golang.org/p/xVFAX_0Uig8>
 
-在上面的程序中，我们创建了一个互斥量 ` m`，并将它的指针传递给所有派生的 goroutines。在开始对 `i` 进行操作之前，我们使用 `m.lock()` 语法获得互斥对象 `m` 上的锁，然后在操作之后使用 `m.unlock()` 语法解锁它。上面的程序产生下面的结果。
+在上面的程序中，我们创建了一个互斥量 `m`，并将它的指针传递给所有派生的 goroutines。在开始对 `i` 进行操作之前，我们使用 `m.lock()` 语法获得互斥对象 `m` 上的锁，然后在操作之后使用 `m.unlock()` 语法解锁它。上面的程序产生下面的结果。
 
 ```go
 value of i after 1000 operations is 1000
@@ -641,18 +641,18 @@ import (
 )
 // return channel for input numbers
 func getInputChan() <-chan int {
-	// make return channel
+// make return channel
 	input := make(chan int, 100)
 
-	// sample numbers
+// sample numbers
 	numbers := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 
-	// run goroutine
+// run goroutine
 	go func() {
 		for num := range numbers {
 			input <- num
 		}
-		// close channel once all numbers are sent to channel
+// close channel once all numbers are sent to channel
 		close(input)
 	}()
 
@@ -661,17 +661,17 @@ func getInputChan() <-chan int {
 
 // returns a channel which returns square of numbers
 func getSquareChan(input <-chan int) <-chan int {
-	// make return channel
+// make return channel
 	output := make(chan int, 100)
 
-	// run goroutine
+// run goroutine
 	go func() {
 		// push squares until input channel closes
 		for num := range input {
 			output <- num * num
 		}
 
-		// close output channel once for loop finishesh
+// close output channel once for loop finishesh
 		close(output)
 	}()
 
@@ -682,36 +682,35 @@ func getSquareChan(input <-chan int) <-chan int {
 // this produce fan-in channel
 // this is veriadic function
 func merge(outputsChan ...<-chan int) <-chan int {
-	// create a WaitGroup
+// create a WaitGroup
 	var wg sync.WaitGroup
-	
-	// make return channel
+// make return channel
 	merged := make(chan int, 100)
-	
-	// increase counter to number of channels `len(outputsChan)`
-	// as we will spawn number of goroutines equal to number of channels received to merge
-	wg.Add(len(outputsChan))
-	
-	// function that accept a channel (which sends square numbers)
-	// to push numbers to merged channel
+
+// increase counter to number of channels `len(outputsChan)`
+// as we will spawn number of goroutines equal to number of channels received to merge
+wg.Add(len(outputsChan))
+
+// function that accept a channel (which sends square numbers)
+// to push numbers to merged channel
 	output := func(sc <-chan int) {
-		// run until channel (square numbers sender) closes
+// run until channel (square numbers sender) closes
 		for sqr := range sc {
 			merged <- sqr
 		}
-		// once channel (square numbers sender) closes,
-		// call `Done` on `WaitGroup` to decrement counter
+// once channel (square numbers sender) closes,
+// call `Done` on `WaitGroup` to decrement counter
 		wg.Done()
 	}
-	
-	// run above `output` function as groutines, `n` number of times
-	// where n is equal to number of channels received as argument the function
-	// here we are using `for range` loop on `outputsChan` hence no need to manually tell `n`
+
+// run above `output` function as groutines, `n` number of times
+// where n is equal to number of channels received as argument the function
+// here we are using `for range` loop on `outputsChan` hence no need to manually tell `n`
 	for _, optChan := range outputsChan {
 		go output(optChan)
 	}
-	
-	// run goroutine to close merged channel once done
+
+// run goroutine to close merged channel once done
 	go func() {
 		// wait until WaitGroup finishesh
 		wg.Wait()
@@ -722,34 +721,34 @@ func merge(outputsChan ...<-chan int) <-chan int {
 }
 
 func main() {
-	// step 1: get input numbers channel
-	// by calling `getInputChan` function, it runs a goroutine which sends number to returned channel
+// step 1: get input numbers channel
+// by calling `getInputChan` function, it runs a goroutine which sends number to returned channel
 	chanInputNums := getInputChan()
-	
-	// step 2: `fan-out` square operations to multiple goroutines
-	// this can be done by calling `getSquareChan` function multiple times where individual function call returns a channel which sends square of numbers provided by `chanInputNums` channel
-	// `getSquareChan` function runs goroutines internally where squaring operation is ran concurrently
+
+// step 2: `fan-out` square operations to multiple goroutines
+// this can be done by calling `getSquareChan` function multiple times where individual function call returns a channel which sends square of numbers provided by `chanInputNums` channel
+// `getSquareChan` function runs goroutines internally where squaring operation is ran concurrently
 	chanOptSqr1 := getSquareChan(chanInputNums)
 	chanOptSqr2 := getSquareChan(chanInputNums)
-	
-	// step 3: fan-in (combine) `chanOptSqr1` and `chanOptSqr2` output to merged channel
-	// this is achieved by calling `merge` function which takes multiple channels as arguments
-	// and using `WaitGroup` and multiple goroutines to receive square number, we can send square numbers
-	// to `merged` channel and close it
+
+// step 3: fan-in (combine) `chanOptSqr1` and `chanOptSqr2` output to merged channel
+// this is achieved by calling `merge` function which takes multiple channels as arguments
+// and using `WaitGroup` and multiple goroutines to receive square number, we can send square numbers
+// to `merged` channel and close it
 	chanMergedSqr := merge(chanOptSqr1, chanOptSqr2)
-	
-	// step 4: let's sum all the squares from 0 to 9 which should be about `285`
-	// this is done by using `for range` loop on `chanMergedSqr`
+
+// step 4: let's sum all the squares from 0 to 9 which should be about `285`
+// this is done by using `for range` loop on `chanMergedSqr`
 	sqrSum := 0
-	
-	// run until `chanMergedSqr` or merged channel closes
-	// that happens in `merge` function when all goroutines pushing to merged channel finishes
-	// check line no. 86 and 87
+
+// run until `chanMergedSqr` or merged channel closes
+// that happens in `merge` function when all goroutines pushing to merged channel finishes
+// check line no. 86 and 87
 	for num := range chanMergedSqr {
 		sqrSum += num
 	}
-	
-	// step 5: print sum when above `for loop` is done executing which is after `chanMergedSqr` channel closes
+
+// step 5: print sum when above `for loop` is done executing which is after `chanMergedSqr` channel closes
 	fmt.Println("Sum of squares between 0-9 is", sqrSum)
 }
 ```
