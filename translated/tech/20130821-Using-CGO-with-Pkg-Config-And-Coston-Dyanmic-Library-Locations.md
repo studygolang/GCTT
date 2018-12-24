@@ -134,7 +134,6 @@ pkg-config –cflags –libs GoingGoKeyboard
 -L$GOPATH/src/github.com/goinggo/keyboard/DyLib -lkeyboard
 ```
 
-
 如果仔细观察调用的输出，你会看到些我告诉你的错误的用法。$GOPATH 环境变量是运行时提供的。
 
 打开在 pkgconfig 目录下的包配置文件，你会看到 pkg-config 程序没有撒谎。在文件的头部，我正在使用 $GOPATH 设置一条路径的前缀路径(prefix variable)。 那为什么一切都有效？
