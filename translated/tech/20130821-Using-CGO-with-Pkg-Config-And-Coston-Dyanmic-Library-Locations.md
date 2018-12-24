@@ -56,8 +56,7 @@ pkg-config –cflags –libs MagickWand
 
 你能看到头文件和库文件文件路径是绝对路径。在包配置文件中定义的其他参数都出现在命令的返回结果中。
 
-现在，我们对包配置文件有了些了解，并且知道如何使用 pkg-config 工具。 let’s take a look at the changes I made to the project for the [C Dynamic Libraries in Go Programs post].  
-让我们看看我为了[Go 语言中使用 C 动态库](https://www.ardanlabs.com/blog/2013/08/using-c-dynamic-libraries-in-go-programs.html) 这篇文章对这个项目的修改。
+现在，我们对包配置文件有了些了解，并且知道如何使用 pkg-config 工具。让我们看看我为了[Go 语言中使用 C 动态库](https://www.ardanlabs.com/blog/2013/08/using-c-dynamic-libraries-in-go-programs.html) 这篇文章对这个项目的修改。
 这个项目现在使用一个包配置文件和新的 cgo 参数。
 
 在我们开始之前，我必须先抱歉，因为针对这个项目所构建的动态库只能够在 Mac 上编译。上面我所提到文章说明了原因。动态库的预编译版本已经存在在版本控制系统中，如果你不在 Mac 上工作，那么这个项目就无法正常地编译，但是项目的思路，设置和结构都是正确的。
