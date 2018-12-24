@@ -174,3 +174,13 @@ DYLD_LIBRARY_PATH 环境变量告诉操作系统在哪里还可以查找动态�
 还有一个我们提到的好处，你可以使用这种技术来将第三方库安装到一个临时的路径下进行测试使用。这让你在不想使用这个第三库时，可以很方便地进行移除。
 
 如果您想在 Windows 或 Ubuntu 的机器上尝试这些代码或概念，请阅读[Go 语言中使用 C 动态库](https://www.ardanlabs.com/blog/2013/08/using-c-dynamic-libraries-in-go-programs.html) ，了解如何构建您自己的动态库以供自己进行实验。
+
+----------------
+
+via: https://www.ardanlabs.com/blog/2013/08/using-cgo-with-pkg-config-and-custom.html
+
+作者：[William Kennedy](https://www.ardanlabs.com/my/contact-us)
+译者：[magichan](https://github.com/magichan)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
