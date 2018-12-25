@@ -232,8 +232,6 @@ ad.Do(parseFoo(&f))
 - [`bufio.Scanner`](https://golang.org/pkg/bufio/#Scanner)
 - [`netlink.AttributeDecoder`](https://godoc.org/github.com/mdlayher/netlink#AttributeDecoder)
 
-
-
 [comments powered by Disqus](https://disqus.com/)
 
 ---
