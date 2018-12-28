@@ -14,11 +14,15 @@ Go中提供了一个关键字`go`来让我们创建一个Go协程，当我们在
 
 ![example-1](https://cdn-images-1.medium.com/max/1600/1*gF5yHIbu2E0pqAceDMGbdw.png)
 
+<center><a href="https://play.golang.org/p/pIGsToIA2hL">https://play.golang.org/p/pIGsToIA2hL</a></center>
+
 在上面的代码中，我们定义了一个可以在控制台输出`Hello World`字符串的`printHello`的函数，在`main`函数中，我们就像平时那样调用`printHello`函数，最终也是理所当然地获得了期望的结果。
 
 下面，让我们尝试从同一个函数创建go协程：
 
 ![example-2](https://cdn-images-1.medium.com/max/1600/1*7viT_DLTjVJ-wEU0IPS9Wg.png)
+
+<center><a href="https://play.golang.org/p/LWXAgDpTcJP">https://play.golang.org/p/LWXAgDpTcJP</a></center>
 
 根据go协程的语法，我们在函数调用的前面增加了一个`go`关键字，之后程序运行正常，输出了以下的结果：
 
@@ -37,6 +41,8 @@ go协程总是在后台运行，当一个go协程执行的时候（在这个例�
 
 ![example-3](https://cdn-images-1.medium.com/max/1600/1*Vd4kxUcz1_CKC_hrY8_r-A.png)
 
+<center><a href="https://play.golang.org/p/ujQKjpALlRJ">https://play.golang.org/p/ujQKjpALlRJ</a></center>
+
 如上图所示，我们修改了程序，程序在main函数的最后一条语句之前调用了`time.Sleep(10 * time.Millisecond)`，使得`主协程`在执行最后一条指令之前调度器就将控制权转移给了`printhello协程`。在这个例子中，我们通过调用`time.Sleep(10 * time.Millisecond)`强行让`主协程`休眠10ms并且在在这个10ms内不会再被调度器重新调度运行。
 
 一旦`printHello协程`执行，它就会向控制台打印‘Hello World！’，然后该go协程（`printHello协程`）就会随之终止，接下来`主协程`就会被重新调度（因为main go协程已经睡够10ms了），并执行最后一条语句。因此，运行上面的程序就会得到以下的输出:
@@ -51,6 +57,8 @@ main execution stopped
 
 ![example-4](https://cdn-images-1.medium.com/max/1600/1*3lQnGP4JRuzDH2DEvFE2sw.png)
 
+<center><a href="https://play.golang.org/p/rWvzS8UeqD6">https://play.golang.org/p/rWvzS8UeqD6</a></center>
+
 上面的程序依旧和之前的例子一样，输出以下相同的结果：
 
 ```shell
@@ -62,6 +70,7 @@ main execution stopped
 要是，我把这个**printHello** 协程中的休眠1毫秒改成休眠15毫秒，这个结果又是如何呢？
 
 ![example-5](https://cdn-images-1.medium.com/max/1600/1*m6IyoYmXTb4mocn_0-OqrQ.png)
+<center><a href="https://play.golang.org/p/Pc2nP2BtRiP">https://play.golang.org/p/Pc2nP2BtRiP</a></center>
 
 在这个例子中，与其他的例子最大的区别就是**printHello** 协程比主协程的休眠时间还要长，很明显，主协程要比printHello 协程唤醒要早，这样的结果就是主协程即使唤醒后执行完所有的语句，printHello协程还是在休眠状态。之前提到过，主协程比较特殊，如果主协程执行结束后整个程序就要退出，所以printHello协程得不到机会去执行下面的输出的语句了，所以以上的程序的数据结果如下：
 
@@ -75,6 +84,7 @@ main execution stopped
 就像之前我所提到过的，你可以随心所欲地创建多个go协程。下面让我们定义两个简单的函数，一个是用于顺序打印某个字符串中的每个字符，另一个是顺序打印出某个整数切片中的每个数字。
 
 ![example2-1](https://cdn-images-1.medium.com/max/800/1*C1TtQM5vFjNiiR99GNrMzA.png)
+<center><a href="https://play.golang.org/p/SJano_g1wTV">https://play.golang.org/p/SJano_g1wTV</a></center>
 
 在上图中的程序中，我们连续地创建了两个go协程，程序输出的结果如下：
 
@@ -87,6 +97,7 @@ main execution stopped
 上面的结果证实了go协程是以合作式调度来运作的。下面我们在每个函数中的输出语句的下面添加一行`time.Sleep`，让函数在输出每个字符或数字后休息一段时间，好让调度器调度其他可用的go协程。
 
 ![example-2-2](https://cdn-images-1.medium.com/max/800/1*LbE_Ls0r-bWZIX-lr5jc9g.png)
+<center><a href="https://play.golang.org/p/lrSIEdNxSaH">https://play.golang.org/p/lrSIEdNxSaH</a></center>
 
 在上面的程序中，我又修改了一下输出语句使得我们可以看到每个字符或数字的输出时刻。理论上主协程会休眠200ms，因此其他go协程要赶在主协程唤醒之前做完自己的工作，因为主协程唤醒之后就会导致程序退出。`getChars` 协程每打印一个字符就会休眠10ms，之后控制权就会传给`getDigits`协程，`getDigits`协程每打印一个数字后就休眠30ms，若`getChars`协程唤醒，则会把控制权传回`getChars`协程，如此往复。在代码中可以看到，`getChars`协程会在其他协程休眠的时候多次进行打印字符以及休眠操作，所以我们预计可以看到输出的字符比数字更具有连续性。
 
@@ -115,13 +126,13 @@ main execution stopped at time 200.3137ms    | exiting after 200ms
 
 ## 匿名go协程
 
-如果一个匿名函数可以退出，那么匿名go协程也同样可以退出。请参照`functions`课程中的`即时调用函数（Immedietly invoked function）`来理解本节。让我们修改一下之前`printHello`协程的例子：
+如果一个匿名函数可以退出，那么匿名go协程也同样可以退出。请参照[`functions`](https://medium.com/rungo/the-anatomy-of-functions-in-go-de56c050fe11)课程中的`即时调用函数（Immedietly invoked function）`来理解本节。让我们修改一下之前`printHello`协程的例子：
 
 ![example-3-1](https://cdn-images-1.medium.com/max/800/1*BB4uDfV7ooZ0SwQpTJPTsQ.png)
 
 结果非常明显，因为我们定义了匿名函数，并在同一语句中作为go协程执行。
 
-*需要注意的是，所有的go协程都是匿名的，因为我们从`并发（concurrency）`一课中学到，go协程是不存在标识符的，在这里所谓的匿名go协程只是通过匿名函数来创建的go协程罢了*
+*需要注意的是，所有的go协程都是匿名的，因为我们从[`并发（concurrency）`](https://medium.com/rungo/achieving-concurrency-in-go-3f84cbf870ca)一课中学到，go协程是不存在标识符的，在这里所谓的匿名go协程只是通过匿名函数来创建的go协程罢了*
 
 ---
 
@@ -129,6 +140,6 @@ via: https://medium.com/rungo/anatomy-of-goroutines-in-go-concurrency-in-go-a4cb
 
 作者：[Uday Hiwarale](https://medium.com/@thatisuday)
 译者：[Hafrans](https://github.com/hafrans)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
