@@ -184,7 +184,7 @@ func AverageLatency(host string) Metrics {
 为了展示完整实例，`CalculateStats` 的实现可能是介样的：
 
 ```go
-// Takes amount of requests and errors and returns some stats on a 
+// Takes amount of requests and errors and returns some stats on a
 // `Metrics` struct
 func CalculateStats(results *[]int64, errors *int64) Metrics {
     successfulRequests := len(*results)
@@ -276,7 +276,7 @@ func AverageLatency(host string) Metrics {
 
 好了，让我们看看这整个竞争条件是什么。
 
-# 在 Go 中，很少情况是线程安全的
+## 在 Go 中，很少情况是线程安全的
 
 每当我们使用 `Goroutine` 操作时，我们必须小心修改外部变量，因为它们通常不是线程安全的。在我们的 main goroutine 中，我们使用 `atomic.AddInt64` 以线程安全的方式存储错误信息，但是我们在 `results` 切片中存储延迟信息，这不是线程安全的。并不能绝对保证结果中的结果数量与我们尝试的请求数量相匹配。
 
@@ -326,16 +326,15 @@ func AverageLatency(host string) Metrics {
 }
 ```
 
-我们正在创建了一个 `successfulRequestsQueue` channel，它只能缓冲一个值，相当于创建一个同步队列。我们现在可以在这个 channel 发送延迟信息结果，而不是直接将结果添加到 `result` 切片中。然后我们循环遍历 `successRequestsQueue` 中的所有传入延迟信息，然后将其添加到对应 `goroutine` 中的 `result`。 我们还将 `wg.Done()` 调用移到了 `append` 之后。这样我们就可以确保每个结果都得到处理，并且不会出现竞争状态。 
+我们正在创建了一个 `successfulRequestsQueue` channel，它只能缓冲一个值，相当于创建一个同步队列。我们现在可以在这个 channel 发送延迟信息结果，而不是直接将结果添加到 `result` 切片中。然后我们循环遍历 `successRequestsQueue` 中的所有传入延迟信息，然后将其添加到对应 `goroutine` 中的 `result`。 我们还将 `wg.Done()` 调用移到了 `append` 之后。这样我们就可以确保每个结果都得到处理，并且不会出现竞争状态。
 
 ## 小结
 
 我们还可以进一步重构这段代码，但是对于本文的目的，我认为我们现在可以停止了。如果你还想继续，我建议你做以下改进:
 
-- 使计算函数(现在是 `net.LookupHost`)变得通用，这样我们就可以在测试中使用不同的函数。 
+- 使计算函数(现在是 `net.LookupHost`)变得通用，这样我们就可以在测试中使用不同的函数。
 - 如果没有 goroutines，如何编写这段代码?
 - 使代码完全独立于上下文，以便我们可以在任何时候使用它来存储来自许多不同操作的结果。
-
 
 ----------------
 
