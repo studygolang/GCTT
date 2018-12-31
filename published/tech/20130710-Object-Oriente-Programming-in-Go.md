@@ -1,4 +1,6 @@
-# Go面向对象编程
+首发于：https://studygolang.com/articles/17340
+
+# Go 面向对象编程
 
 今天有人在论坛上问我，怎么在不使用内嵌的方式下更好的使用继承。很重要的一点是，每个人都应当考虑 Go 而不是他们使用的其他语言。我不会告诉你我在 Go 的早期实现中删除了多少代码，因为这些都不重要。语言设计师拥有多年的经验和知识，事后审校有助于创建一个快速、精简而有趣的语言。
 
@@ -28,7 +30,8 @@ type Dog struct {
 结构 Animal 的所有的成员属性除了私有的 `mean` 以外都是公有的，私有属性以小写字母开头。在 Go 中，对于变量、结构、属性和方法等，由第一个字母决定其访问规范。大写字母表示公有，而小写字母表示私有。
 
 注：Go 中的私有和公有的概念并不完全正确。
-[http://www.goinggo.net/2014/03/exportedunexported-identifiers-in-go.html](http://www.goinggo.net/2014/03/exportedunexported-identifiers-in-go.html)
+
+https://www.ardanlabs.com/blog/2014/03/exportedunexported-identifiers-in-go.html
 
 由于 Go 中没有继承，所以使用组合是唯一的选择。结构 Cat 拥有一个叫做 Basics 的属性，它的类型是 Animal。结构 Dog 使用了类型为 Animal 的匿名结构（内嵌的形式）。我会将这两种实现方式都展示出来，怎么使用由你自己决定。
 
@@ -88,7 +91,7 @@ func MakeSomeNoise(animalSounder AnimalSounder) {
 
 这里我们增加了一个接口和一个公有的函数，函数接收接口类型的值。实际上，该函数引用的是实现此接口类型的值。接口类型是不可实例化的类型，接口声明了一种行为而由其他类型实现这种行为。
 
-Go 约定，当接口只包含一个方法时，接口使用 “er” 后缀命名。
+Go 约定，当接口只包含一个方法时，接口使用 “ er ” 后缀命名。
 
 在 Go 语言中，任何类型通过成员方法的形式实现了接口，则该类型即可表示这个接口类型。在我们的例子中，结构 Cat 和 Gog 都使用带有指针接收器的方法实现了接口 AnimalSounder，所以它们都可以被看做是 AnimalSounder 类型的。
 
@@ -253,13 +256,13 @@ func PressHorn(hornSounder HornSounder) {
 
 要了解相关主题的更多信息请选择以下帖子：
 
-[http://www.goinggo.net/2014/05/methods-interfaces-and-embedded-types.html](http://www.goinggo.net/2014/05/methods-interfaces-and-embedded-types.html)
+https://www.ardanlabs.com/blog/2014/05/methods-interfaces-and-embedded-types.html
 
-[http://www.goinggo.net/2013/07/how-packages-work-in-go-language.html](http://www.goinggo.net/2013/07/how-packages-work-in-go-language.html)
+https://studygolang.com/articles/13285
 
-[http://www.goinggo.net/2013/07/singleton-design-pattern-in-go.html](http://www.goinggo.net/2013/07/singleton-design-pattern-in-go.html)
+https://studygolang.com/articles/12728
 
-希望我的这个小例子能够对你未来的 GO 编程有所帮助。
+希望我的这个小例子能够对你未来的 Go 编程有所帮助。
 
 ---
 
@@ -267,6 +270,6 @@ via: https://www.ardanlabs.com/blog/2013/07/object-oriented-programming-in-go.ht
 
 作者：[William Kennedy](https://github.com/ardanlabs/gotraining)
 译者：[Tyrodw](https://github.com/tyrodw)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
