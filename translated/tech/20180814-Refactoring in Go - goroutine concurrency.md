@@ -8,7 +8,7 @@
 
 假设你希望运行特定数量的任务，而这些任务很容易并行化(没有副作用，没有外部依赖等等)，并且希望存储每个任务的结果。Go 的解决方案就是使用多个 Goroutine。
 
-我重构的真是代码是：通过调用100次 `net.LookupHost` 来计算系统中的平均 DNS 延迟。让我们来看看如何实现。
+我重构的真实代码是：通过调用100次 `net.LookupHost` 来计算系统中的平均 DNS 延迟。让我们来看看如何实现。
 
 ## 随意收集的一段代码
 
@@ -49,7 +49,7 @@ func AverageLatency(host string) (latency int64, err error) {
 
 
 func dnsTest(jobs <-chan int, results chan<- int64, errResults chan<- string, host string) {
-    for range jobs {
+    for range jobs {    //译注：原文此处 range 用法错误，按程序目的看，此处for-range的结果应该是忽略。
         start := time.Now()
         if _, err := net.LookupHost(host); err != nil {
             errResults <- err.Error()
@@ -72,7 +72,7 @@ func dnsTest(jobs <-chan int, results chan<- int64, errResults chan<- string, ho
 
 ## 使用 Goroutine 代价很小，所以我们应该发挥它的优势
 
-Goroutine是轻量级线程，这意味着我们可以在不影响程序性能的情况下启动大量线程。那么，为什么使用与任务一样多的 goroutine 呢?通过这种方式，我们摆脱了一个仅用于迭代的 channel，以及与之配套的所有业务逻辑。我们还可以在循环中移动 goroutine 代码，因为它足够小:
+Goroutine是轻量级线程，这意味着我们可以在不影响程序性能的情况下启动大量线程。那么，为什么不使用与任务一样多的 goroutine 呢？通过这种方式，我们摆脱了一个仅用于迭代的 channel，以及与之配套的所有业务逻辑。我们还可以在循环中移动 goroutine 代码，因为它足够小:
 
 ```go
 func AverageLatency(host string) (latency int64, err error) {
@@ -108,11 +108,11 @@ func AverageLatency(host string) (latency int64, err error) {
 }
 ```
 
-代码逻辑现在更清晰了。我们循环 `REQUESTS_LIMIT` 次，并在每次检查查找主机的延迟时创建一个 goroutine。然后我们进行 `REQUESTS_LIMIT` 循环，等待 `results`、`errorResults` channel 和 `time.After()`的结果。
+代码逻辑现在更清晰了。我们循环执行 `REQUESTS_LIMIT` 次，每次创建一个检查 DNS 延迟的 goroutine。。然后我们进行 `REQUESTS_LIMIT` 循环，等待 `results`、`errorResults` channel 和 `time.After()`的结果。
 
 ## Leveraging WaitGroup and cleaning up
 
-我对最后一个循环不太满意，它看起来有点脆弱，Go 有更优雅的工具可以帮助收集衍生出的 gouroutine 的结果。其中一个是 WaitGroup。Waitgroup 是一个等待一组协程完成的结构，而我们不需要做太多工作。我们只使用 `WaitGroup.Add` 增加 `WaitGroup` 计数器来统计我们使用了多少 goroutine。当所有 goroutine 完成时我们调用 `WaitGroup.Done` 即可。
+我对最后一个循环不太满意，它看起来有点脆弱。Go 有更优雅的工具，可以帮助我们从创建出的 gouroutine 中获取的结果。其中一个是 `WaitGroup`。`Waitgroup` 是一个等待一组协程完成的结构，而我们不需要做太多工作。我们只使用 `WaitGroup.Add` 增加 `WaitGroup` 计数器来统计我们使用了多少 goroutine。每当一个 goroutine 完成任务时，我们调用 `WaitGroup.Done` 即可。
 
 ```go
 func AverageLatency(host string) (latency int64, err error) {
@@ -143,7 +143,7 @@ func AverageLatency(host string) (latency int64, err error) {
 
 这样我们就不需要通道来收集错误和结果，我们可以使用更传统的数据类型。
 
-此外我还想收集用于监控目的的错误数量，而不仅仅是在有一个错误时返回。 如果我们想查看实际的错误信息，我们可以手动检查日志：
+出于监控的目的，我还想收集错误的数量，而不仅仅是在有一个错误时返回。 如果我们想查看实际的错误信息，我们可以手动检查日志：
 
 ```go
 type Metrics struct {
@@ -181,7 +181,7 @@ func AverageLatency(host string) Metrics {
 
 我们创建了一个新类型 `Metrics`，用于对需要监视的值进行封装。我们现在将 `wg` 计数器设置为我们计划执行的请求数量，并在每个 `goroutine` 完成时调用 `wg.Done`，无论是否成功。 然后我们等待所有的 `goroutines` 完成。我们还将所有统计计算提取到外部 `CalculateStats` 函数，以便 `AverageLatency` 函数专注于收集原始值。
 
-为了展示完整实例，`CalculateStats` 的实现可能是介样的：
+为了展示完整实例，`CalculateStats` 的实现可能是这样的：
 
 ```go
 // Takes amount of requests and errors and returns some stats on a
@@ -235,7 +235,7 @@ func waitWithTimeout(wg *sync.WaitGroup, timeout time.Duration) bool {
 
 在这里，我们创建一个 `wg.Wait()` 运行后将关闭的 channel，这意味着所有 `goroutine` 都已完成。然后我们使用 `select` 语句在所有 `goroutine` 完成时或者超时时间已经过去时返回。在这种情况下，我们返回 `true` 表示已发生超时。
 
-我们的中级版本的 `AverageLatency` 将如下所示：
+我们的终极版本的 `AverageLatency` 将如下所示：
 
 ```go
 func AverageLatency(host string) Metrics {
@@ -326,7 +326,7 @@ func AverageLatency(host string) Metrics {
 }
 ```
 
-我们正在创建了一个 `successfulRequestsQueue` channel，它只能缓冲一个值，相当于创建一个同步队列。我们现在可以在这个 channel 发送延迟信息结果，而不是直接将结果添加到 `result` 切片中。然后我们循环遍历 `successRequestsQueue` 中的所有传入延迟信息，然后将其添加到对应 `goroutine` 中的 `result`。 我们还将 `wg.Done()` 调用移到了 `append` 之后。这样我们就可以确保每个结果都得到处理，并且不会出现竞争状态。
+我们正在创建了一个 `successfulRequestsQueue` channel，它只能缓冲一个值，相当于创建一个同步队列。我们现在可以在这个 channel 发送延迟信息结果，而不是直接将结果添加到 `result` 切片中。然后我们循环遍历 `successRequestsQueue` 中的所有传入延迟信息，然后将其添加到对应 `results` 的 goroutine。我们还将 `wg.Done()` 调用移到了 `append` 之后。这样我们就可以确保每个结果都得到处理，并且不会出现竞争状态。
 
 ## 小结
 
@@ -342,6 +342,6 @@ via: https://itnext.io/refactoring-in-go-goroutine-concurrency-fccbe7093c04
 
 作者：[Sergi Mansilla](https://itnext.io/@sergimansilla)
 译者：[7Ethan](https://github.com/7Ethan)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[magichan](https://github.com/magichan)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
