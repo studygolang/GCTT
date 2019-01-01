@@ -326,7 +326,7 @@ func AverageLatency(host string) Metrics {
 }
 ```
 
-我们正在创建了一个 `successfulRequestsQueue` channel，它只能缓冲一个值，相当于创建一个同步队列。我们现在可以在这个 channel 发送延迟信息结果，而不是直接将结果添加到 `result` 切片中。然后我们在一个新的 goroutine 中循环遍历 successRequestsQueue 中的所有传入延迟信息，然后将其添加到`results`。我们还将 `wg.Done()` 调用移到了 `append` 之后。这样我们就可以确保每个结果都得到处理，并且不会出现竞争状态。
+我们正在创建了一个 `successfulRequestsQueue` channel，它只能缓冲一个值，相当于创建一个同步队列。我们现在可以在这个 channel 发送延迟信息结果，而不是直接将结果添加到 `result` 切片中。然后我们在一个新的 goroutine 中循环遍历 `successRequestsQueue` 中的所有传入延迟信息，然后将其添加到`results`。我们还将 `wg.Done()` 调用移到了 `append` 之后。这样我们就可以确保每个结果都得到处理，并且不会出现竞争状态。
 
 ## 小结
 
