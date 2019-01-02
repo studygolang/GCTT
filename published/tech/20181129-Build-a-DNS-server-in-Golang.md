@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/17397
+
 # 使用 Golang 构建 DNS 服务器
 
 需求：对 DNS 查询进行转发和缓存的本地 DNS 服务器。
@@ -49,7 +51,7 @@ err = m.Unpack(buf)
 
 如果你想知道一条 DNS 消息长什么样，请查看下图：
 
-![a DNS message](https://cdn-images-1.medium.com/max/800/1*viPXyk-o9vlctIm0GtusfA.jpeg)
+![a DNS message](https://raw.githubusercontent.com/studygolang/gctt-images/master/build-dns-server/1.jpg)
 
 ## 转发消息到公共解析器
 
@@ -73,7 +75,7 @@ if m.Header.Response {
 
 ## 存储 answer
 
-我们会使用 map，简单采用“question-anwser”的键值对，这会让查询变得很容易。同样不要忘了 `RWMutex`，对于并发操作，map 使用起来并不安全。需要提醒的是，从理论上讲，在一次 DNS 查询中，可能会有多个 question，但是大多数 DNS 服务器，都只会接收一条 question。
+我们会使用 map，简单采用“ question-anwser ”的键值对，这会让查询变得很容易。同样不要忘了 `RWMutex`，对于并发操作，map 使用起来并不安全。需要提醒的是，从理论上讲，在一次 DNS 查询中，可能会有多个 question，但是大多数 DNS 服务器，都只会接收一条 question。
 
 ```go
 func questionToString(q dnsmessage.Question) string {
@@ -96,15 +98,15 @@ s.Unlock()
 
 ```go
 f, err := os.Create(filepath.Join("path", "file"))
-enc := gob.NewEncoder(f)
+enc := Gob.NewEncoder(f)
 err = enc.Encode(s.data)
 ```
 
 需要注意，**gob** 在编码前需要知道数据类型。
 
 ```go
-func init() {
-    gob.Register(&dnsmessage.AResource{})
+func INIt() {
+    Gob.Register(&dnsmessage.AResource{})
     ...
 }
 ```
@@ -124,7 +126,7 @@ func toResource(req request) (dnsmessage.Resource, error) {
     ...
 }
 // POST handler
-err = json.NewDecoder(r.Body).Decode(&req)
+err = JSON.NewDecoder(r.Body).Decode(&req)
 // transform req to a dnsmessage.Resource
 r, err := toResource(req)
 // write r to the store
@@ -136,7 +138,7 @@ r, err := toResource(req)
 
 以上就是用 Go 实现这个网络程序的简述。
 
-欢迎任何反馈。编程愉快，Gopher！
+欢迎任何反馈。编程愉快，Gopher ！
 
 ---
 
@@ -144,6 +146,6 @@ via: https://medium.com/@owlwalks/build-a-dns-server-in-golang-fec346c42889
 
 作者：[Khoa Pham](https://medium.com/@owlwalks)
 译者：[Noluye](https://github.com/Noluye)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

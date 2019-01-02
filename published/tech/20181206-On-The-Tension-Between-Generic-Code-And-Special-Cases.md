@@ -1,10 +1,12 @@
+首发于：https://studygolang.com/articles/17399
+
 # 关于通用代码和特殊情况之间的冲突
 
-`io.Reader` 和 `io.Writer` 接口几乎出现在所有的Go程序中，并代表了处理数据流的基本构建块。Go 的一个重要特性是，对象如套接字、文件或内存缓冲区的抽象都是用这些接口表示的。当 Go 程序对外部世界说话的时候，它几乎是通过 `io.Reader`s 和 `io.Writer` s来表达，无论它使用的是特殊的平台或通信媒介。这种普遍性是编码处理可组合和可重复使用的数据流代码的关键因素<sup><a href="#fn1" name="fnref1">1</a></sup>。
+`io.Reader` 和 `io.Writer` 接口几乎出现在所有的 Go 程序中，并代表了处理数据流的基本构建块。Go 的一个重要特性是，对象如套接字、文件或内存缓冲区的抽象都是用这些接口表示的。当 Go 程序对外部世界说话的时候，它几乎是通过 `io.Reader`s 和 `io.Writer` s 来表达，无论它使用的是特殊的平台或通信媒介。这种普遍性是编码处理可组合和可重复使用的数据流代码的关键因素<sup><a href="#fn1" name="fnref1">1</a></sup>。
 
 这篇文章研究了 `io.Copy` 的设计和实现，该函数用可能是最简单的方法连接一个 `Reader` 到一个 `Writer`：该函数从一个地方传输数据到另一个地方。
 
-通常情况下<sup><a href="#fn2" name="fnref2">2</a></sup>，`io.Copy` 分配一个缓冲区，然后从源读取器读取到缓冲区和从缓冲区写到目标写程序交替进行。这在许多情况下工作得良好，并且从语义角度来看肯定是正确的。
+通常情况下 <sup><a href="#fn2" name="fnref2">2</a></sup>，`io.Copy` 分配一个缓冲区，然后从源读取器读取到缓冲区和从缓冲区写到目标写程序交替进行。这在许多情况下工作得良好，并且从语义角度来看肯定是正确的。
 
 这么说来，如果对于一些特殊的 reader 和 writer 的选择，我们可以做得更好吗？我们怎么教授 `Copy` 呢？
 
@@ -64,7 +66,7 @@ func Copy(dst Writer, src Reader) (int, error) {
 
 似乎是有些事情出了问题。这个 `Copy` *确实* 适用于特殊情况和通用代码，但它付出了可怕的代价去这样做，并且它对世界的其他地方施加了可怕的限制。
 
-## 也许是一个更好的尝试：使用接口将Copy与世界分离
+## 也许是一个更好的尝试：使用接口将 Copy 与世界分离
 
 与教授特定类型的 `Copy` 相反，`io` 包引入了两个新的接口：`ReaderFrom` 和 `WriterTo`。
 
@@ -113,9 +115,9 @@ func (cw *CountingWriter) Write(b []byte) (int, error) {
 }
 ```
 
-当被用做是 `io.Writer` 时，`CountingWriter` 隐藏了来自调用者的底层属性。因此，在运行时检查功能的代码，例如 `io.Copy`，在查看 `*CountingWriter`时将会只看到 `io.Writer`。
+当被用做是 `io.Writer` 时，`CountingWriter` 隐藏了来自调用者的底层属性。因此，在运行时检查功能的代码，例如 `io.Copy`，在查看 `*CountingWriter` 时将会只看到 `io.Writer`。
 
-然而，在这种情况下需要底层 `Witer` 的特定功能，调用者需要通过发现有趣的功能和使用更加具体的包装方法去适应自己的情况。在特定情况下这可能非常地困难<sup><a href="#fn3" name="fnref1">3</a></sup>。
+然而，在这种情况下需要底层 `Witer` 的特定功能，调用者需要通过发现有趣的功能和使用更加具体的包装方法去适应自己的情况。在特定情况下这可能非常地困难 <sup><a href="#fn3" name="fnref1">3</a></sup>。
 
 此外，请注意为何 `io.ReaderFrom` 和 `io.WriterTo` 不出现在 `io.Copy` 的 *签名* 中。相反，它们出现在 *文档* 中：一个弱得多的约定。
 
@@ -125,13 +127,11 @@ func (cw *CountingWriter) Write(b []byte) (int, error) {
 
 ---
 
-<a name="fn1">1</a>. Go 与平台的对比见 [red-blue](http://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/) <sup><a href="#fnref1">return</a></sup>
+<a id="fn1">1</a>. Go 与平台的对比见 [red-blue](http://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/) <sup><a href="#fnref1">return</a></sup>
 
-<a name="fn2">2</a>. 在 [这里](https://github.com/golang/go/blob/112f28defcbd8f48de83f4502093ac97149b4da6/src/io/io.go#L401-L423) 看源码 <sup><a href="#fnref2">return</a></sup>
+<a id="fn2">2</a>. 在 [这里](https://github.com/golang/go/blob/112f28defcbd8f48de83f4502093ac97149b4da6/src/io/io.go#L401-L423) 看源码 <sup><a href="#fnref2">return</a></sup>
 
-<a name="fn3">3</a>. 查看组合（译注：原文单词错误，应为 combinatorial）展现的 [这个库](https://github.com/felixge/httpsnoop) <sup><a href="#fnref3">return</a></sup>
-
-[comments powered by Disqus](https://disqus.com/)
+<a id="fn3">3</a>. 查看组合（译注：原文单词错误，应为 combinatorial）展现的 [这个库](https://github.com/felixge/httpsnoop) <sup><a href="#fnref3">return</a></sup>
 
 ---
 
@@ -139,6 +139,6 @@ via: https://blog.gopheracademy.com/advent-2018/generic-code-vs-special-cases/
 
 作者：[Andrei Tudor Călin](https://blog.gopheracademy.com/advent-2018/generic-code-vs-special-cases/)
 译者：[PotoYang](https://github.com/PotoYang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
