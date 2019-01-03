@@ -7,7 +7,7 @@ Gleicon Moraes
 
 在这篇文章中，我将展示如何在Go中使用Memcached协议来构建一个名为Beano的本地键/值对数据库服务器，并且该数据库可以优雅地热交换其整个数据集。
 
-# Go数据存储类库的简单选择
+## Go数据存储类库的简单选择
 
 我已经使用过SQLite，BerkeleyDB并了解InnoDB，但出于种种原因，我从来没有像在数据库服务器上那样花费太多精力。
 
@@ -26,7 +26,7 @@ Gleicon Moraes
 - 是否实现了事务？虽然不像RDBMS事务那般可以并发的提交或者回滚，但是大多数都提供了简单的实现。事务对隔离很有用。
 - 压缩，快照和日志是值得探索的有趣功能。
 
-# Beano：诞生于遗产
+## Beano：诞生于解决遗留问题
 
 我正在处理一组遗留应用程序，这些应用程序每天两次新数据出现时就会出现性能问题。该公司有严格的流程和可用性要求，所有应用程序都是在框架中编写的，而如果这些框架改变了数据库实现，这将会在不到一年的时间内无法完成的。我需要快速修改数据集但是不能更改主数据库架构。
 
@@ -44,9 +44,9 @@ Gleicon Moraes
 
 在与非原生LevelDB包装器，信号问题和线程调试进行一些交互以学习memcached协议之后，我创建了一个数据库服务器，当你在通过memcached客户端或者我提供的抽象进行REST api通信的时候，可以动态切换数据库。
 
-# Beano的内部实现
+## Beano的内部实现
 
- ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Golang-and-local-datastores-fast-and-flexible-data-storage/beano_arch.png)
+ ![Beano](https://raw.githubusercontent.com/studygolang/gctt-images/master/Golang-and-local-datastores-fast-and-flexible-data-storage/beano_arch.png)
 
 最初```Beano```只有一个我想尝试的原生Go实现数据库后端。我重构了服务器代码，通过接口接受可插拔的后端。
 
@@ -260,7 +260,6 @@ func (be KVBoltDBBackend) Get(key []byte) ([]byte, error) {
 Beano的源码位于[github](https://github.com/gleicon/beano)上 - 欢迎新的想法，问题和PR。我的计划是寻找新的数据库，并将Memcached协议解析出来。
 
 如果您喜欢使用已知协议来执行特定功能，请检查我的```redis```兼容服务器[nazare](https://github.com/gleicon/nazare)，该服务器仅使用```HyperLogLog```实现```PFADD/PFCOUNT```。
-
 
 ----------------
 
