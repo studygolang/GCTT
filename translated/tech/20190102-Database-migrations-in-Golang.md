@@ -109,7 +109,7 @@ CMD ["/cmd"]
 
 ---
 
-via: [Database migrations in Golang](https://lanre.wtf/blog/2019/01/02/database-migration-golang/).
+via: [Database migrations in Golang]2).
 
 作者：[Lanre Adelowo](https://lanre.wtf/about)
 译者：[wodotatop10](https://github.com/wodotatop10)
