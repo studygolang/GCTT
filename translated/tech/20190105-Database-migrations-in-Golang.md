@@ -69,7 +69,7 @@ func main() {
 	os.Exit(0)
 }
 ```
-以上是在Go中进行数据库迁移的最简单方法。您可以继续从[这个repo](https://github.com/adelowo/migration-demo)下载以下文件，并将它们放在migrations目录中或您认为合适的任何位置。之后，您需要使用以下命令运行它:
+以上是在Go中进行数据库迁移的最简单方法。您可以继续从[这个repo](https://github.com/adelowo/migration-demo)下载以下文件，并将它们放在migrations目录中或你认为合适的任何位置。之后，你需要使用以下命令运行它:
 
 ```
 $ go run main.go -mysql.dsn "root:@tcp(localhost)/xyz"
