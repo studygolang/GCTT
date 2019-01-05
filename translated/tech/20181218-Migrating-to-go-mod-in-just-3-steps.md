@@ -20,7 +20,7 @@
 
 ```shell
 git clone https://github.com/wesovilabs/mollydb.git
-cd mollydb; 
+cd mollydb;
 git checkout -b feature/using-go-mods
 ```
 
@@ -94,7 +94,7 @@ require (
 )
 ```
 
-我们只需要运行下面的命令来验证项目是否像以前那样工作。 
+我们只需要运行下面的命令来验证项目是否像以前那样工作。
 
 go run main.go
 
