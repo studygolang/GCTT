@@ -74,7 +74,7 @@ func main() {
 ```
 $ go run main.go -mysql.dsn "root:@tcp(localhost)/xyz"
 ```
-如果一切顺利，您应该看到在标准输出上打印了“Database migrated”(数据库迁移完成)。
+如果一切顺利，你应该看到在标准输出上打印了“Database migrated”(数据库迁移完成)。
 
 ## 实际部署考虑事项
 虽然这非常容易设置，但是它确实对文件系统产生了依赖性——为了使迁移成为可能，必须提供迁移文件。这也很容易解决。有三种方法可以解决这个问题:
@@ -99,7 +99,7 @@ COPY --from=build-env /go/src/github.com/adelowo/project/path/to/migrations /mig
 CMD ["/cmd"]
 ```
 
-* 如果您已经有了CI/CD流程，那么您可以使用`migrate`附带的cli工具。只要在实际部署过程之前包含它就可以了，当在自动化测试阶段你获取了文件的源代码——那么理想情况下，至少它们是被标识版本的。详情请参考[文档](https://github.com/golang-migrate/migrate/tree/master/cli)。
+* 如果你已经有了CI/CD流程，那么你可以使用`migrate`附带的cli工具。只要在实际部署过程之前包含它就可以了，当在自动化测试阶段你获取了文件的源代码——那么理想情况下，至少它们是被标识版本的。详情请参考[文档](https://github.com/golang-migrate/migrate/tree/master/cli)。
 
 
 >虽然我还没实践过，但是以上方法确实是可行的方案
