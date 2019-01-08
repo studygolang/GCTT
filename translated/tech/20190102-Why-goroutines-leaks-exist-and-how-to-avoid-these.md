@@ -4,20 +4,20 @@
 
 在开始阅读我们关于调试Goroutines泄漏的讨论之前，首先简要介绍几个原理，这些原理可以让您更全面地了解这个概念所要解决的挑战。
 
-**并发编程：**  
+## 并发编程： 
 
 并发编程是一种并行编码的方法，可以同时运行连续线程的集合。通过这种方式，软件程序可以更快地计算，并且因此能够更好地执行。当今多核处理器的功能赋予了这种并发编程能力。
 
 ![img01](https://github.com/studygolang/gctt-images/Why-goroutines-leaks-exist-and-how-to-avoid-these/0_4qAuYdD50SJv9ry4.jpg)
 
-**Goroutines:** 
+## Goroutines:
 
 传统的线程方法基于使用共享内存的线程之间的通信。Go不是专门使用锁来调解对共享数据的访问，而是促进使用通道在goroutine之间移动对数据的引用。
 这样，在给定时间段内只有一个goroutine可以访问数据。Golang满足了使用这些goroutine进行并发编程的需求，这些goroutine基本上是由Go在运行时控制的轻量级线程。
 
 ![img02](https://github.com/studygolang/gctt-images/Why-goroutines-leaks-exist-and-how-to-avoid-these/0_zF1_QhpVAM4mIGnw.jpg)
 
-**泄露:** 
+## 泄露:
 
 但是要小心！Goroutines可以缓慢但可靠地储存一段时间，因此浪费你的内存等资源，你甚至都不会注意到它。
 因此，了解泄漏的危险和(或)尽早调试它们非常重要。这是我们最近在与Jacob Walker的访谈中讨论到的一个主题，
@@ -176,7 +176,6 @@ Jacob Walker [5:24 PM]:
 ![img05](https://github.com/studygolang/gctt-images/Why-goroutines-leaks-exist-and-how-to-avoid-these/0_s5amuhubZvRktiui.png)
 
 最初发表于[Jexia](http://blog.jexia.com/why-goroutines-leaks-exist-and-how-to-avoid-these/)。
-
 
 ---
 
