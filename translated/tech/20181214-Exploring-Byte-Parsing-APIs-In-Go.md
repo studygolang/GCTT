@@ -218,9 +218,9 @@ ad.Do(parseFoo(&f))
 
 ## 结论
 
-虽然花了一些时间和实验，但是我对 `netlink.AttributeDecoder` 中类似迭代器字节解析 API 感到非常满意。它非常适合于我的需求，感谢 Terin Stock，我们还添加了一个  [对称编码器 API](https://github.com/mdlayher/netlink/pull/95)，其灵感来自于解码器 API 的成功！
+虽然花了一些时间和实验，但是我对 `netlink.AttributeDecoder` 中类似迭代器字节解析 API 感到非常满意。它非常适合于我的需求，感谢 Terin Stock，我们还添加了一个 [对称编码器 API](https://github.com/mdlayher/netlink/pull/95)，其灵感来自于解码器 API 的成功！
 
-如果你正在开发一个你并不满意的包 API，标准库是寻找灵感的好地方！我也强烈建议与各种 [Go 帮助社区](https://golang.org/help/#help) 取得联系，因为有和多人非常愿意提供出色的建议和批评！
+如果你正在开发一个你并不满意的包 API，标准库是寻找灵感的好地方！我也强烈建议与各种 [Go 帮助社区](https://golang.org/help/#help) 取得联系，因为有很多人非常愿意提供出色的建议和批评！
 
 如果你有任何问题，请随时和我联系！我在 [Gophers Slack](https://gophers.slack.com/)、[Github](https://github.com/mdlayher) 和 [Twitter](https://twitter.com/mdlayher) 的称号是 mdlayher。
 
@@ -240,6 +240,6 @@ via: https://blog.gopheracademy.com/advent-2018/exploring-byte-parsing-apis-in-g
 
 作者：[Matt Layher](https://blog.gopheracademy.com/advent-2018/exploring-byte-parsing-apis-in-go/)
 译者：[PotoYang](https://github.com/PotoYang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
