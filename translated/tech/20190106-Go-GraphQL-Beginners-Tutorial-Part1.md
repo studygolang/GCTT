@@ -159,7 +159,7 @@ $ go run ./...
 
 我们将会创建一个GraphQL服务器，它返回一系列内存中的教程以及它们的作者，以及对这些特定教程所做的任何评论。
 
-让我们先定义能够表示`tutorail`，`Author`和`Comment`的结构:
+让我们先定义能够表示`tutorial`，`Author`和`Comment`的结构:
 
 ```go
 type Tutorial struct {
@@ -178,7 +178,7 @@ type Comment struct {
 }
 ```
 
-接着我们可以创建一个非常简单的`populate()`函数用于返回`Tutorail`类型的切片。
+接着我们可以创建一个非常简单的`populate()`函数用于返回`tutorial`类型的切片。
 
 ```go
 func populate() []Tutorial {
@@ -243,7 +243,7 @@ var authorType = graphql.NewObject(
 )
 ```
 
-最后，让我们定义`tutorailType`，它将封装一个`author`，一个元素为`comment`的切片，`ID`以及`title`。
+最后，让我们定义`tutorialType`，它将封装一个`author`，一个元素为`comment`的切片，`ID`以及`title`。
 
 ```go
 var tutorialType = graphql.NewObject(
@@ -272,7 +272,7 @@ var tutorialType = graphql.NewObject(
 
 ## 更新模式(Schema)
 
-现在我们已经定义了`Type`系统，接下来让我们开始更新我们的`Schema`以反映到这些类型上。我们将定义两个不同的`Field`，第一个是我们的`tutorail`字段，它允许我们根据传入的查询ID检索单个`Tutorail`。而第二个字段将会是一个`list`，它允许我们检索我们已经定义在内存中的`Tutorails`完整列表。
+现在我们已经定义了`Type`系统，接下来让我们开始更新我们的`Schema`以反映到这些类型上。我们将定义两个不同的`Field`，第一个是我们的`tutorial`字段，它允许我们根据传入的查询ID检索单个`tutorial`。而第二个字段将会是一个`list`，它允许我们检索我们已经定义在内存中的`tutorials`完整列表。
 
 ```go
 // Schema
@@ -354,7 +354,7 @@ $ go run ./...
 
 正如我们所看到的，我们的查询以JSON形式返回了所有教程，看起来和初始的查询非常相似。
 
-现在让我们通过`tutorail`模式来执行一个查询:
+现在让我们通过`tutorial`模式来执行一个查询:
 
 ```go
 query := `
@@ -377,7 +377,7 @@ $ go run ./...
 {"data":{"tutorial":{"author":{"Name":"Elliot Forbes","Tutorials":[1]},"title":"Go GraphQL Tutorial"}}}
 ```
 
-完美，看起来我们的`list`和`tutorail`模式能够正常工作。
+完美，看起来我们的`list`和`tutorial`模式能够正常工作。
 
 ## 结论
 
