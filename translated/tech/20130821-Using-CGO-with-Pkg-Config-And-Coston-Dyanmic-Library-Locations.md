@@ -24,13 +24,13 @@
 
 另外一个需要注意的事情是，**你不能使用环境变量来帮助指定一条路径位置**。如果你这么做，构建工具在定位它所需要的任何文件都会有类似的问题(you will have problems with the build tools locating any of the files it needs.)。 这个环境变量最终会一个字符串的形式提供给编译工具。请记住这一点，因为它很重要。
 
-以以下参数在终端运行这个 **pkg-config** 命令：
+以下参数在终端运行这个 **pkg-config** 命令：
 
 ```sh
 pkg-config –cflags –libs libcrypto
 ```
 
-这些参数要求 **pkg-config** 程序显示 libcrypto 这个 .pc 类型文件的所设定的编译器和链接器参数。
+这些参数要求 **pkg-config** 程序显示 libcrypto 这个 .pc 类型文件所设定的编译器和链接器参数。
 
 这是应该返回的：
 
@@ -44,7 +44,7 @@ pkg-config –cflags –libs libcrypto
 
 这个文件有些稍微复杂。你会注意到它指定了它所需要的 MagickCode 库以及一些作为环境变量的参数。
 
-当我运行对这个文件运行 pkg-config 程序时，我得到以下反馈信息：
+当我对这个文件运行 pkg-config 程序时，我得到以下反馈信息：
 
 ```sh
 pkg-config –cflags –libs MagickWand
@@ -54,7 +54,7 @@ pkg-config –cflags –libs MagickWand
 -lMagickCore-6.Q16
 ```
 
-你能看到头文件和库文件文件路径是绝对路径。在包配置文件中定义的其他参数都出现在命令的返回结果中。
+你能看到头文件和库文件路径是绝对路径。在包配置文件中定义的其他参数都出现在命令的返回结果中。
 
 现在，我们对包配置文件有了些了解，并且知道如何使用 pkg-config 工具。让我们看看我为了[Go 语言中使用 C 动态库](https://www.ardanlabs.com/blog/2013/08/using-c-dynamic-libraries-in-go-programs.html) 这篇文章对这个项目的修改。
 这个项目现在使用一个包配置文件和新的 cgo 参数。
@@ -81,7 +81,7 @@ go get github.com/goinggo/keyboard
 
 在项目中有一个名字为 pkgconfig 的新的文件夹。在该文件下的包配置文件让这一切称为可能。
 
-为了利用这个包配置文件，main.go 的源码被做了修改。
+为了利用这个包配置文件，对 main.go 的源码做了修改。
 
 如果我们切换到 bin 目录下，并且执行程序，我们能看到它能正常工作。
 
@@ -179,6 +179,6 @@ via: https://www.ardanlabs.com/blog/2013/08/using-cgo-with-pkg-config-and-custom
 
 作者：[William Kennedy](https://www.ardanlabs.com/my/contact-us)
 译者：[magichan](https://github.com/magichan)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
