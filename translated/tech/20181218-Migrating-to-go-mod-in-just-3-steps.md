@@ -4,11 +4,11 @@
 
 ![](https://cdn-images-1.medium.com/max/1600/1*a-NrrpFPmj-_JQGulalCdQ.png)
 
-我不打算列举使用 go modules 与使用依赖关系管理工具对比的好处，因为在互联网上有几篇关于这方面的文章。另一方面，**我将指导您如何迁移项目**
+我不打算一一列举相对于使用依赖关系关联工具，使用 Go modules 的优势，因为在互联网上有几篇关于这方面的文章。另一方面，**我将指导您如何迁移项目**
 
 ## 检查最新的 golang 版本
 
-你可以问我，为什么是最新一个？因为如果我们都是软件爱好者，我们应该渴望测试最新的技术！(顺便说一下，你可以用 golang 1.11.X，但是您应该想知道为什么不使用最新的可用版本……)
+你可以问我，为什么要用最新的？因为如果我们都是软件爱好者，我们应该渴望测试最新的技术！(顺便说一下，你可以用 golang 1.11.X，但是您应该想知道为什么不使用最新的可用版本……)
 
 到[这里](https://golang.org/dl/)，下载你所使用的操作系统的发行版。
 
@@ -20,7 +20,7 @@
 
 ```shell
 git clone https://github.com/wesovilabs/mollydb.git
-cd mollydb;
+cd mollydb
 git checkout -b feature/using-go-mods
 ```
 
@@ -45,7 +45,7 @@ mv src/mollydb/* .
 go mod init mollydb
 ```
 
-Go 足够聪明，而且它会将 glide.lock 中的依赖项写入到 go.mod 文件中
+Go 足够聪明，而且它会将 glide.lock 中的依赖项写入到 go.mod 文件中。
 
 go：创建新的 go.mod文件：mollydb module
 
@@ -68,7 +68,7 @@ require (
 )
 ```
 
-无论如何，如果我们要删除 glide 的配置文件和创建的 go.mod 文件就需要运行下面的命令。
+无论如何，如果我们删除 glide 的配置文件，创建了 go.mod 文件，并且运行下面的命令。
 
 ```go
 go mod init mollydb
