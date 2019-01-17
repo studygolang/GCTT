@@ -2,7 +2,7 @@
 
 这篇文章讲述了 **为什么** 我们开始为智能合约创建新的编程语言（使用 Go）。
 
-### 动机
+## 动机
 
 目前有两个众所周知的区块链，比特币和以太坊。比特币有 **bitcoin script** 和以太坊有 **solidity** 为它们自己的智能合约编程。两者都有利有弊。
 
@@ -17,7 +17,7 @@
 
 所以这就是“koa”生存的地方。**“koa”是高级加密货币语言。并且没有状态，静态分析很容易，比 bitcoin scripts 更多的操作。**
 
-### 架构
+## 架构
 
 ![koa components](https://raw.githubusercontent.com/PotoYang/gctt-images/master/create-new-smartcontract-language-with-go-new-project-motivation-concept/koa-components.png)
 <center>koa 组件</center>
