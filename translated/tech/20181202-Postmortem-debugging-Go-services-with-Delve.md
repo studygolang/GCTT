@@ -1,8 +1,6 @@
-## Postmortem debugging Go services with Delve
+# 使用Delve 调试Go服务的一次经历
 
 ----
-
-#### 使用Delve 调试Go服务的一次经历
 
 > Vladimir Varankin 写于 2018/12/02
 
@@ -58,9 +56,7 @@ curl: (28) Operation timed out after 5001 milliseconds with 0 bytes received
 
 *在我们生产服务的真实场景中，服务器起来以后，goroutines的数量由于请求的增多而迅速增加，之后便失去响应。对pprof调试句柄的请求变得非常非常慢，看起来就像服务器“死掉了”。同样，我们也尝试使用`SIGQUIT`命令杀掉进程以[释放所运行goroutines堆栈](https://golang.org/pkg/os/signal/#hdr-Default_behavior_of_signals_in_Go_programs)，但是收不到任何效果。*
 
------
-
-#### GDB和Coredump
+## GDB和Coredump
 
 我们可以使用GDB（GNU Debugger）尝试进入正在运行的服务内部。
 
@@ -121,7 +117,7 @@ core文件保存后，服务器没必要继续运行，使用`kill -9`结束它�
 
 *如果需要了解更多使用GDB调试的技巧，可以继续阅读[使用GDB调试Go代码](https://golang.org/doc/gdb)。*
 
-#### 使用Delve调试器
+## 使用Delve调试器
 
 [Delve](https://github.com/derekparker/delve)是一个针对Go程序的调试器。它类似于GDB，但是更关注Go的运行时、数据结构以及其他内部的机制。
 
@@ -389,7 +385,6 @@ Switched from 0 to 20 (thread 1628)
 
 **Vladimir*是一个后端开发工程师，目前就职于*adjust.com. @tvii on Twitter, @narqo on Github**
 
-```
 ---
 
 via: https://blog.gopheracademy.com/advent-2018/postmortem-debugging-delve/
@@ -399,4 +394,3 @@ via: https://blog.gopheracademy.com/advent-2018/postmortem-debugging-delve/
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-```
