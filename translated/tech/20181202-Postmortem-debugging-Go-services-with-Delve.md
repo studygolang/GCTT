@@ -1,6 +1,6 @@
 # 使用Delve 调试Go服务的一次经历
 
-----
+---
 
 > Vladimir Varankin 写于 2018/12/02
 
@@ -52,7 +52,7 @@ curl: (28) Operation timed out after 5001 milliseconds with 0 bytes received
 
 我们遇到麻烦了！让我们分析一下。
 
------
+---
 
 *在我们生产服务的真实场景中，服务器起来以后，goroutines的数量由于请求的增多而迅速增加，之后便失去响应。对pprof调试句柄的请求变得非常非常慢，看起来就像服务器“死掉了”。同样，我们也尝试使用`SIGQUIT`命令杀掉进程以[释放所运行goroutines堆栈](https://golang.org/pkg/os/signal/#hdr-Default_behavior_of_signals_in_Go_programs)，但是收不到任何效果。*
 
@@ -60,11 +60,11 @@ curl: (28) Operation timed out after 5001 milliseconds with 0 bytes received
 
 我们可以使用GDB（GNU Debugger）尝试进入正在运行的服务内部。
 
--------
+---
 
 *在生产环境运行调试器可能需要额外的权限，所以与你的团队提前沟通是很明智的。*
 
--------
+---
 
 在虚机上再开启一个SSH会话，找到服务器的进程id并使用调试器连接到该进程：
 
@@ -377,7 +377,7 @@ Switched from 0 to 20 (thread 1628)
 
 单个goroutines中，一个从缓冲通道读取数据的函数，同时也在往通道中发送数据。当进入通道的值达到通道的容量时，消费函数继续往已满的通道中发送数据就会造成自身的死锁。由于单个通道的消费者死锁，那么每一个尝试往通道中发送数据的请求都会被阻塞。
 
-------
+---
 
 这就是我们的故事，使用上述调试技术帮助我们发现了问题的根源。那些代码是很多年前写的，甚至从没有人看过这些代码，也万万没有想到会导致这么大的问题。
 
