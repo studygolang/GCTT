@@ -121,7 +121,7 @@ core文件保存后，服务器没必要继续运行，使用`kill -9`结束它�
 
 [Delve](https://github.com/derekparker/delve)是一个针对Go程序的调试器。它类似于GDB，但是更关注Go的运行时、数据结构以及其他内部的机制。
 
-如果你对Delve的内部实现机制很感兴趣，纳闷我十分推荐你阅读Alessandro Arzilli在GopherCon EU 2018所作的演讲，[[Internal Architecture of Delve, a Debugger For Go](https://www.youtube.com/watch?v=IKnTr7Zms1k)]。
+如果你对Delve的内部实现机制很感兴趣，那么我十分推荐你阅读Alessandro Arzilli在GopherCon EU 2018所作的演讲，[[Internal Architecture of Delve, a Debugger For Go](https://www.youtube.com/watch?v=IKnTr7Zms1k)]。
 
 Delve是用Go写的，所以安装起来非常简单：
 
