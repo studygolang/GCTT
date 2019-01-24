@@ -159,8 +159,6 @@ func (f doerFunc) Do() (int, error) {
 
 希望您会发现它很有用！
 
-
-
 ----------------
 
 via:https://itnext.io/yet-another-tool-to-mock-interfaces-in-go-73de1b02c041
