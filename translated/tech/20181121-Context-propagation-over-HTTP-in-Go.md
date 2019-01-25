@@ -26,11 +26,8 @@ func IDFromContext(ctx context.Context) string {
 }
 type contextIDType struct{}
 var contextIDKey = &contextIDType{}
-// ...
-
+// ..
 ```
-
-
 
 WithID允许我们读取请求ID，IDFromContext允许我们将请求ID放在给定的context中。一旦我们想要跨越线程传播context，我们就需要进行手动操作以将context置于同一条线上。同时，将其从传播线路上解析到接收端的context。
 
@@ -82,8 +79,6 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
  h.Base.ServeHTTP(w, r)
 }
 ```
-
-
 
 为了继续传播context，请确保将当前context传递给处理程序的传出请求。传入context将传播到https：//endpoint。
 
