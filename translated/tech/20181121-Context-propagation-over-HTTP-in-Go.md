@@ -83,7 +83,7 @@ http.Handle("/", &Handler{
     Base: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         req, _ := http.NewRequest("GET", "https://endpoint", nil)
         // Propagate the incoming context.
-        req = req.WithContext(r.Context()) 
+        req = req.WithContext(r.Context())
         // 生成request.
     }),
 })
