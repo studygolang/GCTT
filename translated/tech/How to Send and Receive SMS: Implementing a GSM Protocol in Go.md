@@ -55,7 +55,6 @@ type Client struct {
 // Client represents a UCP client connection.
 type Client struct {
   // skipped fields ...
-  
   // ring counter for sequence numbers 00-99
   ringCounter *ring.Ring
 }
@@ -116,9 +115,7 @@ func (c *Client) Connect() error {
   c.writer.Flush()
   resp, _ := c.reader.ReadString(etx)
   err = parseSessionResp(resp)
-  
   // ....other processing....
-  
   return err
 }
 ```
@@ -285,7 +282,6 @@ func readDeliveryMsg(/*....*/) {
         // send ack to SMSC with the same reference number
         writer.Write(createDeliverySmAck([]byte(refNum), sysmsg))
         writer.Flush()
-        
         var incomingMsg deliverMsgPart
         incomingMsg.sender = sender
         incomingMsg.receiver = recvr
@@ -325,7 +321,6 @@ func readDeliveryMsg(/*....*/) {
         return
       case mo := <-deliverMsgCh:
         // initial processing ......
-        
         if xserUdh, ok := xserData[udhXserKey]; ok {
           // handle multi-part mobile originating message
           // get the total message parts in the xser data
