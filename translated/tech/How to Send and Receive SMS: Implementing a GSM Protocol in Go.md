@@ -38,14 +38,14 @@
 ```go
 // Client represents a UCP client connection.
 type Client struct {
-  // IP:PORT address of the SMSC	
+  // IP:PORT address of the SMSC
   addr string
   // SMSC username
   user string
   // SMSC pasword
   password string
   // SMSC accesscode
-  accessCode string 
+  accessCode string
 }
 
 ```
@@ -57,7 +57,7 @@ type Client struct {
   // skipped fields ...
   
   // ring counter for sequence numbers 00-99
-  ringCounter *ring.Ring 
+  ringCounter *ring.Ring
 }
 ```
 ```go
@@ -148,7 +148,7 @@ type Client struct {
 }
 
 // Connect will establish a TCP connection with the SMSC
-// and send a login request. 
+// and send a login request.
 func (c *Client) Connect() error {
   // after login, spawn goroutines
   sendAlert(/*....*/)
@@ -160,7 +160,7 @@ func (c *Client) Connect() error {
   return err
 }
 
-// Close will close the UCP connection. 
+// Close will close the UCP connection.
 // It's safe to call Close multiple times.
 func (c *Client) Close() {
   // close closeChan to terminate the spawned goroutines
@@ -172,14 +172,14 @@ func (c *Client) Close() {
   if c.conn != nil {
     c.conn.Close()
   }
-  // wait for all goroutines to terminate  
+  // wait for all goroutines to terminate
   c.wg.Wait()
 }
 ```
 ## 读取 UCP 数据包
 我们通过 <font color=red>`readLoop`</font> 从 UCP 连接读取数据包。合法的 UCP 数据包是以 [文件结束符分隔（ETX）](https://en.wikipedia.org/wiki/End-of-Text_character) 分隔的。对应的字节码是 <font color=red>`03`</font> <font color=red>`readLoop`</font> 会一直读取直到发现 <font color=red>`etx`</font>，然后解析读取到的信息，并将其发送到相应的通道。
 ```go
-// readLoop reads incoming messages from the SMSC 
+// readLoop reads incoming messages from the SMSC
 // using the underlying bufio.Reader
 func readLoop(/*.....*/) {
   wg.Add(1)
@@ -230,7 +230,7 @@ func sendAlert(/*....*/) {
 ## 读取传递通知状态
 <font color=red>`readDeliveryNotif`</font> 用来读取 SMS 的传递通知状态。每读到一个 <font color=red>`delivery notification operation`</font> 就会向 SMSC 发送一个确认数据包。
 ```go
-// readDeliveryNotif reads delivery notifications from deliverNotifCh channel. 
+// readDeliveryNotif reads delivery notifications from deliverNotifCh channel.
 func readDeliveryNotif(/*....*/) {
   wg.Add(1)
   go func() {
@@ -242,7 +242,7 @@ func readDeliveryNotif(/*....*/) {
       case dr := <-deliverNotifCh:
         refNum := dr[refNumIndex]
         // msg contains the complete delivery status report from the SMSC
-        msg, _ := hex.DecodeString(dr[drMsgIndex]) 
+        msg, _ := hex.DecodeString(dr[drMsgIndex])
         // sender is the access code of the SMSC
         sender := dr[drSenderIndex]
         // recvr is the mobile number of the recipient subscriber
@@ -261,7 +261,7 @@ func readDeliveryNotif(/*....*/) {
 ## 读取传递短消息
 <font color=red>`readDeliveryMsg`</font> 用来读取 MO消息。
 ```go
-// readDeliveryMsg reads all delivery short messages 
+// readDeliveryMsg reads all delivery short messages
 // (mobile-originating messages) from the deliverMsgCh channel.
 func readDeliveryMsg(/*....*/) {
   wg.Add(1)
@@ -285,13 +285,13 @@ func readDeliveryMsg(/*....*/) {
         // send ack to SMSC with the same reference number
         writer.Write(createDeliverySmAck([]byte(refNum), sysmsg))
         writer.Flush()
-          
+        
         var incomingMsg deliverMsgPart
         incomingMsg.sender = sender
         incomingMsg.receiver = recvr
         incomingMsg.message = msg
         incomingMsg.msgID = msgID
-        // further processing    
+        // further processing
       }
     }
   }()
@@ -311,9 +311,9 @@ type deliverMsgPart struct {
   dcs         string
 }
 ```
-为了处理 超长MO信息，我们把 每个消息片段 发送到通道<font color=red>`deliverMsgPartCh`</font>上，把 MO消息发送到通道<font color=red>`deliverMsgCompleteCh`</font>上。 
+为了处理 超长MO信息，我们把 每个消息片段 发送到通道<font color=red>`deliverMsgPartCh`</font>上，把 MO消息发送到通道<font color=red>`deliverMsgCompleteCh`</font>上。
 ```go
-// readDeliveryMsg reads all delivery short messages 
+// readDeliveryMsg reads all delivery short messages
 // (mobile-originating messages) from the deliverMsgCh channel.
 func readDeliveryMsg(/*....*/) {
   wg.Add(1)
@@ -324,8 +324,8 @@ func readDeliveryMsg(/*....*/) {
       case <-closeChan:
         return
       case mo := <-deliverMsgCh:
-        // initial processing ...... 
-          
+        // initial processing ......
+        
         if xserUdh, ok := xserData[udhXserKey]; ok {
           // handle multi-part mobile originating message
           // get the total message parts in the xser data
@@ -342,7 +342,7 @@ func readDeliveryMsg(/*....*/) {
           incomingMsg.totalParts = int(msgPartsLenInt)
           incomingMsg.refNum = int(msgRefNumInt)
           // send to partial channel
-          deliverMsgPartCh <- incomingMsg 
+          deliverMsgPartCh <- incomingMsg
         } else {
           // handle mobile originating message with only 1 part
           // send the incoming message to the complete channel
@@ -402,7 +402,7 @@ func (c *Client) Send(sender, receiver, message string) ([]string, error) {
 ## 示例
 我写了一个简单的项目 [CLI](https://github.com/go-gsm/ucp-cli) 来演示这个库，我们使用 [SMSC simulator](https://github.com/jcaberio/ucp-smsc-sim) 当做短消息中心，通过 [Wireshark](https://www.wireshark.org/) 查看 UCP 数据包
 
-首先，通过 <font color=red>`go get`</font> 获取 CLI 和 SMSC 模拟器，并且确保 [redis](https://redis.io/) 运行在地址 <font color=red>`localhost:6379`</font> 上 
+首先，通过 <font color=red>`go get`</font> 获取 CLI 和 SMSC 模拟器，并且确保 [redis](https://redis.io/) 运行在地址 <font color=red>`localhost:6379`</font> 上
 ```go
 $ go get github.com/go-gsm/ucp-cli
 $ go get github.com/jcaberio/ucp-smsc-sim
