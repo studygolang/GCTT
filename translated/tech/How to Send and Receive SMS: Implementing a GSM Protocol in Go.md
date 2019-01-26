@@ -116,7 +116,7 @@ func (c *Client) Connect() error {
   c.writer.Flush()
   resp, _ := c.reader.ReadString(etx)
   err = parseSessionResp(resp)
-    
+  
   // ....other processing....
   
   return err
@@ -433,7 +433,7 @@ $ ucp-cli
 ```go
 curl -H "Content-Type: application/json" -d '{"sender":"09191234567", "receiver":"2929", "message":"This is a mobile-originating message"}' http://localhost:16003/mo
 ```
-我们模仿的是一个号码为 <font color=red>`09191234567`</font> 的用户向 <font color=red>`2929`</font> 发送了以下的信息 <font color=red>`This is a mobile-originating message`</font> 
+我们模仿的是一个号码为 <font color=red>`09191234567`</font> 的用户向 <font color=red>`2929`</font> 发送了以下的信息 <font color=red>`This is a mobile-originating message`</font>
 
 我们可以看到 CLI 接收到了这各 MO信息，并且在 Wireshark 得到了验证
 ![](https://blog.gopheracademy.com/postimages/advent-2018/recv-via-cli.png)
