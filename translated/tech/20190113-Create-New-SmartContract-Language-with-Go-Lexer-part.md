@@ -51,7 +51,6 @@ type Token struct {
 
 ```go
 // stateFn determines how to scan the current state.
-// stateFn 
 // stateFn also returns the stateFn to be scanned next after scanning the current state.
 type stateFn func(*state, emitter) stateFn
 ```
@@ -144,7 +143,7 @@ func defaultStateFn(s *state, e emitter) stateFn {
       return numberStateFn
    ...
    default:
-      e.emit(s.cut(Illegal)) 
+      e.emit(s.cut(Illegal))
    }
    return defaultStateFn
 }
@@ -177,7 +176,7 @@ case unicode.IsDigit(ch):
    return numberStateFn
 ```
 
-如果接下来的字符是数字，怎么办呢？我们应该回退。为什么？因为如果读取的字符是数字，我们对于数字的选择应该采取不同的行为，不然我们就会出错，默认状态函数由于回退一个字符并且通过返回分析数字字符的 `numberStateFn`，我们才能恰当地处理数字字符。 
+如果接下来的字符是数字，怎么办呢？我们应该回退。为什么？因为如果读取的字符是数字，我们对于数字的选择应该采取不同的行为，不然我们就会出错，默认状态函数由于回退一个字符并且通过返回分析数字字符的 `numberStateFn`，我们才能恰当地处理数字字符。
 
 ```go
 default:
@@ -198,9 +197,12 @@ default:
 
 在下一篇文章中，我们将要介绍从词法分析器接收 tokens 的解析器并做它自己的工作:)
 
+---
 
+via: https://medium.com/@14wnrkim/create-new-smartcontract-language-with-go-lexer-part-a5cdfca9b42e
 
+作者：[zeroFruit](https://medium.com/@14wnrkim)
+译者：[PotoYang](https://github.com/PotoYang)
+校对：[校对者ID](https://github.com/校对者ID)
 
-
-
-
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
