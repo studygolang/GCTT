@@ -1,12 +1,14 @@
+首发于：https://studygolang.com/articles/17939
+
 # 探索 Go 中字节解析 API
 
-很多年前，我开始研究 Linux 的 Netlink 进程间通信接口。Netlink 被用于从 Linux 内核检索信息，并且为了跨越内核边界，信息通常被打包到 Netlink 的属性中。经过一些实验，我为 Go 创建了自己的 [netlink包](https://github.com/mdlayher/netlink)。
+很多年前，我开始研究 Linux 的 Netlink 进程间通信接口。Netlink 被用于从 Linux 内核检索信息，并且为了跨越内核边界，信息通常被打包到 Netlink 的属性中。经过一些实验，我为 Go 创建了自己的 [netlink 包](https://github.com/mdlayher/netlink)。
 
 随着时间的推移，包中的 API 已经有很大的改变了。特别是 Netlink 属性总是处理起来相当复杂。今天，我们将探索一些我为处理 Netlink 属性所创建的字节解析 API。这里描述的技术应该也能广泛应用于许多其他的 Go 库和应用程序中！
 
 ## Netlink 属性简介
 
-Netlink 属性被以类型/长度/值或 TLV 格式打包，与许多二进制网络协议情况一样。这种格式具有很好的扩展性，因为许多属性可以在单个字节切片中被打包成自发自收的形式。
+Netlink 属性被以类型 / 长度 / 值或 TLV 格式打包，与许多二进制网络协议情况一样。这种格式具有很好的扩展性，因为许多属性可以在单个字节切片中被打包成自发自收的形式。
 
 属性中的值可以包含：
 
@@ -78,7 +80,7 @@ fmt.Printf("num: %d, str: %q", num, str)
 num = parseUint16(a.Data[0:2])
 ```
 
-如果它少于 2 字节，此代码将出现 panic，并且让你的应用程序挂掉。如果它超过 2 字节，我们就默默地忽略任何额外的数据（这个值实际上不是 `uint16`！）。
+如果它少于 2 字节，此代码将出现 panic，并且让你的应用程序挂掉。如果它超过 2 字节，我们就默默地忽略任何额外的数据（这个值实际上不是 `uint16` ！）。
 
 ## 添加验证和错误处理
 
@@ -231,8 +233,6 @@ ad.Do(parseFoo(&f))
 - [Go 博客：Errors are values](https://blog.golang.org/errors-are-values)
 - [`bufio.Scanner`](https://golang.org/pkg/bufio/#Scanner)
 - [`netlink.AttributeDecoder`](https://godoc.org/github.com/mdlayher/netlink#AttributeDecoder)
-
-[comments powered by Disqus](https://disqus.com/)
 
 ---
 
