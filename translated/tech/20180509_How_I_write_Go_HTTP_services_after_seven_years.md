@@ -65,7 +65,7 @@ func (s *server) handleSomething() http.HandlerFunc {
 }
 ```
 
-该`prepareThing`只调用一次，所以你可以用它做一次处理程序前的初始化，然后用`thing`在处理程序重处理请求。
+该`prepareThing`只调用一次，所以你可以用它做一次处理程序前的初始化，然后在处理程序中使用 `thing`。
 
 确保只读取共享数据，如果处理程序正在修改任何内容，请记住您需要一个互斥锁或其他东西来保护它。
 
@@ -160,7 +160,7 @@ func (s *server) handleSomething() http.HandlerFunc {
 
 这是一个为需要了解您的代码的后来者做一些讲解的机会。
 
-例如，假设`Person`我们的代码中有一个类型，我们在许多端点上重用它。如果我们有一个`/greet`端点，我们可能只关心他们的名字，所以我们可以在测试代码中表达：
+例如，假设我们代码中有一个类型`Person`，我们在许多端点上重用它。如果我们有一个`/greet`端点，我们可能只关心他们的名字，所以我们可以在测试代码中表达：
 
 ```go
 func TestGreet(t *testing.T) {
