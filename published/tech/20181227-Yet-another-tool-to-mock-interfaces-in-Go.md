@@ -10,7 +10,6 @@ Go 还有一个补充框架，用以模拟接口。同时，还有一些社区�
 
 关于 Go 中的接口，最令人惊讶的部分是它的默认满足性。任何类型，只需要提供其签名与接口声明中的方法匹配的实现，即可以满足该接口。这种类型甚至可以是函数，如果您熟悉 `net/http` 包，你也可能看到其中的一种可以叫做 `adapters` 的类型。
 
-
 ```go
 // A Handler responds to an HTTP request.
 type Handler interface {
@@ -30,7 +29,6 @@ func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
 ```
 
 如上述代码，`adapters` 类型本身是一个函数类型，而且具有与接口方法声明相同的签名，它通过在对应方法中调用自身，实现了接口。这个适配器允许具有适当签名的任何函数来实现 `Handler` 。它作为一种模拟接口的通用工具，看起来在表驱动的测试中十分有用。例如，需要测试以下代码:
-
 
 ```go
 package execute
@@ -70,7 +68,6 @@ func Execute(job Doer, w io.Writer) {
 ```
 
 使用 `adapter` 的单元测试如下：
-
 
 ```go
 package execute
@@ -134,7 +131,6 @@ func (f doerFunc) Do() (int, error) {
 ```
 
 编写这样的 `adapters` 十分繁杂，所以我决定编写一个工具来生成代码，叫做 [adapt](https://github.com/romanyx/adapt) 。使用这个工具可以对一个指定接口生成 `adapters` ，并且打印其输出。你所需要做的工作就是，传入一个包名和接口名来生成代码。
-
 
 ```shell
 $ adapt io Reader
