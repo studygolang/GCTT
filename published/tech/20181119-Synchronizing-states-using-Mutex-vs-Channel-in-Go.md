@@ -1,18 +1,21 @@
+首发于：https://studygolang.com/articles/17953
+
 # 在 Go 中使用 Mutex 与 Channel 进行状态同步
 
-我通过谷歌搜索查找哪种方法最适合 GoLang 的同步工作。 当我开始构建自己的 GoLang 包 Go-Log 时，我就开始了这项工作。 Go-Log 是一个日志包，在 Go 的普通 Log 包之上提供实用程序，具有以下功能：将日志标记为调试和错误变体，向日志添加 / 删除时间戳以及在日志中获取调用功能详细信息。这就非常需要使这个日志记录线程安全，或者需要同步，因为当数百万个请求进入服务器日志时需要以较少的延迟同步。
+我通过谷歌搜索查找哪种方法最适合 GoLang 的同步工作。当我开始构建自己的 GoLang 包 Go-Log 时，我就开始了这项工作。 Go-Log 是一个日志包，在 Go 的普通 Log 包之上提供实用程序，具有以下功能：将日志标记为调试和错误变体，向日志添加 / 删除时间戳以及在日志中获取调用功能详细信息。这就非常需要使这个日志记录线程安全，或者需要同步，因为当数百万个请求进入服务器日志时需要以较少的延迟同步。
 
 通过浏览文章，StackOverflow 问答，以及常用的 Go 教学视频时，我找到了两种方法：
+
 1. 使用线程安全的 Channel
 2. 使用 Mutex 共享内存
 
 ## Go 开发人员最常犯的错误是什么？
 
-在开始讨论选择哪种方法之前，所有人需要知道作为 Go 开发人员易犯的常见错误。 我知道大家都醉心于并发模式，这种模式会让你过度使用 Go 强力的 Channel 和 Goroutine，最终成为一种反模式。我并不是说 Channel 不好或者它们不能用于同步，但过度使用（在没有要求的情况下使用它）绝对不是你应该遵循的途径。
+在开始讨论选择哪种方法之前，所有人需要知道作为 Go 开发人员易犯的常见错误。我知道大家都醉心于并发模式，这种模式会让你过度使用 Go 强力的 Channel 和 Goroutine，最终成为一种反模式。我并不是说 Channel 不好或者它们不能用于同步，但过度使用（在没有要求的情况下使用它）绝对不是你应该遵循的途径。
 
 > Dave Cheney 是 Go 编程语言的开源贡献者和项目成员，曾在一次采访中说过，“如果你想谈论最糟糕的代码，那就是我曾试图将 Channel 用于一切工作”
 >
-> Go 的官方文档指出，“常见的 Go 新手错误是过度使用 Channel 和 Goroutine，仅仅只是因为它是可能的，和 / 或因为它很有趣。”
+> Go 的官方文档指出，“常见的 Go 新手错误是过度使用 Channel 和 Goroutine，仅仅只是因为它是可能的，和/或因为它很有趣。”
 
 现在假设您根本没有关于 Goroutine 和 Channel 或 Mutex 的任何概念，让我们看看之前提到的关于如何进行同步，两种方法之间的区别。
 
@@ -20,7 +23,7 @@
 
 Channel 是连接并发 Goroutine 的管道，您可以从一个 Goroutine 将值发送到 Channel，并在另一个 Goroutine 中接收值。Channel 最适合传递数据所有权，分发工作单元和传递异步结果等情况。
 
-让我们利用 Channel 来实现 GoLang 包的同步（目的是使日志同步工作并保证线程安全），下面是我之前写的包中的代码片段。
+让我们利用 Channel 来实现 Golang 包的同步（目的是使日志同步工作并保证线程安全），下面是我之前写的包中的代码片段。
 
 ```go
 func generateMessage(message string) {
@@ -85,7 +88,8 @@ func printMessage(resultMessage string) {
 在上面的例子中，这种方法更好更快！ 我们减少了不必要的开销。 但是如果您发现 sync.Mutex 锁定规则过于复杂，扪心自问使用通道是否真的更简单。
 
 查看我的软件包的源代码，了解我实际上是如何使用 Mutex 以实现同步：
->https://github.com/MindorksOpenSource/Go-Log
+
+https://github.com/MindorksOpenSource/Go-Log
 
 ### 附加资源
 
@@ -96,8 +100,8 @@ https://github.com/golang/go/wiki/MutexOrChannel
 
 ### 联系我
 
-Twitter: https://twitter.com/DuaYashish
-MentorCruise: https://mentorcruise.com/mentor/YashishDua/
+- Twitter: https://twitter.com/DuaYashish
+- MentorCruise: https://mentorcruise.com/mentor/YashishDua/
 
 ---
 
@@ -105,6 +109,6 @@ via: https://medium.com/mindorks/https-medium-com-yashishdua-synchronizing-state
 
 作者：[Yashish Dua](https://medium.com/@yashishdua)
 译者：[weiwg521](https://github.com/weiwg521)
-校对：[校对者 ID](https://github.com/ 校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
