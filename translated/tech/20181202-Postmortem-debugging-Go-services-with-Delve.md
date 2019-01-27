@@ -1,40 +1,40 @@
-# 使用Delve 调试Go服务的一次经历
+# 使用 Delve 调试 Go 服务的一次经历
 
 ---
 
 > Vladimir Varankin 写于 2018/12/02
 
-某天，我们生产服务上的几个实例突然不能处理外部进入的流量，HTTP请求成功通过负载均衡到达实例，但是之后却hang住了。接下来记录的是一次调试在线Go服务的惊心动魄的经历。
+某天，我们生产服务上的几个实例突然不能处理外部进入的流量，HTTP 请求成功通过负载均衡到达实例，但是之后却 hang 住了。接下来记录的是一次调试在线 Go 服务的惊心动魄的经历。
 
 正是下面逐步演示的操作，帮助我们定位了问题的根本原因。
 
-简单起见，我们将起一个Go写的HTTP服务作为调试使用，这个服务实现的细节暂时不做深究（之后我们将深入分析代码）。一个真实的生产应用可能包含很多组件，这些组件实现了业务罗和服务的基础架构。我们可以确信，这些应用已经在生产环境“身经百战” :)。
+简单起见，我们将起一个 Go 写的 HTTP 服务作为调试使用，这个服务实现的细节暂时不做深究（之后我们将深入分析代码）。一个真实的生产应用可能包含很多组件，这些组件实现了业务罗和服务的基础架构。我们可以确信，这些应用已经在生产环境“身经百战” :)。
 
-源代码以及配置细节可以查看[GitHub仓库](https://github.com/narqo/postmortem-debug-go)。为了完成接下来的工作，你需要一台Linux系统的虚机，这里我使用[vagrant-hostmanager](https://github.com/sevos/vagrant-hostmanager)插件。`Vagrantfile`在GitHub仓库的根目录，可以查看更多细节。
+源代码以及配置细节可以查看[GitHub 仓库](https://github.com/narqo/postmortem-debug-go)。为了完成接下来的工作，你需要一台 Linux 系统的虚机，这里我使用[vagrant-hostmanager](https://github.com/sevos/vagrant-hostmanager) 插件。`Vagrantfile` 在 GitHub 仓库的根目录，可以查看更多细节。
 
-让我们开启虚机，构建HTTP服务并且运行起来，可以看到下面的输出：
+让我们开启虚机，构建 HTTP 服务并且运行起来，可以看到下面的输出：
 
 ```shell
-$ vagrant up
-Bringing machine 'server-test-1' up with 'virtualbox' provider...
+$ Vagrant up
+Bringing Machine 'server-test-1' up with 'virtualbox' provider...
 
-$ vagrant ssh server-test-1
+$ Vagrant SSH server-test-1
 Welcome to Ubuntu 18.04.1 LTS (GNU/Linux 4.15.0-33-generic x86_64)
 ···
 vagrant@server-test-1:~$ cd /vagrant/example/server
-vagrant@server-test-1:/vagrant/example/server$ go build
+vagrant@server-test-1:/vagrant/example/server$ Go build
 vagrant@server-test-1:/vagrant/example/server$ ./server --addr=:10080
 server listening addr=:10080
 ```
 
-通过`curl`发送请求到所起的HTTP服务，可以判断其是否处于工作状态，新开一个terminal并执行下面的命令：
+通过 `curl` 发送请求到所起的 HTTP 服务，可以判断其是否处于工作状态，新开一个 terminal 并执行下面的命令：
 
 ```shell
 $ curl 'http://server-test-1:10080'
 OK
 ```
 
-为了模拟失败的情况，我们需要发送大量请求到HTTP服务，这里我们使用HTTP benchmark测试工具[wrk](https://github.com/wg/wrk)进行模拟。我的MacBook是4核的，所以使用4个线程运行wrk，能够产生1000个连接，基本能够满足需求。
+为了模拟失败的情况，我们需要发送大量请求到 HTTP 服务，这里我们使用 HTTP benchmark 测试工具[wrk](https://github.com/wg/wrk) 进行模拟。我的 MacBook 是 4 核的，所以使用 4 个线程运行 wrk，能够产生 1000 个连接，基本能够满足需求。
 
 ```shell
 $ wrk -d1m -t4 -c1000 'http://server-test-1:10080'
@@ -43,7 +43,7 @@ Running 1m test @ http://server-test-1:10080
   ···
 ```
 
-一会的时间，服务器hang住了。甚至等wrk跑完之后，服务器已经不能处理任何请求：
+一会的时间，服务器 hang 住了。甚至等 wrk 跑完之后，服务器已经不能处理任何请求：
 
 ```shell
 $ curl --max-time 5 'http://server-test-1:10080/'
@@ -54,11 +54,11 @@ curl: (28) Operation timed out after 5001 milliseconds with 0 bytes received
 
 ---
 
-*在我们生产服务的真实场景中，服务器起来以后，goroutines的数量由于请求的增多而迅速增加，之后便失去响应。对pprof调试句柄的请求变得非常非常慢，看起来就像服务器“死掉了”。同样，我们也尝试使用`SIGQUIT`命令杀掉进程以[释放所运行goroutines堆栈](https://golang.org/pkg/os/signal/#hdr-Default_behavior_of_signals_in_Go_programs)，但是收不到任何效果。*
+*在我们生产服务的真实场景中，服务器起来以后，goroutines 的数量由于请求的增多而迅速增加，之后便失去响应。对 pprof 调试句柄的请求变得非常非常慢，看起来就像服务器“死掉了”。同样，我们也尝试使用 `SIGQUIT` 命令杀掉进程以[释放所运行 Goroutines 堆栈](https://golang.org/pkg/os/signal/#hdr-Default_behavior_of_signals_in_Go_programs)，但是收不到任何效果。*
 
-## GDB和Coredump
+## GDB 和 Coredump
 
-我们可以使用GDB（GNU Debugger）尝试进入正在运行的服务内部。
+我们可以使用 GDB（GNU Debugger）尝试进入正在运行的服务内部。
 
 ---
 
@@ -66,10 +66,10 @@ curl: (28) Operation timed out after 5001 milliseconds with 0 bytes received
 
 ---
 
-在虚机上再开启一个SSH会话，找到服务器的进程id并使用调试器连接到该进程：
+在虚机上再开启一个 SSH 会话，找到服务器的进程 id 并使用调试器连接到该进程：
 
 ```shell
-$ vagrant ssh server-test-1
+$ Vagrant SSH server-test-1
 Welcome to Ubuntu 18.04.1 LTS (GNU/Linux 4.15.0-33-generic x86_64)
 ···
 vagrant@server-test-1:~$ pgrep server
@@ -80,7 +80,7 @@ GNU gdb (Ubuntu 8.1-0ubuntu3) 8.1.0.20180409-git
 ···
 ```
 
-调试器连接到服务器进程之后，我们可以运行GDB的`bt`命令（aka backtrace）来检查当前线程的堆栈信息：
+调试器连接到服务器进程之后，我们可以运行 GDB 的 `bt` 命令（aka backtrace）来检查当前线程的堆栈信息：
 
 ```shell
 (gdb) bt
@@ -95,9 +95,9 @@ GNU gdb (Ubuntu 8.1-0ubuntu3) 8.1.0.20180409-git
 #8  0x0000000000000000 in ?? ()
 ```
 
-说实话我并不是GDB的专家，但是显而易见Go运行时似乎使线程进入睡眠状态了，为什么呢？
+说实话我并不是 GDB 的专家，但是显而易见 Go 运行时似乎使线程进入睡眠状态了，为什么呢？
 
-调试一个正在运行的进程是不明智的，不如将该线程的coredump保存下来，进行离线分析。我们可以使用GDB的`gcore`命令，该命令将core文件保存在当前工作目录并命名为`core.<process_id>`。
+调试一个正在运行的进程是不明智的，不如将该线程的 coredump 保存下来，进行离线分析。我们可以使用 GDB 的 `gcore` 命令，该命令将 core 文件保存在当前工作目录并命名为 `core.<process_id>`。
 
 ```shell
 (gdb) gcore
@@ -111,41 +111,41 @@ Quit anyway? (y or n) y
 Detaching from program: /vagrant/example/server/server, process 1628
 ```
 
-core文件保存后，服务器没必要继续运行，使用`kill -9`结束它。
+core 文件保存后，服务器没必要继续运行，使用 `kill -9` 结束它。
 
-我们能够注意到，即使是一个简单的服务器，core文件依然会很大（我这一份是1.2G）,对于生产的服务来说，可能会更加巨大。
+我们能够注意到，即使是一个简单的服务器，core 文件依然会很大（我这一份是 1.2G）, 对于生产的服务来说，可能会更加巨大。
 
-*如果需要了解更多使用GDB调试的技巧，可以继续阅读[使用GDB调试Go代码](https://golang.org/doc/gdb)。*
+*如果需要了解更多使用 GDB 调试的技巧，可以继续阅读[使用 GDB 调试 Go 代码](https://golang.org/doc/gdb)。*
 
-## 使用Delve调试器
+## 使用 Delve 调试器
 
-[Delve](https://github.com/derekparker/delve)是一个针对Go程序的调试器。它类似于GDB，但是更关注Go的运行时、数据结构以及其他内部的机制。
+[Delve](https://github.com/derekparker/delve) 是一个针对 Go 程序的调试器。它类似于 GDB，但是更关注 Go 的运行时、数据结构以及其他内部的机制。
 
-如果你对Delve的内部实现机制很感兴趣，那么我十分推荐你阅读Alessandro Arzilli在GopherCon EU 2018所作的演讲，[[Internal Architecture of Delve, a Debugger For Go](https://www.youtube.com/watch?v=IKnTr7Zms1k)]。
+如果你对 Delve 的内部实现机制很感兴趣，那么我十分推荐你阅读 Alessandro Arzilli 在 GopherCon EU 2018 所作的演讲，[[Internal Architecture of Delve, a Debugger For Go](https://www.youtube.com/watch?v=IKnTr7Zms1k)]。
 
-Delve是用Go写的，所以安装起来非常简单：
+Delve 是用 Go 写的，所以安装起来非常简单：
 
 ```shell
-$ go get -u github.com/derekparker/delve/cmd/dlv
+$ Go get -u Github.com/derekparker/delve/cmd/dlv
 ```
 
-Delve安装以后，我们就可以通过运行`dlv core <path to service binary> <core file>`来分析core文件。我们先列出执行coredump时正在运行的所有goroutines。Delve的`goroutines`命令如下：
+Delve 安装以后，我们就可以通过运行 `dlv core <path to service binary> <core file>` 来分析 core 文件。我们先列出执行 coredump 时正在运行的所有 Goroutines。Delve 的 `goroutines` 命令如下：
 
 ```shell
 $ dlv core example/server/server core.1628
 
-(dlv) goroutines
+(dlv) Goroutines
   ···
   Goroutine 4611 - User: /vagrant/example/server/metrics.go:113 main.(*Metrics).CountS (0x703948)
   Goroutine 4612 - User: /vagrant/example/server/metrics.go:113 main.(*Metrics).CountS (0x703948)
   Goroutine 4613 - User: /vagrant/example/server/metrics.go:113 main.(*Metrics).CountS (0x703948)
 ```
 
-不幸的是，在真实生产环境下，这个列表可能会很长，甚至会超出terminal的缓冲区。由于服务器为每一个请求都生成一个对应的goroutine，所以`goroutines`命令生成的列表可能会有百万条。我们假设现在已经遇到这个问题，并想一个方法来解决它。
+不幸的是，在真实生产环境下，这个列表可能会很长，甚至会超出 terminal 的缓冲区。由于服务器为每一个请求都生成一个对应的 Goroutine，所以 `goroutines` 命令生成的列表可能会有百万条。我们假设现在已经遇到这个问题，并想一个方法来解决它。
 
-Delve支持"headless"模式，并且能够通过[JSON-RPC API](https://github.com/derekparker/delve/tree/master/Documentation/api)与调试器交互。
+Delve 支持 "headless" 模式，并且能够通过[JSON-RPC API](https://github.com/derekparker/delve/tree/master/Documentation/api) 与调试器交互。
 
-运行`dlv core`命令，指定想要启动的Delve API server：
+运行 `dlv core` 命令，指定想要启动的 Delve API server：
 
 ```shell
 $ dlv core example/server/server core.1628 --listen :44441 --headless --log
@@ -153,13 +153,13 @@ API server listening at: [::]:44441
 INFO[0000] opening core file core.1628 (executable example/server/server)  layer=debugger
 ```
 
-调试服务器运行后，我们可以发送命令到其TCP端口并将返回结果以原生JSON的格式存储。我们以上面相同的方式得到正在运行的goroutines，不同的是我们将结果存储到文件中：
+调试服务器运行后，我们可以发送命令到其 TCP 端口并将返回结果以原生 JSON 的格式存储。我们以上面相同的方式得到正在运行的 Goroutines，不同的是我们将结果存储到文件中：
 
 ```shell
-$ echo -n '{"method":"RPCServer.ListGoroutines","params":[],"id":2}' | nc -w 1 localhost 44441 > server-test-1_dlv-rpc-list_goroutines.json
+$ Echo -n '{"method":"RPCServer.ListGoroutines","params":[],"id":2}' | nc -w 1 localhost 44441 > server-test-1_dlv-rpc-list_goroutines.json
 ```
 
-现在我们拥有了一个（比较大的）JSON文件，里面存储大量原始信息。推荐使用[jq](https://stedolan.github.io/jq/)命令进一步了解JSON数据的原貌，举例：这里我获取JSON数据的result字段的前三个对象：
+现在我们拥有了一个（比较大的）JSON 文件，里面存储大量原始信息。推荐使用[jq](https://stedolan.github.io/jq/) 命令进一步了解 JSON 数据的原貌，举例：这里我获取 JSON 数据的 result 字段的前三个对象：
 
 ```shell
 $ jq '.result[0:3]' server-test-1_dlv-rpc-list_goroutines.json
@@ -221,11 +221,11 @@ $ jq '.result[0:3]' server-test-1_dlv-rpc-list_goroutines.json
 ]
 ```
 
-JSON数据中的每个对象都代表了一个goroutine。通过[命令手册](https://github.com/derekparker/delve/blob/master/Documentation/cli/README.md#goroutines)
+JSON 数据中的每个对象都代表了一个 Goroutine。通过[命令手册](https://github.com/derekparker/delve/blob/master/Documentation/cli/README.md#goroutines)
 
-可知，`goroutines`命令可以获得每一个goroutines的信息。通过手册我们能够分析出`userCurrentLoc`字段是服务器源码中goroutines最后出现的地方。
+可知，`goroutines` 命令可以获得每一个 Goroutines 的信息。通过手册我们能够分析出 `userCurrentLoc` 字段是服务器源码中 Goroutines 最后出现的地方。
 
-为了能够了解当core file创建的时候，goroutines正在做什么，我们需要收集JSON文件中包含`userCurrentLoc`字段的函数名字以及其行号：
+为了能够了解当 core file 创建的时候，goroutines 正在做什么，我们需要收集 JSON 文件中包含 `userCurrentLoc` 字段的函数名字以及其行号：
 
 ```shell
 $ jq -c '.result[] | [.userCurrentLoc.function.name, .userCurrentLoc.line]' server-test-1_dlv-rpc-list_goroutines.json | sort | uniq -c
@@ -239,9 +239,9 @@ $ jq -c '.result[] | [.userCurrentLoc.function.name, .userCurrentLoc.line]' serv
    6 ["runtime.gopark",303]
 ```
 
-大量的goroutines(上面是1000个)在函数`main.(*Metrics).CoutS`的95行被阻塞。现在我们回头看一下我们服务器的[源码](https://github.com/narqo/postmortem-debug-go)。
+大量的 Goroutines( 上面是 1000 个 ) 在函数 `main.(*Metrics).CoutS` 的 95 行被阻塞。现在我们回头看一下我们服务器的[源码](https://github.com/narqo/postmortem-debug-go)。
 
-在`main`包中找到`Metrics`结构体并且找到它的`CountS`方法（example/server/metrics.go）。
+在 `main` 包中找到 `Metrics` 结构体并且找到它的 `CountS` 方法（example/server/metrics.go）。
 
 ```go
 // CountS increments counter per second.
@@ -250,7 +250,7 @@ func (m *Metrics) CountS(key string) {
 }
 ```
 
-我们的服务器在往`inChannel`通道发送的时候阻塞住了。让我们找出谁负责从这个通道读取数据，深入研究代码之后我们找到了[下面的函数](https://github.com/narqo/postmortem-debug-go/blob/2c42ca73ebd500fe8da1c6ac8ecaf4af143aca78/example/server/metrics.go#L109)：
+我们的服务器在往 `inChannel` 通道发送的时候阻塞住了。让我们找出谁负责从这个通道读取数据，深入研究代码之后我们找到了[下面的函数](https://github.com/narqo/postmortem-debug-go/blob/2c42ca73ebd500fe8da1c6ac8ecaf4af143aca78/example/server/metrics.go#L109)：
 
 ```shell
 // starts a consumer for inChannel
@@ -263,18 +263,18 @@ func (m *Metrics) startInChannelConsumer() {
 
 这个函数逐个地从通道中读取数据并加以处理，那么什么情况下发送到这个通道的任务会被阻塞呢？
 
-当处理通道的时候，根据Dave Cheney的[通道准则](https://dave.cheney.net/2014/03/19/channel-axioms)，只有四种情况可能导致通道有问题：
+当处理通道的时候，根据 Dave Cheney 的[通道准则](https://dave.cheney.net/2014/03/19/channel-axioms)，只有四种情况可能导致通道有问题：
 
-- 向一个nil通道发送
-- 从一个nil通道接收
+- 向一个 nil 通道发送
+- 从一个 nil 通道接收
 - 向一个已关闭的通道发送
 - 从一个已关闭的通道接收并立即返回零值
 
-第一眼就看到了“向一个nil通道发送”，这看起来像是问题的原因。但是反复检查代码后，`inChannel`是由`Metrics`初始化的，不可能为nil。
+第一眼就看到了“向一个 nil 通道发送”，这看起来像是问题的原因。但是反复检查代码后，`inChannel` 是由 `Metrics` 初始化的，不可能为 nil。
 
-n你可能会注意到，使用`jq`命令获取到的信息中，没有`startInChannelConsumer`方法。会不会是因为在`main.(*Metrics).startInChannelConsumer`的某个地方阻塞而导致这个（可缓冲）通道满了？
+n 你可能会注意到，使用 `jq` 命令获取到的信息中，没有 `startInChannelConsumer` 方法。会不会是因为在 `main.(*Metrics).startInChannelConsumer` 的某个地方阻塞而导致这个（可缓冲）通道满了？
 
-Delve能够提供从开始位置到`userCurrentLoc`字段之间的初始位置信息，这个信息存储到`startLoc`字段中。使用下面的jq命令可以查询出所有goroutines,其初始位置都在函数`startInChannelConsumer`中：
+Delve 能够提供从开始位置到 `userCurrentLoc` 字段之间的初始位置信息，这个信息存储到 `startLoc` 字段中。使用下面的 jq 命令可以查询出所有 Goroutines, 其初始位置都在函数 `startInChannelConsumer` 中：
 
 ```shell
 $ jq '.result[] | select(.startLoc.function.name | test("startInChannelConsumer$"))' server-test-1_dlv-rpc-list_goroutines.json
@@ -323,14 +323,14 @@ $ jq '.result[] | select(.startLoc.function.name | test("startInChannelConsumer$
 
 结果中有一条信息非常振奋人心！
 
-在`main.(*Metrics).startInChannelConsumer`，109行（看结果中的startLoc字段），有一个id为20的goroutines阻塞住了！
+在 `main.(*Metrics).startInChannelConsumer`，109 行（看结果中的 startLoc 字段），有一个 id 为 20 的 Goroutines 阻塞住了！
 
-拿到goroutines的id能够大大降低我们搜索的范围（并且我们再也不用深入庞大的JSON文件了）。使用Delve的`goroutines`命令我们能够将当前goroutines切换到目标goroutines，然后可以使用`stack`命令打印该goroutines的堆栈信息：
+拿到 Goroutines 的 id 能够大大降低我们搜索的范围（并且我们再也不用深入庞大的 JSON 文件了）。使用 Delve 的 `goroutines` 命令我们能够将当前 Goroutines 切换到目标 Goroutines，然后可以使用 `stack` 命令打印该 Goroutines 的堆栈信息：
 
 ```shell
 $ dlv core example/server/server core.1628
 
-(dlv) goroutine 20
+(dlv) Goroutine 20
 Switched from 0 to 20 (thread 1628)
 
 (dlv) stack -full
@@ -365,17 +365,17 @@ Switched from 0 to 20 (thread 1628)
 
 从下往上分析：
 
-（6）一个来自通道的新`inMetrics`值在`main.(*Metrics).startInChannelConsumer`中被接收
+（6）一个来自通道的新 `inMetrics` 值在 `main.(*Metrics).startInChannelConsumer` 中被接收
 
-（5）我们调用`main.(*Metrics).sendMetricsToOutChannel`并且在`example/server/metrics.go`的146行进行处理
+（5）我们调用 `main.(*Metrics).sendMetricsToOutChannel` 并且在 `example/server/metrics.go` 的 146 行进行处理
 
-（4）然后`main.(*Metrics).SetM`被调用
+（4）然后 `main.(*Metrics).SetM` 被调用
 
-一直运行到`runtime.gopark`中的`waitReasonChanSend`阻塞！
+一直运行到 `runtime.gopark` 中的 `waitReasonChanSend` 阻塞！
 
 一切的一切都明朗了！
 
-单个goroutines中，一个从缓冲通道读取数据的函数，同时也在往通道中发送数据。当进入通道的值达到通道的容量时，消费函数继续往已满的通道中发送数据就会造成自身的死锁。由于单个通道的消费者死锁，那么每一个尝试往通道中发送数据的请求都会被阻塞。
+单个 Goroutines 中，一个从缓冲通道读取数据的函数，同时也在往通道中发送数据。当进入通道的值达到通道的容量时，消费函数继续往已满的通道中发送数据就会造成自身的死锁。由于单个通道的消费者死锁，那么每一个尝试往通道中发送数据的请求都会被阻塞。
 
 ---
 
@@ -391,6 +391,6 @@ via: https://blog.gopheracademy.com/advent-2018/postmortem-debugging-delve/
 
 作者：[Vladimir Varankin](https://blog.gopheracademy.com/advent-2018/postmortem-debugging-delve/)
 译者：[hantmac](https://github.com/hantmac)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/ 校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
