@@ -1,6 +1,6 @@
-# 使用 Delve 调试 Go 服务的一次经历
+首发于：https://studygolang.com/articles/17961
 
----
+# 使用 Delve 调试 Go 服务的一次经历
 
 > Vladimir Varankin 写于 2018/12/02
 
@@ -391,6 +391,6 @@ via: https://blog.gopheracademy.com/advent-2018/postmortem-debugging-delve/
 
 作者：[Vladimir Varankin](https://blog.gopheracademy.com/advent-2018/postmortem-debugging-delve/)
 译者：[hantmac](https://github.com/hantmac)
-校对：[校对者 ID](https://github.com/ 校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
