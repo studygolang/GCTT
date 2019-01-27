@@ -479,7 +479,7 @@ $ ucp-smsc-sim
 $ ucp-cli
 ```
 
-我们用 `Gopher` 向 `09191234567` 发送一条消息 `Hello, 世界`. 模拟器会返回包含 `[09191234567:021218201629]` 的响应。我们还可以从模拟器中看到传递通知信息。
+我们用 `Gopher` 向 `09191234567` 发送一条消息 `Hello, 世界`。模拟器会返回包含 `[09191234567:021218201629]` 的响应。我们还可以从模拟器中看到传递通知信息。
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-sms/send-via-cli.png)
 
