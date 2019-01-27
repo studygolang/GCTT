@@ -1,7 +1,6 @@
-2018 年 12 月 1 日
-# 使用 Prometheus 对 Go 应用程序进行监测
+首发于：https://studygolang.com/articles/17959
 
-🕓 8 分钟
+# 使用 Prometheus 对 Go 应用程序进行监测
 
 监测服务级别的指标能让团队成员更清晰的看到你的程序表现如何，你的程序如何被使用，并且可以帮助定位潜在的性能瓶颈。
 
@@ -243,16 +242,16 @@ histogram_quantile(
 
 最后，我推荐配置 [Grafana](https://grafana.org/) 来向你的 Prometheus 服务器查询指标。Grafana 是一个令人惊叹的开源可视化解决方案，它能帮助你把 Prometheus 统计数据变成漂亮的可操作的面板。这里有一些用这种方式创建出的面板。
 
-![image](https://scot.coffee/2018/12/monitoring-go-applications-with-prometheus/dashboard-by-type.png)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/monitor-go-application/dashboard-by-type.png)
 
 查阅这个关于 [向你的 Golang 服务添加 Prometheus 指标](https://github.com/scotwells/prometheus-by-example/tree/master/job-processor) 的示例获得更多 Grafana 面板的例子。
 
 ---
 
-\#[golang](https://scot.coffee/tags/golang)
-\#[prometheus](https://scot.coffee/tags/prometheus)
+- [golang](https://scot.coffee/tags/golang)
+- [prometheus](https://scot.coffee/tags/prometheus)
 
-📆 Dec 17, 2018
+Dec 17, 2018
 
 ---
 
@@ -260,6 +259,6 @@ via: https://scot.coffee/2018/12/monitoring-go-applications-with-prometheus/
 
 作者：[Scot Wells](https://scot.coffee/)
 译者：[krystollia](https://github.com/krystollia)
-校对：[校对者 ID](https://github.com/ 校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
