@@ -5,11 +5,11 @@
 
 监测服务级别的指标能让团队成员更清晰的看到你的程序表现如何，你的程序如何被使用，并且可以帮助定位潜在的性能瓶颈。
 
-[Prometheus](https://prometheus.io/) 是一个开源的监测解决方案，原生的服务发现支持让它成为动态环境下进行服务监测的一个完美选择。Prometheus 支持从 [AWS, Kubernetes, Consul等](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#configuration-file) 拉取服务!
+[Prometheus](https://prometheus.io/) 是一个开源的监测解决方案，原生的服务发现支持让它成为动态环境下进行服务监测的一个完美选择。Prometheus 支持从 [AWS, Kubernetes, Consul 等](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#configuration-file) 拉取服务 !
 
 当使用 Prometheus 生成服务级别的指标时，有两个典型的方法：内嵌地运行在一个服务里并在 HTTP 服务器上暴露一个 `/metrics` 端点，或者创建一个独立运行的进程，建立一个所谓的导出器。
 
-在这篇指南里，我们从头到尾过一遍如何使用官方的 golang 客户端在基于 Go 的服务中集成 Prometheus。查阅这个关于 [向一个基于 worker 的 Go 服务添加指标](https://github.com/scotwells/prometheus-by-example/tree/master/job-processor) 的完整示例。
+在这篇指南里，我们从头到尾过一遍如何使用官方的 Golang 客户端在基于 Go 的服务中集成 Prometheus。查阅这个关于 [向一个基于 worker 的 Go 服务添加指标](https://github.com/scotwells/prometheus-by-example/tree/master/job-processor) 的完整示例。
 
 ---
 
@@ -27,7 +27,7 @@ Prometheus 客户端公开了在暴露服务指标时能够运用的四种指标
 
 ### Gauge（计量器）
 
-[*gauge*](https://prometheus.io/docs/concepts/metric_types/#guage) 是代表一个数值类型的指标，它的值可以增或减。gauge 通常用于一些度量的值例如温度或是当前内存使用，也可以用于一些可以增减的“计数”，如正在运行的 goroutine 个数。
+[*gauge*](https://prometheus.io/docs/concepts/metric_types/#guage) 是代表一个数值类型的指标，它的值可以增或减。gauge 通常用于一些度量的值例如温度或是当前内存使用，也可以用于一些可以增减的“计数”，如正在运行的 Goroutine 个数。
 
 ### Histogram（分布图）
 
@@ -53,8 +53,8 @@ http.ListenAndServe(":9001", server)
 这将创建一个新的 HTTP 服务器运行在端口 `:9001` 上，它将暴露 Prometheus 预期格式的指标。在启动了 HTTP 服务器后，尝试运行 `curl localhost:9001/metrics`. 你将看到如下格式的指标。
 
 ```
-# HELP go_goroutines Number of goroutines that currently exist.
-# TYPE go_goroutines gauge
+# HELP Go_goroutines Number of Goroutines that currently exist.
+# TYPE Go_goroutines gauge
 go_goroutines 5
 ```
 
@@ -70,9 +70,9 @@ func main() {
   // create a channel with a 10,000 Job buffer
   jobChannel := make(chan *Job, 10000)
   // start the job processor
-  go startJobProcessor(jobChannel)
-  // start a goroutine to create some mock jobs
-  go createJobs(jobChannel)
+  Go startJobProcessor(jobChannel)
+  // start a Goroutine to create some mock jobs
+  Go createJobs(jobChannel)
   ...
 }
 
@@ -102,7 +102,7 @@ func startWorker(workerID string, jobs <- chan *Job) {
 
 ## 添加服务指标
 
-那么首先，让我们专注于采集已被我们的 worker 处理过的任务数。这个指标也将让我们能够采集到单个 worker 处理过的任务数。当你注册了这个计数器(counter)，你将需要修改 worker 的函数以追踪处理过的任务数。
+那么首先，让我们专注于采集已被我们的 worker 处理过的任务数。这个指标也将让我们能够采集到单个 worker 处理过的任务数。当你注册了这个计数器 (counter)，你将需要修改 worker 的函数以追踪处理过的任务数。
 
 ```go
 var (
@@ -119,7 +119,7 @@ var (
   )
 )
 
-func init() {
+func INIt() {
   ...
   // register with the prometheus collector
   prometheus.MustRegister(totalCounterVec)
@@ -152,7 +152,7 @@ worker_jobs_processed_total{type="order_processed", worker_id="2"} 13
 worker_jobs_processed_total{type="transaction",     worker_id="1"} 16
 ```
 
-下一步，试试看你能否更新 worker 以采集正在处理的任务数 (*提示: 使用 Guage* 😉) 以及 worker 处理一个任务所花费的时间 (*提示: 使用 Histogram* 😉).
+下一步，试试看你能否更新 worker 以采集正在处理的任务数 (*提示 : 使用 Guage* 😉 ) 以及 worker 处理一个任务所花费的时间 (*提示 : 使用 Histogram* 😉 ).
 
 ---
 
@@ -260,6 +260,6 @@ via: https://scot.coffee/2018/12/monitoring-go-applications-with-prometheus/
 
 作者：[Scot Wells](https://scot.coffee/)
 译者：[krystollia](https://github.com/krystollia)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/ 校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
