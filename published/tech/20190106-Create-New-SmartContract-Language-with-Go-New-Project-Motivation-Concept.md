@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/17960
+
 # 用 Go 创建一个新的智能合约语言 - 新项目动机，概念
 
 这篇文章讲述了 **为什么** 我们开始为智能合约创建新的编程语言（使用 Go）。
@@ -32,6 +34,6 @@ via: https://medium.com/@14wnrkim/create-new-smartcontract-language-with-go-new-
 
 作者：[zeroFruit](https://medium.com/@14wnrkim)
 译者：[PotoYang](https://github.com/PotoYang)
-校对：[校对者 ID](https://github.com/ 校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
