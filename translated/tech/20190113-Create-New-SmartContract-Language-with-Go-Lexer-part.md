@@ -2,19 +2,19 @@
 
 这是用 go 创建新的智能合约语言项目的第二篇文章。在上一篇文章中，介绍了项目的概念，为什么我们决定去构建新的智能合约语言和简要的架构。这个项目就是 WIP 并且开放了源码，你可以在 [这里](https://github.com/DE-labtory/koa) 访问它并随时向我们做出贡献。
 
-- **前面的文章：** [**新语言概念，目标，架构**](https://github.com/PotoYang/GCTT/blob/Create-New-SmartContract-Language-with-Go-Branch/translated/tech/20190106-Create-New-SmartContract-Language-with-Go-New-Project-Motivation-Concept.md)
+- **前面的文章：** [**新语言概念，目标，架构**](https://studygolang.com/articles/17960)
 
-![koa architecture](https://raw.githubusercontent.com/PotoYang/gctt-images/master/create-new-smartcontract-language-with-go-lexer-part/koa-architecture.png)
+![koa architecture](https://raw.githubusercontent.com/studygolang/gctt-images/master/create-new-smartcontract-language-with-go-lexer-part/koa-architecture.png)
 
 <center>koa 架构</center>
 
-项目由四个组件组成：词法分析器，语法分析器，编译器，VM。在这片文章中我们将深入讨论第一个组价：**词法分析器**。
+项目由四个组件组成：词法分析器，语法分析器，编译器，VM。在这篇文章中我们将深入讨论第一个组件：**词法分析器**。
 
 ## 词法分析器？
 
 在我们上代码之前，什么是词法分析器？词法分析器做的事就是按照字面意思对给出的输入文本做词法分析。然后词法分析是怎么进行的呢？第一个词法分析器一个一个地读取根据编程语言规则编写的由源码组成的字符流，然后无论什么时候词法分析器遇到由字符组成的词位是有意义的组合时，将该词位作为 `token` 并继续做相同的事情直到我们遇到 `eof`。
 
-![How-lexer-works](https://raw.githubusercontent.com/PotoYang/gctt-images/master/create-new-smartcontract-language-with-go-lexer-part/How-lexer-works.png)
+![How-lexer-works](https://raw.githubusercontent.com/studygolang/gctt-images/master/create-new-smartcontract-language-with-go-lexer-part/How-lexer-works.png)
 <center>词法分析器是怎么工作的？</center>
 
 例如，在图中词法分析器取到源码；‘fun main() { return 0 }’，然后词法分析器逐个字符地读取代码；‘f’，‘u’，‘n’，‘c’。当词法分析器读到‘c’，它知道‘fun’ + ‘c’是一个有意义的单词，函数关键字，然后词法分析器将‘func’字符从文本（代码）中剪切下来并为该单词制作 **token**。词法分析器继续像这样工作，直到我们遇到 `eof`。**简而言之，词法分析器把字符分组并制作 tokens**。
