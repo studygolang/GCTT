@@ -1,7 +1,9 @@
 # 深入理解Go语言中的Testable Examples
 
-隐藏的`ast`和`parser`包的介绍  
-Michał Łowicki  
+隐藏的`ast`和`parser`包的介绍
+
+Michał Łowicki
+
 2016年10月10日
 
 Golang的工具链实现了名为`Testable Examples`的功能。如果对该功能没有什么印象的话，我强烈建议首先阅读[“Testable Examples in Go”](https://blog.golang.org/examples)博文进行了解。通过这篇文章我们将了解到该功能的整个解决方案以及如何构建其简化版本。
