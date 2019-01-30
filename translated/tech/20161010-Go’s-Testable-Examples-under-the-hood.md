@@ -177,10 +177,10 @@ fmt.Printf("Position %#v\n", fset.PositionFor(group.Pos(), true))
 
 程序额外输出：
 
-···go
+```go
 Position token.Position{Filename:"t.go", Offset:28, Line:5, Column:1}
 Position token.Position{Filename:"t.go", Offset:54, Line:9, Column:2}
-···
+```
 
 ### [Fileset](https://golang.org/pkg/go/token/#FileSet)
 
