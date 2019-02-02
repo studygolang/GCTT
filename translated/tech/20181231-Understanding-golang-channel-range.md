@@ -209,7 +209,7 @@ func main() {
 
 [点我运行](https://play.golang.org/p/1hhWLHg6So2)
 
-好了，现在可以从很多个`goroutines`中接收数据了！在这个例子中，我们等待`for / go` 迭代的完成，接收者 `goroutine`通过管道使得接收同步，当循环发送数据结束时，主进程也就跟着结束了。
+好了，现在可以从很多个`goroutines`中接收数据了！在这个例子中，我们等待`for / go` 迭代的完成，接收者`goroutine`通过管道使得接收同步，当循环发送数据结束时，主进程也就跟着结束了。
 
 我写这篇文章也是为了做一个自我梳理，让自己的思路更清晰一些，所以如果你发现任何不正确不到位的讲解说明，请不要犹豫，赶快在下面评论吧。
 
@@ -217,7 +217,7 @@ ____
 
 via: <https://imil.net/blog/2018/12/31/Understanding-golang-channel-range/>
 
-作者：[Imil](https://github.com/iMilnb) 
+作者：[Imil](https://github.com/iMilnb)
 
 译者：[CNbluer](https://github.com/CNbluer)
 
