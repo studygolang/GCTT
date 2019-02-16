@@ -87,6 +87,6 @@ via: https://blog.usejournal.com/why-you-need-to-learn-more-programming-language
 
 作者：[Akshat Giri](https://blog.usejournal.com/@akshatgiri)
 译者：[Inno Jia](https://kobehub.github.io)
-校对：[ID](https://github.com/)
+校对：[magichan](https://github.com/magichan)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
