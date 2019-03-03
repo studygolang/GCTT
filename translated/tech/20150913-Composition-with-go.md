@@ -1,9 +1,9 @@
 # Go 语言中的组合
-### 组合超越了[嵌入式](https://www.ardanlabs.com/blog/2014/05/methods-interfaces-and-embedded-types.html)结构。这是我们可以用来设计更好的 APIs并通过较小的模块构建更大的程序的范式。这一切都是从单一目类型的声明和实现开始。程序在架构时考虑到组合能更好的扩展和适应不断变化的需求。它们能更容易阅读和推理。
+### 组合超越了<a style="color:#ea4d14;text-decoration: none" href="https://www.ardanlabs.com/blog/2014/05/methods-interfaces-and-embedded-types.html">嵌入式</a>结构。这是我们可以用来设计更好的 APIs并通过较小的模块构建更大的程序的范式。这一切都是从单一目类型的声明和实现开始。程序在架构时考虑到组合能更好的扩展和适应不断变化的需求。它们能更容易阅读和推理。
 ### 为了证明这个观点，我们来评审下面的程序:  
 
-## [示例代码](https://github.com/ardanlabs/gotraining/blob/c081f15e59fbe895c50b25a8a2d2eaf7a5772cbc/topics/composition/example4/example4.go)
- 
+<a style="color:#ea4d14;text-decoration: none;font-size: 32px;" href="https://github.com/ardanlabs/gotraining/blob/c081f15e59fbe895c50b25a8a2d2eaf7a5772cbc/topics/composition/example4/example4.go">示例代码</a>
+
 ### 这个代码示例探究嵌入式结构，并让我们机会讨论怎样使用组合能设计灵活而且易读的代码。一个程序包输出的每个标识符组成程序包的 API。这包括所有的常量、变量、类型结构、方法和函数等输出。注释是每个程序包的 API 中经常被忽视的一方面，要非常清楚和简洁以便与程序包的使用者进行信息交流。  
 
 ### 这个例子太长所以我们把它分解成碎片然后用我们自己的办法了解它。  
@@ -35,7 +35,7 @@
 33     NailDriver
 34     NailPuller
 35 }
-```  
+```
 ### 清单 2 展示的接口通过承包商需要的工具声明我们需要的行为。第 22 行的 NailDriver 接口声明订一个钉子到木板的行为。该方法提供了钉子的供给和把钉子订入木板的行为。第 27 行的 NailPuller 接口声明了相反的行为。这个方法提供钉子和木板的供给，但它会把钉子从木板上拔出来并把钉子放回供给。  
 ### 这 2 个接口，NailDriver 和 NailPuller，都实现了一个单一的定义好的行为。这正是我们想要的。可以将行为分解为单独的、简单的行为，使它变得可组合、灵活和易读，如你所见。    
 ### 第 32 行的最后一个接口名称是 NailDrivePuller：  
@@ -46,7 +46,7 @@
 33         NailDriver
 34         NailPuller
 35 }
-```  
+```
 ### 这个接口是从 NailDriver 和 NailPuller 接口组合而成。这是 Go 语言中一种非常常见的模式，调用已经存在的接口并组合它们成组合行为。稍后你会看到它在代码中怎么扮演的。现在，实现任何钉入和拔出行为具体类型的值同样会实现 NailDrivePuller 接口。  
 ### 行为定义完成，是时候声明和实现一些工具了  
 ## 清单 4
@@ -84,7 +84,7 @@
 63     
 64     fmt.Println("Crowbar: yanked nail out of the board.")
 65 }
-```  
+```
 ### 在清单 5，第 54 行我们声明了我们的第二个工具。这种类型表示一个撬棒，用来从木板上撬钉子。第 57 行，我们通过 PullNail 方法的声明实现了 NailPuller 接口。再次实现不相关但你能看到一个钉子是怎么从木板上减少并添加到钉子堆。  
 ### 在代码的这个点上，我们已经通过我们的接口声明了工具的行为并通过一组结构类型实现了这些行为，这些结构类型代表承包商使用的两种独特的工具。现在，让我们创建一个类型，它代表使用这些工具完成工作的承包商。  
 ## 清单 6
@@ -154,7 +154,7 @@
 73 func (Contractor) Fasten(d NailDriver, nailSupply *int, b *Board) {
 ```
 ### 注意 Fasten 方法需要一个 NailDriver 接口类型的值我们却传入了一个 NailDrivePuller 接口类型的值。这是可以的因为编译器知道能被存储进 NailDrivePuller 接口值中的任何具体类型的值也必须实现 NailDriver 接口。因此，编译器接受方法调用和在这两种接口类型值之间赋值。
-  
+
 ### 同样对 Unfasten 方法调用也是这样：
 ## 清单 12
 ```go
@@ -163,7 +163,7 @@
 ### 编译器知道存储在 NailDriverPuller 类型的接口值中任何具体类型的值也实现了 NailPuller 接口。因此，传入一个 NailDriverPuller 类型的接口值可以为 NailPuller 类型的接口赋值。因为在两种接口之间是静态关系，编译器可以放弃生成执行时类型声明而是生成一个接口转换。
 ### 承包商有了，我们现在可以声明一个新的类型，它声明承包商使用的工具盒:  
 ## 清单 13
-```
+```go
 105 // Toolbox 包含所有的工具
 106 type Toolbox struct {
 107     NailDriver
@@ -269,7 +269,8 @@
 129     }
 ```
 ### 主函数在清单 19 的第 116 行开始。这里我们创建了一个 boards 切片和每一块木板需要的钉子数目。然后，我们创建工具箱：
-## 清单 20
+## 清单 20  
+
 ```go
 131     // 装满工具箱。
 132     tb := Toolbox{
@@ -299,7 +300,7 @@
 87 func (c Contractor) ProcessBoards(dp NailDrivePuller, nailSupply *int, boards []Board) {
 ```
 ### 我们再次看到 ProcessBoard 方法怎样使用可以实现 NailDrivePuller 接口的任意具体类型的值作为它的第一个参数。由于 Toolbox 结构类型里嵌入了接口类型 NailDriver 和 NailPuller，ToolBox 类型的指针实现 NailDrivePuller 接口并且可以通过。
-### *注意：Mallet 和 Crowbar 类型使用值接收器实现它们各自的接口。根据 [Method Sets](https://www.ardanlabs.com/blog/2014/05/methods-interfaces-and-embedded-types.html) 的规则，值和指针都满足接口。这是为什么我们可以创建并将具体类型的值赋值给嵌入式接口类型值。在 清单 21 第 143 行调用 ProcessBoards时使用 Toolbox 值的地址因为我们想要共享同一个 Toolbox。但是，Toolbox 类型的值也满足接口。如果具体类型使用指针接收来实现接口，那么只有指针可以满足接口。
+### *注意：Mallet 和 Crowbar 类型使用值接收器实现它们各自的接口。根据 <a style="color:#ea4d14;text-decoration: none" href="https://www.ardanlabs.com/blog/2014/05/methods-interfaces-and-embedded-types.html">Method Sets</a> 的规则，值和指针都满足接口。这是为什么我们可以创建并将具体类型的值赋值给嵌入式接口类型值。在 清单 21 第 143 行调用 ProcessBoards时使用 Toolbox 值的地址因为我们想要共享同一个 Toolbox。但是，Toolbox 类型的值也满足接口。如果具体类型使用指针接收来实现接口，那么只有指针可以满足接口。
 ### 为了完整，这里是 displayState 函数的实现：
 ## 清单 23
 ```go
@@ -321,10 +322,10 @@
 ### * 思考嵌入作为内部类型和外部类型的关联。记住通过内部类型提升，所有声明在内部的类型都被提升为外部类型。然而，内部类型的值本身就存在，并且总是根据输出规则访问。
 ### * 嵌入类型既不是子类型也不是子类。具体类型的值代表一个单独的类型并且不能根据任何嵌入关系赋值。
 ### * 编译器可以安排接口在关联的接口值之间转换。在编译时，接口转换不关心具体的类型，它只知道根据接口类型本身做什么，不是实现它们包含的具体值。
-### 我要感谢 [Kevin Gillette](https://twitter.com/kevingillette) 和我一起码代码和帖子还有 [Bill Hathaway](https://twitter.com/billhathaway) 帮我评论和编辑帖子。  
+### 我要感谢 <a style="color:#ea4d14;text-decoration: none" href="https://twitter.com/kevingillette">Kevin Gillette</a> 和我一起码代码和帖子还有 <a style="color:#ea4d14;text-decoration: none" href="https://twitter.com/billhathaway">Bill Hathaway</a> 帮我评论和编辑帖子。  
 
 作者：[William Kennedy](https://www.ardanlabs.com/blog/2015/09/composition-with-go.html)
 译者：[WillsYoung](https://github.com/WillsYoung)
 校对：[校对者ID](https://github.com/校对者ID)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创翻译，[Go 中文网](https://studygolang.com/) 荣誉推出
