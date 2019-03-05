@@ -7,7 +7,7 @@
 
 Let’s Encrypt 是利用 ACME 向任何要求认证域的人提供免费的域名证书认证。验证的一种方法是应用程序从 Let’s Encrypt（通过安全连接）请求秘钥令牌，然后 Let’s Encrypt 将对正在验证的域名发出 HTTP 请求。如果应用程序可以将秘钥令牌提供给 Let's Encrypt，则验证该域名具有对域的控制权，并且 Let's Encrypt 将签署证书以在域上使用。
 
-# Let’s get cooking
+## Let’s get cooking
 
 ![let's_get_cooking](1_ZSx82UcchxKQvn6eI4yCZA.jpeg)
 首先你需要有一个域名。只要能将应用程序部署到该域所托管的服务上，任何域/子域都可以。您可以拥有多个域，例如，您可以在同一个应用程序中托管和验证 chat.example.com 和 www.example.com。对于此示例，我将在 kappa.serv.brendanr.net 上托管我的应用程序。理想情况下，您的应用程序不会进行负载平衡 - 虽然可以在负载平衡域上实现 ACME 验证，但它更复杂。
@@ -16,7 +16,7 @@ Let’s Encrypt 是利用 ACME 向任何要求认证域的人提供免费的域�
 
 最后，您需要使用上文提到的 [acme/autocert](https://godoc.org/golang.org/x/crypto/acme/autocert) 包来请求和响应 ACME 请求。 [Krzysztof Kowalczyk](https://blog.kowalczyk.info/) 提供了一个很好的[示例](https://github.com/kjk/go-cookbook/blob/master/free-ssl-certificates/main.go)，您可以阅读它，但我将向您展示一个为更简单的版本以便更好地解释它是如何工作的。
 
-# 应用代码
+## 应用代码
 
 ```go
 func main() {
@@ -81,7 +81,7 @@ server.ListenAndServeTLS("", "")
 
 构建和部署您的应用程序，并向其发出 https 请求！虽然应用程序第一次使用 Let's Encrypt 进行 ACME 质询流程请求时会有几秒耗时，但您的应用程序仍将使用安全可靠的 HTTPS 页面进行响应。
 
-# You promised me Docker
+## You promised me Docker
 
 ![You_promised_me_Docker](1_EnBK1tCbV3p6VAdV2ivBKQ.png)
 在容器化这个应用程序前，你需要避免几个问题。以下是完整的 Dockerfile。我正在使用的这个 Dockerfile 是基于 Pierre Prinetti [Go 1.11 web service Dockerfile](https://medium.com/@pierreprinetti/the-go-1-11-dockerfile-a3218319d191) 的修改版本。
@@ -138,7 +138,7 @@ Dockerfile 分两个阶段，构建和最终阶段。这使我们能够发送极
 * <strong>即使您不打算通过 HTTP 提供任何服务，也必须开放 80 端口</strong>。这是因为 Let’s Encrypt 需要能够向我们的应用程序发出 HTTP 请求。
 * <strong>您应该将缓存目录缓存至本地磁盘，即便在部署过程中也会缓存证书</strong>。如果你不这样做，你可能会超出 Let’s Encrypt 速率限制。
 
-# 总结一下
+## 总结一下
 
 我希望这篇文章可以帮助您在设置下一个 Web 服务时减少一些时间和困惑，或者至少让您有兴趣再写一些 Go)。
 
