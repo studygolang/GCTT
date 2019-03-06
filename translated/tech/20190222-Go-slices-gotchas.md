@@ -71,7 +71,7 @@ b := append(a, a...) /* [1, 2, 1, 2] */
 a = append(a, 3, 4)  /* [1, 2, 3, 4] */
 ```
 
-这通常让slice成为所有应用场景首选的数据结构(译者注:应该是对于所有适用数组和slice的场景而言, slice胜于数组) 
+这通常让slice成为所有应用场景首选的数据结构(译者注:应该是对于所有适用数组和slice的场景而言, slice胜于数组)
 
 ## 那么, 有什么问题呢?
 
@@ -83,7 +83,7 @@ type slice struct {
 	len  int
 	// data的大小
 	cap  int
-	// 底层数组 data 
+	// 底层数组 data
 	data *[...]Type
 }
 ```
@@ -174,7 +174,7 @@ fmt.Println(c[3]) /* 1 <- ??      */
 
 ```go
 a := append([]int{}, 0, 1, 2, 3)
-// 如果`potentialSliceGrower`保持着对`a`的引用, 下方这种调用可能是危险的, 
+// 如果`potentialSliceGrower`保持着对`a`的引用, 下方这种调用可能是危险的
 potentialSliceGrower(a)
 // 这个是安全的, 取一个确定大小的slice(进行传递)
 // 追加则会引起复制
