@@ -264,8 +264,6 @@ func main() {
 
 ![img](https://github.com/studygolang/gctt-images/raw/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/3.png)
 
-
-
 ## 创建和授权用户
 
 创建一个新文件 `models/accounts.go`
