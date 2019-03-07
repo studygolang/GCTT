@@ -2,16 +2,16 @@
 ## 组合超越了<a style="color:#ea4d14;text-decoration: none" href="https://www.ardanlabs.com/blog/2014/05/methods-interfaces-and-embedded-types.html">嵌入式</a>结构。这是我们可以用来设计更好的 APIs并通过较小的模块构建更大的程序的范式。这一切都是从单一目类型的声明和实现开始。程序在架构时考虑到组合能更好的扩展和适应不断变化的需求。它们能更容易阅读和推理。
 ### 为了证明这个观点，我们来评审下面的程序：
 
-<h2><a style="color:#ea4d14;text-decoration: none;" href="https://github.com/ardanlabs/gotraining/blob/c081f15e59fbe895c50b25a8a2d2eaf7a5772cbc/topics/composition/example4/example4.go">示例代码</a></h2>
+## <a style="color:#ea4d14;text-decoration: none;" href="https://github.com/ardanlabs/gotraining/blob/c081f15e59fbe895c50b25a8a2d2eaf7a5772cbc/topics/composition/example4/example4.go">示例代码</a>
 
-### 这个代码示例探究嵌入式结构，并让我们机会讨论怎样使用组合能设计灵活而且易读的代码。一个程序包输出的每个标识符组成程序包的 API。这包括所有的常量、变量、类型结构、方法和函数等输出。注释是每个程序包的 API 中经常被忽视的一方面，要非常清楚和简洁以便与程序包的使用者进行信息交流。
+### 这个代码示例探讨嵌入式结构，并让我们机会讨论怎样使用组合能设计灵活而且易读的代码。一个程序包输出的每个标识符组成程序包的 API。这包括所有的常量、变量、类型结构、方法和函数等输出。注释是每个程序包的 API 中经常被忽视的一方面，要非常清楚和简洁以便与程序包的使用者进行信息交流。
 
 ### 这个例子太长所以我们把它分解成碎片然后用我们自己的办法了解它。
 ### 这个程序的概念是我们雇佣一个承包商修复我们的房子。特别是在房子里有些木板已经腐烂需要被扔掉，新的板子需要被固定。那么承包商会提供钉子、木板和工具来完成这个工作。
 ## 清单 1
 
 ```go
-13 // Board represents a surface we can work on. 
+13 // Board represents a surface we can work on.
 14 type Board struct {
 15     NailsNeeded int
 16     NailsDriven int
