@@ -65,6 +65,7 @@ var b bool // named type
 > 命名(定义)类型总是与任何其他类型不同。
 
 ##未命名类型
+
 复合类型，包括 array、struct、pointer、function、interface、slice、Map 和 channel，都是未命名类型。
 
 ```go
@@ -94,6 +95,7 @@ map[string]string // unnamed type
 你可能会想，为什么我会如此重视未命名类型、命名类型和底层类型的规范。因为它们在 Go 语言规范中扮演重要的角色，我们将进一步讨论，以帮助我们理解为什么上面展示的代码片段有的能编译而有的不能编译，即使它们的意思基本相同。
 
 ##可赋值性
+
 当变量 a 可以赋值给类型 T 的变量时。
 
 【图片】
