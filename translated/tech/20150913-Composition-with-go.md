@@ -2,7 +2,7 @@
 ## 组合超越了<a style="color:#ea4d14;text-decoration: none" href="https://www.ardanlabs.com/blog/2014/05/methods-interfaces-and-embedded-types.html">嵌入式</a>结构。这是我们可以用来设计更好的 APIs并通过较小的模块构建更大的程序的范式。这一切都是从单一目类型的声明和实现开始。程序在架构时考虑到组合能更好的扩展和适应不断变化的需求。它们能更容易阅读和推理。
 ### 为了证明这个观点，我们来评审下面的程序：
 
-<a style="color:#ea4d14;text-decoration: none;font-size: 32px;" href="https://github.com/ardanlabs/gotraining/blob/c081f15e59fbe895c50b25a8a2d2eaf7a5772cbc/topics/composition/example4/example4.go">示例代码</a>
+<h2><a style="color:#ea4d14;text-decoration: none;" href="https://github.com/ardanlabs/gotraining/blob/c081f15e59fbe895c50b25a8a2d2eaf7a5772cbc/topics/composition/example4/example4.go">示例代码</a></h2>
 
 ### 这个代码示例探究嵌入式结构，并让我们机会讨论怎样使用组合能设计灵活而且易读的代码。一个程序包输出的每个标识符组成程序包的 API。这包括所有的常量、变量、类型结构、方法和函数等输出。注释是每个程序包的 API 中经常被忽视的一方面，要非常清楚和简洁以便与程序包的使用者进行信息交流。
 
@@ -11,11 +11,11 @@
 ## 清单 1
 
 ```go
-13 // Board represents a surface we can work on.  
-14 type Board struct {  
-15     NailsNeeded int  
+13 // Board represents a surface we can work on. 
+14 type Board struct {
+15     NailsNeeded int
 16     NailsDriven int
-17 }  
+17 }
 ```
 ### 在清单 1中，我们声明了 Board 类型，一个 Board 有 2 个字段，木板需要的钉子数量和当前钉入木板的钉子数量。现在，让我们看看接口声明：
 ## 清单 2
@@ -24,12 +24,12 @@
 22 type NailDriver interface {
 23     DriveNail(nailSupply *int, b *Board)
 24 }
-25  
+25
 26 // NailPuller represents behavior to remove nails into a board.
 27 type NailPuller interface {
 28     PullNail(nailSupply *int, b *Board)
 29 }
-30  
+30
 31 // NailDrivePuller represents behavior to drive/remove nails into a board.
 32 type NailDrivePuller interface {
 33     NailDriver
@@ -37,7 +37,7 @@
 35 }
 ```
 ### 清单 2 展示的接口通过承包商需要的工具声明我们需要的行为。第 22 行的 NailDriver 接口声明订一个钉子到木板的行为。该方法提供了钉子的供给和把钉子订入木板的行为。第 27 行的 NailPuller 接口声明了相反的行为。这个方法提供钉子和木板的供给，但它会把钉子从木板上拔出来并把钉子放回供给。
-### 这 2 个接口，NailDriver 和 NailPuller，都实现了一个单一的定义好的行为。这正是我们想要的。可以将行为分解为单独的、简单的行为，使它变得可组合、灵活和易读，如你所见。 
+### 这 2 个接口，NailDriver 和 NailPuller，都实现了一个单一的定义好的行为。这正是我们想要的。可以将行为分解为单独的、简单的行为，使它变得可组合、灵活和易读，如你所见。
 ### 第 32 行的最后一个接口名称是 NailDrivePuller：
 
 ## 清单 3
@@ -47,13 +47,13 @@
 34         NailPuller
 35 }
 ```
-### 这个接口是从 NailDriver 和 NailPuller 接口组合而成。这是 Go 语言中一种非常常见的模式，调用已经存在的接口并组合它们成组合行为。稍后你会看到它在代码中怎么扮演的。现在，实现任何钉入和拔出行为具体类型的值同样会实现 NailDrivePuller 接口。 
+### 这个接口是从 NailDriver 和 NailPuller 接口组合而成。这是 Go 语言中一种非常常见的模式，调用已经存在的接口并组合它们成组合行为。稍后你会看到它在代码中怎么扮演的。现在，实现任何钉入和拔出行为具体类型的值同样会实现 NailDrivePuller 接口。
 ### 行为定义完成，是时候声明和实现一些工具了：
 ## 清单 4
 ```go
 39 // 锤子是敲钉子的工具.
 40 type Mallet struct {}
-41 
+41
 42 // DriveNail 将钉子钉入指定木板.
 43 func (Mallet) DriveNail(nailSupply *int, b *Board) {
 44     // 从钉子堆拿一枚钉子.
@@ -61,7 +61,7 @@
 46
 47     // 订一个钉子到木板里.
 48     b.NailsDriven++
-49    
+49
 50     fmt.Println("Mallet: pounded nail into the board.")
 
 ```
@@ -78,10 +78,10 @@
 57 func (Crowbar) PullNail(nailSupply *int, b *Board) {
 58     // 从木板是拔出一枚钉子
 59     b.NailsDriven-
-60  
+60
 61     // 把拔出的钉子放入钉子堆
 62     *nailSupply++
-63     
+63
 64     fmt.Println("Crowbar: yanked nail out of the board.")
 65 }
 ```
@@ -112,14 +112,14 @@
 84 }
 ```
 ### 在清单 7 中定义的 Unfasten 方法为承包商提供了与 Fasten 方法相反的行为。这个方法会从指定的木板上拔出尽可能多的钉子并将其添加到钉子堆。该方法只接受实现 NailPuller 接口的工具。这恰好是我们想要的因为这是实现方法需要的唯一行为。
-### 承包商最终的行为是一个叫 ProcessBoards 的方法，它允许承包商一次在一组木板上工作： 
+### 承包商最终的行为是一个叫 ProcessBoards 的方法，它允许承包商一次在一组木板上工作：
 ## 清单 8
 ```go
 86 // ProcessBoards works against boards.
 87 func (c Contractor) ProcessBoards (dp NailDrivePuller, nailSupply *int, boards []Boards) {
 88     for i := range boards {
 89         b := &boards[i]
-90 
+90
 91         fmt.Printf("contractor: examing board #%d: %+v\n", i+1, b)
 92
 93         switch {
@@ -161,7 +161,7 @@
 80 func (Contractor) Unfasten(p NailPuller, nailSupply *int, b *Board) 81 {
 ```
 ### 编译器知道存储在 NailDriverPuller 类型的接口值中任何具体类型的值也实现了 NailPuller 接口。因此，传入一个 NailDriverPuller 类型的接口值可以为 NailPuller 类型的接口赋值。因为在两种接口之间是静态关系，编译器可以放弃生成执行时类型声明而是生成一个接口转换。
-### 承包商有了，我们现在可以声明一个新的类型，它声明承包商使用的工具盒: 
+### 承包商有了，我们现在可以声明一个新的类型，它声明承包商使用的工具盒：
 ## 清单 13
 ```go
 105 // Toolbox 包含所有的工具
