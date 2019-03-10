@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/18625
+
 # 为什么要学习更多的编程语言
 
-![page head](https://cdn-images-1.medium.com/max/800/1*02ZYF7yOC56qqZ5jekqT3g.jpeg)
+![page head](https://raw.githubusercontent.com/studygolang/gctt-images/master/why-need-to-learn-mpl/1.jpg)
 
 ## 我与编程语言的开放式关系
 
@@ -8,7 +10,7 @@
 
 我不敢说在这些语言中我称得上专家，但是我比其他人有更多的关于语言和框架的经验。为什么我热衷于学习编程语言？因为我是容易被诱惑的，当我看到一些语言中的一些优异的特性时，我就忍不住去学习它。
 
-![page middle](https://cdn-images-1.medium.com/max/800/1*zavVYyQzbF9WR0diqYUn8A.jpeg)
+![page middle](https://raw.githubusercontent.com/studygolang/gctt-images/master/why-need-to-learn-mpl/2.jpg)
 
 那么我为什么让你做同样的事呢？因为在你不了解有哪些工具，这些工具具体是做什么之前，你也不可能去选择正确的工具。选择正确的工具和武器可以帮助你赢得大部分的战争。我个人发现这一点在生活中十分有用。选择合适的语言，可以极大地减少解决问题所需要付出的努力。
 
@@ -62,7 +64,7 @@ func main() {
 
 在任务栏放置该可执行文件的快捷方式，设置图标。太棒了！一个便于访问的按钮，可以让我很快的连接到 AirPods。
 
-![con](https://cdn-images-1.medium.com/max/1000/1*XRz12S7EgWVIPM8PdLSwOw.gif)
+![con](https://raw.githubusercontent.com/studygolang/gctt-images/master/why-need-to-learn-mpl/3.gif)
 
 我知道通过使用 C# 我也可以获得相同的结果。但我不想在我的笔记本电脑上安装 Visual Studio 这样一个怪异的 IDE。我还可以使用 nexe 等其他工具将我的 Nodejs 应用程序打包到 exe 中，但这只是不必要的工作。
 这只是一个简单的例子，说明了解不同的工具如何帮助您轻松解决问题。如果我所知道的只是 Python 或 Java 或 Go，那将是一件非常困难的事情。我有更多的例子，知道使用正确的语言，大大减少了解决问题所需的时间和精力。
@@ -81,7 +83,7 @@ func main() {
 
 我希望我已经说服你与你的主要语言建立开放的关系，并获得一些新的令人兴奋的经历。 如果你知道两种截然不同的语言，到目前为止你的经验是什么？您认为它对您的职业生涯有何帮助？请在评论中告诉我。
 
-----
+---
 
 via: https://blog.usejournal.com/why-you-need-to-learn-more-programming-languages-9160d609eac3
 
