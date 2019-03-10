@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/18801
+
 # Go GraphQL 入门指南
 
 欢迎各位 Gophers ！在本教程中，我们将探索如何使用 Go 和 GraphQL 服务进行交互。在本教程完结之时，我们希望你可以了解到以下内容：
@@ -37,7 +39,7 @@
 
 如果给定的是一个合法的 `ID` ，它将会返回一个响应体，该响应体可能会如下所示：
 
-```js
+```json
 {
     "title": "Go GraphQL Tutorial",
     "Author": "Elliot Forbes",
@@ -47,25 +49,25 @@
 }
 ```
 
-现在，假设我们想创建一个控件，该控件会列出指定的作者撰写的前5个帖子。我们可以使用 `/author/:id` 这样的 API 来检索出所有由该作者撰写的帖子，然后再执行后续的调用获取排名前5的帖子。亦或者，我们可以创建一个新的 API 来返回这些数据。
+现在，假设我们想创建一个控件，该控件会列出指定的作者撰写的前 5 个帖子。我们可以使用 `/author/:id` 这样的 API 来检索出所有由该作者撰写的帖子，然后再执行后续的调用获取排名前 5 的帖子。亦或者，我们可以创建一个新的 API 来返回这些数据。
 
 上述的解决方案听起来并没有什么特别之处，因为它们创建了大量无用的请求或者返回了过多的冗余信息，这也暴露了 RESTful 方法的一些缺陷。
 
 此时，就轮到 GraphQL 入场了。通过 GraphQL ，我们可以在查询中精确定义我们想要返回的数据。因此，如果我们需要上述的教程信息，我们可以创建一个查询，如下所示：
 
-```js
+```json
 {
-    tutorial(id: 1) {
-        id
-        title
-        author {
-            name
-            tutorials
-        }
-        comments {
-            body
-        }
-    }
+	tutorial(id: 1) {
+		id
+		title
+		author {
+			name
+			tutorials
+		}
+		comments {
+			body
+		}
+	}
 }
 ```
 
@@ -75,58 +77,58 @@
 
 目前为止，我们已经了解了 GraphQL 的基础知识以及使用它的益处，下面，让我们看看如何在实战中运用它。
 
-我们将会使用 Go 创建一个简易的 GraphQL 服务，这里，我们是使用[graphql-go/graphql](https://github.com/graphql-go/graphql)这个库实现的。
+我们将会使用 Go 创建一个简易的 GraphQL 服务，这里，我们是使用[graphql-go/graphql](https://github.com/graphql-go/graphql) 这个库实现的。
 
 ## 设置简易的 GraphQL 服务
 
-使用`go mod init`来初始化我们的项目：
+使用 `go mod INIt` 来初始化我们的项目：
 
 ```bash
-$ go mod init github.com/elliotforbes/go-graphql-tutorial
+$ Go mod INIt Github.com/elliotforbes/go-graphql-tutorial
 ```
 
 接下来，让我们创建一个名为 `main.go` 的文件；并从头开始创建一个简易的 GraphQL 服务，它包含一个极简的解析器。
 
 ```go
-// credit - go-graphql hello world example
+// credit - Go-graphql hello world example
 package main
 
 import (
-        "encoding/json"
-        "fmt"
-        "log"
+	"encoding/json"
+	"fmt"
+	"log"
 
-        "github.com/graphql-go/graphql"
+	"github.com/graphql-go/graphql"
 )
 
 func main() {
-        // Schema
-        fields := graphql.Fields{
-                "hello": &graphql.Field{
-                        Type: graphql.String,
-                        Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-                                return "world", nil
-                        },
-                },
-        }
-        rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: fields}
-        schemaConfig := graphql.SchemaConfig{Query: graphql.NewObject(rootQuery)}
-        schema, err := graphql.NewSchema(schemaConfig)
-        if err != nil {
-                log.Fatalf("failed to create new schema, error: %v", err)
-        }
-        // Query
-        query := `
-        { hello
+	// Schema
+	fields := graphql.Fields{
+		"hello": &graphql.Field{
+			Type: graphql.String,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				return "world", nil
+			},
+		},
+	}
+	rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: fields}
+	schemaConfig := graphql.SchemaConfig{Query: graphql.NewObject(rootQuery)}
+	schema, err := graphql.NewSchema(schemaConfig)
+	if err != nil {
+		log.Fatalf("failed to create new schema, error: %v", err)
+	}
+	// Query
+	query := `
+	{ hello
     }
-        `
-        params := graphql.Params{Schema: schema, RequestString: query}
-        r := graphql.Do(params)
-        if len(r.Errors) > 0 {
-                log.Fatalf("failed to execute graphql operation, errors: %+v", r.Errors)
-        }
-        rJSON, _ := json.Marshal(r)
-        fmt.Printf("%s \n", rJSON) // {“data”:{“hello”:”world”}}
+	`
+	params := graphql.Params{Schema: schema, RequestString: query}
+	r := graphql.Do(params)
+	if len(r.Errors) > 0 {
+		log.Fatalf("failed to execute graphql operation, errors: %+v", r.Errors)
+	}
+	rJSON, _ := JSON.Marshal(r)
+	fmt.Printf("%s \n", rJSON) // { “ data ” :{ “ hello ” : ” world ” }}
 }
 ```
 
@@ -159,22 +161,22 @@ $ go run ./...
 
 我们会创建一个 GraphQL 服务，它返回一系列存储于内存中的教程以及相应的作者、评论等信息。
 
-首先，我们需要定义能够表示 `Tutorial` ，`Author` 和 `Comment` 的结构体:
+首先，我们需要定义能够表示 `Tutorial` ，`Author` 和 `Comment` 的结构体 :
 
 ```go
 type Tutorial struct {
-        Title    string
-        Author   Author
-        Comments []Comment
+	Title    string
+	Author   Author
+	Comments []Comment
 }
 
 type Author struct {
-        Name      string
-        Tutorials []int
+	Name      string
+	Tutorials []int
 }
 
 type Comment struct {
-        Body string
+	Body string
 }
 ```
 
@@ -182,20 +184,20 @@ type Comment struct {
 
 ```go
 func populate() []Tutorial {
-        author := &Author{Name: "Elliot Forbes", Tutorials: []int{1}}
-        tutorial := Tutorial{
-                ID:     1,
-                Title:  "Go GraphQL Tutorial",
-                Author: *author,
-                Comments: []Comment{
-                Comment{Body: "First Comment"},
-        },
+	author := &Author{Name: "Elliot Forbes", Tutorials: []int{1}}
+	tutorial := Tutorial{
+		ID:     1,
+		Title:  "Go GraphQL Tutorial",
+		Author: *author,
+		Comments: []Comment{
+		Comment{Body: "First Comment"},
+	},
 }
 
-        var tutorials []Tutorial
-        tutorials = append(tutorials, tutorial)
+	var tutorials []Tutorial
+	tutorials = append(tutorials, tutorial)
 
-        return tutorials
+	return tutorials
 }
 ```
 
@@ -209,17 +211,17 @@ func populate() []Tutorial {
 
 ```go
 var commentType = graphql.NewObject(
-        graphql.ObjectConfig{
-        Name: "Comment",
-        // we define the name and the fields of our
-        // object. In this case, we have one solitary
-        // field that is of type string
-                Fields: graphql.Fields{
-                        "body": &graphql.Field{
-                                Type: graphql.String,
-                        },
-                },
-        },
+	graphql.ObjectConfig{
+	Name: "Comment",
+	// we define the name and the fields of our
+	// object. In this case, we have one solitary
+	// field that is of type string
+		Fields: graphql.Fields{
+			"body": &graphql.Field{
+				Type: graphql.String,
+			},
+		},
+	},
 )
 ```
 
@@ -227,19 +229,19 @@ var commentType = graphql.NewObject(
 
 ```go
 var authorType = graphql.NewObject(
-        graphql.ObjectConfig{
-                Name: "Author",
-                Fields: graphql.Fields{
-                        "Name": &graphql.Field{
-                                Type: graphql.String,
-                        },
-                        "Tutorials": &graphql.Field{
-                // we'll use NewList to deal with an array
-                // of int values
-                                Type: graphql.NewList(graphql.Int),
-                        },
-                },
-        },
+	graphql.ObjectConfig{
+		Name: "Author",
+		Fields: graphql.Fields{
+			"Name": &graphql.Field{
+				Type: graphql.String,
+			},
+			"Tutorials": &graphql.Field{
+		// we'll use NewList to deal with an array
+		// of int values
+				Type: graphql.NewList(graphql.Int),
+			},
+		},
+	},
 )
 ```
 
@@ -247,26 +249,26 @@ var authorType = graphql.NewObject(
 
 ```go
 var tutorialType = graphql.NewObject(
-        graphql.ObjectConfig{
-                Name: "Tutorial",
-                Fields: graphql.Fields{
-                        "id": &graphql.Field{
-                                Type: graphql.Int,
-                        },
-                        "title": &graphql.Field{
-                                Type: graphql.String,
-                        },
-                        "author": &graphql.Field{
-                // here, we specify type as authorType
-                // which we've already defined.
-                // This is how we handle nested objects
-                                Type: authorType,
-                        },
-                        "comments": &graphql.Field{
-                                Type: graphql.NewList(commentType),
-                        },
-                },
-        },
+	graphql.ObjectConfig{
+		Name: "Tutorial",
+		Fields: graphql.Fields{
+			"id": &graphql.Field{
+				Type: graphql.Int,
+			},
+			"title": &graphql.Field{
+				Type: graphql.String,
+			},
+			"author": &graphql.Field{
+		// here, we specify type as authorType
+		// which we've already defined.
+		// This is how we handle nested objects
+				Type: authorType,
+			},
+			"comments": &graphql.Field{
+				Type: graphql.NewList(commentType),
+			},
+		},
+	},
 )
 ```
 
@@ -276,46 +278,46 @@ var tutorialType = graphql.NewObject(
 
 ```go
 // Schema
-        fields := graphql.Fields{
-                "tutorial": &graphql.Field{
-                        Type: tutorialType,
-                        // it's good form to add a description
-                        // to each field.
-                        Description: "Get Tutorial By ID",
-                        // We can define arguments that allow us to
-                        // pick specific tutorials. In this case
-                        // we want to be able to specify the ID of the
-                        // tutorial we want to retrieve
-                        Args: graphql.FieldConfigArgument{
-                                "id": &graphql.ArgumentConfig{
-                                        Type: graphql.Int,
-                                },
-                        },
-                        Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-                                // take in the ID argument
-                                id, ok := p.Args["id"].(int)
-                                if ok {
-                                        // Parse our tutorial array for the matching id
-                                        for _, tutorial := range tutorials {
-                                                if int(tutorial.ID) == id {
-                                                        // return our tutorial
-                                                        return tutorial, nil
-                                                }
-                                        }
-                                }
-                                return nil, nil
-                        },
-                },
-                // this is our `list` endpoint which will return all
-                // tutorials available
-                "list": &graphql.Field{
-                        Type:        graphql.NewList(tutorialType),
-                        Description: "Get Tutorial List",
-                        Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-                                return tutorials, nil
-                        },
-                },
-        }
+	fields := graphql.Fields{
+		"tutorial": &graphql.Field{
+			Type: tutorialType,
+			// it's Good form to add a description
+			// to each field.
+			Description: "Get Tutorial By ID",
+			// We can define arguments that allow us to
+			// pick specific tutorials. In this case
+			// we want to be able to specify the ID of the
+			// tutorial we want to retrieve
+			Args: graphql.FieldConfigArgument{
+				"id": &graphql.ArgumentConfig{
+					Type: graphql.Int,
+				},
+			},
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				// take in the ID argument
+				id, ok := p.Args["id"].(int)
+				if ok {
+					// Parse our tutorial array for the matching id
+					for _, tutorial := range tutorials {
+						if int(tutorial.ID) == id {
+							// return our tutorial
+							return tutorial, nil
+						}
+					}
+				}
+				return nil, nil
+			},
+		},
+		// this is our `list` endpoint which will return all
+		// tutorials available
+		"list": &graphql.Field{
+			Type:        graphql.NewList(tutorialType),
+			Description: "Get Tutorial List",
+			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+				return tutorials, nil
+			},
+		},
+	}
 ```
 
 到目前为止，我们创建了 `Types` 并更新了 GraphQL 模式，看起来我们似乎做的还算不错。
@@ -327,19 +329,19 @@ var tutorialType = graphql.NewObject(
 ```go
 // Query
 query := `
-    {
-        list {
-            id
-            title
-            comments {
-                body
-            }
-            author {
-                Name
-                Tutorials
-            }
-        }
-    }
+	{
+		list {
+			id
+			title
+			comments {
+				body
+			}
+			author {
+				Name
+				Tutorials
+			}
+		}
+	}
 `
 ```
 
@@ -354,19 +356,19 @@ $ go run ./...
 
 正如我们所看到的，我们的查询以 JSON 的格式返回了所有教程列表，这看起来和我们定义的初始查询非常相似。
 
-现在让我们通过 `tutorial` 模式来执行另一个查询:
+现在让我们通过 `tutorial` 模式来执行另一个查询 :
 
 ```go
 query := `
-    {
-        tutorial(id:1) {
-            title
-            author {
-                Name
-                Tutorials
-            }
-        }
-    }
+	{
+		tutorial(id:1) {
+			title
+			author {
+			Name
+			Tutorials
+			}
+		}
+	}
 `
 ```
 
@@ -379,19 +381,19 @@ $ go run ./...
 
 完美，从输出结果上看，我们的 `list` 和 `tutorial` 模式能够正常工作。
 
-> 挑战：尝试在`populate` 函数中更新教程列表，使其可以返回更多的教程。一旦我们完成了这一步，我们就可以尝试使用查询，并加深对查询的理解。
+> 挑战：尝试在 `populate` 函数中更新教程列表，使其可以返回更多的教程。一旦我们完成了这一步，我们就可以尝试使用查询，并加深对查询的理解。
 
 ## 总结
 
 > 注意： 本教程全部的源代码位于这里：[main.go](https://gist.github.com/elliotforbes/9b8400ef5154eb3420e409aeffe39633)
 
-这就是我们在本次初始教程中所介绍的所有内容。我们成功地配置了一个由内存数据存储支持的极简的GraphQL服务。
+这就是我们在本次初始教程中所介绍的所有内容。我们成功地配置了一个由内存数据存储支持的极简的 GraphQL 服务。
 
-在下篇教程中，我们将查看 GraphQL 变更的概念，并改造我们的数据源以使用NoSQL数据库。关于下一篇教程可以阅读[Go GraphQL Beginners Tutorial - Part2](https://tutorialedge.net/golang/go-graphql-beginners-tutorial-part-2/)
+在下篇教程中，我们将查看 GraphQL 变更的概念，并改造我们的数据源以使用 NoSQL 数据库。关于下一篇教程可以阅读[Go GraphQL Beginners Tutorial - Part2](https://tutorialedge.net/golang/go-graphql-beginners-tutorial-part-2/)
 
 ---
 
-via: [Go GraphQL Beginners Tutorial - Part1](https://tutorialedge.net/golang/go-graphql-beginners-tutorial/)
+via: https://tutorialedge.net/golang/go-graphql-beginners-tutorial/
 
 作者：[Elliot Forbes](https://twitter.com/elliot_f)
 译者：[barryz](https://github.com/barryz)
