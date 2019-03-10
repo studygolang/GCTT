@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/18792
+
 # Go 语言的 Stack Trace
 
 ## 简介
@@ -53,12 +55,12 @@ runtime.goexit()
         /Users/bill/go/src/runtime/asm_amd64.s:2232 +0x1
 ```
 
-清单 2 中的 stack trace  显示了 panic 的时候所有存在的 goroutine、所有 goroutine 的运行状态和 goroutine 对应的调用栈。正在运行并且导致了程序 panic 的 goroutines 将会在顶上。我们先来关注一下导致 panic 的 goroutine。
+清单 2 中的 stack trace  显示了 panic 的时候所有存在的 Goroutine、所有 Goroutine 的运行状态和 Goroutine 对应的调用栈。正在运行并且导致了程序 panic 的 Goroutines 将会在顶上。我们先来关注一下导致 panic 的 Goroutine。
 
 **清单 3**
 
 ```bash
-01 goroutine 1 [running]:
+01 Goroutine 1 [running]:
 02 main.Example(0x2080c3f50, 0x2, 0x4, 0x425c0, 0x5, 0xa)
            /Users/bill/Spaces/Go/Projects/src/github.com/goinaction/code/
            temp/main.go:9 +0x64
@@ -67,11 +69,11 @@ runtime.goexit()
            temp/main.go:5 +0x85
 ```
 
-清单 3 中 01 行表明了 goroutine 1 在 panic 发生之前正在运行，在 02 行，我们可以看到 panic 的代码是 `main` 包里面的 `Example` 函数，缩进了的那行指明了源代码文件的路径和导致 panic 的代码所在的行数。在这个例子中，是第 9 行代码导致的 panic。
+清单 3 中 01 行表明了 Goroutine 1 在 panic 发生之前正在运行，在 02 行，我们可以看到 panic 的代码是 `main` 包里面的 `Example` 函数，缩进了的那行指明了源代码文件的路径和导致 panic 的代码所在的行数。在这个例子中，是第 9 行代码导致的 panic。
 
 03 行显示了调用 `Example` 函数的函数名。即是 `main` 包中的 `main` 函数。在函数的名字后面，同样也是由缩进了的那行指明了源代码文件的路径，以及在哪一行调用的 `Example` 函数。
 
-stack trace 显示了在 panic 发生的时候正在执行的 goroutine 的函数的调用链，现在我们来关注一下传递给 `Example` 函数的各个参数的值：
+stack trace 显示了在 panic 发生的时候正在执行的 Goroutine 的函数的调用链，现在我们来关注一下传递给 `Example` 函数的各个参数的值：
 
 **清单 4**
 
@@ -87,7 +89,7 @@ Example(slice, "hello", 10)
 main.Example(0x2080c3f50, 0x2, 0x4, 0x425c0, 0x5, 0xa)
 ```
 
-根据 stack trace 的结果，我们整理出了清单 4，它展示了当 `main` 函数调用 `Example` 函数的时候，传递给 `Example` 函数的参数的值，你可能会发现，stack trace 里面显示传递的参数跟我们在源代码里面的调用不一样：在我们的源代码里面 `Example`函数的声明是接受 3 个参数，但是 stack trace 里面显示的是传递了 6 个十六进制的参数，它们之间存在怎样的对应关系呢？要搞懂这个问题，你需要了解一下这些参数的类型的实现。
+根据 stack trace 的结果，我们整理出了清单 4，它展示了当 `main` 函数调用 `Example` 函数的时候，传递给 `Example` 函数的参数的值，你可能会发现，stack trace 里面显示传递的参数跟我们在源代码里面的调用不一样：在我们的源代码里面 `Example` 函数的声明是接受 3 个参数，但是 stack trace 里面显示的是传递了 6 个十六进制的参数，它们之间存在怎样的对应关系呢？要搞懂这个问题，你需要了解一下这些参数的类型的实现。
 
 我们从 `Example` 函数的第一个参数——字符串切片开始吧。切片（slice）在 Go 里面是一个引用类型，这意味着一个切片的值只是一个 header value（标头值），它里面包含一个指针指向底层的数据。在这个例子中的切片， 它的 header value 是一个三字长的结构。包括了一个指向底层数组的指针、切片的长度以及切片的容量，stack trace 中看到的传递给 `Example` 函数的前三个参数，其实刚好就是它的 header value 对应的三个值。
 
@@ -153,7 +155,7 @@ main.Example(0x2080c3f50, 0x2, 0x4, 0x425c0, 0x5, 0xa)
 10
 
 // 整型
-十六进制数值: 0xa
+十六进制数值 : 0xa
 
 // Example 的函数声明
 main.Example(slice []string, str string, i int)
@@ -206,7 +208,7 @@ func (t *trace) Example(slice []string, str string, i int) {
 Receiver Address: 0x1553a8
 panic: Want stack trace
 
-01 goroutine 1 [running]:
+01 Goroutine 1 [running]:
 02 main.(*trace).Example(0x1553a8, 0x2081b7f50, 0x2, 0x4, 0xdc1d0, 0x5, 0xa)
            /Users/bill/Spaces/Go/Projects/src/github.com/goinaction/code/
            temp/main.go:16 +0x116
@@ -243,7 +245,7 @@ func Example(b1, b2, b3 bool, i uint8) {
 **清单 11**
 
 ```shell
-01 goroutine 1 [running]:
+01 Goroutine 1 [running]:
 02 main.Example(0x19010001)
            /Users/bill/Spaces/Go/Projects/src/github.com/goinaction/code/
            temp/main.go:8 +0x64
