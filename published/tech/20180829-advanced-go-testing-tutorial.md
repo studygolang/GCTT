@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/18797
+
 # Go 语言测试进阶教程
 
 你好啊各位码农们！在这个教程中，我们将介绍一些进阶的测试实践，很多 Go 语言的核心开发人员以及流行的生产级工具都使用到了它们。
@@ -5,12 +7,12 @@
 我希望这种通过生产上真实使用的案例来讲解的方法。能够给你一些启示，让你深入了解怎么去测试你自己的生产级别的 Go 程序。
 
 > 注意：如果你对如何测试 Go 语言的程序完全不了解的话，我建议你先看看之前的教程：
-> [an introduction to testing in go](https://tutorialedge.net/golang/intro-testing-in-go/)
+> [an introduction to testing in Go](https://tutorialedge.net/golang/intro-testing-in-go/)
 > （译注：Go 语言中文网译文：[Go 测试介绍](https://studygolang.com/articles/16772)）
 
 ## 通过表格驱动的测试来实现良好的测试覆盖率
 
-我们先来看看 `strings` 代码包，如果你看一眼 `src/strings/`目录里面的 `strings_test.go` 文件，你会发现文件开头定义了一些数组。
+我们先来看看 `strings` 代码包，如果你看一眼 `src/strings/` 目录里面的 `strings_test.go` 文件，你会发现文件开头定义了一些数组。
 
 举个例子，我们来看看 `lastIndexTests`，它是一个 `IndexTest` 类型的数组：
 
@@ -100,11 +102,11 @@ func TestReader(t *testing.T) {
 上面的函数中你可以看到 Go 语言的核心开发者使用了我们一开始提到的表格驱动的测试方法以及我们在本节提到的方法。
 他们把用于测试的 `.tar` 文件放在 `testdata` 目录里面，然后编写测试代码，确保这些 `.tar` 文件被解压出来以后，里面的文件和文件的校验和与预期的结果一致。
 
-## Mock HTTP请求
+## Mock HTTP 请求
 
 当你开始编写生产级别的 API 和服务的时候，你可能会需要与其他的服务进行交互。能按照你与这些服务的交互方式来进行测试，跟测试你本地的代码一样有必要。
 
-但是，你的交互可能是一个会对数据库进行 CRUD（译注：指创建-查询-更新-删除）操作的 REST API，当你只是想测试一下这些操作能不够使用的时候，你肯定不会喜欢这些测试会真正地改动到你的数据库里面的数据。
+但是，你的交互可能是一个会对数据库进行 CRUD（译注：指创建 - 查询 - 更新 - 删除）操作的 REST API，当你只是想测试一下这些操作能不够使用的时候，你肯定不会喜欢这些测试会真正地改动到你的数据库里面的数据。
 
 所以，为了解决这个问题，我们可以使用 `net/http/httptest` 来 mock HTTP 的应答：
 
@@ -177,7 +179,7 @@ func TestMainIntegration(t *testing.T) {
 这时如果你想要运行这个集成测试，你可以这样的使用 `go test` ：
 
 ```bash
-$ go test -tags=integration
+$ Go test -tags=integration
 My Integration Test
 PASS
 ok      _/Users/elliot/Documents/Projects/tutorials/golang/advanced-go-testing-tutorial 0.006s
@@ -197,7 +199,7 @@ ok      _/Users/elliot/Documents/Projects/tutorials/golang/advanced-go-testing-t
 
 - [Improving Your Tests with Testify in Go](https://tutorialedge.net/golang/improving-your-tests-with-testify-go/)（译注：Go 语言中文网译文：[用 Testify 来改善 GO 测试和模拟](https://studygolang.com/articles/16799)）
 
-----
+---
 
 via: https://tutorialedge.net/golang/advanced-go-testing-tutorial/
 
