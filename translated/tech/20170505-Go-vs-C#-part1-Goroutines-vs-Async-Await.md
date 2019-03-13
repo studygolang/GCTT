@@ -159,7 +159,6 @@ Sending 1000000 messages (Task<int>): 1693.675ms
 
 ![Memory Detail](https://upload-images.jianshu.io/upload_images/1780316-075137a9f9b487bb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-
 Go为1M数量的goroutine 分配了近9GB的内存，假设每个goroutine consimes 至少需要8KB，那么这些内存就大概达到了8GB。
 
 如果我们增加测试数量到2M的话，我的机器直接挂了(内存不足)。
