@@ -116,7 +116,7 @@ if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 logger.Println("Server stopped")
 ```
 
-一旦关闭完成，我们通过`done` channel来通知主协程我们完成优雅关闭了。这让程序继续执行最后一行`logger.Println `。输出关闭顺序全部完成并关闭程序。
+一旦关闭完成，我们通过`done` channel来通知主协程我们完成优雅关闭了。这让程序继续执行最后一行`logger.Println`。输出关闭顺序全部完成并关闭程序。
 
 ## TLDR
 
