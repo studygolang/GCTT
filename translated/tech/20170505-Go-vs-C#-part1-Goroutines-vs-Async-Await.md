@@ -125,7 +125,7 @@ namespace ChannelsTest
 
 ```
 
-#### Go输出内容：
+## Go输出内容：
 ```
 C:\Projects\GoTest\src>go run ChannelsTest.go
 Started, sending 1000000 messages.
@@ -136,7 +136,7 @@ Started, sending 1000000 messages.
 Sending 1000000 messages took 808.9572ms
 ```
 
-#### C# 输出内容：
+## C# 输出内容：
 ```
 C:\Projects\ChannelsTest>dotnet run -c Release -f netcoreapp1.1
 1000000
@@ -151,7 +151,7 @@ Sending 1000000 messages (Task<int>): 1693.675ms
 * 为了公平起见，C#中除了通道的测试外，我还用了一个异步任务的测试，代码里面，每个task等待他的"input"task, 在得到的数字上自增1，并返回自增后的结果。
 * C#有一个预热的功能，Go没有，预热的逻辑会导致任何小的函数第一次执行的时候，都会花费更长的时间。
 
-#### 原始结果对比：
+## 原始结果对比：
 * 第一次执行，Go和C#的时间基本相同。
 * 第二次 Go快了很多，大概提升了3.4倍，C#没有执行第二次，因为他的速度始终是一样的。
 * 基于任务版本的C#代码，仍然是Go第二次执行的两倍时长。
@@ -211,7 +211,7 @@ Sending 5000 messages (Task<int>): 6.881ms
 
 在这里，可以看到C#基于task的效果，比Go还要好，C#的通道测试，比Go最好的状态慢2倍左右。
 
-#### 为啥C#使用Task的效果更好？
+## 为啥C#使用Task的效果更好？
 * Go上的5K测试使用~ 5MB RAM，这仍然小于Core i7的L3缓存大小，但远远大于L2缓存大小;另一方面，不太清楚为什么性能不如第二次访问时的性能好——CPU只缓存被访问的数据子集。
 * c#版本，是prob。10x内存效率更高，在这个测试中使用了~ 500KB的RAM，这更接近核心i7的L2缓存大小(每个核心256KB)
 
