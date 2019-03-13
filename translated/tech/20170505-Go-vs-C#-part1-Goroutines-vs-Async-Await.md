@@ -10,8 +10,9 @@
 
 接下来，我会做一些简单的测试：
 * 创建n个goroutines，每个goroutines在通道上面等待一个数字，并在他的基础上自增，并发送给输出通道。
-* goroutines 和 channels 连接在一起，因此发送给第一个通道的消息会被传送到最后一个通道上面。
-#### Go代码如下：
+* goroutines 和 channels 连接在一起，因此发送给第一个通道的消息会被传送到最后一个通道8上面。
+
+**Go代码如下：**
 ```
 package main
 
@@ -55,7 +56,7 @@ func main() {
 }
 ```
 
-#### C# 代码：
+**CSharp 代码：**
 ```
 using System;
 using System.Diagnostics;
