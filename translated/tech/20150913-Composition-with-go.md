@@ -1,13 +1,15 @@
 # Go 语言中的组合
-组合超越了<a style="color:#ea4d14;text-decoration: none" href="https://www.ardanlabs.com/blog/2014/05/methods-interfaces-and-embedded-types.html">嵌入式</a>结构。这是我们可以用来设计更好的 APIs并通过较小的模块构建更大的程序的范式。这一切都是从单一目类型的声明和实现开始。程序在架构时考虑到组合能更好的扩展和适应不断变化的需求。它们能更容易阅读和推理。
+组合超越了[嵌入式](https://www.ardanlabs.com/blog/2014/05/methods-interfaces-and-embedded-types.html)结构。这是我们可以用来设计更好的 APIs并通过较小的模块构建更大的程序的范式。这一切都是从单一目类型的声明和实现开始。程序在架构时考虑到组合能更好的扩展和适应不断变化的需求。它们能更容易阅读和推理。
 为了证明这个观点，我们来评审下面的程序：
 
-## <a style="color:#ea4d14;text-decoration: none;" href="https://github.com/ardanlabs/gotraining/blob/c081f15e59fbe895c50b25a8a2d2eaf7a5772cbc/topics/composition/example4/example4.go">示例代码</a>
+## [示例代码](https://github.com/ardanlabs/gotraining/blob/c081f15e59fbe895c50b25a8a2d2eaf7a5772cbc/topics/composition/example4/example4.go)
 
-这个代码示例探讨嵌入式结构，并让我们机会讨论怎样使用组合能设计灵活而且易读的代码。一个程序包输出的每个标识符组成程序包的 API。这包括所有的常量、变量、类型结构、方法和函数等输出。注释是每个程序包的 API 中经常被忽视的一方面，要非常清楚和简洁以便与程序包的使用者进行信息交流。
+这个代码示例探讨嵌入式结构，并让我们得以研究怎样使用组合能设计灵活而且易读的代码。一个程序包输出的每个标识符组成程序包的 API。这包括所有的常量、变量、类型结构、方法和函数等输出。注释是每个程序包的 API 中经常被忽视的一方面，要非常清楚和简洁以便与程序包的使用者进行信息交流。
 
 这个例子太长所以我们把它分解成碎片然后用我们自己的办法了解它。
+
 这个程序的概念是我们雇佣一个承包商修复我们的房子。特别是在房子里有些木板已经腐烂需要被扔掉，新的板子需要被固定。那么承包商会提供钉子、木板和工具来完成这个工作。
+
 ## 清单 1
 
 ```go
@@ -36,8 +38,10 @@
 34     NailPuller
 35 }
 ```
-清单 2 展示的接口通过承包商需要的工具声明我们需要的行为。第 22 行的 NailDriver 接口声明订一个钉子到木板的行为。该方法提供了钉子的供给和把钉子订入木板的行为。第 27 行的 NailPuller 接口声明了相反的行为。这个方法提供钉子和木板的供给，但它会把钉子从木板上拔出来并把钉子放回供给。
+清单 2 展示的接口通过承包商需要的工具声明我们需要的行为。第 22 行的 NailDriver 接口声明钉一个钉子到木板的行为。该方法提供了钉子的供给和把钉子钉入木板的行为。第 27 行的 NailPuller 接口声明了相反的行为。这个方法提供钉子和木板的供给，但它会把钉子从木板上拔出来并把钉子放回供给。
+
 这 2 个接口，NailDriver 和 NailPuller，都实现了一个单一的定义好的行为。这正是我们想要的。可以将行为分解为单独的、简单的行为，使它变得可组合、灵活和易读，如你所见。
+
 第 32 行的最后一个接口名称是 NailDrivePuller：
 
 ## 清单 3
@@ -48,7 +52,9 @@
 35 }
 ```
 这个接口是从 NailDriver 和 NailPuller 接口组合而成。这是 Go 语言中一种非常常见的模式，调用已经存在的接口并组合它们成组合行为。稍后你会看到它在代码中怎么扮演的。现在，实现任何钉入和拔出行为具体类型的值同样会实现 NailDrivePuller 接口。
+
 行为定义完成，是时候声明和实现一些工具了：
+
 ## 清单 4
 ```go
 39 // 锤子是敲钉子的工具.
@@ -59,7 +65,7 @@
 44     // 从钉子堆拿一枚钉子.
 45     *nailSupply-
 46
-47     // 订一个钉子到木板里.
+47     // 钉一个钉子到木板里.
 48     b.NailsDriven++
 49
 50     fmt.Println("Mallet: pounded nail into the board.")
@@ -68,7 +74,9 @@
 在清单 4 第 40 行，我们声明一个名称为 Mallet 的结构类型。这个类型声明为一个空结构，因为它是无状态的不需要维护。我们只需要实现行为。
 
 棒槌是用来钉钉子的工具， 因此第 43 行，NailDriver 接口实现了经过 DriveNail 声明的方法。该方法的实现是不相关的，它使得钉子堆中的钉子减少 1 木板上钉子数量加 1。
-让我们看看声明和实现的第二个工具
+
+让我们看看声明和实现的第二个工具：
+
 ## 清单 5
 ```go
 53 // 撬棍是拔出钉子的工具
@@ -86,7 +94,9 @@
 65 }
 ```
 在清单 5，第 54 行我们声明了我们的第二个工具。这种类型表示一个撬棒，用来从木板上撬钉子。第 57 行，我们通过 PullNail 方法的声明实现了 NailPuller 接口。再次实现不相关但你能看到一个钉子是怎么从木板上减少并添加到钉子堆。
+
 在代码的这个点上，我们已经通过我们的接口声明了工具的行为并通过一组结构类型实现了这些行为，这些结构类型代表承包商使用的两种独特的工具。现在，让我们创建一个类型，它代表使用这些工具完成工作的承包商。
+
 ## 清单 6
 ```go
 69 // 承包商完成了固定板的工作。
@@ -100,8 +110,11 @@
 77 }
 ```
 在清单 6，第 70 行我们声明了 Contractor 类型。同样，我们不需要任何状态因此我们使用一个空结构体。然后再第 73 行，我们看到 Fasten 方法，这是针对 Contractor 类型声明的三种方法之一。
+
 Fasten 方法被声明来提供一个承包商的行为，该行为需要将一定数量的钉子钉入指定的木板。这个方法要求用户将实现 NailDriver 接口的值作为传入第一个参数。该值代表是承包商用来执行这个行为的工具。使用此参数接口类型允许 API 使用者后创建和使用不同的工具且不需要改变 API。用户提供工具的行为，Fasten 方法提供了工具使用时间和方式的工作流程。
+
 注意我们使用的是 NailDriver 接口而不是 NailDriverPuller 接口作为参数类型。这非常重要因为 Fasten 方法所需的唯一行为是钉钉子的能力。通过只声明我们需要的行为，我们的代码更容易理解同时由于耦合度最小也更容易使用。现在，让我们看看 Unfasten 方法：
+
 ## 清单 7
 ```go
 79 // Unfasten 将钉子从木板上拔出
@@ -112,7 +125,9 @@ Fasten 方法被声明来提供一个承包商的行为，该行为需要将一�
 84 }
 ```
 在清单 7 中定义的 Unfasten 方法为承包商提供了与 Fasten 方法相反的行为。这个方法会从指定的木板上拔出尽可能多的钉子并将其添加到钉子堆。该方法只接受实现 NailPuller 接口的工具。这恰好是我们想要的因为这是实现方法需要的唯一行为。
+
 承包商最终的行为是一个叫 ProcessBoards 的方法，它允许承包商一次在一组木板上工作：
+
 ## 清单 8
 ```go
 86 // ProcessBoards works against boards.
@@ -161,6 +176,7 @@ Fasten 方法被声明来提供一个承包商的行为，该行为需要将一�
 80 func (Contractor) Unfasten(p NailPuller, nailSupply *int, b *Board) 81 {
 ```
 编译器知道存储在 NailDriverPuller 类型的接口值中任何具体类型的值也实现了 NailPuller 接口。因此，传入一个 NailDriverPuller 类型的接口值可以为 NailPuller 类型的接口赋值。因为在两种接口之间是静态关系，编译器可以放弃生成运行时类型断言而是生成一个接口转换。
+
 承包商有了，我们现在可以声明一个新的类型，它声明承包商使用的工具盒：
 
 ## 清单 13
@@ -174,9 +190,13 @@ Fasten 方法被声明来提供一个承包商的行为，该行为需要将一�
 111 }
 ```
 每个优秀的承包商都有工具箱，在清单 13 我们声明了工具箱。Toolbox是一种结构体，它在第 107 行嵌入了 NailDriver 类型的接口值，在 108 行嵌入了 NailPuller 类型的接口值。然后在第 110 行通过 nails 字段声明了钉子堆。
+
 当把一个类型嵌入到另一个类型时，最好考虑将一个新类型作为外部类型并将嵌入类型作为内部类型。这很重要因为你可以看到嵌入类型创建的关系。
+
 任何嵌入类型总是作为一个内部值存在于外部类型值中。它永远不会失去自己的标识并且总是存在。然而，由于内部类型提升，在内部类型中声明的所有内容都被提升为外部类型。这意味着通过外部类型值，我们能直接根据输出规则访问内部类型值关联的任何字段或方法。
+
 让我们看看这个例子：
+
 ## 清单 14
 ```go
 01 package main
@@ -228,8 +248,11 @@ Fasten 方法被声明来提供一个承包商的行为，该行为需要将一�
 41 }
 ```
 清单 16 第 28 行展示了使用结构体文字创建外部类型 admin 的值。在结构体文字内部使用第二层结构体文字创建并初始化内部类型 user 的值。admin 类型的值有了，我们可以直接调用 notify 方法，从第 37 行内部类型的值或者通过第 40 行外部类型的值。
+
 最后一点，这既不是子类型也不是子类。admin 类型的值不能作为 user 类型的值使用。admin 类型的值仅仅是 admin 类型的值，user 类型的值仅仅是 user 类型的值。由于内部类型提升，内部类型的字段和方法能通过外部类型的值直接访问。
+
 现在回到我们的工具箱：
+
 ## 清单 17
 ```go
 105 // Toolbox 包含任何工具
@@ -241,7 +264,9 @@ Fasten 方法被声明来提供一个承包商的行为，该行为需要将一�
 111 }
 ```
 我们没有嵌入任何结构类型到 Toolbox 而是嵌入两种接口类型。这意味着实现 NailDriver 接口的任何具体的类型值可以为NailDriver 嵌入式接口类型作为内部类型值赋值。同样对于 NailPuller 嵌入式接口类型也适用。
+
 一旦分配了具体类型，Toolbox 就可以保证实现这个行为。甚至，由于 toolbox 嵌入了 NailDriver 和 Nailpuller 接口类型，这意味着 Toolbox 同样也实现了 NailDrivePuller 接口：
+
 ## 清单 18
 ```go
 31     NailDrivePuller interface {
@@ -250,7 +275,9 @@ Fasten 方法被声明来提供一个承包商的行为，该行为需要将一�
 34     }
 ```
 在清单 18 我们又看到了 NailDrivePuller 的声明。嵌入式接口类型把内部类型提升和接口规范的概念提升到新的水平。
+
 现在我们准备通过实现主函数把所有内容放在一起：
+
 ## 清单 19
 ```go
 115 // main() 函数是应用程序入口
@@ -284,7 +311,9 @@ Fasten 方法被声明来提供一个承包商的行为，该行为需要将一�
 139     displayState(&tb, boards)
 ```
 在清单 20，我们创建 Toolbox 的值并创建结构类型 Mallet 的值并将它赋值给内部类型 NailDriver。然后我们创建结构类型 Crowbar 的值并将他赋值给内部类型 NailPuller。最后，我们添加了 10 枚钉子到工具箱。
+
 现在让我们创建承包商并处理一些木板：
+
 ## 清单 21
 ```go
 141     // 雇佣一个承包商并让他工作。
@@ -301,7 +330,9 @@ Fasten 方法被声明来提供一个承包商的行为，该行为需要将一�
 87 func (c Contractor) ProcessBoards(dp NailDrivePuller, nailSupply *int, boards []Board) {
 ```
 我们再次看到 ProcessBoard 方法怎样使用可以实现 NailDrivePuller 接口的任意具体类型的值作为它的第一个参数。由于 Toolbox 结构类型里嵌入了接口类型 NailDriver 和 NailPuller，ToolBox 类型的指针实现 NailDrivePuller 接口并且可以通过。
-**注意**：Mallet 和 Crowbar 类型使用值接收器实现它们各自的接口。根据 <a style="color:#ea4d14;text-decoration: none" href="https://www.ardanlabs.com/blog/2014/05/methods-interfaces-and-embedded-types.html">Method Sets</a> 的规则，值和指针都满足接口。这是为什么我们可以创建并将具体类型的值赋值给嵌入式接口类型值。在 清单 21 第 143 行调用 ProcessBoards时使用 Toolbox 值的地址因为我们想要共享同一个 Toolbox。但是，Toolbox 类型的值也满足接口。如果具体类型使用指针接收来实现接口，那么只有指针可以满足接口。
+
+**注意**：Mallet 和 Crowbar 类型使用值接收器实现它们各自的接口。根据 [Method Sets](https://www.ardanlabs.com/blog/2014/05/methods-interfaces-and-embedded-types.html) 的规则，值和指针都满足接口。这是为什么我们可以创建并将具体类型的值赋值给嵌入式接口类型值。在 清单 21 第 143 行调用 ProcessBoards时使用 Toolbox 值的地址因为我们想要共享同一个 Toolbox。但是，Toolbox 类型的值也满足接口。如果具体类型使用指针接收来实现接口，那么只有指针可以满足接口。
+
 为了完整，这里是 displayState 函数的实现：
 
 ## 清单 23
@@ -330,7 +361,7 @@ Fasten 方法被声明来提供一个承包商的行为，该行为需要将一�
 
 * 编译器可以安排接口在关联的接口值之间转换。在编译时，接口转换不关心具体的类型，它只知道根据接口类型本身做什么，不是实现它们包含的具体值。
 
-*我要感谢 <a style="color:#ea4d14;text-decoration: none" href="https://twitter.com/kevingillette">Kevin Gillette</a> 和我一起码代码和帖子还有 <a style="color:#ea4d14;text-decoration: none" href="https://twitter.com/billhathaway">Bill Hathaway</a> 帮我评论和编辑帖子。*
+*我要感谢  [Kevin Gillette](https://twitter.com/kevingillette) 和我一起码代码和帖子还有  [Bill Hathaway](https://twitter.com/billhathawa)。帮我评论和编辑帖子。*
 
 ---
 
