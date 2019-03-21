@@ -8,67 +8,67 @@
 
 假设你有一个日志服务，能够获取获取某个应用，最近n条日志。例如下面代码中的 `GetLog` 方法！我提供的是我们生产环境已经再用的代码，方便你了解实际的应用场景。
 ```
-    package logging
+package logging
 
-    import (
-	    "gopkg.in/olivere/elastic.v3"
-	    "reflect"
-    )
+import (
+	"gopkg.in/olivere/elastic.v3"
+	"reflect"
+)
 
-    type Service interface {
-	    GetLog(app string, lines int) ([]string, error)
-    }
+type Service interface {
+	GetLog(app string, lines int) ([]string, error)
+}
 
-    func NewService(url string) (Service, error) {
-	    client, err := elastic.NewSimpleClient(elastic.SetURL(url))
-	    if err != nil {
-		    return nil, err
-	    }
-	    return &service{elasticClient: client}, nil
-    }
+func NewService(url string) (Service, error) {
+	client, err := elastic.NewSimpleClient(elastic.SetURL(url))
+	if err != nil {
+		return nil, err
+	}
+	return &service{elasticClient: client}, nil
+}
 
-    type service struct {
-	    elasticClient   *elastic.Client
-    }
+type service struct {
+	elasticClient *elastic.Client
+}
 
-    type Log struct {
-	    Message string `json:"message"`
-    }
+type Log struct {
+	Message string `json:"message"`
+}
 
-    // GetLog returns limited tail of log sorted    by time in ascending order
-    func (s *service) GetLog(app string, limit int) ([]string, error) {
-	    termQuery := elastic.NewTermQuery("app", app)
+// GetLog returns limited tail of log sorted by time in ascending order
+func (s *service) GetLog(app string, limit int) ([]string, error) {
+	termQuery := elastic.NewTermQuery("app", app)
 
-	    res, err := s.elasticClient.Search("_all").
-		    Query(termQuery).
-		    Sort("@timestamp", false).
-		    Size(limit).
-		    Do()
+	res, err := s.elasticClient.Search("_all").
+		Query(termQuery).
+		Sort("@timestamp", false).
+		Size(limit).
+		Do()
 
-	    if err != nil {
-		    return nil, err
-	    }
+	if err != nil {
+		return nil, err
+	}
 
-	    msgNum := len(res.Hits.Hits)
-	    if msgNum == 0 {
-		    return []string{}, nil
-	    }
+	msgNum := len(res.Hits.Hits)
+	if msgNum == 0 {
+		return []string{}, nil
+	}
 
-	    messages := make([]string, msgNum, msgNum)
+	messages := make([]string, msgNum, msgNum)
 
-	    var l Log
-	    for i, item := range res.Each(reflect.TypeOf(l)) {
-		    l := item.(Log)
-		    messages[i] = l.Message
-	    }
+	var l Log
+	for i, item := range res.Each(reflect.TypeOf(l)) {
+		l := item.(Log)
+		messages[i] = l.Message
+	}
 
-	    // Reversing messages
-	    for i := 0; i < msgNum/2; i++ {
-		    messages[i], messages[msgNum-(i+1)] = messages[msgNum-(i+1)], messages[i]
-	    }
+	// Reversing messages
+	for i := 0; i < msgNum/2; i++ {
+		messages[i], messages[msgNum-(i+1)] = messages[msgNum-(i+1)], messages[i]
+	}
 
-	    return messages, nil
-    }
+	return messages, nil
+}
 ```
 日志是首先通过Elasticsearch倒序获取过来的，转换一下格式之后，在将结果返回给调用端。
 
@@ -78,143 +78,143 @@
 
 更深层次的解决方式应该是mock Elasticsearch的API，这种方式就简单多了。一个解决办法是通过 `httptest.Server` 访问一个预制好的服务接口，这里只返回一些预定义好的Elasticsearch查询结果。
 ```
-	package logging
-	
-	import (
-		"[github.com/stretchr/testify/assert](https://github.com/stretchr/testify/assert)"
-		"[gopkg.in/olivere/elastic.v3](https://gopkg.in/olivere/elastic.v3)"
-		"net/http"
-		"net/http/httptest"
-		"testing"
-	)
-	
-	func TestLog(t *testing.T) {
-		handler := http.NotFound
-		ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			handler(w, r)
-		}))
-		defer ts.Close()
-	
-		handler = func(w http.ResponseWriter, r *http.Request) {
-			resp := `{
-				"took" : 122,
-				"timed_out" : false,
-				"_shards" : {
-					"total" : 6,
-					"successful" : 5,
-					"failed" : 1,
-					"failures" : [ {
-					"shard" : 0,
-					"index" : ".kibana",
-					"node" : "jucBX9QkQIini9dLG9tZIw",
-					"reason" : {
-					"type" : "search_parse_exception",
-					"reason" : "No mapping found for [offset] in order to sort on"
-					}
-					} ]
+package logging
+
+import (
+	"github.com/stretchr/testify/assert"
+	"gopkg.in/olivere/elastic.v3"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+)
+
+func TestLog(t *testing.T) {
+	handler := http.NotFound
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler(w, r)
+	}))
+	defer ts.Close()
+
+	handler = func(w http.ResponseWriter, r *http.Request) {
+		resp := `{
+			  "took" : 122,
+			  "timed_out" : false,
+			  "_shards" : {
+			    "total" : 6,
+			    "successful" : 5,
+			    "failed" : 1,
+			    "failures" : [ {
+			      "shard" : 0,
+			      "index" : ".kibana",
+			      "node" : "jucBX9QkQIini9dLG9tZIw",
+			      "reason" : {
+				"type" : "search_parse_exception",
+				"reason" : "No mapping found for [offset] in order to sort on"
+			      }
+			    } ]
+			  },
+			  "hits" : {
+			    "total" : 10,
+			    "max_score" : null,
+			    "hits" : [ {
+			      "_index" : "logstash-2016.07.25",
+			      "_type" : "log",
+			      "_id" : "AVYkNv542Gim_t2htKPU",
+			      "_score" : null,
+			      "_source" : {
+				"message" : "Alice message 10",
+				"@version" : "1",
+				"@timestamp" : "2016-07-25T22:39:55.760Z",
+				"source" : "/Users/yury/logs/alice.log",
+				"offset" : 144,
+				"type" : "log",
+				"input_type" : "log",
+				"count" : 1,
+				"fields" : null,
+				"beat" : {
+				  "hostname" : "Yurys-MacBook-Pro.local",
+				  "name" : "Yurys-MacBook-Pro.local"
 				},
-				"hits" : {
-					"total" : 10,
-					"max_score" : null,
-					"hits" : [ {
-					"_index" : "logstash-2016.07.25",
-					"_type" : "log",
-					"_id" : "AVYkNv542Gim_t2htKPU",
-					"_score" : null,
-					"_source" : {
-					"message" : "Alice message 10",
-					"@version" : "1",
-					"@timestamp" : "2016-07-25T22:39:55.760Z",
-					"source" : "/Users/yury/logs/alice.log",
-					"offset" : 144,
-					"type" : "log",
-					"input_type" : "log",
-					"count" : 1,
-					"fields" : null,
-					"beat" : {
-					"hostname" : "Yurys-MacBook-Pro.local",
-					"name" : "Yurys-MacBook-Pro.local"
-					},
-					"host" : "Yurys-MacBook-Pro.local",
-					"tags" : [ "beats_input_codec_plain_applied" ],
-					"app" : "alice"
-					},
-					"sort" : [ 144 ]
-					}, {
-					"_index" : "logstash-2016.07.25",
-					"_type" : "log",
-					"_id" : "AVYkNv542Gim_t2htKPT",
-					"_score" : null,
-					"_source" : {
-					"message" : "Alice message 9",
-					"@version" : "1",
-					"@timestamp" : "2016-07-25T22:39:55.760Z",
-					"source" : "/Users/yury/logs/alice.log",
-					"offset" : 128,
-					"input_type" : "log",
-					"count" : 1,
-					"beat" : {
-					"hostname" : "Yurys-MacBook-Pro.local",
-					"name" : "Yurys-MacBook-Pro.local"
-					},
-					"type" : "log",
-					"fields" : null,
-					"host" : "Yurys-MacBook-Pro.local",
-					"tags" : [ "beats_input_codec_plain_applied" ],
-					"app" : "alice"
-					},
-					"sort" : [ 128 ]
-					}, {
-					"_index" : "logstash-2016.07.25",
-					"_type" : "log",
-					"_id" : "AVYkNv542Gim_t2htKPR",
-					"_score" : null,
-					"_source" : {
-					"message" : "Alice message 8",
-					"@version" : "1",
-					"@timestamp" : "2016-07-25T22:39:55.760Z",
-					"type" : "log",
-					"input_type" : "log",
-					"source" : "/Users/yury/logs/alice.log",
-					"count" : 1,
-					"fields" : null,
-					"beat" : {
-					"hostname" : "Yurys-MacBook-Pro.local",
-					"name" : "Yurys-MacBook-Pro.local"
-					},
-					"offset" : 112,
-					"host" : "Yurys-MacBook-Pro.local",
-					"tags" : [ "beats_input_codec_plain_applied" ],
-					"app" : "alice"
-					},
-					"sort" : [ 112 ]
-					} ]
-				}
-				}`
-	
-			w.Write([]byte(resp))
-		}
-	
-		s, err := MockService(ts.URL)
-		assert.NoError(t, err)
-	
-		expectedMessages := []string{
-			"Alice message 8",
-			"Alice message 9",
-			"Alice message 10",
-		}
-		actualMessages, err := s.GetLog("app", 3)
-		assert.NoError(t, err)
-		assert.Equal(t, expectedMessages, actualMessages)
+				"host" : "Yurys-MacBook-Pro.local",
+				"tags" : [ "beats_input_codec_plain_applied" ],
+				"app" : "alice"
+			      },
+			      "sort" : [ 144 ]
+			    }, {
+			      "_index" : "logstash-2016.07.25",
+			      "_type" : "log",
+			      "_id" : "AVYkNv542Gim_t2htKPT",
+			      "_score" : null,
+			      "_source" : {
+				"message" : "Alice message 9",
+				"@version" : "1",
+				"@timestamp" : "2016-07-25T22:39:55.760Z",
+				"source" : "/Users/yury/logs/alice.log",
+				"offset" : 128,
+				"input_type" : "log",
+				"count" : 1,
+				"beat" : {
+				  "hostname" : "Yurys-MacBook-Pro.local",
+				  "name" : "Yurys-MacBook-Pro.local"
+				},
+				"type" : "log",
+				"fields" : null,
+				"host" : "Yurys-MacBook-Pro.local",
+				"tags" : [ "beats_input_codec_plain_applied" ],
+				"app" : "alice"
+			      },
+			      "sort" : [ 128 ]
+			    }, {
+			      "_index" : "logstash-2016.07.25",
+			      "_type" : "log",
+			      "_id" : "AVYkNv542Gim_t2htKPR",
+			      "_score" : null,
+			      "_source" : {
+				"message" : "Alice message 8",
+				"@version" : "1",
+				"@timestamp" : "2016-07-25T22:39:55.760Z",
+				"type" : "log",
+				"input_type" : "log",
+				"source" : "/Users/yury/logs/alice.log",
+				"count" : 1,
+				"fields" : null,
+				"beat" : {
+				  "hostname" : "Yurys-MacBook-Pro.local",
+				  "name" : "Yurys-MacBook-Pro.local"
+				},
+				"offset" : 112,
+				"host" : "Yurys-MacBook-Pro.local",
+				"tags" : [ "beats_input_codec_plain_applied" ],
+				"app" : "alice"
+			      },
+			      "sort" : [ 112 ]
+			    } ]
+			  }
+			}`
+
+		w.Write([]byte(resp))
 	}
-	
-	func MockService(url string) (Service, error) {
-		client, err := elastic.NewSimpleClient(elastic.SetURL(url))
-		if err != nil {
-			return nil, err
-		}
-		return &service{elasticClient: client}, nil
+
+	s, err := MockService(ts.URL)
+	assert.NoError(t, err)
+
+	expectedMessages := []string{
+		"Alice message 8",
+		"Alice message 9",
+		"Alice message 10",
 	}
+	actualMessages, err := s.GetLog("app", 3)
+	assert.NoError(t, err)
+	assert.Equal(t, expectedMessages, actualMessages)
+}
+
+func MockService(url string) (Service, error) {
+	client, err := elastic.NewSimpleClient(elastic.SetURL(url))
+	if err != nil {
+		return nil, err
+	}
+	return &service{elasticClient: client}, nil
+}
 ```
 	
 预制的结果可以提前写入到一个文件里面，在代码里读取就可以了。源代码可以访问[GitHub](https://github.com/upitau/goinbigdata/tree/master/examples/elastictest)获取
