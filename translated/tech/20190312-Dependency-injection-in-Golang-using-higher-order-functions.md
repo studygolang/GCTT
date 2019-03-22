@@ -4,7 +4,6 @@
 
 ## 简介
 
-
 在这篇博文我们介绍一种go中依赖注入的方式 -- 使用更高阶的函数和闭包。
 
 考虑下以下返回用户资料的domain层函数。
@@ -80,7 +79,7 @@ interface DB {
 
 public class UserService {
     private final DB db;
-    
+
     public UserService(DB db) { // 注入依赖到构造器中
         this.DB = db;
     }
@@ -104,11 +103,10 @@ func NewGetUserProfile(selectUser SelectUser) { // 注入依赖的工厂方法
     return func(id string) UserProfile { // 访问(依赖)的方法
         user := selectUser(id)
         ...
-        return userProfile        
-    } 
+        return userProfile
+    }
 }
 ```
-
 
 ## 测试
 
@@ -128,7 +126,6 @@ func TestGetUserProfile(t *testing.T) {
 ```
 
 你可以找到一个完整的代码示例在[github.com/steinfletcher/func-dependency-injection-go](https://github.com/steinfletcher/func-dependency-injection-go)。例子包含了一个暴露REST接口的http服务器。
-
 
 ---
 

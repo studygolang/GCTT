@@ -123,7 +123,6 @@ logger.Println("Server stopped")
 下面你可以看到我们在这篇博文中讨论的所有内容的完整示例，它们结合在一个完全可用的样板文件中。
 
 ```go
-
 main.go
 package main
 
@@ -198,3 +197,13 @@ func newWebserver(logger *log.Logger) *http.Server {
 正如你所能看到的，我做了两处小型重构，我把服务器创建和优雅关闭移到了他们各自的方法中。对于细心的读者可能也会注意到，我已经控制在函数里读写的channel仅仅在函数范围内，这为你提供了少量的编译时间优势，也防止你错误地使用channel。最后但也挺重要的，你可以在这里下载样板文件，作为你自己的web服务器的起点。
 
 期待你的反馈。请在社交媒体上和你的朋友、同事分享这篇博客吧。
+
+---
+
+via: https://marcofranssen.nl/go-webserver-with-gracefull-shutdown/
+
+作者：[Marco Franssen](https://marcofranssen.nl/about)
+译者：[LSivan](https://github.com/LSivan)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
