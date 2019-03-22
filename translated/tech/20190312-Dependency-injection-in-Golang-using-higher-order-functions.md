@@ -58,7 +58,6 @@ func selectUser(id string) User {
 
 ```
 
-SelectUserByID is a function that takes a user ID and returns a User. We do not define its implementation. NewGetUserProfile is a factory method that takes its dependencies as an argument - selectUser - then returns a function that can be invoked by the caller. This strategy uses a closure to give the inner function access to the dependency from the outer function. The closure captures the variables and constants of the context in which it is defined. This is referred to as `closing over` those variables and constants.
 `SelectUserByID`是提供用户ID返回一个用户的函数，我们不定义它的实现。`NewGetUserProfile`是一个从参数`selectUser`中得到依赖的工厂方法，然后返回一个能被调用者使用的函数。这个策略使用闭包让内部函数访问到外层函数的依赖。闭包在变量和常量定义的地方捕获它们的上下文，这被称为`关闭`那些变量和常量。(译者注：想表达的意思应该是，把变量和常量的上下文给`关闭`起来，因而称为闭包。一个形象化的比喻)
 
 我们可以像这样调用domain函数。
