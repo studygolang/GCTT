@@ -49,8 +49,8 @@ webhooks:
 因为这篇教程不包括如何构建一个 [PKI](https://en.wikipedia.org/wiki/Public_key_infrastructure) 包, 因此我们在 [grumpy](https://github.com/giantswarm/grumpy) 仓库创建一个脚本 `gen_cret,sh` 来为我们的 grumpy 服务负责生成一个 CA 包和密钥对。我们也需要在刚刚讨论过的钩子中配置这个 CA，以便于 Kubernetes API 模块能够与我们的控制器建立安全的链接。
 
 ```
-// Clone repository in case you did not do it before 
-$ git clone https://github.com/giantswarm/grumpy 
+// Clone repository in case you did not do it before
+$ git clone https://github.com/giantswarm/grumpy
 // Run the command to generate the certs under 'certs' folder
 $ cd grumpy
 $ ./gen_cert.sh
@@ -96,7 +96,7 @@ spec:
         - name: webhook-certs
           secret:
             secretName: grumpy
---- 
+---
 apiVersion: v1
 kind: Service
 metadata:
