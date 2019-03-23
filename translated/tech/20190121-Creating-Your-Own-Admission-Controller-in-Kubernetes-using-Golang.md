@@ -2,7 +2,7 @@
 
 Kubernetes API 是一个非常优秀的产品。由于是基于 REST 模型构建的，我们能够通过 HTTP 请求来管理我们的工作单元。类似于 `kubectl` 或者 `Kubernetes dashboard` 这样的工具就充分地利用这个优势来帮助管理不同的资源。然而 Kubernetes API 能做的不仅仅是这些。让我们深入了解该组件是如何组成的。
 
-![1.png](https://github.com/studygolang/gctt-images/blob/master/creating-your-own-admission-controller-in-kubernetes-using-golang/1.png?raw=true)
+![1](https://github.com/studygolang/gctt-images/blob/master/creating-your-own-admission-controller-in-kubernetes-using-golang/1.png?raw=true)
 
 上图展现了构成 API 组件的各个模块。请求从认证控制器（Authentication）开启 API 的旅程。一旦请求被验证，授权模块将会判断这个请求的发出者能否执行这个操作。在这个请求被正确地授权之后， 准入控制器（admission controller)开始发挥作用。
 
