@@ -18,10 +18,10 @@ MongoDB 以其简单、高可用性和面向文档的特性风靡市场。与关
 
 ```json
 {
-    "isbn":    "0134190440",
-    "title":   "The Go Programming Language",
-    "authors": ["Alan A. A. Donovan", "Brian W. Kernighan"],
-    "price":   "$34.57"    
+	"isbn":    "0134190440",
+	"title":   "The Go Programming Language",
+	"authors": ["Alan A. A. Donovan", "Brian W. Kernighan"],
+	"price":   "$34.57"    
 }
 ```
 
@@ -107,7 +107,6 @@ err := c.Remove(bson.M{"isbn": isbn})
 下面是一个用 Go 编写的完整的书店微服务示例，并用 MongoDB 做支持。您可以从 [Github](https://github.com/upitau/goinbigdata/tree/master/examples/mongorest) 下载这个例子。
 
 > 这个服务使用 *Goji* 做路由。如果您以前没有使用过 Goji，可以看一下 [怎样用 Goji 写 RESTful 服务](http://goinbigdata.com/restful-web-service-in-go-using-goji/)。
-
 
 ```go
 package main
