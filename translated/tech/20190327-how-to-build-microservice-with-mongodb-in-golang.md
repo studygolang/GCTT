@@ -21,7 +21,7 @@ MongoDB 以其简单、高可用性和面向文档的特性风靡市场。与关
 	"isbn":    "0134190440",
 	"title":   "The Go Programming Language",
 	"authors": ["Alan A. A. Donovan", "Brian W. Kernighan"],
-	"price":   "$34.57"    
+	"price":   "$34.57"
 }
 ```
 
