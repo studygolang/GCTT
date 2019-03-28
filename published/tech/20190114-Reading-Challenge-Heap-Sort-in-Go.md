@@ -1,7 +1,9 @@
+首发于：https://studygolang.com/articles/19337
+
 # 阅读挑战：Go 的堆排序
 
-![image](https://cdn-images-1.medium.com/max/1600/1*EGrh0TP0gMPgQc0rTVUPzg.jpeg)
-*<center>一堆废旧汽车</center>*
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/heap-sort-in-go/1_EGrh0TP0gMPgQc0rTVUPzg.jpeg)
+*<center> 一堆废旧汽车 </center>*
 
 堆排序是一种漂亮的排序算法。它使用一个最大堆对一系列数字或其他定义了顺序关系的元素进行排序。在这篇文章里，我们将深入探究 **Go 标准库**中堆排序的实现。
 
@@ -15,13 +17,13 @@ First a short recap on [**binary max-heaps**](https://en.wikipedia.org/wiki/Heap
 
 这两个特性一起定义出一个最大堆：
 
-![image](https://cdn-images-1.medium.com/max/1600/1*p9i-S08DcFF-ODzKqsdmLA.png)
-*<center>一个最大堆. By Ermishin — Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=12251273</center>*
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/heap-sort-in-go/1_p9i-S08DcFF-ODzKqsdmLA.png)
+*<center> 一个最大堆 . By Ermishin — Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=12251273</center>*
 
 在堆的算法里，最大堆用一个数组来表示。在数组表示中，第 `i` 个元素的子节点位于 `2*i+1` 和 `2*i+2`。下面这个来自维基百科的图解释了数组表示：
 
-![image](https://cdn-images-1.medium.com/max/1600/1*p6GAjUOEbc8ZDsmgeCQ2Gg.png)
-*<center>用一个数组表示最大堆. By Maxiantor — Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=55590553</center>*
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/heap-sort-in-go/1_p6GAjUOEbc8ZDsmgeCQ2Gg.png)
+*<center> 用一个数组表示最大堆 . By Maxiantor — Own work, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=55590553</center>*
 
 ## 构建一个堆
 
@@ -160,8 +162,8 @@ func siftDown(data Interface, lo, hi, first int) {
 
 这段程序将 `root` 位置的元素一直向下传送直到它比它的两个子节点都大。当往下走一级时，这个元素将和它较大的子节点进行交换。这是为了保证新的父节点比它两个子节点都大。
 
-![image](https://cdn-images-1.medium.com/max/1600/1*Og-wSGu552--J1f2ZcuXJw.png)
-*<center>父节点 `3` 与其最大的子节点 `10` 进行交换</center>*
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/heap-sort-in-go/1_Og-wSGu552--J1f2ZcuXJw.png)
+*<center> 父节点 `3` 与其最大的子节点 `10` 进行交换 </center>*
 
 前面的几行计算第一个子节点的索引并确认它存在：
 
@@ -211,6 +213,6 @@ via: https://blog.bitsrc.io/reading-challenge-heap-sort-in-go-93115239accd
 
 作者：[Ehud Tamir](https://blog.bitsrc.io/@ehudt)
 译者：[krystollia](https://github.com/krystollia)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
