@@ -48,6 +48,7 @@ GCTT (Go Chinese Translation Team) 是 Go 中文网（https://studygolang.com) �
 * 2018/03/01 提升 gogeof 为核心成员。
 * 2018/03/23 提升 alfred-zhong 为核心成员。
 * 2018/07/22 提升 magichan 为核心成员。
+* 2018/09/07 提升 alexliutao 为核心成员。
 
 ## Inspire By LCTT
 
