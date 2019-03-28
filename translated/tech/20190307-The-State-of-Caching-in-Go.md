@@ -22,7 +22,7 @@
 5. 更高的缓存命中率
 
 ## Go map 与 sync.Mutex的结合使用
-Go map 结合 sync.Mutex 是应对缓存的常见形式(独占所)。但这也确实会导致所有的Goroutines同时在一个地方锁住， 产生严重的锁竞争问题。而且也不能对内存的使用量做限制。所以对于有内存限制要求的场景，这个方案不适用。
+Go map 结合 sync.Mutex 是应对缓存的常见形式(独占锁)。但这也确实会导致所有的Goroutines同时在一个地方锁住， 产生严重的锁竞争问题。而且也不能对内存的使用量做限制。所以对于有内存限制要求的场景，这个方案不适用。
 
 **不满足 上面的2,3,4条**
 
@@ -43,7 +43,7 @@ Go 里面，groupcache 实现了一个基本的LRU 缓存，在通过lock stripi
 
 我们无法预估缓存会引起多少的竞争。在使用了近一年的情况下，我们意识到缓存上面的竞争有多严重，删除掉这块之后，我们的缓存效率提高了10倍。
 
-在这块的实现上，每次读取缓存会更新链表中的相对位置。因此每个访问都在等待一个互斥锁。此外LRU的速度比Map要慢，而且在反复的进行指针的释放，维护一个map和一个双向链表。尽管我们在惰性加载上面不断地优化，但依然遭受到竞争的而影响。
+在这块的实现上，每次读取缓存会更新链表中的相对位置。因此每个访问都在等待一个互斥锁。此外LRU的速度比Map要慢，而且在反复的进行指针的释放，维护一个map和一个双向链表。尽管我们在惰性加载上面不断地优化，但依然遭受到严重竞争的影响。
 
 **不满足3,4**
 
@@ -107,9 +107,9 @@ Go 里面，groupcache 实现了一个基本的LRU 缓存，在通过lock stripi
 ## 那还有什么没说的么？
 其实也没什么了，Go中并没有一个能满足所有场景的智能缓存框架，如果你发现了有这种，请快快联系我。
 
-与此同时，我们遇到了[Caffeine](https://github.com/ben-manes/caffeine),一个Java的库，被用于使用Cassandra, Finagle 和一些其他的数据库系统。他使用的是[TinyLFU](https://arxiv.org/abs/1512.00727),一个[高效](https://docs.google.com/presentation/d/1NlDxyXsUG1qlVHMl4vsUUBQfAJ2c2NsFPNPr2qymIBs/edit?usp=sharing)的缓存接纳策略，并使用各种技术来扩展和执行，随着线程和内核数量的增长，同时提供接近最佳命中率。您可以在[这篇文章](http://highscalability.com/blog/2016/1/25/design-of-a-modern-cache.html)中了解它是如何工作的。
+与此同时，我们遇到了[Caffeine](https://github.com/ben-manes/caffeine),一个Java的库，被用于Cassandra, Finagle 和一些其他的数据库系统。他使用的是[TinyLFU](https://arxiv.org/abs/1512.00727),一个[高效](https://docs.google.com/presentation/d/1NlDxyXsUG1qlVHMl4vsUUBQfAJ2c2NsFPNPr2qymIBs/edit?usp=sharing)的缓存接纳策略，并使用各种技术来扩展和执行，随着线程和内核数量的增长，同时提供接近最佳命中率。您可以在[这篇文章](http://highscalability.com/blog/2016/1/25/design-of-a-modern-cache.html)中了解它是如何工作的。
 
-Caffeine 满足了我开始提到的所有的5个需求，所以我正在考虑构建一个Go版本的Caffeine。他不仅能满足我们的需求，同事也可能填补Go语言中并发，高性能，内存限制的缓存框架的空白。如果你也想参与或者你已经有类似的成果了，请联系我。
+Caffeine 满足了我开始提到的所有的5个需求，所以我正在考虑构建一个Go版本的Caffeine。他不仅能满足我们的需求，同时也可能填补Go语言中并发，高性能，内存限制的缓存框架的空白。如果你也想参与或者你已经有类似的成果了，请联系我。
 
 ## 感谢
 
@@ -121,6 +121,6 @@ via: https://blog.dgraph.io/post/caching-in-go/
 
 作者：[Manish Rai Jain](https://twitter.com/manishrjain)
 译者：[JYSDeveloper](https://github.com/JYSDeveloper)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
