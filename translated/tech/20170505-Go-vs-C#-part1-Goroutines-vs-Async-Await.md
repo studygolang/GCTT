@@ -10,7 +10,7 @@
 
 接下来，我会做一些简单的测试：
 * 创建n个goroutines，每个goroutines在通道上面等待一个数字，并在他的基础上自增，并发送给输出通道。
-* goroutines 和 channels 连接在一起，因此发送给第一个通道的消息会被传送到最后一个通道8上面。
+* goroutines 和 channels 连接在一起，因此发送给第一个通道的消息会被传送到最后一个通道上面。
 
 **Go代码如下：**
 ```
@@ -156,7 +156,7 @@ Sending 1000000 messages (Task<int>): 1693.675ms
 * 第二次 Go快了很多，大概提升了3.4倍，C#没有执行第二次，因为他的速度始终是一样的。
 * 基于任务版本的C#代码，仍然是Go第二次执行的两倍时长。
 
-所以为啥Go第二次执行这么快嘞？ 解释起来很简单，当你启动goroutine的时候，Go需要分配8K的堆内存给他，而这些内存可以重用，所以第二次的时候，不需要分配更多的内存给他，证明图如下：
+所以为啥Go第二次执行这么快嘞？ 解释起来很简单，当你启动goroutine的时候，Go需要分配8K的堆内存给他(译者注：不一定是都是8K，不同版本大小不一样)，而这些内存可以重用，所以第二次的时候，不需要分配更多的内存给他，证明图如下：
 
 ![Memory Detail](https://upload-images.jianshu.io/upload_images/1780316-075137a9f9b487bb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
@@ -188,7 +188,7 @@ Sending 20000 messages (Task<int>): 28.702ms
 ```
 
 结果不难看出，两者很接近了：
-* Go第一次的表现不进入任意
+* Go第一次的表现不进入人意
 * C# 比第二次的Go慢1.5倍
 * C# 通道的方式慢 2.7倍
 
@@ -234,6 +234,6 @@ via: https://medium.com/@alexyakunin/go-vs-c-part-1-goroutines-vs-async-await-ac
 
 作者：[Alex Yakunin](https://medium.com/@alexyakunin)
 译者：[JYSDeveloper](https://github.com/JYSDeveloper)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
