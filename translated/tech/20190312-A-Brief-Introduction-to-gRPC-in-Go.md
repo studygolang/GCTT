@@ -248,11 +248,15 @@ protoc --go_out=plugins=grpc:. *.proto
 + var _ grpc.ClientConn
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 575b0ad366f8c70fbc097a47120bcc29cef29f6e
 +
 + // This is a compile-time assertion to ensure that this generated file
 + // is compatible with the grpc package it is being compiled against.
 + const _ = grpc.SupportPackageIsVersion4
 +
+<<<<<<< HEAD
 =======
 + 
 + // This is a compile-time assertion to ensure that this generated file
@@ -267,6 +271,8 @@ protoc --go_out=plugins=grpc:. *.proto
 + const _ = grpc.SupportPackageIsVersion4
 +
 >>>>>>> update a-brief-introduction-to-grpc-in-go
+=======
+>>>>>>> 575b0ad366f8c70fbc097a47120bcc29cef29f6e
 + // GravatarServiceClient is the client API for GravatarService service.
 + //
 + // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
@@ -275,6 +281,9 @@ protoc --go_out=plugins=grpc:. *.proto
 + }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 575b0ad366f8c70fbc097a47120bcc29cef29f6e
 +
 + type gravatarServiceClient struct {
 + 	cc *grpc.ClientConn
@@ -284,6 +293,7 @@ protoc --go_out=plugins=grpc:. *.proto
 + 	return &gravatarServiceClient{cc}
 + }
 +
+<<<<<<< HEAD
 =======
 + 
 =======
@@ -302,6 +312,8 @@ protoc --go_out=plugins=grpc:. *.proto
 =======
 +
 >>>>>>> update a-brief-introduction-to-grpc-in-go
+=======
+>>>>>>> 575b0ad366f8c70fbc097a47120bcc29cef29f6e
 + func (c *gravatarServiceClient) Generate(ctx context.Context, in *GravatarRequest, opts ...grpc.CallOption) (*GravatarResponse, error) {
 + 	out := new(GravatarResponse)
 + 	err := c.cc.Invoke(ctx, "/gravatar.GravatarService/Generate", in, out, opts...)
@@ -312,6 +324,7 @@ protoc --go_out=plugins=grpc:. *.proto
 + }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 +
 =======
 + 
@@ -319,17 +332,24 @@ protoc --go_out=plugins=grpc:. *.proto
 =======
 +
 >>>>>>> update a-brief-introduction-to-grpc-in-go
+=======
++
+>>>>>>> 575b0ad366f8c70fbc097a47120bcc29cef29f6e
 + // GravatarServiceServer is the server API for GravatarService service.
 + type GravatarServiceServer interface {
 + 	Generate(context.Context, *GravatarRequest) (*GravatarResponse, error)
 + }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 575b0ad366f8c70fbc097a47120bcc29cef29f6e
 +
 + func RegisterGravatarServiceServer(s *grpc.Server, srv GravatarServiceServer) {
 + 	s.RegisterService(&_GravatarService_serviceDesc, srv)
 + }
 +
+<<<<<<< HEAD
 =======
 + 
 + func RegisterGravatarServiceServer(s *grpc.Server, srv GravatarServiceServer) {
@@ -344,6 +364,8 @@ protoc --go_out=plugins=grpc:. *.proto
 + }
 +
 >>>>>>> update a-brief-introduction-to-grpc-in-go
+=======
+>>>>>>> 575b0ad366f8c70fbc097a47120bcc29cef29f6e
 + func _GravatarService_Generate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 + 	in := new(GravatarRequest)
 + 	if err := dec(in); err != nil {
@@ -363,6 +385,7 @@ protoc --go_out=plugins=grpc:. *.proto
 + }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 +
 =======
 + 
@@ -370,6 +393,9 @@ protoc --go_out=plugins=grpc:. *.proto
 =======
 +
 >>>>>>> update a-brief-introduction-to-grpc-in-go
+=======
++
+>>>>>>> 575b0ad366f8c70fbc097a47120bcc29cef29f6e
 + var _GravatarService_serviceDesc = grpc.ServiceDesc{
 + 	ServiceName: "gravatar.GravatarService",
 + 	HandlerType: (*GravatarServiceServer)(nil),
