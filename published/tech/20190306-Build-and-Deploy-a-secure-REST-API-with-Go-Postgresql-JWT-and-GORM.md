@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/19395
+
 # 使用 Go、Postgresql、JWT 和 GORM 搭建安全的 REST API
 
 在本教程中，我们将要学习如何使用 Go 语言开发和部署一个安全的 REST API
@@ -38,14 +40,14 @@ REST 是 *Representational State Transfer* （表述性状态转移）的缩写�
 要安装这些代码包，只要打开你的终端控制台并运行：
 
 ```bash
-go get github.com/{包名称}
+go get github.com/{ 包名称 }
 ```
 
 这个命令会安装代码包到你的 `GOPATH`。
 
 ## 项目结构
 
-![img](https://github.com/studygolang/gctt-images/raw/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/1.png)
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/1.png)
 
 *可以在右边的面板看到项目结构*
 
@@ -73,7 +75,7 @@ func Respond(w http.ResponseWriter, data map[string] interface{})  {
 
 ## JWT 介绍
 
-JWT（JSON Web Tokens ）是一个开放的工业标准（[RFC 7519](https://tools.ietf.org/html/rfc7519)）方法，用于在双方之间安全的交互。通过 session，我们可以很轻易地验证一个 web 程序的用户，但是，当你的 web 程序 API 需要和安卓或 IOS 客户端交互时，session 就不能用了，因为 http 的请求有无状态的特性。使用 JWT，我们可以为每一个用户创建一个特殊的 token，它将会被包含在后续的 API 请求头里面。这个方法能让我们验证每一个调用我们的 API 的用户身份。我们来看看下面的实现：
+JWT（JSON Web Tokens ）是一个开放的工业标准（[RFC 7519](https://tools.ietf.org/html/rfc7519)）方法，用于在双方之间安全的交互。通过 session，我们可以很轻易地验证一个 Web 程序的用户，但是，当你的 Web 程序 API 需要和安卓或 IOS 客户端交互时，session 就不能用了，因为 http 的请求有无状态的特性。使用 JWT，我们可以为每一个用户创建一个特殊的 token，它将会被包含在后续的 API 请求头里面。这个方法能让我们验证每一个调用我们的 API 的用户身份。我们来看看下面的实现：
 
 ```go
 package app
@@ -165,8 +167,8 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 在用户能够在保存它们的联系人信息到服务器之前，我希望他们可以在我们的系统中注册和登录。所以我们要做的第一件事就是连接到我们的数据库，我们使用 `.env` 文件来保存我们的数据库登录信息，我的 `.env` 文件是这样的：
 
 ```
-db_name = gocontacts
-db_pass = **** // windows系统默认情况下，这个是当前用户的 windows 登录密码
+db_name = Gocontacts
+db_pass = **** // Windowss 系统默认情况下，这个是当前用户的 Windowss 登录密码
 db_user = postgres
 db_type = postgres
 db_host = localhost
@@ -189,9 +191,9 @@ import (
 
 var db *gorm.DB // 数据库
 
-func init() {
+func INIt() {
 
-	e := godotenv.Load() // 加载 .env 文件
+	e := Godotenv.Load() // 加载 .env 文件
 	if e != nil {
 		fmt.Print(e)
 	}
@@ -205,7 +207,7 @@ func init() {
 	dbUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password) // 构建连接字符串
 	fmt.Println(dbUri)
 
-	conn, err := gorm.Open("postgres", dbUri)
+	conn, err := Gorm.Open("postgres", dbUri)
 	if err != nil {
 		fmt.Print(err)
 	}
@@ -242,7 +244,7 @@ func main() {
 	router := mux.NewRouter()
 	router.Use(app.JwtAuthentication) // 添加 JWT 中间件
 
-	port := os.Getenv("PORT") // 从.env 文件获取端口号, 在本地测试的时候，我们没有指定任何端口号所以这里将会返回空
+	port := os.Getenv("PORT") // 从 .env 文件获取端口号 , 在本地测试的时候，我们没有指定任何端口号所以这里将会返回空
 	if port == "" {
 		port = "8000" // localhost
 	}
@@ -256,13 +258,13 @@ func main() {
 }
 ```
 
-我们在第13行创建了一个新的 Router 对象，在第14行通过 `Use()` 函数把我们的 JWT 中间件附加到 Router 上，然后我们开始监听来自客户端的请求。
+我们在第 13 行创建了一个新的 Router 对象，在第 14 行通过 `Use()` 函数把我们的 JWT 中间件附加到 Router 上，然后我们开始监听来自客户端的请求。
 
-![img](https://github.com/studygolang/gctt-images/raw/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/2.png)
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/2.png)
 
 点击 `func main()` 旁边的那个小三角符号来开始编译和运行程序，如果一切正常，你会看的在终端里面没有任何报错，如果有错误的话，你可以检查一下你的数据库连接参数看看它们是否正确。
 
-![img](https://github.com/studygolang/gctt-images/raw/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/3.png)
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/3.png)
 
 ## 创建和授权用户
 
@@ -312,7 +314,7 @@ func (account *Account) Validate() (map[string] interface{}, bool) {
 
 	// 检查是否有错误和 Email 是否唯一
 	err := GetDB().Table("accounts").Where("email = ?", account.Email).First(temp).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
+	if err != nil && err != Gorm.ErrRecordNotFound {
 		return u.Message(false, "Connection error. Please retry"), false
 	}
 	if temp.Email != "" {
@@ -355,7 +357,7 @@ func Login(email, password string) (map[string]interface{}) {
 	account := &Account{}
 	err := GetDB().Table("accounts").Where("email = ?", email).First(account).Error
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if err == Gorm.ErrRecordNotFound {
 			return u.Message(false, "Email address not found")
 		}
 		return u.Message(false, "Connection error. Please retry")
@@ -411,7 +413,7 @@ import (
 var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 
 	account := &models.Account{}
-	err := json.NewDecoder(r.Body).Decode(account) //decode the request body into struct and failed if any error occur
+	err := JSon.NewDecoder(r.Body).Decode(account) //decode the request body into struct and failed if any error occur
 	if err != nil {
 		u.Respond(w, u.Message(false, "Invalid request"))
 		return
@@ -424,7 +426,7 @@ var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 var Authenticate = func(w http.ResponseWriter, r *http.Request) {
 
 	account := &models.Account{}
-	err := json.NewDecoder(r.Body).Decode(account) //decode the request body into struct and failed if any error occur
+	err := JSon.NewDecoder(r.Body).Decode(account) //decode the request body into struct and failed if any error occur
 	if err != nil {
 		u.Respond(w, u.Message(false, "Invalid request"))
 		return
@@ -448,9 +450,9 @@ router.HandleFunc("/api/user/login", controllers.Authenticate).Methods("POST")
 
 现在， 重新编译代码并且通过 postman 访问 `localhost:8000/api/user/new`, 把请求的内容设置为 `application/json`，如下图所示：
 
-![img](https://github.com/studygolang/gctt-images/raw/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/4.png)
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/4.png)
 
-如果你尝试调用 `/user/new` 两次并使用相同的调用参数，你会收到一个“email 已经存在”的提示，一切按照我们的预期运行。
+如果你尝试调用 `/user/new` 两次并使用相同的调用参数，你会收到一个“ email 已经存在”的提示，一切按照我们的预期运行。
 
 ## 创建联系人
 
@@ -563,7 +565,7 @@ var CreateContact = func(w http.ResponseWriter, r *http.Request) {
 	user := r.Context().Value("user") . (uint) // 获取发送请求的用户 ID
 	contact := &models.Contact{}
 
-	err := json.NewDecoder(r.Body).Decode(contact)
+	err := JSon.NewDecoder(r.Body).Decode(contact)
 	if err != nil {
 		u.Respond(w, u.Message(false, "Error while decoding request body"))
 		return
@@ -591,7 +593,7 @@ var GetContactsFor = func(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-这段代码做的事情跟 `authController.go` 很像，它获取 json 内容并解析到 `Contract` 结构体，如果过程中有错误发生，则立刻把错误信息返回给客户端，如果没有错误发生，则将联系人信息插入到数据库。
+这段代码做的事情跟 `authController.go` 很像，它获取 JSon 内容并解析到 `Contract` 结构体，如果过程中有错误发生，则立刻把错误信息返回给客户端，如果没有错误发生，则将联系人信息插入到数据库。
 
 ## 获取用户的联系人
 
@@ -619,7 +621,7 @@ var CreateContact = func(w http.ResponseWriter, r *http.Request) {
 	user := r.Context().Value("user") . (uint) // 获取发送请求的用户 ID
 	contact := &models.Contact{}
 
-	err := json.NewDecoder(r.Body).Decode(contact)
+	err := JSon.NewDecoder(r.Body).Decode(contact)
 	if err != nil {
 		u.Respond(w, u.Message(false, "Error while decoding request body"))
 		return
@@ -647,49 +649,49 @@ var GetContactsFor = func(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-![img](https://github.com/studygolang/gctt-images/raw/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/5.png)
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/5.png)
 
-这个项目的代码我都放在 github 里面了：
+这个项目的代码我都放在 Github 里面了：
 
 https://github.com/adigunhammedolalekan/go-contacts
 
 ## 部署
 
-我们可以很轻易地把我们的项目部署到 heroku 上。首先，下载 `godep`。 godep 是一个 Go 语言的依赖管理工具（译注：当前 go 1.12 版本中已经内置了 go module 功能，推荐大家使用 go module 来管理项目的依赖），它的作用类似 nodejs 的 npm.
+我们可以很轻易地把我们的项目部署到 Heroku 上。首先，下载 `godep`。 Godep 是一个 Go 语言的依赖管理工具（译注：当前 Go 1.12 版本中已经内置了 Go module 功能，推荐大家使用 Go module 来管理项目的依赖），它的作用类似 Node.js 的 NPM.
 
 ```bash
-go get -u github.com/tools/godep
+go get -u Github.com/tools/godep
 ```
 
-- 打开 `Goland terminal`  并运行 `godep save`，它会创建 `Godeps` 和 `vendor` 文件夹。要了解更多关于 godep 的信息，请访问：https://github.com/tools/godep
-- 在 heroku.com 创建一个账户，并下载 `Heroku Cli` 并登录自己的账号。
-- 登录完成后运行 `heroku create gocontacts`， 这会在你的 heroku 个人页创建一个应用程序，并且为它添加一个git仓库，
-- 运行下面的指令把代码推送到 heroku 中：
+- 打开 `Goland terminal`  并运行 `godep save`，它会创建 `Godeps` 和 `vendor` 文件夹。要了解更多关于 Godep 的信息，请访问：https://github.com/tools/godep
+- 在 Heroku.com 创建一个账户，并下载 `Heroku Cli` 并登录自己的账号。
+- 登录完成后运行 `heroku create Gocontacts`， 这会在你的 Heroku 个人页创建一个应用程序，并且为它添加一个 Git 仓库，
+- 运行下面的指令把代码推送到 Heroku 中：
 - `git add .`
 - `git commit -m "First commit"`
-- `git push heroku master`
+- `git push Heroku master`
 
-![img](https://github.com/studygolang/gctt-images/raw/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/6.png)
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/6.png)
 
 如果一切顺利，你屏幕的输出应该会像我一样。
 
 好啦，你的程序已经部署完毕了，下一件事情就是部署好远程的 Postgresql 数据库。
 
-运行 `heroku addons:create heroku-postgresql:hobby-dev` 来创建数据库，更多信息可以查看 https://devcenter.heroku.com/articles/heroku-postgresql
+运行 `heroku addons:create Heroku-postgresql:hobby-dev` 来创建数据库，更多信息可以查看 https://devcenter.heroku.com/articles/heroku-postgresql
 
 太棒了，我们差不多搞定了。下一步要做的是连接到我们的远程数据库。
 
-前往 heroku.com 并登录到你的账号，你应该能看到新建的程序在一的个人首页中，点击它，然后点击 settings，然后点击 `Reveal Config Vars` ，这里会有个名为 `DATABASE_URL` 的变量，当你创建了 postgresql 数据库之后，这些将会自动添加到你的 .env 文件中（注意：Heroku 自动替换你本地的 `.env` 文件）。我们可以从这个变量中提取数据库连接参数。
+前往 Heroku.com 并登录到你的账号，你应该能看到新建的程序在一的个人首页中，点击它，然后点击 settings，然后点击 `Reveal Config Vars` ，这里会有个名为 `DATABASE_URL` 的变量，当你创建了 PostgreSQL 数据库之后，这些将会自动添加到你的 .env 文件中（注意：Heroku 自动替换你本地的 `.env` 文件）。我们可以从这个变量中提取数据库连接参数。
 
-![img](https://github.com/studygolang/gctt-images/raw/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/7.png)
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/7.png)
 
-![img](https://github.com/studygolang/gctt-images/raw/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/8.png)
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/8.png)
 
 *我从自动生成的 DATABASE_URL 变量中提取数据库连接参数*
 
 如果一切正常，你的 API 现在应该能正常访问了。
 
-![img](https://github.com/studygolang/gctt-images/raw/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/9.png)
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/Build-and-Deploy-a-secure-REST-API-with-Go-Postgresql-JWT-and-GORM/9.png)
 
 *如你所见，API 成功调用了*
 
@@ -708,6 +710,7 @@ go get -u github.com/tools/godep
 这篇文章真的很长，感谢你的阅读。
 
 ---
+
 via: https://medium.com/@adigunhammedolalekan/build-and-deploy-a-secure-rest-api-with-go-postgresql-jwt-and-gorm-6fadf3da505b
 
 作者：[Adigun Hammed Olalekan](https://medium.com/@adigunhammedolalekan)
