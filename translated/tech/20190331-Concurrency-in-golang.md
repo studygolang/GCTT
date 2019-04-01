@@ -13,7 +13,7 @@ Go 语言的并发性是一种思维方式而不仅仅是一个语法。为了�
 不过还是要提醒大家，这个模型可能会被过度使用。你必须知道这何时应该使用它，或者何时恢复到良好的旧的共享内存模型。例如，引用计数最好在锁中保护，文件访问也是如此。Go 语言也会通过同步包来支持你使用锁保护。
 ## 代码实现 Go 的并发性
 我们来谈谈代码相关的，我们要如何实现“通过通信共享”模型？请继续往下读：
-在Go里，'goroutine' 就是作为上面提到的所谓的线程。实际上，这并不能称为线程，这只是一个可以和其他 'goroutine' 并发地在同一个地址空间上面的函数。它们在 O.S 线程中被多路复用，因此如果有一个被阻塞了，其他的仍然可以继续运行。所有的同步和内存管理都由Go本地执行。之所以说它们不是真正的线程，是因为它们并不一定总是要并行执行。然而，由于多路复用和同步，你会得到并发的效果。要启动一个新的 'goroutine' ，你只需要使用关键字 "go" ： 
+在Go里，'goroutine' 就是作为上面提到的所谓的线程。实际上，这并不能称为线程，这只是一个可以和其他 'goroutine' 并发地在同一个地址空间上面的函数。它们在 O.S 线程中被多路复用，因此如果有一个被阻塞了，其他的仍然可以继续运行。所有的同步和内存管理都由Go本地执行。之所以说它们不是真正的线程，是因为它们并不一定总是要并行执行。然而，由于多路复用和同步，你会得到并发的效果。要启动一个新的 'goroutine' ，你只需要使用关键字 "go" ：
  ```go
 go processdataFunction()
 ```
@@ -47,7 +47,7 @@ func main() {
 	done := make(chan bool)
 	go sendingGoRoutine(ch)
 	go receivingGoRoutine(ch,done)
-	//This will prevent the program from exiting till a value is sent over the 
+	//This will prevent the program from exiting till a value is sent over the
     "done" channel, value doesn't matter
 	<- done
 }
