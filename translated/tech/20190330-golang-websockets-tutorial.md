@@ -2,7 +2,6 @@
 
 > 注 -本教程是使用Go 1.9版和 [googollee / go-socket.io](https://github.com/googollee/go-socket.io) 编写的
 
-
 Websockets 我觉得非常有趣，在应用程序之间通信中使用标准 RESTful API 方案之外，它为我们提供了一个替代选项。使用套接字，我们可以做到成千上万个不同客户端之间的实时通信，而不必让每分钟数十万个RESTful API调用来轰炸我们的服务器。
 
 <a name="aec25b12"></a>
@@ -149,7 +148,6 @@ $ go run main.go
 <a name="54bbba80"></a>
 ## 结论
 > 注 -该项目的完整源代码可以在Github上找到： [TutorialEdge / Go](https://github.com/TutorialEdge/Go/tree/master/go-websocket-tutorial)
-
 
 如果您发现本教程有用或需要任何进一步的帮助，请随时在下面的评论部分告诉我。
 
