@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/19577
+
 # Go 中的 gRPC 简介
 
-<span style="color: grey;">给使用 Go 语言的初学者的 gRPC 概述</span>
+*给使用 Go 语言的初学者的 gRPC 概述*
 
 ![grpc.png](https://raw.githubusercontent.com/studygolang/gctt-images/master/a-brief-introduction-to-grpc-in-go/grpc.png)
 
@@ -10,7 +12,7 @@ RPC 是用于 **软件应用之间点对点通信** 的 **网络编程模型** �
 
 RPC 是一种 **协议**，一个程序能够使用该协议，对位于另外一台计算机中的程序请求服务，而无需了解网络的详细信息。
 
-RPC 代表 **"远程过程调用"**，它是一种 **客户端-服务器交互** 的形式-调用者是客户端，执行者是服务器-通常通过 **"请求-响应消息传递系统"** 实现。
+RPC 代表 **“远程过程调用”**，它是一种 **客户端 - 服务器交互** 的形式 - 调用者是客户端，执行者是服务器 - 通常通过 **" 请求 - 响应消息传递系统 "** 实现。
 
 客户端运行时程序，知道如何去寻址远程服务器应用程序，以及通过网络发送请求远程过程的消息。类似的，服务器包括与远程过程本身的运行时程序和存根。
 
@@ -55,7 +57,7 @@ message GravatarResponse {
 }
 ```
 
-**一个消息类型是一个数值字段的列表**，每一个字段有一个类型和一个名称。在定义了 `.proto` 文件之后，运行 protocol buffer 编译器去给对象（使用你选择的语言）生成代码，使用字段的 get/set 函数以及对象的序列化/反序列化函数。如你所见，你也可以在命名空间内打包信息。
+**一个消息类型是一个数值字段的列表**，每一个字段有一个类型和一个名称。在定义了 `.proto` 文件之后，运行 protocol buffer 编译器去给对象（使用你选择的语言）生成代码，使用字段的 get/set 函数以及对象的序列化 / 反序列化函数。如你所见，你也可以在命名空间内打包信息。
 
 ### 安装
 
@@ -72,14 +74,14 @@ brew install protobuf
 ```bash
 mkdir profobuf-example
 cd profobuf-example
-go mod init
+go mod INIt
 ```
 
 接下来，安装 Go 支持的 Google 的 protocol buffers：
 
 ```shell
-go get -u github.com/golang/protobuf/protoc-gen-go
-go install github.com/golang/protobuf/protoc-gen-go
+go get -u Github.com/golang/protobuf/protoc-gen-go
+go install Github.com/golang/protobuf/protoc-gen-go
 ```
 
 最后，编译所有的 `.proto` 文件：
@@ -112,8 +114,8 @@ var _ = math.Inf
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type GravatarRequest struct {
-	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	Size                 int32    `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
+	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" JSON:"email,omitempty"`
+	Size                 int32    `protobuf:"varint,2,opt,name=size,proto3" JSON:"size,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -158,7 +160,7 @@ func (m *GravatarRequest) GetSize() int32 {
 }
 
 type GravatarResponse struct {
-	Url                  string   `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	Url                  string   `protobuf:"bytes,1,opt,name=url,proto3" JSON:"url,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -195,12 +197,12 @@ func (m *GravatarResponse) GetUrl() string {
 	return ""
 }
 
-func init() {
+func INIt() {
 	proto.RegisterType((*GravatarRequest)(nil), "gravatar.GravatarRequest")
 	proto.RegisterType((*GravatarResponse)(nil), "gravatar.GravatarResponse")
 }
 
-func init() { proto.RegisterFile("gravatar.proto", fileDescriptor_gravatar_d539f97f43eb2d2e) }
+func INIt() { proto.RegisterFile("gravatar.proto", fileDescriptor_gravatar_d539f97f43eb2d2e) }
 
 var fileDescriptor_gravatar_d539f97f43eb2d2e = []byte{
 	// 158 bytes of a gzipped FileDescriptorProto
@@ -449,7 +451,7 @@ Protocol Buffers 生成的存根类（你通常不必要接触）可以提供大
 
 <div style="text-align: center; font-size: 24px; padding: 1px;">. . .</div>
 
-你可以说你仍然会在一些简单的情况下使用 JSON，我同意，它不是 JSON 的批发替代品，特别是对于直接由 Web 浏览器使用的服务。我希望你能在自己的用例中为它们找到合适的位置。
+你可以说你仍然会在一些简单的情况下使用 JSON，我同意，并没有完全的替换 JSON，特别是对于直接由 Web 浏览器使用的服务。我希望你能在自己的用例中为它们找到合适的位置。
 
 ![0_TsWKXNyLzgqchDTh](https://raw.githubusercontent.com/studygolang/gctt-images/master/a-brief-introduction-to-grpc-in-go/0_TsWKXNyLzgqchDTh.png)
 
@@ -459,6 +461,6 @@ via: https://blog.lelonek.me/a-brief-introduction-to-grpc-in-go-e66e596fe244
 
 作者：[Kamil Lelonek](https://blog.lelonek.me/@KamilLelonek)
 译者：[PotoYang](https://github.com/PotoYang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
