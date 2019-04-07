@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/19579
+
 # 如何在 Golang 中使用 MongoDB 构建微服务
 
 如今，Golang 越来越流行于编写 RESTful 微服务。这些服务常常使用 MongoDB 作为持久性存储。在本文中，我们将使用 Go 和 MongoDB 构建一个简单的 *书店* 微服务。我们将使用 *mgo* 驱动程序连接 MongoDB，并使用 *curl* 测试微服务。
@@ -27,11 +29,11 @@ MongoDB 以其简单、高可用性和面向文档的特性风靡市场。与关
 
 ### 集合
 
-MongoDB 存储相似的文档在同一个集合。例如，我们将存储 books 在 *books集合*。如果您有关系型背景知识，则集合类似于表。集合的不同之处是不强制要求任何结构，尽管它意味着存储在同一个集合中的文档是相似的。
+MongoDB 存储相似的文档在同一个集合。例如，我们将存储 books 在 *books 集合*。如果您有关系型背景知识，则集合类似于表。集合的不同之处是不强制要求任何结构，尽管它意味着存储在同一个集合中的文档是相似的。
 
 ### 查询
 
-如果您想从 MongoDB 获取数据，你首先要查询它。 *查询* 是 MongoDB 的一个概念，用于指定请求哪些数据的一组筛选器参数。MongoDB 使用 *json* 和 *bson* (二进制 json) 编写查询。获取具有指定 isbn 图书的查询示例看起来如下：
+如果您想从 MongoDB 获取数据，你首先要查询它。 *查询* 是 MongoDB 的一个概念，用于指定请求哪些数据的一组筛选器参数。MongoDB 使用 *json* 和 *bson* ( 二进制 JSON) 编写查询。获取具有指定 isbn 图书的查询示例看起来如下：
 
 ```json
 {
@@ -41,7 +43,7 @@ MongoDB 存储相似的文档在同一个集合。例如，我们将存储 books
 
 ## Go 的 MongoDB 驱动
 
-mgo (发音是 mango) 是一个针对 Golang 开发的 MongoDB 驱动。它的 [API](https://godoc.org/gopkg.in/mgo.v2) 非常简单，并且遵循标准的 Go 风格。稍后我们将看到它是如何帮助构建微服务的 CRUD (创建、读取、更新、删除)操作，但首先让我们来熟悉一下会话管理。
+mgo ( 发音是 mango) 是一个针对 Golang 开发的 MongoDB 驱动。它的 [API](https://godoc.org/gopkg.in/mgo.v2) 非常简单，并且遵循标准的 Go 风格。稍后我们将看到它是如何帮助构建微服务的 CRUD ( 创建、读取、更新、删除 ) 操作，但首先让我们来熟悉一下会话管理。
 
 ### 会话管理
 
@@ -129,7 +131,7 @@ func ErrorWithJSON(w http.ResponseWriter, message string, code int) {
 	fmt.Fprintf(w, "{message: %q}", message)
 }
 
-func ResponseWithJSON(w http.ResponseWriter, json []byte, code int) {
+func ResponseWithJSON(w http.ResponseWriter, JSON []byte, code int) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(code)
 	w.Write(json)
@@ -152,7 +154,7 @@ func main() {
 	session.SetMode(mgo.Monotonic, true)
 	ensureIndex(session)
 
-	mux := goji.NewMux()
+	mux := Goji.NewMux()
 	mux.HandleFunc(pat.Get("/books"), allBooks(session))
 	mux.HandleFunc(pat.Post("/books"), addBook(session))
 	mux.HandleFunc(pat.Get("/books/:isbn"), bookByISBN(session))
@@ -195,7 +197,7 @@ func allBooks(s *mgo.Session) func(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		respBody, err := json.MarshalIndent(books, "", "  ")
+		respBody, err := JSON.MarshalIndent(books, "", "  ")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -210,7 +212,7 @@ func addBook(s *mgo.Session) func(w http.ResponseWriter, r *http.Request) {
 		defer session.Close()
 
 		var book Book
-		decoder := json.NewDecoder(r.Body)
+		decoder := JSON.NewDecoder(r.Body)
 		err := decoder.Decode(&book)
 		if err != nil {
 			ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
@@ -259,7 +261,7 @@ func bookByISBN(s *mgo.Session) func(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		respBody, err := json.MarshalIndent(book, "", "  ")
+		respBody, err := JSON.MarshalIndent(book, "", "  ")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -276,7 +278,7 @@ func updateBook(s *mgo.Session) func(w http.ResponseWriter, r *http.Request) {
 		isbn := pat.Param(r, "isbn")
 
 		var book Book
-		decoder := json.NewDecoder(r.Body)
+		decoder := JSON.NewDecoder(r.Body)
 		err := decoder.Decode(&book)
 		if err != nil {
 			ErrorWithJSON(w, "Incorrect body", http.StatusBadRequest)
@@ -449,7 +451,7 @@ curl -X DELETE -H "Content-Type: application/json" -d @body.json http://localhos
 
 ## 最后
 
-MongoDB 是用 Go 编写微服务的一个非常流行的后端。Go 的 MongoDB 驱动程序 (mgo) 是惯用的并非常容易使用。如果您正在构建、测试或记录RESTful 服务，不要忽略 *curl*。
+MongoDB 是用 Go 编写微服务的一个非常流行的后端。Go 的 MongoDB 驱动程序 (mgo) 是惯用的并非常容易使用。如果您正在构建、测试或记录 RESTful 服务，不要忽略 *curl*。
 
 ---
 
@@ -457,6 +459,6 @@ via: http://goinbigdata.com/how-to-build-microservice-with-mongodb-in-golang/
 
 作者：[Yury Pitsishin](http://goinbigdata.com/about/)
 译者：[themoonbear](https://github.com/themoonbear)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉出品
