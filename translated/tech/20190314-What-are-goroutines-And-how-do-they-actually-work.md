@@ -1,4 +1,4 @@
-#什么是协程（goroutine），他们是怎样工作的呢？
+#什么是协程（goroutine），它们是怎样工作的呢？
 ![image](https://github.com/studygolang/gctt-images/blob/master/What-are-goroutines-And-how-do-they-actually-work/pic1.jpeg?raw=true)
 在过去的几年里，go 语言能获得如此难以置信的流行度的一个主要原因，是 go 能通过轻量级的 goroutines 和 channel 更加简便地处理并发问题。
 
