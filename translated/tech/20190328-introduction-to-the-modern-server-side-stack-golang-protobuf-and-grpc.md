@@ -5,7 +5,7 @@
 ## Golang
 
 Golang，或者说Go语言，是谷歌开发的一门开源、通用的编程语言。由于多种原因，它的流行度最近一直在提升。说起来可能令人惊讶，据谷歌宣称，这门语言已经将近10岁了，并且近7年都可用于生产环境。
-Golang被设计为简单的、现代的、易于理解并且可快速掌握。这门语言的开发者将它设计为普通程序员都能在一周内掌握如何使用。我作证，他们绝对成功了。说到Golang的开发者，他们是设计C语言草案的专家，因此，我们可以确定他们知道自己在做什么。
+Golang被设计为简单的、现代的、易于理解并且可快速掌握的语言。这门语言的开发者将它设计为普通程序员都能在一周内掌握如何使用。我作证，他们绝对成功了。说到Golang的开发者，他们是设计C语言草案的专家，因此，我们可以确定他们知道自己在做什么。
 
 ## 既然一切都很好，为什么我需要另一门编程语言
 
@@ -35,9 +35,9 @@ func performAsyncTasks(task []Task) {
 }
 ```
 
-是的，这是如此简单，既然Go是一门简单的语言，它也确该如此。你应当为每个独立的异步任务开启一个协程而无需考虑太多。如果多核可用，Go的runtime会自动并发运行协程。但是，协程间如何通信呢？答案是“通道”。
+是的，就是这么简单，既然Go是一门简单的语言，它也确该如此。你应当为每个独立的异步任务开启一个协程而无需考虑太多。如果多核可用，Go的runtime会自动并发运行协程。但是，协程间如何通信呢？答案是“通道”。
 
-“通道”也是一个语言原语，它被用于协程间通信。通过通道，你可以向另一个协程传递任何数据（原生类型、结构类型甚至其他通道）。本质上，通道是一个阻塞的双向队列（也可以是单向的）。如果你想要协程等待，直到特定的条件满足才继续运行，你可以使用通道来实现协程间的合作阻塞。
+“通道”也是一个语言原语，它被用于协程间通信。通过通道，你可以向另一个协程传递任何数据（原生类型、结构类型甚至其他通道类型）。本质上，通道是一个阻塞的双向队列（也可以是单向的）。如果你想要协程等待，直到特定的条件满足才继续运行，你可以使用通道来实现协程间的合作阻塞。
 
 在编写异步或并发的代码时，这两个原语提供了极大的灵活性和简洁性。使用如上原语可以非常容易地创建出协程池等有用的库。一个基本的例子如下：
 
@@ -184,5 +184,146 @@ func (executor *Executor) Inactive() bool {
 
 ## 简单的语言
 
-与很多其他的现代语言不同，Golang的特性并不多。事实上，令人信服的案例可以证明Go在它的特性集上太过严格，这是有意为之的。它并不是围绕着Java一样的编程范例来设计的，也不像Python一样可以支持多种编程范例。它仅仅只是简单的结构编程。除了必要的特性外，这门语言并没有多余的东西。
+与很多其他的现代语言不同，Golang的特性并不多。事实上，令人信服的案例可以证明Go在它的特性集上太过严格，这是有意为之的。它并不是围绕着Java一样的编程范例来设计的，也不像Python一样可以支持多种编程范例。它仅仅只是简单的结构化编程。除了必要的特性外，这门语言并没有多余的东西。
 
+了解这门语言后，你会觉得它并没有遵循特定的哲学或方向，感觉像是所有能解决特定问题的特性都被包含在内，仅此而已。例如，它有方法和接口，但是没有类；编译器生成一个静态链接的二进制文件，却仍然有一个垃圾回收器；它有严格的静态类型，却不支持泛型；它有一个瘦的runtime，却不支持异常。
+
+这里的主要想法是，开发人员应该花最少的时间用代码表达自己的想法或算法，而无需考虑“在X语言中，这样做的最好方式是什么？”，并且，其他人应该易于理解。它仍然并不完美，确实不时地让人感到限制，像泛型和异常这样必要的特性正在被考虑加入“Go 2”。
+
+## 性能
+
+单线程执行性能并不是评价语言的好的指标，尤其当这门语言专注于并发和并行。但是，Golang仍然跑出了优秀的基准测试数据，仅仅被诸如C，C++，Rust这样的底层系统编程语言打败。它的性能仍在不断提升中。考虑到它是一门“垃圾回收型”语言，它的性能确实非常优秀，足以在任何场景下使用。
+
+// pic
+
+## 开发工具
+
+采用新工具或语言直接取决于它的开发人员的经验。Go的使用确实代言了它的工具。我们可以发现，相同的想法和工具非常小但是很有效。这都是通过“go”命令和它的子命令实现的，全部是命令行。
+
+这门语言没有像pip、npm一样的包管理工具。但是你可以获取任何社区的包，只需要这样做：
+
+```go
+go get github.com/farkaskid/WebCrawler/blob/master/executor/executor.go
+```
+
+是的，它成功了。你可以直接从GitHub或其他任何地方拉取包。它们仅仅是源代码文件。
+
+但是，package.json文件该怎么办呢？我并没有看到任何与`go get`等价的命令，因为确实没有。你不需要在一个文件中明确你的所有依赖。你可以直接在你的源代码文件中使用：
+
+```go
+import "github.com/xlab/pocketsphinx-go/sphinx"
+```
+
+当你执行`go build`命令，它将自动为你执行`go get`。这里是完整的源文件：
+
+```go
+package main
+
+import (
+	"encoding/binary"
+	"bytes"
+	"log"
+	"os/exec"
+
+	"github.com/xlab/pocketsphinx-go/sphinx"
+	pulse "github.com/mesilliac/pulse-simple" // pulse-simple
+)
+
+var buffSize int
+
+func readInt16(buf []byte) (val int16) {
+	binary.Read(bytes.NewBuffer(buf), binary.LittleEndian, &val)
+	return
+}
+
+func createStream() *pulse.Stream {
+	ss := pulse.SampleSpec{pulse.SAMPLE_S16LE, 16000, 1}
+	buffSize = int(ss.UsecToBytes(1 * 1000000))
+	stream, err := pulse.Capture("pulse-simple test", "capture test", &ss)
+	if err != nil {
+		log.Panicln(err)
+	}
+	return stream
+}
+
+func listen(decoder *sphinx.Decoder) {
+	stream := createStream()
+	defer stream.Free()
+	defer decoder.Destroy()
+	buf := make([]byte, buffSize)
+	var bits []int16
+
+	log.Println("Listening...")
+
+	for {
+		_, err := stream.Read(buf)
+		if err != nil {
+			log.Panicln(err)
+		}
+
+		for i := 0; i < buffSize; i += 2 {
+			bits = append(bits, readInt16(buf[i:i+2]))
+		}
+
+		process(decoder, bits)
+		bits = nil
+	}
+}
+
+func process(dec *sphinx.Decoder, bits []int16) {
+	if !dec.StartUtt() {
+		panic("Decoder failed to start Utt")
+	}
+	
+	dec.ProcessRaw(bits, false, false)
+	dec.EndUtt()
+	hyp, score := dec.Hypothesis()
+	
+	if score > -2500 {
+		log.Println("Predicted:", hyp, score)
+		handleAction(hyp)
+	}
+}
+
+func executeCommand(commands ...string) {
+	cmd := exec.Command(commands[0], commands[1:]...)
+	cmd.Run()
+}
+
+func handleAction(hyp string) {
+	switch hyp {
+		case "SLEEP":
+		executeCommand("loginctl", "lock-session")
+		
+		case "WAKE UP":
+		executeCommand("loginctl", "unlock-session")
+
+		case "POWEROFF":
+		executeCommand("poweroff")
+	}
+}
+
+func main() {
+	cfg := sphinx.NewConfig(
+		sphinx.HMMDirOption("/usr/local/share/pocketsphinx/model/en-us/en-us"),
+		sphinx.DictFileOption("6129.dic"),
+		sphinx.LMFileOption("6129.lm"),
+		sphinx.LogFileOption("commander.log"),
+	)
+	
+	dec, err := sphinx.NewDecoder(cfg)
+	if err != nil {
+		panic(err)
+	}
+
+	listen(dec)
+}
+```
+
+这将依赖声明与源代码本身绑定在一起。
+
+如你所见，Go简单、简约、满足需求、优雅，有对单元测试和带火焰图的基准测试的一手支持。像特性集一样，它也有自己的缺点。例如，`go get`命令不支持版本，并且你被传入源文件的导入URL锁定了。随着其他依赖管理工具开始出现，这正在不断改善。
+
+最初，Golang被设计用来解决谷歌在他们大规模的代码基础中遇到的问题，满足他们编写高效并发程序的必要需求。它使得编写程序或库来利用现代芯片的多核性质非常容易。它从不满足开发者的需求（？）。它只是一门简单的现代语言，从未想过成为其他的什么。
+
+## Protobuf（Protocol Buffers）
