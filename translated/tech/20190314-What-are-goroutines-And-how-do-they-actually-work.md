@@ -97,7 +97,7 @@ Go Runtime Scheduler 执行协作调度，这意味着只有在当前 goroutine 
 via: https://medium.com/@joaoh82/what-are-goroutines-and-how-do-they-actually-work-f2a734f6f991
 
 作者：[João Henrique Machado](https://medium.com/@joaoh82)
-译者：[译者ID](https://github.com/译者ID)
-校对：[校对者ID](https://github.com/校对者ID)
+译者：[HN-JIE](https://github.com/HN-JIE)
+校对：[magichan](https://github.com/magichan)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
