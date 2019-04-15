@@ -1,3 +1,5 @@
+# 使用Golang goroutines并发编程
+
 大家好！在这篇文章中，我们将介绍如何在基于Go语言的项目中使用***goroutines***，以及如何提升项目运行时的性能。
 
 ### 视频教程
@@ -122,8 +124,8 @@ func compute(value int) {
 func main() {
     fmt.Println("Goroutine Tutorial")
 
-  // notice how we've added the 'go' keyword
-  // in front of both our compute function calls
+    // notice how we've added the 'go' keyword
+    // in front of both our compute function calls
     go compute(10)
     go compute(10)
 
@@ -165,8 +167,6 @@ func main() {
 - [Go Mutex Tutorial](https://tutorialedge.net/golang/go-mutex-tutorial/)
 - [Go Channels Tutorial](https://tutorialedge.net/golang/go-channels-tutorial/)
 
-
-
 ---
 
 via: https://tutorialedge.net/golang/concurrency-with-golang-goroutines/
@@ -176,5 +176,3 @@ via: https://tutorialedge.net/golang/concurrency-with-golang-goroutines/
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
-
