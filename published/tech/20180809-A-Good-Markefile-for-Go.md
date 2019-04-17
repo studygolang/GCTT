@@ -375,9 +375,9 @@ help: Makefile
 
 ---
 
-via: http://azer.bike/journal/a-good-makefile-for-go/
+via: https://kodfabrik.com/journal/a-good-makefile-for-go/
 
-作者：[Azer Koçulu](http://azer.bike)
+作者：[Azer Koçulu](http://kodfabrik.com)
 译者：[lightfish-zhang](https://github.com/lightfish-zhang)
 校对：[polaris1119](https://github.com/polaris1119)
 
