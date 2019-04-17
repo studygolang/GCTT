@@ -216,7 +216,7 @@ func MockService(url string) (Service, error) {
 	return &service{elasticClient: client}, nil
 }
 ```
-	
+
 预制的结果可以提前写入到一个文件里面，在代码里读取就可以了。源代码可以访问[GitHub](https://github.com/upitau/goinbigdata/tree/master/examples/elastictest)获取
 
 >如果你不清楚 `w.Write([]byte(resp))` 中的`res`为什么需要被转换成 []byte的话, 可以看一下这篇文章： [How To Correctly Serialize JSON String In Golang](http://goinbigdata.com/how-to-correctly-serialize-json-string-in-golang/)。
