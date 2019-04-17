@@ -1,12 +1,12 @@
-# Creating Your Own Admission Controller in Kubernetes using Golang
+# 编写自定义准入控制器（Golang版）
 
 Kubernetes API 是一个非常优秀的产品。由于是基于 REST 模型构建的，我们能够通过 HTTP 请求来管理我们的工作单元。类似于 `kubectl` 或者 `Kubernetes dashboard` 这样的工具就充分地利用这个优势来帮助管理不同的资源。然而 Kubernetes API 能做的不仅仅是这些。让我们深入了解该组件是如何组成的。
 
 ![1](https://github.com/studygolang/gctt-images/blob/master/creating-your-own-admission-controller-in-kubernetes-using-golang/1.png?raw=true)
 
-上图展现了构成 API 组件的各个模块。请求从认证控制器（Authentication）开启 API 的旅程。一旦请求被验证，授权模块将会判断这个请求的发出者能否执行这个操作。在这个请求被正确地授权之后， 准入控制器（admission controller)开始发挥作用。
+上图展现了构成 API 组件的各个模块。请求在 API 模块的旅程是从认证控制器（Authentication）开始的。请求被验证之后，授权模块将会判断这个请求的发出者能否执行这个操作。在这个请求被正确地授权之后， 准入控制器（admission controller)开始发挥作用。
 
-在 Kubernets 中有两种不同的准入控制器，他们工作的方式有稍许不同。第一种是**验证准入控制器**(validating admission controller)，他将请求转发的订阅该请求的钩子(webhook) Kubernets API 根据请求的方法和请求所操作的资源类型注册钩子，每一个钩子运行些逻辑来烟瘴输入的请求，并以判决结果回复 API 组件。如果验证钩子拒绝了请求，Kubernetes API 模块将返回一个失败的 HTTP 响应给用户。否则，它将进行下一个准入判定。
+在 Kubernets 中有两种不同的准入控制器，他们工作的方式有稍许不同。第一种是**验证准入控制器**(validating admission controller)，它将请求转发到订阅该请求的钩子(webhook)。因此 Kubernets API 组件注册钩子时，需要确认钩子想订阅的请求的方法和资源类型。每一个钩子运行根据内置的逻辑验证输入的请求，并以将结果回复给 API 组件。如果验证钩子拒绝了请求，Kubernetes API 组件将返回一个失败的 HTTP 响应给用户。否则，它将进行下一个准入判定。
 
 第二种类型的是 **变更准入控制器**(mutating admission controller)，这种准入控制器能够修改用户提交的资源 ，因此你能够设置默认值或者验证属性。集群管理员能够以和验证模块相同的运行方式将变更控制器添加到 API 组件中。事实上，变更逻辑运行在验证逻辑之前。
 
@@ -40,7 +40,7 @@ webhooks:
         resources: ["pods"]
 ```
 
-在配置文件中你需要注意两个部分。第一个部分是 `clientConfig`，它定义了我们在那里寻找我们的服务（可以是一个外部 URL）和我们验证服务(validation server)所监听的 `path`。你应该也注意到该部分同时也定义了一个 `CA` 证书。这是因为安全的至关重要性，添加这个证书颁发机构能够告诉 Kubernetes API 组件使用 HTTPS，并且使用传递过来的证书验证我们的服务。在一个章节，你会看到如何生成所有需要的证书。
+在配置文件中你需要注意两个部分。第一个部分是 `clientConfig`，它定义了我们在哪里寻找我们的服务（可以是一个外部 URL）和我们验证服务(validation server)所监听的 `path`。你应该也注意到该部分同时也定义了一个 `CA` 证书。这是因为安全的至关重要性，添加这个证书颁发机构能够告诉 Kubernetes API 组件使用 HTTPS，并且使用传递过来的证书验证我们的服务。在一个章节，你会看到如何生成所有需要的证书。
 
 第二部分说明 API 模块要使用哪些规则来判断一个请求是否被转发到 `grumpy`进行验证。这里的配置文件指明只有方法是 `CREATE` 并且资源类型为 `pod` 的请求会被转发。
 
