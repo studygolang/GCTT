@@ -230,3 +230,11 @@
 ## 最后
 
 当测试Go客户端访问外服API的代码的时候，最好的方式就是mock外部服务，如果外服服务是通过结构体实现的时候，可以直接mock外部API，返回一些预制的数据方便我们完成真实情况的测试。
+
+via: http://goinbigdata.com/unit-testing-golang-code-calling-elasticsearch/
+
+作者：[Yury Pitsishin](http://goinbigdata.com/about/)
+译者：[JYSDeveloper](https://github.com/JYSDeveloper)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
