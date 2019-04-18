@@ -40,7 +40,7 @@ $ sed -i '' 's/^Libs: .*/& -lblas -llapack/' /usr/local/lib/pkgconfig/dlib-1.pc
 $ go get -u github.com/Kagami/go-face
 ```
 
-在你的 GOPATH 目录中创建一个名为 <span style="background:#e5eff5">go-face-recognition</span> 的新目录。在此目录中创建一个名为 <span style="background:#e5eff5">main.go</span> 的文件，这是我们所有源码所在位置。  
+在你的 GOPATH 目录中创建一个名为<span style="background:#e5eff5"> go-face-recognition </span>的新目录。在此目录中创建一个名为 <span style="background:#e5eff5">main.go</span> 的文件，这是我们所有源码所在位置。
 完成操作后，你需要从 TutorialEdge / go-face-recognition-tutorial repo的 <span style="background:#e5eff5">image/</span> 目录中获取文件。最简单的方法是 clone repo 到另一个目录，只需复制图片目录到当前的工作目录
 ```go
 $ git clone https://github.com/TutorialEdge/go-face-recognition-tutorial.git
@@ -74,7 +74,7 @@ func main() {
 
 -----
 ## [**计算图片中的面孔**](https://tutorialedge.net/golang/go-face-recognition-tutorial-part-one/#counting-faces-in-a-picture)
-我们对这个 package 的第一个真正测试是我们是否能准确地计算照片中的面孔数量。出于本教程的目的，我们将使用此照片：  
+我们对这个 package 的第一个真正测试是我们是否能准确地计算照片中的面孔数量。出于本教程的目的，我们将使用此照片：
 ![tony-stark](https://tutorialedge.net/images/tony-stark.jpg)
 
 如你所见，没什么特别的，只有 Tony Stark 那张孤独的脸
@@ -131,13 +131,13 @@ Number of Faces in Image:  1
 ```go
 avengersImage := filepath.Join(dataDir, "avengers-01.jpg")
 ```
- 重新运行我们的程序，应该会看到我们的程序能够确认2个人在这个此图像中。    
+ 重新运行我们的程序，应该会看到我们的程序能够确认2个人在这个此图像中。
 
 -----
 ## [**人脸识别：**](https://tutorialedge.net/golang/go-face-recognition-tutorial-part-one/#recognizing-faces)
-很好，我们可以计算一张图片中有多少张面孔，现在来实际地确认这些人是谁？  
-为此，我们需要一些参考照片，例如，如果我们想要从照片中识别 Tony Stark ,我们需要带他名字的样例照片。识别软件能分析与他相识的人脸照片，然后将其匹配。  
-因此，让我们用 <span style="background:#e5eff5">avengers-02.jpg</span> 作为 Tony Stark 的参考照片，然后看看是否能识别这张图像包含他的脸  
+很好，我们可以计算一张图片中有多少张面孔，现在来实际地确认这些人是谁？
+为此，我们需要一些参考照片，例如，如果我们想要从照片中识别 Tony Stark ,我们需要带他名字的样例照片。识别软件能分析与他相识的人脸照片，然后将其匹配。
+因此，让我们用 <span style="background:#e5eff5">avengers-02.jpg</span> 作为 Tony Stark 的参考照片，然后看看是否能识别这张图像包含他的脸
 ![tony-stark](https://tutorialedge.net/images/tony-stark.jpg)
 ```go
 avengersImage := filepath.Join(dataDir, "avengers-02.jpeg")
@@ -165,7 +165,7 @@ labels := []string{
 // Pass samples to the recognizer.
 rec.SetSamples(samples, avengers)
 ```
-因此，在上面的代码中，我们已经从左到右检查了面孔并标记了合适的名字。我们的识别系统能使用这些参考样例来尝试对对后续文件进行自己的人脸识别。  
+因此，在上面的代码中，我们已经从左到右检查了面孔并标记了合适的名字。我们的识别系统能使用这些参考样例来尝试对对后续文件进行自己的人脸识别。
 让我们尝试用已有的 Tony Stark 图片测试我们的识别系统，然后看看是否能根据 avengers-02.jpeg 文件生成的人脸描述符来识别它：
 ```go
 // Now let's try to classify some not yet known image.
@@ -245,12 +245,12 @@ Wong
 -----
 
 ## [**结论**](https://tutorialedge.net/golang/go-face-recognition-tutorial-part-one/#conclusion)
-在此教程中，我们成功地构建了一个十分简单的人脸识别系统，能在静态图像上运行。这个系列教程有望成为下一部分的基础，我们将在研究如何如何在视频流的实时上下文中进行识别。  
-希望你喜欢本教程，如果您这样完成了，请在下面的评论部分告诉我们！  
+在此教程中，我们成功地构建了一个十分简单的人脸识别系统，能在静态图像上运行。这个系列教程有望成为下一部分的基础，我们将在研究如何如何在视频流的实时上下文中进行识别。
+希望你喜欢本教程，如果您这样完成了，请在下面的评论部分告诉我们！
 
 ### **注意**：如果你想实时追踪新的 Go 文章发布到网站的时间，那么请在 Twitter 随时关注我所有的最新消息：[**@Elliot_F**](https://twitter.com/elliot_f).
 
----
+-----
 
 via: https://tutorialedge.net/golang/go-face-recognition-tutorial-part-one/
 
