@@ -18,7 +18,7 @@ import (
 const (
 	limit = 10000000000
 )
-SerialSum sums up all numbers from 0 to limit, sice and easy!	
+// 实现sum
 func SerialSum() int {
 	sum := 0
 	for i := 0; i < limit; i++ {
@@ -66,8 +66,7 @@ func ConcurrentSum() int {
 }
 ```
 
-### 然而运行速度不降反增 ?
-#### 那么以上两个版本运行速度如何呢 , 让我们引入两个压力测试文件来以探究竟 .
+#### 然而运行速度不降反增?那么以上两个版本运行速度如何呢 , 让我们引入两个压力测试文件来以探究竟 .
 ```
 package concurrencyslower
 
