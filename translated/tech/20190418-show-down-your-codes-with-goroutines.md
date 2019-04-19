@@ -39,14 +39,14 @@ return sum
 ```go
 /* ConcurrentSum 函数会使用所有可用内核  ,  获取可用逻辑核心的数量  ,  通常这是 2* c ,  其中 c 是物理核心数  , 2 是每个核心的超线程数 .
  n:=runtime.GOMAXPROCS（0）
-我们需要从某个地方收集 n 个 Goroutines 的结果 . 每个 Goroutine 都有一个元素的全局切片  , 
+我们需要从某个地方收集 n 个 Goroutines 的结果 . 每个 Goroutine 都有一个元素的全局切片  ,
 sums：= make（[] int , n）
 现在我们可以产生 Goroutines ,  WaitGroup 帮助我们检测所有 Goroutine 何时完成 .
 */
 func ConcurrentSum() int {
 wg := sync.WaitGroup{}
 for i := 0; i < n; i++ {
-// 为每个 Goroutine 增加一个 oneADD	
+// 为每个 Goroutine 增加一个 oneADD
 wg.Add(1)
 go func(i int) {
 // 将输入分割到每个块
@@ -151,7 +151,7 @@ sum := 0
 // 采用了分块处理
 start := (limit / n) * i
 end := start + (limit / n)
-// 计算中间值	
+// 计算中间值
 for j := start; j < end; j += 1 {
 sum += j
 }
