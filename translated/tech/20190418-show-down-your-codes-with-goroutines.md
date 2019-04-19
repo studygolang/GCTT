@@ -2,8 +2,8 @@
 ## 如何使用 Goroutine 才能使你的 CPU 满负载运行呢
 * 下面  ,  我们将会展示一个关于 for 循环的代码  ,  将输入分成几个序列添加到 Goroutines 里面！
 
-* 我敢打赌你之前可能有过几次这种情况  ,  但是每次引入Gorountine都让你的代码变得更快吗？ 
-* 下面是一个简单的循环示例  ,  它似乎很容易变成并发代码 但正如我们将看到的 , 并发版本不仅不会更快 , 实际上需要花费两倍的时间.
+* 我敢打赌你之前可能有过几次这种情况  ,  但是每次引入 Gorountine 都让你的代码变得更快吗？ 
+* 下面是一个简单的循环示例  ,  它似乎很容易变成并发代码 但正如我们将看到的 , 并发版本不仅不会更快 , 实际上需要花费两倍的时间 .
 ## 串行循环  ,  我们以一个把索引相加的简单的串行循环作为示例 .
 
 ```go
@@ -18,7 +18,7 @@ import (
 const (
 	limit = 10000000000
 )
-// 实现sum
+// 实现 sum
 func SerialSum() int {
 	sum := 0
 	for i := 0; i < limit; i++ {
@@ -41,23 +41,23 @@ sums：= make（[] int , n）
 func ConcurrentSum() int {
 	wg := sync.WaitGroup{}
 	for i := 0; i < n; i++ {
-//为每个goroutine增加一个oneADD	
+// 为每个 Goroutine 增加一个 oneADD	
 		wg.Add(1)
 		go func(i int) {
-//将输入分割到每个块	
+// 将输入分割到每个块	
 			start := (limit / n) * i
 			end := start + (limit / n)
-//在每个块中运行各自的loop
+// 在每个块中运行各自的 loop
 			for j := start; j < end; j += 1 {
 				sums[i] += j
 			}
-//waitgroup减一	
+//waitgroup 减一	
 			wg.Done()
 		}(i)
 	}
 //Done().	
 	wg.Wait()
-//从各个块中收集	
+// 从各个块中收集	
 	sum := 0
 	for _ ,  s := range sums {
 		sum += s
@@ -66,7 +66,7 @@ func ConcurrentSum() int {
 }
 ```
 
-## 然而运行速度不降反增?那么以上两个版本运行速度如何呢  ,  让我们引入两个压力测试文件来以探究竟 .
+## 然而运行速度不降反增 ? 那么以上两个版本运行速度如何呢  ,  让我们引入两个压力测试文件来以探究竟 .
 ```
 package concurrencyslower
 
@@ -130,18 +130,18 @@ func ChannelSum() int {
 	for i := 0; i < n; i++ {
 	//Goroutine 接受第二个参数  ,  结果参数 . 箭头 <- 标明只读参数 .	
 		go func(i int ,  r chan<- int) {
-		//本地变量取代了全局变量	
+		// 本地变量取代了全局变量	
 			sum := 0
-        //采用了分块处理	
+        // 采用了分块处理	
 			start := (limit / n) * i
 			end := start + (limit / n)
-		//计算中间值	
+		// 计算中间值	
 			for j := start; j < end; j += 1 {
 				sum += j
 			}
-            //传递结果
+            // 传递结果
 			r <- sum
-        //入参
+        // 入参
 		}(i ,  res)
 	}
 
@@ -174,7 +174,7 @@ ok      GitHub.com/appliedgo/concurrencyslower  23.807s
 
 * 但是  ,  我们如何确保各个变量永远不会共享同一个缓存行 ? 好吧  ,  启动一个新的 Goroutine 会在堆栈上分配 2KB 到 8KB 的数据  ,  这比 64 字节的典型缓存行大小要多  ,  并且由于中间和变量不是从创建它的 Goroutine 之外的任何地方引用的  ,  因此它不会转移到堆 ( 它可能最终接近其他中间和变量之一 ). 所以我们可以非常肯定没有两个中间和变量会在同一个缓存行中结束 .
 ## 如何获取代码
-* 使用Go get , 注意-d参数阻止自动安装二进制到$GOPATH/bin.
+* 使用 Go get , 注意 -d 参数阻止自动安装二进制到 $GOPATH/bin.
 ```
 go get -d GitHub.com/appliedgo/concurrencyslower
 ```
