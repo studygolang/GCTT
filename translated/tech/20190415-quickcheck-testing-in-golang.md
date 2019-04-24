@@ -86,7 +86,7 @@
 
 via: <https://itnext.io/quickcheck-testing-in-golang-772e820f0bd5>
 
-作者：[Robert Weber](https://itnext.io/@robert_70579) 
+作者：[Robert Weber](https://itnext.io/@robert_70579)
 
 译者：[maxwellhertz](<https://github.com/maxwellhertz>)
 
