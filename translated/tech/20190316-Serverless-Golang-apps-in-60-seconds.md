@@ -1,4 +1,4 @@
-# 60秒搭建无服务 Golang 应用
+# 60 秒搭建无服务 Golang 应用
 
 在这篇简短的文章中，我将说明使用 [Apex Up](https://medium.com/r/?url=https%3A%2F%2Fgithub.com%2Fapex%2Fup) 对任何 Golang 应用程序或 API 是如何快速的生产出无服务环境的。这篇文章假设你在你的机器上配置了 [AWS credentials](https://medium.com/r/?url=https%3A%2F%2Fdocs.aws.amazon.com%2Fcli%2Flatest%2Fuserguide%2Fcli-chap-configure.html)，因为 Up 是部署到 AWS Lambda 和 API 网关上的。
 
@@ -139,6 +139,6 @@ via: https://medium.com/@tjholowaychuk/serverless-golang-apis-in-60-seconds-46e4
 
 作者：[TJ Holowaychuk](https://medium.com/@tjholowaychuk)
 译者：[PotoYang](https://github.com/PotoYang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/ 校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
