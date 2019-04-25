@@ -1,5 +1,8 @@
+首发于：https://studygolang.com/articles/19815
+
 # 调试 Go 的代码生成
-2016年10月15日
+
+2016 年 10 月 15 日
 
 *上周，我在 [dotGo](http://www.dotgo.eu/)，参加一个最棒的 Go 会议，与大西洋彼岸的 Gopher 们相聚。我做了一个简短迅速的演讲，关于使用工具链中可用工具来进行代码生成的检查。这篇文章给没能参加会议的 Gopher 们过一遍演讲的内容。幻灯片在 [go-talks](https://go-talks.appspot.com/github.com/rakyll/talks/gcinspect/talk.slide) 也能找到。*
 
@@ -18,7 +21,7 @@ func main() {
 
 ## 工具链
 
-Go build 是一个对用户来说囊括了一大堆东西的命令。但是，如果你需要的话，它也提供了关于它是做什么的更详细的信息。`-x` 是一个能让 go build 输出调用了什么的标记。如果你想看看工具链的组件是什么，它们在一个什么样的序列里以及使用了什么标记的话，使用 `-x`。
+go build 是一个对用户来说囊括了一大堆东西的命令。但是，如果你需要的话，它也提供了关于它是做什么的更详细的信息。`-x` 是一个能让 Go build 输出调用了什么的标记。如果你想看看工具链的组件是什么，它们在一个什么样的序列里以及使用了什么标记的话，使用 `-x`。
 
 ```
 $ go build -x
@@ -51,8 +54,8 @@ $ go build -gcflags="-S"
     0x0013 00019 (/Users/jbd/src/hello/hello.go:5)  SUBQ    $96, SP
     0x0017 00023 (/Users/jbd/src/hello/hello.go:5)  MOVQ    BP, 88(SP)
     0x001c 00028 (/Users/jbd/src/hello/hello.go:5)  LEAQ    88(SP), BP
-    0x0021 00033 (/Users/jbd/src/hello/hello.go:5)  FUNCDATA    $0, gclocals·69c1753bd5f81501d95132d08af04464(SB)
-    0x0021 00033 (/Users/jbd/src/hello/hello.go:5)  FUNCDATA    $1, gclocals·e226d4ae4a7cad8835311c6a4683c14f(SB)
+    0x0021 00033 (/Users/jbd/src/hello/hello.go:5)  FUNCDATA    $0, gclocals · 69c1753bd5f81501d95132d08af04464(SB)
+    0x0021 00033 (/Users/jbd/src/hello/hello.go:5)  FUNCDATA    $1, gclocals · e226d4ae4a7cad8835311c6a4683c14f(SB)
     0x0021 00033 (/Users/jbd/src/hello/hello.go:7)  MOVQ    $2, "".autotmp_1+64(SP)
     0x002a 00042 (/Users/jbd/src/hello/hello.go:7)  MOVQ    $0, "".autotmp_0+72(SP)
     0x0033 00051 (/Users/jbd/src/hello/hello.go:7)  MOVQ    $0, "".autotmp_0+80(SP)
@@ -66,7 +69,7 @@ $ go build -gcflags="-S"
     0x005b 00091 (/Users/jbd/src/hello/hello.go:7)  MOVQ    24(SP), CX
     0x0060 00096 (/Users/jbd/src/hello/hello.go:7)  MOVQ    AX, "".autotmp_0+72(SP)
     0x0065 00101 (/Users/jbd/src/hello/hello.go:7)  MOVQ    CX, "".autotmp_0+80(SP)
-    0x006a 00106 (/Users/jbd/src/hello/hello.go:7)  LEAQ    go.string."sum: %v\n"(SB), AX
+    0x006a 00106 (/Users/jbd/src/hello/hello.go:7)  LEAQ    Go.string."sum: %v\n"(SB), AX
     0x0071 00113 (/Users/jbd/src/hello/hello.go:7)  MOVQ    AX, (SP)
     0x0075 00117 (/Users/jbd/src/hello/hello.go:7)  MOVQ    $8, 8(SP)
     0x007e 00126 (/Users/jbd/src/hello/hello.go:7)  LEAQ    "".autotmp_0+72(SP), AX
@@ -135,12 +138,12 @@ ad2e0 R _shifts
 和新的 SSA 后端的贡献一起，团队贡献了一个可视化所有 SSA pass 的工具。将环境变量 GOSSAFUNC 的值设置为一个函数名称然后运行 go build 命令。将会产生一个 ssa.html 文件，显示了编译器为了优化你的代码所经过的每一步。
 
 ```
-$ GOSSAFUNC=main go build && open ssa.html
+$ GOSSAFUNC=main Go build && open ssa.html
 ```
 
 这里是对 main 函数应用的所有 pass 的可视化结果。
 
-![image](https://rakyll.org/img/ssa.png)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/debug-go-code-gen/ssa.png)
 
 Go 编译器还可以标注内联和逃逸分析。如果你将 `-m=2` 标志传给编译器，它将输出关于这两个方面的优化和标注。这里我们看到 `net/context` 包相关的内联操作和逃逸分析。
 
@@ -152,7 +155,7 @@ $ go build -gcflags="-m" golang.org/x/net/context
 ../golang.org/x/net/context/go17.go:32: cannot inline WithCancel: non-leaf function
 ../golang.org/x/net/context/go17.go:46: cannot inline WithDeadline: non-leaf function
 ../golang.org/x/net/context/go17.go:61: cannot inline WithTimeout: non-leaf function
-../golang.org/x/net/context/go17.go:62: inlining call to time.Time.Add method(time.Time) func(time.Duration) time.Time { time.t·2.sec += int64(time.d·3 / time.Duration(1000000000)); var time.nsec·4 int32; time.nsec·4 = <N>; time.nsec·4 = time.t·2.nsec + int32(time.d·3 % time.Duration(1000000000)); if time.nsec·4 >= int32(1000000000) { time.t·2.sec++; time.nsec·4 -= int32(1000000000) } else { if time.nsec·4 < int32(0) { time.t·2.sec--; time.nsec·4 += int32(1000000000) } }; time.t·2.nsec = time.nsec·4; return time.t·2 }
+../golang.org/x/net/context/go17.go:62: inlining call to time.Time.Add method(time.Time) func(time.Duration) time.Time { time.t · 2.sec += int64(time.d · 3 / time.Duration(1000000000)); var time.nsec · 4 int32; time.nsec · 4 = <N>; time.nsec · 4 = time.t · 2.nsec + int32(time.d · 3 % time.Duration(1000000000)); if time.nsec · 4 >= int32(1000000000) { time.t · 2.sec++; time.nsec · 4 -= int32(1000000000) } else { if time.nsec · 4 < int32(0) { time.t · 2.sec--; time.nsec · 4 += int32(1000000000) } }; time.t · 2.nsec = time.nsec · 4; return time.t · 2 }
 ../golang.org/x/net/context/go17.go:70: cannot inline WithValue: non-leaf function
 ../golang.org/x/net/context/context.go:141: background escapes to heap
 ../golang.org/x/net/context/context.go:141:     from ~r0 (return) at ../golang.org/x/net/context/context.go:140
@@ -249,10 +252,9 @@ lex: implicit semi
 ---
 
 via: https://rakyll.org/codegen/
-ß
+
 作者：[rakyll](https://rakyll.org/about/)
 译者：[krystollia](https://github.com/krystollia)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-

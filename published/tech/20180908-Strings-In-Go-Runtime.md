@@ -2,7 +2,7 @@
 
 # 在 Go 运行时中的 Strings
 
-## 动机（Movivation）
+## 动机（Motivation）
 
 可以认为这是对 [Rob Pike](https://ai.google/research/people/r) 的一篇关于 Go 字符串的[博客](https://blog.golang.org/strings)的解释。以 Go 程序员的思维来写。
 
