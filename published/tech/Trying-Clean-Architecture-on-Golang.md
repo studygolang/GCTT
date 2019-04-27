@@ -154,7 +154,7 @@ type ArticleUsecase interface {
 
 * 表现（ Delivery ）层
 
-  与用例层相同，因为该层依赖于用例层，意味着改成需要用例层来支持测试。基于之前定义的契约接口， 也需要对用例层进行模拟。
+  与用例层相同，因为该层依赖于用例层，意味着该层需要用例层来支持测试。基于之前定义的契约接口， 也需要对用例层进行模拟。
 
 对于模拟，我使用 vektra 的 golang的模拟库：
 [https://github.com/vektra/mockery](https://github.com/vektra/mockery)
