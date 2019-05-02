@@ -154,7 +154,7 @@ type ArticleUsecase interface {
 
 * 表现（ Delivery ）层
 
-  与用例层相同，因为该层依赖于用例层，意味着改成需要用例层来支持测试。基于之前定义的契约接口， 也需要对用例层进行模拟。
+  与用例层相同，因为该层依赖于用例层，意味着该层需要用例层来支持测试。基于之前定义的契约接口， 也需要对用例层进行模拟。
 
 对于模拟，我使用 vektra 的 golang的模拟库：
 [https://github.com/vektra/mockery](https://github.com/vektra/mockery)
@@ -162,33 +162,33 @@ type ArticleUsecase interface {
 ## 仓库层(Repository)测试
 
 为了测试这层，就如我之前所说， 我使用 sql-mock 来模拟我的查询过程。
+
 你可以像我一样使用 github.com/DATA-DOG/go-sqlmock ，或者使用其他具有相似功能的库。
 
 ```go
 func TestGetByID(t *testing.T) {
- db, mock, err := sqlmock.New()
- if err != nil {
-    t.Fatalf(“an error ‘%s’ was not expected when opening a stub database connection”, err)
-  }
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
 
- defer db.Close()
- rows := sqlmock.NewRows([]string{
-        “id”, “title”, “content”, “updated_at”, “created_at”}).
-        AddRow(1, “title 1”, “Content 1”, time.Now(), time.Now())
+	defer db.Close()
+	rows := sqlmock.NewRows([]string{
+		"id", "title", "content", "updated_at", "created_at"}).
+		AddRow(1, "title 1", "Content 1", time.Now(), time.Now())
 
- query := “SELECT id,title,content,updated_at, created_at FROM article WHERE ID = \\?”
+	query := "SELECT id,title,content,updated_at, created_at FROM article WHERE ID = ?"
 
- mock.ExpectQuery(query).WillReturnRows(rows)
+	mock.ExpectQuery(query).WillReturnRows(rows)
 
- a := articleRepo.NewMysqlArticleRepository(db)
- num := int64(1)
+	a := articleRepo.NewMysqlArticleRepository(db)
+	num := int64(1)
 
- anArticle, err := a.GetByID(num)
+	anArticle, err := a.GetByID(num)
 
- assert.NoError(t, err)
- assert.NotNil(t, anArticle)
+	assert.NoError(t, err)
+	assert.NotNil(t, anArticle)
 }
-
 ```
 
 ## 用例层（Usecase）测试
@@ -240,37 +240,37 @@ Mockery 将会为我生成一个仓库层模型，我不需要先完成仓库（
 
 表现层测试依赖于你如何传递的数据。如果使用 http REST API， 我们可以使用 golang 中的内置包 httptest。
 
-因为该层依赖于用例( Usecase )层, 所以 我们需要模拟 Usecase， 与仓库层相同，我使用 Mockery 模拟我的 Usecase 来进行表现层（ Delivery ）的测试。
+因为该层依赖于用例( Usecase )层, 所以 我们需要模拟 Usecase，与仓库层相同，我使用 Mockery 模拟我的 Usecase 来进行表现层（ Delivery ）的测试。
 
-  ```go
-  func TestGetByID(t *testing.T) {
-   var mockArticle models.Article
-   err := faker.FakeData(&mockArticle)
-   assert.NoError(t, err)
-   mockUCase := new(mocks.ArticleUsecase)
-   num := int(mockArticle.ID)
-   mockUCase.On(“GetByID”, int64(num)).Return(&mockArticle, nil)
-   e := echo.New()
-   req, err := http.NewRequest(echo.GET, “/article/” +
-               strconv.Itoa(int(num)), strings.NewReader(“”))
+```go
+func TestGetByID(t *testing.T) {
+	var mockArticle models.Article
+	err := faker.FakeData(&mockArticle)
+	assert.NoError(t, err)
+	mockUCase := new(mocks.ArticleUsecase)
+	num := int(mockArticle.ID)
+	mockUCase.On("GetByID", int64(num)).Return(&mockArticle, nil)
+	e := echo.New()
+	req, err := http.NewRequest(echo.GET, "/article/"+
+		strconv.Itoa(int(num)), strings.NewReader(""))
 
-   assert.NoError(t, err)
-   rec := httptest.NewRecorder()
-   c := e.NewContext(req, rec)
-   c.SetPath(“article/:id”)
-   c.SetParamNames(“id”)
-   c.SetParamValues(strconv.Itoa(num))
+	assert.NoError(t, err)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("article/:id")
+	c.SetParamNames("id")
+	c.SetParamValues(strconv.Itoa(num))
 
-   handler:= articleHttp.ArticleHandler{
-              AUsecase: mockUCase,
-              Helper: httpHelper.HttpHelper{}
-   }
-   handler.GetByID(c)
+	handler := articleHttp.ArticleHandler{
+		AUsecase: mockUCase,
+		Helper:   httpHelper.HttpHelper{},
+	}
+	handler.GetByID(c)
 
-   assert.Equal(t, http.StatusOK, rec.Code)
-   mockUCase.AssertCalled(t, “GetByID”, int64(num))
-  }
-  ```
+	assert.Equal(t, http.StatusOK, rec.Code)
+	mockUCase.AssertCalled(t, "GetByID", int64(num))
+}
+```
 
 ## 最终输出与合并
 
