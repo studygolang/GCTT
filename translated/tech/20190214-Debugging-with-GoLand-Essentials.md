@@ -5,6 +5,7 @@
 在今天的帖子中，我们将继续探索 Golang 中的调试器功能。如果你想知道如何配置调试器。请查看我们之前的帖子，其中包含关于如何配置 IDE 在各种方案中工作的所有信息
 
 我们将讨论：
+
 * [控制执行流程](http://blog.jetbrains.com/go/2019/02/14/debugging-with-goland-essentials/#controlling-the-execution-flow)
 * [计算表达式](http://blog.jetbrains.com/go/2019/02/14/debugging-with-goland-essentials/#evaluating-expressions)
 * [查看自定义值](http://blog.jetbrains.com/go/2019/02/14/debugging-with-goland-essentials/#watching-custom-values)
@@ -15,23 +16,28 @@
 ![debugging-session](https://d3nmt5vlzunoa1.cloudfront.net/go/files/2019/02/6-optimized.gif)
 
 ## **控制执行流程**
+
 我们可以从这里完全控制调试器，我们可以用 step into, smart step into, step over, step out 或者运行代码到光标处。
 ![Controlling-the-execution-flow](https://d3nmt5vlzunoa1.cloudfront.net/go/files/2019/02/7-optimized.gif)
 
 ## **计算表达式**
+
 我们也可以用它来计算简单的表达式。由于 Delve 的限制，目前不支持调用函数，但请为此功能投票以获取更多信息：[https://youtrack.jetbrains.com/issue/GO-3433](https://youtrack.jetbrains.com/issue/GO-3433)
 ![feature-informations](https://d3nmt5vlzunoa1.cloudfront.net/go/files/2019/02/8-optimized.gif)
 
 ## **查看自定义值**
+
 我们还可以创建一个新表，让我们去监控自定义表达式。当我们想要观察更复杂的表达式或仅查看 slice/map/struct 中的某个值时，这非常有用。
 ![Watching-custom-values](https://d3nmt5vlzunoa1.cloudfront.net/go/files/2019/02/9-optimized.gif)
 
 ## **更改变量值**
+
 由于 Go 运行时的限制，目前只能对***非字符串基本类型***（如 ***int***, ***float*** 或 ***boolean*** 类型）更改值。
 要执行此操作，请从变量视图中选择要更改的值，然后按 *F2* 键并开始输入值。当你满意时，请按 ***Enter*** 键，你的代码现在将使用一个不同的值
 ![Changing-variable-values](https://d3nmt5vlzunoa1.cloudfront.net/go/files/2019/02/10-optimized.gif.gif)
 
 ## **使用断点**
+
 设置断点是一个相当简单的操作，单击要停止执行的行左侧，或者用快捷键 ***Ctrl+F8/Cmd+F8***，调试器将停止执行。
 如果你不需要更多东西，那这就是你真正需要知道的所有东西。但是，Golang 为你和调试器如何与断点进行交互提供了一些很好的选择
 
@@ -53,7 +59,7 @@
 
 ---
 
-via: https://tutorialedge.net/golang/go-face-recognition-tutorial-part-one/
+via: https://blog.jetbrains.com/go/2019/02/14/debugging-with-goland-essentials/
 
 作者：[Elliot Forbes](https://tutorialedge.net/about/)
 译者：[piglig](https://github.com/piglig)
