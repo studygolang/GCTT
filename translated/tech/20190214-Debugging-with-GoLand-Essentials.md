@@ -62,7 +62,7 @@
 via: https://blog.jetbrains.com/go/2019/02/14/debugging-with-goland-essentials/
 
 作者：[Florin Pățan](https://blog.jetbrains.com/go/author/florin-patanjetbrains-com/)
-译者：[译者ID](https://github.com/piglig)
+译者：[piglig](https://github.com/piglig)
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
