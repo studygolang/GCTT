@@ -8,7 +8,7 @@
 一般来说，大家比较喜欢的调试风格有两种： 
 
 * 打印语句：在代码执行到各个步骤时进行记录  
-* 使用类似 [Delve](https://github.com/go-delve/delve) 的调试器，或直接使用IDE：这能让我们在程序执行过程中有更多的控制力，提供更多可查看代码的功能，可能这些功能并没有包含在原始的打印语句中，甚至可以在运行时改值，或者在运行时来回切换(单步调试) 。 
+* 使用类似 [Delve](https://github.com/go-delve/delve) 的调试器，或直接使用IDE：这能让我们在程序执行过程中有更多的控制力，提供更多可查看代码的功能，可能这些功能并没有包含在原始的打印语句中，甚至可以在运行时改值，或者在运行时来回切换(单步调试)。 
 
 这一系列文章中我们将重点讨论第二种风格，使用IDE来调试应用。
 
@@ -179,12 +179,12 @@ func TestIndexHandler(t *testing.T) {
 
 您还应该确保的是，如果您在使用 *__$GOPATH__*，那么项目也是在与 *__$GOPATH__* 同一相对路径编译的。例如：如果您的项目在 *__github.com/JetBrains/go-sample__* 下是可用的，那么无论是IDE所在的机器上还是在应用编译的机器上，其应用所在的路径都是 **$GOPATH/src/github.com/JetBrains/go-sample** ，这两台机器上的 *__$GOPATH__* 可能是不同的。IDE会在本地和远程机上自动映射源。  
 
- 当你部署你应用的时候，还要部署之前被编译的Delve的副本，你有两种启动测试的选项：  
+当你部署你应用的时候，还要部署之前被编译的Delve的副本，你有两种启动测试的选项：  
 
 * 让调试器运行进程：如果你选择了这个选项，你需要运行`dlv --listen=:2345 --headless=true --api-version=2 exec ./application` 。还要注意如果你使用了防火墙或容器，你就需要将 *__2345__* 这个端口暴露给那些配置。端口号可以是你想要的任意值，不一定非得是  *__2345__*，只要是主机上空闲的就行。  
-* 附加到进程中：你需要运行 `dlv --listen=:2345 --headless=true --api-version=2 attach <pid>`  ， *__<__* *__pid__* *__>__*是你应用的进程id。  
+* 附加到进程中：你需要运行 `dlv --listen=:2345 --headless=true --api-version=2 attach <pid>` ， *__<__* *__pid__* *__>__*是你应用的进程id。  
 
-这些都完事了之后，最后一步是将你的IDE连接到远程调试器。你可以通过 ***Run | Edit Configurations… | + | Go Remote***  ，然后配置主机和你的远程调试器监听的端口号进行连接。  
+这些都完事了之后，最后一步是将你的IDE连接到远程调试器。你可以通过 ***Run | Edit Configurations… | + | Go Remote*** ，然后配置主机和你的远程调试器监听的端口号进行连接。  
 
 
 ![4th_gif](https://d3nmt5vlzunoa1.cloudfront.net/go/files/2019/02/4-optimized.gif)
