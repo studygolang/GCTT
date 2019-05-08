@@ -192,7 +192,7 @@ func (s *Service) Registrate(ctx context.Context, f *Form) (*User, error) {
 }
 ```
 
-示例中使用到的`context`在`Sameer Ajmari`的博文[Go blog](https://blog.golang.org/context)又说介绍，其中还提及了它应该在所有的传入和传出请求的路径上的传播的好处。
+示例中使用到的`context`在`Sameer Ajmari`的博文[Go blog](https://blog.golang.org/context)有所介绍，其中还提及了它应该在所有的传入和传出请求的路径上的传播的好处。
 
 变更的[代码](https://github.com/romanyx/service_object/pull/2/files)。
 
@@ -205,3 +205,13 @@ func (s *Service) Registrate(ctx context.Context, f *Form) (*User, error) {
 尽管Go不是通常意义上的OOP语言，但用它编写的代码也应该是直观的并且具有明确的结构。这些代码可以使用`SOLID`原则中包含的原则来编写，该原则带有适用于许多编程语言的通用方法集。
 
 本文的目的是表达我对Go中编写的代码应该是什么样的理解，并且我希望它包含比负面代码更多的积极方面。
+
+---
+
+via: <https://itnext.io/using-service-objects-in-go-d899dc599335>
+
+作者：[Roman Budnikov](https://itnext.io/@romanyx90)
+译者：[lovechuck](https://github.com/lovechuck)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
