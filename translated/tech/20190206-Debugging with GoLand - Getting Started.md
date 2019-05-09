@@ -1,4 +1,4 @@
-#使用Goland调试 - 起步
+# 使用Goland调试 - 起步
 
 *由 [Florin Pățan](https://blog.jetbrains.com/go/author/florin-patanjetbrains-com/) 发布于2019年2月6日*
 
@@ -30,7 +30,7 @@
 
 IDE支持调试Linux上生成的内存转储，也支持在Linux上使用Mozilla的rr可逆调试器。我们将在接下来的博客中分别看到这些特性。
 
-对于以上几点的调试，我们都将使用一个简单的web服务器，但其实它们可应用于任何种类的应用，像是客户端工具、图形界面应用等等。  
+对于以上几点的调试，我们都将使用一个简单的web服务器，但其实它们可应用于任何种类的应用，像是客户端工具、图形界面应用等等。 
 
 我们使用Go模块。当然，使用其他依赖管理表单的默认的GOPATH也可以。
 
@@ -136,7 +136,7 @@ func TestIndexHandler(t *testing.T) {
 
 ### <a name="debugging-an-application"></a>调试应用
 
-我们可以点击绿色三角，然后选择 Debug 'go build main.go' 来调试程序。  
+我们可以点击绿色三角，然后选择 Debug 'go build main.go' 来调试程序。
 或者我们也可以右键文件夹选择 *__Debug | go build <project__* *__name>__*。
 
 ![1st_gif](https://d3nmt5vlzunoa1.cloudfront.net/go/files/2019/02/1-optimized.gif)
@@ -225,7 +225,7 @@ CMD ["/dlv", "--listen=:40000", "--headless=true", "--api-version=2", "exec", "/
 
 这就是今天的所有内容了。在这个系列的下一篇我们将学到如何在上述的调试场景中使用各种可用的特性。请让我们在下面的评论区，或[Twitter](https://twitter.com/GoLandIDE)上得到您的反馈，或者您可以在我们的[issue tracker](https://youtrack.jetbrains.com/issues/Go)上新开一个issue。
 
----  
+----------------------------------------
 
 via: [https://blog.jetbrains.com/go/2019/02/06/debugging-with-goland-getting-started/](https://blog.jetbrains.com/go/2019/02/06/debugging-with-goland-getting-started/)
 
