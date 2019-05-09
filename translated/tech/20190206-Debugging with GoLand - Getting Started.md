@@ -42,23 +42,23 @@ IDE支持调试Linux上生成的内存转储，也支持在Linux上使用Mozilla
 ```
 
 package main
- 
+
 import (
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
- 
+
 	"github.com/gorilla/mux"
 )
- 
+
 const (
 	readTimeout  = 5
 	writeTimeout = 10
 	idleTimeout  = 120
 )
- 
+
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
 	returnStatus := http.StatusOK
@@ -66,14 +66,14 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	message := fmt.Sprintf("Hello %s!", r.UserAgent())
 	w.Write([]byte(message))
 }
- 
+
 func main() {
 	serverAddress := ":8080"
 	l := log.New(os.Stdout, "sample-srv ", log.LstdFlags|log.Lshortfile)
 	m := mux.NewRouter()
- 
+
 	m.HandleFunc("/", indexHandler)
- 
+
 	srv := &http.Server{
 		Addr:         serverAddress,
 		ReadTimeout:  readTimeout * time.Second,
@@ -81,7 +81,7 @@ func main() {
 		IdleTimeout:  idleTimeout * time.Second,
 		Handler:      m,
 	}
- 
+
 	l.Println("server started")
 	if err := srv.ListenAndServe(); err != nil {
 		panic(err)
@@ -94,13 +94,13 @@ func main() {
 
 ```
 package main
- 
+
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
- 
+
 func TestIndexHandler(t *testing.T) {
 	tests := []struct {
 		name           string
@@ -191,30 +191,30 @@ func TestIndexHandler(t *testing.T) {
 
 ```
 FROM golang:1.11.5-alpine3.8 AS build-env
- 
+
 ENV CGO_ENABLED 0
- 
+
 # Allow Go to retreive the dependencies for the build step
 RUN apk add --no-cache git
- 
+
 WORKDIR /goland-debugging/
 ADD . /goland-debugging/
- 
+
 RUN go build -o /goland-debugging/srv .
- 
+
 # Get Delve from a GOPATH not from a Go Modules project
 WORKDIR /go/src/
 RUN go get github.com/go-delve/delve/cmd/dlv
- 
+
 # final stage
 FROM alpine:3.8
- 
+
 WORKDIR /
 COPY --from=build-env /goland-debugging/srv /
 COPY --from=build-env /go/bin/dlv /
- 
+
 EXPOSE 8080 40000
- 
+
 CMD ["/dlv", "--listen=:40000", "--headless=true", "--api-version=2", "exec", "/srv"]
 ```
 
