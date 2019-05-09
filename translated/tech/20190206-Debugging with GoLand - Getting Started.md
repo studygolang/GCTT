@@ -30,7 +30,7 @@
 
 IDE支持调试Linux上生成的内存转储，也支持在Linux上使用Mozilla的rr可逆调试器。我们将在接下来的博客中分别看到这些特性。
 
-对于以上几点的调试，我们都将使用一个简单的web服务器，但其实它们可应用于任何种类的应用，像是客户端工具、图形界面应用等等。 
+对于以上几点的调试，我们都将使用一个简单的web服务器，但其实它们可应用于任何种类的应用，像是客户端工具、图形界面应用等等。
 
 我们使用Go模块。当然，使用其他依赖管理表单的默认的GOPATH也可以。
 
@@ -134,22 +134,22 @@ func TestIndexHandler(t *testing.T) {
 
 好啦，我们所有的代码都已就位，开始调试吧！
 
-### <a name="debugging-an-application"></a>调试应用
+## <a name="debugging-an-application"></a>调试应用
 
 我们可以点击绿色三角，然后选择 Debug 'go build main.go' 来调试程序。
 或者我们也可以右键文件夹选择 *__Debug | go build <project__* *__name>__*。
 
 ![1st_gif](https://d3nmt5vlzunoa1.cloudfront.net/go/files/2019/02/1-optimized.gif)
 
-### <a name="debugging-tests"></a>调试测试
+## <a name="debugging-tests"></a>调试测试
 
 跟调试应用很相似，GoLand会从标准 *__testing__* 包，*__gocheck__*，和*__testify__* 框架来识别测试，所以这些操作可以在编辑器窗口直接使用。
 
-对于其他框架，您可能需要在 *__Run | Edit Configurations...__* 中配置自定义的测试运行器，并在 *__Go tool arguments__* 或 *__Program arguments__* 中指定额外参数。这取决于您使用的自定义库需要哪些参数。 
+对于其他框架，您可能需要在 *__Run | Edit Configurations...__* 中配置自定义的测试运行器，并在 *__Go tool arguments__* 或 *__Program arguments__* 中指定额外参数。这取决于您使用的自定义库需要哪些参数。
 
 ![2nd_gif](https://d3nmt5vlzunoa1.cloudfront.net/go/files/2019/02/2-optimized.gif)
 
-### <a name="debugging-local"></a>本机调试运行中的应用
+## <a name="debugging-local"></a>本机调试运行中的应用
 
 以下有几个您可能会想要在IDE外启动调试的应用案例。
 其中一个案例是在本地机器上运行的应用。
@@ -171,12 +171,12 @@ func TestIndexHandler(t *testing.T) {
 
 ![3rd_gif](https://d3nmt5vlzunoa1.cloudfront.net/go/files/2019/02/3-optimized.gif)
 
-### <a name="debugging-remote"></a>在远程机器上调试运行中的应用
+## <a name="debugging-remote"></a>在远程机器上调试运行中的应用
 最后，这个案例更加复杂，至少现在来看是这样。这中调试类型允许您连接IDE到远程机器来调试一个运行着的进程。通过这种方式，我们可以考虑用本地运行的容器，去远程目标服务器或实际服务器，无论该服务器是内部的或云上的。
 
 与在本地运行相比，您要更加小心的使用编译器标识去编译应用。然后，您需要用与您的应用相同的Go版本和主机/目标主机来编译Delve，因为不同的操作系统之间可能存在一些细微的差异，这有可能导致您无法按照预期进行调试。
 
-您还应该确保的是，如果您在使用 *__$GOPATH__*，那么项目也是在与*__$GOPATH__* 同一相对路径编译的。例如：如果您的项目在 *__github.com/JetBrains/go-sample__* 下是可用的，那么无论是IDE所在的机器上还是在应用编译的机器上，其应用所在的路径都是 **$GOPATH/src/github.com/JetBrains/go-sample** ，这两台机器上的 *__$GOPATH__* 可能是不同的。IDE会在本地和远程机上自动映射源。
+您还应该确保的是，如果您在使用 *__$GOPATH__*，那么项目也是在与*__$GOPATH__* 同一相对路径编译的。例如：如果您的项目在 *__github.com/JetBrains/go-sample__* 下是可用的，那么无论是IDE所在的机器上还是在应用编译的机器上，其应用所在的路径都是**$GOPATH/src/github.com/JetBrains/go-sample** ，这两台机器上的 *__$GOPATH__* 可能是不同的。IDE会在本地和远程机上自动映射源。
 
 当你部署你应用的时候，还要部署之前被编译的Delve的副本，你有两种启动测试的选项：
 
