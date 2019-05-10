@@ -12,7 +12,7 @@ Jacob Walker 2019年4月18日
 
 为了看到一个简单的未完成任务陷阱的例子，请检查这个程序
 
-**例1**
+**例 1**
 
 https://play.golang.org/p/VORJoAD2oAh
 
@@ -37,7 +37,7 @@ https://play.golang.org/p/VORJoAD2oAh
 
 在 Ardan 实验室中，我的团队需要为客户搭建一个跟踪特定事件的 web 服务，这个记录事情的系统有一个类似例 2 中 Tracker 类型绑定的方法，
 
-**例2**
+**例 2**
 
 https://play.golang.org/p/8LoUoCdrT7T
 
@@ -56,7 +56,8 @@ https://play.golang.org/p/8LoUoCdrT7T
 
 考虑到这一点，跟踪事件的处理程序最初编写如下：
 
-**例3**
+**例 3**
+
 https://play.golang.org/p/8LoUoCdrT7T
 
 ```
@@ -200,16 +201,30 @@ https://play.golang.org/p/p4gsDkpw1Gh
 58 }
 ```
 
+现在在例 7 的 38 行，`Shutdown` 方法将 `context.Context` 作为输入参数。这就是调用者来限制等待程序终止的时间。在方法的 41 行，一个 channel 被创建了，并且在 45 行，一个 Goroutine 也启动了。这个 Goroutine 的唯一作用就是等待所有的协程都完成，然后关闭这个 channel。最后，在 52 行有一个 `select` 代码块，它可以等待 context 被取消，或则通道被关闭。
 
+下一步团队就 `func main` 改成了如下所示：
 
+**例 8**
 
+https://play.golang.org/p/p4gsDkpw1Gh
 
+```
+86     // Wait up to 5 seconds for all event goroutines to finish.
+87     const timeout = 5 * time.Second
+88     ctx, cancel := context.WithTimeout(context.Background(), timeout)
+89     defer cancel()
+90 
+91     err := a.track.Shutdown(ctx)
+```
 
+在例 8 中，`mian` 函数中创建了一个 5s 的上下文对象。这将传递到 `a.track.shutdown` 以设置主服务器愿意等待的时间。
 
+## 结论
 
+随着 Goroutines 的引入，此服务器的处理程序能够将跟踪事件所需的 API 请求时间延迟成本降到最低。只使用 `go` 关键字在后台运行此工作是很容易的，但该解决方案存在完整性问题。正确地执行此操作需要在关闭程序之前努力确保所有相关的 `goroutine` 都已终止。
 
-
-
+**并发性是一个有用的工具，但我们必须谨慎使用它。**
 
 ---
 
