@@ -40,7 +40,7 @@ https://play.golang.org/p/8LoUoCdrT7T
 ```go
  9 // Tracker knows how to track events for the application.
 10 type Tracker struct{}
-11 
+11
 12 // Event records an event to a database or stream.
 13 func (t *Tracker) Event(data string) {
 14     time.Sleep(time.Millisecond) // Simulate network write latency.
@@ -61,15 +61,15 @@ https://play.golang.org/p/8LoUoCdrT7T
 19 type App struct {
 20     track Tracker
 21 }
-22 
+22
 23 // Handle represents an example handler for the web service.
 24 func (a *App) Handle(w http.ResponseWriter, r *http.Request) {
-25 
+25
 26     // Do some actual work.
-27 
+27
 28     // Respond to the client.
 29     w.WriteHeader(http.StatusCreated)
-30 
+30
 31     // Fire and Hope.
 32     // BUG: We are not managing this goroutine.
 33     go a.track.Event("this event")
@@ -91,12 +91,12 @@ https://play.golang.org/p/BMah6_C57-l
 ```go
 44 // Handle represents an example handler for the web service.
 45 func (a *App) Handle(w http.ResponseWriter, r *http.Request) {
-46 
+46
 47     // Do some actual work.
-48 
+48
 49     // Respond to the client.
 50     w.WriteHeader(http.StatusCreated)
-51 
+51
 52     // Track the event.
 53     a.track.Event("this event")
 54 }
@@ -113,26 +113,26 @@ https://play.golang.org/p/BMah6_C57-l
 11 type Tracker struct {
 12     wg sync.WaitGroup
 13 }
-14 
+14
 15 // Event starts tracking an event. It runs asynchronously to
 16 // not block the caller. Be sure to call the Shutdown function
 17 // before the program exits so all tracked events finish.
 18 func (t *Tracker) Event(data string) {
-19 
+19
 20     // Increment counter so Shutdown knows to wait for this event.
 21     t.wg.Add(1)
-22 
+22
 23     // Track event in a goroutine so caller is not blocked.
 24     go func() {
-25 
+25
 26         // Decrement counter to tell Shutdown this goroutine finished.
 27         defer t.wg.Done()
-28 
+28
 29         time.Sleep(time.Millisecond) // Simulate network write latency.
 30         log.Println(data)
 31     }()
 32 }
-33 
+33
 34 // Shutdown waits for all tracked events to finish processing.
 35 func (t *Tracker) Shutdown() {
 36     t.wg.Wait()
@@ -149,14 +149,14 @@ https://play.golang.org/p/BMah6_C57-l
 
 ```go
 56 func main() {
-57 
+57
 58     // Start a server.
 59     // Details not shown...
 60     var a App
-61 
+61
 62     // Shut the server down.
 63     // Details not shown...
-64 
+64
 65     // Wait for all event goroutines to finish.
 66     a.track.Shutdown()
 67 }
@@ -175,17 +175,17 @@ https://play.golang.org/p/p4gsDkpw1Gh
 36 // Shutdown waits for all tracked events to finish processing
 37 // or for the provided context to be canceled.
 38 func (t *Tracker) Shutdown(ctx context.Context) error {
-39 
+39
 40     // Create a channel to signal when the waitgroup is finished.
 41     ch := make(chan struct{})
-42 
+42
 43     // Create a goroutine to wait for all other goroutines to
 44     // be done then close the channel to unblock the select.
 45     go func() {
 46         t.wg.Wait()
 47         close(ch)
 48     }()
-49 
+49
 50     // Block this function from returning. Wait for either the
 51     // waitgroup to finish or the context to expire.
 52     select {
@@ -210,7 +210,7 @@ https://play.golang.org/p/p4gsDkpw1Gh
 87     const timeout = 5 * time.Second
 88     ctx, cancel := context.WithTimeout(context.Background(), timeout)
 89     defer cancel()
-90 
+90
 91     err := a.track.Shutdown(ctx)
 ```
 
