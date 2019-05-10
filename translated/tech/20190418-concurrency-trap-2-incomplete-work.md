@@ -88,7 +88,7 @@ https://play.golang.org/p/8LoUoCdrT7T
 
 刚开始我们直接使用不创建协程的方法。只要在 53 行去电 `go` 就可以了。
 
-**例4**
+**例 4**
 
 https://play.golang.org/p/BMah6_C57-l
 
@@ -108,7 +108,7 @@ https://play.golang.org/p/BMah6_C57-l
 
 下一步 `Tracker` 类型将可以自己管理协程
 
-**例5**
+**例 5**
 
 https://play.golang.org/p/BMah6_C57-l
 
