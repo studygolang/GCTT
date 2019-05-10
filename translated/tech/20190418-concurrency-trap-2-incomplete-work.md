@@ -2,7 +2,7 @@ https://www.ardanlabs.com/blog/2019/04/concurrency-trap-2-incomplete-work.html
 
 # 并发陷阱 2:未完成的工作
 
-Jacob Walker 2019年4月18日
+Jacob Walker 2019 年 4 月 18 日
 
 ## 介绍
 
