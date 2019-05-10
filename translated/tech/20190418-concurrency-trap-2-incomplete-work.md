@@ -5,18 +5,12 @@ https://www.ardanlabs.com/blog/2019/04/concurrency-trap-2-incomplete-work.html
 Jacob Walker 2019年4月18日
 
 ## 介绍
-In my first post on Goroutine Leaks, I mentioned that concurrency is a useful tool but it comes with certain traps that don’t exist in synchronous programs. To continue with this theme, I will introduce a new trap called incomplete work. Incomplete work occurs when a program terminates before outstanding Goroutines (non-main goroutines) complete. Depending on the nature of the Goroutine that is being terminated forcefully, this may be a serious problem.
-在我的第一篇文章 Goroutine 泄露中，我提到并发编程是一个很有用的工具，但是使用它也会带来某些非并发编程中不存在的陷阱。为了继续这个主题，我将介绍一个新的陷阱，这个陷阱叫做未完成的工作。当进程在非主协程的协程结束前终止时这种陷阱就会发生。根据Gorotine的本性，强制关闭它将造成一个严重的问题。
 
-Incomplete Work
-To see a simple example of incomplete work, examine this program.
+在我的第一篇文章 Goroutine 泄露中，我提到并发编程是一个很有用的工具，但是使用它也会带来某些非并发编程中不存在的陷阱。为了继续这个主题，我将介绍一个新的陷阱，这个陷阱叫做未完成的工作。当进程在非主协程的协程结束前终止时这种陷阱就会发生。根据Gorotine的本性，强制关闭它将造成一个严重的问题。
 
 ## 未完成的工作
 
 为了看到一个简单的未完成任务陷阱的例子，请检查这个程序
-
-Listing 1
-https://play.golang.org/p/VORJoAD2oAh
 
 **例1**
 
@@ -29,29 +23,17 @@ https://play.golang.org/p/VORJoAD2oAh
 8 }
 ```
 
-The program in Listing 1 prints "Hello" on line 6 and then on line 7, the program calls fmt.Println again but does so within the scope of a different Goroutine. Immediately after scheduling this new Goroutine, the program reaches the end of the main function and terminates. If you run this program you won’t see the “Goodbye” message because in the Go specification there is a rule:
-
-“Program execution begins by initializing the main package and then invoking the function main. When that function invocation returns, the program exits. It does not wait for other (non-main) goroutines to complete.”
-
 在例一的程序中，第6行打印了"Hello",随后在第 7 行，这个程序再次调用了 `fmt.Println` ，但是这次是在一个不同的 Groutine 中调用的。当启动这个新的 Goroutine 后，这个程序就到了主函数的结尾，然后程序就终止了。如果你运行这个程序，你不会看到“Goodbye”这个信息，因为 Go 的规范中有一个这样的规则：
 
 >
 程序的启动是通过初始化 main 包，然后调用其中的 main 方法来实现的。当这个 main 函数返回时，这个程序就退出了。它不会等待其他非主协程完成后再退出。
 >
 
-The spec is clear that your program will not wait for any outstanding Goroutines to finish when the program returns from the  main function. This is a good thing! Consider how easy it is to let a Goroutine leak or have a Goroutine run for a very long time. If your program waited for non-main Goroutines to finish before it could be terminated, it could be stuck in some kind of zombie state and never terminate.
-
 这个情况就很清楚了，当你的程序的主函数返回时，它不会等待任何非主协程完成，考虑到协程泄露和协程运行很长时间，这真是个好事情啊！当你的程序本可以结束，但是却要的等待一个非主协程完成，那么它可能就会卡住，以至于永远不会终止。
-
-However, this termination behavior becomes a problem when you start a Goroutine to do something important, but the main function does not know to wait for it to complete. This type of scenario can lead to integrity issues such as corrupting databases, file systems, or losing data.
 
 然后，当你启动一个协程去做重要的事情时，这种终止的方式就变成一个问题，因为主函数不会等待这个重要的协程完成就会返回。这种情况就会导致完整性问题，例如损坏数据库，文件系统，或者丢失数据。
 
-## A Real Example
-
 ## 一个真实的例子
-
-At Ardan Labs, my team built a web service for a client that required certain events to be tracked. The system for recording events had a method similar to the type Tracker shown below in Listing 2:
 
 在 Ardan 实验室中，我的团队需要为客户搭建一个跟踪特定事件的 web 服务，这个记录事情的系统有一个类似例 2 中 Tracker 类型绑定的方法，
 
@@ -70,11 +52,11 @@ https://play.golang.org/p/8LoUoCdrT7T
 16 }
 ```
 
-The client was concerned that tracking these events would add unnecessary latency to response times and wanted to perform the tracking asynchronously. It is unwise to make assumptions about performance, so our first task was to measure latency of the service with events tracked in a straight-forward and synchronous approach. In this case, the latency was unacceptably high and the team decided an asynchronous approach was needed. If the synchronous approach was fast enough then this story would be over as we would have moved on to more important things.
+客户担心跟踪这些事件，会增加程序的响应时间，并希望可以通过异步执行来进行跟踪。猜想程序的运行情况是不明智的，于是我们首先的任务是直接测量跟踪记录事物所会产生的延迟。在这个事件中，程序的延迟真的是高的不能接受，于是我们的团队决定采用异步的方法来实现。如果同步的方式足够快，我们也就不会将这个故事了，我们也会去做更重要的事。
 
-With that in mind, the handlers that tracked events were initially written like this:
+考虑到这一点，跟踪事件的处理程序最初编写如下：
 
-Listing 3
+**例3**
 https://play.golang.org/p/8LoUoCdrT7T
 
 ```
@@ -97,7 +79,76 @@ https://play.golang.org/p/8LoUoCdrT7T
 34 }
 ```
 
-The significant part of the code in listing 3 is line 33. This is where the a.track.Event method is being called within the scope of a new Goroutine. This had the desired effect of tracking events asynchronously without adding latency to the request. However, this code falls into the incomplete work trap and must be refactored. Any Goroutine created on line 33 has no guarantee of running or finishing. This is an integrity issue as events can be lost when the server shuts down.
+在代码中最重要的部分是 33 行，在这里，`a.track.Event` 方法在一个新的协程中被调用。这样就按期望地消除了请求的延迟。然而，这些代码却陷入了 *未完成的工作* 的陷阱，我们必须重构它。任何在第 33 行常见的协程，我们都无法保证它运行或者完成。这是一个数据完成性的严重问题，因为当服务被终止时，要记录的事件信息将会丢失。
+
+## 为保证重构
+
+为了避免陷入这个陷阱，团队修改了代码，让 `Tracker` 去管理这个协程。我们使用 `sync.WaitGroup` 去确保当主函数返回时，所有的协程都已经完成。
+
+刚开始我们直接使用不创建协程的方法。只要在 53 行去电 `go` 就可以了。
+
+**例4**
+
+https://play.golang.org/p/BMah6_C57-l
+
+```
+44 // Handle represents an example handler for the web service.
+45 func (a *App) Handle(w http.ResponseWriter, r *http.Request) {
+46 
+47     // Do some actual work.
+48 
+49     // Respond to the client.
+50     w.WriteHeader(http.StatusCreated)
+51 
+52     // Track the event.
+53     a.track.Event("this event")
+54 }
+```
+
+下一步 `Tracker` 类型将可以自己管理协程
+
+**例5**
+
+https://play.golang.org/p/BMah6_C57-l
+
+```
+10 // Tracker knows how to track events for the application.
+11 type Tracker struct {
+12     wg sync.WaitGroup
+13 }
+14 
+15 // Event starts tracking an event. It runs asynchronously to
+16 // not block the caller. Be sure to call the Shutdown function
+17 // before the program exits so all tracked events finish.
+18 func (t *Tracker) Event(data string) {
+19 
+20     // Increment counter so Shutdown knows to wait for this event.
+21     t.wg.Add(1)
+22 
+23     // Track event in a goroutine so caller is not blocked.
+24     go func() {
+25 
+26         // Decrement counter to tell Shutdown this goroutine finished.
+27         defer t.wg.Done()
+28 
+29         time.Sleep(time.Millisecond) // Simulate network write latency.
+30         log.Println(data)
+31     }()
+32 }
+33 
+34 // Shutdown waits for all tracked events to finish processing.
+35 func (t *Tracker) Shutdown() {
+36     t.wg.Wait()
+37 }
+```
+
+例 5 的第 12 行为 `Tracker` 增加了 `sync.WaitGroup`。在第 12 行 `Event` 方法中调用了 `t.wg.Add(1)`。这个不断的增加的计数器记录这在 24 行创建的协程的数量。一旦新协程被创建，这个函数就会返回，就可以满足客户对延迟的要求。创建的协程在执行完他们的工作后就会调用 27行的  `t.wg.Done()`。调用 `Done` 方法将会使计数器减 1 ，于是 WaitGroup 就知道这个协程完成了。
+
+
+
+
+
+
 
 
 
