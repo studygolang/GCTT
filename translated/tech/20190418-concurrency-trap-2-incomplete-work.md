@@ -14,7 +14,7 @@ Jacob Walker 2019 年 4 月 18 日
 
 https://play.golang.org/p/VORJoAD2oAh
 
-```go
+```
 5 func main() {
 6     fmt.Println("Hello")
 7     go fmt.Println("Goodbye")
