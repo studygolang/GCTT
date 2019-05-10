@@ -14,7 +14,7 @@ Jacob Walker 2019 年 4 月 18 日
 
 https://play.golang.org/p/VORJoAD2oAh
 
-```
+```go
 5 func main() {
 6     fmt.Println("Hello")
 7     go fmt.Println("Goodbye")
@@ -37,7 +37,7 @@ https://play.golang.org/p/VORJoAD2oAh
 
 https://play.golang.org/p/8LoUoCdrT7T
 
-```
+```go
  9 // Tracker knows how to track events for the application.
 10 type Tracker struct{}
 11 
@@ -56,7 +56,7 @@ https://play.golang.org/p/8LoUoCdrT7T
 
 https://play.golang.org/p/8LoUoCdrT7T
 
-```
+```go
 18 // App holds application state.
 19 type App struct {
 20     track Tracker
@@ -88,7 +88,7 @@ https://play.golang.org/p/8LoUoCdrT7T
 
 https://play.golang.org/p/BMah6_C57-l
 
-```
+```go
 44 // Handle represents an example handler for the web service.
 45 func (a *App) Handle(w http.ResponseWriter, r *http.Request) {
 46 
@@ -108,7 +108,7 @@ https://play.golang.org/p/BMah6_C57-l
 
 https://play.golang.org/p/BMah6_C57-l
 
-```
+```go
 10 // Tracker knows how to track events for the application.
 11 type Tracker struct {
 12     wg sync.WaitGroup
@@ -147,7 +147,7 @@ https://play.golang.org/p/BMah6_C57-l
 
 https://play.golang.org/p/BMah6_C57-l
 
-```
+```go
 56 func main() {
 57 
 58     // Start a server.
@@ -171,7 +171,7 @@ https://play.golang.org/p/BMah6_C57-l
 
 https://play.golang.org/p/p4gsDkpw1Gh
 
-```
+```go
 36 // Shutdown waits for all tracked events to finish processing
 37 // or for the provided context to be canceled.
 38 func (t *Tracker) Shutdown(ctx context.Context) error {
@@ -205,7 +205,7 @@ https://play.golang.org/p/p4gsDkpw1Gh
 
 https://play.golang.org/p/p4gsDkpw1Gh
 
-```
+```go
 86     // Wait up to 5 seconds for all event goroutines to finish.
 87     const timeout = 5 * time.Second
 88     ctx, cancel := context.WithTimeout(context.Background(), timeout)
