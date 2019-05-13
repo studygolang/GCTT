@@ -91,7 +91,7 @@ func main() {
 
 我们也可以像这样创建一个测试文件：
 
-```
+```go
 package main
 
 import (
@@ -188,7 +188,7 @@ func TestIndexHandler(t *testing.T) {
 
 你可以使用如下 Dockerfile 中的容器定义：
 
-```go
+```
 
 FROM golang:1.11.5-alpine3.8 AS build-env
 
