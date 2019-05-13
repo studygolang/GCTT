@@ -1,6 +1,6 @@
 # 现代服务端技术栈介绍——Golang,Protobuf和gRPC
 
-// pic
+<img src="https://github.com/DoubleLuck/gctt-images/blob/master/Introduction-to-the-Modern-Server-side-Stack-Golang,Protobuf,and-gRPC/1_W_1gSpbn79xtYZw9_TBGPA.jpeg?raw=true" width = "100%" height = "219" style="margin-bottom: 20px; margin-top: 10px;" />
 
 身边多了一些新的服务端程序员，这一次，一切都与谷歌有关。自从谷歌开始在他们的生产系统中使用go语言以来，`go` 语言的流行度快速地提升。从微服务架构创立至今，人们一直在关注像 `gRPC`、`Protobuf` 这样的现代数据通信解决方案。在这篇文章中，我将分别对它们作简要的介绍。
 
@@ -197,7 +197,7 @@ func (executor *Executor) Inactive() bool {
 
 单线程执行性能并不是评价语言的好的指标，尤其当这门语言专注于并发和并行。但是，`Golang` 仍然跑出了优秀的基准测试数据，仅仅被诸如 `C`，`C++`，`Rust` 这样的底层系统编程语言打败。它的性能仍在不断提升中。考虑到它是一门“垃圾回收型”语言，它的性能确实非常优秀，足以在任何场景下使用。
 
-// pic
+<img src="https://github.com/DoubleLuck/gctt-images/blob/master/Introduction-to-the-Modern-Server-side-Stack-Golang,Protobuf,and-gRPC/1_2SrMSeCcNmTExRXE-Fpr4A.png?raw=true" width = "100%" height = "352" style="margin-bottom: 20px; margin-top: 10px;" />
 
 ## 开发工具
 
@@ -344,7 +344,7 @@ func main() {
 
 `Protobuf` 确实那么快吗？简明扼要：是的。根据 [谷歌开发者网站](https://developers.google.com/protocol-buffers/docs/overview#whynotxml)，它们比`XML` 小 3-10 倍，并且快 20-100 倍。由于它是二进制格式，所以这并不令人惊讶，序列化后的数据是人类无法阅读的。
 
-//pic
+<img src="https://github.com/DoubleLuck/gctt-images/blob/master/Introduction-to-the-Modern-Server-side-Stack-Golang,Protobuf,and-gRPC/1_FI7JuupJ02r5cVSMqKAuAA.png?raw=true" width = "100%" height = "352" style="margin-bottom: 20px; margin-top: 10px;" />
 
 `Protobufs` 采取更有计划的步骤。你定义 `.proto` 文件，这些文件有点像模式文件，但作用更大。本质上，你定义的是你期望的消息被格式化的方式，可选的字段，必需的字段，它们的数据类型等。在这之后，`Protobuf` 编译器将会为你生成类来使用数据。你可以在你的业务逻辑中使用这些类来进行通信。
 
