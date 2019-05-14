@@ -277,11 +277,11 @@ func process(dec *sphinx.Decoder, bits []int16) {
 	if !dec.StartUtt() {
 		panic("Decoder failed to start Utt")
 	}
-	
+
 	dec.ProcessRaw(bits, false, false)
 	dec.EndUtt()
 	hyp, score := dec.Hypothesis()
-	
+
 	if score > -2500 {
 		log.Println("Predicted:", hyp, score)
 		handleAction(hyp)
@@ -297,7 +297,7 @@ func handleAction(hyp string) {
 	switch hyp {
 		case "SLEEP":
 		executeCommand("loginctl", "lock-session")
-		
+
 		case "WAKE UP":
 		executeCommand("loginctl", "unlock-session")
 
@@ -313,7 +313,7 @@ func main() {
 		sphinx.LMFileOption("6129.lm"),
 		sphinx.LogFileOption("commander.log"),
 	)
-	
+
 	dec, err := sphinx.NewDecoder(cfg)
 	if err != nil {
 		panic(err)
@@ -350,7 +350,7 @@ func main() {
 
 阅读一个关联到服务的 `.proto` 文件也会让你清楚地了解通信的具体细节和它暴露的特性。一个典型的 `.proto` 文件如下：
 
-```protobuf 
+```protobuf
 message Person {
   required string name = 1;
   required int32 id = 2;
