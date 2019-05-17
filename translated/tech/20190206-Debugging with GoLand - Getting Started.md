@@ -126,8 +126,8 @@ func TestIndexHandler(t *testing.T) {
 }
 ```
 
-对于支持 *__GO Modules__* 的应用，您可以使用快捷键 *__Alt+Enter__* 然后 *__Sync__* *__packages__* *__of__* *__<my__* *__project>__*。
-对于不支持 *__GO Modules__* 的应用，您可以使用快捷键 *__Alt+Enter__* 然后 *__go__* *__get__* *__-t__* *__<missing__* *__dependency>__*。
+对于支持 *__GO Modules__* 的应用，您可以使用快捷键 *__Alt+Enter__* 然后 *__Sync packages of \<my project\>__*。
+对于不支持 *__GO Modules__* 的应用，您可以使用快捷键 *__Alt+Enter__* 然后 *__go get -t \<missing dependency\>__*。
 
 最终我们会发现，我们用于编译项目的GO版本也会影响到我们调试的体验。随着每一个 Go 版本的发布，GO 小组成员都会添加更多的调试信息，并提升现有调试信息的质量。比如，我们将 Go 1.8 更新到 Go 1.9 就会发现这些提升的变化，如果我们从 Go  1.8 更新到 Go 1.11，提升效果就会更加明显。因此，您用越新的 Go 版本，就会有越好的体验。
 
@@ -136,7 +136,7 @@ func TestIndexHandler(t *testing.T) {
 ## <a name="debugging-an-application"></a>调试应用
 
 我们可以点击绿色三角，然后选择 Debug 'go build main.go' 来调试程序。
-或者我们也可以右击文件夹选择 *__Debug | go build <project__* *__name>__*。
+或者我们也可以右击文件夹选择 *__Debug | go build \<project name\>__*。
 
 ![1st_gif](https://d3nmt5vlzunoa1.cloudfront.net/go/files/2019/02/1-optimized.gif)
 
@@ -175,12 +175,12 @@ func TestIndexHandler(t *testing.T) {
 
 与在本地运行相比，您要更加小心的使用编译器标识去编译应用。然后，您需要用与您的应用相同的 Go 版本和主机/目标主机来编译 Delve ，因为不同的操作系统之间可能存在一些细微的差异，这有可能导致您无法按照预期进行调试。
 
-您还应该确保的是，如果您在使用 *__$GOPATH__*，那么项目也是在与*__$GOPATH__* 同一相对路径编译的。例如：如果您的项目在 *__github.com/JetBrains/go-sample__* 下是可用的，那么无论是IDE所在的机器上还是在应用编译的机器上，其应用所在的路径都是**$GOPATH/src/github.com/JetBrains/go-sample** ，这两台机器上的 *__$GOPATH__* 可能是不同的。IDE 会在本地和远程机上自动映射源代码。
+您还应该确保的是，如果您在使用 *__$GOPATH__* ，那么项目也是在与 *__$GOPATH__* 同一相对路径编译的。例如：如果您的项目在 *__github.com/JetBrains/go-sample__* 下是可用的，那么无论是IDE所在的机器上还是在应用编译的机器上，其应用所在的路径都是 **$GOPATH/src/github.com/JetBrains/go-sample** ，这两台机器上的 *__$GOPATH__* 可能是不同的。IDE 会在本地和远程机上自动映射源代码。
 
 当你部署你应用的时候，还要部署之前被编译的 Delve 的副本，你有两种启动测试的选项：
 
 * 让调试器运行进程：如果你选择了这个选项，你需要运行`dlv --listen=:2345 --headless=true --api-version=2 exec ./application` 。还要注意如果你使用了防火墙或容器，你就需要将 *__2345__* 这个端口暴露给那些配置。端口号可以是你想要的任意值，不一定非得是  *__2345__*，只要是主机上空闲的就行。
-* 附加到进程中：你需要运行 `dlv --listen=:2345 --headless=true --api-version=2 attach <pid>` ， *__<__* *__pid__* *__>__*是你应用的进程 id 。
+* 附加到进程中：你需要运行 `dlv --listen=:2345 --headless=true --api-version=2 attach <pid>` ，*__\<pid\>__* 是你应用的进程 id 。
 
 这些都完事了之后，最后一步是将你的 IDE 连接到远程调试器。你可以通过 ***Run | Edit Configurations… | + | Go Remote*** ，然后配置主机和你的远程调试器监听的端口号进行连接。
 
