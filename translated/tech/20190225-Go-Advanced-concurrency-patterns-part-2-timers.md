@@ -1,7 +1,9 @@
 # Go 高并发模式：第二部分（计时器）
-正如我在[上一篇文章](https://blogtitle.github.io/go-advanced-concurrency-patterns-part-1/)中所述，定时器很难被正确的使用，所以这里进行一些说明。
+
+正如我在[上一篇文章](https://blogtitle.github.io/go-advanced-concurrency-patterns-part-1/)中所述，准确使用定时器很难的，所以这里进行一些说明。
 
 ## 前言
+
 如果你认为结合 goroutines 去处理时间和计数器很简单的话，那你就错了，这里有提到的一些与 time.Timer 相关的问题或 bug：
 
 * [time: Timer.Reset is not possible to use correctly #14038](https://github.com/golang/go/issues/14038)
@@ -15,33 +17,37 @@ tm := time.NewTimer(1)
 tm.Reset(100 * time.Millisecond)
 <-tm.C
 if !tm.Stop() {
-	<-tm.C
+    <-tm.C
 }
 ```
+
 死锁代码片段
 
 ```go
 func toChanTimed(t *time.Timer, ch chan int) {
-	t.Reset(1 * time.Second)
-	defer func() {
-		if !t.Stop() {
-			<-t.C
-		}
-	}()
-	select {
-	case ch <- 42:
-	case <-t.C:
-	}
+    t.Reset(1 * time.Second)
+    defer func() {
+        if !t.Stop() {
+            <-t.C
+        }
+    }()
+    select {
+    case ch <- 42:
+    case <-t.C:
+    }
 }
 ```
+
 可能代码比较难懂，下面对相关方法进行阐述。
 
 ## time.Ticker
+
 ```go
 type Ticker struct {
         C <-chan Time // The channel on which the ticks are delivered.
 }
 ```
+
 Ticker 简单易用，但也有一些小问题
 
 * 如果 C 中已存在一条消息，则发送消息时将删除所有未读值。
@@ -49,16 +55,19 @@ Ticker 简单易用，但也有一些小问题
 * 设置 C 无用：消息仍将在原始的 channel 上发送。
 
 ## time.Tick
-time.Tick 是对 time.NewTicker 的封装。最好不要使用该方法，除非你准备将 `chan` 作为返回结果并在程序的整个生命周期中继续使用它。<br/>
-正如官方描述：<br/>
-`垃圾收集器无法恢复底层的 Ticker，出现"泄漏".`<br/>
+
+time.Tick 是对 time.NewTicker 的封装。最好不要使用该方法，除非你准备将 `chan` 作为返回结果并在程序的整个生命周期中继续使用它。
+正如官方描述：
+`垃圾收集器无法恢复底层的 Ticker，出现"泄漏".`
 请谨慎使用，如有疑问请改用 `Ticker`。
 
 ## time.After
-这与 `Tick` 的概念基本相同，它是对 `Timer` 进行封装。一旦计时器被触发，它将开始计数。请注意，计时器使用了缓存容量是 1 的通道，即使没有接收者，它仍可以进行计数。<br/>
+
+这与 `Tick` 的概念基本相同，它是对 `Timer` 进行封装。一旦计时器被触发，它将开始计数。请注意，计时器使用了缓存容量是 1 的通道，即使没有接收者，它仍可以进行计数。
 如上所述，如果您关心性能且不希望被调用，请不要使用 `After`。
 
 ## time.Timer (也称为 time.WhatTheFork?!)
+
 对于 Go 来说这是一个比较奇怪的 API ：`NewTicker(Duration)` 返回了一个 `*Timer` 类型，该类型仅<strong>输出</strong>一个定义为 chan 类型的变量 `C` ，这点非常奇怪。
 
 通常在 Go 语言中允许导出的字段意味着用户可以获取或设置该字段，而此处设置变量 `C` 并没有实际意义。相反：设置 C 并重置 Timer 并不会影响之前在 C 通道的消息传递。更糟糕的是：AfterFunc 返回的 Timer 根本不会使用到 C。
@@ -67,7 +76,7 @@ time.Tick 是对 time.NewTicker 的封装。最好不要使用该方法，除非
 
 ```go
 type Timer struct {
-	C <-chan Time
+    C <-chan Time
 }
 
 func AfterFunc(d Duration, f func()) *Timer
@@ -79,6 +88,7 @@ func (*Timer) Reset(d Duration) bool
 四个非常简单的函数，其中两个是构造函数，<strong>有可能出错吗？</strong>
 
 ### time.AfterFunc
+
 `官方文档： AfterFunc 持续时间超时后通过开 goroutine 去调用 f 函数， f 返回一个 Timer 类型，以便通过 Stop 方法取消调用。`
 
 这么描述虽然没有问题，但需要注意：当调用 `Stop` 方法时，如果返回 `false` ，则表示该函数已经执行且停止失败。但并不意味着函数已经返回，你需要添加一些处理逻辑：
@@ -86,20 +96,21 @@ func (*Timer) Reset(d Duration) bool
 ```go
 done := make(chan struct{})
 f := func() {
-	doStuff()
-	close(done)
+    doStuff()
+    close(done)
 }
 t := time.AfterFunc(1*time.Second, f)
 if !t.Stop() {
-	<-done
+    <-done
 }
 ```
+
 这个在 `Stop` 文档中有相关说明
 除此之外，返回的计时器不会被触发，只能用于调用 `Stop` 方法。
 
 ```go
 t := time.AfterFunc(1*time.Second, func() {
-		fmt.Println("Time has passed!")
+    fmt.Println("Time has passed!")
 })
 // This will deadlock.
 <-t.C
@@ -108,6 +119,7 @@ t := time.AfterFunc(1*time.Second, func() {
 此外，在写入时，重置计时器会使在持续时间之后再次调用 f，目前这块暂没有相关描述。
 
 ### time.NewTimer
+
 `官方文档: NewTimer 实例化 Timer 结构体，在持续时间 d 之后发送当前时间至通道内.`
 
 这意味着没有声明它就无法构建有效的 `Timer` 类型结构体。 如果你需要构建一个以便后续重复使用，可以用该方法进行实例化，或者使用如下代码实现自主创建和停止计数器
@@ -115,9 +127,10 @@ t := time.AfterFunc(1*time.Second, func() {
 ```go
 t := time.NewTimer(0)
 if !t.Stop() {
-	<-t.C
+    <-t.C
 }
 ```
+
 你<strong>必须</strong>从 channel 中读取数据。假如在 `New` 和 `Stop` 调用期间触发了定时器，且 channel 存在未消费的数据， 则 `C` 会存在一个值。将导致后续读取均是错误的。
 
 ### (*time.Timer).Stop
@@ -126,9 +139,10 @@ if !t.Stop() {
 
 ```go
 if !t.Stop() {
-	<-t.C
+    <-t.C
 }
 ```
+
 关键点在于 "or" 它意味着有效 0 次或 1 次。对已消费完通道数据和在此期间未调用 Reset 进行过多次执行的情况，均是无效的。综上所述，当且仅当没有执行对通道数据的消费，Stop+drain 才是安全的。
 
 在文档中体现如下：
@@ -137,7 +151,8 @@ if !t.Stop() {
 
 此外，上面的模式不是线程安全的，因为当消费完通道数据时，Stop 返回的值可能已经过时了，两个 goroutine 尝试消费通道 C 数据也会导致死锁。
 
-###(*time.Timer).Reset
+### (*time.Timer).Reset
+
 这个方法更有意思，文档很长，你可以在[这里](https://golang.org/pkg/time/#Timer.Reset)进行查看
 
 文档中一个有趣的摘录：
@@ -149,17 +164,18 @@ if !t.Stop() {
 
 ```go
 if !t.Stop() {
-	<-t.C
+    <-t.C
 }
 t.Reset(d)
 ```
+
 不能与来自通道的其他接收者同时使用 `Stop` 和 `Reset` 方法， 为了使 `C` 上传递的消息有效，C 应该在每次`重置`之前被消费完。
 
 重置计时器而不清空它将使运行过程时丢弃改值，因为 `C` 缓存为 1，运行时对其他执行是[有损发送](https://golang.org/src/time/sleep.go?s=#L134)。
 
-
 ### time.Timer: putting it together
-* Stop 仅作用在 New 和 Reset 方法之后才安全.
+
+* Stop 仅作用在 New 和 Reset 方法之后才安全
 * Reset 仅在 Stop 方法后有效。
 * 只有在每次运行 Stop 后，channel 消费完时，所接收的值才是有效的。
 * 只有 channel 未被消费时，才允许清空 channel。
@@ -172,26 +188,27 @@ t.Reset(d)
 
 ```go
 func toChanTimed(t *time.Timer, ch chan int) {
-	t.Reset(1 * time.Second)
-	// No defer, as we don't know which
-	// case will be selected
+    t.Reset(1 * time.Second)
+    // No defer, as we don't know which
+    // case will be selected
 
-	select {
-	case ch <- 42:
-	case <-t.C:
-		// C is drained, early return
-		return
-	}
+    select {
+    case ch <- 42:
+    case <-t.C:
+        // C is drained, early return
+        return
+    }
 
-	// We still need to check the return value
-	// of Stop, because t could have fired
-	// between the send on ch and this line.
-	if !t.Stop() {
-		<-t.C
-	}
+    // We still need to check the return value
+    // of Stop, because t could have fired
+    // between the send on ch and this line.
+    if !t.Stop() {
+        <-t.C
+    }
 }
 
 ```
+
 上述代码可以确保 toChanTimed 返回后可以重新使用计时器
 
 ## 想知道更多吗
