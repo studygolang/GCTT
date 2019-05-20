@@ -11,7 +11,7 @@ MySQL的主从复制是一个很棒的设计。而我们的守护进程可以视
 >1、如何处理binlog中的新数据
 
 >2、如何设置和扩展
- 
+
 ## part 1.快速运行
 我们可以使用这个库<https://github.com/siddontang/go-mysql/>来处理binlog。
 
@@ -258,11 +258,11 @@ func (m *BinlogParser) intHelper(e *canal.RowsEvent, n int, columnName string) i
 除了getBinlogIdByName()方法，所有东西看起来都是合理的。
 
 需要使用trivial帮助器来处理column名而不是它的id，这样可以：
-> 使用gorm注释来处理字段名：
+>使用gorm注释来处理字段名：
 
-> 在开头和中间添加字段名时不需要额外修改：
+>在开头和中间添加字段名时不需要额外修改：
 
-> 使用字段名处理比column3更方便。
+>使用字段名处理比column3更方便。
 
 最后，我们加入以下处理：
 
