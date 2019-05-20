@@ -8,7 +8,7 @@ MySQL的主从复制是一个很棒的设计。而我们的守护进程可以视
 >1、如何处理binlog中的新数据  
 >2、如何设置和扩展
   
-### part 1.快速运行
+## part 1.快速运行
 我们可以使用这个库<https://github.com/siddontang/go-mysql/>来处理binlog。  
 连接到一个新的channel（chanal是一个库的标签）。我们将使用binlog中的row格式<https://mariadb.com/kb/en/library/binary-log-formats/>。  
 
@@ -144,7 +144,7 @@ User 1 is created with name Jack
 User 1 name changed from Jack to Jonh
 ```
 这段代码通过binlog来解析新增的row，并通过数据表获取我们需要的数据，在结构体中解析数据并输出结果。我没有介绍所有的数据解析器（BinlogParser），这其中还隐藏了一些hydration逻辑模型。  
-### part 2.正如cobb所说，我们需要更加深入了解
+## part 2.正如cobb所说，我们需要更加深入了解
 解析器的隐藏部分是基于反射，可以使用下面这种方式来进行hydration模型。
 
 ```
@@ -257,7 +257,7 @@ func (m *BinlogParser) intHelper(e *canal.RowsEvent, n int, columnName string) i
 ```
 s.Field(k).SetInt(m.intHelper(e, n, columnName))
 ```
-### 还有两个例子
+## 还有两个例子
 ENUM:我们将获取的值作为索引——所以“active”状态会被设置为0。同样的，我们也需要用enum字符串表示，而不是id，这些可以从字段介绍中获取。重要提示，值中的1描述的是0值索引字段，数组的值是从0开始的。  
 Enum的解析如下：
 
@@ -273,7 +273,7 @@ func (m *BinlogParser) stringHelper(e *canal.RowsEvent, n int, columnName string
 	}
 }
 ```
-### 存储JSON
+## 存储JSON
 这难道不是个好主意吗？json是MySQL引擎侧的字符串，我们可以将序列化的数据指向解析器。为此，可以添加一个自定义gorm注释——“fromJson”，以下是不同数据之间的例子：
 
 ```
