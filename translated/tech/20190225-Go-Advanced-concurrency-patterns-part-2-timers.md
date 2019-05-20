@@ -224,3 +224,12 @@ func toChanTimed(t *time.Timer, ch chan int) {
 |AfterFunc(d,f)|`d`|not set|`goFunc`|`f`|
 
 运行计数器不依赖于 goroutine ，而是以更高效精确的方式组合使用。你可以在 [runtime/time.go](https://golang.org/src/runtime/time.go) 包中深入了解实现细节。祝学的开心！
+
+---
+via: https://blogtitle.github.io/go-advanced-concurrency-patterns-part-2-timers/
+
+作者：[Rob](https://blogtitle.github.io/authors/rob/)
+译者：[liulizhi](https://github.com/liulizhi)
+校对：[校对者 ID](https://github.com/校对者 ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
