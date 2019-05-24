@@ -1,12 +1,14 @@
-# Go GraphQL入门指南-第二部分
+首发于：https://studygolang.com/articles/20653
 
-___注意___：关于 GraphQL 的系列教程的第一部分可以在这里：[Go GraphQL 入门指南 - Part 1](https://studygolang.com/articles/18801)阅读。
+# Go GraphQL 入门指南 - 第二部分
+
+___注意___：关于 GraphQL 的系列教程的第一部分可以在这里：[Go GraphQL 入门指南 - Part 1](https://studygolang.com/articles/18801) 阅读。
 
 首先，再次欢迎各位 Gophers ！在本篇教程中，我们将在上一篇教程中所做的工作基础上进行扩展，了解变更 (Mutation) 的概念，并在 GraphQL API 后端实现合适的数据源。
 
 在上篇教程中，我们了解到 GraphQL 的一些主要的优点，以及它是如何在应用程序中极大地改进特定组件的检索方式。
 
-我们研究了为特定的视图构建可编排的 API 可能会造成额外开销的原因，以及运用这种技术是如何帮助你降低 web 组件检索数据而产生的冗余信息。
+我们研究了为特定的视图构建可编排的 API 可能会造成额外开销的原因，以及运用这种技术是如何帮助你降低 Web 组件检索数据而产生的冗余信息。
 
 ___阅读资料___： 如果你不太确信 GraphQL 所谓的益处，我建议你阅读**Paypal Engineering**的这篇文章，这篇文章很有趣，同时也强调了他们在一些技术实践上成功之处 - [GraphQL - A Success Story for Paypal Checkout](https://medium.com/paypal-engineering/graphql-a-success-story-for-paypal-checkout-3482f724fb53)。
 
@@ -24,7 +26,7 @@ GraphQL 中的**变更**不仅可以从 GraphQL API 获取数据，而且也可�
 
 下面，让我们尝试开始创建一个简单的**变更**，该**变更**允许我们在已有的教程列表中增加新的教程。
 
-我们会创建一个全新的 GraphQL 对象，这与我们之前对 `fields` 所做的操作一样，在这个新对象中我们会定义一个 `create` 字段。该字段只会根据传递给它的参数填充一个新的 `Tutorial` ，然后将这个 `Tutorial` 追加到全局`Tutorials`列表中。
+我们会创建一个全新的 GraphQL 对象，这与我们之前对 `fields` 所做的操作一样，在这个新对象中我们会定义一个 `create` 字段。该字段只会根据传递给它的参数填充一个新的 `Tutorial` ，然后将这个 `Tutorial` 追加到全局 `Tutorials` 列表中。
 
 ___一些需要微调的地方___: 我们需要将 `tutorials` 移动到一个新的全局变量中以便于我们使用。在这之后我们会用数据库去替换它，所以不必担心设置或修改了全局状态。
 
@@ -79,7 +81,7 @@ schemaConfig := graphql.SchemaConfig{
         if len(r.Errors) > 0 {
                 log.Fatalf("failed to execute graphql operation, errors: %+v", r.Errors)
         }
-        rJSON, _ := json.Marshal(r)
+        rJSON, _ := JSON.Marshal(r)
         fmt.Printf("%s \n", rJSON)
 ```
 
@@ -101,13 +103,13 @@ r = graphql.Do(params)
             log.Fatalf("failed to execute graphql operation, errors: %+v", r.Errors)
 
     }
-    rJSON, _ = json.Marshal(r)
+    rJSON, _ = JSON.Marshal(r)
     fmt.Printf("%s \n", rJSON)
 `
 `
 ```
 
-___完整源代码___: 本小节所有的源代码都可以在[simple-mutation.go](https://gist.github.com/elliotforbes/becdd2b6d57260e88ac0698cb6c83d0b)找到。
+___完整源代码___: 本小节所有的源代码都可以在[simple-mutation.go](https://gist.github.com/elliotforbes/becdd2b6d57260e88ac0698cb6c83d0b) 找到。
 
 当我们尝试运行这些代码，我们会看到 _变更_ 已经被成功地调用，并且，返回的教程列表中已经包含了我们最新定义的教程信息。
 
@@ -119,7 +121,7 @@ $ go run ./...
 
 这非常棒，目前为止我们已经成功地创建了一个变更，该变更允许我们向已存在的教程列表中插入一篇新的教程。
 
-如果我们想更进一步，我们则可以添加更多的变更来更新现有的教程，或从教程列表中删除某些教程。我们只需在变更对象上创建一个新 `field`，该 `field` 具有针对每个操作的 `resolve` 函数，然后在这些 `resolve` 函数内部，我们可以实现针对特定教程的更新/删除的相关实现。
+如果我们想更进一步，我们则可以添加更多的变更来更新现有的教程，或从教程列表中删除某些教程。我们只需在变更对象上创建一个新 `field`，该 `field` 具有针对每个操作的 `resolve` 函数，然后在这些 `resolve` 函数内部，我们可以实现针对特定教程的更新 / 删除的相关实现。
 
 ## 更换数据源
 
@@ -221,11 +223,11 @@ if len(r.Errors) > 0 {
         log.Fatalf("failed to execute graphql operation, errors: %+v", r.Errors)
 
 }
-rJSON, _ := json.Marshal(r)
+rJSON, _ := JSON.Marshal(r)
 fmt.Printf("%s \n", rJSON)
 ```
 
-运行该代码，我们可以看到从 sqlite3 数据库返回的三行数据，同时我们也可以看到从 GraphQL 查询中返回的 JSON 响应体。同样地，如果我们只想返回教程的 `id`，我们可以修改 `query` 删除 `title` 字段，一切也会如预期一样地工作。
+运行该代码，我们可以看到从 SQLite3 数据库返回的三行数据，同时我们也可以看到从 GraphQL 查询中返回的 JSON 响应体。同样地，如果我们只想返回教程的 `id`，我们可以修改 `query` 删除 `title` 字段，一切也会如预期一样地工作。
 
 ```bash
 $ go run ./...
@@ -237,7 +239,7 @@ $ go run ./...
 
 ## 检索单个教程
 
-我们已经掌握了为 GraphQL API 使用外部数据源的诀窍，那么现在让我们看一个更加简单的例子。试着更新 `tutorial` 模式，以使它引用我们新的 sqlite3 数据源。
+我们已经掌握了为 GraphQL API 使用外部数据源的诀窍，那么现在让我们看一个更加简单的例子。试着更新 `tutorial` 模式，以使它引用我们新的 SQLite3 数据源。
 
 ```go
 "tutorial": &graphql.Field{
