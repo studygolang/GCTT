@@ -4,13 +4,8 @@
 
 （译者注：登录原网站可使用在线练习资源）
 
-
-
 > **难度**：入门级
-
 > **时间**：约30分钟
-
-
 
 [TOC]
 
@@ -23,8 +18,6 @@
 但有了编排工具之后，你通常可以摆脱大部分人力劳动，让自动化完成繁重的工作。Docker Swarm 容器编排有一个很酷的功能是，你只需一个命令即可在多个主机上部署应用程序（前提是启用了 Swarm 模式）。另外，如果 Docker Swarm 中的其中一个节点停止了运行，其他节点将自动接过负载，你的应用程序将继续运作如常。
 
 如果你通常只使用 `docker run` 来部署应用程序，那么使用 Docker Compose 或 Docker Swarm 模式或二者兼用将很有可能是你受益不浅。
-
-
 
 ## 第二节：配置 Docker Swarm 模式
 
@@ -184,8 +177,6 @@ yu3hbegvwsdpy9esh9t2lr431    node2   Ready   Active
 
  `docker node ls` 命令展示的是群组中的所有节点以及它们在群组中的角色。`*`标志表示你发布指令的节点。
 
-
-
 ## 第三节：跨多主机部署应用
 
 现在你有了一个运行中的群组，是时候部署我们非常简单的 *sleep* 应用了。你需要在 **node1** 上完成以下步骤。
@@ -224,8 +215,6 @@ of5rxsxsmm3a  sleep-app  replicated  1/1       ubuntu:latest
 到这一步为止，我们所做的事情似乎并没有比运行一条 `docker run ...` 命令更加复杂。我们同样还是只在一台主机上部署了单个的容器。不同之处在于，这个容器是在一个 Swarm 集群中进行调度。
 
 好的，利用了 Docker 服务这一特性，你已经成功在新群组上部署了这个 sleep 应用。
-
-
 
 ## 第四节：应用扩容缩容
 
@@ -283,8 +272,6 @@ wol6bzq7xf0v  sleep-app.2  ubuntu:latest  node3  Running        Running 5 minute
 ```
 
 你现在已经成功完成群组服务的扩容缩容啦。
-
-
 
 ## 第五节：排空节点并重新调度容器
 
@@ -373,8 +360,6 @@ s3548wki7rlk  sleep-app.6      ubuntu:latest  node3  Running        Running 3 mi
 44s8d59vr4a8  sleep-app.7      ubuntu:latest  node1  Running        Running 18 minutes ago
 ```
 
-
-
 ## 清理工作
 
 在 **node1** 上执行 `docker service rm sleep-app` 命令，删掉名为 *sleep-app* 的服务。
@@ -422,11 +407,7 @@ docker swarm leave --force
 
 恭喜你，完成本次的练习！你现在应该学会了怎样创建群组、将应用部署成服务以及对每个服务进行扩容缩容。
 
-
-
 ----------------
-
-
 
 via: https://training.play-with-docker.com/orchestration-hol/
 
