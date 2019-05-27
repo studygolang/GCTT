@@ -139,7 +139,7 @@ https://play.golang.org/p/BMah6_C57-l
 37 }
 ```
 
-例 5 的第 12 行为 `Tracker` 增加了 `sync.WaitGroup`。在第 12 行 `Event` 方法中调用了 `t.wg.Add(1)`。这个不断的增加的计数器记会录这在 24 行创建的协程的数量。一旦新协程被创建，这个函数就会返回，就可以满足客户对延迟的要求。创建的协程在执行完他们的工作后就会调用 27 行的  `t.wg.Done()`。调用 `Done` 方法将会使计数器减 1 ，于是 WaitGroup 就知道这个协程完成了。
+例 5 的第 12 行为 `Tracker` 增加了 `sync.WaitGroup`。在第 12 行 `Event` 方法中调用了 `t.wg.Add(1)`。这个不断的增加的计数器记会录这在 24 行创建的协程的数量。一旦新协程被创建，Event 函数就会返回，就可以满足客户对延迟的要求。创建的协程在执行完他们的工作后就会调用 27 行的  `t.wg.Done()`。调用 `Done` 方法将会使计数器减 1 ，于是 WaitGroup 就知道这个协程完成了。
 
 调用 `Add` 和 `Done` 对于记录活跃协程的数量是很有用的，但是主程序必须等待这些协程完成。为了满足这点，在 35 行 `Tracker` 又增加了一个新的方法 `Shutdown` 这个方法很简单，期中只是调用了 `t.Wg.Wait()`，这个函数会一直阻塞，只到协程的计数器减到 0，最后，这个程序必须要在 `func main` 中被调用。就想在 例 6 中。
 
@@ -161,15 +161,15 @@ https://play.golang.org/p/BMah6_C57-l
 66     a.track.Shutdown()
 67 }
 ```
-在例 6 中最关键的地方是第 66 行，这个函数会一直在阻塞，防止 `func main` 终止，至到 `a.track.Shutdown()` 完成。
+在例 6 中最关键的地方是第 66 行，这个函数会一直在阻塞，防止 `func main` 终止，直到 `a.track.Shutdown()` 完成。
 
 ## 也许不用等太久
 
-所展示的 `Shutdown` 方法的实现是很简单的，也确实完成了它的工作；等待所有的协程完成。但是不幸是的是，这里无法限制等待多长时间。考虑到在生产环境上，您可能不愿意无限期地等待程序关闭。为了给 `Shutdown` 方法增加一个最后期限，团队将程序改成了如下所示：
+所展示的 `Shutdown` 方法的实现是很简单的，也确实完成了它的工作，即等待所有的协程完成。但是不幸是的是，这里无法限制等待多长时间。考虑到在生产环境上，您可能不愿意无限期地等待程序关闭。为了给 `Shutdown` 方法增加一个最后期限，团队将程序改成了如下所示：
 
 **例 7**
 
-https://play.golang.org/p/p4gsDkpw1Gh
+[https://play.golang.org/p/p4gsDkpw1Gh](https://play.golang.org/p/p4gsDkpw1Gh)
 
 ```go
 36 // Shutdown waits for all tracked events to finish processing
@@ -214,7 +214,7 @@ https://play.golang.org/p/p4gsDkpw1Gh
 91     err := a.track.Shutdown(ctx)
 ```
 
-在例 8 中，`mian` 函数中创建了一个 5s 的上下文对象。这将传递到 `a.track.shutdown` 以设置主服务器愿意等待的时间。
+在例 8 中，`mian` 创建了一个 5 s 的超时取消的 context。这将传递到 a.track.shutdown 以设置 main 愿意等待的时间。
 
 ## 结论
 
