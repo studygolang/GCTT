@@ -252,7 +252,7 @@ Requests/Collection : ~3.98 r/gc    Requests/Collection : 7.13 r/gc
 清单 15 展示了跟最后一次的对比结果。下边是更形象的表达发生了什么
 
 **图 5**
- 
+
 ![img](https://www.ardanlabs.com/images/goinggo/101_figure5.png)
 
 图 5 形象的展示了发生了什么。这次处理相同的 10k 请求收集器少执行了 1149 (1420 vs 2551) 次。这使得整个的 GC 时间百分比从 14% 降到 7%。使应用的运行速度提升了 48%，垃圾收集时间降低了 74%。
