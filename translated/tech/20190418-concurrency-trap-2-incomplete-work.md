@@ -12,7 +12,7 @@ Jacob Walker 2019 年 4 月 18 日
 
 **例 1**
 
-https://play.golang.org/p/VORJoAD2oAh
+[https://play.golang.org/p/VORJoAD2oAh](https://play.golang.org/p/VORJoAD2oAh)
 
 ```go
 5 func main() {
@@ -21,7 +21,7 @@ https://play.golang.org/p/VORJoAD2oAh
 8 }
 ```
 
-在例一的程序中，第 6 行打印了 "Hello",随后在第 7 行，这个程序再次调用了 `fmt.Println` ，但是这次是在一个不同的 Groutine 中调用的。当启动这个新的 Goroutine 后，这个程序就到了主函数的结尾，然后程序就终止了。如果你运行这个程序，你不会看到“Goodbye”这个信息，因为 Go 的规范中有一个这样的规则：
+在例一的程序中，第 6 行打印了 "Hello",随后在第 7 行，这个程序再次调用了 `fmt.Println` ，但是这次是在一个不同的 Groutine 中调用的。当启动这个新的 Goroutine 后，这个程序就到了主函数的结尾，然后程序就终止了。如果你运行这个程序，你不会看到“Goodbye”这个信息，因为 [Go 的规范](https://golang.org/ref/spec#Program_execution)中有一个这样的规则：
 
 > 程序的启动是通过初始化 main 包，然后调用其中的 main 方法来实现的。当这个 main 函数返回时，这个程序就退出了。它不会等待其他非主协程完成后再退出。
 
@@ -35,7 +35,7 @@ https://play.golang.org/p/VORJoAD2oAh
 
 **例 2**
 
-https://play.golang.org/p/8LoUoCdrT7T
+[https://play.golang.org/p/8LoUoCdrT7T](https://play.golang.org/p/8LoUoCdrT7T)
 
 ```go
  9 // Tracker knows how to track events for the application.
@@ -48,13 +48,13 @@ https://play.golang.org/p/8LoUoCdrT7T
 16 }
 ```
 
-客户担心跟踪这些事件，会增加程序的响应时间，并希望可以通过异步执行来进行跟踪。猜想程序的运行情况是不明智的，于是我们首先的任务是直接测量跟踪记录事物所产生的延迟。在这个事件中，程序的延迟真的是高的不能接受，于是我们的团队决定采用异步的方法来实现。如果同步的方式足够快，我们也就不会将这个故事了，我们也会去做更重要的事。
+客户担心跟踪这些事件会增加程序的响应时间，希望可以通过异步执行来进行跟踪。猜想程序的运行情况是不明智的，于是我们首先的任务是通过同步追踪的方式记录发生的事件，从而衡量服务延迟。在这个案例中，程序的延迟真的是高的不能接受，于是我们的团队决定采用异步的方法来实现。如果同步的方式足够快，我们也就不会将这个故事了，我们也会去做更重要的事。
 
 考虑到这一点，跟踪记录事件的处理程序最初编写如下：
 
 **例 3**
 
-https://play.golang.org/p/8LoUoCdrT7T
+[https://play.golang.org/p/8LoUoCdrT7T](https://play.golang.org/p/8LoUoCdrT7T)
 
 ```go
 18 // App holds application state.
@@ -76,7 +76,7 @@ https://play.golang.org/p/8LoUoCdrT7T
 34 }
 ```
 
-在代码中最重要的部分是 33 行，在这里，`a.track.Event` 方法在一个新的协程中被调用的。这样就预期地消除了请求的延迟。然而，这些代码却陷入了 *未完成的工作* 的陷阱，我们必须重构它。任何在第 33 行常见的协程，我们都无法保证它运行或者完成。这是一个数据完成性的严重问题，因为当服务被终止时，要记录的事件信息将会丢失。
+在代码中最重要的部分是 33 行，在这里，`a.track.Event` 方法在一个新的协程中被调用的。这样就预期地消除了请求的延迟。然而，这些代码却陷入了 *未完成的工作* 的陷阱，我们必须重构它。任何在第 33 行常见的协程，我们都无法保证它运行或者完成。这是一个数据完整性的严重问题，因为当服务被终止时，要记录的事件信息将会丢失。
 
 ## 为保证重构
 
