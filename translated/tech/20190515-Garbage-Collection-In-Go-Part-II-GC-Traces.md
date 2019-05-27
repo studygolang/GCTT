@@ -1,3 +1,6 @@
+
+# Go 垃圾收集：第二部分 - GC追踪
+
 ### 前言
 
 这是三篇系列文章中的第二篇，该系列文章将会提供一个对Go垃圾收集器背后的机制和概念的理解。本篇主要介绍如何生成GC追踪并解释它们。
@@ -172,7 +175,6 @@ Total: 9.56GB
 ROUTINE ======================== project/search.rssSearch in project/search/rss.go
    71.53MB     4.55GB (flat, cum) 47.63% of Total
 
-
          .          .    117:   // Capture the data we need for our results if we find ...
          .          .    118:   for _, item := range d.Channel.Items {
          .     4.48GB    119:           if strings.Contains(strings.ToLower(item.Description), strings.ToLower(term)) {
@@ -249,7 +251,7 @@ Requests/Collection : ~3.98 r/gc    Requests/Collection : 7.13 r/gc
 ```
 清单 15 展示了跟最后一次的对比结果。下边是更形象的表达发生了什么
 
- **图 5**
+**图 5**
  
  ![img](https://www.ardanlabs.com/images/goinggo/101_figure5.png)
 
@@ -292,7 +294,6 @@ Requests/Collection : ~3.98 r/gc    Requests/Collection : 7.13 r/gc
 作为一个 Go 开发者，如果你花时间专注于降低内存分配，你正在尽你所能的对垃圾收集器友好。你不能写一个 0 内存分配的应用，所以认清生产性(有助于应用)和非生产性(对应用有害)的内存分配之间的区别很重要。信任垃圾收集器，并保证堆的合理使用，你的应用就会一直运行完好
 
 有一个垃圾收集器是一个很好的权衡。我会为垃圾收集的成本买单，所以我没有内存管理的负担。Go 是想让你作为一个开发者能够快速写出生产性的应用。垃圾收集器就是让这成为现实的起到了很大作用。在下一篇文章中，我将会分享另外一个项目，它将会展示垃圾收集器是如何分析你的 Go 应用并找到最佳收集路径的。
-
 
 ----------------
 
