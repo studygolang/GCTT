@@ -206,7 +206,7 @@ https://play.golang.org/p/BMah6_C57-l
 
 **例 8**
 
-https://play.golang.org/p/p4gsDkpw1Gh
+[https://play.golang.org/p/p4gsDkpw1Gh](https://play.golang.org/p/p4gsDkpw1Gh)
 
 ```go
 86     // Wait up to 5 seconds for all event goroutines to finish.
