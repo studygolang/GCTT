@@ -23,17 +23,16 @@
 我永远不会将堆称为可以存储或释放值的容器。重要的是，要理解定义“堆”是没有线性限制内存的，认为为进程空间中的应用程序使用而保留的任何内存都可用于堆内存分配，虚拟或物理存储任何给定的堆内存分配与我们的模型无关。 这种理解将帮助您更好地了解垃圾收集器的工作原理。
 
 ## 收集器行为
+
 当某次回收开始，收集器经历三个阶段的工作。其中两个阶段是引起Stop The World(STW)的延迟，另外的阶段会产生降低程序吞吐量的延迟。这三个阶段为：
 
-+ 标记开始 - STW
-
-+ 标记中 - 并发
-
-+ 标记结束 - STW
+- 标记开始 - STW
+- 标记中 - 并发
+- 标记结束 - STW
 
 以下为每一个阶段的细分
 
-### 标记开始 - STW 
+### 标记开始 - STW
 
 当回收开始，首要执行的动作是打开写屏障。写屏障的目的是允许收集器在收集过程保持堆上的数据完整性，因为收集器和应用程序的goroutine会并发执行。
 
@@ -79,12 +78,11 @@ func add(numbers []int) int {
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Garbage-Collection-in-Go-Part-I-semantics/100_figure3.png)
 
-
 图三展示了收集器在回收过程中如何为自身占有P1。现在收集器开始标记阶段了。标记阶段标记堆内存中仍在使用的值。这个工作先检查栈内所有存活的gorouitne，去寻找堆内存的根指针。然后收集器必须从那些根指针遍历堆内存图。当标记工作发生在P1上，应用程序可以继续在P2,P3和P4上同步工作。这意味着收集器的影响被最小化到当前CPU处理能力的25%。
 
 我希望这个事就这样完了然而并没有。如果在收集过程中确定了在P1上专用于GC的goroutine在使用中的堆内存达到极限之前无法完成标记工作，该怎么办？如果3个goroutine中只有一个进行的应用工作导致收集器无法及时完成(标记工作)又怎么办？(译者注：此处的意思为内存分配过快)。 在这种情况下，新的分配必须放慢速度，特别是从那个(导致标记无法完成的)goroutine。 
 
-如果收集器确定它需要减慢分配，它将招募应用goroutine以协助标记工作。 这称为辅助标记。 任何应用goroutine花费在辅助标记的时间长度与它添加到堆内存中的数据量成正比。辅助标记的一个积极影响是它有助于更快地完成回收。
+如果收集器确定它需要减慢分配，它将招募应用goroutine以协助标记工作。 这称为辅助标记。任何应用goroutine花费在辅助标记的时间长度与它添加到堆内存中的数据量成正比。辅助标记的一个积极影响是它有助于更快地完成回收。
 
 ### 图4
 
@@ -102,11 +100,9 @@ func add(numbers []int) int {
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Garbage-Collection-in-Go-Part-I-semantics/100_figure5.png)
 
-
 图5展示了在标记结束阶段完成时所有的goroutine如何停止的。这个动作通常平均在60到90微秒之间。这个阶段可以不需要STW，但通过使用STW，代码会更简单，小小的收益抵不上增加的复杂度。
 
 一旦回收完成，每个P都能服务于应用goroutine，然后应用回到全力运行状态。
-
 ### 图6
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Garbage-Collection-in-Go-Part-I-semantics/100_figure6.png)
@@ -123,7 +119,6 @@ func add(numbers []int) int {
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Garbage-Collection-in-Go-Part-I-semantics/100_figure7.png)
 
-
 图7展示了追踪的部分快照。你可以看到在回收过程中(盯着顶部的蓝色GC线)，12个P中的其中3个如何专门用于GC。你可以看到goroutine2450，1978和2696在这段时间进行了数次辅助标记而不是执行应用的工作。在回收的最后，只有一个P用于GC并最终执行STW(标记结束)的工作。
 
 在回收完成后，应用程序回到全力运行状态。此外你看到在goroutine下面有一些玫瑰色的线条。
@@ -131,7 +126,6 @@ func add(numbers []int) int {
 ### 图8
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Garbage-Collection-in-Go-Part-I-semantics/100_figure8.png)
-
 
 图8展示了那些玫瑰色的线条如何代表goroutine不执行应用的工作而进行清除工作的时刻。这些都是goroutine尝试分配新值到堆内存的时刻。
 
@@ -155,17 +149,16 @@ func add(numbers []int) int {
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Garbage-Collection-in-Go-Part-I-semantics/100_figure10.png)
 
-
 图10展示了最后的回收完成后在使用中的2MB的堆内存。因为GC百分比设置为100%，下一次回收需要在添加到2MB的堆内存时才开始，或者在超过2MB之前开始。
 
 ### 图11
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Garbage-Collection-in-Go-Part-I-semantics/100_figure11.png)
 
-
 图11显示了超过2MB堆内存正在使用。这会触发回收。查看该动作所有(细节)的方法是为每次回收生成GC追踪。
 
 ## GC追踪
+
 GC追踪可以通过在运行任意Go应用时包含环境变量`GODEBUG`并指定`gctracec=1`来生成。每次回收发生，运行时会将GC追踪信息写到`stderr`中。
 
 ### 清单2
@@ -180,12 +173,12 @@ gc 1406 @6.070s 11%: 0.051+1.8+0.076 ms clock, 0.61+2.0/2.5/0+0.91 ms cpu, 8->11
 gc 1407 @6.073s 11%: 0.052+1.8+0.20 ms clock, 0.62+1.5/2.2/0+2.4 ms cpu, 8->14->8 MB, 13 MB goal, 12 P
 ```
 
-
 清单2展示了如何使用`GODEBUG`变量来生成GC追踪。清单也展示了在运行Go应用生成的3份追踪信息。
 
 以下是通过查看清单中的第一个GC追踪线来细分GC追踪中每个值的含义。
 
 ### 清单3
+
 ```bash
 gc 1405 @6.068s 11%: 0.058+1.2+0.083 ms clock, 0.70+2.5/1.5/0+0.99 ms cpu, 7->11->6 MB, 10 MB goal, 12 P
 
@@ -215,7 +208,6 @@ gc 1404     : 自程序启动以来，1404的GC运行(译者注：此处应当�
 12P         : 用于运行gorouitne 的物理调度器或线程的数量
 ```
 
-
 清单3展示了第一条GC追踪线的实际数字所代表的含义，按行细分。我后面会讨论这些值中的大部分，但现在只要关注追踪1405的GC追踪的内存部分。
 
 ### 图12
@@ -232,10 +224,9 @@ gc 1404     : 自程序启动以来，1404的GC运行(译者注：此处应当�
 10MB        : 标记完成后使用中的堆内存收集目标
 ```
 
-
 清单4中的GC追踪线想告诉你的是，在标记工作开始前使用中的堆内存大小为7MB。当标记工作完成时，使用中的堆内存大小达到了11MB。这意味着在回收过程中出现了额外的4MB内存分配。在标记工作完成后被标记为存活的堆内存大小为6MB。这意味着在下次回收开始前应用可以增加使用的堆内存到12MB(存活堆大小6MB的100%)。
 
-你可以看到收集器与其目标有1MB的偏差，标记工作完成后正在使用的堆内存量为11MB而不是10MB。 没关系，因为目标是根据当前正在使用的堆内存量、标记为存活的堆内存量以及有关在回收运行时将会发生的其他分配的时间计算来计算的。 在这种情况下，应用程序做了一些事情，需要在标记之后使用更多的堆内存而不是像预期那样。
+你可以看到收集器与其目标有1MB的偏差，标记工作完成后正在使用的堆内存量为11MB而不是10MB。没关系，因为目标是根据当前正在使用的堆内存量、标记为存活的堆内存量以及有关在回收运行时将会发生的其他分配的时间计算来计算的。 在这种情况下，应用程序做了一些事情，需要在标记之后使用更多的堆内存而不是像预期那样。
 
 如果查看下一个GC跟踪线（1406），你会看到事情在2ms内发生了变化。
 
@@ -254,7 +245,6 @@ gc 1406 @6.070s 11%: 0.051+1.8+0.076 ms clock, 0.61+2.0/2.5/0+0.91 ms cpu, 8->11
 6MB         : 标记开完成后被标记为存活的堆内存
 13MB        : 标记完成后的使用堆内存收集目标
 ```
-
 
 清单5展示了这次回收如何在前一次回收2ms之后开始了，即便使用中的堆内存仅仅达到了8MB，而所允许的是12MB。这需要特别注意，如果收集器认为早点开始回收会好一点，那么就会提前开始。在这种情况下，它提前开始大概是因为应用在进行大量的分配工作，然后收集器想要减小这次回收的辅助标记的延时大小。
 
@@ -277,7 +267,6 @@ pacer: assist ratio=+1.232155e+000 (scan 1 MB in 70->71 MB) workers=2+0
 pacer: H_m_prev=30488736 h_t=+2.334071e-001 H_T=37605024 h_a=+1.409842e+000 H_a=73473040 h_g=+1.000000e+000 H_g=60977472 u_a=+2.500000e-001 u_g=+2.500000e-001 W_a=308200 goalΔ=+7.665929e-001 actualΔ=+1.176435e+000 u_a/u_g=+1.000000e+000
 ```
 
-
 运行GC追踪可以告诉你很多关于程序健康状态以及收集器速度的事情。收集器正在运行的速度在回收过程中起了重要作用。
 
 ## 调步
@@ -294,7 +283,6 @@ pacer: H_m_prev=30488736 h_t=+2.334071e-001 H_T=37605024 h_a=+1.409842e+000 H_a=
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Garbage-Collection-in-Go-Part-I-semantics/100_figure14.png)
 
-
 图14展示了改变GC百分比会如何改变下次回收开始前允许分配的堆内存大小。你可以想象收集器如何因为等待更多的堆内存被使用而变慢。
 
 Attempting to directly affect the pace of collection has nothing to do with being sympathetic with the collector. It’s really about getting more work done between each collection or during the collection. You affect that by reducing the amount or the number of allocations any piece of work is adding to heap memory.尝试直接影响收集器的速度，除了同情收集器之外毫无他法。确实希望在每次回收之间或回收期间完成更多的工作，可以通过减少任意工作添加到堆内存的分配数量或次数来影响它。
@@ -305,7 +293,6 @@ Attempting to directly affect the pace of collection has nothing to do with bein
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Garbage-Collection-in-Go-Part-I-semantics/100_figure15.png)
 
-
 清单15显示了将在本系列(博文)的下一篇文章中所使用的运行中的Go应用程序的一些统计信息。 蓝色版本显示没经过任意优化的应用程序在处理10K请求时的统计信息。绿色版本显示了应用程序4.48GB的非生产性内存分配被发现并移除后，处理相同的10k请求的统计信息。
 
 看这两个版本的平均收集速度（2.08ms vs 1.96ms），它们几乎相同，约为2.0ms。 这两个版本之间的根本变化是每次回收之间的工作量。 该应用程序从每次回收处理3.98到7.13个请求，以同样的速度完成的工作量增加了79.1％。 正如你所看到的，回收并没有随着这些分配的减少而减慢，而是保持不变，(绿色版本的)胜利来自每次回收之间完成了更多工作。
@@ -313,19 +300,18 @@ Attempting to directly affect the pace of collection has nothing to do with bein
 调整回收的速度以延缓其延迟花费并不是你提高应用程序性能的方式。减少收集器运行所需的时间，这反过来就会减少造成的延迟成本。已经对收集器造成的延迟花费进行解释了，但为了清楚起见，让我再次总结一下。
 
 ## 收集器延时消耗
+
 运行应用中每次回收有两种类型的延时。第一种是偷取CPU的处理能力。偷取CPU处理能力的影响是你的应用在回收过程中不能以全力状态运行。应用的goruinte正在和收集器的goroutine共享P，或者正在帮助回收(辅助标记)。
 
 ### 图16
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Garbage-Collection-in-Go-Part-I-semantics/100_figure16.png)
 
-
 图16展示了应用如何只是用CPU处理能力的75%去工作。这是因为收集器为自身占用了P1,这是主要是为了回收。
 
 ### 图17
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Garbage-Collection-in-Go-Part-I-semantics/100_figure17.png)
-
 
 图17展示了在这个时刻（通常只有几微秒）应用如何只使用一半的CPU处理能力为应用工作。这是因为在P3上的goroutine正在进行辅助标记，并且收集器为自己设置了专用的P1。
 
@@ -336,7 +322,6 @@ Attempting to directly affect the pace of collection has nothing to do with bein
 ### 图18
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Garbage-Collection-in-Go-Part-I-semantics/100_figure18.png)
-
 
 图18展示了所有goroutine都停止的STW 延时。这会在每次回收发生两次。如果你的应用健康，收集器应该能够保持大部分回收过程的总STW时间在100微秒之内。
 
@@ -350,14 +335,15 @@ Attempting to directly affect the pace of collection has nothing to do with bein
 
 帮助收集器：
 
-+ 尽可能维护最小化的堆
-+ 找到最佳的一致步调
-+ 每次回收保持在目标之内
-+ 最小化每次回收，STW和辅助标记的持续时长
+- 尽可能维护最小化的堆
+- 找到最佳的一致步调
+- 每次回收保持在目标之内
+- 最小化每次回收，STW和辅助标记的持续时长
 
 The pace of the collection has nothing to do with it. 以上所列都能帮助降低在你运行中的程序主要因收集器造成的延迟大小。这会提升你的应用的吞吐量表现。收集器的步调不需要的对它做任何处理。下面是你可以做的其他事情，以帮助做出更好的工程决策，减少堆上的压力。
 
 ### 了解应用程序执行的工作负载的性质
+
 了解工作负载意味着确保使用合理数量的goroutine来完成你的工作。CPU密集型与IO密集型的工作负载不同，需要不同的工程决策。
 
 [https://www.ardanlabs.com/blog/2018/12/scheduling-in-go-part3.html](https://www.ardanlabs.com/blog/2018/12/scheduling-in-go-part3.html)
@@ -374,9 +360,7 @@ The pace of the collection has nothing to do with it. 以上所列都能帮助�
 
 拥有垃圾收集器是一笔很值得的交易。我会花费垃圾收集的成本，因而没有内存管理的负担。Go允许你作为开发人员提高工作效率，同时可以编写足够快的应用程序。垃圾收集器是实现这一目标的重要组成部分。在下一篇文章中，我将向你展示一个示例Web应用程序以及如何动手使用工具查看所有这些信息。
 
-
-
----
+------
 
 via: https://www.ardanlabs.com/blog/2018/12/garbage-collection-in-go-part1-semantics.html
 
