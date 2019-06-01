@@ -6,11 +6,11 @@ Go 语言有着一个热情的社区。尤其是当涉及推动语言本身及�
 
 ## Vgo + Modules
 
-Vgo 是 Go 的参考实现，旨在提供通用的版本控制，尤其是依赖管理。Vgo 导致了 modules 的引入，以此来专门解决依赖及其版本控制的问题。截至撰写本文时，Go modules 的提案已经被采纳。2018 年 8 月 24 日发布的 Go 1.11 版本提供了对 modules 的临时性支持，2019 年 1 月 1 日发布的 Go 1.12 版本会终止这一临时性支持。
+Vgo 是 Go 的参考实现，旨在提供通用的版本控制，尤其是依赖管理。Vgo 导致了 modules 的引入，以此来专门解决依赖及其版本控制的问题。截至撰写本文时，Go modules 的提案已经被采纳。2018 年 8 月 24 日发布的 Go 1.11 版本提供了对 modules 的临时性支持，2019 年 1 月 1 日发布的 Go 1.12 版本会正式支持该特性。
 
-然而，社区一直依赖都拒绝采纳 modules。
+然而，社区一直都拒绝采纳 modules。
 
-有人可能没意识到，Go modules 提供了将指定版本的包组成的集合表示为一个单元的方法。这一实现需要你在根目录下创建一个 Go.mod 文件，用来告诉 Go 这是一个 Go module，要使用指定版本的导入路径。Go.mod 里的配置项允许你指定有效版本的集合，实际的代码需要调用指定的版本号（这一句不是很确定该怎么翻）。现在，如果你使用的一个库从版本 2 升级到版本 3，那么你就需要修改你的代码。诚然这种方法可以帮助避免程序的崩溃，但是它也给开发者带来了各种额外的手工操作。当然，遗留代码将需要改成新的 module 支持的格式。
+有人可能没意识到，Go modules 提供了将指定版本的包组成的集合表示为一个单元的方法。这一实现需要你在根目录下创建一个 Go.mod 文件，用来告诉 Go 这是一个 Go module，要使用指定版本的导入路径。Go.mod 里的配置项允许你指定有效版本的集合，实际的代码需要调用指定的版本号（译注：Go modules 使用一种称为“最小版本选择”的算法来确定依赖库的版本。比如，依赖库 M 的最新版本为 v1.2.3，那么 Go modules 允许使用 v1.2.3 及更新版本的 M；但是不能使用 v2 版本，因为 v2 被认为是与 v1 不兼容的。有关“最小版本选择”算法的详细解释，请参考 [https://github.com/golang/go/wiki/Modules#version-selection](https://github.com/golang/go/wiki/Modules#version-selection)）。现在，如果你使用的一个库从版本 2 升级到版本 3，那么你就需要修改你的代码。诚然这种方法可以帮助避免程序的崩溃，但是它也给开发者带来了各种额外的手工操作。当然，遗留代码将需要改成新的 module 支持的格式。
 
 ## 版本控制 & 依赖管理
 
@@ -30,6 +30,6 @@ via: https://www.activestate.com/blog/golang-module-vs-dep-pros-cons/
 
 作者：[Pete Garcin](https://www.activestate.com/blog/author/peteg/)
 译者：[maxwellhertz](https://github.com/maxwellhertz)
-校对：
+校对：[magichan](<https://github.com/magichan>)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
