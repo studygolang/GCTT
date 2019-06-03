@@ -5,9 +5,9 @@
 
 这是三篇系列文章中的第二篇，该系列文章将会提供一个对Go垃圾回收器背后的机制和概念的理解。本篇主要介绍如何生成GC追踪并解释它们。
 
-三篇系列文章的索引：
-1）Go 垃圾回收：第一部分 - 概念
-2）Go 垃圾回收：第二部分 - GC 追踪
+三篇系列文章的索引：  
+1）[Go 垃圾回收：第一部分 - 概念](https://www.ardanlabs.com/blog/2018/12/garbage-collection-in-go-part1-semantics.html)  
+2）[Go 垃圾回收：第二部分 - GC 追踪](https://www.ardanlabs.com/blog/2019/05/garbage-collection-in-go-part2-gctraces.html)  
 3）即将发布
 
 ## 介绍
@@ -16,7 +16,7 @@
 
 那篇文章得出的最后结论是，降低堆的压力，就会降低延迟成本从而增加应用的性能。我也提出了另外一个观点，通过找到增加任意两次垃圾回收间隔时间的方法，来降低回收器开始的步调不是一个好的策略。一个稳定的步调，即使比较快，也会有利于保持应用的高性能运行
 
-在本篇文章中，我将会带领你运行一个真实的web应用并且向你展示如何生成 GC 追踪和应用的性能概要（profile）文件。然后我会向你展示如何解释这些工具的输出内容，从而找到一个提升应用性能的方法。
+在本篇文章中，我将会带领你运行一个真实的 web 应用并且向你展示如何生成 GC 追踪和应用的性能概要（profile）文件。然后我会向你展示如何解释这些工具的输出内容，从而找到一个提升应用性能的方法。
 
 ## 运行应用
 
@@ -36,13 +36,13 @@ https://github.com/ardanlabs/gotraining/tree/master/topics/go/profiling/project)
 $ go build
 $ GOGC=off ./project > /dev/null
 ```
-清单 1 向我们展示了如何启动应用，并通过设置 GOGC 环境变量为 off 来关闭垃圾回收。日志文件被重定向到了 /dev/null 设备。应用运行的过程中，我们可以发送请求到服务器。
+清单 1 向我们展示了如何启动应用，并通过设置 `GOGC` 环境变量为 `off` 来关闭垃圾回收。日志文件被重定向到了 `/dev/null` 设备。应用运行的过程中，我们可以发送请求到服务器。
 
 **清单 2**
 ```console
 $ hey -m POST -c 100 -n 10000 "http://localhost:5000/search?term=topic&cnn=on&bbc=on&nyt=on"
 ```
-清单 2 向我们展示了如何利用 hey 工具通过 100 个连接向服务端发送 10k 的请求。当所有的请求都成功发送到服务器时，就会发生接下来的结果
+清单 2 向我们展示了如何利用 `hey` 工具通过 100 个连接向服务端发送 10k 的请求。当所有的请求都成功发送到服务器时，就会发生接下来的结果
 
 **图片 2**
 
@@ -58,7 +58,7 @@ $ hey -m POST -c 100 -n 10000 "http://localhost:5000/search?term=topic&cnn=on&bb
 ```console
 $ GODEBUG=gctrace=1 ./project > /dev/null
 ```
-清单 3 展示了如何启动应用并打开 GC 追踪。这里移除了 GOGC 变量并且替换为 GODEBUG。GODEBUG 这样设置了之后，运行时就会在每次垃圾回收发生的时候产生一条 GC 追踪。现在又可以向服务器发送同样的 10k 请求了。一旦所有的请求都发送到服务器后，就会产生一些可以用来分析的 GC 追踪信息和 hey 工具产生的信息
+清单 3 展示了如何启动应用并打开 GC 追踪。这里移除了 `GOGC` 变量并且替换为 `GODEBUG`。`GODEBUG` 这样设置了之后，运行时就会在每次垃圾回收发生的时候产生一条 GC 追踪。现在又可以向服务器发送同样的 10k 请求了。一旦所有的请求都发送到服务器后，就会产生一些可以用来分析的 GC 追踪信息和 `hey` 工具产生的信息
 
 **清单 4**
 ```console
@@ -101,7 +101,7 @@ gc 2553     : The 2553 GC runs since the program started
 // Threads
 12P         : Number of logical processors or threads used to run Goroutines.
 ```
-清单 5 展示了最后一次垃圾回收的实际数据。幸亏有了 hey 工具，这些是运行的性能结果。
+清单 5 展示了最后一次垃圾回收的实际数据。幸亏有了 `hey` 工具，这些是运行的性能结果。
 
 **清单 6**
 ```console
@@ -138,7 +138,7 @@ Requests/Collection : ~3.98 r/gc  - (10,000 / 2,511)
 ```console
 go tool pprof http://localhost:5000/debug/pprof/allocs
 ```
-清单 7 展示了使用 pprof 工具调用 /debug/pprof/allocs 路径来从运行的应用中拉取内存的性能概要（profile）。用那个路径是因为以下代码
+清单 7 展示了使用 `pprof` 工具调用 `/debug/pprof/allocs` 路径来从运行的应用中拉取内存的性能概要（profile）。用那个路径是因为以下代码
 
 **清单 8**
 ```go
@@ -148,9 +148,9 @@ go func() {
     http.ListenAndServe("localhost:5000" , http.DefaultServeMux)
 }()
 ```
-清单8展示了如何绑定 /debug/pprof/allocs 路径到任何应用中。增加 net/http/pprof 包的导入可以绑定路径到默认的服务器路由。然后调用 http.ListenAndServer 方法并传入 http.DefaultServerMux 常量使该路径可用。
+清单8展示了如何绑定 `/debug/pprof/allocs` 路径到任何应用中。增加 `net/http/pprof` 包的导入可以绑定路径到默认的服务器路由。然后调用 `http.ListenAndServer` 方法并传入 `http.DefaultServerMux` 常量使该路径可用。
 
-profiler 启动后，就可以用 top 命令查看正在分配内存的前 6 个方法
+profiler 启动后，就可以用 `top` 命令查看正在分配内存的前 6 个方法
 
 **清单 9**
 ```console
@@ -166,7 +166,7 @@ Showing top 6 nodes out of 51
          0     0%  5.11%     4.93GB 51.55%  net/http.serverHandler.ServeHTTP
     0.07GB  0.73%  5.84%     4.55GB 47.63%  project/search.rssSearch
 ```
-清单 9 在清单的底部展示了 rssSearch 方法的表现。这个方法到现在共分配了 5.96 GB 中的 4.55 GB。现在是时候使用 list 命令来分析 rssSearch 方法的细节了
+清单 9 在清单的底部展示了 `rssSearch` 方法的表现。这个方法到现在共分配了 5.96 GB 中的 4.55 GB。现在是时候使用 `list` 命令来分析 `rssSearch` 方法的细节了
 
 **清单 10**
 ```console
@@ -207,7 +207,7 @@ ROUTINE ======================== project/search.rssSearch in project/search/rss.
 126    }
 127 }
 ```
-清单 12 展示了那行代码在一个紧密的循环中。对 strings.ToLower 的调用将会产生分配因为创建新的 strings 需要在堆上分配内存。这些 strings.ToLower 的调用是没有必要的，因为这些调用可以在循环外完成。
+清单 12 展示了那行代码在一个紧密的循环中。对 `strings.ToLower` 的调用将会产生分配因为创建新的 `strings` 需要在堆上分配内存。这些 `strings.ToLower` 的调用是没有必要的，因为这些调用可以在循环外完成。
 
 修改一下 119 行可以移除掉所有的这些内存分配
 
@@ -219,8 +219,8 @@ if strings.Contains(strings.ToLower(item.Description), strings.ToLower(term)) {
 // After the code change.
 if strings.Contains(item.Description, term) {
 ```
-*注意：你没看到的其他的改动的代码功能是将源放到缓存里之前让描述变为小写。新闻源每 15 分钟缓存一次。使 term 变为小写的调用是在循环外部*
-清单 13 展示了如何移除了对 strings.ToLower 的调用。用新的改动过的代码重新编译该项目，重新对服务器发起 10 请求。
+*注意：你没看到的其他的改动的代码功能是将源放到缓存里之前让描述变为小写。新闻源每 15 分钟缓存一次。使 `term` 变为小写的调用是在循环外部*
+清单 13 展示了如何移除了对 `strings.ToLower` 的调用。用新的改动过的代码重新编译该项目，重新对服务器发起 10 请求。
 
 **清单 14**
 ```console
@@ -303,6 +303,6 @@ via: [https://www.ardanlabs.com/blog/2019/05/garbage-collection-in-go-part2-gctr
 
 译者：[tpkeeper](https://github.com/tpkeeper)
 
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[magichan](https://github.com/magichan)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
