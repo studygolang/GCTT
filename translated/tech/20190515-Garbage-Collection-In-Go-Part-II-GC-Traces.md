@@ -5,9 +5,12 @@
 
 这是三篇系列文章中的第二篇，该系列文章将会提供一个对Go垃圾回收器背后的机制和概念的理解。本篇主要介绍如何生成GC追踪并解释它们。
 
-三篇系列文章的索引：  
-1）[Go 垃圾回收：第一部分 - 概念](https://www.ardanlabs.com/blog/2018/12/garbage-collection-in-go-part1-semantics.html)  
-2）[Go 垃圾回收：第二部分 - GC 追踪](https://www.ardanlabs.com/blog/2019/05/garbage-collection-in-go-part2-gctraces.html)  
+三篇系列文章的索引：
+
+1）[Go 垃圾回收：第一部分 - 概念](https://www.ardanlabs.com/blog/2018/12/garbage-collection-in-go-part1-semantics.html)
+
+2）[Go 垃圾回收：第二部分 - GC 追踪](https://www.ardanlabs.com/blog/2019/05/garbage-collection-in-go-part2-gctraces.html)
+
 3）即将发布
 
 ## 介绍
