@@ -90,9 +90,9 @@ func Sort(arr []int) []int {
 ...
 
 /*
-  update(f, a, &index, &i) => 
-  f[index] = a[i]; 
-  i++; 
+  update(f, a, &index, &i) =>
+  f[index] = a[i];
+  i++;
   index++;
 */
 for ; i < size1 && j < size2; {
@@ -135,9 +135,9 @@ func Sort(arr []int, ch chan int) {
     go Sort(arr[:mid], s1)
     go Sort(arr[mid:], s2)
     // The sorting of arr[mid:] & arr[:mid] occurs Concurrently now.
-  
+
     // Merging happens simultaneously and is not blocked on individual sorting.
-    merge.Merge(s1, s2, ch) 
+    merge.Merge(s1, s2, ch)
 }
 ```
 
