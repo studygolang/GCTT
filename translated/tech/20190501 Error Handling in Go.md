@@ -1,0 +1,70 @@
+# Error Handling in Go
+
+## Mastering pragmatic error handling in your Go code
+
+![images](https://)
+
+*这篇文章是“在你进入到Go的世界之前”系列中的一部分。在这里，我们可以一起探索Golang的世界，让你了解用Go语言编程时应注意到的小技巧并领悟Go语言的特性，让你学习Go语言的过程不再困难。*
+
+我假设你已经有了一些Go语言的基础，不过当你遇到文章中你不熟悉的知识点的时候，可以随时停下来，查阅这些知识点之后，再回来继续读下去。
+
+现在这些问题都讲清楚了，就让我们开始吧！
+
+---
+
+Go语言的错误处理方法是一个一直都颇受争议或是被误用的特性。在这篇文章里，你将会学到Go是如何处理错误的并理解他们的工作原理。你将会通过探索几种不同的方法、查看Go源码和一些标准库的细节，去理解错误是如何产生(**how errors work**)的以及如何处理他们。你将会了解Type Assertions在处理这些错误时所扮演的重要角色,以及将会在Go 2中发布的一些重要的错误处理模式的改变.
+
+![images](https://cdn-images-1.medium.com/max/800/1*__fmJKbSA3D0HUVDqp56IA.jpeg)
+
+### 介绍
+
+起始阶段(First thing's first)：Go语言中的错误（Errors）**不**是异常（Exceptions），Dave Cheney 写了一个关于这个问题的[epic blog post](https://dave.cheney.net/2012/01/18/why-go-gets-exceptions-right)，我将在这里向你总结一下：在其它语言中，你无法确定一个函数是否会向你抛出一个异常（Exceptions）。相比于抛出一个异常，Go中的函数支持**返回多个值**，有一个约定俗成的用法是返回这个函数的结果并伴随一个错误（error）变量。
+
+```go
+func calculate(a, b int) (int, error) {
+    // 一些代码
+}
+```
+
+如果你的函数由于某些原因运行错误，你应当返回预先声明过的`error`类型。通常来讲，返回一个错误是在向函数调用者发出信号表明发生了一个错误，如果没有错误，就返回`nil`值。这样，你就让调用者知道发生了错误，并让调用者处理这个错误：函数的调用者应当在试图使用返回的值之前检查是否发生了错误。如果`error`不是`nil`，调用者有责任去检查这个错误并处理它（日志、返回错误、serve、尝试重新调用/清理机制等）。
+
+```go
+result, err := calculate(a, b)
+if err != nil {
+    // 处理异常
+}
+// 继续
+```
+
+这些片段在Go语言中非常常见，有些人认为它们是一大堆锅炉代码（a whole lot of boiler plate code？？？？）。编译器会将没有使用的变量视为编译错误，所以当你不打算去检查错误的时候，应该给返回的错误变量分配一个空白标识符`_`。但是无论这个方式多方便，都不应该忽视错误。
+
+```go
+// 在检查错误之前，结果无法被信任
+
+result, _ := caculate(a, b)
+
+if result >0 {
+    // 忽视错误是不安全的，
+    // 理论上讲，在你检查是否有异常之前，
+    // 是无法相信你接收到的结果的
+}
+```
+
+在Go语言严格的检查机制下，让一个函数返回结果的同时返回错误，可以让你更难写出含有错误的方法。你应当假设，函数的返回值是不正确的（损坏的）除非你检查了函数返回的错误值。如果将错误分配给了空白标识符，说明你忽略了你的函数值可能已经损坏。
+
+Go语言确实有一个`panic`和`recover`机制，这再[另一篇Go博文](https://blog.golang.org/defer-panic-and-recover)中有详细的描述。但是这不意味着去模仿异常。用Dave的话说就是：“*当你在使用Go的时候产生`panic`，你会被吓坏，这不是其他人的问题，这是完蛋了，兄弟。*”他们非常的致命，并且会导致你的程序崩溃。Rob Pike创造了“*不要恐慌*”的谚语，这是不言自明的：你应当避免它，并返回错误。
+
+- “错误就是价值观。” 
+- “不要只是检查错误，优雅地处理它们” 
+- “不要惊慌失措”  
+[所有Rob Pike的Go谚语](https://go-proverbs.github.io/)
+
+---
+
+via: <https://medium.com/gett-engineering/error-handling-in-go-53b8a7112d04>
+
+作者：[Alon Abadi](https://medium.com/@alonabadi)
+译者：[JoeyGaojingxing](https://github.com/JoeyGaojingxing)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
