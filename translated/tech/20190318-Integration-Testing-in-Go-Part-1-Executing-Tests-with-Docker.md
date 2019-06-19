@@ -175,7 +175,7 @@ db:
       - integration-tests-example-test
 ```
 
-容器 `db` 需要的最后几个配置选项是 `environment`，`restart` 和 `networks `。与之前的服务定义类似，`networks` 的值为已被定义过的网络的名字。将 `restart` 键设为 `on-failure` 以确保服务会在运行中途崩溃时自动重启。`environment` 选项包含了注入到容器 shell 中的一系列环境变量。大多数主流应用的镜像，例如 postgres，都有用来配置其所提供的应用的环境变量。
+容器 `db` 需要的最后几个配置选项是 `environment`，`restart` 和 `networks`。与之前的服务定义类似，`networks` 的值为已被定义过的网络的名字。将 `restart` 键设为 `on-failure` 以确保服务会在运行中途崩溃时自动重启。`environment` 选项包含了注入到容器 shell 中的一系列环境变量。大多数主流应用的镜像，例如 postgres，都有用来配置其所提供的应用的环境变量。
 
 运行测试
 
