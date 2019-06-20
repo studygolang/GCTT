@@ -1,4 +1,4 @@
-# Go: 理解 Sync.Pool 
+# Go: 理解 Sync.Pool
 
 ![](https://github.com/watermelo/gctt-images/blob/master/understand-the-design-of-sync-pool/3.jpg)
 
@@ -96,7 +96,6 @@ Go 的 1.13 版本将改进 `shared` 的访问，并且还将带来一个新的�
 
 ## 新的无锁池和 victim 缓存
 Go 1.13 版将 `shared` 用一个[双向链表](https://github.com/golang/go/commit/d5fd2dd6a17a816b7dfd99d4df70a85f1bf0de31#diff-491b0013c82345bf6cfa937bd78b690d)`poolChain`作为储存结构，这次改动删除了锁并改善了 `shared`  的访问。以下是 `shared` 访问的新流程：
-
 
 ![new shared pools in Go 1.13](https://github.com/watermelo/gctt-images/blob/master/understand-the-design-of-sync-pool/2.jpg)
 
