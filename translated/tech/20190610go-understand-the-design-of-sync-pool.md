@@ -1,4 +1,4 @@
-# Go: 理解 Sync.Pool
+# Go: 理解 Sync.Pool 的设计
 
 ![](https://github.com/watermelo/gctt-images/blob/master/understand-the-design-of-sync-pool/3.jpg)
 
