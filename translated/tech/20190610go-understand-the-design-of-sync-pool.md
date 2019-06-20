@@ -132,6 +132,6 @@ via https://medium.com/@blanchon.vincent/go-understand-the-design-of-sync-pool-2
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[咔叽咔叽](https://github.com/watermelo)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
