@@ -1,6 +1,6 @@
 # Go: 理解 Sync.Pool 
 
-![](https://user-gold-cdn.xitu.io/2019/6/12/16b4ad7632cdc194?w=800&h=342&f=png&s=262697)
+![](https://github.com/watermelo/gctt-images/blob/master/understand-the-design-of-sync-pool/3.jpg)
 
 ℹ️本文基于 Go 1.12 和 1.13 版本，并解释了这两个版本之间 sync/pool.go 的演变。
 
