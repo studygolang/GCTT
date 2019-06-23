@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/21376
+
 # Docker 容器编排实践练习
 
 在本次练习中，你将体验到 Docker 的容器编排功能。首先你需要在单个主机上部署一个简单的应用程序，并了解其工作机制。然后，通过配置 Docker Swarm 模式，你将学习到怎样在多个主机上部署相同的简单应用程序。最后，你将看到如何对应用的规模进行扩容、缩容，以及如何将工作负载在不同的主机之间转移。
@@ -5,16 +7,16 @@
 （译者注：登录原网站可使用在线练习资源）
 
 > **难度**：入门级
-> **时间**：约30分钟
+> **时间**：约 30 分钟
 
 **任务**：
 
-- [第一节 - 容器编排是什么](#第一节：容器编排是什么)
-- [第二节 - 配置 Docker Swarm 模式](#第二节：配置-Docker-Swarm-模式)
-- [第三节 - 跨多主机部署应用](#第三节：跨多主机部署应用)
-- [第四节 - 应用扩容缩容](#第四节：应用扩容缩容)
-- [第五节 - 排空节点并重新调度容器](#第五节：排空节点并重新调度容器)
-- [清理工作](#清理工作)
+- [第一节 - 容器编排是什么](# 第一节：容器编排是什么 )
+- [第二节 - 配置 Docker Swarm 模式](# 第二节：配置 -Docker-Swarm- 模式 )
+- [第三节 - 跨多主机部署应用](# 第三节：跨多主机部署应用 )
+- [第四节 - 应用扩容缩容](# 第四节：应用扩容缩容 )
+- [第五节 - 排空节点并重新调度容器](# 第五节：排空节点并重新调度容器 )
+- [清理工作](# 清理工作 )
 
 ## 第一节：容器编排是什么
 
@@ -30,10 +32,10 @@
 
 如前所述，实际应用程序通常部署在多个主机上。 这可以提高应用程序性能和可用性，并允许各个组件独立扩展。Docker 拥有强大的原生工具来帮助你实现这一目标。
 
-手动在单个主机上运行程序的一个例子，是在**node1**上运行 `docker run -dt ubuntu sleep infinity`，来创建一个新的容器。
+手动在单个主机上运行程序的一个例子，是在**node1**上运行 `docker run -dt Ubuntu sleep infinity`，来创建一个新的容器。
 
 ```shell
-docker run -dt ubuntu sleep infinity
+docker run -dt Ubuntu sleep infinity
 ```
 
 ```shell
@@ -45,11 +47,11 @@ e8db7bf7c39f: Pull complete
 9654c40e9079: Pull complete
 6d9ef359eaaa: Pull complete
 Digest: sha256:dd7808d8792c9841d0b460122f1acf0a2dd1f56404f8d1e56298048885e45535
-Status: Downloaded newer image for ubuntu:latest
+Status: Downloaded newer image for Ubuntu:latest
 846af8479944d406843c90a39cba68373c619d1feaa932719260a5f5afddbf71
 ```
 
-此命令将基于 `ubuntu：latest` 镜像创建一个新容器，并将运行sleep命令以使容器在后台运行。 您可以通过在 **node1** 上运行 `docker ps` 来验证我们的示例容器已启动。
+此命令将基于 `ubuntu：latest` 镜像创建一个新容器，并将运行 sleep 命令以使容器在后台运行。 您可以通过在 **node1** 上运行 `docker ps` 来验证我们的示例容器已启动。
 
 ```shell
 docker ps
@@ -57,10 +59,10 @@ docker ps
 
 ```shell
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
-044bea1c2277        ubuntu              "sleep infinity"    2 seconds ago       Up 1 second                             distracted_mayer
+044bea1c2277        Ubuntu              "sleep infinity"    2 seconds ago       Up 1 second                             distracted_mayer
 ```
 
-但是，这只是在一个节点上。 如果此节点出现故障会怎样？ 好吧，我们的应用程序会被终止，它永远不会重新启动。 要恢复服务，我们必须手动登录此计算机，折腾一番才能使其恢复运行。 因此，如果我们有某种类型的系统允许我们在许多机器上运行这个“睡眠”应用程序/服务，那将会很有帮助。
+但是，这只是在一个节点上。 如果此节点出现故障会怎样？ 好吧，我们的应用程序会被终止，它永远不会重新启动。 要恢复服务，我们必须手动登录此计算机，折腾一番才能使其恢复运行。 因此，如果我们有某种类型的系统允许我们在许多机器上运行这个“睡眠”应用程序 / 服务，那将会很有帮助。
 
 在本节中，你将练习配置 Swarm 模式。 这是一种新的可选模式，其中多个 Docker 主机形成一个称为群组的自编排引擎。Swarm 模式支持新功能，如服务和捆绑，可帮助你跨多个 Docker 主机部署和管理多容器应用程序。
 
@@ -77,18 +79,18 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 
 在这一小节的演示里，实验中的三个节点你全部都需要用到。**node1** 将成为群组管理节点，**node2** 和 **node3** 将成为工作节点。Swarm 模式支持高可用的冗余管理节点的设置，但如果只是以此次练习为目的，你只需要部署单个管理节点就够了。
 
-### 步骤2.1 创建管理节点
+### 步骤 2.1 创建管理节点
 
 在这一步骤中，你将要初始化一个新的 Swarm 群组，添加一个工作节点，并验证操作是否生效。
 
-在 node1 上运行 `docker swarm init`
+在 node1 上运行 `docker swarm INIt`
 
 ```shell
-docker swarm init --advertise-addr $(hostname -i)
+docker swarm INIt --advertise-addr $(hostname -i)
 ```
 
 ```shell
-Swarm initialized: current node (6dlewb50pj2y66q4zi3egnwbi) is now a manager.
+Swarm INItialized: current node (6dlewb50pj2y66q4zi3egnwbi) is now a manager.
 
 To add a worker to this swarm, run the following command:
 
@@ -117,11 +119,11 @@ Storage Driver: aufs
  Backing Filesystem: extfs
  Dirs: 13
  Dirperm1 Supported: true
-Logging Driver: json-file
+Logging Driver: JSON-file
 Cgroup Driver: cgroupfs
 Plugins:
  Volume: local
- Network: bridge host macvlan null overlay
+ Network: bridge host Macvlan null overlay
 Swarm: active
  NodeID: rwezvezez3bg1kqg0y0f4ju22
  Is Manager: true
@@ -147,7 +149,7 @@ Swarm: active
 
 至此，群组已经初始化完毕，以 **node1** 作为管理节点。下一小节中，你将要把 **node2** 和 **node3** 添加成为工作节点。
 
-### 步骤2.2 向群组中添加工作节点
+### 步骤 2.2 向群组中添加工作节点
 
 你需要在 **node2** 和 **node3** 上完成下列步骤，在完成后切换回 **node1** 节点。
 
@@ -182,7 +184,7 @@ ym6sdzrcm08s6ohqmjx9mk3dv    node3   Ready   Active
 yu3hbegvwsdpy9esh9t2lr431    node2   Ready   Active
 ```
 
- `docker node ls` 命令展示的是群组中的所有节点以及它们在群组中的角色。`*`标志表示你发布指令的节点。
+ `docker node ls` 命令展示的是群组中的所有节点以及它们在群组中的角色。`*` 标志表示你发布指令的节点。
 
 恭喜！你已经成功部署了含有一个管理节点和两个工作节点的群组了。
 
@@ -190,7 +192,7 @@ yu3hbegvwsdpy9esh9t2lr431    node2   Ready   Active
 
 现在你有了一个运行中的群组，是时候部署我们非常简单的 *sleep* 应用了。你需要在 **node1** 上完成以下步骤。
 
-### 步骤3.1 将应用组件部署为 Docker 服务
+### 步骤 3.1 将应用组件部署为 Docker 服务
 
 我们的 *sleep* 应用正在互联网上蹿红（由于在 Reddit 和 HN 上广受关注）。人们真的就很喜欢它。所以，你需要为你的应用扩容以满足峰值需求。你同样需要在多主机上部署，来获得高可用性。我们用*服务*的概念来简化应用扩容，并将多个容器作为一个单独的实体来管理。
 
@@ -201,7 +203,7 @@ yu3hbegvwsdpy9esh9t2lr431    node2   Ready   Active
 先来将 *sleep* 部署成我们 Docker 群组上的一个服务吧。
 
 ```shell
-docker service create --name sleep-app ubuntu sleep infinity
+docker service create --name sleep-app Ubuntu sleep infinity
 ```
 
 ```
@@ -216,7 +218,7 @@ docker service ls
 
 ```shell
 ID            NAME       MODE        REPLICAS  IMAGE
-of5rxsxsmm3a  sleep-app  replicated  1/1       ubuntu:latest
+of5rxsxsmm3a  sleep-app  replicated  1/1       Ubuntu:latest
 ```
 
 服务的状态可能会经过多次改变，直到进入运行状态。镜像从 Docker Store 下载到群组里其他的机器上。当镜像下载完毕后，容器将在三个节点中的一个上进入运行状态。
@@ -249,13 +251,13 @@ docker service ps sleep-app
 
 ```shell
 ID            NAME         IMAGE          NODE     DESIRED STATE  CURRENT STATE          ERROR  PORTS
-7k0flfh2wpt1  sleep-app.1  ubuntu:latest  node1  Running        Running 9 minutes ago
-wol6bzq7xf0v  sleep-app.2  ubuntu:latest  node3  Running        Running 2 minutes ago
-id50tzzk1qbm  sleep-app.3  ubuntu:latest  node2  Running        Running 2 minutes ago
-ozj2itmio16q  sleep-app.4  ubuntu:latest  node3  Running        Running 2 minutes ago
-o4rk5aiely2o  sleep-app.5  ubuntu:latest  node2  Running        Running 2 minutes ago
-35t0eamu0rue  sleep-app.6  ubuntu:latest  node2  Running        Running 2 minutes ago
-44s8d59vr4a8  sleep-app.7  ubuntu:latest  node1  Running        Running 2 minutes ago
+7k0flfh2wpt1  sleep-app.1  Ubuntu:latest  node1  Running        Running 9 minutes ago
+wol6bzq7xf0v  sleep-app.2  Ubuntu:latest  node3  Running        Running 2 minutes ago
+id50tzzk1qbm  sleep-app.3  Ubuntu:latest  node2  Running        Running 2 minutes ago
+ozj2itmio16q  sleep-app.4  Ubuntu:latest  node3  Running        Running 2 minutes ago
+o4rk5aiely2o  sleep-app.5  Ubuntu:latest  node2  Running        Running 2 minutes ago
+35t0eamu0rue  sleep-app.6  Ubuntu:latest  node2  Running        Running 2 minutes ago
+44s8d59vr4a8  sleep-app.7  Ubuntu:latest  node1  Running        Running 2 minutes ago
 ```
 
 注意，这里一共列出了 7 个容器。这些新容器从启动到变成如上面显示的 **RUNNING** 状态，可能需要一些时间。``NODE`` 一列向我们展示容器是跑在哪个节点上面。
@@ -274,10 +276,10 @@ docker service ps sleep-app
 
 ```shell
 ID            NAME         IMAGE          NODE     DESIRED STATE  CURRENT STATE           ERROR  PORTS
-7k0flfh2wpt1  sleep-app.1  ubuntu:latest  node1  Running        Running 13 minutes ago
-wol6bzq7xf0v  sleep-app.2  ubuntu:latest  node3  Running        Running 5 minutes ago
-35t0eamu0rue  sleep-app.6  ubuntu:latest  node2  Running        Running 5 minutes ago
-44s8d59vr4a8  sleep-app.7  ubuntu:latest  node1  Running        Running 5 minutes ago
+7k0flfh2wpt1  sleep-app.1  Ubuntu:latest  node1  Running        Running 13 minutes ago
+wol6bzq7xf0v  sleep-app.2  Ubuntu:latest  node3  Running        Running 5 minutes ago
+35t0eamu0rue  sleep-app.6  Ubuntu:latest  node2  Running        Running 5 minutes ago
+44s8d59vr4a8  sleep-app.7  Ubuntu:latest  node1  Running        Running 5 minutes ago
 ```
 
 你现在已经成功完成群组服务的扩容缩容啦。
@@ -309,7 +311,7 @@ docker ps
 
 ```shell
 CONTAINER ID        IMAGE                                                                            COMMAND             CREATED             STATUS              PORTS               NAMES
-4e7ea1154ea4        ubuntu@sha256:dd7808d8792c9841d0b460122f1acf0a2dd1f56404f8d1e56298048885e45535   "sleep infinity"    9 minutes ago       Up 9 minutes                            sleep-app.6.35t0eamu0rueeozz0pj2xaesi
+4e7ea1154ea4        Ubuntu@sha256:dd7808d8792c9841d0b460122f1acf0a2dd1f56404f8d1e56298048885e45535   "sleep infinity"    9 minutes ago       Up 9 minutes                            sleep-app.6.35t0eamu0rueeozz0pj2xaesi
 ```
 
 你会看到有其中一个 sleep-app 的容器正在这里运行（虽然你的输出可能会稍有不同）。
@@ -329,17 +331,17 @@ yu3hbegvwsdpy9esh9t2lr431    node2   Ready   Active
 
 我们需要用到 **node2** 的 **ID**，运行 `docker node update --availability drain yournodeid`。我们使用 **node2** 的主机 **ID** 作为 `drain` 命令的输入。你需要将命令中的 yournodeid 替换成 **node2** 的实际 **ID**。
 
-```sh
+```shell
 docker node update --availability drain yournodeid
 ```
 
 检查节点状态
 
-```sh
+```shell
 docker node ls
 ```
 
-```sh
+```shell
 ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS
 6dlewb50pj2y66q4zi3egnwbi *  node1   Ready   Active        Leader
 ym6sdzrcm08s6ohqmjx9mk3dv    node3   Ready   Active
@@ -350,7 +352,7 @@ yu3hbegvwsdpy9esh9t2lr431    node2   Ready   Drain
 
 切换到 **node2**，使用 `docker ps` 看看运行中的容器。
 
-```sh
+```shell
 docker ps
 ```
 
@@ -368,11 +370,11 @@ docker service ps sleep-app
 
 ```shell
 ID            NAME             IMAGE          NODE     DESIRED STATE  CURRENT STATE           ERROR  PORTS
-7k0flfh2wpt1  sleep-app.1      ubuntu:latest  node1  Running        Running 25 minutes ago
-wol6bzq7xf0v  sleep-app.2      ubuntu:latest  node3  Running        Running 18 minutes ago
-s3548wki7rlk  sleep-app.6      ubuntu:latest  node3  Running        Running 3 minutes ago
-35t0eamu0rue   \_ sleep-app.6  ubuntu:latest  node2  Shutdown       Shutdown 3 minutes ago
-44s8d59vr4a8  sleep-app.7      ubuntu:latest  node1  Running        Running 18 minutes ago
+7k0flfh2wpt1  sleep-app.1      Ubuntu:latest  node1  Running        Running 25 minutes ago
+wol6bzq7xf0v  sleep-app.2      Ubuntu:latest  node3  Running        Running 18 minutes ago
+s3548wki7rlk  sleep-app.6      Ubuntu:latest  node3  Running        Running 3 minutes ago
+35t0eamu0rue   \_ sleep-app.6  Ubuntu:latest  node2  Shutdown       Shutdown 3 minutes ago
+44s8d59vr4a8  sleep-app.7      Ubuntu:latest  node1  Running        Running 18 minutes ago
 ```
 
 ## 清理工作
@@ -385,18 +387,18 @@ docker service rm sleep-app
 
 在 **node1** 上执行 `docker ps`，获取运行中的容器列表。
 
-```sh
+```shell
 docker ps
 ```
 
-```sh
+```shell
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
-044bea1c2277        ubuntu              "sleep infinity"    17 minutes ago      17 minutes ag                           distracted_mayer
+044bea1c2277        Ubuntu              "sleep infinity"    17 minutes ago      17 minutes ag                           distracted_mayer
 ```
 
 你可以在 **node1** 上用 `docker kill <CONTAINER ID>` 命令，清理掉我们最开始启动的那个 sleep 容器。
 
-```sh
+```shell
 docker kill yourcontainerid
 ```
 
@@ -404,30 +406,30 @@ docker kill yourcontainerid
 
 先在 **node1** 上运行 `docker swarm leave --force`。
 
-```sh
+```shell
 docker swarm leave --force
 ```
 
 然后在 **node2** 上运行 `docker swarm leave --force`。
 
-```sh
+```shell
 docker swarm leave --force
 ```
 
 最后在 **node3** 上运行 `docker swarm leave --force`。
 
-```sh
+```shell
 docker swarm leave --force
 ```
 
 恭喜你，完成本次的练习！你现在应该学会了怎样创建群组、将应用部署成服务以及对每个服务进行扩容缩容。
 
-----------------
+---
 
 via: https://training.play-with-docker.com/orchestration-hol/
 
 作者：[Play with Docker classroom](https://training.play-with-docker.com)
 译者：[Mockery-Li](https://github.com/Mockery-Li)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[magichan](https://github.com/magichan)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
