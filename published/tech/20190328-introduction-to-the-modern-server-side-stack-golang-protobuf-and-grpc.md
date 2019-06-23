@@ -1,14 +1,16 @@
-# 现代服务端技术栈介绍——Golang,Protobuf和gRPC
+首发于：https://studygolang.com/articles/21374
 
-<img src="https://github.com/DoubleLuck/gctt-images/blob/master/Introduction-to-the-Modern-Server-side-Stack-Golang,Protobuf,and-gRPC/1_W_1gSpbn79xtYZw9_TBGPA.jpeg?raw=true" width = "100%" height = "219" style="margin-bottom: 20px; margin-top: 10px;" />
+# 现代服务端技术栈介绍 —— Golang、Protobuf 和 gRPC
 
-身边多了一些新的服务端程序员，这一次，一切都与谷歌有关。自从谷歌开始在他们的生产系统中使用go语言以来，`go` 语言的流行度快速地提升。从微服务架构创立至今，人们一直在关注像 `gRPC`、`Protobuf` 这样的现代数据通信解决方案。在这篇文章中，我将分别对它们作简要的介绍。
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/modern-server/1_W_1gSpbn79xtYZw9_TBGPA.jpg)
+
+身边多了一些新的服务端程序员，这一次，一切都与谷歌有关。自从谷歌开始在他们的生产系统中使用 Go 语言以来，`go` 语言的流行度快速地提升。从微服务架构创立至今，人们一直在关注像 `gRPC`、`Protobuf` 这样的现代数据通信解决方案。在这篇文章中，我将分别对它们作简要的介绍。
 
 ## Golang
 
-`Golang`，或者说 `Go` 语言，是谷歌开发的一门开源、通用的编程语言。由于多种原因，它的流行度最近一直在提升。说起来可能令人惊讶，据谷歌宣称，这门语言已经将近10岁了，并且近7年都可用于生产环境。
+`Golang`，或者说 `Go` 语言，是谷歌开发的一门开源、通用的编程语言。由于多种原因，它的流行度最近一直在提升。说起来可能令人惊讶，据谷歌宣称，这门语言已经将近 10 岁了，并且近 7 年都可用于生产环境。
 
-`Golang` 被设计为简单的、现代的、易于理解并且可快速掌握的语言。普通程序员都能在一周内掌握如何使用。我作证，他们绝对成功了。说到 `Golang` 的开发者，他们是设计C语言草案的专家，因此，我们可以确定他们知道自己在做什么。
+`Golang` 被设计为简单的、现代的、易于理解并且可快速掌握的语言。普通程序员都能在一周内掌握如何使用。我作证，他们绝对成功了。说到 `Golang` 的开发者，他们是设计 C 语言草案的专家，因此，我们可以确定他们知道自己在做什么。
 
 ## 既然一切都很好，为什么我需要另一门编程语言
 
@@ -19,30 +21,29 @@
 * 非常优秀的性能
 * 对现代软件开发所需工具的基本支持
 
-我将简要解释 `Go` 如何做到上面几点。在 [Go语言官方网站](https://golang.org/) ，你可以详细了解更多有关 `Go` 及其特性的细节。
+我将简要解释 `Go` 如何做到上面几点。在 [Go 语言官方网站](https://golang.org/) ，你可以详细了解更多有关 `Go` 及其特性的细节。
 
 ## 并发
 
 并发是大多数服务端程序的主要关注点之一，考虑到现代微处理器，这也应该是 `Go` 语言的首要关注点。 `Go` 引入了 `goroutine` 的概念。一个 `goroutine` 类似一个“轻量级的用户空间线程”。事实上要复杂的多，多个 `goroutine` 会复用同一个线程，不过这个解释能让你明白个大概。`goroutine` 非常轻量，你可以同时自旋百万个 `goroutine`，因为它们启动时只需极少的栈空间。事实上，使用 `goroutine` 也是推荐的做法。`Go` 语言的任何函数或方法，都可以用来开启一个 `Goroutine`。你只需要调用 `go myAsyncTask()` 来从 `myAsyncTask` 函数中开启一个 `goroutine`。下面是一个例子：
 
 ```go
-// This function performs the given task concurrently by spawing a goroutine
+// This function performs the given task concurrently by spawing a Goroutine
 // for each of those tasks.
-
 func performAsyncTasks(task []Task) {
-  for _, task := range tasks {
-    // This will spawn a separate goroutine to carry out this task.
-    // This call is non-blocking
-    go task.Execute()
-  }
+	for _, task := range tasks {
+		// This will spawn a separate Goroutine to carry out this task.
+		// This call is non-blocking
+		go task.Execute()
+	}
 }
 ```
 
 是的，就是这么简单，既然 `Go` 是一门简单的语言，它也确该如此。你应当为每个独立的异步任务开启一个 `goroutine` 而无需担心太多。如果多核可用，`Go` 的 `runtime` 会自动并发运行 `goroutine`。但是，这些 `goroutine` 间如何通信呢？答案是 `channel`。
 
-`Channel`也是一个语言原语，它被用于 `goroutine` 间通信。通过 `channel`，你可以向另一个 `goroutine` 传递任何数据（原生类型、结构类型甚至其他 `channel`）。本质上，`channel` 是一个阻塞的双向队列（也可以是单向的）。如果你想要 `goroutine` 等待，直到特定的条件满足才继续运行，你可以使用 `channel` 来实现 `goroutine` 间的合作阻塞。
+`Channel` 也是一个语言原语，它被用于 `goroutine` 间通信。通过 `channel`，你可以向另一个 `goroutine` 传递任何数据（原生类型、结构类型甚至其他 `channel`）。本质上，`channel` 是一个阻塞的双向队列（也可以是单向的）。如果你想要 `goroutine` 等待，直到特定的条件满足才继续运行，你可以使用 `channel` 来实现 `goroutine` 间的合作阻塞。
 
-在编写异步或并发的代码时，这两个原语提供了极大的灵活性和简洁性。使用如上原语可以非常容易地创建出类似 `goroutine池` 等有用的库。一个基本的例子如下：
+在编写异步或并发的代码时，这两个原语提供了极大的灵活性和简洁性。使用如上原语可以非常容易地创建出类似 `goroutine 池` 等有用的库。一个基本的例子如下：
 
 ```go
 package executor
@@ -53,8 +54,8 @@ import (
 )
 
 // The Executor struct is the main executor for tasks.
-// 'maxWorkers' represents the maximum number of simultaneous goroutines.
-// 'ActiveWorkers' tells the number of active goroutines spawned by the Executor at given time.
+// 'maxWorkers' represents the maximum number of simultaneous Goroutines.
+// 'ActiveWorkers' tells the number of active Goroutines spawned by the Executor at given time.
 // 'Tasks' is the channel on which the Executor receives the tasks.
 // 'Reports' is channel on which the Executor publishes the every tasks reports.
 // 'signals' is channel that can be used to control the executor. Right now, only the termination
@@ -69,7 +70,7 @@ type Executor struct {
 }
 
 // NewExecutor creates a new Executor.
-// 'maxWorkers' tells the maximum number of simultaneous goroutines.
+// 'maxWorkers' tells the maximum number of simultaneous Goroutines.
 // 'signals' channel can be used to control the Executor.
 func NewExecutor(maxWorkers int, signals chan int) *Executor {
 	chanSize := 1000
@@ -137,7 +138,7 @@ func (executor *Executor) handleSignals(signal int) int {
 
 // launchWorker is called whenever a new Task is received and Executor can spawn more workers to spawn
 // a new Worker.
-// Each worker is launched on a new goroutine. It performs the given task and publishes the report on
+// Each worker is launched on a new Goroutine. It performs the given task and publishes the report on
 // the Executor's internal reports channel.
 func (executor *Executor) launchWorker(task Task, reports chan<- Report) {
 	report := task.Execute()
@@ -167,7 +168,7 @@ func (executor *Executor) AddTask(task Task) bool {
 
 // addReport is used by the Executor to publish the reports in a non-blocking way. It client is not
 // reading the reports channel or is slower that the Executor publishing the reports, the Executor's
-// reports channel is going to get full. In that case this method will not block and that report will
+// reports channel is Going to get full. In that case this method will not block and that report will
 // not be added.
 func (executor *Executor) addReport(report Report) bool {
 	if len(executor.Reports) == cap(executor.Reports) {
@@ -191,13 +192,13 @@ func (executor *Executor) Inactive() bool {
 
 了解这门语言后，你会觉得它并没有遵循特定的哲学或方向，感觉像是所有能解决特定问题的特性都被包含在内，仅此而已。例如，它有方法和接口，但是没有类；编译器生成一个静态链接的二进制文件，却仍然有一个垃圾回收器；它有严格的静态类型，却不支持泛型；它有一个瘦的 `runtime`，却不支持异常。
 
-这些的主要意图是，开发人员应该花最少的时间用代码表达自己的想法或算法，而无需考虑“在X语言中，这样做的最好方式是什么？”，并且，其他人应该易于理解。它仍然并不完美，确实不时地让人感到受限制，像泛型和异常这样必要的特性正在被考虑加入 `Go 2`。
+这些的主要意图是，开发人员应该花最少的时间用代码表达自己的想法或算法，而无需考虑“在 X 语言中，这样做的最好方式是什么？”，并且，其他人应该易于理解。它仍然并不完美，确实不时地让人感到受限制，像泛型和异常这样必要的特性正在被考虑加入 `Go 2`。
 
 ## 性能
 
 单线程执行性能并不是评价语言的好的指标，尤其当这门语言专注于并发和并行。但是，`Golang` 仍然跑出了优秀的基准测试数据，仅仅被诸如 `C`，`C++`，`Rust` 这样的底层系统编程语言打败。它的性能仍在不断提升中。考虑到它是一门“垃圾回收型”语言，它的性能确实非常优秀，足以在任何场景下使用。
 
-<img src="https://github.com/DoubleLuck/gctt-images/blob/master/Introduction-to-the-Modern-Server-side-Stack-Golang,Protobuf,and-gRPC/1_2SrMSeCcNmTExRXE-Fpr4A.png?raw=true" width = "100%" height = "352" style="margin-bottom: 20px; margin-top: 10px;" />
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/modern-server/1_2SrMSeCcNmTExRXE-Fpr4A.png)
 
 ## 开发工具
 
@@ -206,7 +207,7 @@ func (executor *Executor) Inactive() bool {
 这门语言没有像 `pip`、`npm` 一样的包管理工具。但是你可以获取任何社区的包，只需要这样做：
 
 ```go
-go get github.com/farkaskid/WebCrawler/blob/master/executor/executor.go
+go get gitHub.com/farkaskid/WebCrawler/blob/master/executor/executor.go
 ```
 
 是的，它成功了。你可以直接从 `GitHub` 或其他任何地方拉取包。它们仅仅是源代码文件。
@@ -307,14 +308,14 @@ func handleAction(hyp string) {
 }
 
 func main() {
-	cfg := sphinx.NewConfig(
+	cfg := Sphinx.NewConfig(
 		sphinx.HMMDirOption("/usr/local/share/pocketsphinx/model/en-us/en-us"),
 		sphinx.DictFileOption("6129.dic"),
 		sphinx.LMFileOption("6129.lm"),
 		sphinx.LogFileOption("commander.log"),
 	)
 
-	dec, err := sphinx.NewDecoder(cfg)
+	dec, err := Sphinx.NewDecoder(cfg)
 	if err != nil {
 		panic(err)
 	}
@@ -342,9 +343,9 @@ func main() {
 * 直接支持生成多种语言的解析和客户端代码。
 * 二进制格式并且快速。
 
-`Protobuf` 确实那么快吗？简明扼要：是的。根据 [谷歌开发者网站](https://developers.google.com/protocol-buffers/docs/overview#whynotxml)，它们比`XML` 小 3-10 倍，并且快 20-100 倍。由于它是二进制格式，所以这并不令人惊讶，序列化后的数据是人类无法阅读的。
+`Protobuf` 确实那么快吗？简明扼要：是的。根据 [谷歌开发者网站](https://developers.google.com/protocol-buffers/docs/overview#whynotxml)，它们比 `XML` 小 3-10 倍，并且快 20-100 倍。由于它是二进制格式，所以这并不令人惊讶，序列化后的数据是人类无法阅读的。
 
-<img src="https://github.com/DoubleLuck/gctt-images/blob/master/Introduction-to-the-Modern-Server-side-Stack-Golang,Protobuf,and-gRPC/1_FI7JuupJ02r5cVSMqKAuAA.png?raw=true" width = "100%" height = "352" style="margin-bottom: 20px; margin-top: 10px;" />
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/modern-server/1_FI7JuupJ02r5cVSMqKAuAA.png)
 
 `Protobufs` 采取更有计划的步骤。你定义 `.proto` 文件，这些文件有点像模式文件，但作用更大。本质上，你定义的是你期望的消息被格式化的方式，可选的字段，必需的字段，它们的数据类型等。在这之后，`Protobuf` 编译器将会为你生成类来使用数据。你可以在你的业务逻辑中使用这些类来进行通信。
 
@@ -357,14 +358,14 @@ message Person {
   optional string email = 3;
 
   enum PhoneType {
-    MOBILE = 0;
-    HOME = 1;
-    WORK = 2;
+	MOBILE = 0;
+	HOME = 1;
+	WORK = 2;
   }
 
   message PhoneNumber {
-    required string number = 1;
-    optional PhoneType type = 2 [default = HOME];
+	required string number = 1;
+	optional PhoneType type = 2 [default = HOME];
   }
 
   repeated PhoneNumber phone = 4;
@@ -377,9 +378,9 @@ message Person {
 
 `gRPC`，正如你所猜想的，是一个现代的 `RPC`（远程过程调用）框架。它包含了系列框架，内置了对负载均衡，追踪，健康检查和认证的支持。谷歌于 2015 年将它开源，从那时起，它日益流行。
 
-## 一个 RPC 框架？REST 呢？
+## 一个 RPC 框架？ REST 呢？
 
-作为面向服务架构中不同系统之间的通信方式，使用 `WSDL`（译注：网络服务描述语言）的 `SOAP`(简单对象访问协议)已经被使用了很长时间。在那时，协议通常被制定得非常严格，系统庞大，耦合严重，暴露了非常多的接口。
+作为面向服务架构中不同系统之间的通信方式，使用 `WSDL`（译注：网络服务描述语言）的 `SOAP`( 简单对象访问协议 ) 已经被使用了很长时间。在那时，协议通常被制定得非常严格，系统庞大，耦合严重，暴露了非常多的接口。
 
 后来出现了“浏览”的概念，服务端和客户端不需要紧密耦合。即使服务端提供的服务是独立编码的，客户端也应该能够浏览服务。如果客户端请求一本书的信息，该服务通过请求的内容也可以提供相关书籍的列表以供客户端浏览。`REST` 范例对此至关重要，因为它允许服务端和客户端在没有使用某些原语动词的情况下自由通信。
 
@@ -430,6 +431,6 @@ via: https://medium.com/velotio-perspectives/introduction-to-the-modern-server-s
 
 作者：[Velotio Technologies](https://medium.com/@velotio)
 译者：[DoubleLuck](https://github.com/DoubleLuck)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
