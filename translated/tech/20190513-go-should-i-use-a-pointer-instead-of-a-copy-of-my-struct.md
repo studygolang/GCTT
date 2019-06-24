@@ -1,6 +1,6 @@
 # Go：我应该用指针替代结构的副本吗？
 
-<img src="https://github.com/DoubleLuck/gctt-images/blob/master/go-should-i-use-a-pointer-instead-of-a-copy-of-my-struct-44b43b104963/1_IO4bo74w6aX7rKC_spjmvw.png?raw=true" width = "900" height = "219" style="margin-bottom: 20px; margin-top: 10px;" />
+<img src="https://github.com/studygolang/gctt-images/blob/master/go-should-i-use-a-pointer-instead-of-a-copy-of-my-struct-44b43b104963/1_IO4bo74w6aX7rKC_spjmvw.png?raw=true" width = "900" height = "219" style="margin-bottom: 20px; margin-top: 10px;" />
 
 对于许多 `golang` 开发者来说，考虑到性能，最佳实践是系统地使用指针而非结构副本。
 我们将回顾两个用例，来理解使用指针而非结构副本的影响。
@@ -124,22 +124,22 @@ MemoryStack-4    0.00
 
 为了理解原因，让我们看看追踪生成的图表：
 
-<img src="https://github.com/DoubleLuck/gctt-images/blob/master/go-should-i-use-a-pointer-instead-of-a-copy-of-my-struct-44b43b104963/1_tUgeQdgYoHwOFuWzyUX_cw.png?raw=true" width = "900" height = "219" style="margin-bottom: 20px; margin-top: 10px;" />
+<img src="https://github.com/studygolang/gctt-images/blob/master/go-should-i-use-a-pointer-instead-of-a-copy-of-my-struct-44b43b104963/1_tUgeQdgYoHwOFuWzyUX_cw.png?raw=true" width = "900" height = "219" style="margin-bottom: 20px; margin-top: 10px;" />
 
-<img src="https://github.com/DoubleLuck/gctt-images/blob/master/go-should-i-use-a-pointer-instead-of-a-copy-of-my-struct-44b43b104963/1_VPgyB_GjbEkcyHIZ_NyZFQ.png?raw=true" width = "900" height = "219" style="margin-bottom: 20px; margin-top: 10px;" />
+<img src="https://github.com/studygolang/gctt-images/blob/master/go-should-i-use-a-pointer-instead-of-a-copy-of-my-struct-44b43b104963/1_VPgyB_GjbEkcyHIZ_NyZFQ.png?raw=true" width = "900" height = "219" style="margin-bottom: 20px; margin-top: 10px;" />
 
 第一张图非常简单。由于没有使用堆，因此没有垃圾收集器，也没有额外的 `goroutine`。
 对于第二个图，指针的使用强制`go`编译器将变量转义到堆并对垃圾收集器施加压力。如果我们放大图表，我们可以看到垃圾收集器占据了进程的重要部分：
 对于第二张图，使用指针迫使 `go` 编译器<u>将变量逃逸到堆</u>，由此增大了垃圾回收器的压力。如果我们放大图表，我们可以看到，垃圾回收器占据了进程的重要部分。
 
-<img src="https://github.com/DoubleLuck/gctt-images/blob/master/go-should-i-use-a-pointer-instead-of-a-copy-of-my-struct-44b43b104963/1_SUlM_idjAevNfofEhgm5YA.png?raw=true" width = "900" height = "219" style="margin-bottom: 20px; margin-top: 10px;" />
+<img src="https://github.com/studygolang/gctt-images/blob/master/go-should-i-use-a-pointer-instead-of-a-copy-of-my-struct-44b43b104963/1_SUlM_idjAevNfofEhgm5YA.png?raw=true" width = "900" height = "219" style="margin-bottom: 20px; margin-top: 10px;" />
 
 
 我们可以在此图中看到垃圾收集器必须每4ms工作一次。
 在这张图中，我们可以看到，垃圾回收器每隔 4ms 必须工作一次。
 如果我们再次缩放，我们可以详细了解正在发生的事情：
 
-<img src="https://github.com/DoubleLuck/gctt-images/blob/master/go-should-i-use-a-pointer-instead-of-a-copy-of-my-struct-44b43b104963/1_Ik7agDlBN6dwLaL_4U806Q.png?raw=true" width = "900" height = "219" style="margin-bottom: 20px; margin-top: 10px;" />
+<img src="https://github.com/studygolang/gctt-images/blob/master/go-should-i-use-a-pointer-instead-of-a-copy-of-my-struct-44b43b104963/1_Ik7agDlBN6dwLaL_4U806Q.png?raw=true" width = "900" height = "219" style="margin-bottom: 20px; margin-top: 10px;" />
 
 蓝色，粉色和红色是垃圾收集器的不同阶段，而棕色的是与堆上的分配相关（在图上标有 “runtime.bgsweep”）：
 
