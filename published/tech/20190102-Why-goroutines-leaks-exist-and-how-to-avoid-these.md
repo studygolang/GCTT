@@ -2,7 +2,7 @@
 
 # 为什么会存在 Goroutines 泄漏，如何避免？
 
-在这个时代，软件程序和应用程序应该能够快速顺畅地运行。能够并行运行代码是当今满足这种需求的能力之一。但要注意泄漏的危险！我们将与来自[Ardan Labs](https://www.ardanlabs.com/) 的 Jacob Walker 讨论这个问题，他专门为 Golang 工程师撰写了这篇[博文](https://www.ardanlabs.com/blog/2018/11/goroutine-leaks-the-forgotten-sender.html)。
+在这个时代，软件程序和应用程序应该能够快速顺畅地运行。能够并行运行代码是当今满足这种需求的能力之一。但要注意泄漏的危险！我们将与来自[Ardan Labs](https://www.ardanlabs.com/) 的 Jacob Walker 讨论这个问题，他专门为 Golang 工程师撰写了这篇[博文](https://studygolang.com/articles/17364)。
 
 在开始阅读我们关于调试 Goroutines 泄漏的讨论之前，首先简要介绍几个原理，这些原理可以让您更全面地了解这个概念所要解决的挑战。
 

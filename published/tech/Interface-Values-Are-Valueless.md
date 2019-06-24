@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/12802
+
 # 接口不是值类型（Interface Values Are Valueless）
 
 ## 介绍（Introduction）
