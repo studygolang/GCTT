@@ -104,7 +104,7 @@ go test ./... -bench=BenchmarkMemoryStack -benchmem -run=^$ -count=10 > stack.tx
 
 以下是统计数据：
 
-```
+```go
 name          time/op
 MemoryHeap-4  75.0ns ± 5%
 name          alloc/op
@@ -133,7 +133,6 @@ MemoryStack-4    0.00
 对于第二张图，使用指针迫使 `go` 编译器<u>将变量逃逸到堆</u>，由此增大了垃圾回收器的压力。如果我们放大图表，我们可以看到，垃圾回收器占据了进程的重要部分。
 
 <img src="https://github.com/studygolang/gctt-images/blob/master/go-should-i-use-a-pointer-instead-of-a-copy-of-my-struct-44b43b104963/1_SUlM_idjAevNfofEhgm5YA.png?raw=true" width = "900" height = "219" style="margin-bottom: 20px; margin-top: 10px;" />
-
 
 我们可以在此图中看到垃圾收集器必须每4ms工作一次。
 在这张图中，我们可以看到，垃圾回收器每隔 4ms 必须工作一次。
