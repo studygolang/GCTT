@@ -4,7 +4,7 @@
 * 日期：2018.6.4
 
 ## 摘要
-我最近在墨尔本Golang聚会上就如何开发微服务和框架进行了一次演讲。
+我最近在墨尔本 Golang 聚会上就如何开发微服务和框架进行了一次演讲。
 在这篇文章中，我将与您分享我的知识（此外，它对我来说是一个很好的提醒）。
 
 在这里，我要介绍以下框架：
@@ -16,11 +16,11 @@
 ## 框架简介
 ### Go Micro
 这是我认为最受欢迎的框架之一。有很多博客文章和简单的例子可供使用参考。
-您可以从microhq在Medium或@MicroHQ获得Go Micro的最新更新。
+您可以从 microhq 在 Medium 或 @MicroHQ 获得 Go Micro 的最新更新。
 
-那么，什么是Go Micro？
+那么，什么是 Go Micro ?
 
-它是一个可拔插的RPC框架，用于在Go中编写微服务。开箱即用，您将看到：
+它是一个可拔插的 RPC 框架，用于在 Go 中编写微服务。开箱即用，您将看到：
 * 服务发现 - 自动向服务发现系统注册的应用程序。
 * 负载均衡 - 客户端负载均衡，用于平衡服务实例之间请求的负载。
 * 同步通信 - 提供请求/响应传输层。
@@ -28,9 +28,9 @@
 * 消息编码 - 基于消息的Content-Type请求头的编码/解码。
 * RPC客户端/服务器打包 - 利用上述特性并公开接口来构建微服务。
 
-Go Micro架构可以描述为三层堆栈。
+ Go Micro 架构可以描述为三层堆栈。
 
-![图1. Go Micro架构](goMicro.png)
+![图1.Go Micro架构](https://github.com/studygolang/gctt-images/blob/master/microservices-in-go/goMicro.png)
 
 顶层包括客户端 - 服务器模型和服务抽象。该服务器是用于编写服务的基础。
 而客户端提供了一个接口，用于向服务端发起请求。
@@ -43,13 +43,13 @@ Go Micro架构可以描述为三层堆栈。
 它允许使用诸如random，roundrobin，leastconn等算法“选择”服务。
 * Transport - 服务之间同步请求/响应通信的接口。
 
-Go Micro还提供Sidecar等功能。这允许您使用Go以外的语言编写的服务。
+ Go Micro 还提供Sidecar等功能。这允许您使用Go以外的语言编写的服务。
 Sidecar提供服务注册，gRPC编码/解码和HTTP处理程序。它有多种语言版本。
 
 ### Go Kit
-Go Kit是一个用于在Go中构建微服务的编程工具包。与Go Micro不同，它是一个旨在导入二进制包的库。
+Go Kit 是一个用于在Go中构建微服务的编程工具包。与 Go Micro 不同，它是一个旨在导入二进制包的库。
 
-Go Kit遵循简单的规则，例如：
+Go Kit 遵循简单的规则，例如：
 * 没有全局状态
 * 声明性构图
 * 显式依赖
@@ -73,51 +73,50 @@ Go Kit遵循简单的规则，例如：
 此外，在“Go + microservices”幻灯片中，您将找到使用Go Kit构建的服务架构的示例。
 有关快速参考，请参阅服务架构图。
 
-![图2.使用Go Kit构建的服务架构示例 Go Micro架构](Go+microservices.png)
+![图2.使用Go Kit构建的服务架构示例 Go Micro 架构](https://github.com/studygolang/gctt-images/blob/master/microservices-in-go/Go%2Bmicroservices.png)
 
 ### Gizmo
-Gizmo是纽约时报的微服务工具包。它提供了将服务器和pubsub守护进程组合在一起的软件包。它公开了以下包：
+Gizmo 是纽约时报的微服务工具包。它提供了将服务器和 pubsub 守护进程组合在一起的软件包。它公开了以下包：
 
-* server - 提供两种服务器实现：SimpleServer（通过HTTP），RPCServer（通过gRPC）。
-* server/kit - 基于Go Kit的实验包。
-* config - 包含功能：解析JSON文件，Consul 键值对中的JSON blob，或者环境变量。
+* server - 提供两种服务器实现：SimpleServer（通过 HTTP ），RPCServer（通过 gRPC ）。
+* server/kit - 基于 Go Kit 的实验包。
+* config - 包含功能：解析 JSON 文件，Consul 键值对中的 JSON blob ，或者环境变量。
 * pubsub - 提供通用接口，用于从队列中发布和使用数据。
-* pubsub / pubsubtest - 包含发布者和订阅者接口的测试实现。
+* pubsub/pubsubtest - 包含发布者和订阅者接口的测试实现。
 * web - 公开用于从请求查询和有效负载中解析类型的函数。
 
 Pubsub包提供了使用以下队列的接口：
 
-* pubsub / aws - 适用于Amazon SNS / SQS。
-* pubsub / gcp - 适用于Google Pubsub。
-* pubsub / kafka - 适用于Kafka主题。
-* pubsub / http - 用于通过HTTP发布。
+* pubsub/aws - 适用于 Amazon SNS / SQS。
+* pubsub/gcp - 适用于 Google Pubsub。
+* pubsub/kafka - 适用于 Kafka主题。
+* pubsub/http - 用于通过 HTTP 发布。
 
-因此，在我看来，Gizmo介于Go Micro和Go Kit之间。它不像Go Micro那样完整的“黑盒子”。与此同时，它并不像Go Kit那么粗糙。它提供更高级别的构建组件，例如config和pubsub包。
+因此，在我看来，Gizmo 介于 Go Micro 和 Go Kit 之间。它不像 Go Micro 那样完整的“黑盒子”。与此同时，它并不像Go Kit那么粗糙。它提供更高级别的构建组件，例如config和pubsub包。
 
 ### Kite
-Kite是一个在Go中开发微服务的框架。它公开了RPC客户端和服务端的包。
-创建的服务会自动注册到服务发现系统Kontrol。Kontrol是用Kite写的，它本身就是Kite服务。
-这意味着Kite微服务在自己的环境中运行良好。如果您需要将Kite微服务连接到另一个服务发现系统，
-则需要进行自定义。这是我从名单中删除Kite的主要原因，并决定不讨论这个框架。
-
+Kite 是一个在 Go  中开发微服务的框架。它公开了 RPC 客户端和服务端的包。
+创建的服务会自动注册到服务发现系统 Kontrol 。Kontrol 是用 Kite 写的，它本身就是 Kite 服务。
+这意味着 Kite 微服务在自己的环境中运行良好。如果您需要将 Kite 微服务连接到另一个服务发现系统，
+则需要进行自定义。这是我从名单中删除 Kite 的主要原因，并决定不讨论这个框架。
 
 ## 比较框架
 我将使用四个类别比较框架：
 
-* 客观比较 - GitHub统计
+* 客观比较 - GitHub 统计
 * 文档和示例
 * 用户和社区
 * 代码质量。
 
 ### GitHub统计
-![表1.Go微服务框架统计（2018年4月收集）](MicroStatics.png)
+![表1. Go  微服务框架统计（2018年4月收集）](https://github.com/studygolang/gctt-images/blob/master/microservices-in-go/MicroStatics.png)
 
 ### 文档和示例
 嗯，简单来说，没有一个框架提供可靠的文档。通常，唯一的正式文档是repo首页上的自述文件。
 
-对于Go Micro，可以在micro.mu，microhq和社交媒体@MicroHQ上获得大量信息和公告。
+对于 Go Micro，可以在 micro.mu，microhq 和社交媒体@MicroHQ上获得大量信息和公告。
 
-如果是Go Kit，您可以在Peter Bourgon的博客中找到最好的文档。我发现的一个最好的例子是在ru-rocker博客中。
+如果是 Go Kit，您可以在 Peter Bourgon 的博客中找到最好的文档。我发现的一个最好的例子是在ru-rocker博客中。
 
 使用Gizmo，源代码提供了最好的文档和示例。
 
@@ -127,19 +126,19 @@ Kite是一个在Go中开发微服务的框架。它公开了RPC客户端和服�
 ### 用户和社区
 Go Kit是最受欢迎的微服务框架，基于GitHub统计数据 - 在本出版物发布时超过10k星。它拥有大量的贡献者（122）和超过1000个分叉。最后，Go Kit由DigitalOcean提供支持。
 
-拥有超过3600颗星，27个贡献者和385个分支 - Go Micro获得第二名。Six Micro的最大赞助商之一是Sixt。
+拥有超过3600颗星，27个贡献者和385个分支 - Go Micro 获得第二名。Six Micro的最大赞助商之一是Sixt。
 
 这为Gizmo留下了第三名。超过2200颗星，31个贡献者和137个分支。由纽约时报支持和创建。
 
 ### 代码质量
-* Go Kit在代码质量类别中排名第一。它拥有近80％的代码覆盖率和出色的Go报告评级。
-* Gizmo也有很好的Go报告评级。但它的代码覆盖率仅为46％。
-* Go Micro不提供覆盖率信息，但它确实具有很好的Go报告评级。
+* Go Kit在代码质量类别中排名第一。它拥有近80％的代码覆盖率和出色的 Go  报告评级。
+* Gizmo也有很好的 Go  报告评级。但它的代码覆盖率仅为46％。
+* Go Micro 不提供覆盖率信息，但它确实具有很好的 Go  报告评级。
 
 ## 微服务中的代码
 好吧，足够的理论。为了更好地理解框架，我创建了三个简单的微服务。
 
-![图3.实际示例架构](micro_practice.png)
+![图3.实际示例架构](https://github.com/studygolang/gctt-images/blob/master/microservices-in-go/micro_practice.png)
 
 这些是实现一个业务功能的服务 - 问候。
 当用户将“name”参数传递给服务器时，该服务会发送问候语响应。此外，所有服务均符合以下要求：
@@ -152,7 +151,7 @@ Go Kit是最受欢迎的微服务框架，基于GitHub统计数据 - 在本出�
 您可以在此处停止并阅读存储库中的[源代码](https://github.com/antklim/go-microservices).
 
 ### Go Micro greeter
-使用Go Micro创建服务需要做的第一件事是定义protobuf描述。
+使用 Go Micro 创建服务需要做的第一件事是定义protobuf描述。
 方便后期，所有三项服务都采用了相同的protobuf定义。我创建了以下服务描述：
 
 ```proto
@@ -177,7 +176,7 @@ message GreetingResponse {
 请求中有一个参数 - 'name'，响应中有一个参数 - 'greeting'。
 
 然后我使用修改后的protoc从protobuf生成服务接口。
-该生成器由Go Micro分叉并进行了修改，以支持该框架的一些功能。
+该生成器由 Go Micro 分叉并进行了修改，以支持该框架的一些功能。
 我在“greeting”服务中将这些连接在一起。此时，该服务正在启动并注册服务发现系统。
 它只支持gRPC传输协议：
 
@@ -277,11 +276,11 @@ func main() {
 	}
 }
 ```
-非常简单明了。Go Micro在幕后处理了许多事情 - 例如在服务发现系统中注册。
+非常简单明了。 Go Micro 在幕后处理了许多事情 - 例如在服务发现系统中注册。
 另一方面，创建纯HTTP服务很困难。
 
 ### Go Kit greeter
-完成Go Micro后，我转到了Go Kit服务实现。
+完成 Go Micro 后，我转到了Go Kit服务实现。
 我花了很多时间阅读Go Kit存储库中提供的代码示例。
 理解端点的概念花了我很多时间。下一个耗时的难题是服务发现注册商代码。在找到一个好例子后我才实现它。
 
@@ -502,8 +501,7 @@ func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, respo
 }
 ```
 在我开始gRPC端点实现之前，我不需要protobuf定义。
-我复制了Go Micro服务protobuf。但就Go Kit而言，我使用默认服务生成器来创建服务接口。
-
+我复制了 Go Micro 服务protobuf。但就Go Kit而言，我使用默认服务生成器来创建服务接口。
 
 protobuf定义的服务接口生成器
 ```
@@ -779,7 +777,6 @@ func usageFor(fs *flag.FlagSet, short string) func() {
 您可能已经注意到，我在几个地方使用了日志记录中间件。它允许我将记录逻辑与主服务/端点工作流分离。
 
 服务级别日志记录中间件
-
 ```go
 package greeterservice
 
@@ -856,14 +853,12 @@ func LoggingMiddleware(logger log.Logger) endpoint.Middleware {
 }
 ```
 
-
 ### Gizmo greeter
 我以与Go Kit类似的方式创建了Gizmo服务。我为服务，端点，传输和服务发现注册商定义了四个包。
 
 服务实现和服务发现系统注册器与Go Kit服务共享相同的代码。但是端点定义和传输实现必须根据Gizmo功能完成。
 
-
-Gizmo迎宾端点
+Gizmo Greeting 端点
 ```go
 package greeterendpoint
 
@@ -937,9 +932,9 @@ type errorResponse struct {
 }
 ```
 
-如您所见，代码段与Go Kit类似。主要区别在于应该返回的接口类型：
+如您所见，代码段与 Go Kit 类似。主要区别在于应该返回的接口类型：
 
-Gizmo迎宾HTTP终端
+GizmoGreeting HTTP终端
 ```go
 package greetertransport
 
@@ -1039,7 +1034,7 @@ func (s *TService) JSONEndpoints() map[string]map[string]server.JSONContextEndpo
 }
 ```
 
-GIzmo迎宾gRPC
+GIzmo Greeting gRPC
 ```go
 package greetertransport
 
@@ -1054,19 +1049,17 @@ func (s *TService) Greeting(ctx ocontext.Context, r *pb.GreetingRequest) (*pb.Gr
 }
 ```
 
-
-Go Kit和Gizmo之间的显着差异在于传输实现。Gizmo提供了几种可以使用的服务类型。
-我所要做的就是将HTTP路径映射到端点定义。低级HTTP请求/响应处理由Gizmo处理。
+Go Kit和 Gizmo  之间的显着差异在于传输实现。 Gizmo  提供了几种可以使用的服务类型。
+我所要做的就是将HTTP路径映射到端点定义。低级HTTP请求/响应处理由 Gizmo  处理。
 
 ## 结论
-Go Micro是推出微服务系统的最快方式。框架提供了许多功能。所以你不需要重新发明轮子。
+ Go Micro 是推出微服务系统的最快方式。框架提供了许多功能。所以你不需要重新发明轮子。
 但这种舒适和速度伴随着牺牲 - 灵活性。它不像Go Kit那样容易改变或更新系统的各个部分。并且它强制gRPC作为一流的通信类型。
 
-您可能需要一段时间才能熟悉Go Kit。它需要熟悉Go lang功能和软件架构方面的经验。
+您可能需要一段时间才能熟悉 Go Kit。它需要熟悉 Golang 特性和软件架构方面的经验。
 另一方面，没有框架限制。所有部件都可以独立更改和更新。
-
-Gizmo位于Go Micro和Go Kit之间。它提供了一些更高级别的抽象，例如Service包。
-但缺乏文档和示例意味着我必须阅读源代码以了解不同的服务类型是如何工作的。使用Gizmo比使用Go Kit更容易。但它并不像Go Micro那么顺利。
+ Gizmo 位于 Go Micro 和 Go Kit 之间。它提供了一些更高级别的抽象，例如 Service 包。
+但缺乏文档和示例意味着我必须阅读源代码以了解不同的服务类型是如何工作的。使用 Gizmo 比使用 Go Kit 更容易。但它并不像 Go Micro 那么顺利。
 
 这就是今天的一切。谢谢阅读。请查看微服务代码库以获取更多信息。如果您对Go和微服务框架有任何经验，请在下面的评论中分享。
 
