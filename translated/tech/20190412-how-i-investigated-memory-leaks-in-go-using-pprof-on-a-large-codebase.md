@@ -1,7 +1,6 @@
 # 我是如何在大型代码库上使用 pprof 调查 Go 中的内存泄漏
 
-![](https://github.com/watermelo/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_1.png](https://github.com/watermelo/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_6.png)
-)
+![](https://github.com/studygolang/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_6.png)
 
 在今年的大部分时间里，我一直在 Orbs 团队用 Go 语言做可扩展的区块链的基础设施开发，这是令人兴奋的一年。在 2018 年的时候，我们研究我们的区块链该选择哪种语言实现。因为我们知道 Go 拥有一个良好的社区和一个非常棒的工具集，所以我们选择了 Go。
 
@@ -163,7 +162,7 @@ Showing top 10 nodes out of 56
 
 在我们的系统上，默认的可视化输出类似于：
 
-![](https://github.com/watermelo/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_1.png)
+![](https://github.com/studygolang/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_1.png)
 
 这看起来可能有点吓人，但它是程序中内存分配流程（根据堆栈跟踪）的可视化。阅读图表并不像看起来那么复杂。带有数字的白色方块显示已分配的空间（在图形边缘上是它占用内存的数量），每个更宽的矩形显示调用的函数。
 
@@ -176,7 +175,7 @@ Showing top 10 nodes out of 56
 
 跳到结论部分，我们可以假设序列化路径上的一个节点负责持有内存，例如：
 
-![](https://github.com/watermelo/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_2.png)
+![](https://github.com/studygolang/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_2.png)
 
 我们可以看到日志库中链中的某个地方，控制着>50MB 的已分配内存。这是由我们的日志记录器调用函数分配的内存。经过思考，这实际上是预料之中的。日志记录器会分配内存，是因为它需要序列化数据以将其输出到日志，因此它会造成进程中的内存分配。
 
@@ -242,11 +241,11 @@ ROUTINE ======================== github.com/orbs-network/orbs-network-go/service
 
 设置`nodefraction=0`时，我们将看到已分配对象的整个图，包括较小的对象。我们来看看输出：
 
-![](https://github.com/watermelo/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_3.png)
+![](https://github.com/studygolang/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_3.png)
 
 我们有两个新的子树。再次提醒，pprof 堆画像文件是内存分配的采样。对于我们的系统而言 - 我们不会遗漏任何重要信息。这个较长的绿色新子树的部分是与系统的其余部分完全断开的测试运行器，在本篇文章中我没有兴趣考虑它。
 
-![](https://github.com/watermelo/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_4.png)
+![](https://github.com/studygolang/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_4.png)
 
 较短的蓝色子树，有一条边连接到整个系统是`inMemoryBlockPersistance`。这个名字也解释了我们想象的'泄漏'。这是数据后端，它将所有数据存储在内存中而不是持久化到磁盘。值得注意的是，我们可以看到它持有两个大的对象。为什么是两个？因为我们可以看到对象大小为 1.28MB，函数占用大小为 2.57MB。
 
@@ -343,7 +342,7 @@ BenchmarkStringRead-4           960           32            -96.67%
 
 从同一测试中获取堆画像文件来看一下`pprof`，我们将看到现在内存消耗实际上下降了约 90％。
 
-![](https://github.com/watermelo/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_5.png)
+![](https://github.com/studygolang/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_5.png)
 
 需要注意的是，对于较小的数据集，在切片满足的情况就不要使用 map，因为 map 的开销很大。
 
