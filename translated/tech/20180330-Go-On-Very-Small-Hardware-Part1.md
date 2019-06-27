@@ -186,12 +186,12 @@ adapter speed: 1000 kHz
 adapter_nsrst_delay: 100
 none separate
 adapter speed: 950 kHz
-target halted due to debug-request, current mode: Thread 
+target halted due to debug-request, current mode: Thread
 xPSR: 0xc1000000 pc: 0x0800119c msp: 0x20000da0
 adapter speed: 4000 kHz
 ** Programming Started **
 auto erase enabled
-target halted due to breakpoint, current mode: Thread 
+target halted due to breakpoint, current mode: Thread
 xPSR: 0x61000000 pc: 0x2000003a msp: 0x20000da0
 wrote 10240 bytes from file cortexm0.elf in 0.817425s (12.234 KiB/s)
 ** Programming Finished **
