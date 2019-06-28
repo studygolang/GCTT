@@ -1,10 +1,12 @@
-# 并发陷阱 2:未完成的工作
+首发于：https://studygolang.com/articles/21385
+
+# 并发陷阱 2: 未完成的工作
 
 Jacob Walker 2019 年 4 月 18 日
 
 ## 介绍
 
-在我的第一篇文章 [Goroutine 泄露](https://www.ardanlabs.com/blog/2018/11/goroutine-leaks-the-forgotten-sender.html)中，我提到并发编程是一个很有用的工具，但是使用它也会带来某些非并发编程中不存在的陷阱。为了继续这个主题，我将介绍一个新的陷阱，这个陷阱叫做未完成的工作。当进程在非主协程的协程结束前终止时，这种陷阱就会发生。根据 Gorotine 的特性，强制关闭它将造成一个严重的问题。
+在我的第一篇文章 [Goroutine 泄露](https://studygolang.com/articles/17364) 中，我提到并发编程是一个很有用的工具，但是使用它也会带来某些非并发编程中不存在的陷阱。为了继续这个主题，我将介绍一个新的陷阱，这个陷阱叫做未完成的工作。当进程在非主协程的协程结束前终止时，这种陷阱就会发生。根据 Gorotine 的特性，强制关闭它将造成一个严重的问题。
 
 ## 未完成的工作
 
@@ -21,7 +23,7 @@ Jacob Walker 2019 年 4 月 18 日
 8 }
 ```
 
-在例一的程序中，第 6 行打印了 "Hello",随后在第 7 行，这个程序再次调用了 `fmt.Println` ，但是这次是在一个不同的 Groutine 中调用的。当启动这个新的 Goroutine 后，这个程序就到了主函数的结尾，然后程序就终止了。如果你运行这个程序，你不会看到“Goodbye”这个信息，因为 [Go 的规范](https://golang.org/ref/spec#Program_execution)中有一个这样的规则：
+在例一的程序中，第 6 行打印了 "Hello", 随后在第 7 行，这个程序再次调用了 `fmt.Println` ，但是这次是在一个不同的 Groutine 中调用的。当启动这个新的 Goroutine 后，这个程序就到了主函数的结尾，然后程序就终止了。如果你运行这个程序，你不会看到“ Goodbye ”这个信息，因为 [Go 的规范](https://golang.org/ref/spec#Program_execution) 中有一个这样的规则：
 
 > 程序的启动是通过初始化 main 包，然后调用其中的 main 方法来实现的。当这个 main 函数返回时，这个程序就退出了。它不会等待其他非主协程完成后再退出。
 
@@ -31,7 +33,7 @@ Jacob Walker 2019 年 4 月 18 日
 
 ## 一个真实的例子
 
-在 Ardan 实验室中，我的团队需要为客户搭建一个跟踪特定事件的 web 服务，这个记录事情的系统有一个类似例 2 中 Tracker 类型绑定的方法，
+在 Ardan 实验室中，我的团队需要为客户搭建一个跟踪特定事件的 Web 服务，这个记录事情的系统有一个类似例 2 中 Tracker 类型绑定的方法，
 
 **例 2**
 
@@ -62,7 +64,7 @@ Jacob Walker 2019 年 4 月 18 日
 20     track Tracker
 21 }
 22
-23 // Handle represents an example handler for the web service.
+23 // Handle represents an example handler for the Web service.
 24 func (a *App) Handle(w http.ResponseWriter, r *http.Request) {
 25
 26     // Do some actual work.
@@ -71,7 +73,7 @@ Jacob Walker 2019 年 4 月 18 日
 29     w.WriteHeader(http.StatusCreated)
 30
 31     // Fire and Hope.
-32     // BUG: We are not managing this goroutine.
+32     // BUG: We are not managing this Goroutine.
 33     go a.track.Event("this event")
 34 }
 ```
@@ -81,7 +83,7 @@ Jacob Walker 2019 年 4 月 18 日
 ## 为保证重构
 
 为了避免陷入这个陷阱，团队修改了代码，让 `Tracker` 去管理这个协程。我们使用 `sync.WaitGroup` 去确保当主函数返回时，所有的协程都已经完成。
-为了避免这个陷阱，团队修改了代码，让 `Tracker` 来管理 Goroutines。`Tracker` 使用 sync.waitgroup 来记录打开的 goroutine 数量，并为主函数提供一个关闭方法，并且这个方法会等到所有 goroutine 完成后才会返回。
+为了避免这个陷阱，团队修改了代码，让 `Tracker` 来管理 Goroutines。`Tracker` 使用 sync.waitgroup 来记录打开的 Goroutine 数量，并为主函数提供一个关闭方法，并且这个方法会等到所有 Goroutine 完成后才会返回。
 
 刚开始我们直接使用不创建协程的方法。只要在例 4 的 53 行去掉 `go` 就可以了。
 
@@ -90,7 +92,7 @@ Jacob Walker 2019 年 4 月 18 日
 https://play.golang.org/p/BMah6_C57-l
 
 ```go
-44 // Handle represents an example handler for the web service.
+44 // Handle represents an example handler for the Web service.
 45 func (a *App) Handle(w http.ResponseWriter, r *http.Request) {
 46
 47     // Do some actual work.
@@ -123,10 +125,10 @@ https://play.golang.org/p/BMah6_C57-l
 20     // Increment counter so Shutdown knows to wait for this event.
 21     t.wg.Add(1)
 22
-23     // Track event in a goroutine so caller is not blocked.
+23     // Track event in a Goroutine so caller is not blocked.
 24     go func() {
 25
-26         // Decrement counter to tell Shutdown this goroutine finished.
+26         // Decrement counter to tell Shutdown this Goroutine finished.
 27         defer t.wg.Done()
 28
 29         time.Sleep(time.Millisecond) // Simulate network write latency.
@@ -140,7 +142,7 @@ https://play.golang.org/p/BMah6_C57-l
 37 }
 ```
 
-在例 5 的第 12 行为 `Tracker` 增加了字段 wg，wg 的类型为 `sync.WaitGroup`。并且在 `Event` 函数中，也就是代码的第 21 行，程序调用了 t.wg 的 `t.wg.Add(1)` 方法。调用这个方法可以记录在 24 行创建的协程数量。这样跟踪事物的方法就可以满足用户对延迟的需求了。被创建的协程在结束时会调用 `t.wg.Done()`,这样记录协程个数的计数器就会减 1，`WaitGroup` 就知道这程结束了。
+在例 5 的第 12 行为 `Tracker` 增加了字段 wg，wg 的类型为 `sync.WaitGroup`。并且在 `Event` 函数中，也就是代码的第 21 行，程序调用了 t.wg 的 `t.wg.Add(1)` 方法。调用这个方法可以记录在 24 行创建的协程数量。这样跟踪事物的方法就可以满足用户对延迟的需求了。被创建的协程在结束时会调用 `t.wg.Done()`, 这样记录协程个数的计数器就会减 1，`WaitGroup` 就知道这程结束了。
 
 调用 `Add` 和 `Done` 对于记录活跃协程的数量是很有用的，但是主程序必须等待这些协程完成。为了满足这点，在 35 行 `Tracker` 又增加了一个新的方法 `Shutdown` 这个方法很简单，其中只是调用了 `t.Wg.Wait()`，这个函数会一直阻塞，直到协程的计数器减到 0，最后，这个程序必须要在 `func main` 中被调用。就像在 例 6 中。
 
@@ -158,7 +160,7 @@ https://play.golang.org/p/BMah6_C57-l
 62     // Shut the server down.
 63     // Details not shown...
 64
-65     // Wait for all event goroutines to finish.
+65     // Wait for all event Goroutines to finish.
 66     a.track.Shutdown()
 67 }
 ```
@@ -180,7 +182,7 @@ https://play.golang.org/p/BMah6_C57-l
 40     // Create a channel to signal when the waitgroup is finished.
 41     ch := make(chan struct{})
 42
-43     // Create a goroutine to wait for all other goroutines to
+43     // Create a Goroutine to wait for all other Goroutines to
 44     // be done then close the channel to unblock the select.
 45     go func() {
 46         t.wg.Wait()
@@ -207,7 +209,7 @@ https://play.golang.org/p/BMah6_C57-l
 [https://play.golang.org/p/p4gsDkpw1Gh](https://play.golang.org/p/p4gsDkpw1Gh)
 
 ```go
-86     // Wait up to 5 seconds for all event goroutines to finish.
+86     // Wait up to 5 seconds for all event Goroutines to finish.
 87     const timeout = 5 * time.Second
 88     ctx, cancel := context.WithTimeout(context.Background(), timeout)
 89     defer cancel()
@@ -229,6 +231,6 @@ via: https://www.ardanlabs.com/blog/2019/04/concurrency-trap-2-incomplete-work.h
 
 作者：[Jacob Walker](https://github.com/jcbwlkr)
 译者：[xmge](https://github.com/xmge)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[magichan](https://github.com/magichan)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

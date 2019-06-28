@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/21387
+
 # Golang Module Vs Dep: 支持 & 反对
 
-![img](https://cdn.activestate.com/wp-content/uploads/2018/10/vgo-modules-dependency-management-golang-blog-hero-1200x630.png)
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/vgo-module/vgo-modules-dependency-management-golang-blog-hero-1200x630.png)
 
 Go 语言有着一个热情的社区。尤其是当涉及推动语言本身及其生态的进步时，这种热情催生出精彩的讨论和许多很棒的想法，但是在前进的方向上发生分歧时，热情也会使社区分裂。比如，关于版本和依赖管理，在今年早些时候推出 vgo 和 Go modules 之前，社区主导的试验性的 dep 是很有可能成为事实标准的。
 
@@ -18,7 +20,7 @@ Vgo 是 Go 的参考实现，旨在提供通用的版本控制，尤其是依赖
 
 关于依赖管理，现有的解决方案 dep 因其相对而言非限制的使用方法备受喜欢：导入一个库，dep 就会抓取它所能找到的所有版本。Go modules 需要使用一个 Go.mod 配置文件，并且要使用语义化的版本控制来声明你要导入哪个资源。
 
-当要管理相互依赖时，事情甚至会变得更加复杂。比如，假设资源 A 需要有资源 B 的支持，资源 B 需要有 1.0 版本及以上的资源 D。但是资源 A 还需要有资源 C，资源 C 需要 1.0 或 1.1 版本的资源 D。Vgo 内置有一个备受争议的版本选择算法，该算法将总是选择适用于所有情况的最老版本，在这个例子中则是 1.0 版本的 D。大多数其他语言都会选择最新的可用版本，现有的 dep 也是如此。默认使用最老的可用版本对稳定性有很大好处，因为较新版本可能没有得到很好的测试/检验，但是这也可能会使本已在新版本得到修复的漏洞永久存在下去。
+当要管理相互依赖时，事情甚至会变得更加复杂。比如，假设资源 A 需要有资源 B 的支持，资源 B 需要有 1.0 版本及以上的资源 D。但是资源 A 还需要有资源 C，资源 C 需要 1.0 或 1.1 版本的资源 D。Vgo 内置有一个备受争议的版本选择算法，该算法将总是选择适用于所有情况的最老版本，在这个例子中则是 1.0 版本的 D。大多数其他语言都会选择最新的可用版本，现有的 dep 也是如此。默认使用最老的可用版本对稳定性有很大好处，因为较新版本可能没有得到很好的测试 / 检验，但是这也可能会使本已在新版本得到修复的漏洞永久存在下去。
 
 ## 总结
 
@@ -30,6 +32,6 @@ via: https://www.activestate.com/blog/golang-module-vs-dep-pros-cons/
 
 作者：[Pete Garcin](https://www.activestate.com/blog/author/peteg/)
 译者：[maxwellhertz](https://github.com/maxwellhertz)
-校对：[magichan](<https://github.com/magichan>)
+校对：[magichan](https://github.com/magichan)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
