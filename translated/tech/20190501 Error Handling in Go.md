@@ -4,7 +4,7 @@
 
 ![images](https://cdn-images-1.medium.com/max/900/1*BmEMrWVjQVUs5bwWTn_AIg.png)
 
-*这篇文章是“在你进入到Go的世界之前”系列中的一部分。在这里，我们可以一起探索Golang的世界，让你了解用Go语言编程时应注意到的小技巧并领悟Go语言的特性，让你学习Go语言的过程不再困难。*
+*这篇文章是“在你进入到Go语言的世界之前”系列中的一部分。在这里，我们可以一起探索Golang的世界，让你了解用Go语言编程时应注意到的小技巧并领悟Go语言的特性，让你学习Go语言的过程不再困难。*
 
 我假设你已经有了一些Go语言的基础，不过当你遇到文章中你不熟悉的知识点的时候，可以随时停下来，查阅这些知识点之后，再回来继续读下去。
 
@@ -50,9 +50,13 @@ if result >0 {
 }
 ```
 
+>*在检查错误之前，结果不能被信任*
+
 在Go语言严格的检查机制下，让一个函数返回结果的同时返回错误，可以让你更难写出含有错误的方法。你应当假设，函数的返回值是不正确的（损坏的）除非你检查了函数返回的错误值。如果将错误分配给了空白标识符，说明你忽略了你的函数值可能已经损坏。
 
 ![image](https://cdn-images-1.medium.com/max/1800/1*jDw9aGCJZWQhN_mOWRINew.jpeg)
+
+>*空白标识符是黑暗的，令人恐惧的。*
 
 Go语言确实有一个`panic`和`recover`机制，这再[另一篇Go博文](https://blog.golang.org/defer-panic-and-recover)中有详细的描述。但是这不意味着去模仿异常。用Dave的话说就是：“*当你在使用Go的时候产生`panic`，你会被吓坏，这不是其他人的问题，这是完蛋了，兄弟。*”他们非常的致命，并且会导致你的程序崩溃。Rob Pike创造了“*不要恐慌*”的谚语，这是不言自明的：你应当避免它，并返回错误。
 
@@ -75,6 +79,8 @@ type error interface {
     Error() string
 }
 ```
+
+>*错误接口的源码*
 
 实现你自己的错误类型非常容易，有非常多的方法能够让你实现`Error() string`方法的自定义结构体。任何实现了这个方法的结构体都会被视为一个合法的错误值同时可以被返回。
 
@@ -101,6 +107,8 @@ func (e *errorString) Error() string {
 
 ```
 
+>*来源：[Go语言源码](https://golang.org/src/errors/errors.go)*
+
 你可以在[这里](https://golang.org/src/errors/errors.go)看到它的简单实现。它做的事情就是保存一个`string`，同时，这个字符串是由`Error`方法返回的。我们可以使用数据格式化这个错误信息，比如，`fmt.Springf`。但除此之外，它不包含任何其他功能。如果你在使用内置的[`errors.New`](https://golang.org/src/errors/errors.go?s=293:353#L1)或者[`fmt.Errorf`](https://golang.org/src/fmt/print.go#L220)，你就[已经在使用他们了](https://play.golang.org/p/olRXqq3jNyR)。
 
 ```Go
@@ -121,6 +129,8 @@ func main() {
     // Type of error 2: *errors.errorString
 }
 ```
+
+>*[尝试一下](https://play.golang.org/p/oWy5BNY1Hzq)*
 
 ### github.com/pkg/errors
 
@@ -182,6 +192,124 @@ if s ok := x.(string); ok {
 ---
 
 ### 使用接口类型T进行断言
+
+使用接口类型`T`进行类型断言能够断言`x`实现了接口`T`。通过这种方法，你可以实现这个接口，并且只有当这个接口值被实现时，才可以调用这个方法。
+
+```Go
+type resolver interface {
+    Resolve()
+}
+
+if v, ok := x.(resolver); ok {    // asserts x implements resolver
+    v.Resolver() // here we can use this method safely
+}
+```
+
+为了理解如何利用这一特性，让我们重新查看一下`pkg/errors`。你已经知道了errors这个包，所以就让我们直接进入`errors.Cause(err error) error`函数去看一下吧。
+
+这个函数输入一个error并提取出它封装的最底层的错误（在这个错误内部没有再封装其它的错误）。这看起来很简单，但是你可以从这个实现中学到很多很有用的东西：
+
+```Go
+func Cause(err error) error {
+    type causer interface {
+        Cause() error
+    }
+
+    for err != nil {
+        cause, ok := err.(causer)
+        if !ok {
+            break
+        }
+        err = cause.Cause()
+    }
+
+    return err
+}
+```
+
+>来源：[pkg/errors](https://github.com/pkg/errors/blob/master/errors.go#L269)
+
+这个函数获取一个错误值并且它不能假设`err`参数接收到的是一个封装过的错误（一个支持`Cause`方法的错误）。所以，在调用`Cause`方法之前，有必要检查一下是否有正在处理此方法的错误。通过在每个for循环中进行类型断言，你可以保证变量`cause`支持`Cause`方法，并且可以不断的从中提取出内部错误直到这个错误不再包含`cause`。
+
+通过创建一个只包含你需要的方法的精简的本地接口，并在其上执行断言，您的代码将与其他依赖项解耦。你接收到的参数不需要是一个已知的结构体，只需要是一个错误就可以。任何实现`Error`和`Cause`方法的类型都可以在这里使用。所以，当你在你自定义的错误类型中实现`Cause`方法的时候，你可以直接使用这个函数。
+
+不过，你应该注意一个小问题：接口可能会发生变化。因此你应该小心的维护你的代码，这样你的断言才不会崩溃。记住一点，要在使用它们的地方定义接口，保持它们的简洁，并小心维护它们，这样就不容易出现问题。
+
+最后，如果你只关心一个方法，那么在匿名接口上断言只包含您所依赖的方法有时会更方便，即`v, ok := x.(interface{ F() (int, error) })`。使用匿名接口可以帮助你将代码从依赖项中分离出来，并且可以帮助保护代码不受接口中可能发生的更改的影响。
+
+### 使用具体类型T和类型转换进行断言
+
+在本节开始之前，我将介绍两个类似的错误处理模式，它们都有一些缺点和陷阱。但这并不意味着它们不常见。在小型项目中，这两种工具都非常方便，只是它们的伸缩性不太好。
+
+首先，是第二种类型断言：使用具体类型`T`进行类型断言`x.(T)`。它断言`x`的值是`T`类型，或者将它转换为`T`类型。
+
+```Go
+if v, ok := err.(mypkg.SomeErrorType); ok {
+    // we can use v as mypkg.SomeErrorType
+}
+```
+
+另一个是[类型转换](https://golang.org/doc/effective_go.html#type_switch)模式。类型转换通过保留类型关键字将switch语句与类型断言组合在一起。它们在错误处理中特别常见。在错误处理中，了解错误变量的基本类型非常有用。
+
+```Go
+switch err.(type) {
+case mypkg.SomeErrorType:
+    // handle...
+default:
+    // handle...
+}
+```
+
+这两种方法的最大缺点是，它们都会导致代码与其依赖项耦合。这两个示例都需要熟悉`SomeErrorType`结构(显然需要导出它)，并需要导入`mypkg`包。
+
+在这两种方法中，当处理错误时，你必须熟悉这个类型并导入它的包。当您处理包装错误时，情况会变得更糟，其中错误的原因可能是在你没有(也不应该)意识到的内部依赖项中创建的错误。
+
+```Go
+import "mypkg"
+
+// ...
+
+switch err := errors.Cause(err).(type) {
+case mypkg.SomeErrorType:
+    // handle...
+default:
+    // handle...
+}
+```
+
+类型转换区分了`*MyStruct`和`MyStruct`。因此，如果不确定是在处理指针还是结构体的实例（actual instance），你必须同时提供这两种方法。而且，就像开关(译注：开关和转换的英文都是switch)一样，类型转换中的case不会失败，但是与开关不同，类型转换禁止使用`fallthrough`，所以您必须使用逗号并提供两个选项，这很容易被忘记。
+
+```Go
+if err != {
+    // log the error once, log.Log(err)
+
+    cause := errors.Cause(err)
+    switch cause.(type) {
+    case SomeErrorType, *SomeErrorType:
+        // handle...
+    default:
+        // handle...
+    }
+}
+```
+
+---
+
+## 总结
+
+就是这样！现在，你已经熟悉了错误，并且应当准备好处理你的Go程序抛出（或实际返回）的任何错误了！
+
+这两个`errors`包都提供了在Go中处理错误的简单但重要的方法，如果它们满足了你的需求，那么它们就是非常好的选择。你可以轻松地实现自己自定义的错误结构，并享受将它们与`pkg/errors`组合时获得的好处。
+
+当你扩展出简单的错误时，正确地使用类型断言可以成为处理不同错误的一个很好的工具。要么使用类型转换，要么断言错误的行为并检查它实现的接口。
+
+### 接下来该做什么
+
+Go的错误处理现在是一个非常热门的话题。现在你已经掌握了基本的知识，你可能会对Go错误处理未来的发展趋势感兴趣!
+
+在即将到来的Go 2版本，Go错误处理获得了非常多的关注，你现在已经可以在[设计草图](https://go.googlesource.com/proposal/+/master/design/go2draft.md)中进行查看。同时，在[dotGo 2019](https://www.dotgo.eu/)期间，Marcel van Lohuizen就这个话题进行了一次非常棒的演讲，我极力推荐大家去看一下——[ “Go 2 Error Values Today”](https://www.youtube.com/watch?v=SeVxmQl9Wmk)。
+
+很显然，还有很多方法、技巧和一些细节点，我不可能把它们都放在一篇文章中进行讲解！无论如何，我希望你们喜欢这篇文章，我们将在“在你进入到Go语言的世界之前”系列中的下一期再见!
 
 ---
 
