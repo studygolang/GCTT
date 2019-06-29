@@ -20,7 +20,7 @@ var j = int16(i) // -1 二进制表示: 11111111 11111111
 println(i, j) // -1 -1
 ```
 
-`unsafe` 包让我们可以直接访问此变量的内存，并将原始二进制值存储在此地址中。在绕过类型约束时，我们可以根据需要使用它：
+`unsafe` 包让我们可以直接访问此变量的内存，并将原始二进制值存储在此地址中。当我们想绕过类型约束时，我们可以根据需要使用它：
 
 ```go
 var k uint8 = *(*uint8)(unsafe.Pointer(&i))
@@ -30,9 +30,9 @@ println(k) // 255 is the uint8 value for the binary 11111111
 现在，原始值被解释为 uint8，而没有使用先前声明的类型（int8）。如果你有兴趣深入了解此主题，我建议你阅读我关于[使用 Go 进行 Cast 和 Conversion](https://medium.com/@blanchon.vincent/go-cast-vs-conversion-by-example-26e0ef3003f0)的文章。
 
 ## Go 1 兼容性指南
-[Go 1 的指南](https://golang.org/doc/go1compat#expectations)清楚地解释了如果你的代码使用了 `unsafe`包， 在更改实现之后可能会破坏你的代码：
+[Go 1 的指南](https://golang.org/doc/go1compat#expectations)清楚地解释了如果他们修改了底层的实现，`unsafe` 包的使用可能导致你的代码无法运行：
 
-> 导入`unsafe`软件包可能取决于 Go 实现的内部属性。 我们保留对可能导致程序崩溃的实现进行修改的权利。
+> 导入 `unsafe` 软件包可能取决于 Go 实现的内部属性。 我们保留做导致奔溃的修改的权利，因此需要修订一下。
 
 我们应该记住，在 Go 1 中，内部实现可能会发生变化，我们可能会遇到像这个[Github issue](https://github.com/golang/go/issues/16769)中类似的问题，两个版本之间的行为略有变化。但是，Go 标准库在许多地方也使用了 `unsafe` 包。
 
@@ -51,12 +51,12 @@ func unpackEface(i interface{}) Value {
 }
 ```
 
-变量`e`现在包含有关值的所有信息，例如类型或是否已导出值。反射还使用`unsafe`包通过直接更新内存中的值来修改反射变量的值，如前所述。
+变量 `e` 现在包含有关值的所有信息，例如类型或是否已导出值。反射还使用 `unsafe` 包通过直接更新内存中的值来修改反射变量的值，如前所述。
 
 ## 在 Go 的 sync 包中使用
-`unsafe` 包的另一个有趣用法是在`sync`包中。如果你不熟悉 `sync` 包，我建议你阅读我的[sync.Pool 的设计](https://juejin.im/post/5d006254e51d45776031afe3)的一篇文章。
+`unsafe` 包的另一个有趣用法是在`sync`包中。如果你不熟悉 `sync` 包，我建议你阅读我的关于[sync.Pool 的设计](https://juejin.im/post/5d006254e51d45776031afe3)的一篇文章。
 
-这些池通过一段内存在所有 goroutine/processors 之间共享，所有 goroutine 都可以通过`unsafe`包访问：
+这些池通过一段内存在所有 goroutine/processors 之间共享，所有 goroutine 都可以通过 `unsafe` 包访问该内存：
 
 ```go
 func indexLocal(l unsafe.Pointer, i int) *poolLocal {
@@ -65,7 +65,7 @@ func indexLocal(l unsafe.Pointer, i int) *poolLocal {
 }
 ```
 
-变量 `l` 是内存段，`i` 是处理器编号。函数 `indexLocal` 只读取此内存段 - 包含 X（处理器数量）`poolLocal` 结构 - 具有与其读取的索引相关的偏移量。存储指向完整内存段的指针是实现共享池的一种非常轻松的方法。
+变量 `l` 是内存段，`i` 是处理器编号。函数 `indexLocal` 只读取此内存段 - 包含 X（处理器数量）`poolLocal` 结构体 - 具有与其读取的索引相关的偏移量。存储指向完整内存段的指针是实现共享池的一种非常轻松的方法。
 
 ## 在 Go 的 runtime 包中使用
 Go 还在 `runtime` 包中使用了 `unsafe` 包，因为它必须处理内存操作，如堆栈分配或释放堆栈内存。堆栈在其结构中由两个边界表示：
@@ -124,7 +124,7 @@ func main() {
 
 `unsafe` 包中另一个不错的用法是[http://golang-sizeof.tips](http://golang-sizeof.tips)，它可以帮助你理解结构内存对齐的大小。
 
-总之，该软件包非常有趣且功能强大，但是应该谨慎使用。此外，如果你对`unsafe`包的将来的修改有建议，你可以在[Github for Go 2](https://github.com/golang/go/issues?utf8=%E2%9C%93&q=is%3Aopen+label%3AGo2+%22unsafe%22+in%3Atitle)中提 Issue。
+总之，该软件包非常有趣且功能强大，但是应该谨慎使用。此外，如果你对 `unsafe` 包的将来的修改有建议，你可以在[Github for Go 2](https://github.com/golang/go/issues?utf8=%E2%9C%93&q=is%3Aopen+label%3AGo2+%22unsafe%22+in%3Atitle)中提 Issue。
 
 ---
 
@@ -132,6 +132,6 @@ via: https://medium.com/@blanchon.vincent/go-what-is-the-unsafe-package-d2443da3
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[咔叽咔叽](https://github.com/watermelo)
-校对：[校对者 ID](https://github.com/校对者ID)
+校对：[magichan](https://github.com/magichan)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
