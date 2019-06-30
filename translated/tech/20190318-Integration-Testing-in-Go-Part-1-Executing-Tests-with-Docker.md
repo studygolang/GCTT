@@ -8,11 +8,11 @@ Burt Rutan 是一名航空航天工程师，他设计了 Voyager，这是第一�
 
 在开发 Web 服务时，我相信一组强大的集成测试可以比其他类型的测试更好地分析这个 Web 服务。集成测试是一种软件测试形式，用于测试代码与应用程序利用的依赖项（如数据库和消息传递系统）之间的交互。如果没有集成测试，很难信任 Web 服务的端到端操作。我之所以这么说，是因为在 Web 服务中的单元测试很少能提供与集成测试相媲美的信息量。
 
-这是关于 Go 语言集成测试的三部曲系列中的第一篇文章。本系列中分享的想法、代码和流程旨在轻松迁移到您正在处理的 Web 服务项目。在这篇文章中，我将向您展示如何配置 Web 服务项目以使用 Docker 和 Docker Compose 在没有预先安装 Go 的受限计算环境中运行 Go 测试和依赖项。
+这是关于 Go 语言集成测试的三部曲系列中的第一篇文章。本系列中分享的想法、代码和流程旨在轻松应用到您正在处理的 Web 服务项目。在这篇文章中，我将向您展示如何配置 Web 服务项目以使用 Docker 和 Docker Compose 在没有预先安装 Go 的受限计算环境中运行 Go 测试和依赖项。
 
 ## 为什么使用 Docker 和 Docker Compose
 
-吸引许多开发人员使用 Docker 的原因是想在主机上加载应用程序，而无需手动安装和管理它们。这意味着您可以加载复杂的软件，包括但不限于数据库（例如 Postgres），消息传递系统（例如 Kafka）和监控系统（例如 Prometheus）。所有这一切都是通过下载一组代表应用程序及其所有依赖项的镜像来完成的。
+众多开发者使用 Docker，是因为它能够在无需手动安装管理应用程序的前提下，在主机上加载应用程序。这意味着您可以加载复杂的软件，包括但不限于数据库（例如 Postgres），消息传递系统（例如 Kafka）和监控系统（例如 Prometheus）。所有这一切都是通过下载一组代表应用程序及其所有依赖项的镜像来完成的。
 
 *注意：想要了解有关容器的更多信息，可以参考 Docker 专门用于定义容器的[网页](https://www.docker.com/resources/what-container)，该网页还重点说明了容器和虚拟机之间的异同。*
 
@@ -63,7 +63,7 @@ services:
       - integration-tests-example-test
 ```
 
-在清单 1 中，可以看到这个 Docker Compose 文件定义了测试本项目所需的服务。这个文件有三个主要的键值：`version`，`networks` 以及 `services`。其中 `version` 键值定义了正在使用的 Docker Compose 版本。而 `networks` 键值定义了一个或多个供特定服务使用的网络配置。`services` 键值则定义了要启动的容器，和容器的配置。
+在清单 1 中，可以看到这个 Docker Compose 文件定义了需要运行测试的所需要项目服务。这个文件有三个主要的键值：`version`，`networks` 以及 `services`。其中 `version` 键值定义了正在使用的 Docker Compose 版本。而 `networks` 键值定义了一个或多个供特定服务使用的网络配置。`services` 键值则定义了要启动的容器和容器的配置。
 
 *清单 2*
 
@@ -177,7 +177,7 @@ db:
 
 容器 `db` 需要的最后几个配置选项是 `environment`，`restart` 和 `networks`。与之前的服务定义类似，`networks` 的值为已被定义过的网络的名字。将 `restart` 键设为 `on-failure` 以确保服务会在运行中途崩溃时自动重启。`environment` 选项包含了注入到容器 shell 中的一系列环境变量。大多数主流应用的镜像，例如 postgres，都有用来配置其所提供的应用的环境变量。
 
-运行测试
+## 运行测试
 
 在 Docker Compose 文件准备好之后，下一步就是基于 `listd_tests` 服务中提到的 dockerfile 构建镜像。这个 dockerfile 定义了一个能够为整个服务运行集成测试的镜像。一旦镜像创建完成，测试就可以运行了。
 
@@ -185,7 +185,7 @@ db:
 
 为了构建一个能运行测试的镜像，在 dockerfile 中要定义四样东西：
 
-获取一个带有最新稳定版 Go 的基础镜像。为 Go 模块安装 `git`。将可测试的代码复制到容器中。运行测试。
+获取一个带有最新稳定版 Go 的基础镜像。为 Go Modules 安装 `git`。将可测试的代码复制到容器中。运行测试。
 
 让我们来分解这几个步骤，并对 dockerfile 需要涉及的命令进行分析。
 
@@ -207,7 +207,7 @@ RUN set -ex; \
     apk add --no-cache git
 ```
 
-因为 Alpine OS 是非常轻量级的，您必须在基础镜像之上，手动安装 `git` 依赖。清单 11 展示的是第二步，将 `git` 添加到镜像中，为了后续使用 Go 模块。其中 `apk update` 命令要在添加 `git` 之前运行，以确保安装的是最新版本的 `git`。如果您的项目恰好要使用 `cgo`，那么您必须手动安装 `gcc` 以及 它的依赖库。
+因为 Alpine OS 是非常轻量级的，您必须在基础镜像之上，手动安装 `git` 依赖。清单 11 展示的是第二步，将 `git` 添加到镜像中，为了后续使用 Go Modules。其中 `apk update` 命令要在添加 `git` 之前运行，以确保安装的是最新版本的 `git`。如果您的项目恰好要使用 `cgo`，那么您必须手动安装 `gcc` 以及它的依赖库。
 
 *清单 12*
 
@@ -263,7 +263,7 @@ test:
 	docker-compose -f docker-compose.test.yml down --volumes
 ```
 
-停止并删除容器、持久卷和网络是完成测试后非常重要的一步，而这一步经常会被忽略。搞清楚为什么测试会因为上一次测试写入的残留数据而失败并不是一个能够轻易避免的普通问题。想要避免这个问题发生，我创建了一个简单的 `makefile` 规则 `test`，如清单 15 所示，无需任何人力参与也能创建、运行并清除容器。
+停止并删除容器、持久卷和网络是完成测试后非常重要的一步，而这一步经常会被忽略。由上次测试的遗留数据所导致的测试失败，其错误的原因难以发现，因此不容易解决，但这个问题是非常容易避免的。想要避免这个问题发生，我创建了一个简单的 `makefile` 规则 `test`，如清单 15 所示，无需任何人力参与也能创建、运行并清除容器。
 
 *清单 16*
 
@@ -289,6 +289,6 @@ via: https://www.ardanlabs.com/blog/2019/03/integration-testing-in-go-executing-
 
 作者：[George Shaw](https://github.com/george-e-shaw-iv/)
 译者：[Mockery-Li](https://github.com/Mockery-Li)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[magichan](https://github.com/magichan)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
