@@ -32,7 +32,7 @@ println(k) // 255 is the uint8 value for the binary 11111111
 ## Go 1 兼容性指南
 [Go 1 的指南](https://golang.org/doc/go1compat#expectations)清楚地解释了如果他们修改了底层的实现，`unsafe` 包的使用可能导致你的代码无法运行：
 
-> 导入 `unsafe` 软件包可能取决于 Go 实现的内部属性。 我们保留做导致奔溃的修改的权利，因此需要修订一下。
+> 导入 `unsafe` 软件包可能取决于 Go 实现的内部属性。 我们保留做导致奔溃的修改的权利。
 
 我们应该记住，在 Go 1 中，内部实现可能会发生变化，我们可能会遇到像这个[Github issue](https://github.com/golang/go/issues/16769)中类似的问题，两个版本之间的行为略有变化。但是，Go 标准库在许多地方也使用了 `unsafe` 包。
 
