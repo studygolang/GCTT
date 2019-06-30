@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/20747
+
 # 60 秒搭建无服务 Golang 应用
 
-在这篇简短的文章中，我将说明使用 [Apex Up](https://medium.com/r/?url=https%3A%2F%2Fgithub.com%2Fapex%2Fup) 对任何 Golang 应用程序或 API 是如何快速的生产出无服务环境的。这篇文章假设你在你的机器上配置了 [AWS credentials](https://medium.com/r/?url=https%3A%2F%2Fdocs.aws.amazon.com%2Fcli%2Flatest%2Fuserguide%2Fcli-chap-configure.html)，因为 Up 是部署到 AWS Lambda 和 API 网关上的。
+在这篇简短的文章中，我将说明使用 [Apex Up](https://github.com/apex/up) 对任何 Golang 应用程序或 API 是如何快速的生产出无服务环境的。这篇文章假设你在你的机器上配置了 [AWS credentials](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)，因为 Up 是部署到 AWS Lambda 和 API 网关上的。
 
 Up 适用于任何 Go 应用程序，没有必要专门为了构建无服务而去重写你的应用程序，但是如果你想跟随写，你可以将以下内容复制粘贴到你项目中的 `main.go` 文件中：
 
@@ -40,7 +42,7 @@ func getPets(w http.ResponseWriter, r *http.Request) {
 
 当你看到术语 "serverless" 的时候，你可能想到 FaaS - 或是功能即为服务 - 但是这不是你将通过 Up 找到的，它将你的整个应用程序部署到单个 AWS Lambda 函数中，让你专注于构建你的 API 或者 应用程序，因为你可以通过 `go run main.go` 像你在本地开发一样简单。
 
-当你的应用程序接收请求时，将由 [API Gateway](https://medium.com/r/?url=https%3A%2F%2Faws.amazon.com%2Fapi-gateway%2F)（一个由 AWS 提供的无服务负载均衡器）处理。请求传递给你的 Lambda 函数，该函数通常类似于以下内容（在 Node.js 中），你将使用 HTTP 的 `event` 作为请求，返回对象作为响应进行交互。这在简单的场景中可以很好，但是它将你锁定在 FaaS 中，并且在本地开发可能更加困难。
+当你的应用程序接收请求时，将由 [API Gateway](https://aws.amazon.com/cn/api-gateway/)（一个由 AWS 提供的无服务负载均衡器）处理。请求传递给你的 Lambda 函数，该函数通常类似于以下内容（在 Node.js 中），你将使用 HTTP 的 `event` 作为请求，返回对象作为响应进行交互。这在简单的场景中可以很好，但是它将你锁定在 FaaS 中，并且在本地开发可能更加困难。
 
 ```javascript
 exports.handle = async function(event, context) {
@@ -78,7 +80,7 @@ Up 将指导你选择应用程序的名称，要使用的 AWS 配置文件凭据
 
 ![1_SBH63IX2RHToaK8Qhml_Zw](https://raw.githubusercontent.com/studygolang/gctt-images/master/serverless-golang-apps-in-60-seconds/1_SBH63IX2RHToaK8Qhml_Zw.png)
 
-列出的端点是 `staging` 环境，默认情况下还有一个生产环境，但是你也可以定义 [个性化阶段](https://medium.com/r/?url=https%3A%2F%2Fup.docs.apex.sh%2F%23configuration.stages)。
+列出的端点是 `staging` 环境，默认情况下还有一个生产环境，但是你也可以定义 [个性化阶段](https://up.docs.apex.sh/#configuration.stages)。
 
 使用 `curl` 尝试你的新 API：
 
@@ -90,11 +92,11 @@ $ curl https://jb8mxj0cda.execute-api.eu-west-2.amazonaws.com/staging/pets
 或者，你可以使用 `up url` 扩展到同一端点：
 
 ```bash
-$ curl `up url`/pets
+$ curl up url/pets
 ["Tobi","Loki","Jane"]
 ```
 
-就这样了！如果你有兴趣了解更多 Up 提供的信息，请查看以下功能或 [文档](https://medium.com/r/?url=https%3A%2F%2Fup.docs.apex.sh%2F)。完成后，运行以下命令去删除应用程序和资源：
+就这样了！如果你有兴趣了解更多 Up 提供的信息，请查看以下功能或 [文档](https://up.docs.apex.sh/)。完成后，运行以下命令去删除应用程序和资源：
 
 ```bash
 $ up stack delete
@@ -112,7 +114,7 @@ $ up stack delete
 - 请求隔离 - 每个请求与它自己的 Lambda 隔离，crash 永远不会让你的整个应用程序崩溃
 - 富有表现力的结构化日志查询（例如：`up logs 'error message = "login failed" region="us-west-2"'`）
 - 免费的 SSL 和自定义域名支持
-- [Slack chat](https://medium.com/r/?url=http%3A%2F%2Fchat.apex.sh%2F) 社区支持
+- [Slack chat](http://chat.apex.sh/) 社区支持
 
 ## 专业功能
 
@@ -120,18 +122,18 @@ $ up stack delete
 - 使用 Git 继承部署日志历史记录
 - 即时回滚到以前的部署或者 Git tag/commit
 - 加密环境变量，集中并且定义每一个阶段
-- 通过 SMA，Slack 和邮件 [提醒](https://medium.com/r/?url=https%3A%2F%2Fup.docs.apex.sh%2F%23configuration.alerting) 错误和性能问题
-- 支持 [区域端点](https://medium.com/r/?url=https%3A%2F%2Faws.amazon.com%2Fabout-aws%2Fwhats-new%2F2017%2F11%2Famazon-api-gateway-supports-regional-api-endpoints%2F)
-- 支持 [Lambda 层](https://medium.com/r/?url=https%3A%2F%2Fdocs.aws.amazon.com%2Flambda%2Flatest%2Fdg%2Fconfiguration-layers.html)
+- 通过 SMA，Slack 和邮件 [提醒](https://up.docs.apex.sh/#configuration.alerting) 错误和性能问题
+- 支持 [区域端点](https://aws.amazon.com/about-aws/whats-new/2017/11/amazon-api-gateway-supports-regional-api-endpoints/)
+- 支持 [Lambda 层](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html)
 - 优先邮件支持
 - 保持项目活力
 
-<div style="text-align: center; font-size: 24px; padding: 1px;">. . .</div>
+---
 
 ## 链接
 
-- 文档： [https://up.docs.apex.sh](https://medium.com/r/?url=https%3A%2F%2Fup.docs.apex.sh%2F)
-- GitHub 仓库： [https://github.com/apex/up](https://medium.com/r/?url=https%3A%2F%2Fgithub.com%2Fapex%2Fup)
+- 文档：[https://up.docs.apex.sh](https://up.docs.apex.sh/)
+- GitHub 仓库：[https://github.com/apex/up](https://github.com/apex/up)
 
 ---
 
@@ -139,6 +141,6 @@ via: https://medium.com/@tjholowaychuk/serverless-golang-apis-in-60-seconds-46e4
 
 作者：[TJ Holowaychuk](https://medium.com/@tjholowaychuk)
 译者：[PotoYang](https://github.com/PotoYang)
-校对：[校对者 ID](https://github.com/ 校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
