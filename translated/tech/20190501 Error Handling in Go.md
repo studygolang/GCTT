@@ -62,7 +62,8 @@ Go语言确实有一个`panic`和`recover`机制，这再[另一篇Go博文](htt
 
 - “错误就是价值观。”
 - “不要只是检查错误，优雅地处理它们”
-- “不要惊慌失措”  
+- “不要惊慌失措”
+
 [所有Rob Pike的Go谚语](https://go-proverbs.github.io/)
 
 ---
@@ -73,7 +74,7 @@ Go语言确实有一个`panic`和`recover`机制，这再[另一篇Go博文](htt
 
 在底层实现中，`error`类型是一个[普通的单方法接口](https://golang.org/ref/spec#Errors)，如果你还对他不熟悉，我强烈建议你仔细的阅读在Go官方博客中的[这篇文章](https://blog.golang.org/error-handling-and-go).
 
-```Go
+```go
 // error interface from the source code
 type error interface {
     Error() string
@@ -90,7 +91,7 @@ type error interface {
 
 错误接口中最常用同时也是最出名的就是`errorString`结构体。这是你能想到的最简洁的实现。
 
-```Go
+```go
 package errors
 
 func New(text string) error {
@@ -111,7 +112,7 @@ func (e *errorString) Error() string {
 
 你可以在[这里](https://golang.org/src/errors/errors.go)看到它的简单实现。它做的事情就是保存一个`string`，同时，这个字符串是由`Error`方法返回的。我们可以使用数据格式化这个错误信息，比如，`fmt.Springf`。但除此之外，它不包含任何其他功能。如果你在使用内置的[`errors.New`](https://golang.org/src/errors/errors.go?s=293:353#L1)或者[`fmt.Errorf`](https://golang.org/src/fmt/print.go#L220)，你就[已经在使用他们了](https://play.golang.org/p/olRXqq3jNyR)。
 
-```Go
+```go
 import (
     "errors"
     "fmt"
@@ -136,13 +137,13 @@ func main() {
 
 另一个简单的示例是[`pkg/errors`](https://github.com/pkg/errors/blob/master/errors.go)[包](https://github.com/pkg/errors/blob/master/errors.go)。不要与之前学到的内置`errors`包混淆这个包额外提供了一些重要的功能，比如错误的封装（wrapping）、展开（unwrapping），格式化和堆栈跟踪记录。你可以通过运行`go get github.com/pkg/errors`来安装这个包。
 
-```Go
+```go
 go get github.com/pkg/errors
 ```
 
 如果需要将堆栈跟踪信息附加的错误中，或是附加必要的调试信息到错误中，可以使用此包的`New`或者`Errorf`函数，他们已经记录下了你的堆栈记录。同时，你还可以附加简单的元数据格式化功能。`Errorf`调用了[`fmt.Formatter`](https://golang.org/pkg/fmt/#Formatter)[接口](https://golang.org/pkg/fmt/#Formatter)，这意味着你可以使用`fmt`包的runes(`%s`, `%v`, `%+v` etc)来格式化他们。
 
-```Go
+```go
 import "github.com/pkg/errors"
 
 // ...
@@ -154,7 +155,7 @@ errors.Errorf("error writing to file %s", f.Path)
 
 这个包还包含`errors.Wrap`和`errors.Wrapf`函。这些函数将上下文添加到错误中，并在调用的时候跟踪堆栈信息。这样,你就可以将其与其上下文和重要的调试数据封装在一起,而不是简单地返回错误。
 
-```Go
+```go
 if err != nil {
     return errors.Wrap(err, "could not open file")
 }
@@ -170,7 +171,7 @@ if err != nil {
 
 它的语法对于所有的目标（purposes）都是相同的——`x.(T)`，其中`x`是接口类型。`x.(T)`断言`x`不为`nil`，并且存储在`x`中的值类型为`T`。在接下来的几节里面，你将会看到使用类型断言的两种方式——通过使用具体类型`T`和使用接口类型`T`。
 
-```Go
+```go
 var x interface{}
 // short syntax, dropping the ok boolean
 // panic: interface conversion: interface is nil, not string
@@ -195,7 +196,7 @@ if s ok := x.(string); ok {
 
 使用接口类型`T`进行类型断言能够断言`x`实现了接口`T`。通过这种方法，你可以实现这个接口，并且只有当这个接口值被实现时，才可以调用这个方法。
 
-```Go
+```go
 type resolver interface {
     Resolve()
 }
@@ -209,7 +210,7 @@ if v, ok := x.(resolver); ok {    // asserts x implements resolver
 
 这个函数输入一个error并提取出它封装的最底层的错误（在这个错误内部没有再封装其它的错误）。这看起来很简单，但是你可以从这个实现中学到很多很有用的东西：
 
-```Go
+```go
 func Cause(err error) error {
     type causer interface {
         Cause() error
@@ -243,7 +244,7 @@ func Cause(err error) error {
 
 首先，是第二种类型断言：使用具体类型`T`进行类型断言`x.(T)`。它断言`x`的值是`T`类型，或者将它转换为`T`类型。
 
-```Go
+```go
 if v, ok := err.(mypkg.SomeErrorType); ok {
     // we can use v as mypkg.SomeErrorType
 }
@@ -251,7 +252,7 @@ if v, ok := err.(mypkg.SomeErrorType); ok {
 
 另一个是[类型转换](https://golang.org/doc/effective_go.html#type_switch)模式。类型转换通过保留类型关键字将switch语句与类型断言组合在一起。它们在错误处理中特别常见。在错误处理中，了解错误变量的基本类型非常有用。
 
-```Go
+```go
 switch err.(type) {
 case mypkg.SomeErrorType:
     // handle...
@@ -264,7 +265,7 @@ default:
 
 在这两种方法中，当处理错误时，你必须熟悉这个类型并导入它的包。当您处理包装错误时，情况会变得更糟，其中错误的原因可能是在你没有(也不应该)意识到的内部依赖项中创建的错误。
 
-```Go
+```go
 import "mypkg"
 
 // ...
@@ -279,7 +280,7 @@ default:
 
 类型转换区分了`*MyStruct`和`MyStruct`。因此，如果不确定是在处理指针还是结构体的实例（actual instance），你必须同时提供这两种方法。而且，就像开关(译注：开关和转换的英文都是switch)一样，类型转换中的case不会失败，但是与开关不同，类型转换禁止使用`fallthrough`，所以您必须使用逗号并提供两个选项，这很容易被忘记。
 
-```Go
+```go
 if err != {
     // log the error once, log.Log(err)
 
