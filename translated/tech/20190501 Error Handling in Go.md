@@ -308,7 +308,7 @@ if err != {
 
 Go的错误处理现在是一个非常热门的话题。现在你已经掌握了基本的知识，你可能会对Go错误处理未来的发展趋势感兴趣!
 
-在即将到来的Go 2版本，Go错误处理获得了非常多的关注，你现在已经可以在[设计草图](https://go.googlesource.com/proposal/+/master/design/go2draft.md)中进行查看。同时，在[dotGo 2019](https://www.dotgo.eu/)期间，Marcel van Lohuizen就这个话题进行了一次非常棒的演讲，我极力推荐大家去看一下——[ “Go 2 Error Values Today”](https://www.youtube.com/watch?v=SeVxmQl9Wmk)。
+在即将到来的Go 2版本，Go错误处理获得了非常多的关注，你现在已经可以在[设计草图](https://go.googlesource.com/proposal/+/master/design/go2draft.md)中进行查看。同时，在[dotGo 2019](https://www.dotgo.eu/)期间，Marcel van Lohuizen就这个话题进行了一次非常棒的演讲，我极力推荐大家去看一下——[“Go 2 Error Values Today”](https://www.youtube.com/watch?v=SeVxmQl9Wmk)。
 
 很显然，还有很多方法、技巧和一些细节点，我不可能把它们都放在一篇文章中进行讲解！无论如何，我希望你们喜欢这篇文章，我们将在“在你进入到Go语言的世界之前”系列中的下一期再见!
 
