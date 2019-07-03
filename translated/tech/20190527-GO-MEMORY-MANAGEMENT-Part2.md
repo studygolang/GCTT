@@ -7,9 +7,9 @@
 首先，我们一起来看一下占用很多虚拟内存的程序 `ex1`。它的代码如下：
 ```go
 func main() {
-    http.HandleFunc("/bar", 
+    http.HandleFunc("/bar",
         func(w http.ResponseWriter, r *http.Request) {
-        fmt.Fprintf(w, "Hello, %q", 
+        fmt.Fprintf(w, "Hello, %q",
             html.EscapeString(r.URL.Path))
     })
 
@@ -18,7 +18,7 @@ func main() {
 ```
 我执行了 `ps` 命令来查看虚拟内存大小，以下是它的输出。注意，输出中的内存大小单位是千字节（KiB），388496 KiB 约等于 379.390625 MiB。
 ```bash
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT 
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT
 povilasv 16609  0.0  0.0 388496  5236 pts/9    Sl+
 ```
 
@@ -43,8 +43,8 @@ func main() {
 
 最后，我们看一下这个程序的 `ps` 命令的输出，你可以看到它运行时只占用了少量的虚拟内存：4900 KiB，约等于 4.79 MiB。
 ```bash
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT 
-povilasv  3642  0.0  0.0   4900   948 pts/10   Sl+ 
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT
+povilasv  3642  0.0  0.0   4900   948 pts/10   Sl+
 ```
 
 有一点需要说明，这些程序是使用较老的 Go 1.10 版编译的；如果使用新版本的 Go 编译的话，这些数字将会不同。比如拿 `ex1` 来说，使用 Go 1.11 版编译，占用的虚拟内存为 466 MiB，常驻内存为 3.22 MiB；改用 Go 1.12 版编译，则这两者分别为 100.37 MiB 和 1.44 MiB。
@@ -183,7 +183,7 @@ close(3)                                = 0
 ```go
 package main
 
-// #include 
+// #include
 import "C"
 import "fmt"
 
@@ -367,7 +367,7 @@ go build -tags netgo
 ```
 `ps` 输出：
 ```bash
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT 
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT
 povilasv  3524  0.0  0.0   7216  4076 pts/17   Sl+
 ```
 可以看到在这种模式下虚拟内存的占用是很低的。
@@ -378,7 +378,7 @@ go build -tags netcgo
 ```
 `ps` 输出：
 ```bash
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT 
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT
 povilasv  6361  0.0  0.0 382296  4988 pts/17   Sl+
 ```
 可以看到在这种模式下，占用了大量虚拟内存（382296 KiB）。
@@ -389,7 +389,7 @@ go build -tags 'netgo cgo' .
 ```
 `ps` 输出：
 ```bash
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT 
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT
 povilasv  8175  0.0  0.0   7216  3968 pts/17   Sl+
 ```
 可以看到在这种模式下虚拟内存的占用也是是很低的（7216 KiB）。
@@ -402,7 +402,7 @@ povilasv  8175  0.0  0.0   7216  3968 pts/17   Sl+
 ```go
 package main
 
-// #include 
+// #include
 import "C"
 import "fmt"
 
@@ -410,9 +410,9 @@ func main() {
   char := C.getchar()
   fmt.Printf("%T %#v", char, char)
 
-  http.HandleFunc("/bar", 
+  http.HandleFunc("/bar",
     func(w http.ResponseWriter, r *http.Request) {
-        fmt.Fprintf(w, "Hello, %q", 
+        fmt.Fprintf(w, "Hello, %q",
           html.EscapeString(r.URL.Path))
   })
 
@@ -427,7 +427,7 @@ go build -tags netcgo .
 ```
 `ps` 输出：
 ```bash
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT 
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT
 povilasv 12594  0.0  0.0 382208  4824 pts/17   Sl+
 ```
 可以看到虚拟内存占用没有变化。现在来试一下 `netgo cgo`：
@@ -436,8 +436,8 @@ go build -tags 'netgo cgo' .
 ```
 `ps` 输出：
 ```bash
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT 
-povilasv  1026  0.0  0.0 382208  4824 pts/17   Sl+ 
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT
+povilasv  1026  0.0  0.0 382208  4824 pts/17   Sl+
 ```
 最后，终于可以排除 libc 的 DNS 客户端实现的影响，因为禁用它并没有带来任何变化。我们清楚的看到这一切都跟 cgo 有关。
 
@@ -445,8 +445,8 @@ povilasv  1026  0.0  0.0 382208  4824 pts/17   Sl+
 ```go
 package main
 
-// #include 
-// #include 
+// #include
+// #include
 import "C"
 import (
     "time"
@@ -469,7 +469,7 @@ go build .
 ```
 `ps` 输出：
 ```bash
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT 
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT
 povilasv 15972  0.0  0.0 378228  2476 pts/17   Sl+
 ```
 酷！它真的占用了许多虚拟内存，我们真的需要调查 cgo 了。
