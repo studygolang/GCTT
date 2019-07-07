@@ -3,7 +3,7 @@
 ## 前言
 我们已经[设计和构建](https://www.browserlondon.com/services/design-development/)了十多年的软件，大部分时间我们一直在使用优秀的 Symfony 框架来实现这一目标。 Symfony 是一个传统的单体 PHP 构件集，受 Java Spring 的启发，我们发现它非常适合[企业 web 应用程序](https://www.browserlondon.com/case-study/insights/)和[数字产品](https://www.browserlondon.com/case-study/twine/)的快速开发，而这些正是我们主要经济来源。
 
-然而，去年发布的 Symfony 4 代表了该框架的重点逐渐变化; 这变化体现在其远离单一的根源和向[微服务](https://en.wikipedia.org/wiki/Microservices)靠拢，这种变化背后的方法论在过去几年中越来越受欢迎。
+然而，去年发布的 Symfony 4 代表了该框架的重点逐渐变化; 这变化体现在其远离单体架构和向[微服务](https://en.wikipedia.org/wiki/Microservices)靠拢，这种变化背后的方法论在过去几年中越来越受欢迎。
 
 为了说明这一转变，新版本在默认情况下被标榜为微服务的, Symfony 组织大力宣传其新的微内核设计，声称与 Symfony 3 相比，编写应用程序所需的代码减少了70%。
 
@@ -40,7 +40,7 @@
 * 服务间的通信
 * 多个应用程序上的额外配置管理
 
-## 例外情况（混合的方式） 
+## 例外情况（混合的方式）
 
 有时候微服务是合适的，但是根据我的经验，在这些情况下，可伸缩性需求或容错需求超过了必须设计和管理分布式系统的缺点。这里的一个很好的例子是像 [Monzo Bank](https://monzo.com/blog/2016/09/19/building-a-modern-bank-backend) 这样的企业应用，它既需要能够立即按需求进行伸缩，又需要能够确保系统某个区域的故障不会影响到另一个区域.
 
