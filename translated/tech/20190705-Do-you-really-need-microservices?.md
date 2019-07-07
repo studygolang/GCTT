@@ -1,7 +1,7 @@
 # 你真的需要微服务吗？
 
 ## 前言
-我们已经[设计和构建](https://www.browserlondon.com/services/design-development/)了十多年的软件，大部分时间我们一直在使用优秀的 Symfony 框架来实现这一目标。 Symfony 是一个传统的单体 PHP 构件集，受 Java Spring 的启发，我们发现它非常适合[企业 web 应用程序](https://www.browserlondon.com/case-study/insights/)和[数字产品](https://www.browserlondon.com/case-study/twine/)的快速开发，而这些正是我们主要经济来源。 
+我们已经[设计和构建](https://www.browserlondon.com/services/design-development/)了十多年的软件，大部分时间我们一直在使用优秀的 Symfony 框架来实现这一目标。 Symfony 是一个传统的单体 PHP 构件集，受 Java Spring 的启发，我们发现它非常适合[企业 web 应用程序](https://www.browserlondon.com/case-study/insights/)和[数字产品](https://www.browserlondon.com/case-study/twine/)的快速开发，而这些正是我们主要经济来源。
 
 然而，去年发布的 Symfony 4 代表了该框架的重点逐渐变化; 这变化体现在其远离单一的根源和向[微服务](https://en.wikipedia.org/wiki/Microservices)靠拢，这种变化背后的方法论在过去几年中越来越受欢迎。
 
@@ -19,7 +19,6 @@
 
 微服务体系结构的另一个好处是允许灵活地扩展一个特定组件的数量，而不是整个应用程序。在[弹性云计算](https://www.browserlondon.com/blog/2019/01/28/modernising-hosting-platform/#ECS-and-EC2)的世界中，这是一个很好的选择，但在大多数情况下，我认为这种效率提高会被一个大而突出的问题所淹没。
 
-
 ## 你真的需要微服务
 
 我的观点是，除非你在 Google 或 Netflix 等拥有数百名软件开发人员的公司工作，否则你可能不需要微服务。事实上，对于大多数中小型企业来说，采用这种设计可能非常不合适。
@@ -33,7 +32,7 @@
 
 ## 为什么微服务在开发和运维上开销更大？
 
-由于您不需要处理大量的分布式系统问题，因此单体应用程序通常是一个开销更少的方案。使用像 Symfony 这样的单体框架所通过提供开箱即用的集成特性提供了许多好处，这些特性可以方便地从应用程序的所有区域访问。你基本上可以避免处理以下的这些问题: 
+由于您不需要处理大量的分布式系统问题，因此单体应用程序通常是一个开销更少的方案。使用像 Symfony 这样的单体框架所通过提供开箱即用的集成特性提供了许多好处，这些特性可以方便地从应用程序的所有区域访问。你基本上可以避免处理以下的这些问题:
 
 * 分布式系统上的身份验证和授权
 * 跟踪多个独立系统上的复杂事务
@@ -55,7 +54,7 @@
 
 尽早做出正确的决定可以增加产品在最短的时间内获得投资回报的机会，而不会妨碍您希望将来探索。 在后续计划中将组件微服务化通常比最初的 MVP 开发中微服务化更具成本效益。
 
-## 关于 Browser 
+## 关于 Browser
 我们为创建企业级 web 应用程序提供更好、更高效的工作环境。我们帮助 Shell、British Airways 和 UK Gov 等客户提高效率，简化业务流程。访问我们的[伦敦的网站](https://www.browserlondon.com/)
 
 ---
