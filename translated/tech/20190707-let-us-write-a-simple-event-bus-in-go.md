@@ -1,8 +1,4 @@
-> * 原文地址：[https://levelup.gitconnected.com/lets-write-a-simple-event-bus-in-go-79b9480d8997?from=singlemessage](https://levelup.gitconnected.com/lets-write-a-simple-event-bus-in-go-79b9480d8997?from=singlemessage)
-> * 原文作者：[Kasun Vithanage](https://levelup.gitconnected.com/@kasvith)
-> * 译文地址：[https://github.com/watermelo/dailyTrans](https://github.com/watermelo/dailyTrans/blob/master/golang/go_simple_event_bus.md)
-> * 译者：咔叽咔叽  
-> * 译者水平有限，如有翻译或理解谬误，烦请帮忙指出
+# 使用 Go 实现简单的事件总线
 
 ![](https://github.com/studygolang/gctt-images/blob/master/let’s-write-a-simple-event-bus-in-go/pic_1.png)
 
