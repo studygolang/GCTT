@@ -67,7 +67,7 @@
 
 ![image](https://cdn-images-1.medium.com/max/1600/1*7b1ZmM39ppGTFs3nLgdMzw.png)
 
-声明了一个非类型化的长岭 Pi，并且为它赋值为 3.14，那么它默认的类型就是 float。
+声明了一个非类型化的常量 Pi，并且为它赋值为 3.14，那么它默认的类型就是 float。
 
 ![image](https://cdn-images-1.medium.com/max/1600/1*7cCppzbC1AbmF9u8O75MkQ.png)
 
