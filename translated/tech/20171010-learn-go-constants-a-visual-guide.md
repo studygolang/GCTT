@@ -1,5 +1,3 @@
-#### https://blog.learngoprogramming.com/learn-golang-typed-untyped-constants-70b4df443b61
-
 # Go 常量学习-可视化指南
 
 > go 的类型常量和非类型常量是两个必须要了解的关键概念
