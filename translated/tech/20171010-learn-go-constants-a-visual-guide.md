@@ -87,7 +87,7 @@ If you stay in the untyped constants realm, there is no-speed-limit! But, when y
 
 ## 灵活的表达方式
 
-你可以使用非类型化常量临时从Go的强类型系统中逸出，直到它们在类型要求表达式中的计算为止。
+你可以使用非类型化常量临时从 Go 的强类型系统中逸出，直到它们在类型要求表达式中的计算为止。
 
 我在[代码中](https://github.com/inancgumus/myhttp/blob/master/get.go#L12)一直使用它们来避免在不需要强类型时不必要地声明内容。所以，如果您不真正需要常量，就不要用它声明类型。
 
