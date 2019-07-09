@@ -40,24 +40,24 @@ Golang 为我们提供了一个神奇的工具叫 `pprof`。掌握此工具后�
 ## pprof 画像
 pprof 的工作方式是使用画像。
 
-画像是一组显示导致特定事件实例的调用顺序堆栈的追踪，例如内存分配。
+画像(profile)是一组显示导致特定事件实例的调用序列的堆栈追踪，例如内存分配。
 
 文件[runtime/pprof/pprof.go](https://golang.org/src/runtime/pprof/pprof.go)包含画像的详细信息和实现。
 
 Go 有几个内置的画像供我们在常见情况下使用：
-- goroutine - 所有当前 goroutines 的堆栈跟踪
-- heap - 活动对象的内存分配的样本
-- allocs - 过去所有内存分配的样本
-- threadcreate - 导致创建新 OS 线程的堆栈跟踪
-- block - 导致阻塞同步原语的堆栈跟踪
-- mutex - 争用互斥锁持有者的堆栈跟踪
+- goroutine - 当前所有 goroutines 的堆栈跟踪
+- heap - 当前存活对象的内存分配的采样
+- allocs - 过去所有内存分配的采样
+- threadcreate - 导致创建新 OS 线程的堆栈跟踪信息
+- block - 同步原语导致阻塞的堆栈跟踪信息
+- mutex - 锁争用的持有者的堆栈跟踪信息
 
 在查看内存问题时，我们将专注于堆画像。 allocs 画像和它在关于数据收集方面是相同的。两者之间的区别在于 pprof 工具在启动时读取的方式不一样。 allocs 画像将以显示自程序启动以来分配的总字节数（包括垃圾收集的字节）的模式启动 pprof。在尝试提高代码效率时，我们通常会使用该模式。
 
 ## 堆
 简而言之，这是 OS（操作系统）存储我们代码中对象占用内存的地方。这块内存随后会被“垃圾回收”，或者在非垃圾回收语言中手动释放。
 
-堆不是唯一发生内存分配的地方，一些内存也在栈中分配。栈主要是短周期的内存。在 Go 中，栈通常用于在函数闭包内发生的赋值。 Go 使用栈的另一个地方是编译器“知道”在运行时需要多少内存（例如固定大小的数组）。有一种方法可以使 Go 编译器将栈“转义”到堆中输出分析，但我不会在这篇文章中谈到它。
+堆不是唯一发生内存分配的地方，一些内存也在栈中分配。栈主要是短周期的内存。在 Go 中，栈通常用于在函数闭包内发生的赋值。 Go 使用栈的另一个地方是编译器“知道”在运行时需要多少内存（例如固定大小的数组）。有一种方法可以使 Go 编译器输出关于内存从栈“逃逸”到堆的分析，但我不会在这篇文章中谈到它。
 
 堆数据需要“释放”和垃圾回收，而栈数据则不需要。这意味着使用栈效率更高。
 
@@ -73,9 +73,9 @@ Go 有几个内置的画像供我们在常见情况下使用：
 pprof.Lookup("heap").WriteTo(some_file, 0)
 ```
 
-根据文档，`WriteHeapProfile`可以向后兼容。其余类型的画像没有这样的便捷方式，必须使用`Lookup()`函数来获取其画像数据。
+根据文档，`WriteHeapProfile` 是为保证向后兼容性而存在的。其余类型的画像没有这样的便捷方式，必须使用`Lookup()`函数来获取其画像数据。
 
-第二个更有意思，是通过 HTTP（基于 Web 的 endpoints）来启用。这允许你从正在运行的 e2e/test 环境中的容器中去提取数据，甚至从“生产”环境中提取数据。这是 Go 运行时和工具集所擅长的部分。整个包文档可以在[这里找到](https://golang.org/pkg/net/http/pprof/)，太长不看版，只需要你将它添加到代码中：
+第二个更有意思，是通过 HTTP（基于 Web 的 endpoints）来启用。这允许你从在 e2e/test 环境下运行中容器中去提取数据，甚至从“生产”环境中提取数据。这是 Go 运行时和工具集所擅长的部分。整个包文档可以在[这里找到](https://golang.org/pkg/net/http/pprof/)，太长不看版，只需要你将它添加到代码中：
 
 ```golang
 import (
@@ -100,7 +100,7 @@ curl -sK -v http://localhost:8080/debug/pprof/heap > heap.out
 ## 使用 pprof
 所以我们收集了这些数据，现在该干什么呢？如上所述，pprof 有两种主要的内存分析策略。一个是查看当前的内存分配（字节或对象计数），称为`inuse`。另一个是查看整个程序运行时的所有分配的字节或对象计数，称为 `alloc`。这意味着无论它是否被垃圾回收，都会是所有样本的总和。
 
-在这里我们需要重申一下堆画像文件是内存分配的样例。幕后的`pprof`使用`runtime.MemProfile`函数，该函数默认按分配字节每 512KB 收集分配信息。可以修改 MemProfile 以收集所有对象的信息。需要注意的是，这很可能会降低应用程序的运行速度。
+在这里我们需要重申一下堆画像文件是内存分配的样例。幕后的`pprof`使用`runtime.MemProfile`函数，默认情况下，该函数每分配 512 kb 空间收集一次信息。可以修改 MemProfile 以收集所有对象的信息。需要注意的是，这很可能会降低应用程序的运行速度。
 
 这意味着默认情况下，对于在 pprof 监控下抖动的小对象，可能会出现问题。对于大型代码库/长期运行的程序，这不是问题。
 
@@ -150,8 +150,8 @@ Showing top 10 nodes out of 56
 如果要该画像文件的所有数据，请在运行 pprof 时添加`-nodefraction=0`选项，或在交互命令行中键入`nodefraction=0`。
 
 在输出列表中，我们可以看到两个值，`flat`和`cum`。
-- `flat` 表示堆栈中当前层函数的内存
-- `cum` 表示堆栈中直到当前层函数所累积的内存
+- `flat` 表示堆栈中当前函数消耗的内存
+- `cum` 表示堆栈中当前函数加上它之上的调用累积消耗的内存
 
 仅仅这个信息有时可以帮助我们了解是否存在问题。例如，一个函数负责分配了大量内存但没有保留内存的情况。这意味着某些其他对象指向该内存并维护其分配，这说明我们可能存在系统设计的问题或 bug。
 
@@ -171,7 +171,7 @@ Showing top 10 nodes out of 56
 ## 深入挖掘，寻找根本原因
 到目前为止，我们能够理解应用程序在运行期间内存怎么分配的。这有助于我们了解我们程序的行为（或不好的行为）。
 
-在我们的例子中，我们可以看到内存由`membuffers`持有，这是我们的[数据序列化库](https://github.com/orbs-network/membuffers)。这并不意味着我们在该代码段有内存泄漏，这意味着该函数持有了内存。了解如何阅读图表以及 pprof 输出非常重要。在这个例子中，当我们序列化数据时，意味着我们将内存分配给结构和原始对象（int，string），它不会被释放。
+在我们的例子中，我们可以看到内存由`membuffers`持有，这是我们的[数据序列化库](https://github.com/orbs-network/membuffers)。这并不意味着我们在该代码段有内存泄漏，这意味着该函数持有了内存。重要的是了解如何阅读图表以及 pprof 输出。在这个例子中，当我们序列化数据时，意味着我们将内存分配给结构和原始对象（int，string），它不会被释放。
 
 跳到结论部分，我们可以假设序列化路径上的一个节点负责持有内存，例如：
 
@@ -228,12 +228,12 @@ ROUTINE ======================== github.com/orbs-network/orbs-network-go/service
 
 我们可以看到所做的内存分配位于`cum`列中，这意味着分配的内存保留在调用栈中。这与图表显示的内容相关。此时很容易看出日志记录器分配内存是因为我们发送了整个“block”对象造成的。这个对象需要序列化它的某些部分（我们的对象是 membuffer 对象，它实现了一些`String()`函数）。它是一个有用的日志，还是一个好的做法？可能不是，但它不是日志记录器端或调用日志记录器的代码产生了内存泄漏，
 
-`list`在`GOPATH`路径下搜索可以找到源代码。如果它搜索的根不匹配（取决于你电脑的项目构建），则可以使用`-trim_path`选项。这将有助于修复它并让你看到带注释的源代码。当正在捕获堆配置文件时要将 git 设置为可以正确提交。
+`list`在`GOPATH`路径下搜索可以找到源代码。如果它搜索的根不匹配（取决于你电脑的项目构建），则可以使用`-trim_path`选项。这将有助于修复它并让你看到带注释的源代码。注意要将 git 设置为捕获堆画像（Head Profile）时正在运行的代码版本。（译注：你可能要在本地机器上分析收集自服务器的堆画像，这要求你本地机器的代码版本要和服务器上的程序匹配。）。
 
 ## 内存泄漏原因
 之所以调查是因为怀疑有内存泄漏的问题。我们发现内存消耗高于系统预期的需要。最重要的是，我们看到它不断增加，这是“这里有问题”的另一个强有力的指标。
 
-此时，在 Java 或.Net 的情况下，我们将打开一些'gc roots'分析或分析器，并获取引用该数据并造成泄漏的实际对象。正如所解释的那样，对于 Go 来说这是不可能的，因为工具问题也是由于 Go 低等级的内存表示。
+此时，在 Java 或.Net 的情况下，我们将打开一些'gc roots'分析或分析器，并获取引用该数据并造成泄漏的实际对象。对于 Go 来说这是不可能的，因为工具问题也是由于 Go 低等级的内存表示。
 
 没有详细说明，我们不知道 Go 把哪个对象存储在哪个地址（指针除外）。这意味着实际上，了解哪个内存地址表示对象（结构）的哪个成员将需要把某种映射输出到堆画像文件。这可能意味着在进行完整的 core dump 之前，还应该采用堆画像文件，以便将地址映射到分配的行和文件，从而映射到内存中表示的对象。
 
@@ -243,7 +243,7 @@ ROUTINE ======================== github.com/orbs-network/orbs-network-go/service
 
 ![](https://github.com/studygolang/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_3.png)
 
-我们有两个新的子树。再次提醒，pprof 堆画像文件是内存分配的采样。对于我们的系统而言 - 我们不会遗漏任何重要信息。这个较长的绿色新子树的部分是与系统的其余部分完全断开的测试运行器，在本篇文章中我没有兴趣考虑它。
+我们有两个新的子树。再次提醒，pprof 堆画像文件是内存分配的采样。对于我们的系统而言是可行的 - 我们不会遗漏任何重要信息。这个较长的绿色新子树的部分是与系统的其余部分完全断开的测试运行器，在本篇文章中我没有兴趣考虑它。
 
 ![](https://github.com/studygolang/gctt-images/blob/master/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase/pprof_4.png)
 
@@ -287,7 +287,7 @@ ROUTINE ======================== github.com/orbs-network/orbs-network-go/vendor/
 
 我们可以看到两个有趣的信息。同样，请记住 pprof 堆画像文件会对有关分配的信息进行采样。我们可以看到`flat`和`cum`数字是相同的。这表明分配的内存也在这些分配点被保留。
 
-接下来，我们可以看到`make()`占用了一些内存。这是很正常的，它是指向数据结构的指针。然而，我们也看到第 43 行的赋值占用了内存，这意味着它分配了内存。
+接下来，我们可以看到`make()`占用了一些内存。这是很正常的，因为它是指向数据结构的指针。然而，我们也看到第 43 行的赋值占用了内存，这意味着它分配了内存。
 
 这让我们学习了映射 map，其中 map 的赋值不是简单的变量赋值。[本文](https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-efficiently-without-generics)详细介绍了 map 的工作原理。简而言之，map 与切片相比，map 开销更大，“成本”更大，元素更多。
 
@@ -351,29 +351,29 @@ BenchmarkStringRead-4           960           32            -96.67%
 
 虽然现在我们没有“陷入困境”，因为没有很好的解决方案来探索完全转储（full down）。 目前为止，`pprof`回答了我们所有的问题。
 
-请注意，互联网会记住许多不再相关的信息。如果你打算尝试自己打开一个完整的转储，那么你应该忽略一些事情，从 go1.11 开始：
+请注意，互联网会记录许多过时的信息。如果你打算尝试自己打开一个完整的转储，那么你应该忽略一些事情，从 go1.11 开始：
 - 没有办法在 MacOS 上打开和调试完整的 core dump，只有 Linux 可以。
 - [https://github.com/randall77/hprof](https://github.com/randall77/hprof)上的工具适用于 Go1.3，它存在 1.7+的分支，但它也不能正常工作（不完整）。
 - 在[https://github.com/golang/debug/tree/master/cmd/viewcore](https://github.com/golang/debug/tree/master/cmd/viewcore)上查看并不真正编译。它很容易修复（内部的包指向 golang.org 而不是 github.com），但是，在 MacOS 或者 Linux 上可能都不起作用。
 - 此外，[https://github.com/randall77/corelib](https://github.com/randall77/corelib)在 MacOS 也会失败
 
 ## pprof UI
-关于 pprof，要注意的一个细节是它的 UI 功能。在开始调查与使用 pprof 画像文件相关的问题时可以节省大量时间。（译者注：需要安装 graphviz）
+关于 pprof，要注意的一个细节是它的 UI 功能。在开始调查与使用 pprof 处理画像相关的任何问题时，UI 能帮我们节省大量时间。（译者注：需要安装 graphviz）
 
 ```shell
 go tool pprof -http=:8080 heap.out
 ```
 
-此时它应该打开 Web 浏览器。如果没有，则浏览你设置的端口。它使你能够比命令行更快地更改选项并获得视觉反馈。消费信息的一种非常有用的方法。
+此时它应该打开 Web 浏览器。如果没有，则浏览你设置的端口。它使你能够比命令行更快地更改选项并获得视觉反馈。这能帮你有效地理解这些信息。
 
-UI 确实让我熟悉了火焰图，它可以非常快速地暴露代码的罪魁祸首。
+UI 能让我们熟悉火焰图，它可以非常快速地暴露出有问题的代码。
 
 ## 结论
 Go 是一种令人兴奋的语言，拥有非常丰富的工具集，你可以用 pprof 做更多的事情。例如，这篇文章没有涉及到的 CPU 分析。
 
 其他一些好的文章：
-- [https://rakyll.org/archive/](https://rakyll.org/archive/) - 我相信这是围绕性能监控的主要贡献者之一，她的博客上有很多好帖子
-- [https://github.com/google/gops](https://github.com/google/gops) - 由[JBD](https://medium.com/@rakyll)（运行 rakyll.org）编写，此工具保证是自己的博客文章。
+- [https://rakyll.org/archive/](https://rakyll.org/archive/) - 我认为他是性能监控模块的主要贡献者之一，她的博客上有很多好文章
+- [https://github.com/google/gops](https://github.com/google/gops) - 由[JBD](https://medium.com/@rakyll)（运行 rakyll.org）。
 - [https://medium.com/@cep21/using-go-1-10-new-trace-features-to-debug-an-integration-test-1dc39e4e812d](https://medium.com/@cep21/using-go-1-10-new-trace-features-to-debug-an-integration-test-1dc39e4e812d) - `go tool trace`是用来做 CPU 分析的，这是一个关于该分析功能的不错的帖子。
 
 ---
@@ -382,6 +382,6 @@ via: https://medium.freecodecamp.org/how-i-investigated-memory-leaks-in-go-using
 
 作者：[Jonathan Levison](https://medium.freecodecamp.org/@jonathanlevison)
 译者：[咔叽咔叽](https://github.com/watermelo)
-校对：[校对者 ID](https://github.com/校对者ID)
+校对：[magichan](https://github.com/magichan)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
