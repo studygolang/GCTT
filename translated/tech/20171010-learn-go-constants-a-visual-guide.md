@@ -22,8 +22,20 @@
 
 ![typed_constants.image](https://cdn-images-1.medium.com/max/1600/1*4zXKp5xjt-a9ivu9b0vNMw.png)
 
-类型 Boolean,rune,numerics,或则 string
+类型 → Boolean,rune,numerics,或则 string
+值 → 编译器的时候在声明中分配值
+地址 → 你无法得到它的在内存中的地址（不像变量）
 
+* 你无法在声明常量之后再改变它
+* 你不能使用运行时的结构，例如 例如变量，指针，数组，切片，map,结构体，接口，方法调用，或则方法的值。
+
+## 类型化常量声明
+
+![image](https://cdn-images-1.medium.com/max/1600/1*wUbUPm7CFOwWTG_vE5UgmA.png)
+
+**图中定义了一个类型常量 Pi，它的类型为 float64，值为 3.14**
+
+*运行并且尝试代码示例，[请点击这里](https://play.golang.org/p/mrnqxa8Kic)*
 
 
 
