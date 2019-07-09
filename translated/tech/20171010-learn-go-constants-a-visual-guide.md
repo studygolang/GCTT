@@ -22,11 +22,11 @@
 
 ![typed_constants.image](https://cdn-images-1.medium.com/max/1600/1*4zXKp5xjt-a9ivu9b0vNMw.png)
 
-类型 → Boolean,rune,numerics,或则 string
+类型→Boolean,rune,numerics,或则 string
 
-值 → 编译期时在声明中分配值
+值→编译期时在声明中分配值
 
-地址 → 你无法得到它在内存中的地址（不像变量）
+地址→你无法得到它在内存中的地址（不像变量）
 
 * 你无法在声明常量之后再改变它
 * 你不能使用运行时的结构，例如变量，指针，数组，切片，map,结构体，接口，方法调用，或则方法的值。
@@ -71,7 +71,7 @@
 
 ![image](https://cdn-images-1.medium.com/max/1600/1*7cCppzbC1AbmF9u8O75MkQ.png)
 
-图片左侧（期望类型）将转化为右边的类型（预先声明的类型）当需要它的类型的时候
+当需要它的类型的时候，图片左侧（期望类型）将转化为右边的类型（预先声明的类型）
 
 **尝试代码，点击[这里](https://play.golang.org/p/L5UC3XgYFk)**
 
