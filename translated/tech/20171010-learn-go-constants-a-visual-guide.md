@@ -92,7 +92,7 @@ If you stay in the untyped constants realm, there is no-speed-limit! But, when y
 
 ### 运行代码示例
 
-* [Understand when and how to use untyped constants](https://play.golang.org/p/2cgFoB4rYD) 
+* [Understand when and how to use untyped constants](https://play.golang.org/p/2cgFoB4rYD)
 * [We can assign an untyped constant to any numeric-type variable](https://play.golang.org/p/7-VMh5egC-)
 
 ## 常量作用范围
