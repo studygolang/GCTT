@@ -78,6 +78,7 @@
 ## 高精度计算
 
 If you stay in the untyped constants realm, there is no-speed-limit! But, when you use them in a variable, the speed-limit applies.
+如果常量只停留在非类型化常量领域，那么它没有速度的限制！但是，当将常量赋值给变量进行使用时，速度就有限制了。
 
 ![image](https://cdn-images-1.medium.com/max/2400/1*YhDCUL1FGF-BbU-yTkxAAA.png)
 
