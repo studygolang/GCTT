@@ -71,7 +71,7 @@
 
 ![image](https://cdn-images-1.medium.com/max/1600/1*7cCppzbC1AbmF9u8O75MkQ.png)
 
-图片左侧（期望类型）将变为右边的类型（预先声明的类型）当需要它的类型的时候
+图片左侧（期望类型）将转化为右边的类型（预先声明的类型）当需要它的类型的时候
 
 **尝试代码，点击[这里](https://play.golang.org/p/L5UC3XgYFk)**
 
