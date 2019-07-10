@@ -49,7 +49,7 @@ Go 有几个内置的画像供我们在常见情况下使用：
 - heap - 当前存活对象的内存分配的采样
 - allocs - 过去所有内存分配的采样
 - threadcreate - 导致创建新 OS 线程的堆栈跟踪信息
-- block - 同步原语导致阻塞的堆栈跟踪信息
+- block - 导致同步原语阻塞的堆栈跟踪信息
 - mutex - 锁争用的持有者的堆栈跟踪信息
 
 在查看内存问题时，我们将专注于堆画像。 allocs 画像和它在关于数据收集方面是相同的。两者之间的区别在于 pprof 工具在启动时读取的方式不一样。 allocs 画像将以显示自程序启动以来分配的总字节数（包括垃圾收集的字节）的模式启动 pprof。在尝试提高代码效率时，我们通常会使用该模式。
@@ -373,7 +373,7 @@ Go 是一种令人兴奋的语言，拥有非常丰富的工具集，你可以�
 
 其他一些好的文章：
 - [https://rakyll.org/archive/](https://rakyll.org/archive/) - 我认为他是性能监控模块的主要贡献者之一，她的博客上有很多好文章
-- [https://github.com/google/gops](https://github.com/google/gops) - 由[JBD](https://medium.com/@rakyll)（运行 rakyll.org）。
+- [https://github.com/google/gops](https://github.com/google/gops) - 由[JBD](https://medium.com/@rakyll)（rakyll.org 运营者）编写。
 - [https://medium.com/@cep21/using-go-1-10-new-trace-features-to-debug-an-integration-test-1dc39e4e812d](https://medium.com/@cep21/using-go-1-10-new-trace-features-to-debug-an-integration-test-1dc39e4e812d) - `go tool trace`是用来做 CPU 分析的，这是一个关于该分析功能的不错的帖子。
 
 ---
