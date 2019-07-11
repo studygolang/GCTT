@@ -12,7 +12,7 @@
 
 你可以问我，为什么要用最新的？因为如果我们都是软件爱好者，我们应该渴望测试最新的技术！ ( 顺便说一下，你可以用 Golang 1.11.X，但是您应该想知道为什么不使用最新的可用版本…… )
 
-到[这里](https://golang.org/dl/)，下载你所使用的操作系统的发行版。
+到[这里](https://studygolang.com/dl)，下载你所使用的操作系统的发行版。
 
 ## 找到要迁移的项目
 
@@ -47,58 +47,58 @@ mv src/mollydb/* .
 go mod init mollydb
 ```
 
-Go 足够聪明，而且它会将 glide.lock 中的依赖项写入到 Go.mod 文件中。
+Go 足够聪明，而且它会将 glide.lock 中的依赖项写入到 go.mod 文件中。
 
-go：创建新的 Go.mod 文件：mollydb module
+go：创建新的 go.mod 文件：mollydb module
 
 go：从 glide.lock 复制需求
 
-而且 Go.mod 文件中的内容看起来和下面的一样
+而且 go.mod 文件中的内容看起来和下面的一样
 
 ```
 module mollydb
 require (
-  GitHub.com/boltdb/bolt v0.0.0 – 20180302180052-fd01fc79c553
-  GitHub.com/fsnotify/fsnotify v1.4.7
-  GitHub.com/go-yaml/yaml v0.0.0 – 20140922213225-bec87e4332ae
-  GitHub.com/graphql-go/graphql v0.0.0 – 20180324214652 – 8ab5400ff77c
-  GitHub.com/graphql-go/handler v0.0.0 – 20180312211735-df717460db9a
-  GitHub.com/graphql-go/relay v0.0.0 – 20171208134043 – 54350098cfe5
-  Golang.org/x/net v0.0.0 – 20180320002117 – 6078986fec03
-  Golang.org/x/sys v0.0.0 – 20180318190847 – 01acb38716e0
-  Gopkg.in/yaml.v2 v2.1.1
+  gitHub.com/boltdb/bolt v0.0.0 – 20180302180052-fd01fc79c553
+  gitHub.com/fsnotify/fsnotify v1.4.7
+  gitHub.com/go-yaml/yaml v0.0.0 – 20140922213225-bec87e4332ae
+  gitHub.com/graphql-go/graphql v0.0.0 – 20180324214652 – 8ab5400ff77c
+  gitHub.com/graphql-go/handler v0.0.0 – 20180312211735-df717460db9a
+  gitHub.com/graphql-go/relay v0.0.0 – 20171208134043 – 54350098cfe5
+  golang.org/x/net v0.0.0 – 20180320002117 – 6078986fec03
+  golang.org/x/sys v0.0.0 – 20180318190847 – 01acb38716e0
+  gopkg.in/yaml.v2 v2.1.1
 )
 ```
 
-无论如何，如果我们删除 glide 的配置文件，创建了 Go.mod 文件，并且运行下面的命令。
+无论如何，如果我们删除 glide 的配置文件，创建了 go.mod 文件，并且运行下面的命令。
 
 ```
 go mod init mollydb
 go mod tidy
 ```
 
-go.mod 文件就会生成，因为 Go mod 检查了我们的 Go 文件
+go.mod 文件就会生成，因为 go mod 检查了我们的 Go 文件
 
 ```
 module mollydb
 require (
-  GitHub.com/fsnotify/fsnotify v1.4.7
-  GitHub.com/go-chi/chi v3.3.3+incompatible
-  GitHub.com/graphql-go/graphql v0.7.7
-  GitHub.com/graphql-go/handler v0.2.2
-  GitHub.com/graphql-go/relay v0.0.0 – 20171208134043 – 54350098cfe5
-  GitHub.com/kr/pretty v0.1.0 // indirect
-  GitHub.com/sirupsen/logrus v1.2.0
-  GitHub.com/stretchr/testify v1.2.2
-  Golang.org/x/net v0.0.0 – 20181217023233-e147a9138326 // indirect
-  Golang.org/x/text v0.3.0 // indirect
-  Gopkg.in/yaml.v2 v2.2.2
+  gitHub.com/fsnotify/fsnotify v1.4.7
+  gitHub.com/go-chi/chi v3.3.3+incompatible
+  gitHub.com/graphql-go/graphql v0.7.7
+  gitHub.com/graphql-go/handler v0.2.2
+  gitHub.com/graphql-go/relay v0.0.0 – 20171208134043 – 54350098cfe5
+  gitHub.com/kr/pretty v0.1.0 // indirect
+  gitHub.com/sirupsen/logrus v1.2.0
+  gitHub.com/stretchr/testify v1.2.2
+  golang.org/x/net v0.0.0 – 20181217023233-e147a9138326 // indirect
+  golang.org/x/text v0.3.0 // indirect
+  gopkg.in/yaml.v2 v2.2.2
 )
 ```
 
 我们只需要运行下面的命令来验证项目是否像以前那样工作。
 
-go run main.go
+> go run main.go
 
 ## 所有的都成功了
 

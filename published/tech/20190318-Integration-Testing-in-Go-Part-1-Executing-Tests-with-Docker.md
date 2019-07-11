@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/21759
+
 # Go 语言中的集成测试：第一部分 - 用 Docker 执行测试
 
 ## 简介
@@ -20,7 +22,7 @@ Docker Compose 是一种容器编排工具，有助于在一个沙箱内构建�
 
 既然 Docker Compose 允许您将不同的应用组合到一起，并在一个网络沙箱中运行，您就可以只用一条命令做到启停一整套的应用。您甚至可以从一组应用中，手动挑选出个别应用来运行。这组应用可以被部署成一个独立的单元，通过 CI （集成开发）环境构建并测试。Docker Compose 最终将帮助确保您的应用在所有测试和部署的环境中保持一致。
 
-*注意：想要了解更多关于 Docker Compose 的内容，请[点此](https://docs.docker.com/compose/overview/)访问 Docker 官方网站对于 Docker Compose 的介绍。*
+*注意：想要了解更多关于 Docker Compose 的内容，请[点此](https://docs.docker.com/compose/overview/) 访问 Docker 官方网站对于 Docker Compose 的介绍。*
 
 Docker 和 Docker Compose 的另一大好处是，它们能简化新的开发者加入一个项目时的交接过程。不需要关于如何安装、管理开发环境的复杂文档，新开发者只需要执行几条 Docker 和 Docker Compose 命令就可以开始工作了。如果在应用启动时，主机上没有所需的镜像，Docker CLI 会负责处理镜像的下载。
 
@@ -58,7 +60,7 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       POSTGRES_DB: testdb
-    restart: on-failure
+    RESTart: on-failure
     networks:
       - integration-tests-example-test
 ```
@@ -85,9 +87,9 @@ services:
     build:
       context: .
       dockerfile: ./cmd/listd/deploy/Dockerfile.test
-// ... omitted code…
+// ... omitted code …
   db:
-// ... omitted code…
+// ... omitted code …
 ```
 
 `services` 键有两个直接子键，分别是 `listd_test` 和 `db`。其中 `listd_tests` 用 dockerfile 的形式定义了它的镜像。而 `context` 键说明所有的主机目录都要相对于当前的工作目录，如这里定义的 `.`。
@@ -140,7 +142,7 @@ db:
       - "5432:5432"
 ```
 
-出于安全考虑，默认情况下没有一个容器端口是可以通过主机访问的。这带来了一个问题，当本地运行集成测试时，如果集成的服务无法被访问，那测试将没有多少价值。这个 `prots` 键定义了从主机到容器的端口映射，形式如下： `"主机端口:容器端口"`。按照清单 7 中的定义，主机上的 5432 端口将被映射到 `db` 容器上，这个端口是 Postgres 在容器中默认的运行端口。
+出于安全考虑，默认情况下没有一个容器端口是可以通过主机访问的。这带来了一个问题，当本地运行集成测试时，如果集成的服务无法被访问，那测试将没有多少价值。这个 `prots` 键定义了从主机到容器的端口映射，形式如下： `" 主机端口 : 容器端口 "`。按照清单 7 中的定义，主机上的 5432 端口将被映射到 `db` 容器上，这个端口是 Postgres 在容器中默认的运行端口。
 
 *清单 8*
 
@@ -170,7 +172,7 @@ db:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       POSTGRES_DB: testdb
-    restart: on-failure
+    RESTart: on-failure
     networks:
       - integration-tests-example-test
 ```
@@ -204,7 +206,7 @@ FROM golang:1.11-alpine
 
 RUN set -ex; \
     apk update; \
-    apk add --no-cache git
+    apk add --no-cache Git
 ```
 
 因为 Alpine OS 是非常轻量级的，您必须在基础镜像之上，手动安装 `git` 依赖。清单 11 展示的是第二步，将 `git` 添加到镜像中，为了后续使用 Go Modules。其中 `apk update` 命令要在添加 `git` 之前运行，以确保安装的是最新版本的 `git`。如果您的项目恰好要使用 `cgo`，那么您必须手动安装 `gcc` 以及它的依赖库。
@@ -216,7 +218,7 @@ FROM golang:1.12-alpine
 
 RUN set -ex; \
     apk update; \
-    apk add --no-cache git
+    apk add --no-cache Git
 
 WORKDIR /go/src/github.com/george-e-shaw-iv/integration-tests-example/
 ```
@@ -230,11 +232,11 @@ FROM golang:1.12-alpine
 
 RUN set -ex; \
     apk update; \
-    apk add --no-cache git
+    apk add --no-cache Git
 
 WORKDIR /go/src/github.com/george-e-shaw-iv/integration-tests-example/
 
-CMD CGO_ENABLED=0 go test ./...
+CMD CGO_ENABLED=0 Go test ./...
 ```
 
 最后，清单 13 代表第四步，运行测试。这是用一条 `CMD` 指令 `go test ./...` 实现的。
