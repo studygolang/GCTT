@@ -6,7 +6,7 @@
 
 如果你看一下 Go 调查提供的这个图表，你会看到，作为 Go 开发人员面临的最大挑战，错误处理的占比落在 5%。
 
-![img]()
+![img](https://github.com/studygolang/gctt-images/blob/master/an-open-letter-to-the-go-team-about-try/102_figure1.png?raw=true)
 
 基于此，我认为感知到的对错误处理的抱怨可能被夸大了，这些改变并不是大部分 Go 开发人员想要或者需要的。偏见可能源于这样的事实，对于 Go 的抱怨实在太少了，因此错误处理会出现在任何调查中。如果你仔细观察，错误处理甚至不是开发人员面临的前 3 大挑战，它是第 5 位。
 
