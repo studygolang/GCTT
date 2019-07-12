@@ -1,4 +1,4 @@
-# Go Slices are Fat Pointers
+# Go 切片是胖指针
 
 *本文的内容曾在 [Hacker News](https://news.ycombinator.com/item?id=20321116) 上进行讨论。*
 
