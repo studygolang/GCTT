@@ -13,7 +13,7 @@
 
 微服务设计基于将大型传统（单体）应用程序拆分为几个小型、不同的应用程序的概念。这些应用程序将处理单个业务功能领域，并与其他组件协作，就像它们是第三方应用程序一样
 
-![](https://cdn-images-1.medium.com/max/1600/0*C87oUwGUqX4txRST.png)
+![](https://github.com/studygolang/gctt-images/blob/master/20190705-Do-you-really-need-microservices%3F/do-you-really-need-micorservices.png?raw=true)
 
 这真的是一个新事物吗，或者这只是一个具有时髦名字的面向服务体架构（SOA)?我们不会在这里进行辩论，毕竟你可以到 Slashdot 和 Hacker News 上讨论这个问题。不过，我们要说的是，微服务方法(或者随便你怎么称呼它)主要对大型组织有益。这是因为非常大的应用程序可以被分割成几个不同的服务，每个服务由各自独立的开发团队管理。
 
@@ -46,7 +46,7 @@
 
 我们在 Browser 中多次重复的一个好方法是采用混合方法进行系统设计。这涉及到一个由支持微服务包围的中心整体，但只有在有充分理由的情况下才会如此。例如，我们最近在将[ NLP 处理集成](https://www.browserlondon.com/blog/2019/04/08/textrazor-nlp-ai-save-client-money-time/)到应用程序中时使用了这种方法。
 
-![](https://cdn-images-1.medium.com/max/1600/0*uSm9RVOksGNlvWHo.png)
+![](https://github.com/studygolang/gctt-images/blob/master/20190705-Do-you-really-need-microservices%3F/Do-you-really-need-microservice2.png?raw=true)
 
 我们已经构建了几个系统，其中核心业务应用程序作为一个整体构建 (通常在 Symfony 中)，由独立的微服务管道处理繁重的数据处理。这不仅允许我们在不影响核心应用程序性能的情况下处理大量数据量，而且如果需要，我们可以在不影响平台的日常操作前提下，将这些组件下线。
 
