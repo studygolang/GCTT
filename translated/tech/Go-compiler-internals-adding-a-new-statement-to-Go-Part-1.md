@@ -1,11 +1,12 @@
-# Go compiler internals: adding a new statement to Go - Part 1
+# Go 编译器内核：给 Go 新增一个语句 —— 第一部分
+>Go compiler internals: adding a new statement to Go - Part 1 译文
 
-This is the first post in a two-part series that takes a tutorial-based approach to exploring the Go compiler. The compiler is large and would require a small book to describe properly, so the idea of these posts is to provide a quick depth-first dive instead. I plan to write more descriptive posts on specific areas of the compiler in the future.
+这是两部分系列文章中的第一部分，该文章采用教程的方式来探讨 Go 编译器。Go 编译器复杂而庞大，需要一本书才可能描述清楚，所以这个系列文章旨在提供一个快速而深度优先的方式进入学习。我计划在以后会写更多关于编译器特定领域的描述性文章。
 
-We're going to change the Go compiler to add a new (toy) language feature, and build a modified compiler to play with.
+我们会修改 Go 编译器来增加一个新的（玩具性质）语言特性，并构建一个修改后的编译器来进行使用。
 
-## The task - adding a new statement
-Many languages have a `while` statement, which in Go is expressed with `for`:
+## 任务 —— 增加新的语句
+很多语言都有 `while` 语句，在 Go 中对应的是 `for`：
 
 ```
 for <some-condition> {
@@ -13,7 +14,7 @@ for <some-condition> {
 }
 ```
 
-Adding a `while` statement to Go is rather trivial, therefore - we simply translate it to `for`. So I chose a slightly more challenging task, adding `until`. `until` is the same as `while` except that the condition is negated. For example, this code:
+增加 `while` 语句是比较简单的，因此 —— 我们只需简单将其转换为 `for` 语句。所以我选择了一个稍微有点挑战性的任务，增加 `until`。`until` 语句和 `while` 语句是一样的，只是有了条件判断。例如下面的代码：
 
 ```go
 i := 4
@@ -23,7 +24,7 @@ until i == 0 {
 }
 ```
 
-Is equivalent to:
+等价于:
 
 ```go
 i := 4
@@ -33,7 +34,7 @@ for i != 0 {
 }
 ```
 
-In fact, we could even use an initializer in the loop declaration as follows:
+事实上，我们甚至可以像下面代码一样，在循环声明中使用一个初始化语句：
 
 ```go
 until i := 4; i == 0 {
@@ -42,23 +43,23 @@ until i := 4; i == 0 {
 }
 ```
 
-Our implementation will support this.
+我们的目标实现将会支持这个。
 
-A mandatory disclaimer - this is just a toy exercise. I don't think adding `until` to Go is a good idea at all, because Go's minimalism is an absolutely correct design choice.
+特别声明 —— 这只是一个玩具性的探索。我觉得在 Go 中添加 `until` 并不好，因为 Go 的极简主义设计思想是非常正确的。
 
-## High-level structure of the Go compiler
-The default Go compiler (`gc`) has a fairly traditional structure that should be immediately familiar if you worked on other compilers before:
+## Go 编译器的高级结构
+默认情况下，Go 编译器（`gc`）是以相当传统的结构来设计的，如果你使用过其他编译器，你应该很快就能熟悉它：
 
 ![](https://eli.thegreenplace.net/images/2019/go-compiler-flow.png)
 
-Relative to the Go repository root, the compiler implementation lives in `src/cmd/compile/internal`; all the code paths mentioned later in the post are going to be relative to this directory. It's all written in Go and the code is fairly readable. Throughout this post we're going to examine these stages one by one, as we add the required code to support an `until` statement.
+Go 仓库中相对路径的根目录下，编译器实现位于 `src/cmd/compile/internal`；本文后续提到的所有代码路径都是相对于这个目录的。编译器是用 Go 编写的，代码可读性很强。在这篇文章中，我们将一点一点的研究这些代码，同时添加支持 `until` 语句的实现代码.
 
-Check out the `README` file in `src/cmd/compile` for a nice step-by-step description of the compilation steps. That file is a good companion to this blog post.
+查看 `src/cmd/compile` 中的 `README` 文件，了解编译步骤的详细说明。它将与本文息息相关。
 
-## Scan
-The scanner (also known as _lexer_) breaks up source code text into discrete entities for the compiler. For example, the word `for` becomes the constant `_For`; the characters `...` become `_DotDotDot`, while `.` on its own becomes `_Dot`, and so on.
+## 扫描
+扫描器（也称为 _词法分析器_ ）将源码文本分解为编译器所需的离散实体。例如 `for` 关键字会转变成常量 `_For`；符号 `...` 转变成 `_DotDotDot`，`.` 将转变成 `_Dot` 等等。
 
-The scanner is implemented in the `syntax` package. All we need from it here is to understand a new keyword - `until`. The file `syntax/tokens.go` has a list of all tokens understood by the compiler, and we'll add a new one:
+扫描器的实现位于 `syntax` 包中。我们需要做的就是理解关键字 —— `until`。`syntax/tokens.go` 文件中列出了所有 token，我们要添加一个新的：
 
 ```
 _Fallthrough // fallthrough
@@ -67,27 +68,27 @@ _Until       // until
 _Func        // func
 ```
 
-The comment on the right-hand side of the token constant is important, as it's used to identify the token in text. This is done by means of code generation from `syntax/tokens.go`, which has this line above the list of tokens:
+token 常量右侧的注释非常重要，它们用来标识 token。这是通过 `syntax/tokens.go` 生成代码来实现的，文件上面的 token 列表有如下这一行：
 
 ```go
 //go:generate stringer -type token -linecomment
 ```
 
-`go generate` has to be run manually and the output file (`syntax/token_string.go`) is checked into the Go source repository. To regenerate it I ran the following command from the `syntax` directory:
+`go generate` 必须手动执行，输出文件（`syntax/token_string.go`）被存入 Go 源码仓库中。为了重新生成它，我在 `syntax` 目录中执行如下命令：
 
 ```
 GOROOT=<src checkout> go generate tokens.go
 ```
 
-The `GOROOT` setting is [essential as of Go 1.12](https://github.com/golang/go/issues/32724), and has to point to the root of the source checkout where we're modifying the compiler.
+环境变量 `GOROOT` 是[从 Go 1.12 开始必须设置](https://github.com/golang/go/issues/32724)，并且必须指向检出的源码根目录，我们要修改这个编译器。
 
-Having run the code generator and verified that `syntax/token_string.go` now has the new token, I tried rebuilding the compiler and ran into a panic:
+运行代码生成器并验证包含新的 token 的 `syntax/token_string.go` 文件，我试着重新编译编译器，却出现了 panic 提示：
 
 ```
 panic: imperfect hash
 ```
 
-It comes from this code in `syntax/scanner.go`:
+这个 panic 是 `syntax/scanner.go` 中代码引起的：
 
 ```go
 // hash is a perfect hash function for keywords.
@@ -110,10 +111,10 @@ func init() {
 }
 ```
 
-The compiler tries to build a "perfect" hash table to perform keyword string to token lookups. By "perfect" it means it wants no collisions, just a linear array where every keyword maps to a single index. The hash function is rather ad-hoc (it only looks at the contents of the first characters of the string token, for example) and it's not easy to debug why a new token creates collisions. To work around it, I increased the lookup table size by changing it to `[1 << 7]token`, thus changing the size of the lookup array from 64 to 128. This gives the hash function much more space to distribute its keys, and the collision went away.
+编译器试图构建一个“完美”哈希表来执行关键字字符串以及 token 查询。“完美”意味着它不太可能发生冲突，是一个线性的数组，其中每个关键字都映射为一个单独的索引。哈希函数相当特殊（例如，它查看字符串 token 的第一个字符），并且不容易调试新 token 为何出现冲突等问题。为了解决这个问题，我将查找表的大小更改为 `[1 << 7]token`，从而将查找数组的大小从 64 改成 128。这给予哈希函数更多的空间来分配对应的键，冲突也就消失了。
 
-## Parse
-Go has a fairly standard recursive-descent parser, which converts a stream of tokens produced by the scanner into a _concrete syntax tree_. We'll start by adding a new node type for `until` in `syntax/nodes.go`:
+## 解析
+Go 有一个相当标准的递归下降算法的解析器，它把扫描生成的 token 流转换为 _具体语法树_。我们开始为 `syntax/nodes.go` 中的 `until` 添加新的节点类型：
 
 ```go
 UntilStmt struct {
@@ -124,7 +125,7 @@ UntilStmt struct {
 }
 ```
 
-I borrowed the overall structure from `ForStmt`, which is used for `for` loops. Similarly to `for`, our `until` statement has several optional sub-statements:
+我借鉴了用于 `for` 循环的 `ForStmt` 的整体结构。类似于 `for`，`until` 语句有几个可选的子语句：
 
 ```
 until <init>; <cond> {
@@ -133,8 +134,9 @@ until <init>; <cond> {
 ```
 
 Both `<init>` and `<cond>` are optional, though it's not common to omit `<cond>`. The `UntilStmt.stmt` embedded field is used for all syntax tree statements and contains position information.
+`<init>` 和 `<cond>` 是可选的，不过省略 `<cond>` 也不是很常见。`UntilStmt.stmt` 中嵌入的字段用于所有语法树语句，并包含对应的位置信息。
 
-The parsing itself is done in `syntax/parser.go`. The `parser.stmtOrNil` method parses a statement in the current position. It looks at the current token and makes a decision of which statement to parse. Here's an excerpt with the code we're adding:
+解析过程在 `syntax/parser.go` 中实现。`parser.stmtOrNil` 方法解析当前位置的语句。它查看当前 token 并决定解析哪个语句。下方是添加的代码片段：
 
 ```go
 switch p.tok {
@@ -168,11 +170,11 @@ func (p *parser) untilStmt() Stmt {
 }
 ```
 
-We reuse the existing `parser.header` method which parses a header for `if` and `for` statements. In its most general form, it supports three parts (separated by semicolons). In `for` statements the third part can be used for the ["post" statement](https://golang.org/ref/spec#PostStmt), but we're not going to support this for `until` so we're only interested in the first two. Note that `header` accepts the source token to be able to differentiate between the kinds of statements it's serving; for example it would reject a "post" statement for `if`. We should explicitly reject it for `until` too, though I haven't bothered to implement this right now.
+我们复用现有的 `parser.header` 方法，因为它解析了 `if` 和 `for` 语句对应的 header。在常用的形式中，它支持三个部分（分号分隔）。在 `for` 语句中，第三部分常被用于 ["post" 语句](https://golang.org/ref/spec#PostStmt)，但我们不打算为 `until` 实现这种形式，而只需实现前两部分。注意 `header` 接收源 token，以便能够区分 `header` 所处的具体场景；例如，编译器会拒绝 `if` 的“post”语句。虽然现在还没有费力气实现“post”语句，但我们在 `until` 的场景中应该明确地拒绝“post”语句。
 
-These are all the changes we need for the parser. Since `until` is so similar structurally to existing statements, we could reuse much of the functionality.
+这些都是我们需要对解析器进行的修改。因为 `until` 语句在结构上跟现有的一些语句非常相似，所以我们可以重用已有的大部分功能。
 
-If we instrument the compiler to dump out the syntax tree (using `syntax.Fdump`) after parsing and run it on:
+假如在编译器解析后输出语法树（使用 `syntax.Fdump`）然后使用语法树：
 
 ```go
 i = 4
@@ -182,7 +184,7 @@ until i == 0 {
 }
 ```
 
-We'll get this fragment for the `until` statement:
+我们会得到 `until` 语句的相关片段：
 
 ```
 84  .  .  .  .  .  3: *syntax.UntilStmt {
@@ -223,12 +225,13 @@ We'll get this fragment for the `until` statement:
 119  .  .  .  .  .  }
 ```
 
-## Create AST
+## 创建 AST
 Now that it has a syntax tree representation of the source, the compiler builds an *abstract syntax tree*. I've written about [Abstract vs. Concrete syntax trees](http://eli.thegreenplace.net/2009/02/16/abstract-vs-concrete-syntax-trees) in the past - it's worth checking out if you're not familiar with the differences. In case of Go, however, this may get changed in the future. The Go compiler was originally written in C and later auto-translated to Go; some parts of it are vestigial from the olden C days, and some parts are newer. Future refactorings may leave only one kind of syntax tree, but right now (Go 1.12) this is the process we have to follow.
+由于有了源代码的语法树表示，编译器才能构建一个*抽象语法树*。我曾写过关于[抽象 vs 具体语法树](http://eli.thegreenplace.net/2009/02/16/abstract-vs-concrete-syntax-trees)的文章 —— 如果你不熟悉他们之间的区别，可以好好看看这个文章。在 Go 中，未来可能会有所变动。Go 编译器最初是用 C 语言编写的，后来自动翻译成 Go；编译器的某些部分是 C 时期遗留下来的，有些部分是比较新的。未来的重构可能只剩下一类语法树，但是现在（Go 1.12）我们必须遵循这个流程。
 
-The AST code lives in the `gc` package, and the node types are defined in `gc/syntax.go` (not to be confused with the `syntax` package where the CST is defined!)
+AST 代码位于 `gc` 包中，节点类型在 `gc/syntax.go` 中定义。（不要跟 `syntax` 包中的 CST 混淆）
 
-Go ASTs are structured differently from CSTs. Instead of each node type having its dedicated struct type, all AST nodes are using the `syntax.Node` type which is a kind of a _discriminated union_ that holds fields for many different types. Some fields are generic, however, and used for the majority of node types:
+Go AST 的结构与 CST 不同。所有的 AST 节点都是 `syntax.Node` 类型而非有各自的类型。`syntax.Node` 类型是一种 _可区分的联合体_，其中的字段有很多不同的类型。然而，这些字段是通用的，并且可用于大多数节点类型：
 
 ```go
 // A Node is a single node in the syntax tree.
@@ -248,7 +251,7 @@ type Node struct {
   // ...
 ```
 
-We'll start by adding a new constant to identify an `until` node:
+我们以增加一个新的常量标识 `until` 节点作为开始：
 
 ```go
 // statements
