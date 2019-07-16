@@ -18,7 +18,7 @@
 
 ![](https://d1jnx9ba8s6j9r.cloudfront.net/blog/wp-content/uploads/2018/09/Golang-Logo-Golang-Tutorial-Edureka-250x300.jpg)
 
-[Golang](https://www.edureka.co/blog/golang-tutorial "Golang") , 也就是我们常说的 Go，是由 Google 开发的一种计算机编程语言。Golang 是于 2007 年在 Google 开始开发的，2009 年面世。Go 语言的三位主要开发人员分别是 Google 的 Robert Geriesemer，Rob Pike 和 Ken Thompson。这几位一直以来的目标是创建一种语法上与 C 语言相似，又能像 C++ 一样消除“多余的垃圾”的语言。以致于 Go 语言包含现代多种语言的特性，如方法和运算符的重载、指针运算、类型继承。最终，造就了一个带有轻量并强大库以及拥有无敌的性能和速度的静态类型语言。
+[Golang](https://www.edureka.co/blog/golang-tutorial "Golang") , 也就是我们常说的 Go，是由 Google 开发的一种计算机编程语言。Golang 是于 2007 年在 Google 开始开发的，2009 年面世。Go 语言的三位主要开发人员分别是 Google 的 Robert Geriesemer，Rob Pike 和 Ken Thompson。这几位一直以来的目标是创建一种语法上与 C 语言相似，又能像 C++ 一样消除「多余的垃圾」的语言。以致于 Go 语言包含现代多种语言的特性，如方法和运算符的重载、指针运算、类型继承。最终，造就了一个带有轻量并强大库以及拥有无敌的性能和速度的静态类型语言。
 
 这就是关于 Go 语言的内容。下面来说说 Python。
 
