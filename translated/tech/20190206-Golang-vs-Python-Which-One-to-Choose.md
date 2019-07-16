@@ -82,7 +82,7 @@ OK, 继续比较下一项：可扩展性。
 
 下面开始比较他们的库吧。
 
-##　Golang vs. Python：库
+## Golang vs. Python：库
 
 ![](https://d1jnx9ba8s6j9r.cloudfront.net/blog/wp-content/uploads/2018/09/Libraries-Golang-vs-Python-Edureka-342x300.png)
 
