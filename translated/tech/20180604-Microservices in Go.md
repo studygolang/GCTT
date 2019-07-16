@@ -2,8 +2,7 @@
 
 ## 摘要
 
-我最近在墨尔本 Golang 聚会上就如何开发微服务和框架进行了一次演讲。
-在这篇文章中，我将与您分享我的知识（此外，它对我来说是一个很好的提醒）。
+我最近在墨尔本 Golang 聚会上就如何开发微服务和框架做了一次演讲。在本文中，我将与您分享我的想法（此外，它对我来说是一个很好的复习）。
 
 在这里，我要介绍以下框架：
 
@@ -16,8 +15,7 @@
 
 ### Go Micro
 
-这是我认为最受欢迎的框架之一。有很多博客文章和简单的例子可供使用参考。
-您可以从 [microhq](https://medium.com/microhq) 在 Medium 或 [@MicroHQ](https://twitter.com/MicroHQ) 获得 Go Micro 的最新更新。
+这是我认为最受欢迎的框架之一。有很多博客文章和简单的例子可供使用参考。您可以从 [microhq](https://medium.com/microhq) 在 Medium 或 [@MicroHQ](https://twitter.com/MicroHQ) 获得 Go Micro 的最新更新。
 
 那么，什么是 Go Micro ?
 
@@ -28,14 +26,13 @@
 * 同步通信 - 提供请求/响应传输层。
 * 异步通信 - 内置发布/订阅功能。
 * 消息编码 - 基于消息的 Content-Type 请求头的编码/解码。
-* RPC客户端/服务器打包 - 利用上述特性并公开接口来构建微服务。
+* RPC 客户端/服务器打包 - 利用上述特性并公开接口来构建微服务。
 
  Go Micro 架构可以描述为三层堆栈。
 
 ![图1.Go Micro架构](https://github.com/studygolang/gctt-images/blob/master/microservices-in-go/goMicro.png)
 
-顶层包括 **Server-Client** 模型和服务抽象。该服务器是用于编写服务的基础。
-而客户端提供了一个接口，用于向服务端发起请求。
+顶层包括 **Server-Client** 模型和服务抽象。该服务器是用于编写服务的基础。而客户端提供了一个接口，用于向服务端发起请求。
 
 底层包含以下类型的插件：
 
@@ -99,7 +96,7 @@ Pubsub包提供了使用以下队列的接口：
 * [pubsub/kafka](https://godoc.org/github.com/NYTimes/gizmo/pubsub/kafka) - 适用于 Kafka主题。
 * [pubsub/http](https://godoc.org/github.com/NYTimes/gizmo/pubsub/http) - 用于通过 HTTP 发布。
 
-因此，在我看来，Gizmo 介于 Go Micro 和 Go Kit 之间。它不像 Go Micro 那样完整的“黑盒子”。与此同时，它并不像 Go Kit 那么粗糙。它提供更高级别的构建组件，例如config和pubsub包。
+因此，在我看来，Gizmo 介于 Go Micro 和 Go Kit 之间。它不像 Go Micro 那样完全的“黑盒”。与此同时，它并不像 Go Kit 那么粗糙。它提供更高级别的构建组件，例如config和pubsub包。
 
 ### Kite
 
@@ -139,9 +136,8 @@ Kite 是一个在 Go 中开发微服务的框架。它公开了 RPC 客户端和
 Go Kit 是最受欢迎的微服务框架，基于 GitHub 统计数据 - 在本出版物发布时超过10k星。它拥有大量的贡献者（122）和超过1000个分叉。
 最后，Go Kit 由 [DigitalOcean](https://www.digitalocean.com/) 提供支持。
 
-拥有超过 3600 颗 stars ，27 个贡献者和 385 个 forks - Go Micro 获得第二名。Six Micro 的最大赞助商之一是 [Sixt](https://www.sixt.com/)。
-
-这为 Gizmo 留下了第三名。超过 2200 颗 star, 31 个贡献者和 137 个 forks 。由纽约时报支持和创建。
+Go Micro 第二，拥有超过 3600 颗 stars ，27 个贡献者和 385 个 forks 。Six Micro 的最大赞助商之一是 [Sixt](https://www.sixt.com/)。
+Gizmo 第三，超过 2200 颗 star, 31 个贡献者和 137 个 forks 。由纽约时报支持和创建。
 
 ### 代码质量
 
@@ -151,7 +147,7 @@ Go Kit 是最受欢迎的微服务框架，基于 GitHub 统计数据 - 在本�
 
 ## 微服务代码实践
 
-好吧，足够的理论。为了更好地理解框架，我创建了三个简单的微服务。
+好吧，已有足够的理论。下边，为了更好地理解框架，我创建了三个简单的微服务。
 
 ![图3.实际示例架构](https://github.com/studygolang/gctt-images/blob/master/microservices-in-go/micro_practice.png)
 
@@ -167,8 +163,8 @@ Go Kit 是最受欢迎的微服务框架，基于 GitHub 统计数据 - 在本�
 
 ### Go Micro greeter
 
-使用 Go Micro 创建服务需要做的第一件事是定义protobuf描述。
-方便后期，所有三项服务都采用了相同的protobuf定义。我创建了以下服务描述：
+使用 Go Micro 创建服务需要做的第一件事是定义 protobuf 描述。
+方便后期，所有三项服务都采用了相同的 protobuf 定义。我创建了以下服务描述：
 
 ```proto
 syntax = "proto3";
@@ -207,10 +203,10 @@ import (
     "golang.org/x/net/context"
 )
 
-// Greeter implements greeter service.
+// Greeter 实现了 greeter 服务.
 type Greeter struct{}
 
-// Greeting method implementation.
+// Greeting 方法实现.
 func (g *Greeter) Greeting(ctx context.Context, in *pb.GreetingRequest, out *pb.GreetingResponse) error {
     out.Greeting = "GO-MICRO Hello " + in.Name
     return nil
@@ -294,14 +290,14 @@ func main() {
 }
 ```
 
-非常简单明了。 Go Micro 在幕后处理了许多事情 - 例如在服务发现系统中注册。
-另一方面，创建纯HTTP服务很困难。
+非常简单明了。 Go Micro 在幕后处理了许多事情——例如在服务发现系统中注册。
+另一方面，创建纯 HTTP 服务很困难。
 
 ### Go Kit greeter
 
 完成 Go Micro 后，我转到了 Go Kit 服务实现。
 我花了很多时间阅读 Go Kit 存储库中提供的代码示例。
-理解端点的概念花了我很多时间。下一个耗时的难题是服务发现注册商的代码。直到在找到一个 [好例子](http://www.ru-rocker.com/2017/04/17/micro-services-using-go-kit-service-discovery/) 后我才实现它。
+理解端点的概念花了我很多时间。下一个耗时的难题是服务发现注册商的代码。直到在找到一个 [不错的例子](http://www.ru-rocker.com/2017/04/17/micro-services-using-go-kit-service-discovery/) 后我才实现它。
 
 最后，我创建了四个包：
 
@@ -313,21 +309,21 @@ func main() {
 ```go
 package greeterservice
 
-// Service describe greetings service.
+// Service 定义 greetings 服务接口.
 type Service interface {
     Health() bool
     Greeting(name string) string
 }
 
-// GreeterService implementation of the Service interface.
+// GreeterService 实现 Service 接口.
 type GreeterService struct{}
 
-// Health implementation of the Service.
+// Health 实现 Service 接口 Health 方法.
 func (GreeterService) Health() bool {
     return true
 }
 
-// Greeting implementation of the Service.
+// Greeting 实现 Service 接口 Greeting 方法.
 func (GreeterService) Greeting(name string) (greeting string) {
     greeting = "GO-KIT Hello " + name
     return
@@ -335,7 +331,7 @@ func (GreeterService) Greeting(name string) (greeting string) {
 
 ```
 
-如您所见，代码没有任何依赖关系。它只是实现逻辑。下一个代码段显示了端点定义：
+如您所见，代码没有任何依赖关系。它只是实现逻辑。下一个代码段展示了端点定义：
 
 ```go
 package greeterendpoint
@@ -349,16 +345,14 @@ import (
     "github.com/go-kit/kit/endpoint"
 )
 
-// Endpoints collects all of the endpoints that compose a greeter service. It's
-// meant to be used as a helper struct, to collect all of the endpoints into a
-// single parameter.
+// Endpoints 包含了所有组成 greeter 服务的端点。
+// 它被用作一个辅助结构，将所有端点收集到一个参数中。
 type Endpoints struct {
     HealthEndpoint   endpoint.Endpoint // used by Consul for the healthcheck
     GreetingEndpoint endpoint.Endpoint
 }
 
-// MakeServerEndpoints returns service Endoints, and wires in all the provided
-// middlewares.
+// MakeServerEndpoints 返回服务端点, 绑定在提供的中间件上。
 func MakeServerEndpoints(s greeterservice.Service, logger log.Logger) Endpoints {
     var healthEndpoint endpoint.Endpoint
     {
@@ -378,7 +372,7 @@ func MakeServerEndpoints(s greeterservice.Service, logger log.Logger) Endpoints 
     }
 }
 
-// MakeHealthEndpoint constructs a Health endpoint wrapping the service.
+// MakeHealthEndpoint 构造封装服务的 Health 端点。
 func MakeHealthEndpoint(s greeterservice.Service) endpoint.Endpoint {
     return func(ctx context.Context, request interface{}) (response interface{}, err error) {
         healthy := s.Health()
@@ -386,7 +380,7 @@ func MakeHealthEndpoint(s greeterservice.Service) endpoint.Endpoint {
     }
 }
 
-// MakeGreetingEndpoint constructs a Greeter endpoint wrapping the service.
+// MakeGreetingEndpoint 构造封装服务的 Greeter 端点。
 func MakeGreetingEndpoint(s greeterservice.Service) endpoint.Endpoint {
     return func(ctx context.Context, request interface{}) (response interface{}, err error) {
         req := request.(GreetingRequest)
@@ -395,41 +389,41 @@ func MakeGreetingEndpoint(s greeterservice.Service) endpoint.Endpoint {
     }
 }
 
-// Failer is an interface that should be implemented by response types.
-// Response encoders can check if responses are Failer, and if so if they've
-// failed, and if so encode them using a separate write path based on the error.
+// Failer 是实现响应类型的接口。
+// 响应可以被检验，是否是 Failer 接口，如果是，那么就是失败的响应，
+// 而且，如果是，则根据错误使用单独的写路径对它们进行编码
 type Failer interface {
     Failed() error
 }
 
-// HealthRequest collects the request parameters for the Health method.
+// HealthRequest 包含了 Health 方法的所有请求参数.
 type HealthRequest struct{}
 
-// HealthResponse collects the response values for the Health method.
+// HealthResponse 包含了 Health 方法的响应值。
 type HealthResponse struct {
     Healthy bool  `json:"healthy,omitempty"`
     Err     error `json:"err,omitempty"`
 }
 
-// Failed implements Failer.
+// Failed 实现 Failer 接口。
 func (r HealthResponse) Failed() error { return r.Err }
 
-// GreetingRequest collects the request parameters for the Greeting method.
+// GreetingRequest 包含了 Greeting 方法的所有请求参数.
 type GreetingRequest struct {
     Name string `json:"name,omitempty"`
 }
 
-// GreetingResponse collects the response values for the Greeting method.
+// GreetingResponse 包含了 Greeting 方法的响应值
 type GreetingResponse struct {
     Greeting string `json:"greeting,omitempty"`
     Err      error  `json:"err,omitempty"`
 }
 
-// Failed implements Failer.
+// Failed 实现 Failer 接口。
 func (r GreetingResponse) Failed() error { return r.Err }
 ```
 
-在定义了服务和端点之后，我开始通过不同的传输协议公开端点。我从HTTP传输开始：
+在定义了服务和端点之后，我开始通过不同的传输协议公开端点。我从 HTTP 传输开始：
 
 ```go
 package greetertransport
@@ -447,12 +441,11 @@ import (
 )
 
 var (
-    // ErrBadRouting is returned when an expected path variable is missing.
+    // ErrBadRouting 无效路径错误.
     ErrBadRouting = errors.New("inconsistent mapping between route and handler")
 )
 
-// NewHTTPHandler returns an HTTP handler that makes a set of endpoints
-// available on predefined paths.
+// NewHTTPHandler 返回一个 HTTP 处理程序（handler），该处理程序使一组端点在预定义的路径上可用。
 func NewHTTPHandler(endpoints greeterendpoint.Endpoints, logger log.Logger) http.Handler {
     m := mux.NewRouter()
     options := []httptransport.ServerOption{
@@ -460,8 +453,8 @@ func NewHTTPHandler(endpoints greeterendpoint.Endpoints, logger log.Logger) http
         httptransport.ServerErrorLogger(logger),
     }
 
-    // GET /health         retrieves service heath information
-    // GET /greeting?name  retrieves greeting
+    // GET /health         查找服务健康信息
+    // GET /greeting?name  查找 greeting
 
     m.Methods("GET").Path("/health").Handler(httptransport.NewServer(
         endpoints.HealthEndpoint,
@@ -510,8 +503,8 @@ type errorWrapper struct {
     Error string `json:"error"`
 }
 
-// EncodeHTTPGenericResponse is a transport/http.EncodeResponseFunc that encodes
-// the response as JSON to the response writer
+// EncodeHTTPGenericResponse is a transport/http.
+// EncodeResponseFunc 返回 json 响应。
 func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
     if f, ok := response.(greeterendpoint.Failer); ok && f.Failed() != nil {
         encodeError(ctx, f.Failed(), w)
@@ -522,10 +515,10 @@ func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, respo
 }
 ```
 
-在我开始 gRPC 端点实现之前，我不需要protobuf定义。
-我复制了 Go Micro 服务protobuf。但就 Go Kit 而言，我使用默认服务生成器来创建服务接口。
+在我开始 gRPC 端点实现之前，我不重新定义需要 protobuf.
+我复制了 Go Micro 服务 protobuf 。但就 Go Kit 而言，我使用默认服务生成器来创建服务接口。
 
-protobuf定义的服务接口生成器
+ protobuf 定义的服务接口生成器
 
 ```
 #!/usr/bin/env sh
@@ -552,7 +545,7 @@ type grpcServer struct {
     greeter grpctransport.Handler
 }
 
-// NewGRPCServer makes a set of endpoints available as a gRPC GreeterServer.
+// NewGRPCServer 构建了 gRPC 可用的端点.
 func NewGRPCServer(endpoints greeterendpoint.Endpoints, logger log.Logger) pb.GreeterServer {
     options := []grpctransport.ServerOption{
         grpctransport.ServerErrorLogger(logger),
@@ -568,7 +561,7 @@ func NewGRPCServer(endpoints greeterendpoint.Endpoints, logger log.Logger) pb.Gr
     }
 }
 
-// Greeting implementation of the method of the GreeterService interface.
+// Greeting 实现 GreeterService 接口 Greeting 方法.
 func (s *grpcServer) Greeting(ctx oldcontext.Context, req *pb.GreetingRequest) (*pb.GreetingResponse, error) {
     _, res, err := s.greeter.ServeGRPC(ctx, req)
     if err != nil {
@@ -739,7 +732,7 @@ func main() {
         })
     }
     {
-        // The service discovery registration.
+        // 服务发现注册
         g.Add(func() error {
             logger.Log("transport", "HTTP", "addr", *httpAddr, "port", *httpPort)
             registar.Register()
@@ -812,10 +805,10 @@ import (
     "github.com/go-kit/kit/log"
 )
 
-// ServiceMiddleware describes a service middleware.
+// ServiceMiddleware 定义了 service 中间件.
 type ServiceMiddleware func(Service) Service
 
-// LoggingMiddleware takes a logger as a dependency and returns a ServiceMiddleware.
+// LoggingMiddleware 使用 logger 作为依赖，返回一个 Service中间件
 func LoggingMiddleware(logger log.Logger) ServiceMiddleware {
     return func(next Service) Service {
         return loggingMiddleware{next, logger}
@@ -866,8 +859,8 @@ import (
     "github.com/go-kit/kit/log"
 )
 
-// LoggingMiddleware returns an endpoint middleware that logs the
-// duration of each invocation, and the resulting error, if any.
+// LoggingMiddleware 返回端点日志中间件，
+// 提供运行过程中日志信息，如果有错，提供错误信息
 func LoggingMiddleware(logger log.Logger) endpoint.Middleware {
     return func(next endpoint.Endpoint) endpoint.Endpoint {
         return func(ctx context.Context, request interface{}) (response interface{}, err error) {
@@ -900,13 +893,13 @@ import (
     "github.com/antklim/go-microservices/gizmo-greeter/pkg/greeterservice"
 )
 
-// Endpoints collects all of the endpoints that compose a greeter service.
+// Endpoints 包含所有组成 greeter 服务的端点
 type Endpoints struct {
     HealthEndpoint   server.JSONContextEndpoint
     GreetingEndpoint server.JSONContextEndpoint
 }
 
-// MakeServerEndpoints returns service Endoints
+// MakeServerEndpoints 返回服务端点
 func MakeServerEndpoints(s greeterservice.Service) Endpoints {
     healthEndpoint := MakeHealthEndpoint(s)
     greetingEndpoint := MakeGreetingEndpoint(s)
@@ -917,7 +910,7 @@ func MakeServerEndpoints(s greeterservice.Service) Endpoints {
     }
 }
 
-// MakeHealthEndpoint constructs a Health endpoint.
+// MakeHealthEndpoint 构造 Health 端点.
 func MakeHealthEndpoint(s greeterservice.Service) server.JSONContextEndpoint {
     return func(ctx ocontext.Context, r *http.Request) (int, interface{}, error) {
         healthy := s.Health()
@@ -925,7 +918,7 @@ func MakeHealthEndpoint(s greeterservice.Service) server.JSONContextEndpoint {
     }
 }
 
-// MakeGreetingEndpoint constructs a Greeting endpoint.
+// MakeGreetingEndpoint 构造 Greeting 端点.
 func MakeGreetingEndpoint(s greeterservice.Service) server.JSONContextEndpoint {
     return func(ctx ocontext.Context, r *http.Request) (int, interface{}, error) {
         vars := r.URL.Query()
@@ -984,13 +977,12 @@ import (
 )
 
 type (
-    // TService will implement server.RPCService and handle all requests to the server.
+    // TService 会实现 server.RPCService （服务的RPC），以及处理服务端请求
     TService struct {
         Endpoints greeterendpoint.Endpoints
     }
 
-    // Config is a struct to contain all the needed
-    // configuration for our JSONService.
+    // Config 包含 server 相关 json 配置
     Config struct {
         Server *server.Config
     }
@@ -1051,7 +1043,7 @@ func (s *TService) ContextEndpoints() map[string]map[string]server.ContextHandle
     return map[string]map[string]server.ContextHandlerFunc{}
 }
 
-// JSONEndpoints is a listing of all endpoints available in the TService.
+// JSONEndpoints 是is a listing of all endpoints available in the TService.
 func (s *TService) JSONEndpoints() map[string]map[string]server.JSONContextEndpoint {
     return map[string]map[string]server.JSONContextEndpoint{
         "/health": map[string]server.JSONContextEndpoint{
@@ -1074,7 +1066,7 @@ import (
     ocontext "golang.org/x/net/context"
 )
 
-// Greeting implementation of the gRPC service.
+// Greeting 实现 gRPC 服务.
 func (s *TService) Greeting(ctx ocontext.Context, r *pb.GreetingRequest) (*pb.GreetingResponse, error) {
     return &pb.GreetingResponse{Greeting: "Hola Gizmo RPC " + r.Name}, nil
 }
