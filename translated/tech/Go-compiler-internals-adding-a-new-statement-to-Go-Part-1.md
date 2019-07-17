@@ -261,16 +261,16 @@ OFOR      // for Ninit; Left; Right { Nbody }
 OUNTIL    // until Ninit; Left { Nbody }
 ```
 
-We'll run `go generate` again, this time on `gc/syntax.go`, to generate a string representation for the new node type:
+我们再运行一下 `go generate`，这次在 `gc/syntax.go` 文件中，生成了一个代表新节点类型的字符串：
 
 ```
 // from the gc directory
 GOROOT=<src checkout> go generate syntax.go
 ```
 
-This should update the `gc/op_string.go` file to include `OUNTIL`. Now it's time to write the actual CST->AST conversion code for our new node type.
+应该更新 `gc/op_string.go` 文件使其包含 `OUNTIL`。现在是时候为新节点类型编写 CST->AST 的转换代码了。
 
-The conversion is done in `gc/noder.go`. We'll keep modeling our changes after the existing `for` statement support, starting with `stmtFall` which has a switch for statement types:
+转换是在 `gc/noder.go` 中实现的。我们基于现有的 `for` 语句支持，对 `until` 修改建模，从包含一个分支语句类型的 `stmtFall` 开始：
 
 ```go
 case *syntax.ForStmt:
@@ -280,6 +280,7 @@ case *syntax.UntilStmt:
 ```
 
 And the new `untilStmt` method we're adding to the `noder` type:
+然后是新的 `untilStmt` 方法，我们将其添加到 `noder` 类型中：
 
 ```go
 // untilStmt converts the concrete syntax tree node UntilStmt into an AST
@@ -301,8 +302,9 @@ func (p *noder) untilStmt(stmt *syntax.UntilStmt) *Node {
 ```
 
 Recall the generic `Node` fields explained above. Here we're using the `Init` field for the optional initializer, the `Left` field for the condition and the `Nbody` field for the loop body.
+回想一下上面解释过的 `Node` 字段。这里我们使用 `Init` 作为可选的初始化操作，`Left` 字段用于条件，`Nbody` 字段用于循环体。
 
-This is all we need to construct AST nodes for `until` statements. If we dump the AST after construction, we get:
+这就是新增 `until` 语句 AST 节点所需的全部内容。如果在构建后输出 AST，将得到以下这些：
 
 ```
 .   .   UNTIL l(13)
@@ -320,14 +322,14 @@ This is all we need to construct AST nodes for `until` statements. If we dump th
 .   .   .   .   LITERAL-"Hello, until!" l(15) untyped string
 ```
 
-## Type-check
-The next step in compilation is type-checking, which is done on the AST. In addition to detecting type errors, type-checking in Go also includes _type inference_, which allows us to write statements like:
+## 类型检查
+编译的下一步是类型检查，这是在 AST 的基础上完成的。除了检查类型错误外，Go 中的类型检查还包括 _类型推导_，类型推导可以让我们编写如下语句：
 
 ```go
 res, err := func(args)
 ```
 
-Without declaring the types of `res` and `err` explicitly. The Go type-checker does a few more tasks, like linking identifiers to their declarations and computing compile-time constants. The code is in `gc/typecheck.go`. Once again, following the lead of the `for` statement, we'll add this clause to the switch in `typecheck`:
+无需显示的声明 `res` 和 `err` 的类型。Go 类型检查器还会做一些其它事情，比如链接标识符到对应的声明上，和计算“编译时”常量。代码在 `gc/typecheck.go` 文件中。同样，在 `for` 语句的引导下，我们把这个子句添加到 `typecheck` 的分支中：
 
 ```go
 case OUNTIL:
@@ -346,14 +348,14 @@ case OUNTIL:
   decldepth--
 ```
 
-It assigns types to parts of the statement, and also checks that the condition is valid in a boolean context.
+只有一部分的语句分配了类型，并且在布尔上下文中检查条件是否合法。
 
-## Analyze and rewrite AST
-After type-checking, the compiler goes through several stages of AST analysis and rewrite. The exact sequence is laid out in the `gc.Main` function in `gc/main.go`. In compiler nomenclature such stages are usually called _passes_.
+## 分析并重写 AST
+在类型检查后，编译器会经历 AST 分析和重写等几个阶段。具体的序列在 `gc/main.go` 文件的 `gc.Main` 函数中列出。在编译器术语中，这个阶段通常称为 _passes_。
 
-Many passes don't require modifications to support `until` because they act generically on all statement kinds (here the generic structure of `gc.Node` comes useful). Some still do, however. For example escape analysis, which tries to find which variables "escape" their function scope and thus have to be allocated on the heap rather than on the stack.
+很多 passes 中无需修改就能支持 `until`，因为这些 passes 对所有类型语句都是通用的（在这里通用的 `gc.Node` 结构也有效）。然而，只是有些场景是这样。比如逃逸分析中，它试图找到那些变量“逃离”函数作用域，并分配在堆上而非栈空间。
 
-Escape analysis works per statement type, so we have to add this switch clause in `Escape.stmt`:
+“逃逸分析”适用于每个语句类型，所以我们必须把它加在 `Escape.stmt` 对应的分支中：
 
 ```go
 case OUNTIL:
@@ -363,11 +365,11 @@ case OUNTIL:
   e.loopDepth--
 ```
 
-Finally, `gc.Main` calls into the portable code generator (`gc/pgen.go`) to compile the analyzed code. The code generator starts by applying a sequence of AST transformations to lower the AST to a more easily compilable form. This is done in the `compile` function, which starts by calling `order`.
+最后，`gc.Main` 可以调用可移植的代码生成器（`gc/pgen.go`）来编译分析代码。代码生成器首先进行一系列 AST 转换，将 AST 转换成更容易编译的形式。这是在先调用 `order` 的 `compile` 函数中完成的。
 
-This transformation (in `gc/order.go`) reorders statements and expressions to enforce evaluation order. For example it will rewrite `foo /= 10` to `foo = foo / 10`, replace multi-assignment statements by multiple single-assignment statements, and so on.
+这个转换（在 `gc/order.go` 中）对语句和表达式重新排序，以强制执行计算的顺序。比如，把 `foo /= 10` 重写为 `foo = foo / 10`，用多个单赋值语句替换多赋值语句等等。
 
-To support `until` statements, we'll add this to `Order.stmt`:
+为了支持 `until` 语句，我们需要向 `Order.stmt` 增加以下内容：
 
 ```go
 case OUNTIL:
@@ -379,9 +381,9 @@ case OUNTIL:
   o.cleanTemp(t)
 ```
 
-After `order`, `compile` calls `walk` which lives in `gc/walk.go`. This pass collects a bunch of AST transformations that helps lower the AST to SSA later on. For example, it rewrites `range` clauses in `for` loops to simpler forms of `for` loops with an explicit loop variable [\[1\]](https://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-1/#id2). [It also rewrites map accesses to runtime calls](https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-efficiently-without-generics), and much more.
+在 `order`、`compile` 调用位于 `gc/walk.go` 中的 `walk` 后。这个 pass 收集了一系列 AST 转换，这些语句在后面有助于降低 AST 的维度成为 SSA。比如，在 `for` 循环中重写 `range` 子句为更简单的具有具体变量的 `for` 循环形式 [\[1\]](https://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-1/#id2)。[运行时重写调用 map 的访问方式](https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-efficiently-without-generics)等等。
 
-To support a new statement in `walk`, we have to add a switch clause in the `walkstmt` function. Incidentally, this is also the place where we can "implement" our `until` statement by rewriting it into AST nodes the compiler already knows how to handle. In the case of `until` it's easy - we just rewrite it into a `for` loop with an inverted condition, as shown in the beginning of the post. Here is the transformation:
+为了支持 `walk` 中的新语句，我们必须在 `walkstmt` 函数中添加一个 switch 子句。顺便说一下，这也是我们实现 `until` 语句要修改的地方，主要是将它重写为编译器能识别的 AST 节点。在 `until` 的例子中，这比较简单 —— 如文章开头所示，我们只是用倒装条件将它重写为一个 `for` 循环。具体转换代码如下：
 
 ```go
 case OUNTIL:
@@ -396,12 +398,12 @@ case OUNTIL:
   walkstmtlist(n.Nbody.Slice())
 ```
 
-Note that we replace n.Left (the condition) with a new node of type ONOT (which represents the unary ! operator) wrapping the old n.Left, and we replace n.Op by OFOR. That's it!
+注意我们替换了 n.Left（条件），它带有类型为 ONOT 的新节点（它代表一元操作符 !），新节点包装了之前的 n.Left，然后我们用 OFOR 替换 n.Op。就是这样！
 
-If we dump the AST again after the walk, we'll see that the OUNTIL node is gone and a new OFOR node takes its place.
+如果在遍历之后输出 AST，我们会看到 OUNTIL 节点不见了，取而代之的是新的 OFOR 节点。
 
-## Trying it out
-We can now try out our modified compiler and run a sample program that uses an `until` statement:
+## 尝试
+我们现在可以尝试修改编译器，然后运行一个使用了 `until` 语句的示例程序，
 
 ```
 $ cat useuntil.go
@@ -424,28 +426,28 @@ Hello, until!
 Hello, until!
 ```
 
-It works!
+成功了！
 
-Reminder: `<src checkout>` is the directory where we checked out Go, changed it and compiled it (see Appendix for more details).
+提醒：`<src checkout>` 是我们检出的 Go 代码仓库，我们需要修改它、编译它（更多细节参见附录）
 
-## Concluding part 1
-This is it for part 1. We've successfully implemented a new statement in the Go compiler. We didn't cover all the parts of the compiler because we could take a shortcut by rewriting the AST of `until` nodes to use `for` nodes instead. This is a perfectly valid compilation strategy, and the Go compiler already has many similar transformations to _canonicalize_ the AST (reducing many forms to fewer forms so the last stages of compilation have less work to do). That said, we're still interested in exploring the last two compilation stages - _Convert to SSA_ and _Generate machine code_. This will be covered in [part 2](http://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-2/).
+## 结论部分 1
+这是结论第一部分。我们成功地在 Go 编译器中实现了新增一个语句。虽然没有涵盖编译器的所有方面，因为这种通过使用 `for` 节点的方式重写 `until`  节点的 AST 方式像是一条捷径。这是一种有效的编译策略，Go 编译器已经有了很多类似的优化手段来 _转换_ AST（这将减少构成的形式，便于编译的最后阶段做更少的工作）。也就是说，我们仍然有兴趣探索最后两个编译阶段 —— _转换为 SSA_ 和 _生成机器码_。这些将在[第 2 部分]((http://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-2/)) 讨论。
 
-## Appendix - building the Go toolchain
-Please start by going over the [Go contribution guide](https://golang.org/doc/contribute.html). Here are a few quick notes on reproducing the modified Go compiler as shown in this post.
+## Appendix - 构建 Go 的工具链
+请先浏览 [Go 贡献指南](https://golang.org/doc/contribute.html)。下面是关于复制修改后的 Go 编译器的类似于本文的简要说明。
 
 There are two paths to proceed: 
-    - 1.Clone the official [Go repository](https://github.com/golang/go) and apply the modifications described in this post.
-    - 2.Clone my fork of the [Go repository](https://github.com/eliben/go) and check out the `adduntil` branch, where all these changes are already applied along with some debugging helpers.
-The cloned directory is where `<src checkout>` points throughout the post.
+    - 1.克隆官方的 [Go 仓库](https://github.com/golang/go)并实践本文所描述的内容。
+    - 2.克隆官方的 [Go 仓库](https://github.com/golang/go)，并检出 `adduntil` 分支，这个分支中已经有很多基于调试工具的修改。
+克隆的路径是本文中 `<src checkout>` 所代表的路径。
 
-To compile the toolchain, enter the `src/` directory and run `./make.bash`. We could also run `./all.bash` to run many tests after building it. Running `make.bash` invokes the full 3-step bootstrap process of building Go, but it only takes about 50 seconds on my (aging) machine.
+要编译工具链，进入 `src/` 目录并运行 `./make.bash`。也能通过 `./all.bash` 来运行所有的测试用例并构建。运行 `make.bash` 将调用构建 Go 完整的 3 个引导步骤，这在我的老机器上大概需要 50 秒时间。
 
-Once built, the toolchain is installed in `bin` alongside `src`. We can then do quicker rebuilds of the compiler itself by running `bin/go` install `cmd/compile`.
+一旦构建完成，工具链安装在 `src` 同级的 `bin` 目录中。然后，我们可以通过运行 `bin/go` 安装 `cmd/compile` 来快速重新构建编译器。
 
-[\[1\]](https://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-1/#id1)	Go has some special "magic" `range` clauses like a `range` over a string which splits its up into runes. This is where such transformations are implemented.
+[\[1\]](https://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-1/#id1)	Go 有一些特殊的“魔法”、`range` 子句，比如在字符串上使用 `range` 子句，把字符串分隔成字符。这个地方就用了“转换”来实现。
 
-For comments, please send me  [an email](eliben@gmail.com), or reach out [on Twitter](https://twitter.com/elibendersky).
+如果要评论，请给我发 [邮件](eliben@gmail.com)，或者在[推特](https://twitter.com/elibendersky)上联系我。
 
 ----------------
 
