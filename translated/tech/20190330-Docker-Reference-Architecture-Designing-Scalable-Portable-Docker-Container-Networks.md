@@ -399,7 +399,7 @@ Swarm 和 UCP 支持对群集端口发布之外的服务访问。服务的入站
 $ docker service create --replicas 2 --publish mode=ingress,target=80,published=8080 nginx
 ```
 
-> `mode=ingress` 是服务的默认模式。此命令也可以使用速记版本 `-p 80:8080 `来完成。端口 `8080` 在群集上的每个主机上公开，并在此服务中对两个容器进行负载平衡。
+> `mode=ingress` 是服务的默认模式。此命令也可以使用速记版本 `-p 80:8080` 来完成。端口 `8080` 在群集上的每个主机上公开，并在此服务中对两个容器进行负载平衡。
 
 ### Host 模式服务发布
 
@@ -750,8 +750,6 @@ ID            NAME  MODE        REPLICAS  IMAGE
 lxnjfo2dnjxq  db    replicated  1/1       consul:latest
 t222cnez6n7h  web   replicated  0/1       chrch/docker-pets:1.0
 ```
-
-
 
 ![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/overlay-pets-example.png?raw=true)
 
