@@ -24,23 +24,23 @@ Go 将键值对存储在桶的列表中，每个桶容纳 8 个键值对，当 m
 
 ![value dispatched in the buckets](https://github.com/studygolang/gctt-images/blob/master/go-map-design-by-example-part-I/1_OgOgEvcqNALd-IHXCSeofw.png?raw=true)
 
-哈希值不仅用于值在桶中的分配，还有其他的操作。每个桶都使用哈希值的首字节，将它存储在一个内部数组中，这使得 Go 可以对键进行索引，并跟踪桶中的空槽。让我们看一下二进制表示下，哈希的例子：
+哈希值不仅用于值在桶中的分配，还参与其他的操作。每个桶都将其哈希值的首字节存储在一个内部数组中，这使得 Go 可以对键进行索引，并跟踪桶中的空槽。让我们看一下二进制表示下，哈希的例子：
 
 ![top hash table in bucket](https://github.com/studygolang/gctt-images/blob/master/go-map-design-by-example-part-I/1_z8YVGw6WANXuW-xboHmPfQ.png?raw=true)
 
-多亏了桶内部被称为 *top hash* 的表，Go 可以在数据访问期间使用它们与请求的键的哈希值进行比较。
+多亏了桶内部被称为 *top hash* 的表，Go 可以在数据访问期间使用它们与请求键的哈希值进行比较。
 
-根据我们在程序中对 map 的使用，Go 需要一种扩容 map 的方法，以便管理更多的键值对。
+根据我们在程序中对 map 的使用，Go 需要对 map 进行扩容，以便管理更多的键值对。
 
 ## Map 扩容
 
-桶在存储键值对时，会将它存储在 8 个可用的插槽中。如果这些插槽全部不可用，Go 会创建一个溢出桶，并于当前桶连接。
+在存储键值对时，桶会将它存储在 8 个可用的插槽中。如果这些插槽全部不可用，Go 会创建一个溢出桶，并于当前桶连接。
 
 ![overflow bucket](https://github.com/studygolang/gctt-images/blob/master/go-map-design-by-example-part-I/1_ZfDObIafsML18crqW-MX_Q.png?raw=true)
 
-这个溢出属性表明了桶的内部结构。然而，增加溢出桶会削弱 map 的性能。作为补救，Go 将会分配新的桶（当前桶的数量的两倍），保存一个旧桶和新桶之间的连接，逐步将旧桶疏散到新桶中。实际上，在这次新的分配之后，每个参与过写操作的桶，如果操作还未完成，都将被疏散。被疏散的桶中的所有键值对都将被重新分配到新桶中，这意味着，先前同一个桶中存储在一起的键值对，现在可能被分配到不同的桶中。
+这个 `overflow` 属性表明了桶的内部结构。然而，增加溢出桶会降低 map 的性能。作为弥补，Go 将会分配新的桶（当前桶的数量的两倍），保存一个旧桶和新桶之间的连接，逐步将旧桶迁移到新桶中。实际上，在这次新的分配之后，每个参与过写操作的桶，如果操作还未完成，都将被迁移。被迁移的桶中的所有键值对都将被重新分配到新桶中，这意味着，先前同一个桶中存储在一起的键值对，现在可能被分配到不同的桶中。
 
-Go 使用负载因子来判断何时开始分配新桶并疏散旧桶。
+Go 使用负载因子来判断何时开始分配新桶并迁移旧桶。
 
 ## 负载因子
 
