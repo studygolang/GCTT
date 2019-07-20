@@ -432,8 +432,8 @@ Hello, until!
 请先浏览 [Go 贡献指南](https://golang.org/doc/contribute.html)。下面是类似于本文关于重述修改 Go 编译器的简要说明。
 
 有两种方法: 
-    - 1.克隆官方的 [Go 仓库](https://github.com/golang/go)并实践本文所描述的内容。
-    - 2.克隆官方的 [Go 仓库](https://github.com/golang/go)，并检出 `adduntil` 分支，这个分支中已经有很多基于调试工具的修改。
+  - 1.克隆官方的 [Go 仓库](https://github.com/golang/go)并实践本文所描述的内容。
+  - 2.克隆官方的 [Go 仓库](https://github.com/golang/go)，并检出 `adduntil` 分支，这个分支中已经有很多基于调试工具的修改。
 
 克隆的路径是本文中 `<src checkout>` 所表示的路径。
 
