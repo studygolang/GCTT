@@ -1,9 +1,9 @@
 # Go 编译器内核：给 Go 新增一个语句 —— 第一部分
 >Go compiler internals: adding a new statement to Go - Part 1 译文
 
-这是两部分系列文章中的第一部分，该文章采用教程的方式来探讨 Go 编译器。Go 编译器复杂而庞大，需要一本书才可能描述清楚，所以这个系列文章旨在提供一个快速而深度优先的方式进入学习。我计划在以后会写更多关于编译器特定领域的描述性文章。
+这是两部分系列文章中的第一部分，该文章采用教程的方式来探讨 Go 编译器。Go 编译器复杂而庞大，需要一本书才可能描述清楚，所以这个系列文章旨在提供一个快速而深度优先的方式进入学习。我计划在以后会写更多关于编译器领域的描述文章。
 
-我们会修改 Go 编译器来增加一个新的（玩具性质）语言特性，并构建一个修改后的编译器来进行使用。
+我们会修改 Go 编译器来增加一个新的（玩具性质）语言特性，并构建一个经过修改的编译器进行使用。
 
 ## 任务 —— 增加新的语句
 很多语言都有 `while` 语句，在 Go 中对应的是 `for`：
@@ -45,19 +45,19 @@ until i := 4; i == 0 {
 
 我们的目标实现将会支持这个。
 
-特别声明 —— 这只是一个玩具性的探索。我觉得在 Go 中添加 `until` 并不好，因为 Go 的极简主义设计思想是非常正确的。
+特别声明 —— 这只是一个玩具性的探索。我觉得在 Go 中添加 `until` 并不好，因为 Go 的极简主义设计思想本身就是非常正确的理念。
 
 ## Go 编译器的高级结构
 默认情况下，Go 编译器（`gc`）是以相当传统的结构来设计的，如果你使用过其他编译器，你应该很快就能熟悉它：
 
 ![](https://eli.thegreenplace.net/images/2019/go-compiler-flow.png)
 
-Go 仓库中相对路径的根目录下，编译器实现位于 `src/cmd/compile/internal`；本文后续提到的所有代码路径都是相对于这个目录的。编译器是用 Go 编写的，代码可读性很强。在这篇文章中，我们将一点一点的研究这些代码，同时添加支持 `until` 语句的实现代码.
+Go 仓库中相对路径的根目录下，编译器实现位于 `src/cmd/compile/internal`；本文后续提到的所有代码路径都是相对于这个目录。编译器是用 Go 编写的，代码可读性很强。在这篇文章中，我们将一点一点的研究这些代码，同时添加支持 `until` 语句的实现代码.
 
 查看 `src/cmd/compile` 中的 `README` 文件，了解编译步骤的详细说明。它将与本文息息相关。
 
 ## 扫描
-扫描器（也称为 _词法分析器_ ）将源码文本分解为编译器所需的离散实体。例如 `for` 关键字会转变成常量 `_For`；符号 `...` 转变成 `_DotDotDot`，`.` 将转变成 `_Dot` 等等。
+扫描器（也称为 _词法分析器_）将源码文本分解为编译器所需的离散实体。例如 `for` 关键字会转变成常量 `_For`；符号 `...` 转变成 `_DotDotDot`，`.` 将转变成 `_Dot` 等等。
 
 扫描器的实现位于 `syntax` 包中。我们需要做的就是理解关键字 —— `until`。`syntax/tokens.go` 文件中列出了所有 token，我们要添加一个新的：
 
@@ -74,7 +74,7 @@ token 常量右侧的注释非常重要，它们用来标识 token。这是通�
 //go:generate stringer -type token -linecomment
 ```
 
-`go generate` 必须手动执行，输出文件（`syntax/token_string.go`）被存入 Go 源码仓库中。为了重新生成它，我在 `syntax` 目录中执行如下命令：
+`go generate` 必须手动执行，输出文件（`syntax/token_string.go`）被保存在 Go 源码仓库中。为了重新生成它，我在 `syntax` 目录中执行如下命令：
 
 ```
 GOROOT=<src checkout> go generate tokens.go
@@ -91,16 +91,16 @@ panic: imperfect hash
 这个 panic 是 `syntax/scanner.go` 中代码引起的：
 
 ```go
-// hash is a perfect hash function for keywords.
-// It assumes that s has at least length 2.
+// hash 是针对关键词的完美哈希函数
+// 它假定参数 s 的长度至少为 2
 func hash(s []byte) uint {
   return (uint(s[0])<<4 ^ uint(s[1]) + uint(len(s))) & uint(len(keywordMap)-1)
 }
 
-var keywordMap [1 << 6]token // size must be power of two
+var keywordMap [1 << 6]token // 大小必须是 2 的整数倍（2 的整数次幂）
 
 func init() {
-  // populate keywordMap
+  // 填充 keywordMap
   for tok := _Break; tok <= _Var; tok++ {
     h := hash([]byte(tok.String()))
     if keywordMap[h] != 0 {
@@ -111,7 +111,7 @@ func init() {
 }
 ```
 
-编译器试图构建一个“完美”哈希表来执行关键字字符串以及 token 查询。“完美”意味着它不太可能发生冲突，是一个线性的数组，其中每个关键字都映射为一个单独的索引。哈希函数相当特殊（例如，它查看字符串 token 的第一个字符），并且不容易调试新 token 为何出现冲突等问题。为了解决这个问题，我将查找表的大小更改为 `[1 << 7]token`，从而将查找数组的大小从 64 改成 128。这给予哈希函数更多的空间来分配对应的键，冲突也就消失了。
+编译器试图构建一个“完美”哈希表来执行关键字字符串到 token 的查询。“完美”意味着它不太可能发生冲突，是一个线性的数组，其中每个关键字都映射为一个单独的索引。哈希函数相当特殊（例如，它查看字符串 token 的第一个字符），并且不容易调试新 token 为何出现冲突等问题。为了解决这个问题，我将查找表的大小更改为 `[1 << 7]token`，从而将查找数组的大小从 64 改成 128。这给予哈希函数更多的空间来分配对应的键，冲突也就消失了。
 
 ## 解析
 Go 有一个相当标准的递归下降算法的解析器，它把扫描生成的 token 流转换为 _具体语法树_。我们开始为 `syntax/nodes.go` 中的 `until` 添加新的节点类型：
@@ -133,8 +133,7 @@ until <init>; <cond> {
 }
 ```
 
-Both `<init>` and `<cond>` are optional, though it's not common to omit `<cond>`. The `UntilStmt.stmt` embedded field is used for all syntax tree statements and contains position information.
-`<init>` 和 `<cond>` 是可选的，不过省略 `<cond>` 也不是很常见。`UntilStmt.stmt` 中嵌入的字段用于所有语法树语句，并包含对应的位置信息。
+`<init>` 和 `<cond>` 是可选的，不过省略 `<cond>` 也不是很常见。`UntilStmt.stmt` 中嵌入的字段用于表示整个语法树语句，并包含对应的位置信息。
 
 解析过程在 `syntax/parser.go` 中实现。`parser.stmtOrNil` 方法解析当前位置的语句。它查看当前 token 并决定解析哪个语句。下方是添加的代码片段：
 
@@ -172,7 +171,7 @@ func (p *parser) untilStmt() Stmt {
 
 我们复用现有的 `parser.header` 方法，因为它解析了 `if` 和 `for` 语句对应的 header。在常用的形式中，它支持三个部分（分号分隔）。在 `for` 语句中，第三部分常被用于 ["post" 语句](https://golang.org/ref/spec#PostStmt)，但我们不打算为 `until` 实现这种形式，而只需实现前两部分。注意 `header` 接收源 token，以便能够区分 `header` 所处的具体场景；例如，编译器会拒绝 `if` 的“post”语句。虽然现在还没有费力气实现“post”语句，但我们在 `until` 的场景中应该明确地拒绝“post”语句。
 
-这些都是我们需要对解析器进行的修改。因为 `until` 语句在结构上跟现有的一些语句非常相似，所以我们可以重用已有的大部分功能。
+这些都是我们需要对解析器进行的修改。因为 `until` 语句在结构上跟现有的一些语句非常相似，所以我们可以复用已有的大部分功能。
 
 假如在编译器解析后输出语法树（使用 `syntax.Fdump`）然后使用语法树：
 
@@ -226,21 +225,20 @@ until i == 0 {
 ```
 
 ## 创建 AST
-Now that it has a syntax tree representation of the source, the compiler builds an *abstract syntax tree*. I've written about [Abstract vs. Concrete syntax trees](http://eli.thegreenplace.net/2009/02/16/abstract-vs-concrete-syntax-trees) in the past - it's worth checking out if you're not familiar with the differences. In case of Go, however, this may get changed in the future. The Go compiler was originally written in C and later auto-translated to Go; some parts of it are vestigial from the olden C days, and some parts are newer. Future refactorings may leave only one kind of syntax tree, but right now (Go 1.12) this is the process we have to follow.
-由于有了源代码的语法树表示，编译器才能构建一个*抽象语法树*。我曾写过关于[抽象 vs 具体语法树](http://eli.thegreenplace.net/2009/02/16/abstract-vs-concrete-syntax-trees)的文章 —— 如果你不熟悉他们之间的区别，可以好好看看这个文章。在 Go 中，未来可能会有所变动。Go 编译器最初是用 C 语言编写的，后来自动翻译成 Go；编译器的某些部分是 C 时期遗留下来的，有些部分是比较新的。未来的重构可能只剩下一类语法树，但是现在（Go 1.12）我们必须遵循这个流程。
+由于有了源代码的语法树表示，编译器才能构建一个*抽象语法树*。我曾写过关于[抽象 vs 具体语法树](http://eli.thegreenplace.net/2009/02/16/abstract-vs-concrete-syntax-trees)的文章 —— 如果你不熟悉他们之间的区别，可以好好看看这个文章。在 Go 中，未来可能会有所变动。Go 编译器最初是用 C 语言编写的，后来自动翻译成 Go；所以编译器的某些部分是 C 时期遗留下来的，有些部分是比较新的。未来的重构可能只会留下一种语法树，但是现在（Go 1.12）我们必须遵循这个流程。
 
 AST 代码位于 `gc` 包中，节点类型在 `gc/syntax.go` 中定义。（不要跟 `syntax` 包中的 CST 混淆）
 
 Go AST 的结构与 CST 不同。所有的 AST 节点都是 `syntax.Node` 类型而非有各自的类型。`syntax.Node` 类型是一种 _可区分的联合体_，其中的字段有很多不同的类型。然而，这些字段是通用的，并且可用于大多数节点类型：
 
 ```go
-// A Node is a single node in the syntax tree.
-// Actually the syntax tree is a syntax DAG, because there is only one
-// node with Op=ONAME for a given instance of a variable x.
-// The same is true for Op=OTYPE and Op=OLITERAL. See Node.mayBeShared.
+// 一个 Node 代表语法树中的单个节点
+// 实际上，因为只有一个，所以语法树就是一个语法 DAG
+// 对于一个给定的变量，使用 Op=ONAME 作为节点
+// Op=OTYPE、Op=OLITERAL 也是这样，参考 Node.mayBeShared
 type Node struct {
-  // Tree structure.
-  // Generic recursive walks should follow these fields.
+  // 树结构
+  // 普通的递归遍历应该包含以下字段
   Left  *Node
   Right *Node
   Ninit Nodes
@@ -254,7 +252,7 @@ type Node struct {
 我们以增加一个新的常量标识 `until` 节点作为开始：
 
 ```go
-// statements
+// 语句
 // ...
 OFALL     // fallthrough
 OFOR      // for Ninit; Left; Right { Nbody }
@@ -264,7 +262,7 @@ OUNTIL    // until Ninit; Left { Nbody }
 我们再运行一下 `go generate`，这次在 `gc/syntax.go` 文件中，生成了一个代表新节点类型的字符串：
 
 ```
-// from the gc directory
+// 在 gc 的目录中
 GOROOT=<src checkout> go generate syntax.go
 ```
 
@@ -279,12 +277,10 @@ case *syntax.UntilStmt:
   return p.untilStmt(stmt)
 ```
 
-And the new `untilStmt` method we're adding to the `noder` type:
-然后是新的 `untilStmt` 方法，我们将其添加到 `noder` 类型中：
+然后是新的 `untilStmt` 方法，我们将其添加到 `noder` 类型上：
 
 ```go
-// untilStmt converts the concrete syntax tree node UntilStmt into an AST
-// node.
+// untilStmt 把具体语法树节点 UntilStmt 转换为对应的 AST 节点
 func (p *noder) untilStmt(stmt *syntax.UntilStmt) *Node {
   p.openScope(stmt.Pos())
   var n *Node
@@ -301,8 +297,7 @@ func (p *noder) untilStmt(stmt *syntax.UntilStmt) *Node {
 }
 ```
 
-Recall the generic `Node` fields explained above. Here we're using the `Init` field for the optional initializer, the `Left` field for the condition and the `Nbody` field for the loop body.
-回想一下上面解释过的 `Node` 字段。这里我们使用 `Init` 作为可选的初始化操作，`Left` 字段用于条件，`Nbody` 字段用于循环体。
+回想一下上面解释过的 `Node` 字段。这里我们使用 `Init` 作为可选的初始化操作，`Left` 字段作用于条件，`Nbody` 字段作用于循环体。
 
 这就是新增 `until` 语句 AST 节点所需的全部内容。如果在构建后输出 AST，将得到以下这些：
 
@@ -365,9 +360,9 @@ case OUNTIL:
   e.loopDepth--
 ```
 
-最后，`gc.Main` 可以调用可移植的代码生成器（`gc/pgen.go`）来编译分析代码。代码生成器首先进行一系列 AST 转换，将 AST 转换成更容易编译的形式。这是在先调用 `order` 的 `compile` 函数中完成的。
+最后，`gc.Main` 可以调用可移植的代码生成器（`gc/pgen.go`）来编译分析代码。代码生成器首先进行一系列 AST 转换，将 AST 维度降低便于编译。这是在先调用 `order` 的 `compile` 函数中完成的。
 
-这个转换（在 `gc/order.go` 中）对语句和表达式重新排序，以强制执行计算的顺序。比如，把 `foo /= 10` 重写为 `foo = foo / 10`，用多个单赋值语句替换多赋值语句等等。
+这个转换（在 `gc/order.go` 中）对语句和表达式重新排序，以强制执行计算标识符顺序。比如，把 `foo /= 10` 重写为 `foo = foo / 10`，用多个单赋值语句替换多赋值语句等等。
 
 为了支持 `until` 语句，我们需要向 `Order.stmt` 增加以下内容：
 
@@ -381,7 +376,7 @@ case OUNTIL:
   o.cleanTemp(t)
 ```
 
-在 `order`、`compile` 调用位于 `gc/walk.go` 中的 `walk` 后。这个 pass 收集了一系列 AST 转换，这些语句在后面有助于降低 AST 的维度成为 SSA。比如，在 `for` 循环中重写 `range` 子句为更简单的具有具体变量的 `for` 循环形式 [\[1\]](https://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-1/#id2)。[运行时重写调用 map 的访问方式](https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-efficiently-without-generics)等等。
+在 `order`、`compile` 调用位于 `gc/walk.go` 中的 `walk` 后。这个传递过程收集了一系列 AST 转换，这些语句在后面有助于降低 AST 的维度成为 SSA。比如，在 `for` 循环中重写 `range` 子句为更简单的具有具体变量的 `for` 循环形式 [\[1\]](https://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-1/#id2)。[运行时重写调用 map 的访问方式](https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-efficiently-without-generics)等等。
 
 为了支持 `walk` 中的新语句，我们必须在 `walkstmt` 函数中添加一个 switch 子句。顺便说一下，这也是我们实现 `until` 语句要修改的地方，主要是将它重写为编译器能识别的 AST 节点。在 `until` 的例子中，这比较简单 —— 如文章开头所示，我们只是用倒装条件将它重写为一个 `for` 循环。具体转换代码如下：
 
@@ -431,17 +426,18 @@ Hello, until!
 提醒：`<src checkout>` 是我们检出的 Go 代码仓库，我们需要修改它、编译它（更多细节参见附录）
 
 ## 结论部分 1
-这是结论第一部分。我们成功地在 Go 编译器中实现了新增一个语句。虽然没有涵盖编译器的所有方面，因为这种通过使用 `for` 节点的方式重写 `until`  节点的 AST 方式像是一条捷径。这是一种有效的编译策略，Go 编译器已经有了很多类似的优化手段来 _转换_ AST（这将减少构成的形式，便于编译的最后阶段做更少的工作）。也就是说，我们仍然有兴趣探索最后两个编译阶段 —— _转换为 SSA_ 和 _生成机器码_。这些将在[第 2 部分]((http://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-2/)) 讨论。
+这是结论第一部分。我们成功地在 Go 编译器中实现了新增一个语句。这个过程没有涵盖编译器的所有方面，因为这种通过使用 `for` 节点的方式重写 `until` 节点的 AST 方式像是一条捷径。这是一种有效的编译策略，Go 编译器已经有了很多类似的优化手段来 _转换_ AST（这将减少构成的形式，便于编译的最后阶段做更少的工作）。即便如此，我们仍然有兴趣探索最后两个编译阶段 —— _转换为 SSA_ 和 _生成机器码_。这些将在[第 2 部分]((http://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-2/)) 讨论。
 
 ## Appendix - 构建 Go 的工具链
-请先浏览 [Go 贡献指南](https://golang.org/doc/contribute.html)。下面是关于复制修改后的 Go 编译器的类似于本文的简要说明。
+请先浏览 [Go 贡献指南](https://golang.org/doc/contribute.html)。下面是类似于本文关于重述修改 Go 编译器的简要说明。
 
-There are two paths to proceed: 
+有两种方法: 
     - 1.克隆官方的 [Go 仓库](https://github.com/golang/go)并实践本文所描述的内容。
     - 2.克隆官方的 [Go 仓库](https://github.com/golang/go)，并检出 `adduntil` 分支，这个分支中已经有很多基于调试工具的修改。
-克隆的路径是本文中 `<src checkout>` 所代表的路径。
 
-要编译工具链，进入 `src/` 目录并运行 `./make.bash`。也能通过 `./all.bash` 来运行所有的测试用例并构建。运行 `make.bash` 将调用构建 Go 完整的 3 个引导步骤，这在我的老机器上大概需要 50 秒时间。
+克隆的路径是本文中 `<src checkout>` 所表示的路径。
+
+要编译工具链，进入 `src/` 目录并运行 `./make.bash`。也能通过 `./all.bash` 来运行所有的测试用例并构建。运行 `make.bash` 将调用构建 Go 完整的 3 个引导步骤，这在我的旧机器上大概需要 50 秒时间。
 
 一旦构建完成，工具链安装在 `src` 同级的 `bin` 目录中。然后，我们可以通过运行 `bin/go` 安装 `cmd/compile` 来快速重新构建编译器。
 
