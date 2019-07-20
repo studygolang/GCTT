@@ -63,15 +63,15 @@ Go Kit 遵循简单的规则，例如：
 * 身份验证 - basic和JWT。
 * 传输 - HTTP，Nats，gRPC 等。
 * 日志记录 - 服务中结构化日志记录的通用接口。
-* 软件度量 - CloudWatch，Statsd，Graphite等。
-* 追踪 - Zipkin和Opentracing。
-* 服务发现 - Consul，Etcd，Eureka等。
-* 熔断器 - Hystrix的Go语言实现。
+* 软件度量 - CloudWatch,Statsd,Graphite等。
+* 追踪 - Zipkin 和 Opentracing。
+* 服务发现 - Consul,Etcd,Eureka等。
+* 熔断器 - Hystrix 的 Go 语言实现。
 
 您可以在Peter Bourgon的文章和演示幻灯片中找到 Go Kit 的最佳描述之一：
 
-* Go kit: Go in the modern enterprise
-* Go + microservices
+* [Go kit: Go in the modern enterprise](https://peter.bourgon.org/go-kit/?source=post_page)
+* [Go + microservices](https://github.com/peterbourgon/go-microservices?source=post_page)
 
 此外，在“Go + microservices”幻灯片中，您将找到使用 Go Kit 构建的服务架构的示例。
 有关快速参考，请参阅服务架构图。
@@ -141,7 +141,7 @@ Gizmo 第三，超过 2200 颗 star, 31 个贡献者和 137 个 forks 。由纽�
 
 ### 代码质量
 
-* Go Kit 在[代码质量类别中排名]第一。它拥有近 80％ 的代码覆盖率和出色的 [Go 报告评级](https://goreportcard.com/report/github.com/go-kit/kit)。
+* Go Kit 在代码质量类别中排名第一。它拥有近 80％ 的代码覆盖率和出色的 [Go 报告评级](https://goreportcard.com/report/github.com/go-kit/kit)。
 * Gizmo 也有很好的 [Go 报告评级](https://goreportcard.com/report/github.com/NYTimes/gizmo)。但它的代码覆盖率仅为 46％。
 * Go Micro 不提供覆盖率信息，但它确实具有很好的 [Go 报告评级](https://goreportcard.com/report/github.com/micro/go-micro)。
 
@@ -184,8 +184,8 @@ message GreetingResponse {
 }
 ```
 
-接口包含一种方法 - "Greeting"。
-请求中有一个参数 - 'name'，响应中有一个参数 - 'greeting'。
+接口包含一种方法—— "Greeting"。
+请求中有一个参数—— 'name'，响应中有一个参数 - 'greeting'。
 
 然后我使用修改后的 [protoc工具](https://github.com/micro/protoc-gen-micro) 通过 protobuf 文件生成服务接口。
 该生成器由 Go Micro fork 并进行了修改，以支持该框架的一些功能。
@@ -228,8 +228,8 @@ func main() {
 }
 ```
 
-为了支持HTTP传输，我不得不添加其他模块。它将HTTP请求映射到protobuf定义的请求。并称为 gRPC 服务。
-然后，它将服务响应映射到HTTP响应并将其回复给用户。
+为了支持HTTP传输，我不得不添加其他模块。它将HTTP请求映射到 protobuf 定义的请求。并称为 gRPC 服务。
+然后，它将服务响应映射到 HTTP 响应并将其回复给用户。
 
 ```go
 package main
@@ -471,12 +471,12 @@ func NewHTTPHandler(endpoints greeterendpoint.Endpoints, logger log.Logger) http
     return m
 }
 
-// DecodeHTTPHealthRequest method.
+// DecodeHTTPHealthRequest 方法.
 func DecodeHTTPHealthRequest(_ context.Context, _ *http.Request) (interface{}, error) {
     return greeterendpoint.HealthRequest{}, nil
 }
 
-// DecodeHTTPGreetingRequest method.
+// DecodeHTTPGreetingRequest 方法.
 func DecodeHTTPGreetingRequest(_ context.Context, r *http.Request) (interface{}, error) {
     vars := r.URL.Query()
     names, exists := vars["name"]
@@ -515,8 +515,8 @@ func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, respo
 }
 ```
 
-在我开始 gRPC 端点实现之前，我不重新定义需要 protobuf.
-我复制了 Go Micro 服务 protobuf 。但就 Go Kit 而言，我使用默认服务生成器来创建服务接口。
+在我开始 gRPC 端点实现之前，我不需要重新定义需要 protobuf.
+我复制了 Go Micro 服务 protobuf 文件。但就 Go Kit 而言，我使用默认服务生成器来创建服务接口。
 
  protobuf 定义的服务接口生成器
 
@@ -570,15 +570,15 @@ func (s *grpcServer) Greeting(ctx oldcontext.Context, req *pb.GreetingRequest) (
     return res.(*pb.GreetingResponse), nil
 }
 
-// decodeGRPCGreetingRequest is a transport/grpc.DecodeRequestFunc that converts
-// a gRPC greeting request to a user-domain greeting request.
+// decodeGRPCGreetingRequest is a transport/grpc.
+// DecodeRequestFunc 将 gRPC 请求转换为用户域的 greeting 请求。
 func decodeGRPCGreetingRequest(_ context.Context, grpcReq interface{}) (interface{}, error) {
     req := grpcReq.(*pb.GreetingRequest)
     return greeterendpoint.GreetingRequest{Name: req.Name}, nil
 }
 
-// encodeGRPCGreetingResponse is a transport/grpc.EncodeResponseFunc that converts
-// a user-domain greeting response to a gRPC greeting response.
+// encodeGRPCGreetingResponse is a transport/grpc.
+// DecodeRequestFunc 将 用户域的 greeting 转换为请求gRPC 请求。
 func encodeGRPCGreetingResponse(_ context.Context, response interface{}) (interface{}, error) {
     res := response.(greeterendpoint.GreetingResponse)
     return &pb.GreetingResponse{Greeting: res.Greeting}, nil
@@ -608,7 +608,7 @@ func ConsulRegister(consulAddress string,
     advertiseAddress string,
     advertisePort string) (registar sd.Registrar) {
 
-    // Logging domain.
+    // 日志 
     var logger log.Logger
     {
         logger = log.NewLogfmtLogger(os.Stderr)
@@ -618,7 +618,7 @@ func ConsulRegister(consulAddress string,
 
     rand.Seed(time.Now().UTC().UnixNano())
 
-    // Service discovery domain. In this example we use Consul.
+    // 服务发现，我们使用 Consul.
     var client consulsd.Client
     {
         consulConfig := api.DefaultConfig()
@@ -639,9 +639,9 @@ func ConsulRegister(consulAddress string,
     }
 
     port, _ := strconv.Atoi(advertisePort)
-    num := rand.Intn(100) // to make service ID unique
+    num := rand.Intn(100) // 服务 ID 唯一
     asr := api.AgentServiceRegistration{
-        ID:      "go-kit-srv-greeter-" + strconv.Itoa(num), //unique service ID
+        ID:      "go-kit-srv-greeter-" + strconv.Itoa(num), 
         Name:    "go-kit-srv-greeter",
         Address: advertiseAddress,
         Port:    port,
@@ -717,8 +717,7 @@ func main() {
 
     var g group.Group
     {
-        // The debug listener mounts the http.DefaultServeMux, and serves up
-        // stuff like the Go debug and profiling routes, and so on.
+        // 调试功能带 http.DefaultServeMux, 并提供Go调试和分析路由等功能
         debugListener, err := net.Listen("tcp", *debugAddr)
         if err != nil {
             logger.Log("transport", "debug/HTTP", "during", "Listen", "err", err)
@@ -742,7 +741,7 @@ func main() {
         })
     }
     {
-        // The gRPC listener mounts the Go kit gRPC server we created.
+        // gRPC 加载我们创建的服务.
         grpcListener, err := net.Listen("tcp", *grpcAddr)
         if err != nil {
             logger.Log("transport", "gRPC", "during", "Listen", "err", err)
@@ -758,7 +757,7 @@ func main() {
         })
     }
     {
-        // This function just sits and waits for ctrl-C.
+        // 监听 Ctrl+C 信号终止.
         cancelInterrupt := make(chan struct{})
         g.Add(func() error {
             c := make(chan os.Signal, 1)
@@ -931,20 +930,20 @@ func MakeGreetingEndpoint(s greeterservice.Service) server.JSONContextEndpoint {
     }
 }
 
-// HealthRequest collects the request parameters for the Health method.
+// HealthRequest 包含了 Health 方法请求参数
 type HealthRequest struct{}
 
-// HealthResponse collects the response values for the Health method.
+// HealthResponse 包含了 Health 方法响应值
 type HealthResponse struct {
     Healthy bool `json:"healthy,omitempty"`
 }
 
-// GreetingRequest collects the request parameters for the Greeting method.
+// GreetingRequest 包含了 Greeting 方法请求参数
 type GreetingRequest struct {
     Name string `json:"name,omitempty"`
 }
 
-// GreetingResponse collects the response values for the Greeting method.
+// GreetingResponse 包含了 Greeting 方法响应值
 type GreetingResponse struct {
     Greeting string `json:"greeting,omitempty"`
 }
@@ -988,38 +987,35 @@ type (
     }
 )
 
-// NewTService will instantiate a RPCService with the given configuration.
+// NewTService 会使用给定的配置实例化 RPC 服务
 func NewTService(cfg *Config, endpoints greeterendpoint.Endpoints) *TService {
     return &TService{Endpoints: endpoints}
 }
 
-// Prefix returns the string prefix used for all endpoints within this service.
+// Prefix 返回所有端点服务使用的字符串前缀
 func (s *TService) Prefix() string {
     return ""
 }
 
-// Service provides the TService with a description of the service to serve and
-// the implementation.
+// Service 向 TService 提供要服务的服务描述和实现。
 func (s *TService) Service() (*grpc.ServiceDesc, interface{}) {
     return &pb.Greeter_serviceDesc, s
 }
 
-// Middleware provides an http.Handler hook wrapped around all requests.
-// In this implementation, we're using a GzipHandler middleware to
-// compress our responses.
+// Middleware 为所有请求挂载 http.Handler hook .
+//在这个实现中，我们使用 GzipHandler 中间件来压缩我们的响应。
 func (s *TService) Middleware(h http.Handler) http.Handler {
     return gziphandler.GzipHandler(h)
 }
 
-// ContextMiddleware provides a server.ContextHAndler hook wrapped around all
-// requests. This could be handy if you need to decorate the request context.
+// ContextMiddleware 为所有请求挂载 server.ContextHAndler hook.
+// 如果需要修饰请求上下文，这将非常方便。
 func (s *TService) ContextMiddleware(h server.ContextHandler) server.ContextHandler {
     return h
 }
 
-// JSONMiddleware provides a JSONEndpoint hook wrapped around all requests.
-// In this implementation, we're using it to provide application logging and to check errors
-// and provide generic responses.
+// JSONMiddleware 为所有请求挂载 JSONEndpoint hooks.
+//在这个实现中，我们使用它来提供应用程序日志记录，检查错误并提供通用响应。
 func (s *TService) JSONMiddleware(j server.JSONContextEndpoint) server.JSONContextEndpoint {
     return func(ctx context.Context, r *http.Request) (int, interface{}, error) {
 
@@ -1036,14 +1032,13 @@ func (s *TService) JSONMiddleware(j server.JSONContextEndpoint) server.JSONConte
     }
 }
 
-// ContextEndpoints may be needed if your server has any non-RPC-able
-// endpoints. In this case, we have none but still need this method to
-// satisfy the server.RPCService interface.
+// ContextEndpoints 在你的服务是非 RPC 端点下，可以提供你需要的功能
+// 此时，我们不需要 RPC,但是仍需要这个方法以实现 server.RPCService 接口.
 func (s *TService) ContextEndpoints() map[string]map[string]server.ContextHandlerFunc {
     return map[string]map[string]server.ContextHandlerFunc{}
 }
 
-// JSONEndpoints 是is a listing of all endpoints available in the TService.
+// JSONEndpoints 是TService中可用的所有端点的列表。
 func (s *TService) JSONEndpoints() map[string]map[string]server.JSONContextEndpoint {
     return map[string]map[string]server.JSONContextEndpoint{
         "/health": map[string]server.JSONContextEndpoint{
