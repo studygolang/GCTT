@@ -42,7 +42,7 @@ func (l *Library) getClient() *http.Client {
 
 ### 不要引入全局变量
 
-补充一个反面模式，允许用户在一个库中设置全局变量。举个例子，在你的库中允许用户设置一个全局的`http.Client`并被所有的`HTTP calls`执行：
+补充一个反面模式，允许用户在一个库中设置全局变量。举个例子，在你的库中允许用户设置一个全局的`http.Client`并被所有的`HTTP`调用执行：
 
 ```go
 var libraryClient *http.Client = http.DefaultClient
@@ -53,3 +53,60 @@ func SetHttpClient(client *http.Client) {
 ```
 
 通常在一个库中不应该存在一堆全局变量。当你写代码的时候，你应该想想用户在他们的程序中多次使用你的这个库会发生什么。全局变量会使得无法使用不同的参数。而且，在你的代码中引入全局变量会引起测试上的问题并造成代码上不必要的复杂度。使用全局变量可能会导致在你程序的不同模块有不必要的依赖。在写你的库的时候，避免全局状态是格外重要的。
+
+### 返回structs，而不是interfaces
+
+这是一个普遍的问题(实际上我在这一点上也犯过错)。很多库都有下面这类函数：
+
+```go
+func New() LibraryInterface {
+    ...
+}
+```
+
+在上面的case中，返回一个interface使struct的特性在库里被隐藏了。实际上应该这么写：
+
+```go
+func New() *LibraryStruct {
+    ...
+}
+```
+
+在库里不应该存在接口的声明，除非它被用在某个函数参数中。如果出现上面的case，你就应该想想你在写这个库的时候的约定。当返回一个interface时，你基本上得声明一系列可用的方法。如果有人想用这个接口来实现他们自己的功能(比如说为了测试)，他得打乱他们的代码来添加更多的方法。这意味着尽管在struct里添加方法是安全的，但在interface里不是。这个想法在这篇文章中被总结得很好《[Accept Interfaces Return Struct in Go](https://mycodesmells.com/post/accept-interfaces-return-struct-in-go)》。这个方案也能解决配置的问题。你想修改库中的一些特性，你可以简单的修改struct中一些公开的字段。但是如果你的库只提供给用户一个interface，这就玩不转了。
+
+详情请参见Go《[http.Client](https://golang.org/pkg/net/http/#Client)》。
+
+### 使用配置结构体来避免修改你的APIs
+
+另一种配置方法是在你的工厂函数中接收一个配置结构体，而不是直接传配置参数。你可以很随意的添加新的参数而不用破坏现有的API。你只需要做一件事情，在Config结构体中添加一个新的字段，并且确保不会影响它原本的特性。
+
+```go
+func New(config Config) *LibraryStruct {
+    ...
+}
+```
+
+下面是一种添加结构体字段的正确的场景-如果一个用户初始化结构体的时候忘了添加字段名。这是一种我认为修改他们的代码能得到原谅的场景。为了维护兼容性，你应该在你的代码中用  `person{name: "Alice", age: 30}`代替`person{"Alice", 30}`。
+
+你能在[golang.org/x/crypto](https://godoc.org/golang.org/x/crypto/openpgp#Sign)包里看到对上面的补充。总之，对配置来说，我认为允许用户在返回的结构体里设置不同的参数是一个更好的方法，这种特殊的方法应该仅仅被用于复杂的方法中。
+
+### 总结
+
+根据经验来讲，在写一个库的时候，你应该总是允许用户指定他们自己的`http.Client`来执行`HTTP`调用。而且考虑到未来迭代修改带来的影响，你可以尝试用可扩展的方式编写代码。避免全局变量-库不能存储全局状态。如果你有任何疑问-参考标准库是怎么写的。
+
+我认为有一个很好的想法，在你的程序中用你的库来测试并问自己一些问题：
+
+- 如果你尝试多次引入库会发生什么？
+- 你的库有没有单元测试？
+- 在不破坏原有代码的前提下，有没有一种非侵入式的方式来扩展你的库？
+- 在不破坏原有代码的前提下，是否可以添加其他配置参数？
+
+​																															2018-12-29
+
+via: https://0x46.net/thoughts/2018/12/29/go-libraries/
+
+作者：[*Filip Borkiewicz*](https://0x46.net/)
+译者：[Alihanniba](https://github.com/alihanniba) / qizai
+校对：
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
