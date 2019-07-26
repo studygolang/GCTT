@@ -4,7 +4,7 @@
 
 ![images](https://cdn-images-1.medium.com/max/900/1*BmEMrWVjQVUs5bwWTn_AIg.png)
 
-*这篇文章是[“在你进入到Go语言的世界之前”](https://medium.com/@alonabadi)系列中的一部分。在这里，我们可以一起探索 Golang 的世界，让你了解用 Go 语言编程时应注意到的小技巧并领悟 Go 语言的特性，让你学习 Go 语言的过程不再困难。*
+*这篇文章是[“在你进入到Go语言的世界之前”](https://medium.com/gett-engineering/before-you-go-go-bf4f861cdec7)系列中的一部分。在这里，我们可以一起探索 Golang 的世界，让你了解用 Go 语言编程时应注意到的小技巧并领悟 Go 语言的特性，让你学习 Go 语言的过程不再困难。*
 
 我假设你已经有了一些 Go 语言的基础，不过当你遇到文章中你不熟悉的知识点的时候，可以随时停下来，查阅这些知识点之后，再回来继续读下去。
 
@@ -161,7 +161,7 @@ if err != nil {
 }
 ```
 
-经过封装的错误支持 `Cause() error` 方法，并且会返回它们的内部错误。通常，，它们可以与 `errors.Cause(err error) error` 函数一起使用，这将会检索这个错误中最底层的错误。
+经过封装的错误支持 `Cause() error` 方法，并且会返回它们的内部错误。通常，它们可以与 `errors.Cause(err error) error` 函数一起使用，这将会检索这个错误中最底层的错误。
 
 ## 处理错误（Working with Errors)
 
