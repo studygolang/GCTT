@@ -22,7 +22,7 @@
 
 *以上的描述跳过了由 gcc 编译的函数 `f` 再调用 Go 函数的可能性。如果发生这种情况，我们会在执行 `f` 的过程中沿着兔子洞走下去。*
 
-*-- cgocall.go 源码（https://golang.org/src/runtime/cgocall.go）*
+*-- cgocall.go 源码（https://golang.org/src/runtime/cgocall.go ）*
 
 注释甚至还深入的讲解了 go 如何实现 cgo 到 go 的调用。我强烈建议你研究一下这些代码和注释。透过现象看本质让我学到了很多。从这些注释我们可以看到，是否调用 C 代码会让 Go 程序的行为完全不同。
 
@@ -153,7 +153,7 @@ mprotect(0x7f198c000000, 135168, PROT_READ|PROT_WRITE
 
 让我们来做一些随手计算：
 
-strace 的输出中有 5 个 `clone` 系统调用。各自保留了 8 MB（栈）+ 128 MB，接着又取消保留 57.8 MB 和 8 MB，这样最终每个线程保留了约 70 MB。但实际上，有一个线程并没有 `munmap` 任何内存，还有一个没有 `munmap` 那 8 MB。所以，最终的算式应该像下面这样：
+strace 的输出中有 5 个 `clone` 系统调用。各自保留了 8 MB（栈）+ 128 MB，接着又取消保留 57.8 MB 和 8 MB，这样最终每个线程保留了约 70 MB。但实际上，有一个线程并没有取消映射任何内存，还有一个没有取消映射那 8 MB。所以，最终的算式应该像下面这样：
 ```
 4 * 70 + 8 + 1 * 128 = ~ 416 MB
 ```
@@ -184,6 +184,8 @@ clone( child_stack=0xc420042000, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHA
 [pid  3934] write(1, "Hello from stdio\n", 17Hello from stdio
 ) = 17
 ```
+[<sup>译注2</sup>](#note2)
+
 然而，在 cgo 版本里，我没有找到 `fputs()` 对应的类似系统调用。
 
 Go 原生程序让我喜爱的一点是，它的 strace 输出更小、更易于理解。这意味着发生了更少的事情。比如，go 原生程序的 strace 输出仅有 281 行，而 cgo 版的输出有 342 行。
@@ -194,7 +196,7 @@ Go 原生程序让我喜爱的一点是，它的 strace 输出更小、更易于
 - 如果使用的包里引用了 C 代码，Go 可能自动神奇的切换到 cgo。比如使用了 `net`、`net/http` 包。
 - Go 有两个 DNS 解析器的实现：`netgo` 版和 `netcgo` 版。
 - 通过设置环境变量 `export GODEBUG=netdns=1`，你可以了解你在使用哪个 DNS 客户端。
-- 你可以在运行时切换 DNS 解析器，只需将环境变量设置成 `export GODEBUG=netdns=go` 或 `export GODEBUG=netdns=cgo`。[<sup>译注2</sup>](#note2)
+- 你可以在运行时切换 DNS 解析器，只需将环境变量设置成 `export GODEBUG=netdns=go` 或 `export GODEBUG=netdns=cgo`。[<sup>译注3</sup>](#note3)
 - 你可以通过 go 构建标签在编译时指定使用的 DNS 解析实现：`go build -tags netcgo` 或 `go build -tags netgo`。
 - `/proc` 文件系统很有用，但是不要被线程误导！
 - `/prod/PID/status` 和 `/proc/PID/maps` 对于快速了解正在发生什么会很有用。
@@ -214,7 +216,8 @@ Go 原生程序让我喜爱的一点是，它的 strace 输出更小、更易于
 
 ## 译注
 1. <a name="note1"></a>此处原文中对 `CLONE_SIGHAND` 的说明实为 `CLONE_FILES` 的说明，应为拷贝粘贴错误。译文已纠正。
-2. <a name="note2"></a>此处原文中两处皆为：`export GODEBUG=netdns=cgo`，应为笔误。译文已纠正。
+2. <a name="note2"></a>行末的 `Hello from stdio` 和换行符应为程序运行时打印到标准输出所致。
+3. <a name="note3"></a>此处原文中两处皆为：`export GODEBUG=netdns=go`，应为笔误。译文已纠正。
 
 ---
 
