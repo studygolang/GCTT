@@ -610,7 +610,7 @@ func ConsulRegister(consulAddress string,
     advertiseAddress string,
     advertisePort string) (registar sd.Registrar) {
 
-    // 日志 
+    // 日志
     var logger log.Logger
     {
         logger = log.NewLogfmtLogger(os.Stderr)
@@ -643,7 +643,7 @@ func ConsulRegister(consulAddress string,
     port, _ := strconv.Atoi(advertisePort)
     num := rand.Intn(100) // 服务 ID 唯一
     asr := api.AgentServiceRegistration{
-        ID:      "go-kit-srv-greeter-" + strconv.Itoa(num), 
+        ID:      "go-kit-srv-greeter-" + strconv.Itoa(num),
         Name:    "go-kit-srv-greeter",
         Address: advertiseAddress,
         Port:    port,
