@@ -16,7 +16,7 @@ Sooo，我决定向社区回馈一些东西并编写一个教程，以便“边�
 
 您可以在我的博客上找到指向微服务的完整源代码的链接，[coding.napolux.com](https://coding.napolux.com/how-to-write-a-microservice-in-go-with-go-kit/)
 
-## 什么是 Go kit ？
+## 什么是 Go kit
 
 [Go kit](https://github.com/go-kit/kit) README.md：
 
@@ -28,7 +28,7 @@ Sooo，我决定向社区回馈一些东西并编写一个教程，以便“边�
 
 我不想讨论太多：Go 对我而言太新了。当然存在喜欢它和不喜欢它的[讨论](https://gist.github.com/posener/330c2b08aaefdea6f900ff0543773b2e)。您还可以在这里找到一篇关于 Go 微服务框架差异的好[文章](https://medium.com/seek-blog/microservices-in-go-2fc1570f6800)。
 
-## 我们会做什么？
+## 我们会做什么
 
 我们将创建一个非常基本的微服务，它将返回并验证日期 ... 目标是了解 Go 工具包的工作原理，仅此而已。你可以轻松地复制所有的逻辑而不用 Go 套件，但我在这里学习，所以 ...
 
