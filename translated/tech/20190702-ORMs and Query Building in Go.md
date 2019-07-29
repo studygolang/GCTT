@@ -1,7 +1,7 @@
 # 在 Go 中的 ORM 和查询构建
 2019.07.13 星期六 发表于 [Programming](https://andrewpillar.com/programming/)
 
-最近，我一直在研究 Go 中与数据库交互的各种解决方案。在 Go 中与数据库交互我使用的底层库是 sqlx。你只需要写出 SQL，并使用 db tag 标记结构，之后让 sqlx 处理其余工作。但是，我遇到的主要问题是符合语法习惯的查询构建。这让我调查了这个问题，并在本文中记下了一些想法。 
+最近，我一直在研究 Go 中与数据库交互的各种解决方案。在 Go 中与数据库交互我使用的底层库是 sqlx。你只需要写出 SQL，并使用 db tag 标记结构，之后让 sqlx 处理其余工作。但是，我遇到的主要问题是符合语法习惯的查询构建。这让我调查了这个问题，并在本文中记下了一些想法。
 
 在 Go 中， 第一类函数是进行 SQL 查询构建的惯用方法。 该仓库包含我编写的一些示例代码：https://github.com/andrewpillar/query。
 
@@ -286,7 +286,7 @@ opts := []Option{
 }
 
 if search != "" {
-    opts = append(opts, WhereLike("title", "%" + search + "%")) 
+    opts = append(opts, WhereLike("title", "%" + search + "%"))
 }
 
 if after != "" {
