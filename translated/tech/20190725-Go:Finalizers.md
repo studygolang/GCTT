@@ -214,3 +214,7 @@ func (p *Process) release() error {
 
 Go同样也在测试中使用finalizers确保在垃圾回收器中期望的动作被执行，举个例子，sync包使用了finalizers测试在垃圾回收循环中pool是否被清空。
 
+via: https://medium.com/@blanchon.vincent/go-finalizers-786df8e17687
+作者：Vincent Blanchon https://medium.com/@blanchon.vincent
+译者：Maple24
+校对：校对者ID
