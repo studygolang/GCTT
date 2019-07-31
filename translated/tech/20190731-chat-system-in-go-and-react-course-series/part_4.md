@@ -11,7 +11,7 @@
 
 在本课程的这一部分结束时，我们的应用程序看起来像这样：
 
-![](https://user-gold-cdn.xitu.io/2019/7/31/16c46913528f034e?w=1192&h=713&f=png&s=131274)
+![](https://github.com/studygolang/gctt-images/blob/master/chat-system-in-go-and-react-course-series/image_3.png)
 
 ## 拆分 Websocket 代码
 现在已经完成了必要的基本工作，我们可以继续改进代码库。可以将一些应用程序拆分为子包以便于开发。
@@ -383,7 +383,7 @@ Distributed Chat App v0.01
 
 如果你在几个浏览器中打开 [http://localhost:3000](http://localhost:3000)，可以看到到它们会自动连接到后端 WebSocket 服务，现在我们可以发送和接收来自同一池内的其他客户端的消息！
 
-![](https://user-gold-cdn.xitu.io/2019/7/31/16c46c02ef95c59e?w=1192&h=713&f=png&s=131274)
+![](https://github.com/studygolang/gctt-images/blob/master/chat-system-in-go-and-react-course-series/image_4.png)
 
 ## 总结
 在本节中，我们设法实现了一种处理多个客户端的方法，并向连接池中连接的每个人广播消息。

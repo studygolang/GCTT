@@ -26,7 +26,7 @@
 ## 聊天应用
 在本课程结束时，你应该有一个看起来像这样的应用：
 
-![](https://user-gold-cdn.xitu.io/2019/7/30/16c42816ea309443?w=1192&h=871&f=png&s=132349)
+![](https://github.com/studygolang/gctt-images/blob/master/chat-system-in-go-and-react-course-series/image_1.png)
 
 > 下一节：Part 1 - [初始化项目](https://github.com/studygolang/GCTT/tree/master/translated/tech/20190731-chat-system-in-go-and-react-course-series/part_1.md)
 

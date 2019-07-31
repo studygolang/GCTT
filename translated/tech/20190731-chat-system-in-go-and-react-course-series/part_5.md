@@ -168,7 +168,7 @@ render() {
 
 现在我们可以看到，每当我们从 WebSocket 端点收到新消息时，它就会在 `ChatHistory` 组件中很好地展示出来！
 
-![](https://user-gold-cdn.xitu.io/2019/7/31/16c471408d0e1403?w=1192&h=871&f=png&s=132349)
+![](https://github.com/studygolang/gctt-images/blob/master/chat-system-in-go-and-react-course-series/image_5.png)
 
 > 下一节：Part 6 - [Docker 部署](https://github.com/studygolang/GCTT/tree/master/translated/tech/20190731-chat-system-in-go-and-react-course-series/part_6.md)
 

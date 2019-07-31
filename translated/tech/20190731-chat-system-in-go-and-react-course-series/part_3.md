@@ -216,8 +216,7 @@ render() {
 
 当我们编译并运行前端和后端项目时，可以看到每当点击前端的发送消息按钮时，它会继续通过 `WebSocket` 连接向后端发送消息，然后后端将其回传给前端，最终在 `ChatHistory` 组件中成功展示！
 
-
-![](https://user-gold-cdn.xitu.io/2019/7/31/16c46905b3c6cf38?w=2542&h=706&f=png&s=76691)
+![](https://github.com/studygolang/gctt-images/blob/master/chat-system-in-go-and-react-course-series/image_3.png)
 
 ## 总结
 我们成功地改进了前端应用程序，并将其视为聊天应用程序。在本系列的下一部分中，将重点关注以下内容：
