@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/22421
+
 # Go 切片是胖指针
 
 *本文的内容曾在 [Hacker News](https://news.ycombinator.com/item?id=20321116) 上进行讨论。*
@@ -11,8 +13,8 @@ void foo(int *);
 
 void bar(void)
 {
-    int array[4];
-    foo(array + 4);  // 指针指向数组末尾后一个位置
+	int array[4];
+	foo(array + 4);  // 指针指向数组末尾后一个位置
 }
 ```
 
@@ -23,7 +25,7 @@ void bar(void)
 void foo(int *);
 ```
 
-或者通过函数原型来传达这样的信息。尽管下面的函数表面上接受一个数组，实际上却是一个指针，“4”和函数原型并没有关系。
+或者通过函数原型来传达这样的信息。尽管下面的函数表面上接受一个数组，实际上却是一个指针，“ 4 ”和函数原型并没有关系。
 
 ```c
 void foo(int[4]);
@@ -41,7 +43,7 @@ void foo(int[static 4]);  // >= 4 个元素， 不能为空
 ssize_t write(int fd, const void *buf, size_t count);
 ```
 
-描述缓冲区大小的必要信息被两个参数隔开了。这看起来冗长，而且如果这两个参数不一致的话还会导致严重的 bug （缓冲区溢出、[信息泄露](https://nullprogram.com/blog/2017/07/19/)等）。如果这些信息能整合到指针当中，岂不会好一些？这就是*胖指针*的定义。
+描述缓冲区大小的必要信息被两个参数隔开了。这看起来冗长，而且如果这两个参数不一致的话还会导致严重的 bug （缓冲区溢出、[信息泄露](https://nullprogram.com/blog/2017/07/19/) 等）。如果这些信息能整合到指针当中，岂不会好一些？这就是*胖指针*的定义。
 
 ## 通过位运算实现胖指针
 
@@ -65,8 +67,8 @@ void *fatptr = (void *)pack;
 
 ```c
 struct fatptr {
-    void *ptr;
-    size_t len;
+	void *ptr;
+	size_t len;
 };
 ```
 
@@ -82,13 +84,13 @@ fatptr_write(int fd, struct fatptr);
 
 ```c
 #define COUNTOF(array) \
-    (sizeof(array) / sizeof(array[0]))
+	(sizeof(array) / sizeof(array[0]))
 
 #define FATPTR(ptr, count) \
-    (struct fatptr){ptr, count}
+	(struct fatptr){ptr, count}
 
 #define ARRAYPTR(array) \
-    FATPTR(array, COUNTOF(array))
+	FATPTR(array, COUNTOF(array))
 
 /* ... */
 
@@ -96,15 +98,15 @@ unsigned char buf[40];
 fatptr_write(fd, ARRAYPTR(buf));
 ```
 
-这种方法存在明显的缺陷，比如 void 指针带来的类型混淆、不能使用`const`，而且这种写法对 C 而言很怪。在一个真实的程序中我不会这么写，但现在请暂时忍耐。
+这种方法存在明显的缺陷，比如 void 指针带来的类型混淆、不能使用 `const`，而且这种写法对 C 而言很怪。在一个真实的程序中我不会这么写，但现在请暂时忍耐。
 
 在我往下说之前，我想往胖指针结构体中添加一个字段：容量。
 
 ```c
 struct fatptr {
-    void *ptr;
-    size_t len;
-    size_t cap;
+	void *ptr;
+	size_t len;
+	size_t cap;
 };
 ```
 
@@ -115,10 +117,10 @@ struct fatptr {
 void
 fill(struct fatptr ptr, int value)
 {
-    int *buf = ptr.ptr;
-    for (size_t i = ptr.len; i < ptr.cap; i++) {
-        buf[i] = value;
-    }
+	int *buf = ptr.ptr;
+	for (size_t i = ptr.len; i < ptr.cap; i++) {
+		buf[i] = value;
+	}
 }
 ```
 
@@ -128,20 +130,20 @@ fill(struct fatptr ptr, int value)
 struct fatptr
 fill(struct fatptr ptr, int value)
 {
-    int *buf = ptr.ptr;
-    for (size_t i = ptr.len; i < ptr.cap; i++) {
-        buf[i] = value;
-    }
-    ptr.len = ptr.cap;
-    return ptr;
+	int *buf = ptr.ptr;
+	for (size_t i = ptr.len; i < ptr.cap; i++) {
+		buf[i] = value;
+	}
+	ptr.len = ptr.cap;
+	return ptr;
 }
 ```
 
-恭喜，现在你有了切片！Go 语言与其的差别在于，切片是 Go 语言本身的一部分，所以无需依赖于危险的技巧或者冗长的额外信息。上面的 `fatptr_write()` 函数几乎和 Go 中接受一个切片的 `Writer.Write()` 函数有相同的功能：
+恭喜，现在你有了切片！ Go 语言与其的差别在于，切片是 Go 语言本身的一部分，所以无需依赖于危险的技巧或者冗长的额外信息。上面的 `fatptr_write()` 函数几乎和 Go 中接受一个切片的 `Writer.Write()` 函数有相同的功能：
 
 ```go
 type Writer interface {
-    Write(p []byte) (n int, err error)
+	Write(p []byte) (n int, err error)
 }
 ```
 
@@ -188,10 +190,11 @@ fooslice = (*[1]int)(unsafe.Pointer(&foo))[:]
 当然，切片十分灵活，在许多使用场景中看起来不那么像胖指针，但当我写 Go 时我仍然会用这种方式来看待切片。
 
 ---
+
 via: https://nullprogram.com/blog/2019/06/30/
 
 作者：[Chris Wellons](https://github.com/skeeto)
 译者：[maxwellhertz](https://github.com/maxwellhertz)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
