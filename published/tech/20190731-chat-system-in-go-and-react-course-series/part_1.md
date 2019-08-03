@@ -1,17 +1,22 @@
-# 使用 Go 和 ReactJS 构建聊天系统（一）
+首发于：https://studygolang.com/articles/22423
+
+# 使用 Go 和 ReactJS 构建聊天系统（一）：初始化项目
 
 本节完整代码：[GitHub](https://github.com/watermelo/realtime-chat-go-react/tree/part-1-and-2)
 
 我们将通过设置两个项目来开始这个课程。一旦我们完成了枯燥的设置，就可以开始添加新功能并构建我们的应用程序，将看到一些积极的结果！
 
 ## 目标
+
 在这部分课程结束后，你将掌握：
+
 - 在 `backend/` 目录创建基本的 Go 应用
 - 在 `frontend/` 目录创建基本的 ReactJS 应用
 
 通过实现这两个部分，你将能够在接下来的几节课程中为聊天系统添加一些功能。
 
 ## 准备工作
+
 为了完成本系列教程，我们先要做以下的准备工作。
 
 - 需要安装 `npm`
@@ -20,6 +25,7 @@
 - 需要一个代码编辑器来开发这个项目，例如 VS
 
 ## 设置 Go 后端项目
+
 如果你熟悉 Go 的话，这一步非常简单，我们首先要在项目目录中创建一个名为 `backend` 的新目录。
 
 这个 `backend` 目录将包含该项目的所有 Go 代码。然后，我们将通过以下命令来初始化我们的项目：
@@ -38,6 +44,7 @@ $ go mod init github.com/TutorialEdge/realtime-chat-go-react
 > 注意 - 有关 Go modules 新特性的更多信息，请查看官方 Wiki 文档: [Go Modules](https://github.com/golang/go/wiki/Modules)
 
 ## 检查 Go 项目
+
 一旦我们在 `backend/` 目录中调用了 `go mod init`，我们将检查一下一切是否按预期工作。
 
 在 `backend/` 目录中添加一个名为 `main.go` 的新文件，并在其中添加以下 Go 代码：
@@ -48,7 +55,7 @@ package main
 import "fmt"
 
 func main() {
-  fmt.Println("Chat App v0.01")
+	fmt.Println("Chat App v0.01")
 }
 ```
 
@@ -62,6 +69,7 @@ Chat App v0.01
 如果成功执行，我们可以继续设置我们的前端应用程序。
 
 ## 设置 React 前端项目
+
 设置前端会稍微复杂一点，首先我们要在项目的根目录中创建一个 `frontend` 目录，它将容纳我们所有的 ReactJS 代码。
 
 > 注意 - 我们将使用 [facebook/create-react-app](https://github.com/facebook/create-react-app) 来生成我们的 React 前端。
@@ -97,6 +105,7 @@ yarn.lock
 ```
 
 ## 本地运行 ReactJS 程序
+
 现在已经成功创建了基本的 ReactJS 应用程序，我们可以测试一下是否正常。输入以下命令来运行应用程序：
 
 ```shell
@@ -110,8 +119,8 @@ Compiled successfully!
 
 You can now view frontend in the browser.
 
-  Local:            http://localhost:3000/
-  On Your Network:  http://192.168.1.234:3000/
+	Local:            http://localhost:3000/
+	On Your Network:  http://192.168.1.234:3000/
 
 Note that the development build is not optimized.
 To create a production build, use yarn build.
@@ -120,16 +129,17 @@ To create a production build, use yarn build.
 现在已经拥有有一个基本的 ReactJS 应用程序了，我们可以在接下来的教程中进行扩展。
 
 ## 总结
+
 太棒了，现在已经成功设置了我们项目的前端和后端部分，接下来我们可以添加一些酷炫的新功能。
 
-> 下一节：Part 2 - [后端实现](https://github.com/studygolang/GCTT/tree/master/translated/tech/20190731-chat-system-in-go-and-react-course-series/part_2.md)
+> 下一节：Part 2 - [后端实现](https://studygolang.com/articles/22426)
 
 ---
 
-https://tutorialedge.net/projects/chat-system-in-go-and-react/part-1-initial-setup/
+via: https://tutorialedge.net/projects/chat-system-in-go-and-react/part-1-initial-setup/
 
 作者：[Elliot Forbes](https://twitter.com/elliot_f)
 译者：[咔叽咔叽](https://github.com/watermelo)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
