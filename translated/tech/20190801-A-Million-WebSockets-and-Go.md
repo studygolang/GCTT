@@ -1,6 +1,6 @@
 # Go 实现百万 WebSocket 连接
 
-![](https://user-gold-cdn.xitu.io/2019/8/4/16c5cac3b6b9939c?w=800&h=476&f=png&s=109349)
+![](https://github.com/studygolang/gctt-images/a-million-websocket-and-go/image_1.jpeg)
 
 大家好！我是 Sergey Kamardin，是 Mail.Ru 的一名工程师。
 
@@ -21,12 +21,11 @@ Mail.Ru 有很多有状态系统。用户的电子邮件存储就是其中之一
 
 之前的架构：
 
-![](https://user-gold-cdn.xitu.io/2019/8/2/16c52992aad49434?w=800&h=171&f=png&s=21967)
+![](https://github.com/studygolang/gctt-images/a-million-websocket-and-go/image_2.png)
 
 现在的架构：
 
-![](https://user-gold-cdn.xitu.io/2019/8/2/16c52995fb1e3ede?w=800&h=268&f=png&s=27560)
-
+![](https://github.com/studygolang/gctt-images/a-million-websocket-and-go/image_3.png)
 
 第一个方案是之前的架构。浏览器定期轮询 API 并查询存储（邮箱服务）是否有更改。
 
@@ -413,14 +412,14 @@ for {
             })
         })
     })
-    if err != nil {   
+    if err != nil {
         time.Sleep(time.Millisecond)
     }
 }
 ```
 
 ## 总结
-> 过早优化是编程中所有邪恶（或至少大部分）的根源。  
+> 过早优化是编程中所有邪恶（或至少大部分）的根源。
 -- Donald Knuth
 
 当然，上述优化是和需求相关的，但并非所有情况下都是如此。例如，如果空闲资源（内存，CPU）和线上连接数之间的比率比较高，则优化可能没有意义。但是，通过了解优化的位置和内容，我们会受益匪浅。
