@@ -161,7 +161,6 @@ func allPostsInTag(db *gorm.DB, t *Tag) ([]Post, error) {
 
 如果您的工作是编写大量简单的类似 CRUD 的应用程序，那么我可以看到 ORM 在 Go 中仍然有用，其节省的代码量克服了这些缺点。最后，所有这些都归结为这一中心论点,即 [Benefits of dependencies in software projects as a function of effort](https://eli.thegreenplace.net/2017/benefits-of-dependencies-in-software-projects-as-a-function-of-effort/)：在我看来，在一个并不属于简单的 CRUD 应用程序上，于 DB 接口相关代码之外花费大量精力，ORM 依赖是不值得的。
 
-
 ---
 
 via: https://eli.thegreenplace.net/2019/to-orm-or-not-to-orm/
