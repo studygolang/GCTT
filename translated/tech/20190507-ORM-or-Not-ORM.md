@@ -12,7 +12,7 @@
 
 数据库表如下：
 
-@TODO
+![image](https://raw.githubusercontent.com/studygolang/gctt-images2/master/orm-or-not-orm/ormdbschema.png)
 
 尽管很简单，这些表展示了一个惯用的、规范的数据库，基本包含构建简单 wiki 或博客应用程序所需的所有元素：它同时具有一对多的关系（帖子与评论）和多对多关系（帖子与标签）。如果您更喜欢数据库 SQL 语句，这是[代码示例](https://github.com/eliben/code-for-blog/tree/master/2019/orm-vs-no-orm/sql)中的定义：
 
