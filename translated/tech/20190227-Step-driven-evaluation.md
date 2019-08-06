@@ -128,7 +128,7 @@ func main() {
 via: https://quasilyte.dev/blog/post/step-pattern/
 
 作者：[Iskander Sharipov](https://github.com/quasilyte)
-译者：[译者ID](https://github.com/yangzhenxiong)
+译者：[yangzhenxiong](https://github.com/yangzhenxiong)
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
