@@ -264,7 +264,7 @@ ok     1.890s
 via: https://medium.com/@blanchon.vincent/go-unknown-parts-of-the-test-package-df8988b2ef7f
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
-译者：[译者ID](https://github.com/sammyne)
+译者：[sammyne](https://github.com/sammyne)
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
