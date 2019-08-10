@@ -133,14 +133,14 @@ func allPostsInTag(db *gorm.DB, t *Tag) ([]Post, error) {
 
 除了为我们生成 SQL 之外，Gorm 还提供了一种更简单的方法来填充结果。在使用 database/sql 的代码中，我们显式地迭代结果，将每一行分别扫描到单独的结构体字段中。Gorm 的相关方法（以及其他类似的查询方法）将自动填充结构体，并且还将一次扫描整个结果集。
 
-随意玩代码！令我惊喜的是 Gorm 在此节约代码的数量（对于 DB 部分的代码，节省约 50％），并且对于这些简单的查询，使用 Gorm 并不难：直接从 API 文档中获取调用方式。我对具体示例的唯一抱怨是，在Post和Tag之间设置多对多关系有点困难，Gorm 字段的 tag 看起来也很丑陋和魔幻。
+随意玩代码！令我惊喜的是 Gorm 在此节约代码量（对于 DB 部分的代码，节省约 50％），并且对于这些简单的查询，使用 Gorm 并不难：直接从 API 文档中获取调用方式。我对具体示例的唯一抱怨是，在 Post 和 Tag 之间设置多对多关系有点困难，Gorm 字段的 tag 看起来也很丑陋和魔幻。
 
 ## 分层的复杂性让人头疼
 像上面那样的简单实验的问题在于，通常很难勾勒出系统的边界。它显然适用于简单的情况，但我有兴趣了解当它被推到极限时会发生什么：它如何处理复杂的查询和数据库模式(schema)？因此我开始浏览 Stack Overflow，那儿有许多与 Gorm 相关的问题，当然足以确信，通常的分层复杂性问题是显而易见的（例1， 例2）。让我解释一下我的意思。
 
 当包装层本身很复杂时，任何将复杂功能包含在其中的情况，都有增加整体复杂性的风险。这通常伴随着 `leaky abstractions`: 包裹层无法完成包装底层功能的完美工作，将迫使程序员同时与两个层进行斗争。
 
-不幸的是，Gorm 非常容易受到这个问题的影响。Stack Overflow 提供了无穷无尽的问题，用户最终需应对由 Gorm 本身强加的复杂性，解决其局限性等问题。很少有事情如此让人恼火： 确切地知道您想要什么（例如，您想要发出哪个 SQL 查询），但是却无法编写出 Gorm 查询时最终调用的正确代码。
+不幸的是，Gorm 非常容易受到这个问题的影响。Stack Overflow 提供了无穷无尽的问题，用户最终需应对由 Gorm 本身强加的复杂性，解决其局限性等问题。很少有事情如此让人恼火：确切地知道您想要什么（例如，您想要发出哪个 SQL 查询），但是却无法编写出 Gorm 查询时最终调用的正确代码。
 
 ## 使用 ORM 的利弊
 从我的实验中可以明显看出使用 ORM 的一个关键优势：它可以节省相当多的繁琐编码。以 DB 为中心的代码节省约 50％ 是非常重要的，这可以为某些应用程序带来真正的改变。
@@ -159,7 +159,7 @@ func allPostsInTag(db *gorm.DB, t *Tag) ([]Post, error) {
 
 随着我经验越来越丰富，我也看到使用 ORM 的许多缺点。尤其，我不认为在 Go 这种语言中 ORM 对我有用，因为 Go 已经拥有一个很好的 SQL 接口，几乎可以跨数据库后端移植。我宁愿花多一点时间敲代码，但这样可以节省我阅读 ORM 文档、优化查询、尤其是调试的时间。
 
-如果您的工作是编写大量简单的类似 CRUD 的应用程序，那么我可以看到 ORM 在 Go 中仍然有用，其节省的代码量克服了这些缺点。最后，所有这些都归结为这一中心论点,即 [Benefits of dependencies in software projects as a function of effort](https://eli.thegreenplace.net/2017/benefits-of-dependencies-in-software-projects-as-a-function-of-effort/)：在我看来，在一个并不属于简单的 CRUD 应用程序上，于 DB 接口相关代码之外花费大量精力，ORM 依赖是不值得的。
+如果您的工作是编写大量简单的类似 CRUD 的应用程序，那么我可以看到 ORM 在 Go 中仍然有用，其节省的代码量克服了这些缺点。最后，所有这些都归结为这一中心论点,即 [Benefits of dependencies in software projects as a function of effort](https://eli.thegreenplace.net/2017/benefits-of-dependencies-in-software-projects-as-a-function-of-effort/)：在我看来，在一个并不属于简单的 CRUD 应用程序上，于 DB 接口相关代码之外花费大量精力，ORM 依赖并不值得。
 
 ---
 
