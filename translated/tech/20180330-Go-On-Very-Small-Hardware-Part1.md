@@ -1,23 +1,23 @@
 # Go 最小硬件编程（第一部分）
 
-Go 在最低配置下运行，同时能够做什么实际的应用呢？
+我们能够让 Go 在多低的配置下运行并做一些实用的事情呢？
 
 最近我购买了这个特别便宜的开发板：
 
 [![STM32F030F4P6](https://ziutek.github.io/images/mcu/f030-demo-board/board.jpg)](https://ziutek.github.io/2018/03/30/go_on_very_small_hardware.html)
 
-购买它，我基于以下三个理由。第一，我（最为一个程序员）从未搞过 STM32F0 系列的东西。第二，STM32F10x 系列的板子已经很陈旧了。STM32F0 系列的 MCU 就是很便宜，如果不便宜，那一定是有新的外设，同时进行过升级和 bug 修复。第三，我选择这个系列中最低配的主要是为了本文，这会让整个事情变得妙趣横生。
+购买它，我基于以下三个理由：第一，我（最为一个程序员）从未搞过 STM32F0 系列的开发板；第二，STM32F10x 系列的板子已经很陈旧了，STM32F0 系列的 MCU 十分便宜，有更新的外设，并有很多改进和 bug 修复；第三，我选择这个系列中最低配的是为了本文，这会让整个事情变得妙趣横生。
 
 ## 硬件
 
-请记住 [STM32F030F4P6](http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32-mainstream-mcus/stm32f0-series/stm32f0x0-value-line/stm32f030f4.html) 的硬件配置如下：
+[STM32F030F4P6](http://www.st.com/content/st_com/en/products/microcontrollers/stm32-32-bit-arm-cortex-mcus/stm32-mainstream-mcus/stm32f0-series/stm32f0x0-value-line/stm32f030f4.html) 是令人印象深刻的硬件：
 
 - CPU: [Cortex M0](https://en.wikipedia.org/wiki/ARM_Cortex-M#Cortex-M0) 48 MHz (最低配置中，只有 12000 个逻辑门电路),
 - RAM: 4 KB,
 - Flash: 16 KB,
 - ADC、SPI、I2C、USART 和几个定时器,
 
-全部采用 TSSOP20 封装。正如你所看到的，它就是非常小的 32 位系统。
+全部采用 TSSOP20 封装。如你所见，它是非常小的 32 位系统。
 
 ## 软件
 
@@ -108,7 +108,7 @@ exit status 1
 
 *Hello, World!* 需要 STM32F030x6 至少 32KB 的 Flash 空间。
 
-*fmt* 包强制包含整个 *strconv* 和 *reflect* 包。甚至在精简版本的 Emgo 中，这三个在一起都非常大。我们不能实现这个例子了。其实许多的应用程序不需要花哨的格式化文本输出。通常情况下对于一个或多个的 LED 或是 7 段数码管而言已经足够了。但是，在第二部分中，我将会尝试使用 *strconv* 包通过 UART 去格式化或是打印一些数字或文本。
+*fmt* 包强制包含整个 *strconv* 和 *reflect* 包。甚至在精简版本的 Emgo 中，这三个在一起都非常大。我们不能实现这个例子了。其实许多的应用程序不需要花哨的格式化文本输出。通常情况下，一个或多个 LED 或是 7 段数码管显示就足够了。但是，在第二部分中，我将会尝试使用 *strconv* 包去格式化并在 UART 上打印一些数字或文本。
 
 ## 闪烁
 
