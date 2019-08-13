@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/22742
+
 # Go 最小硬件编程（第一部分）
 
 我们能够让 Go 在多低的配置下运行并做一些实用的事情呢？
