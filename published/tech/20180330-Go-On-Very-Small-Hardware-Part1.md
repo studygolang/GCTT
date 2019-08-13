@@ -1,3 +1,5 @@
+已发布：https://studygolang.com/articles/22742
+
 # Go 最小硬件编程（第一部分）
 
 我们能够让 Go 在多低的配置下运行并做一些实用的事情呢？
@@ -457,6 +459,6 @@ via: https://ziutek.github.io/2018/03/30/go_on_very_small_hardware.html
 
 作者：[Michał Derkacz ](https://ziutek.github.io)
 译者：[PotoYang](https://github.com/PotoYang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[DingdingZhou](https://blog.zhoudingding.com)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
