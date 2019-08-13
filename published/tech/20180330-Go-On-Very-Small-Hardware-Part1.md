@@ -459,6 +459,6 @@ via: https://ziutek.github.io/2018/03/30/go_on_very_small_hardware.html
 
 作者：[Michał Derkacz ](https://ziutek.github.io)
 译者：[PotoYang](https://github.com/PotoYang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[DingdingZhou](https://blog.zhoudingding.com)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
