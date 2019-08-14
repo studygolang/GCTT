@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/22773
+
 # Go: Concurrency Access with Maps — Part III
 
 ![img](https://github.com/studygolang/gctt-images/blob/master/go-concurrency-access-with-maps-Part-III/1_uZMa7x3KBqJKJ6rWtnZFwA.png?raw=true)
@@ -151,6 +153,6 @@ via: https://medium.com/@blanchon.vincent/go-concurrency-access-with-maps-part-i
 
 作者：[blanchon.vincent](https://medium.com/@blanchon.vincent)
 译者：[DoubleLuck](https://github.com/DoubleLuck)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者ID](https://github.com/dingdingzhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
