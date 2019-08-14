@@ -153,6 +153,6 @@ via: https://medium.com/@blanchon.vincent/go-concurrency-access-with-maps-part-i
 
 作者：[blanchon.vincent](https://medium.com/@blanchon.vincent)
 译者：[DoubleLuck](https://github.com/DoubleLuck)
-校对：[校对者ID](https://github.com/dingdingzhou)
+校对：[dingdingzhou](https://github.com/dingdingzhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
