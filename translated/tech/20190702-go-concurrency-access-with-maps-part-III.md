@@ -2,7 +2,7 @@
 
 ![img](https://github.com/studygolang/gctt-images/blob/master/go-concurrency-access-with-maps-Part-III/1_uZMa7x3KBqJKJ6rWtnZFwA.png?raw=true)
 
-这篇文章是 “[Go: Map Design by Code](https://medium.com/@blanchon.vincent/go-map-design-by-code-part-ii-50d111557c08)” 的下一篇，它讲述了 map 的内部实现。
+在上一篇文章 “[Go: Map Design by Code](https://medium.com/@blanchon.vincent/go-map-design-by-code-part-ii-50d111557c08)” 中，我们讲述了 map 的内部实现。
 
 [Go blog](https://blog.golang.org/go-maps-in-action) 中专门讲解 map 的文章明确地表明：
 
@@ -89,7 +89,7 @@ func mapdelete(t *maptype, h *hmap, key unsafe.Pointer) {
 }
 ```
 
-现在，每个修改 map 的操作都设置了一个控制标志，通过检查这个标志的状态，可以防止并发写入。这里是该标志的生命周期的例子：
+既然每个修改 map 的操作都设置了一个控制标志，那么通过检查这个标志的状态，就可以防止并发写入。这里是该标志的生命周期的例子：
 
 ```go
 func mapdelete(t *maptype, h *hmap, key unsafe.Pointer) {
@@ -111,7 +111,7 @@ func mapdelete(t *maptype, h *hmap, key unsafe.Pointer) {
 
 `sync` 包也提供了并发安全的 map。不过，正如[文档](https://golang.org/pkg/sync/)中解释的，你应该谨慎的选择你使用的 map：
 
-> map 这种类型是专业的。大多数代码应该使用简单的 Go map，附加上锁或者其他协调方式，这样类型安全更有保障，而且更容易维护其他的不变量和 map 的内容。
+> `sync` 包中的 map 类型是专业的。大多数代码应该使用原生的 Go map，附加上锁或者其他协调方式，这样类型安全更有保障，而且更容易维护其他的不变量和 map 的内容。
 
 实际上，正如我的文章 “[Map Design by Code](https://medium.com/@blanchon.vincent/go-map-design-by-code-part-ii-july-50d111557c08)” 中所解释的，map 根据我们处理的具体类型提供了不同的方法。
 
@@ -126,7 +126,7 @@ SyncMapWithReadOnlyInConcurrentEnc-8       55.7µs ± 4%
 
 我们可以看到，两种 map 各有千秋。我们可以根据具体的情况选择其中之一。[文档](https://golang.org/pkg/sync/#Map)中很好地解释了这些情况：
 
-> map 类型针对两种常见使用场景做了优化：(1) 指定 key 的 entry 仅写入一次，但多次读取，比如只增长的缓存 (2) 多个 goroutine 读取，写入，覆盖不相交的 key 的集合指向的 entry。
+> map 类型针对两种常见使用场景做了优化：(1) 指定 key 的 entry 仅写入一次，但多次读取，比如只增长的缓存； (2) 多个 goroutine 读取、写入、覆盖不相交的 key 的集合指向的 entry。
 
 ## Map vs sync.Map
 
