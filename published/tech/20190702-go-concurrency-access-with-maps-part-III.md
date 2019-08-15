@@ -1,10 +1,10 @@
 首发于：https://studygolang.com/articles/22773
 
-# Go: Concurrency Access with Maps — Part III
+# Go: 并发访问 Map — Part III
 
-![img](https://github.com/studygolang/gctt-images/blob/master/go-concurrency-access-with-maps-Part-III/1_uZMa7x3KBqJKJ6rWtnZFwA.png?raw=true)
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-concurrency-access-with-maps-Part-III/1_uZMa7x3KBqJKJ6rWtnZFwA.png)
 
-在上一篇文章 “[Go: Map Design by Code](https://medium.com/@blanchon.vincent/go-map-design-by-code-part-ii-50d111557c08)” 中，我们讲述了 map 的内部实现。
+在上一篇文章 “[Go: 通过源码研究 Map 的设计](https://studygolang.com/articles/22777)” 中，我们讲述了 map 的内部实现。
 
 [Go blog](https://blog.golang.org/go-maps-in-action) 中专门讲解 map 的文章明确地表明：
 
@@ -42,7 +42,7 @@ func main() {
 
 在这个例子中，我们清晰地看到，在某一时刻，两个 goroutine 尝试同时写入一个新值。下面是争用检测器的输出：
 
-```go
+```
 ==================
 WARNING: DATA RACE
 Read at 0x00c00008e000 by goroutine 6:
@@ -80,7 +80,7 @@ func mapdelete(t *maptype, h *hmap, key unsafe.Pointer) {
 
 ^ 是一个异或操作，如果两个操作数的某一位的值不同，^ 将该位置为 1：
 
-![img](https://github.com/studygolang/gctt-images/blob/master/go-concurrency-access-with-maps-Part-III/1_4OrKbRPWgBTNf-zvSYr_hA.png?raw=true)
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-concurrency-access-with-maps-Part-III/1_4OrKbRPWgBTNf-zvSYr_hA.png)
 
 当操作结束时，该标志会被重置：
 
@@ -115,7 +115,7 @@ func mapdelete(t *maptype, h *hmap, key unsafe.Pointer) {
 
 > `sync` 包中的 map 类型是专业的。大多数代码应该使用原生的 Go map，附加上锁或者其他协调方式，这样类型安全更有保障，而且更容易维护其他的不变量和 map 的内容。
 
-实际上，正如我的文章 “[Map Design by Code](https://medium.com/@blanchon.vincent/go-map-design-by-code-part-ii-july-50d111557c08)” 中所解释的，map 根据我们处理的具体类型提供了不同的方法。
+实际上，正如我的文章 “[Go: 通过源码研究 Map 的设计](https://studygolang.com/articles/22777)” 中所解释的，map 根据我们处理的具体类型提供了不同的方法。
 
 让我们运行一个简单的基准测试，比较带有锁的常规 map 和 `sync` 包的 map。一个基准测试并发写入 map，另一个仅仅读取 map 中的值：
 
@@ -138,7 +138,7 @@ SyncMapWithReadOnlyInConcurrentEnc-8       55.7µs ± 4%
 
 让我们运行一个不使用并发 goroutine 的基准测试，来理解当你不需要并发但标准库默认提供并发安全的 map 时，可能带来的影响：
 
-```go
+```
 MapWithWriteOnly-8          11.1ns ± 3%
 SyncMapWithWriteOnly-8       121ns ± 6%
 
@@ -149,6 +149,7 @@ SyncMapWithReadOnly-8       29.2ns ± 4%
 简单的 map 快 7 到 10 倍。显然，在非并发模式下，这听起来更合理，巨大的差异也清楚的解释了为什么默认非并发安全的 map 是更好的选择。如果你不需要处理并发状况，为什么要让程序运行的更慢呢？
 
 ---
+
 via: https://medium.com/@blanchon.vincent/go-concurrency-access-with-maps-part-iii-8c0a0e4eb27e
 
 作者：[blanchon.vincent](https://medium.com/@blanchon.vincent)
