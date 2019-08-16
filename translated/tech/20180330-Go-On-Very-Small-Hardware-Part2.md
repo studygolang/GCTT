@@ -2,7 +2,7 @@
 
 [![STM32F030F4P6](https://ziutek.github.io/images/mcu/f030-demo-board/board.jpg)](https://ziutek.github.io/2018/04/14/go_on_very_small_hardware2.html)
 
-在本文 [第一部分](https://studygolang.com/articles/22742) 的结尾，我说过要写一下关于 *接口* 的东西。我不想在这里写一篇完整或是简短的关于接口的讲稿。相反，我将会举一个简单的例子，用以说明如何定义和使用接口，同时知道如何利用通用的 *io.Writer* 接口。这里也会出现一些关于 *reflection* 和 *semihosting* 的一些名词。
+在本文 [第一部分](https://studygolang.com/articles/22742) 的结尾，我说过要写一下关于 *接口* 的东西。我不想在这里写一篇完整或是简短的关于接口的讲稿。相反，我将会举一个简单的例子，用以说明如何定义和使用接口，同时知道如何利用通用的 *io.Writer* 接口。同时有少量关于 *reflection* 和 *semihosting* 的叙述。
 
 接口是 Go 语言的关键部分。如果你想要更多的学习它们，我建议去阅读 [Effective Go](https://golang.org/doc/effective_go.html#interfaces) 和 [Russ Cox article](https://research.swtch.com/interfaces)。
 
@@ -26,7 +26,7 @@ func (led LED) Off() {
 
 现在我们可以简单地调用 `led.On()` 和 `led.Off()` 方法了，这样就不会再引起任何疑惑。
 
-在前面所有的的例子中，我努力去使用相同的开漏配置，以让代码不会变得复杂。但是在上一个例子中，在 GND 和 PA3 引脚间连接第三个 LED，同时配置 PA3 为推拉模式，似乎更简单。接下来的例子就将会使用这种方式连接一个 LED。
+在前面所有的的例子中，我努力去使用相同的开漏配置，以让代码不会变得复杂。但是在上一个例子中，在 GND 和 PA3 引脚间连接第三个 LED，同时配置 PA3 为推拉模式，似乎更简单。下一个示例将使用这种方式连接的 LED。
 
 但是我们的新 *LED* 类型不支持推拉模式配置。实际上，我们应该叫它 *OpenDrainLED* 同时定义另外一个 *PushPullLED* 类型。
 
@@ -44,7 +44,7 @@ func (led PushPullLED) Off() {
 }
 ```
 
-注意，这两种类型都有同样的方法进行同样的工作。要是在代码上能用两种类型操作 LED，这将会是很棒的，这样就不用关心在什么时候使用的是哪一个类型了。*接口* 类型就能帮上忙了。
+注意，这两种类型都有同样的方法进行同样的工作。如果在 LED 上运行的代码可以使用这两种类型，而不用关注它目前使用哪种类型，这将会是很棒的。*接口* 类型就能帮上忙了。
 
 ```go
 package main
@@ -118,14 +118,14 @@ func main() {
 }
 ```
 
-我们定义了 *LED* 接口，其有两个方法：*On* 和 *Off*。*PushPullLED* 和 *OpenDrainLED* 类型表现出驱动 LED 的两种方法。我们也定义了两个 *Make\*LED* 函数，其作为构造函数。两个类型都实现了 *LED* 接口，所以这些类型的值能够被赋予 *LED* 类型的变量：
+我们定义了 *LED* 接口，其有两个方法：*On* 和 *Off*。*PushPullLED* 和 *OpenDrainLED* 类型代表了驱动 LED 的两种方法。我们也定义了两个 *Make\*LED* 函数，其作为构造函数。两个类型都实现了 *LED* 接口，所以这些类型的值能够被赋予 *LED* 类型的变量：
 
 ```go
 led1 = MakeOpenDrainLED(gpio.A.Pin(4))
 led2 = MakePushPullLED(gpio.A.Pin(3))
 ```
 
-在这种情况下，能否转换在编译时期就被检查过了。在赋值后，*led1* 变量包含 `OpenDrainLED{gpio.A.Pin(4)}` 和 一个指向 *OpenDrainLED* 类型方法的指针。`led1.On()` 的调用粗略对应于以下的 C 代码：
+在这种情况下，可赋值性在编译时期就被检查过了。赋值后，*led1* 变量包含 `OpenDrainLED{gpio.A.Pin(4)}` 和 一个指向 *OpenDrainLED* 类型方法的指针。`led1.On()` 的调用粗略对应于以下的 C 代码：
 
 ```c
 led1.methods->On(led1.value)
@@ -133,7 +133,7 @@ led1.methods->On(led1.value)
 
 正如你所看到的，如果只考虑函数调用开销，这是十分实惠的抽象方式。
 
-但是任何对于一个接口的转换都会造成包含大量的被转换类型的信息。在复杂情况下可以有大量信息，其中包含许多其他类型：
+但是任何对于一个接口的赋值都会造成包含大量的被赋值类型的信息。在复杂情况下可以有大量信息，其中包含许多其他类型：
 
 ```bash
 $ egc
@@ -151,7 +151,7 @@ $ arm-none-eabi-size cortexm0.elf
   10312     196     212   10720    29e0 cortexm0.elf
 ```
 
-生成的二进制码仍然包含一些必要的类型信息和所有被导出方法（和名字）的全部信息。在你把一个被存储于接口变量中的值转换为任何其它变量的时候，这个信息在运行时主要被用于检查转换能力。
+生成的二进制码仍然包含一些必要的类型信息和所有被导出方法（和名字）的全部信息。在你把一个被存储于接口变量中的值赋值为任何其它变量的时候，这个信息在运行时主要被用于检查赋值能力。
 
 我们也可以通过重新编译它们移除来自于被导入包的类型和域名称：
 
