@@ -104,7 +104,7 @@ func New(config Config) *LibraryStruct {
 via: https://0x46.net/thoughts/2018/12/29/go-libraries/
 
 作者：[*Filip Borkiewicz*](https://0x46.net/)
-译者：[Alihanniba](https://github.com/alihanniba) / 柒呀
+译者：[Alihanniba](https://github.com/Alihanniba) / 柒呀
 校对：
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
