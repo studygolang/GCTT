@@ -6,7 +6,7 @@ Goroutine 内存泄漏是产生 Go 程序内存泄漏的常见原因。在我之
 
 ## 泄漏：被遗弃的接收者
 
-***在此内存泄漏示例中，您将看到多个 Goroutines 被阻止等待接收永远不会发送的值。***
+***在此内存泄漏示例中，您将看到多个 Goroutines 被阻塞等待接收永远不会发送的值。***
 
 文章中程序启动了多个 Goroutines 来处理文件中的一批记录。每个 Goroutine 从输入通道接收值，然后通过输出通道发送新值。
 
@@ -108,7 +108,7 @@ Goroutine 内存泄漏是产生 Go 程序内存泄漏的常见原因。在我之
 via: <https://www.ardanlabs.com/blog/2018/12/goroutine-leaks-the-abandoned-receivers.html>
 
 作者：[Jacob Walker](https://github.com/jcbwlkr)
-译者：[译者ID](https://github.com/译者ID)
+译者：[lovechuck](https://github.com/lovechuck)
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
