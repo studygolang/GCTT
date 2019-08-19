@@ -142,7 +142,7 @@ $ arm-none-eabi-size cortexm0.elf
   10356     196     212   10764    2a0c cortexm0.elf
 ```
 
-如果我们不使用 [反射](https://blog.golang.org/laws-of-reflection)，我们可以存储一些字节来阻止类名和结构体的引入：
+如果我们不使用 [反射](https://blog.golang.org/laws-of-reflection)，我们可以节省一些字节来阻止类名和结构体的引入：
 
 ```bash
 $ egc -nf -nt
@@ -185,15 +185,15 @@ Flash page at addr: 0x08002800 erased
 2018-04-10T22:04:35 INFO common.c: Flash written and verified! jolly good!
 ```
 
-我没有连接 NRST 信号到编程器，因此 *重置* 指令不能使用，重置按钮必须被按下以启动程序。
+我没有连接 NRST 信号到编程器，因此 *复位* 指令不能使用，复位按钮必须被按下以启动程序。
 
 ![Interfaces](https://ziutek.github.io/images/mcu/f030-demo-board/interfaces.png)
 
-似乎 *st-flash* 程序在这个开发板上工作得有那么一点不可靠（通常需要重置 ST-LINK 适配器）。除此之外，当前版本的程序没有通过 SWD 发出重置信号（只使用了 NRST 信号）。软件重置是不可靠，但是通常情况下能工作，缺乏它会带来一些不方便。对于这个开发板，编程器与 *OpenOCD* 搭配会工作得更好。
+似乎 *st-flash* 程序在这个开发板上工作得有那么一点不可靠（通常需要复位 ST-LINK 适配器）。除此之外，当前版本的程序没有通过 SWD 发出复位信号（只使用了 NRST 信号）。软件复位是不可靠，但是通常情况下能工作，缺乏它会带来一些不方便。对于这个开发板，编程器与 *OpenOCD* 搭配会工作得更好。
 
 ## [UART](https://ziutek.github.io/2018/04/14/go_on_very_small_hardware2.html#uart)
 
-UART（通用异步收发传输器）仍然是现代微控制器中最重要的外设之一。以下属性都是它的优点：
+UART（通用异步收发传输器）仍然是现代微控制器中最重要的外设之一。以下特性的独特组合，构成了它的优势：
 
 - 相对高的速度，
 - 只有两条信号线（半双工通信下甚至只有一条），
@@ -201,9 +201,9 @@ UART（通用异步收发传输器）仍然是现代微控制器中最重要的�
 - 新数据（起始 bit 位）的同步带内信号，
 - 在被传输信息内准确定时。
 
-这些优点造就了 UART，原本只能传输 7-9 个 bit 位组成的异步信息，也能够被用于高效地实现诸多其他物理协议，比如被用于 [WS28xx LEDs](http://www.world-semi.com/solution/list-4-1.html) 或是 [1-wire](https://en.wikipedia.org/wiki/1-Wire) 设备。
+这些优点造就了最初旨在传输 7-9 个 bit 位组成的异步信息的 UART，也能够被用于高效地实现诸多其他物理协议，比如被用于 [WS28xx LEDs](http://www.world-semi.com/solution/list-4-1.html) 或是 [1-wire](https://en.wikipedia.org/wiki/1-Wire) 设备。
 
-然而，我们将使用 UART 的非常规功能：从我们的程序打印文本信息。
+然而，我们将使用 UART 的常规功能：从我们的程序打印文本信息。
 
 ```go
 package main
@@ -263,7 +263,7 @@ var ISRs = [...]func(){
 
 你会发现这个代码有一点复杂，但是到目前为止在 STM32 HAL 中还没有更简单的 UART 驱动（在某些情况下，简单的轮询驱动程序可能很有用）。*usart.Driver* 是使用 DMA 和中断来卸载 CPU 的高效驱动程序。
 
-STM32 USART 设备提供了传统的 UART 和它的同步版本。为了利用它作为输出，我们必须把它的 Tx 信号连接到右边的 GPIO 引脚：
+STM32 USART 设备提供了传统的 UART 和它的同步版本。为了利用它作为输出，我们必须把它的 Tx 信号连接到对应的 GPIO 引脚：
 
 ```go
 tx.Setup(&gpio.Config{Mode: gpio.Alt})
@@ -296,7 +296,7 @@ STM32 都是使用 3.3V 逻辑电平，但是 RS232 能够产生从 -15V 到 +15
 
 ![UART](https://ziutek.github.io/images/mcu/f030-demo-board/uart.jpg)
 
-你也需要一些终端模拟器程序（我比较喜欢 [picocom](https://github.com/npat-efault/picocom)）。烧录新的镜像，运行终端模拟器，按几次重置按钮：
+你也需要一些终端模拟器程序（我比较喜欢 [picocom](https://github.com/npat-efault/picocom)）。烧录新的镜像，运行终端模拟器，按几次复位按钮：
 
 ```bash
 $ openocd -d0 -f interface/stlink.cfg -f target/stm32f0x.cfg -c 'init; program cortexm0.elf; reset run; exit'
@@ -352,7 +352,7 @@ Hello, World!
 Hello, World!
 ```
 
-每按一次重置按钮，输出一行新的 "Hello, World!"。这些运行结果都符合预期。
+每按一次复位按钮，输出一行新的 "Hello, World!"。这些运行结果都符合预期。
 
 想看这个 MCU 的双向 UART 代码，请看这个 [例子](https://github.com/ziutek/emgo/blob/master/egpath/src/stm32/examples/f030-demo-board/usart/main.go)。
 
@@ -453,7 +453,7 @@ $ egc
 exit status 1
 ```
 
-这次我们已经超出了空间。让我们来尝试简化类型的信息：
+这次我们已经用完了存储空间。让我们来尝试简化类型的信息：
 
 ```bash
 $ cd $HOME/emgo
@@ -635,7 +635,7 @@ Hello, World!
 
 ### 终极闪烁
 
-*Blinky* 在硬件配置上与 *Hello, World!* 程序等同。一旦我们有莫尔斯编码器，我们可以很容易地将它们结合起来以获得 *终极闪烁* 程序：
+*Blinky* 与 *Hello, World!* 的程序在硬件配置上等同。一旦我们有莫尔斯编码器，我们可以很容易地将它们结合起来以获得 *终极闪烁* 程序：
 
 ```go
 package main
@@ -816,7 +816,7 @@ default:
 
 此外，它支持任何实现 *stringer* 接口的类型，即任何具有 *String()* 方法的类型。在任何 *case* 子句中，*v* 变量具有正确的类型，与 *case* 关键字后面列出的相同。
 
-`reflect.ValueOf(p)` 允许以编程的方式分析其类型和内容的形式返回 *p*。我们甚至可以使用 `v.Elem()` 取消引用指针，并使用其名称打印所有结构体字段。
+`reflect.ValueOf(p)` 允许以编程的方式分析其类型和内容的形式返回 *p*。我们甚至可以使用 `v.Elem()` 间接引用指针，并使用其名称打印所有结构体字段。
 
 让我们尝试编译这段代码。现在让我们看看如果没有类型和字段名称编译将会出现什么：
 
@@ -883,7 +883,7 @@ type(*p) = S
 }
 ```
 
-在物联网时代，反射是任何易于使用的序列化库和 [JSON](https://en.wikipedia.org/wiki/JSON) 等序列化 ~~算法~~ 的重要组成部分。
+反射是任何易于使用的序列化库的重要组成部分，而像 [JSON](https://en.wikipedia.org/wiki/JSON) 这样的序列化~~算法~~在物联网时代变得越来越重要。
 
 到此，我完成了本文的第二部分。我认为有可能第三部分更有趣，我们把这个开发板连接到各种有趣的设备。如果这个开发板不能负担它们，我们用更大的东西替换它。
 
