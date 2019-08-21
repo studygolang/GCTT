@@ -142,7 +142,9 @@ $ arm-none-eabi-size cortexm0.elf
   10356     196     212   10764    2a0c cortexm0.elf
 ```
 
-如果我们不使用 [反射](https://blog.golang.org/laws-of-reflection)，我们可以节省一些字节来阻止类名和结构体的引入：
+如果我们不使用 [反射](https://blog.golang.org/laws-of-reflection)，我们可以通过避免引入类型名称和结构体字段名称，来节省一些字节：
+
+如果我们不使用 ，我们可以节省一些字节来阻止类名和结构体的引入：
 
 ```bash
 $ egc -nf -nt
