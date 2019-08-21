@@ -58,7 +58,7 @@ type cancelCtx struct {
 
 ![](https://github.com/studygolang/gctt-images/tree/master/context-and-cancellation-by-propagation/image_2.png)
 
-每个 context 都相互链接，如果我们取消 “C” context，所有它的孩子也将被取消。Go 会对它的子 context 进行循环逐个取消： 
+每个 context 都相互链接，如果我们取消 “C” context，所有它的孩子也将被取消。Go 会对它的子 context 进行循环逐个取消：
 
 ```go
 context/context.go
