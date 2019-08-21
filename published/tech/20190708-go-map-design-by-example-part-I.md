@@ -1,16 +1,18 @@
-# Go: Map Design by Example — Part I
+首发于：https://studygolang.com/articles/22773
 
-![img](https://github.com/studygolang/gctt-images/blob/master/go-map-design-by-example-part-I/1_HFwlzPXZ1nXxKMwumjrlmQ.png?raw=true)
+# Go: 通过例子学习 Map 的设计 — Part I
+
+![img](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-map-design-by-example-part-I/1_HFwlzPXZ1nXxKMwumjrlmQ.png)
 
 本文是三篇系列文章中的第一篇。每篇文章都将涵盖 map 的不同部分。我建议你按顺序阅读。
 
-Go 提供的内置类型 `map` 是使用[哈希表](https://en.wikipedia.org/wiki/Hash_table)实现的。在本文中，我们将探讨这个哈希表的不同部分的具体实现：桶（存储键值对的数据结构），哈希（键值对的索引），负载因子（判断 map 是否应该扩容的指标）。
+Go 提供的内置类型 `map` 是使用[哈希表](https://en.wikipedia.org/wiki/Hash_table) 实现的。在本文中，我们将探讨这个哈希表的不同部分的具体实现：桶（存储键值对的数据结构），哈希（键值对的索引），负载因子（判断 map 是否应该扩容的指标）。
 
 ## 桶
 
 Go 将键值对存储在桶的列表中，每个桶容纳 8 个键值对，当 map 的容量耗尽，哈希桶的数量将会翻倍。下面是持有 4 个桶的 map 的粗略示图：
 
-![map with a list of buckets](https://github.com/studygolang/gctt-images/blob/master/go-map-design-by-example-part-I/1_MvMVl9YfpWVzM7nqjzON9w.png?raw=true)
+![map with a list of buckets](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-map-design-by-example-part-I/1_MvMVl9YfpWVzM7nqjzON9w.png)
 
 在下一篇文章中，我们将看到这些键值对是如何在桶里存储的。如果 map 再一次扩容，桶的数量将会翻倍，依次增加到 8，16，等等。
 
@@ -22,11 +24,11 @@ Go 将键值对存储在桶的列表中，每个桶容纳 8 个键值对，当 m
 
 让我们以键值对 `"foo" = 1` 的插入作为例子。生成的哈希值可能是 `15491954468309821754`。该值将应用于位操作，掩码对应于桶的数量减 1。在我们的 4 个桶的例子中，掩码是 3，位操作如下：
 
-![value dispatched in the buckets](https://github.com/studygolang/gctt-images/blob/master/go-map-design-by-example-part-I/1_OgOgEvcqNALd-IHXCSeofw.png?raw=true)
+![value dispatched in the buckets](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-map-design-by-example-part-I/1_OgOgEvcqNALd-IHXCSeofw.png)
 
 哈希值不仅用于值在桶中的分配，还参与其他的操作。每个桶都将其哈希值的首字节存储在一个内部数组中，这使得 Go 可以对键进行索引，并跟踪桶中的空槽。让我们看一下二进制表示下，哈希的例子：
 
-![top hash table in bucket](https://github.com/studygolang/gctt-images/blob/master/go-map-design-by-example-part-I/1_z8YVGw6WANXuW-xboHmPfQ.png?raw=true)
+![top hash table in bucket](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-map-design-by-example-part-I/1_z8YVGw6WANXuW-xboHmPfQ.png)
 
 多亏了桶内部被称为 *top hash* 的表，Go 可以在数据访问期间使用它们与请求键的哈希值进行比较。
 
@@ -36,7 +38,7 @@ Go 将键值对存储在桶的列表中，每个桶容纳 8 个键值对，当 m
 
 在存储键值对时，桶会将它存储在 8 个可用的插槽中。如果这些插槽全部不可用，Go 会创建一个溢出桶，并于当前桶连接。
 
-![overflow bucket](https://github.com/studygolang/gctt-images/blob/master/go-map-design-by-example-part-I/1_ZfDObIafsML18crqW-MX_Q.png?raw=true)
+![overflow bucket](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-map-design-by-example-part-I/1_ZfDObIafsML18crqW-MX_Q.png)
 
 这个 `overflow` 属性表明了桶的内部结构。然而，增加溢出桶会降低 map 的性能。作为弥补，Go 将会分配新的桶（当前桶的数量的两倍），保存一个旧桶和新桶之间的连接，逐步将旧桶迁移到新桶中。实际上，在这次新的分配之后，每个参与过写操作的桶，如果操作还未完成，都将被迁移。被迁移的桶中的所有键值对都将被重新分配到新桶中，这意味着，先前同一个桶中存储在一起的键值对，现在可能被分配到不同的桶中。
 
@@ -77,6 +79,6 @@ via: https://medium.com/@blanchon.vincent/go-map-design-by-example-part-i-3f78a0
 
 作者：[blanchon.vincent](https://medium.com/@blanchon.vincent)
 译者：[DoubleLuck](https://github.com/DoubleLuck)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
