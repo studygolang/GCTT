@@ -233,7 +233,7 @@ Go 1.4提供了一种使用[// import](https://golang.org/cmd/go/#hdr-Import_pat
 via: https://blog.golang.org/migrating-to-go-modules
 
 作者：[Jean de Klerk](https://blog.golang.org)
-译者：[译者ID](https://github.com/lazytoo)
+译者：[译者ID](https://github.com/lazytooo)
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
