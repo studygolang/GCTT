@@ -1,7 +1,7 @@
 # 为什么要使用 go module proxy
 
-在介绍**Go module**之后，我以为我已经知道了我需要知道的一切。很快，我意识到并非如此。最近，人们开始提倡使用 **Go module proxy**。在研究了利弊之后，我得出结论，这是近年来**最重要**的变化之一。
-但为什么会这样呢？是什么让**Go module**代理如此特别？
+在介绍 **Go module** 之后，我以为我已经知道了我需要知道的一切。很快，我意识到并非如此。最近，人们开始提倡使用 **Go module proxy**。在研究了利弊之后，我得出结论，这是近年来**最重要**的变化之一。
+但为什么会这样呢？是什么让 **Go module** 代理如此特别？
 
 使用 **Go modules** 时，如果向干净的缓存的计算机上添加新依赖项或构建 **Go module**，它基于 **go.mod** 将下载（go get）所有依赖项，并将其缓存以供进一步操作。
 你可以通过使用 vendor 文件夹绕过缓存（以及使用该下载依赖项）并构建使用带有 -mod=vendor 标志的此文件夹。
@@ -14,25 +14,18 @@
 
 * 在go命令用于该命令（在[模块感知模式](https://golang.org/cmd/go/#hdr-Modules_and_vendoring)下），vendor 默认情况下将不再使用。
   如果你不附加 -mod=vendor 命令行参数，它将不会被启用。 这通常引发问题，并导致必须使用其他陈旧的方案来支持老的 Go 版本（请参考：[在Travis CI 上使用 Go Module 和vendor](https://arslan.io/2018/08/26/using-go-modules-with-vendor-support-on-travis-ci/)）
-
 * vendor 文件夹，特别是在比较大的单体应用中，会占据大量空间。这也将增加仓库的克隆时间。可能你认为只用克隆一次，实际却不是这样。CI/CD 在每次事件（例如：pull request ）触发常常都会克隆代码。因此，这将长期导致更长的编译时间，并将影响每一个人。
-  
 * 提供新的依赖关系通常会导致难以审核代码的变化。大多数情况下，你须将依赖项与实际业务逻辑捆绑在一起，这使得很难正确实现变化。
 
 ### 不使用的 vendor 的坏处
 
 * **go** 将去源码仓库下载这些依赖。总是存在任何依赖可能在将来消失的风险（[记住左边的传奇故事](https://qz.com/646467/how-one-programmer-broke-the-internet-by-deleting-a-tiny-piece-of-code/)）。
-  
 * 版本管理系统（例如 github.com ）可能已关闭。在这种情况下，你将无法再构建项目。
-
 * 有些公司不希望内网接入外网，此时，没有 vendor 文件夹，我们将无法使用。
-  
 * 假设发布的依赖 tag 是 v1.3.0 ，并且已经 go get 获取它到本地缓存。此时，依赖的所有者可以通过推送具有相同 tag 的恶意内容来破坏代码库。
   如果在具有干净缓存的计算机上重建**Go module**，它现在将使用受损包。 为了防止这种情况，需要将 go.sum 文件存储在文件旁边 go.mod 。
-
 * 一些依赖使用不同的 **版本管理系统**，比如不只是 git，还有 hg(Mercurial)，bzr(Bazaar)或svn(Subversion)。
   而你的机器（或Dockerfile）没有装这些工具，这将带来问题。
-
 * **go get** 需要获取 **go.mod** 列出的每个依赖项的源代码来解决传递依赖（需相应的go.mod文件）。这显着减慢了整个构建过程，因为它意味着必须下载（例如 git clone ）每个存储库以[获取单个文件](https://about.sourcegraph.com/go/gophercon-2019-go-module-proxy-life-of-a-query)。
 
 **我们怎么改善这些情况呢？**
