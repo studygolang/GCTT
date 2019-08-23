@@ -12,8 +12,8 @@
 
 ### 使用 vendor 文件夹的坏处
 
-* 在go命令用于该命令（在[模块感知模式](https://golang.org/cmd/go/#hdr-Modules_and_vendoring)下），vendor 默认情况下将不再使用。
-  如果你不附加 -mod=vendor 命令行参数，它将不会被启用。 这通常引发问题，并导致必须使用其他陈旧的方案来支持老的 Go 版本（请参考：[在Travis CI 上使用 Go Module 和vendor](https://arslan.io/2018/08/26/using-go-modules-with-vendor-support-on-travis-ci/)）
+* 在 go 命令用于该命令（在[模块感知模式](https://golang.org/cmd/go/#hdr-Modules_and_vendoring)下），vendor 默认情况下将不再使用。
+  如果你不附加 -mod=vendor 命令行参数，它将不会被启用。 这通常引发问题，并导致必须使用其他陈旧的方案来支持老的 Go 版本（请参考：[在 Travis CI 上使用 Go Module 和 vendor](https://arslan.io/2018/08/26/using-go-modules-with-vendor-support-on-travis-ci/)）
 * vendor 文件夹，特别是在比较大的单体应用中，会占据大量空间。这也将增加仓库的克隆时间。可能你认为只用克隆一次，实际却不是这样。CI/CD 在每次事件（例如：pull request ）触发常常都会克隆代码。因此，这将长期导致更长的编译时间，并将影响每一个人。
 * 提供新的依赖关系通常会导致难以审核代码的变化。大多数情况下，你须将依赖项与实际业务逻辑捆绑在一起，这使得很难正确实现变化。
 
@@ -24,25 +24,24 @@
 * 有些公司不希望内网接入外网，此时，没有 vendor 文件夹，我们将无法使用。
 * 假设发布的依赖 tag 是 v1.3.0 ，并且已经 go get 获取它到本地缓存。此时，依赖的所有者可以通过推送具有相同 tag 的恶意内容来破坏代码库。
   如果在具有干净缓存的计算机上重建**Go module**，它现在将使用受损包。 为了防止这种情况，需要将 go.sum 文件存储在文件旁边 go.mod 。
-* 一些依赖使用不同的 **版本管理系统**，比如不只是 git，还有 hg(Mercurial)，bzr(Bazaar)或svn(Subversion)。
-  而你的机器（或Dockerfile）没有装这些工具，这将带来问题。
-* **go get** 需要获取 **go.mod** 列出的每个依赖项的源代码来解决传递依赖（需相应的go.mod文件）。这显着减慢了整个构建过程，因为它意味着必须下载（例如 git clone ）每个存储库以[获取单个文件](https://about.sourcegraph.com/go/gophercon-2019-go-module-proxy-life-of-a-query)。
+* 一些依赖使用不同的 **版本管理系统**，比如不只是 git，还有 hg(Mercurial)，bzr(Bazaar) 或 svn(Subversion)。而你的机器（或 Dockerfile）没有装这些工具，这将带来问题。
+* **go get** 需要获取 **go.mod** 列出的每个依赖项的源代码来解决传递依赖（需相应的 go.mod 文件）。这显着减慢了整个构建过程，因为它意味着必须下载（例如 git clone ）每个存储库以[获取单个文件](https://about.sourcegraph.com/go/gophercon-2019-go-module-proxy-life-of-a-query)。
 
 **我们怎么改善这些情况呢？**
 
 ## 使用 go module proxy 的好处
 
 默认情况下， go 命令会直接从版本管理系统下载代码。
-**GOPROXY** 环境变量允许在下载源的进一步控制。配置该环境变量后，go命令可以使用 **Go module proxy**。
+**GOPROXY** 环境变量允许在下载源的进一步控制。配置该环境变量后，go 命令可以使用 **Go module proxy**。
 
 设置环境变量 **GOPROXY** 开启 **Go module proxy** 后，将解决上边提到的所有问题。
 
 * **Go module proxy** 默认永久缓存所有依赖（不可变存储）。这意味着，不必再使用 vendor 文件夹。
 * 抛弃 vendor 文件夹，它将不会再消耗代码库的空间。
-* 因为依赖项存储在不可变存储中，即使依赖项从Internet上消失，你也会受到保护。
+* 因为依赖项存储在不可变存储中，即使依赖项从 Internet 上消失，你也会受到保护。
 * 一旦 **Go module** 存储在 **Go proxy** 中，就无法覆盖或删除它。这可以保护你免受可能使用相同版本注入恶意代码的攻击。
-* 你不再需要任何 VSC 工具来下载依赖项，因为依赖项是通过HTTP提供的（ **Go proxy** 使用HTTP）。
-* 下载和构建 **Go module** 的速度要快得多，因为 **Go proxy** 通过HTTP独立提供源代码（.zip存档）go.mod。与从 VCS 获取相比，这使得下载花费更少的时间和更快（由于更少的开销）。
+* 你不再需要任何 VSC 工具来下载依赖项，因为依赖项是通过 HTTP 提供的（ **Go proxy** 使用 HTTP）。
+* 下载和构建 **Go module** 的速度要快得多，因为 **Go proxy** 通过 HTTP 独立提供源代码（.zip 存档）go.mod。与从 VCS 获取相比，这使得下载花费更少的时间和更快（由于更少的开销）。
   解决依赖关系也更快，因为 go.mod 可以独立获取（而在它必须获取整个存储库之前）。Go 团队对它进行了测试，他们看到快速网络上的速度提高了 3 倍，而慢速网络则提高了 6 倍！
 * 你可以轻松运行自己的 **Go proxy** ，这可以让你更好地控制构建管道的稳定性，并防止 VCS 关闭时的罕见情况。
 
@@ -50,16 +49,16 @@
   
 ## 如何使用 go module proxy
 
-要开始使用**Go module proxy**，我们需要将GOPROXY环境变量设置为兼容的**Go module proxy**。有多种方式：
+要开始使用**Go module proxy**，我们需要将 GOPROXY 环境变量设置为兼容的**Go module proxy**。有多种方式：
 
-1. 如果没有设置 GOPROXY，将其设置为空或设置为 direct ，然后 go get 将直接到 VCS（例如github.com）拉取代码：
+1. 如果没有设置 GOPROXY，将其设置为空或设置为 direct ，然后 go get 将直接到 VCS（例如 github.com）拉取代码：
 
    ```bash
    GOPROXY=""
    GOPROXY=direct
    ```
 
-    它也可以设置为off，这意味着不允许使用网络
+    它也可以设置为 off，这意味着不允许使用网络
 
     ```bash
     GOPROXY=off
@@ -102,12 +101,11 @@
 2. 默认值 GOPROXY 为 <https://proxy.golang.org,direct>。设置 direct 后将忽略之后的所有内容。这也意味着**go get**现在将默认使用 GOPROXY 。如果你根本不想使用 GOPROXY，则需要将其设置为 off。
 3. 将引入了一个新的环境变量 GOPRIVATE ，它包含以逗号分隔的 全局列表。这可用于绕过 GOPROXY 某些路径的代理，尤其是公司中的私有模块（例如: **GOPRIVATE=*.internal.company.com**）。
 
-所有这些变化都表明Go模块代理是Go模块的核心和重要部分
+所有这些变化都表明 *Go module proxy* 是 *Go module* 的核心和重要部分
 
 ## 总结
 
-无论使用公共网络，还是专用网络， **GOPROXY** 都有很多优势。这是一个很棒的工具，他可以和 go 工具无缝协作。
-鉴于它具有如此多的优势（安全，快速，存储效率），因此为你的项目或组织快速采用它是明智之举。此外，使用Go v1.13，它将默认启用，
+无论使用公共网络，还是专用网络， **GOPROXY** 都有很多优势。这是一个很棒的工具，他可以和 go 工具无缝协作。鉴于它具有如此多的优势（安全，快速，存储效率），因此为你的项目或组织快速采用它是明智之举。此外，使用 Go v1.13，它将默认启用，
 这将迎来依赖管理新的进步。
 
 ---
@@ -116,6 +114,6 @@ via: <https://arslan.io/2019/08/02/why-you-should-use-a-go-module-proxy/>
 
 作者：[Fatih Arslan](https://arslan.io/)
 译者：[TomatoAres](https://github.com/TomatoAres)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
