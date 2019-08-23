@@ -46,7 +46,7 @@
 * 你可以轻松运行自己的 **Go proxy** ，这可以让你更好地控制构建管道的稳定性，并防止 VCS 关闭时的罕见情况。
 
 如你所见，使用**Go module proxy** 对每个人来说都是一个胜利。但是我们如何使用它呢？如果你不想维护自己的**Go module proxy**怎么办？让我们看看许多替代选择。
-  
+
 ## 如何使用 go module proxy
 
 要开始使用**Go module proxy**，我们需要将 GOPROXY 环境变量设置为兼容的**Go module proxy**。有多种方式：
@@ -63,7 +63,7 @@
     ```bash
     GOPROXY=off
     ```
-  
+
 2. 你可以开始使用公共 GOPROXY 。你可以选择使用 Go 团队的 GOPROXY（由 Google 运营）。更多信息可以在这里找到：https：//proxy.golang.org/
 
    要开始使用它，你只需设置环境变量：
@@ -78,7 +78,7 @@
     GOPROXY=https://goproxy.io
     GOPROXY=https://goproxy.cn # proxy.golang.org 被墙了, 这个没有
     ```
-  
+
 3. 你可以运行多个开源实现并自己托管。可用的有：
 
     1. Athens：https：//github.com/gomods/athens
