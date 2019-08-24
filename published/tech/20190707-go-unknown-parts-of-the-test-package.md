@@ -1,4 +1,6 @@
-# Go：Test包不为人知的一面
+# Go：Test 包不为人知的一面
+
+首发于：https://studygolang.com/articles/23050
 
 ![test package](https://github.com/studygolang/gctt-images/blob/master/20190707-go-unknown-parts-of-the-test-package/test-pkg.png?raw=true)
 
@@ -36,7 +38,7 @@ ok   math 0.007s
 
 再提一下：Go 1.12 之前可通过设置[`GOCACHE`](https://golang.org/doc/go1.12#gocache)环境变量`GOCACHE=off go test math/`的方式绕过缓存。
 
-运行测试时，Go 会逐个包依次运行它们。Go处理测试包名的方式也给测试提供了更多策略。
+运行测试时，Go 会逐个包依次运行它们。Go 处理测试包名的方式也给测试提供了更多策略。
 
 ## 白盒测试 vs 黑盒测试
 
@@ -115,7 +117,7 @@ func TestDeckCanDrawCards(t *testing.T) {
 }
 ```
 
-> 原文给出的`deck`包的`import`路径不对，已修正如上
+> 译者注：原文给出的`deck`包的`import`路径不对，已修正如上
 
 编写黑盒测试的唯一要求是给包名加上`_test`后缀。这个包被看作不同于`deck`的包，所以无法访问到非导出的函数。Go 原生支持这个方式，编译器不会抱怨同一个文件夹下有两个不同包名。
 
@@ -263,6 +265,6 @@ via: https://medium.com/@blanchon.vincent/go-unknown-parts-of-the-test-package-d
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[sammyne](https://github.com/sammyne)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[zhoudingding](https://github.com/dingdingzhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
