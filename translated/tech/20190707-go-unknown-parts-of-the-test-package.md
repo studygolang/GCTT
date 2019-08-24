@@ -1,6 +1,6 @@
 # Go：Test包不为人知的一面
 
-![test package](https://miro.medium.com/max/700/1*LJK7zclFUVZw8rv8I_c5Dw.png)
+![test package](https://github.com/studygolang/gctt-images/blob/master/20190707-go-unknown-parts-of-the-test-package/test-pkg.png?raw=true)
 
 Go被用得最频繁的命令我想应该是`go test`。然而，这个命令一些有趣的细节和用法可能你还不知道哟。下面让我们从测试本身讲起。
 
