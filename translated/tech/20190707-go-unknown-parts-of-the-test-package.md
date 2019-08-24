@@ -6,7 +6,7 @@ Go被用得最频繁的命令我想应该是`go test`。然而，这个命令一
 
 ## 规避缓存的习惯用法
 
-如果连续两次运行同一份测试且第一次完全通过的话，会发现真正运行的测试只有一次。事实上，所有测试都采用缓存机制来避免运行没有变化的测试样例。下面看一个测试`math`包的例子：
+如果连续两次运行同一份测试且第一次完全通过的话，会发现测试只真正被运行了一次。事实上，所有测试都采用缓存机制来避免运行没有变化的测试样例。下面看`math`包的一个测试用例：
 
 ```bash
 root@91bb4e4ab781:/usr/local/go/src# go test ./math/
@@ -15,7 +15,7 @@ root@91bb4e4ab781:/usr/local/go/src# go test ./math/
 ok     math   (cached)
 ```
 
-测试时，Go不仅会检查测试的内容，还会检查环境变量和命令行参数。更换环境变量或添加标识符都会导致缓存关闭：
+测试时，Go不仅会检查测试的内容，还会检查环境变量和命令行参数。更新环境变量或添加标识符都会导致缓存失效：
 
 ```bash
 go test ./math/ -v
@@ -26,11 +26,11 @@ PASS
 ok   math 0.007s
 ```
 
-再执行一次的话缓存就会生效了。缓存是测试内容、环境变量和命令行参数的哈希。一旦计算出来，这个缓存会转储到`$GOCACHE`指向的文件夹（Unix系统下默认实`$XDG_CACHE_HOME`或`$HOME/.cache`）。清空这个文件夹也就会清空缓存。
+再执行一次的话缓存就会生效了。缓存是测试内容、环境变量和命令行参数的哈希。一旦计算出来，这个缓存会转储到`$GOCACHE`指向的文件夹（Unix系统下默认是`$XDG_CACHE_HOME`或`$HOME/.cache`）。清空这个文件夹也就会清空缓存。
 
 关于标识符的话，如[文档](https://golang.org/cmd/go/#hdr-Test_packages)所述，并不是所有标识符都是可缓存的：
 
-> 缓存一致的定义为：测试涉及的二进制可执行文件一样，同时命令行标识符属于'可缓存的'测试标识符限定子集（包括`-cpu`，`-list`，`parallel`，`-run`，`-short`和`-v`等）。使用任何不属于可缓存范围的标识符或参数都会导致缓存失效。显式屏蔽缓存的习惯用法是采用`-count=1`标识符。
+> 缓存匹配的规则为：测试涉及的二进制可执行文件一样，同时命令行标识符属于'可缓存的'测试标识符限定子集（包括`-cpu`，`-list`，`parallel`，`-run`，`-short`和`-v`等）。使用任何不属于可缓存范围的标识符或参数都会导致缓存失效。显式屏蔽缓存的习惯用法是采用`-count=1`标识符。
 
 因为`count`规定测试必须执行的次数，因此`-count=1`显式地声明测试应该不多不少地只运行一次，使得这个标识符成为规避缓存的最优习惯用法。
 
@@ -89,8 +89,6 @@ func (d *Deck) shuffle() {
 }
 ```
 
-> 原文给出的`deck`包的`import`路径不对，已修正如上
-
 上述代码只是执行洗牌操作后让用户抽牌。黑盒测试确保牌组能够创建并依次抽取直到没牌。
 
 ```go
@@ -116,6 +114,8 @@ func TestDeckCanDrawCards(t *testing.T) {
 	assert.Equal(t, err, deck.Empty)
 }
 ```
+
+> 原文给出的`deck`包的`import`路径不对，已修正如上
 
 编写黑盒测试的唯一要求是给包名加上`_test`后缀。这个包被看作不同于`deck`的包，所以无法访问到非导出的函数。Go原生支持这个方式，编译器不会抱怨同一个文件夹下有两个不同包名。
 
@@ -155,7 +155,7 @@ func TestDeckShouldBeShuffledOnce(t *testing.T) {
 
 ## 只执行一次性能测试
 
-[Go 1.12](https://golang.org/doc/go1.12#testing)引入的`-benchtime=1x`、`-benchtime=10x`等允许性能测试只执行我们想要的次数。这个`-benchtime=1x`标识符为测试提供了便利，因为它使得我们只需运行至少一次性能测试就可验证上一次变更是否和现有代码兼容。
+[Go 1.12](https://golang.org/doc/go1.12#testing)引入的`-benchtime=1x`、`-benchtime=10x`等允许性能测试只执行我们想要的次数。这个`-benchtime=1x`标识符对测试套件（test suite）是很有用的，它使得我们只需运行至少一次性能测试即可验证上一次变更是否破坏了现有代码。
 
 Go 1.12之前的`-benchtime=1ns`标识符也能起到相同的效果，它会指示1ns后跳出性能测试的循环。因为1ns是最小的时间单位，所以性能测试只会运行一次。性能测试为我们汇报诸如执行操作的时间、所需内存或堆上的内存分配次数等指标。Go1.13更是允许我们获取更多想要的指标。
 
@@ -163,7 +163,28 @@ Go 1.12之前的`-benchtime=1ns`标识符也能起到相同的效果，它会指
 
 Go1.13引入的`ReportMetric`方法允许我们汇报自定义的指标。复用一下之前牌组的示例，并修改为：抽取第一张牌之前先把牌组随机洗多次，次数在1到20次。以下是汇报洗牌次数的性能测试：
 
-> 原文没有贴出修改后的代码，译者理解的实现如下
+```go
+package deck
+
+import (
+	"testing"
+)
+
+func BenchmarkGC(b *testing.B) {
+	b.ReportAllocs()
+	shuffled := 0
+
+	for i := 0; i < b.N; i++ {
+		d := NewDeck(100)
+		_, _ = d.Draw()
+		shuffled += int(d.shuffled)
+	}
+
+	b.ReportMetric(float64(shuffled)/float64(b.N), "shuffle/op")
+}
+```
+
+> 译者注：原文没有贴出修改后的代码，以下是译者理解的实现
 
 ```go
 package deck
@@ -213,29 +234,6 @@ func (d *Deck) shuffle() {
 		d.cards[i], d.cards[j] = d.cards[j], d.cards[i]
 	})
 	d.shuffled++
-}
-```
-
-原文的性能测试代码如下
-
-```go
-package deck
-
-import (
-	"testing"
-)
-
-func BenchmarkGC(b *testing.B) {
-	b.ReportAllocs()
-	shuffled := 0
-
-	for i := 0; i < b.N; i++ {
-		d := NewDeck(100)
-		_, _ = d.Draw()
-		shuffled += int(d.shuffled)
-	}
-
-	b.ReportMetric(float64(shuffled)/float64(b.N), "shuffle/op")
 }
 ```
 
