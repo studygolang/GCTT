@@ -1,6 +1,8 @@
 # Go 最小硬件编程（第二部分）
 
-[![STM32F030F4P6](https://ziutek.github.io/images/mcu/f030-demo-board/board.jpg)](https://ziutek.github.io/2018/04/14/go_on_very_small_hardware2.html)
+首发于：https://studygolang.com/articles/23085
+
+[![STM32F030F4P6](https://raw.githubusercontent.com/studygolang/gctt-images/master/Very-Small-Hardware-Part2/1.jpeg)](https://ziutek.github.io/2018/04/14/go_on_very_small_hardware2.html)
 
 在本文 [第一部分](https://studygolang.com/articles/22742) 的结尾，我说过要写一下关于 *接口* 的东西。我不想在这里写一篇完整或是简短的关于接口的讲稿。相反，我将会举一个简单的例子，用以说明如何定义和使用接口，同时知道如何利用通用的 *io.Writer* 接口。同时有少量关于 *reflection* 和 *semihosting* 的叙述。
 
@@ -144,8 +146,6 @@ $ arm-none-eabi-size cortexm0.elf
 
 如果我们不使用 [反射](https://blog.golang.org/laws-of-reflection)，我们可以通过避免引入类型名称和结构体字段名称，来节省一些字节：
 
-如果我们不使用 ，我们可以节省一些字节来阻止类名和结构体的引入：
-
 ```bash
 $ egc -nf -nt
 $ arm-none-eabi-size cortexm0.elf
@@ -189,7 +189,7 @@ Flash page at addr: 0x08002800 erased
 
 我没有连接 NRST 信号到编程器，因此 *复位* 指令不能使用，复位按钮必须被按下以启动程序。
 
-![Interfaces](https://ziutek.github.io/images/mcu/f030-demo-board/interfaces.png)
+![Interfaces](https://raw.githubusercontent.com/studygolang/gctt-images/master/Very-Small-Hardware-Part2/2.png)
 
 似乎 *st-flash* 程序在这个开发板上工作得有那么一点不可靠（通常需要复位 ST-LINK 适配器）。除此之外，当前版本的程序没有通过 SWD 发出复位信号（只使用了 NRST 信号）。软件复位是不可靠，但是通常情况下能工作，缺乏它会带来一些不方便。对于这个开发板，编程器与 *OpenOCD* 搭配会工作得更好。
 
@@ -296,7 +296,7 @@ $ arm-none-eabi-size cortexm0.elf
 
 STM32 都是使用 3.3V 逻辑电平，但是 RS232 能够产生从 -15V 到 +15V 的电压，这可能会烧掉你的 MCU。你需要 3.3V 逻辑电平的 USB 转 UART 转换器。流行的转换器是基于 FT232 或是 CP2102 芯片。
 
-![UART](https://ziutek.github.io/images/mcu/f030-demo-board/uart.jpg)
+![UART](https://raw.githubusercontent.com/studygolang/gctt-images/master/Very-Small-Hardware-Part2/3.jpeg)
 
 你也需要一些终端模拟器程序（我比较喜欢 [picocom](https://github.com/npat-efault/picocom)）。烧录新的镜像，运行终端模拟器，按几次复位按钮：
 
@@ -708,7 +708,7 @@ $ arm-none-eabi-size cortexm0.elf
   11772     244     244   12260    2fe4 cortexm0.elf
 ```
 
-![Ultimate Blinky](https://ziutek.github.io/images/mcu/f030-demo-board/morse.png)
+![Ultimate Blinky](https://raw.githubusercontent.com/studygolang/gctt-images/master/Very-Small-Hardware-Part2/4.png)
 
 ## 反射
 
@@ -873,7 +873,7 @@ $ arm-none-eabi-size cortexm0.elf
   16052     216     312   16580    40c4 cortexm0.elf
 ```
 
-现在已包含类型和字段名称，但仅在 ~~*main.go* 文件~~ 主程序包中定义了这些名称。我们程序的输出如下：
+现在已包含类型和字段名称，但仅在 *main.go* 文件主程序包中定义了这些名称。我们程序的输出如下：
 
 ```go
 kind(p) = ptr
@@ -885,7 +885,7 @@ type(*p) = S
 }
 ```
 
-反射是任何易于使用的序列化库的重要组成部分，而像 [JSON](https://en.wikipedia.org/wiki/JSON) 这样的序列化~~算法~~在物联网时代变得越来越重要。
+反射是任何易于使用的序列化库的重要组成部分，而像 [JSON](https://en.wikipedia.org/wiki/JSON) 这样的序列化算法在物联网时代变得越来越重要。
 
 到此，我完成了本文的第二部分。我认为有可能第三部分更有趣，我们把这个开发板连接到各种有趣的设备。如果这个开发板不能负担它们，我们用更大的东西替换它。
 
@@ -895,6 +895,6 @@ via: https://ziutek.github.io/2018/04/14/go_on_very_small_hardware2.html
 
 作者：[Michał Derkacz ](https://ziutek.github.io)
 译者：[PotoYang](https://github.com/PotoYang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[zhoudingding](https://github.com/dingdinzhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
