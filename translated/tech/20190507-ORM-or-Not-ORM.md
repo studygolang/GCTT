@@ -116,7 +116,7 @@ func dbAllPostsInTag(db *sql.DB, tagID int64) ([]post, error) {
 
 如果您了解 SQL，这种方式相当直接。我们需要在 `Post` 和 `PostTag` 之间建立一个内连接,并使用 `tagID` 进行条件过滤; 其余代码仅仅迭代结果。
 
-* 接下来，ORM
+* 接下来，ORM：
 
 ```go
 func allPostsInTag(db *gorm.DB, t *Tag) ([]Post, error) {
@@ -143,14 +143,12 @@ func allPostsInTag(db *gorm.DB, t *Tag) ([]Post, error) {
 不幸的是，Gorm 非常容易受到这个问题的影响。Stack Overflow 提供了无穷无尽的问题，用户最终需应对由 Gorm 本身强加的复杂性，解决其局限性等问题。很少有事情如此让人恼火：确切地知道您想要什么（例如，您想要发出哪个 SQL 查询），但是却无法编写出 Gorm 查询时最终调用的正确代码。
 
 ## 使用 ORM 的利弊
-从我的实验中可以明显看出使用 ORM 的一个关键优势：它可以节省相当多的繁琐编码。以 DB 为中心的代码节省约 50％ 是非常重要的，这可以为某些应用程序带来真正的改变。
-
-另一个不明显的优点是从不同的数据库后端抽象。然而，这在 Go 中可能不是一个问题，因为 database/sql 已经提供了一个很好的可移植层。在缺乏标准化 SQL 访问层的语言中，这种优势更加强大。
+从我的实验中可以明显看出使用 ORM 的一个关键优势：它可以节省相当多的繁琐编码。以 DB 为中心的代码节省约 50％ 是非常重要的，这可以为某些应用程序带来真正的改变；另一个不明显的优点是从不同的数据库后端抽象。然而，这在 Go 中可能不是一个问题，因为 database/sql 已经提供了一个很好的可移植层。在缺乏标准化 SQL 访问层的语言中，这种优势更加强大。
 
 至于缺点：
 1. 要学习另一层，包括所有特性，特殊语法，魔法标签等。如果您已经熟悉 SQL 本身，那么这主要是一个缺点;
 2. 即使您没有 SQL 经验，也有大量的知识库和许多可以帮助解答的人。任何一个 ORM 都是更加晦涩的知识，不为很多人所分享，您将花费大量的时间弄清楚如何使其工作;
-3. 调试查询性能具有挑战性，因为我们从 “metal” 进一步抽象了一个级别。有时需要进行相当多的调整才能让 ORM 为您生成正确的查询，当您已经知道需要哪些查询时，这很令人沮丧。
+3. 调试查询性能具有挑战性，因为我们从 `metal` 进一步抽象了一个级别。有时需要进行相当多的调整才能让 ORM 为您生成正确的查询，当您已经知道需要哪些查询时，这很令人沮丧。
 
 最后，一个缺点只会在长期内变得明显：虽然 SQL 多年来保持相当稳定，但 ORM 是特定于语言的，并且往往会出现和消失。每种流行语言都有各种各样的 ORM 可供选择; 当您从一个团队/公司/项目转移到另一个团队/公司/项目时，您可能需要转换，这是额外的精神负担。或者您可能完全切换语言。SQL 是一个更加稳定的层，可以跨团队/语言/项目与您保持联系。
 
@@ -159,7 +157,7 @@ func allPostsInTag(db *gorm.DB, t *Tag) ([]Post, error) {
 
 随着我经验越来越丰富，我也看到使用 ORM 的许多缺点。尤其，我不认为在 Go 这种语言中 ORM 对我有用，因为 Go 已经拥有一个很好的 SQL 接口，几乎可以跨数据库后端移植。我宁愿花多一点时间敲代码，但这样可以节省我阅读 ORM 文档、优化查询、尤其是调试的时间。
 
-如果您的工作是编写大量简单的类似 CRUD 的应用程序，那么我可以看到 ORM 在 Go 中仍然有用，其节省的代码量克服了这些缺点。最后，所有这些都归结为这一中心论点,即 [Benefits of dependencies in software projects as a function of effort](https://eli.thegreenplace.net/2017/benefits-of-dependencies-in-software-projects-as-a-function-of-effort/)：在我看来，在一个并不属于简单的 CRUD 应用程序上，于 DB 接口相关代码之外花费大量精力，ORM 依赖并不值得。
+如果您的工作是编写大量简单的类似 CRUD 的应用程序，那么我可以看到 ORM 在 Go 中仍然有用，其节省的代码量克服了这些缺点。最后，所有这些都归结为这一中心论点即， [Benefits of dependencies in software projects as a function of effort](https://eli.thegreenplace.net/2017/benefits-of-dependencies-in-software-projects-as-a-function-of-effort/)：在我看来，在一个并不属于简单的 CRUD 应用程序上，于 DB 接口相关代码之外花费大量精力，ORM 依赖并不值得。
 
 ---
 
