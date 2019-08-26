@@ -1,6 +1,6 @@
-## 使用Go Modules（模块）进行依赖项迁移
+# 使用Go Modules（模块）进行依赖项迁移
 
-### 介绍
+## 介绍
 
 本篇文章是Go Modules系列文章的第2部分。第1部分请参阅
 
@@ -14,7 +14,7 @@ Go 1.11中引入的Go Modules（模块）系统提供了一个内置在Go命令�
 
 **请注意:如果您的项目已经标记为v2.0.0或更高版本，那么当您添加`go.mod`文件时，您需要更新你的模块路径，我们将在以后的一篇关于v2及以后的文章中解释如何在不破坏用户的情况下做到这一点。**
 
-### 将第三方依赖项迁移至你的项目中
+## 将第三方依赖项迁移至你的项目中
 
 在开始使用Go Module来进行第三方依赖项管理时，你的项目可能处于以下三种状态中的其中一种:
 
@@ -24,7 +24,7 @@ Go 1.11中引入的Go Modules（模块）系统提供了一个内置在Go命令�
 
 第一种情况已经包含在[Using Go Modules（EN）](https://blog.golang.org/using-go-modules)中；剩下的我们将在后两篇文章中讨论。
 
-### 开始使用依赖关系管理
+## 开始使用依赖关系管理
 
 若要转换已使用依赖关系管理工具的项目，请运行以下命令:
 ```bash
@@ -106,7 +106,7 @@ $ go get rsc.io/binaryregexp@v0.2.0
 $
 ```
 
-### 当没有依赖关系管理时
+## 当没有依赖关系管理时
 
 对于没有依赖关系管理系统的Go项目，首先创建一个`go.mod`文件:
 
@@ -184,7 +184,7 @@ $
 
 注意，当 `go mod tidy` 添加一个必须包（requirement）时，它会添加对应模块的最新版本。如果您的GOPATH包含一个旧版本的依赖项，随后发布了一个破坏性的更改，您可能会在`go mod tidy`、`go build`或`go test`中看到错误。如果出现这种情况，尝试使用`go get`降级到较老的版本(例如，`go get github.com/broken/module@v1.1.0`)，或者花点时间修改一下你可爱的代码使模块与每个依赖项的最新版本兼容。
 
-### 模块模式下的测试
+## 模块模式下的测试
 
 在迁移到Go模块之后，有些测试可能需要调整。
 
@@ -194,7 +194,7 @@ $
 
 如果测试期望测试中的go命令以GOPATH模式运行，那么它可能会失败。如果是这种情况，您可能需要添加一个go.mod到要测试的源树，或显式地设置GO111MODULE=off。
 
-### 发布一个版本
+## 发布一个版本
 
 最后，您应该标记并发布新模块的发布版本。如果还没有发布任何版本，这是可选的，但是没有正式的版本，下游用户将依赖使用伪版本([pseudo-versions](https://golang.org/cmd/go/#hdr-Pseudo_versions))的特定提交，而伪版本可能更难支持。
 
@@ -205,7 +205,7 @@ $ git push origin v1.2.0
 
 新的`go.mod`文件为模块定义了一个规范导入路径，并添加了新的最低版本需求。如果您的用户已经使用了正确的导入路径，并且您的依赖项没有进行破坏（兼容性）的更改，则添加go.mod文件是向下（后）兼容（向旧版本兼容）的，但这是一个重要的改变，可能会暴露现有的问题。如果已有版本标记，则应增加次要版本([minor version](https://semver.org/#spec-item-7))。
 
-### 导入和规范模块路径
+## 导入和规范模块路径
 
 每个模块在其`go.mod`文件中声明其模块路径。每个引用模块内包的`import`语句必须将模块路径作为包路径的前缀。然而，go命令可能会通过许多不同的远程导入路径（[remote import paths](https://golang.org/cmd/go/#hdr-Remote_import_paths)）中包含模块的仓库。例如，`golang.org/x/lint`和`github.com/golang/lint`都解析到包含[go.googlesource.com/lint](https://go.googlesource.com/lint)上托管的代码仓库。仓库中包含的[go.mod](https://go.googlesource.com/lint/+/refs/heads/master/go.mod)文件声明其路径为`golang.org/x/lint`，因此只有该路径对应有效模块内容。
 
@@ -213,14 +213,14 @@ Go 1.4提供了一种使用[// import](https://golang.org/cmd/go/#hdr-Import_pat
 
 模块的规范路径可能与其仓库路径不同的另一种场景发生在主版本 v2或更高版本的Go模块上。主版本大于v1的Go模块必须在其模块路径中包含一个主版本后缀:例如，v2.0.0版本必须有后缀/v2。但是，import语句可能引用了模块中没有该后缀的包。例如，v2.0.1版本的github.com/russross/blackfriday/v2的非模块用户可能将其导入为github.com/russross/blackfriday，因此需要更新导入路径以包含/v2后缀。
 
-### 结论
+## 结论
 对大多数用户来说，转换成Go Modules应该是一个简单的过程。由于非规范的导入路径或破坏依赖项中的更改，可能偶尔会出现一些问题。未来的文章将探讨发布新版本、v2和其他版本，以及调试一些异常情况的方法。
 
 为了提供反馈并帮助塑造Go依赖管理的未来，请向我们发送bug报告或经验报告。
 
 感谢您所有的反馈和帮助改进Go的模块。
 
-## 相关文章
+# 相关文章
 
 * [Using Go Modules](https://blog.golang.org/using-go-modules)
 * [Go Modules in 2019](https://blog.golang.org/modules2019)
