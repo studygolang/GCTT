@@ -387,13 +387,13 @@ Python 糟透了。 Go 完胜。对不起，Python：我爱你。完整的代码
 谢谢大家的阅读！
 <!--<span id = "anchor"> 锚点 </span> [锚点](#anchor)-->
 
-1　<span id = "1"> 这里可以在线获得很多关于 Go talk 的 [幻灯片](https://talks.Go.org/2012/concurrency.slide)！</span>
+1　<span id = "1"> 这里可以在线获得很多关于 Go talk 的 [幻灯片](https://talks.golang.org/2012/concurrency.slide)！</span>
 2.　<span id = "2">[Rob Pike 的课程](https://vimeo.com/49718712)：并发不是并行的。</span>
-3.　<span id = "3"> 直接来源官方 [FAQ](https://Go.org/doc/faq) 页面。</span>
-4.　<span id = "4"> 更多信息在 [这里](https://Go.org/ref/spec#Channel_types)。</span>
+3.　<span id = "3"> 直接来源官方 [FAQ](https://golang.org/doc/faq) 页面。</span>
+4.　<span id = "4"> 更多信息在 [这里](https://golang.org/ref/spec#Channel_types)。</span>
 5.　<span id = "5"> 来源 [在这](https://medium.com/@_orcaman/when-too-much-concurrency-slows-you-down-Go-9c144ca305a)</span>
 6.　<span id = "6"> 看看 [这里](https://gobyexample.com/non-blocking-channel-operations)</span>
-7.　<span id = "7"> 这里更多关于 [WaitGroup](https://Go.org/pkg/sync/#WaitGroup) 的信息 </span>
+7.　<span id = "7"> 这里更多关于 [WaitGroup](https://golang.org/pkg/sync/#WaitGroup) 的信息 </span>
 
 ---
 
@@ -403,4 +403,4 @@ via: https://made2591.github.io/posts/go-py-benchmark
 译者：[Titanssword](https://github.com/Titanssword)
 校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studyGo/GCTT) 原创编译，[Go 中文网](https://studyGo.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
