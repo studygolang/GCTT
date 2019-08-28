@@ -1,5 +1,7 @@
 # 现代垃圾收集策略 —— Go 的 GC 策略
 
+![ ](https://github.com/studygolang/gctt-images2/blob/master/modern-garbage-collection/gc.jpeg)
+
 你可以找到有关 [Hacker News](https://news.ycombinator.com/item?id=13218550) 和 [Reddit](https://www.reddit.com/r/golang/comments/5j7phw/modern_garbage_collection/) 的讨论
 
 我最近看过很多文章，它们以令我困扰的方式推广 Go 语言最新的垃圾收集器。其中一些文章来自 Go 官方项目本身。他们声称这意味着 GC 技术已经有根本性的突破。
