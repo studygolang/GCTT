@@ -24,9 +24,7 @@
 
 3. [How to include C code in your Go package](https://dave.cheney.net/2013/09/07/how-to-include-c-code-in-your-go-package)
 
-4. [Why I think Go package management is important](https://dave.cheney.net/2013/10/10/why-i-think-go-package-management-is-important)
-
-   ​											
+4. [Why I think Go package management is important](https://dave.cheney.net/2013/10/10/why-i-think-go-package-management-is-important)										
 
    ​																										2019-01-08
 
