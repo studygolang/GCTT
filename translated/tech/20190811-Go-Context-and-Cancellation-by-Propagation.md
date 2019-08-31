@@ -78,7 +78,7 @@ func (c *cancelCtx) cancel(removeFromParent bool, err error) {
 这种取消传播允许我们定义更高级的例子，这些例子可以帮助我们根据主 context 处理多个/繁重的工作。
 
 ## 取消传播
-让我们通过 2 个 goroutine A 和 B 来一个简单的取消的例子，它们将并行运行，如果由于一个共同的 context 发生错误，则会取消另一个的运行：
+让我们通过 goroutine A 和 B 来展示一个取消的例子，它们将并行运行，因为拥有共同的 context ，当一个发生错误取消时，另外一个也会被取消：
 
 ![](https://github.com/studygolang/gctt-images/tree/master/context-and-cancellation-by-propagation/image_4.png)
 
@@ -108,7 +108,7 @@ B - 200ms
     -> B21 - cancelled
 ```
 
-我们可以看到，当 B2 和 B21 被取消时，A12 被中断，以避免做出不必要的处理：
+我们可以看到，当 B2 和 B21 被取消的同时，A12 被中断，以避免做出不必要的处理（译者注：B2 B21 的取消不是因为 A12 中断，应该是想表达并发安全的意思）：
 
 ![](https://github.com/studygolang/gctt-images/tree/master/context-and-cancellation-by-propagation/image_5.png)
 
