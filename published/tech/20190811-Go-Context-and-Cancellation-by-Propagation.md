@@ -1,6 +1,8 @@
 # Go：Context 和传播取消
 
-![](https://github.com/studygolang/gctt-images/tree/master/context-and-cancellation-by-propagation/image_1.png)
+首发于：https://studygolang.com/articles/23240
+
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/context-and-cancellation-by-propagation/image_1.png)
 
 [context 包](https://blog.golang.org/context)在 Go 1.7 中引入，它为我们提供了一种在应用程序中处理 context 的方法。这些 context 可以为取消任务或定义超时提供帮助。通过 context 传播请求的值也很有用，但对于本文，我们将重点关注 context 的取消功能。
 
@@ -56,7 +58,7 @@ type cancelCtx struct {
 
 以下是创建一些 context 和子 context 的示例：
 
-![](https://github.com/studygolang/gctt-images/tree/master/context-and-cancellation-by-propagation/image_2.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/context-and-cancellation-by-propagation/image_2.png)
 
 每个 context 都相互链接，如果我们取消 “C” context，所有它的孩子也将被取消。Go 会对它的子 context 进行循环逐个取消：
 
@@ -73,14 +75,14 @@ func (c *cancelCtx) cancel(removeFromParent bool, err error) {
 
 取消结束，将不会通知父 context。如果我们取消 C1，它只会通知 C11 和 C12：
 
-![](https://github.com/studygolang/gctt-images/tree/master/context-and-cancellation-by-propagation/image_3.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/context-and-cancellation-by-propagation/image_3.png)
 
 这种取消传播允许我们定义更高级的例子，这些例子可以帮助我们根据主 context 处理多个/繁重的工作。
 
 ## 取消传播
 让我们通过 goroutine A 和 B 来展示一个取消的例子，它们将并行运行，因为拥有共同的 context ，当一个发生错误取消时，另外一个也会被取消：
 
-![](https://github.com/studygolang/gctt-images/tree/master/context-and-cancellation-by-propagation/image_4.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/context-and-cancellation-by-propagation/image_4.png)
 
 如果没有任何错误发生，每个过程都将正常运行。我在每个任务上添加了一条跟踪，这样我们就可以看到一棵树：
 
@@ -110,7 +112,7 @@ B - 200ms
 
 我们可以看到，当 B2 和 B21 被取消的同时，A12 被中断，以避免做出不必要的处理（译者注：B2 B21 的取消不是因为 A12 中断，应该是想表达并发安全的意思）：
 
-![](https://github.com/studygolang/gctt-images/tree/master/context-and-cancellation-by-propagation/image_5.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/context-and-cancellation-by-propagation/image_5.png)
 
 我们可以在这里看到 context 对于**多个 goroutine 是线程安全的**。实际上，有可能是因为我们之前在结构中看到的 mutex，它保证了对 context 的并发安全。
 
@@ -147,6 +149,6 @@ via: https://medium.com/@blanchon.vincent/go-context-and-cancellation-by-propaga
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[咔叽咔叽](https://github.com/watermelo)
-校对：[校对者 ID](https://github.com/校对者ID)
+校对：[zhoudingding](https://github.com/dingdingzhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
