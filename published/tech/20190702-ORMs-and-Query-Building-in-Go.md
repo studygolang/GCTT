@@ -357,7 +357,7 @@ err := db.Select(&posts, q.Build(), q.Args()...)
 via: https://andrewpillar.com/programming/2019/07/13/orms-and-query-building-in-go/
 
 作者：[andrewpillar](https://github.com/andrewpillar)
-译者：[zhoudingding](http://blog.zhoudingding.com)
+译者：[zhoudingding](http://github.com/dingdingzhou)
 校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

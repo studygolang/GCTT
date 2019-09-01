@@ -51,7 +51,7 @@ create table PostTag (
 );
 ```
 
-这个 SQL 用 SQLite 测试过；其他 RDBMS 可能需要进行微调。 使用Gorm时，没必要写此 SQL；作为替代，我们定义“对象”（实际上是结构体）, 并附带上 Gorm 的一些魔法 tag：
+这个 SQL 用 SQLite 测试过；其他 RDBMS 可能需要进行微调。 使用 Gorm 时，没必要写此 SQL；作为替代，我们定义“对象”（实际上是结构体）, 并附带上 Gorm 的一些魔法 tag：
 
 ```go
 type Post struct {
@@ -79,7 +79,7 @@ type Comment struct {
 ```
 
 使用此数据库的代码有两种变体：
-* no-ORM：通过 database/sql 包使用纯SQL查询；
+* no-ORM：通过 database/sql 包使用纯 SQL 查询；
 * ORM：使用 Gorm 库进行数据库访问。
 
 示例正在做几件事：
@@ -164,7 +164,7 @@ func allPostsInTag(db *gorm.DB, t *Tag) ([]Post, error) {
 via: https://eli.thegreenplace.net/2019/to-orm-or-not-to-orm/
 
 作者：[Eli Bendersky](https://eli.thegreenplace.net/)
-译者：[zhoudingding](http://blog.zhoudingding.com/)
+译者：[zhoudingding](http://github.com/dingdingzhou)
 校对：[-](-)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
