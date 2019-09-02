@@ -68,7 +68,7 @@ type httpGetter interface {
 
 ----------------
 
-via: https://ewanvalentine.io/microservices-in-golang-part-3/
+via: https://developer20.com/how-i-organize-packages-in-go/
 
 作者：[Bartłomiej Klimczak](https://developer20.com/how-i-organize-packages-in-go/)
 译者：[shadowstorm97](https://github.com/shadowstorm97)
