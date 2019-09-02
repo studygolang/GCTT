@@ -70,8 +70,8 @@ type httpGetter interface {
 
 via: https://ewanvalentine.io/microservices-in-golang-part-3/
 
-作者：[Ewan Valentine](http://ewanvalentine.io/author/ewan)
-译者：[译者ID](https://github.com/译者ID)
+作者：[Bartłomiej Klimczak](https://developer20.com/how-i-organize-packages-in-go/)
+译者：[shadowstorm97](https://github.com/shadowstorm97)
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
