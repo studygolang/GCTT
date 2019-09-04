@@ -1,4 +1,8 @@
-写一个好的 Go 语言包的开端是起一个好名字，由于你的包名是对这个包的 elevator pitch，你必须用一个单词来说明。
+首发于：https://studygolang.com/articles/23310
+
+# 避免诸如 base、util、common 之类的包名
+
+写一个好的 Go 语言包的开端是起一个好名字。将你的包名视为一个 elevator pitch，你必须用一个单词来说明。
 
 包名不好的一个普遍的原因是被命名为 *utility*，这些包混合了 helpers 和 utility 代码，还包含了各种各样不相关的函数，因此根据它们提供的内容很难描述其作用。这经常导致一个包的名字取决于它所包含内容：实用工具（utilities）。
 
@@ -16,7 +20,7 @@
 
 用包提供了什么功能来它命名，而不是用它包含的内容。
 
-# 相关帖子
+## 相关帖子
 
 1. [Simple profiling package moved, updated](https://dave.cheney.net/2014/10/22/simple-profiling-package-moved-updated)
 
@@ -32,6 +36,6 @@ via:https://dave.cheney.net/2019/01/08/avoid-package-names-like-base-util-or-com
 
 作者：[*[Dave Cheney](https://dave.cheney.net/)*](https://dave.cheney.net/)
 译者：[Alihanniba](https://github.com/Alihanniba) / 柒呀
-校对：
+校对：[zhoudingding](https://github.com/dingdingzhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
