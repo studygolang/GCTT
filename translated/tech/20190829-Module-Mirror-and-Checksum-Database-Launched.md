@@ -29,7 +29,7 @@ Go 的解决方案就是将 go.sum 的每一行记录的全局源，称为校验
 校验和数据库支持一系列端点给go命令请求和校验 go.sum。 /lookup 端提供『signed tree head』（STH）和请求 go.sum 行。/tile 端提供称为 tiles 的树的块，go 命令可以使用它来进行校样。下面是 go 命令如何通过执行 /lookup 模块版本，然后证明所需的 tiles 来与校验和数据库交互的示例。
 ![how the go command may interact with the checksum database](https://blog.golang.org/module-mirror-launch/sumdb-protocol.png)
 
-如果你在使用 Go 1.12 或更早的版本，你可以手动敲入 gosumcheck 检查校验和数据库中的 go.sum 文件： 
+如果你在使用 Go 1.12 或更早的版本，你可以手动敲入 gosumcheck 检查校验和数据库中的 go.sum 文件：
 ```
 $ go get golang.org/x/mod/gosumcheck
 $ gosumcheck /path/to/go.sum
