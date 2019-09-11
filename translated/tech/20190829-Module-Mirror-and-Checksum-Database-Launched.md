@@ -1,6 +1,6 @@
 # 推出模块镜像和校验和数据库(Module Mirror and Checksum Database Launched)
 
-我们很高兴地分享我们的模块 [镜像](https://proxy.golang.org/) ，[索引](https://index.golang.org/) 和 [校验和数据库](https://sum.golang.org/) 现已准备就绪！ 对于 [Go 1.13模块用户](https://golang.org/doc/go1.13#introduction) ，go命令将默认使用模块镜像和校验和数据库。 有关这些服务的隐私信息，请参阅 [proxy.golang.org/privacy](proxy.golang.org/privacy) ，有关配置详细信息，请参阅 [go命令文档](https://golang.org/cmd/go/#hdr-Module_downloading_and_verification) ，包括如何禁用这些服务器或使用不同的服务器。 如果您依赖于非公共模块，请参阅 [配置你的环境的文档](https://golang.org/cmd/go/#hdr-Module_configuration_for_non_public_modules) 。
+我们很高兴地分享我们的模块 [镜像](https://proxy.golang.org/) ，[索引](https://index.golang.org/) 和 [校验和数据库](https://sum.golang.org/) 现已准备就绪！ 对于 [Go 1.13模块用户](https://golang.org/doc/go1.13#introduction) ，go命令将默认使用模块镜像和校验和数据库。 有关这些服务的隐私信息，请参阅 [proxy.golang.org/privacy](proxy.golang.org/privacy) ，有关配置详细信息，请参阅 [go命令文档](https://golang.org/cmd/go/#hdr-Module_downloading_and_verification) ，包括如何禁用这些服务器或使用不同的服务器。如果您依赖于非公共模块，请参阅 [配置你的环境的文档](https://golang.org/cmd/go/#hdr-Module_configuration_for_non_public_modules) 。
 
 这篇文章将描述这些服务及使用它们的好处，并总结了Gophercon 2019提到 [Go Module Proxy: Life of a Query](https://www.youtube.com/watch?v=KqTySYYhPUE&feature=youtu.be) 的一些要点。如果您对完整的演讲感兴趣，请参阅 [录制内容](https://www.youtube.com/watch?v=KqTySYYhPUE&feature=youtu.be) 。
 
@@ -9,6 +9,7 @@
 模块是一组版本化的Go包，每个版本的内容都是不可变的。这种不变性为缓存和身份验证提供了新的机会。当以模块模式运行时，它必须获取包含所请求的包的模块，以及该模块引入的任何新依赖项，根据需要更新 go.mod 和 go.sum 文件。从版本控制中获取模块在系统的延迟和存储方面可能是昂贵的：go命令可能被迫下载包含传递依赖的存储库的完整提交历史记录，即使是未构建的存储裤，也只是解决它的版本。
 
 解决方法是使用模块代理，它代表一种更适合go命令需求的API（参考 go help goproxy ）。当使用代理以模块模式运行时，它只需要请求指定的模块元数据或源代码，所以它可以更快地工作，而不用担心其余部分。下面是一个示例，说明go命令如何通过请求版本列表来获取代理，然后使用最新标记版本的info，mod和zip文件。
+
 ![an example of how the go command may use a proxy](https://blog.golang.org/module-mirror-launch/proxy-protocol.png)
 
 模块镜像是一种特殊的模块代理，它将元数据和源代码缓存在自己的存储系统中，允许镜像继续提供原始位置不再提供的源代码。这可以加快下载速度并防止因为代码更迭导致的依赖关系丢失。有关更多信息，请参阅 [2019年的Go Modules](https://blog.golang.org/modules2019) 。
@@ -24,12 +25,14 @@ go.sum 的局限性在于它完全信任你第一次拉取的代码。当你添�
 Go 的解决方案就是将 go.sum 的每一行记录的全局源，称为校验和数据库，它确保 go 命令总是向每个人的 go.sum 文件添加相同的行。不论什么时候，go 命令接受新的源码，它可以通过全局数据库校验代码的哈希值来确保哈希值是否匹配，以此保证每个人使用相同版本是相同的代码。
 
 [sum.golang.org](sum.golang.org) 校验和数据库提供了校验和数据库，病构建在由 [Trillian](https://github.com/google/trillian) 支持的哈希的 [透明日志](https://research.swtch.com/tlog)（或"Merkle树"）。 Merkle 树的主要优点就是它具有防篡改功能，并且具有不允许未被发现的不良行为的属性，这使得它比简单的数据库更可靠。go 命令使用树来检查『包含』证明（日志中存在特定记录）和『一致性』证明（树未被篡改），然后将新的 go.sum 行添加到模块中。下面是这种树的样子：
+
 ![tree](https://blog.golang.org/module-mirror-launch/tree.png)
 
 校验和数据库支持一系列端点给go命令请求和校验 go.sum。 /lookup 端提供『signed tree head』（STH）和请求 go.sum 行。/tile 端提供称为 tiles 的树的块，go 命令可以使用它来进行校样。下面是 go 命令如何通过执行 /lookup 模块版本，然后证明所需的 tiles 来与校验和数据库交互的示例。
+
 ![how the go command may interact with the checksum database](https://blog.golang.org/module-mirror-launch/sumdb-protocol.png)
 
-如果你在使用 Go 1.12 或更早的版本，你可以手动敲入 gosumcheck 检查校验和数据库中的 go.sum 文件： 
+如果你在使用 Go 1.12 或更早的版本，你可以手动敲入 gosumcheck 检查校验和数据库中的 go.sum 文件：
 ```
 $ go get golang.org/x/mod/gosumcheck
 $ gosumcheck /path/to/go.sum
@@ -53,4 +56,3 @@ via: https://blog.golang.org/module-mirror-launch
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
