@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/23435
+
 # 用Go构建不可变的数据结构
 
-![Photo by Frantzou Fleurine on Unsplash](https://miro.medium.com/max/3264/1*K-uPi3TS9eE47EoIRvEOLw.jpeg)
+![Photo by Frantzou Fleurine on Unsplash](https://raw.githubusercontent.com/studygolang/gctt-images/master/building-immutable-data-structures-in-go/cover.jpeg)
 
 [共享状态](https://www.quora.com/What-is-the-meaning-of-shared-state-and-the-side-effects-in-functional-programming)是比较容易理解和使用的，但是可能产生隐晦以至于很难追踪的 bugs。尤其是在我们的数据结构只有部分是通过引用传递的。切片就是这么一个很好的例子。后续我会作出更加详细的讲解。
 
@@ -299,6 +301,6 @@ via: http://elliot.land/post/building-immutable-data-structures-in-go
 
 作者：[ELLIOT CHANCE](http://elliot.land/)
 译者：[sammyne](https://github.com/sammyne)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[zhoudingding](https://github.com/dingdingzhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
