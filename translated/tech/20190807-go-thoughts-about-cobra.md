@@ -17,7 +17,7 @@ cmd := &cobra.Command{
 }
 ```
 
-设计非常类似于原始的 go 标准库命令，如 `go env`，`go fmt`等
+设计非常类似于原生的 go 标准库命令，如 `go env`，`go fmt`等
 
 比如，`go fmt` 命令结构：
 
@@ -39,7 +39,7 @@ See also: go fix, go vet.
 }
 ```
 
-如果你熟悉了 Cobra，很容易理解内部命令是如何工作的，反之亦然。我们可能会想，当 Go 定义了命令接口后，为什么还要要使用外部库:
+如果你熟悉了 Cobra，很容易理解内部命令是如何工作的，反之亦然。我们可能会想，当 Go 已经定义了命令接口后，为什么还要要使用外部库？
 
 Go 标准库定义的接口：
 
@@ -97,17 +97,17 @@ func main() {
 main.go:4:2: use of internal package cmd/go/internal/base not allowed
 ```
 
-然而，这个内部界面设计 [启发了 Cobra](https://blog.gopheracademy.com/advent-2014/introducing-cobra/)，正如 Cobra 创建者 [Steve Francia](https://www.linkedin.com/in/stevefrancia/) 所解释的那样，他为 Google 工作并且直接参与了 Go 项目。
+然而，正如 Cobra 创建者 [Steve Francia](https://www.linkedin.com/in/stevefrancia/) 所解释的那样：这个内部界面设计 [催生了了 Cobra](https://blog.gopheracademy.com/advent-2014/introducing-cobra/)（Steve Franci 在 Google 工作并曾直接参与了 Go 项目。）。
 
-该项目也建立在来自同一作者的 [pflag 项目](https://github.com/spf13/pflag) 的顶部，提供符合 POSIX 标准。因此，程序包支持短标记和长标记，如`-e`替代`--example` ,或者多个选项，如`-abc` 和`-a`，`-b` 和`-c` 都是是有效选项。这旨在改进 Go 库中的 `flag` 包，该库仅支持标志`-xxx`。
+该项目也建立在来自同一作者的 [pflag 项目](https://github.com/spf13/pflag) 之上，提供符合 POSIX 标准。因此，程序包支持短标记和长标记，如`-e`替代`--example` ,或者多个选项，如`-abc` 和`-a`，`-b` 和`-c` 都是是有效选项。这旨在改进 Go 库中的 `flag` 包，该库仅支持标志`-xxx`。
 
 ## 特性
 
 Cobra 有一些值得了解的简便方法：
 
-* Cobra 提供了两种方法来运行我们的逻辑 `Run func(cmd *Command, args []string)` 和 `RunE func(cmd *Command, args []string) error` ，后者可以返回一个错误，我们将能够从 `Execute()` 方法的返回中捕获。
+* Cobra 提供了两种方法来运行我们的逻辑： `Run func(cmd *Command, args []string)` 和 `RunE func(cmd *Command, args []string) error` ，后者可以返回一个错误，我们将能够从 `Execute()` 方法的返回中捕获。
 
-* `Command` 结构 提供了一个 `Aliases` 属性，允许我们将命令迁移到一个新名称，而不需要通过在`alias`属性中映射旧名称来破坏现有的行为。这种兼容性策略甚至可以通过使用 `Deprecated` 属性来增强，该属性允许您将一个命令标记为`(弃用)Deprecated`，并在删除它之前提供一个简短的说明。
+* `Command` 结构 提供了一个 `Aliases（别名）` 属性，允许我们将命令迁移到一个新名称，而不需要在`alias`属性中通过映射旧名称来破坏现有的行为。这种兼容性策略甚至可以通过使用 `Deprecated` 属性来增强，该属性允许您将一个命令标记为`Deprecated(即将弃用，不推荐使用)`，并在删除它之前提供一个简短的说明。
 
 * 由于每个命令都可以嵌入其他命令，因此 Cobra 本身支持嵌套命令，并允许我们像下边这样编写：
 
@@ -125,8 +125,8 @@ import (
 )
 
 func main() {
-    cmd := newCommand()
-    cmd.AddCommand(newNestedCommand())
+    cmd := newCommand() // 构建一般命令
+    cmd.AddCommand(newNestedCommand()) // 加入嵌套命令
 
     rootCmd := &cobra.Command{}
     rootCmd.AddCommand(cmd)
@@ -168,7 +168,7 @@ func newNestedCommand() *cobra.Command {
 
 ## 轻量
 
-这个库的代码主要包含一个文件夹，而且很好理解，它不会影响你程序的性能。接下来，我们做一个压力测试（benchmark）：
+这个库的代码主要包含一个文件，而且很好理解，它不会影响你程序的性能。接下来，我们做一个压力测试（benchmark）：
 
 ```go
 package main
@@ -220,7 +220,7 @@ name   alloc/op
 Cmd-8  78.3kB ± 0%
 
 name   allocs/op
-Cmd-8     646 ± 0%
+Cmd-8  646 ± 0%
 ```
 
 由于 Cobra 被设计运行在 CLI 模式下, 性能并不重要, 但是可以看出这个库有多么轻量.
@@ -296,7 +296,7 @@ func main() {
 }
 ```
 
-该库基于一个接口而不是一个结构，如我们之前看到的 Cobra 或 CLI，并使代码更加冗长。
+如我们之前看到的 Cobra 或 CLI，该库基于一个接口而不是一个结构体，因此并使代码稍显冗长。
 
 ---
 
@@ -304,6 +304,6 @@ via: <https://medium.com/a-journey-with-go/go-thoughts-about-cobra-f4e8c5f18091>
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[TomatoAres](https://github.com/TomatoAres)
-校对：[校对者 ID](https://github.com/校对者ID)
+校对：[DingdingZhou](https://github.com/DingdingZhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
