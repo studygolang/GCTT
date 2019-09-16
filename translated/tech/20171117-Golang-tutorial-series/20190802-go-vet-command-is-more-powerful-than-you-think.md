@@ -1,6 +1,7 @@
 # Vet 命令：超出预期的强大
 
-!["Golang 之旅"插图，由 Go Gopher 的 Renee French 创作]()
+<!-- TODO 确定图片链接 -->
+!["Golang 之旅"插图，由 Go Gopher 的 Renee French 创作](https://github.com/studygolang/gctt-images2/blob/master/go-vet-command-is-more-powerful-than-you-think/go-vet.png)
 
 Go `vet` 命令在编写代码时非常有用。它可以帮助您检测应用程序中任何可疑、异常或无用的代码。该命令实际上由几个子分析器组成，甚至可以与您的自定义分析器一起工作。让我们首先回顾一下内置的分析器。
 
@@ -71,7 +72,7 @@ func main() {
 ```go
 func main() {
    var wg sync.WaitGroup
-   for _, v := range []int{0,1,2,3} { // 需引入临时变量解决
+   for _, v := range []int{0,1,2,3} { // 需引入临时变量解决,或 通过传值参数解决
       wg.Add(1)
       go func() {
          print(v)
@@ -103,9 +104,33 @@ func main() {
     // cancleFunc()
 ```
 
-如果需要了解关于上下文、和 *可取消上下文*的差异以及取消函数（cancle func）的作用的详细信息，我建议您阅读我关于[上下文和通过传播进行取消](https://medium.com/@blanchon.vincent/go-context-and-cancellation-by-propagation-7a808bbc889c)的文章。
+如果需要了解关于 context 的更多细节、各种 context 的差异以及 cancel function 的功能，我建议您阅读我关于[上下文和通过传播进行取消](https://medium.com/@blanchon.vincent/go-context-and-cancellation-by-propagation-7a808bbc889c)的文章。
 
 ### stdmethods
+
+`stdmethods` 分析器将确保你已经从标准库的接口来实现的方法是与标准库兼容：
+
+```go
+type Foo struct {}
+
+func (f Foo) MarshalJSON() (string, error) {
+   return `{a: 0}`, nil
+}
+// 需改为：
+// func (f Foo) MarshalJSON() ([]byte, error) {
+//    return []byte(`{a: 0}`), nil
+// }
+
+func main() {
+   f := Foo{}
+   j, _ := json.Marshal(f)
+   println(string(j))
+}
+// {}
+// from vet: main.go:7:14: method MarshalJSON() (string, error) should have signature MarshalJSON() ([]byte, error)
+```
+
+### structtag
 
 标签是结构中的字符串，应该遵循[反射包中的约定](http://golang.org/pkg/reflect/#StructTag)。随意使用将使标签无效，并可能很难调试没有审查命令:
 
