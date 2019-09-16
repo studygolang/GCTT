@@ -1,6 +1,6 @@
 # 无缓冲和有缓冲通道
 
-!["Go 之旅 插图，由 Go Gopher 的 Renee French 创作]()
+!["Go 之旅 插图，由 Go Gopher 的 Renee French 创作](https://github.com/studygolang/gctt-images2/blob/master/buffered-and-unbufferd-channel/next-recvier.png)
 
 Go 中的通道（channel）机制十分强大，但是理解内在的概念甚至可以使它更强大。实际上，选择缓冲通道或非缓冲通道将改变应用程序的行为和性能。
 
@@ -52,7 +52,7 @@ func main() {
 
 通道结构`hchan`可以在`runtime`包中的`chan.go`中使用。该结构包含与通道缓冲区相关的属性，但是为了说明未缓存的通道，我将省略我们稍后将看到的那些属性。下面是未缓冲通道的表示
 
-![hchan 结构]()
+![hchan 结构](https://github.com/studygolang/gctt-images2/blob/master/buffered-and-unbufferd-channel/hchan-struct.png)
 
 通道维护了指向接收方 `recvq` 和发送方 `sendq` 列表的指针，由链表 `waitq` 表示。`sudog`，包含指向 （next）下一个 和（previous）上一个元素的指针，以及与处理 *接收方/发送方* 的 goroutine 相关的信息。有了这些信息，就很容易知道，如果没有了发送方，通道什么时候应该阻塞接收方，反之亦然。
 
@@ -109,7 +109,7 @@ func main() {
 
 现在让我们根据这个例子分析结构`hchan`和与缓冲区相关的字段:
 
-![缓冲通道的 hchan 结构]]()
+![缓冲通道的 hchan 结构](https://github.com/studygolang/gctt-images2/blob/master/buffered-and-unbufferd-channel/hchan%20structure%20with%20buffer%20attributes.png)
 
 buffer（缓冲）由以下五个属性组成：
 
@@ -121,7 +121,7 @@ buffer（缓冲）由以下五个属性组成：
 
 通过`sendx`和`recvx`，这个缓冲区就像一个循环队列:
 
-![通道结构中的循环队列]()
+![通道结构中的循环队列](https://github.com/studygolang/gctt-images2/blob/master/buffered-and-unbufferd-channel/circular%20queue%20in%20the%20channel%20struct.png)
 
 这个循环队列允许我们在缓冲区中维护一个顺序，而不需要在其中一个元素从缓冲区弹出时不断移动元素。
 
@@ -208,18 +208,18 @@ WithBufferSizeEqualsToNumberOfWorker-8  183µs ± 4%
 WithBufferSizeExceedsNumberOfWorker-8   134µs ± 2%
 ```
 
-一个适当大小的缓冲区确实可以使您的应用程序更快!让我们跟踪分析基准测试，以确定延迟在哪里。
+一个适当大小的缓冲区确实可以使您的应用程序更快！让我们跟踪分析基准测试，以确定延迟在哪里。
 
 ## 追踪延迟
 
 跟踪基准测试将使您访问同步阻塞概要文件，该概要文件显示等待同步原语的 goroutines 阻塞位于何处。
 Goroutines 在同步过程中花费了 9ms 的时间来等待未缓冲通道的值，而 50 大小的缓冲区只等待 1.9ms:
 
-![同步阻塞概要]()
+![同步阻塞概要](https://github.com/studygolang/gctt-images2/blob/master/buffered-and-unbufferd-channel/synchronization%20blocking%20profile.png)
 
 由于缓冲的存在，接收值的延迟减小了 5 倍：
 
-![同步阻塞概要]()
+![同步阻塞概要](https://github.com/studygolang/gctt-images2/blob/master/buffered-and-unbufferd-channel/synchronization%20blocking%20profile2.png)
 
 我们现在确实证实了我们以前的怀疑。缓冲区的大小对应用程序的性能有重要影响。
 
