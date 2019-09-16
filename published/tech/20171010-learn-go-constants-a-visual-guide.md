@@ -1,12 +1,14 @@
+首发于：https://studygolang.com/articles/23441
+
 # Go 常量学习-可视化指南
 
-> go 的类型常量和非类型常量是两个必须要了解的关键概念
+> Go 的类型常量和非类型常量是两个必须要了解的关键概念
 
 不要忘记在文章下面有很多代码示例，因此你要确保点击这些链接并尝试运行这些程序。
 
 ## 你为什么使用常量？
 
-![why_might_you_use_constants?.image ](https://cdn-images-1.medium.com/max/2400/1*r734fn1RBz1c1J2cKM7ZGw.png)
+![why_might_you_use_constants?.image ](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-const-guide/1*r734fn1RBz1c1J2cKM7ZGw.png)
 
 你不想在代码中到处定义[魔法数值](https://en.wikipedia.org/wiki/Magic_number_%28programming%29)，于是使用常量来声明它们，并在代码中再次使用它们。
 
@@ -18,20 +20,20 @@
 
 ## 类型常量
 
-![typed_constants.image](https://cdn-images-1.medium.com/max/1600/1*4zXKp5xjt-a9ivu9b0vNMw.png)
+![typed_constants.image](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-const-guide/1*4zXKp5xjt-a9ivu9b0vNMw.png)
 
-类型→Boolean,rune,numerics,或则 string
+类型→Boolean,rune,numerics,或者 string
 
 值→编译期时在声明中分配值
 
 地址→你无法得到它在内存中的地址（不像变量）
 
 * 你无法在声明常量之后再改变它
-* 你不能使用运行时的结构，例如变量，指针，数组，切片，map,结构体，接口，方法调用，或则方法的值。
+* 你不能使用运行时的结构，例如变量，指针，数组，切片，map,结构体，接口，方法调用，或者方法的值。
 
 ## 类型化常量声明
 
-![image](https://cdn-images-1.medium.com/max/1600/1*wUbUPm7CFOwWTG_vE5UgmA.png)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-const-guide/1*wUbUPm7CFOwWTG_vE5UgmA.png)
 
 *图中定义了一个类型常量 Pi，它的类型为 float64，值为 3.14*
 
@@ -39,7 +41,7 @@
 
 ## 声明多个常量
 
-![image](https://cdn-images-1.medium.com/max/2400/1*JCWkOyIW1KrJUjSdnbGfNw.png)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-const-guide/1*JCWkOyIW1KrJUjSdnbGfNw.png)
 
 运行图中的代码并且检验它的结果，[请点击这里](https://play.golang.org/p/mBoqG58z_e)
 
@@ -53,9 +55,9 @@
 
 它们有很好的特性，比如高精度的计算以及在所有数值表达式中使用它们而不声明类型等。下面我将介绍这些特性。它们就像 Go 中的通配符。
 
-![iamge](https://cdn-images-1.medium.com/max/1600/1*c2tP3ifIOkq2yo0UMAwdDA.png)
+![iamge](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-const-guide/1*c2tP3ifIOkq2yo0UMAwdDA.png)
 
-理想类型→与Go通常类型不同的隐藏类型。
+理想类型→与 Go 通常类型不同的隐藏类型。
 
 理想值→存在于理想值空间中，并且具有默认类型。
 
@@ -63,11 +65,11 @@
 
 ## 非类型化常量的声明
 
-![image](https://cdn-images-1.medium.com/max/1600/1*7b1ZmM39ppGTFs3nLgdMzw.png)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-const-guide/1*7b1ZmM39ppGTFs3nLgdMzw.png)
 
 声明了一个非类型化的常量 Pi，并且为它赋值为 3.14，那么它默认的类型就是 float。
 
-![image](https://cdn-images-1.medium.com/max/1600/1*7cCppzbC1AbmF9u8O75MkQ.png)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-const-guide/1*7cCppzbC1AbmF9u8O75MkQ.png)
 
 当需要它的类型的时候，图片左侧（期望类型）将转化为右边的类型（预先声明的类型）
 
@@ -78,9 +80,9 @@
 If you stay in the untyped constants realm, there is no-speed-limit! But, when you use them in a variable, the speed-limit applies.
 如果常量只停留在非类型化常量领域，那么它没有速度的限制！但是，当将常量赋值给变量进行使用时，速度就有限制了。
 
-![image](https://cdn-images-1.medium.com/max/2400/1*YhDCUL1FGF-BbU-yTkxAAA.png)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-const-guide/1*YhDCUL1FGF-BbU-yTkxAAA.png)
 
-当你将其分配给变量时，非类型化常量的精度会降低，其默认类型会转换为 go 的[普通类型](https://golang.org/ref/spec#Boolean_types)。
+当你将其分配给变量时，非类型化常量的精度会降低，其默认类型会转换为 Go 的[普通类型](https://golang.org/ref/spec#Boolean_types)。
 
 **运行代码示例，[请点击这里](https://play.golang.org/p/4ODv0n_stw)**
 
@@ -97,7 +99,7 @@ If you stay in the untyped constants realm, there is no-speed-limit! But, when y
 
 ## 常量作用范围
 
-![image](https://cdn-images-1.medium.com/max/2400/1*pOohX09A8xYxc4scxpHoRQ.png)
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-const-guide/1*pOohX09A8xYxc4scxpHoRQ.png)
 
 一个常量只能在它的声明的作用域内使用。如果你在更内部的作用域内以同样的名字再声明一个常量，那么这个常量仅仅在内部作用域内可以使用，并且在此作用域内将覆盖外部声明的常量。查看代码示例，[请点击这里](https://play.golang.org/p/c3-GF_a5iI)
 
@@ -107,6 +109,6 @@ via: https://blog.learngoprogramming.com/learn-golang-typed-untyped-constants-70
 
 作者：[Inanc Gumus](https://www.activestate.com/blog/author/peteg/)
 译者：[xmge](https://github.com/xmge)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
