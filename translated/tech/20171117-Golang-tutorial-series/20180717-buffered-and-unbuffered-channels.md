@@ -54,7 +54,7 @@ func main() {
 
 ![hchan 结构](https://github.com/studygolang/gctt-images2/blob/master/buffered-and-unbufferd-channel/hchan-struct.png)
 
-通道维护了指向接收方 `recvq` 和发送方 `sendq` 列表的指针，由链表 `waitq` 表示。`sudog`，包含指向 （next）下一个 和（previous）上一个元素的指针，以及与处理 *接收方/发送方* 的 goroutine 相关的信息。有了这些信息，就很容易知道，如果没有了发送方，通道什么时候应该阻塞接收方，反之亦然。
+通道维护了指向接收方 `recvq` 和发送方 `sendq` 列表的指针，由链表 `waitq` 表示。`sudog` ，包含指向 （next）下一个 和（previous）上一个元素的指针，以及与处理 *接收方/发送方* 的 goroutine 相关的信息。有了这些信息，就很容易知道，如果没有了发送方，通道什么时候应该阻塞接收方，反之亦然。
 
 下面是我们前面示例的工作流:
 
@@ -62,7 +62,7 @@ func main() {
 2. 在第 16 行我们的第一个 goroutine 将值 `foo` 发送到通道。
 3. 通道从表示发送方的池（pool）中获取 `sudog` 结构体。这个结构将维护对 goroutine 和值 `foo` 的引用。
 4. 这个发送者现在进入队列（enqueued ） `sendq` 。
-5. 由于“*chan send*”，goroutine 进入等待状态。
+5. 由于“*chan send*”阻塞，goroutine 进入等待状态。
 6. 第 23 行，我们的第二个 goroutine 将读取来自通道的消息。
 7. 通道将弹出 `sendq` 队列，以获取步骤 3 中的等待发送的结构体。
 8. 通道将使用 `memmove` 函数将发送方发送的值(封装装在 `sudog` 结构中)复制到读取的通道的变量。
