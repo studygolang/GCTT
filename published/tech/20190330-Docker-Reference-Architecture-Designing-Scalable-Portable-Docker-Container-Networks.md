@@ -1,10 +1,12 @@
-# Docker 参考架构：设计可拓展、可移植的 Docker 容器网络
+首发于：https://studygolang.com/articles/23458
+
+# Docker 参考架构：设计可扩展、可移植的 Docker 容器网络
 
 ## 您将学到什么
 
 Docker 容器将软件封装到一个完整的文件系统当中，这个文件系统包括软件运行所需的一切：代码、运行时、系统工具、系统库，所有能安装在服务器上的东西。这确保了软件在不同的环境下都能有相同的运行情况。默认情况下， 容器将各个应用彼此隔离开并将软件与底层基础设施隔离开，同时为应用提供额外的一层保护。
 
-那如果应用需要和其他应用、主机或外部网络相互通信呢？您会如何在确保应用可移植性、服务发现、负载均衡、安全性、高性能和可拓展性的同时，设计一个拥有适当连通性的网络呢？本文档将解决这些网络设计的问题，提供可用的工具以及通用的部署模式。文章不会指定或推荐物理网络的设计，但会给出一些兼顾应用的需求与物理网络条件约束的 Docker 网络设计方法。
+那如果应用需要和其他应用、主机或外部网络相互通信呢？您会如何在确保应用可移植性、服务发现、负载均衡、安全性、高性能和可扩展性的同时，设计一个拥有适当连通性的网络呢？本文档将解决这些网络设计的问题，提供可用的工具以及通用的部署模式。文章不会指定或推荐物理网络的设计，但会给出一些兼顾应用的需求与物理网络条件约束的 Docker 网络设计方法。
 
 ### 前置内容
 
@@ -30,14 +32,14 @@ Docker 已经开发出了一种新的应用程序交付模式，通过这种模�
   - *我要如何保障拥有应用流量和集群控制流量的容器是安全的？*
 - **性能**
   - 我要怎样才能提供高级的网络服务，使延迟最小，使带宽最大？
-- **可拓展性**
+- **可扩展性**
   - *我要怎么保证这些特性不会在应用进行跨主机扩容的时候受到影响？*
 
 ## 容器网络模型
 
 Docker 的网络架构是建立在一系列称为*容器网络模型*（Container Networking Model, CNM）的接口之上的。CNM 的设计哲学是为了提供跨多种基础设施的应用可移植性。这一模型在应用可移植性和充分利用基础设施自有特性、能力之间，取得了一个平衡。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/cnm.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/cnm.png)
 
 ### CNM 部件
 
@@ -56,9 +58,9 @@ Docker 的网络架构是建立在一系列称为*容器网络模型*（Containe
 - **网络驱动** —— Docker 网络驱动提供使网络运行的实际实现。它们是可插拔的，因此可以使用不同的驱动程序并轻松互换以支持不同的用例。可以在给定的 Docker Engine 或群集上同时使用多个网络驱动程序，但每个 Docker 网络仅通过单个网络驱动程序进行实例化。有两种类型的 CNM 网络驱动程序：
   - **原生网络驱动** —— 原生网络驱动程序是 Docker Engine 的原生部分，由 Docker 提供。有多种驱动程序可供选择，支持不同的功能，如覆盖网络或本地网桥。
   - **远程网络驱动** —— 远程网络驱动是社区和其他供应商创建的网络驱动程序。这些驱动程序可用于和现有软硬件相集成。用户还可以在需要用到现有网络驱动程序不支持的特定功能的情况下创建自己的驱动程序。
-- **IPAM 驱动** —— Docker 具有本机 IP 地址管理驱动程序，若未另加指定，将为网络和端点提供默认子网或 IP 地址。IP 地址也可以通过网络、容器和服务创建命令手动分配。我们同样拥有远程 IPAM 驱动程序，可与现有IPAM工具集成。
+- **IPAM 驱动** —— Docker 具有本机 IP 地址管理驱动程序，若未另加指定，将为网络和端点提供默认子网或 IP 地址。IP 地址也可以通过网络、容器和服务创建命令手动分配。我们同样拥有远程 IPAM 驱动程序，可与现有 IPAM 工具集成。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/cnm-api.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/cnm-api.png)
 
 ### Docker 原生网络驱动
 
@@ -66,7 +68,7 @@ Docker 原生网络驱动程序是 Docker Engine 的一部分，不需要任何�
 
 | 驱动        | 描述                                                         |
 | :---------- | :----------------------------------------------------------- |
-| **Host**    | 使用`host`驱动意味着容器将使用主机的网络栈。没有命名空间分离，主机上的所有接口都可以由容器直接使用。 |
+| **Host**    | 使用 `host` 驱动意味着容器将使用主机的网络栈。没有命名空间分离，主机上的所有接口都可以由容器直接使用。 |
 | **Bridge**  | `bridge` 驱动会在 Docker 管理的主机上创建一个 Linux 网桥。默认情况下，网桥上的容器可以相互通信。也可以通过 `bridge` 驱动程序配置，实现对外部容器的访问。 |
 | **Overlay** | `overlay` 驱动创建一个支持多主机网络的覆盖网络。它综合使用本地 Linux 网桥和 VXLAN，通过物理网络基础架构覆盖容器到容器的通信。 |
 | **MACVLAN** | `macvlan` 驱动使用 MACVLAN 桥接模式在容器接口和父主机接口（或子接口）之间建立连接。它可用于为在物理网络上路由的容器提供 IP 地址。此外，可以将 VLAN 中继到 `macvlan` 驱动程序以强制执行第 2 层容器隔离。 |
@@ -76,7 +78,7 @@ Docker 原生网络驱动程序是 Docker Engine 的一部分，不需要任何�
 
 如 `docker network ls` 命令结果所示，Docker 网络驱动程序具有 *范围* 的概念。网络范围是驱动程序的作用域，可以是本地范围或 Swarm 集群范围。本地范围驱动程序在主机范围内提供连接和网络服务（如 DNS 或 IPAM）。Swarm 范围驱动程序提供跨群集的连接和网络服务。集群范围网络在整个群集中具有相同的网络 ID，而本地范围网络在每个主机上具有唯一的网络 ID。
 
-```sh
+```bash
 $ docker network ls
 NETWORK ID          NAME                DRIVER              SCOPE
 1475f03fbecb        bridge              bridge              local
@@ -137,7 +139,7 @@ Docker 使用了几个 Linux 网络基础模块来实现其原生 CNM 网络驱�
 
 控制面板非常安全，通过加密通道提供机密性、完整性和身份验证。它也是每个网络的边界，大大减少了主机收到的更新。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/controlplane.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/controlplane.png)
 
 它由多个组件组成，这些组件协同工作以实现跨大规模网络的快速收敛。控制平面的分布式特性可确保群集控制器故障不会影响网络性能。
 
@@ -157,9 +159,9 @@ Docker 网络控制面板组件如下：
 
 通常在使用其他网络驱动程序时，每个容器都被放在其自己的 *网络命名空间* （或沙箱）中，以实现彼此间完全的网络隔离。使用 `host` 驱动程序的容器都在同一主机网络命名空间中，并使用主机的网络接口和 IP 堆栈。主机网络中的所有容器都能够在主机接口上相互通信。从网络角度来看，它们相当于在没有使用容器技术的主机上运行的多个进程。因为它们使用相同的主机接口，所以任意两个容器都不能够绑定到同一个 TCP 端口。如果在同一主机上安排多个容器，可能会导致端口争用。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/host-driver.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/host-driver.png)
 
-```sh
+```bash
 #Create containers on the host network
 $ docker run -itd --net host --name C1 alpine sh
 $ docker run -itd --net host --name nginx
@@ -201,9 +203,9 @@ $ curl localhost
 - `bridge` 是网络驱动或网络创建的模板
 - `bridge` 是 Linux 网桥的名字，是内核用于实现网络功能的基础模块
 
-在独立的 Docker 主机上，如果未指定其他网络，则 `bridge` 是容器连接的默认网络。在以下示例中，创建了一个没有网络参数的容器。Docker Engine 默认将其连接到`bridge` 网络。在容器内部，注意由 `bridge` 驱动程序创建的 eth0，并由Docker本机 IPAM 驱动程序给出一个地址。
+在独立的 Docker 主机上，如果未指定其他网络，则 `bridge` 是容器连接的默认网络。在以下示例中，创建了一个没有网络参数的容器。Docker Engine 默认将其连接到 `bridge` 网络。在容器内部，注意由 `bridge` 驱动程序创建的 eth0，并由 Docker 本机 IPAM 驱动程序给出一个地址。
 
-```sh
+```bash
 #Create a busybox container named "c1" and show its IP addresses
 host $ docker run -it --name c1 busybox sh
 c1 # ip address
@@ -217,7 +219,7 @@ c1 # ip address
 
 主机上的工具 `brctl` 显示主机网络命名空间中存在的 Linux 网桥。它显示了一个名为 `docker0` 的网桥。`docker0` 有一个接口 `vetha3788c4`，它提供从网桥到容器 `c1` 内的 `eth0` 接口的连接。
 
-```sh
+```bash
 host $ brctl show
 bridge name      bridge id            STP enabled    interfaces
 docker0          8000.0242504b5200    no             vethb64e8b8
@@ -225,7 +227,7 @@ docker0          8000.0242504b5200    no             vethb64e8b8
 
 在容器 `c1` 内部，容器路由表将流量引导到容器的 `eth0`，从而传输到 `docker0` 网桥。
 
-```sh
+```bash
 c1# ip route
 default via 172.17.0.1 dev eth0
 172.17.0.0/16 dev eth0  src 172.17.0.2
@@ -233,11 +235,11 @@ default via 172.17.0.1 dev eth0
 
 容器可以具有零到多个接口，具体取决于它连接的网络数量。一个 Docker 网络只能为网络中的每个容器提供一个接口。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/bridge-driver.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/bridge-driver.png)
 
 如主机路由表中所示，全局网络命名空间中的 IP 接口现在包括 `docker0`。主机路由表提供了外部网络上 `docker0` 和 `eth0` 之间的连接，完成了从容器内部到外部网络的路径。
 
-```sh
+```bash
 host $ ip route
 default via 172.31.16.1 dev eth0
 172.17.0.0/16 dev docker0  proto kernel  scope link  src 172.17.42.1
@@ -252,11 +254,11 @@ default via 172.31.16.1 dev eth0
 
 除了默认网络，用户还可以创建自己的网络，称为**用户自定义网络**，可以是任何网络驱动类型。用户定义的 `bridge` 网络，相当于在主机上设置新的 Linux 网桥。与默认 `bridge` 网络不同，用户定义的网络支持手动 IP 地址和子网分配。如果未给出赋值，则 Docker 的默认 IPAM 驱动程序将分配私有 IP 空间中可用的下一个子网。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/bridge2.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/bridge2.png)
 
-接下来，在用户定义的`bridge` 网络下面创建了两个连接到它的容器。指定了子网，网络名为 `my_bridge`。一个容器未获得 IP 参数，因此 IPAM 驱动程序会为其分配子网中的下一个可用 IP， 另一个容器已指定 IP。
+接下来，在用户定义的 `bridge` 网络下面创建了两个连接到它的容器。指定了子网，网络名为 `my_bridge`。一个容器未获得 IP 参数，因此 IPAM 驱动程序会为其分配子网中的下一个可用 IP， 另一个容器已指定 IP。
 
-```sh
+```bash
 $ docker network create -d bridge --subnet 10.0.0.0/24 my_bridge
 $ docker run -itd --name c2 --net my_bridge busybox sh
 $ docker run -itd --name c3 --net my_bridge --ip 10.0.0.254 busybox sh
@@ -264,7 +266,7 @@ $ docker run -itd --name c3 --net my_bridge --ip 10.0.0.254 busybox sh
 
 `brctl` 现在显示主机上的第二个 Linux 网桥。这一 Linux 网桥的名称 `br-4bcc22f5e5b9` 与 `my_bridge` 网络的网络 ID 匹配。`my_bridge` 还有两个连接到容器 `c2` 和 `c3` 的 veth 接口。
 
-```sh
+```bash
 $ brctl show
 bridge name      bridge id            STP enabled    interfaces
 br-b5db4578d8c9  8000.02428d936bb1    no             vethc9b3282
@@ -280,7 +282,7 @@ e1cac9da3116        bridge              bridge              local
 
 列出全局网络命名空间接口，可以看到已由 Docker Engine 实例化的 Linux 网络。每个 `veth` 和 Linux 网桥接口都显示为其中一个 Linux 网桥和容器网络命名空间之间的链接。
 
-```sh
+```bash
 $ ip link
 
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536
@@ -301,13 +303,13 @@ $ ip link
 
 Ingress 访问是通过显式端口发布提供的。端口发布由 Docker Engine 完成，可以通过 UCP 或 Engine CLI 进行控制。可以将特定或随机选择的端口配置为公开服务或容器。可以将端口设置为侦听特定（或所有）主机接口，并将所有流量从此端口映射到容器内的端口和接口。
 
-```sh
+```bash
 $ docker run -d --name C2 --net my_bridge -p 5000:80 nginx
 ```
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/nat.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/nat.png)
 
-使用 Docker CLI 或 UCP 中的 `--publish` / `-p` 配置外部访问。运行上述命令后，该图显示容器 `C2` 已连接到 `my_bridge` 网络，其IP地址为 `10.0.0.2`。容器在主机接口 `192.168.0.2` 的端口 `5000` 上向外界发布其服务。进入该端口 `192.168.0.2:5000` 的所有流量都会转发到容器端口 `10.0.0.2:80`。
+使用 Docker CLI 或 UCP 中的 `--publish` / `-p` 配置外部访问。运行上述命令后，该图显示容器 `C2` 已连接到 `my_bridge` 网络，其 IP 地址为 `10.0.0.2`。容器在主机接口 `192.168.0.2` 的端口 `5000` 上向外界发布其服务。进入该端口 `192.168.0.2:5000` 的所有流量都会转发到容器端口 `10.0.0.2:80`。
 
 有关在 Docker Engine 群集中暴露容器和服务的信息，请阅读 [Swarm 服务的外部访问](https://success.docker.com/api/asset/.%2Frefarch%2Fnetworking%2F#swarm-external) 相关文章。
 
@@ -325,13 +327,13 @@ IETF VXLAN（[RFC 7348](https://datatracker.ietf.org/doc/rfc7348/)）是一种�
 
 VXLAN 定义为 MAC-in-UDP 封装，将容器第 2 层的帧数据放置在底层 IP/UDP 头中。底层 IP/UDP 报头提供底层网络上主机之间的传输。overlay 是无状态 VXLAN 隧道，其作为参与给定 overlay 网络的每个主机之间的点对多点连接而存在。由于覆盖层独立于底层拓扑，因此应用程序变得更具可移植性。因此，无论是在本地，在开发人员桌面上还是在公共云中，都可以与应用程序一起传输网络策略和连接。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/packetwalk.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/packetwalk.png)
 
 在此图中，展示了 overlay 网络上的数据包流。以下是 `c1` 在其共享 overlay 网络上发送 `c2` 数据包时发生的步骤：
 
-- `c1` 对 `c2` 进行DNS查找。由于两个容器位于同一个 overlay 网络上，因此 Docker Engine 本地 DNS 服务器将 `c2` 解析为其overlay IP地址 `10.0.0.3`。
+- `c1` 对 `c2` 进行 DNS 查找。由于两个容器位于同一个 overlay 网络上，因此 Docker Engine 本地 DNS 服务器将 `c2` 解析为其 overlay IP 地址 `10.0.0.3`。
 - overlay 网络属于 L2 层，因此 `c1` 生成以 `c2` 的 MAC 地址为目的地的 L2 帧。
-- 该帧由 overlay 网络驱动程序用 VXLAN 头封装。分布式 overlay 控制面板管理每个 VXLAN 隧道端点的位置和状态，因此它知道 `c2` 驻留在物理地址 `192.168.0.3` 的`host-B` 上。该地址成为底层 IP 头的目标地址。
+- 该帧由 overlay 网络驱动程序用 VXLAN 头封装。分布式 overlay 控制面板管理每个 VXLAN 隧道端点的位置和状态，因此它知道 `c2` 驻留在物理地址 `192.168.0.3` 的 `host-B` 上。该地址成为底层 IP 头的目标地址。
 - 封装后，数据包将被发送。物理网络负责将 VXLAN 数据包路由或桥接到正确的主机。
 - 数据包到达 host-B 的 eth0 接口，并由 overlay 网络驱动程序解封装。来自 `c1` 的原始 L2 帧被传递到 `c2` 的 eth0 接口，进而传到侦听应用程序。
 
@@ -339,13 +341,13 @@ VXLAN 定义为 MAC-in-UDP 封装，将容器第 2 层的帧数据放置在底�
 
 Docker Swarm 控制面板可自动完成 overlay 网络的所有配置，不需要 VXLAN 配置或 Linux 网络配置。数据平面加密是 overlay 的可选功能，也可以在创建网络时由 overlay 驱动程序自动配置。用户或网络运营商只需定义网络（`docker network create -d overlay ...`）并将容器附加到该网络。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/overlayarch.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/overlayarch.png)
 
 在 overlay 网络创建期间，Docker Engine 会在每台主机上创建 overlay 所需的网络基础架构。每个 overlay 创建一个 Linux 网桥及其关联的 VXLAN 接口。仅当在主机上安排连接到该网络的容器时，Docker Engine 才会智能地在主机上实例化覆盖网络。这可以防止不存在连接容器的 overlay 网络蔓延。
 
 以下示例创建一个 overlay 网络，并将容器附加到该网络。Docker Swarm/UCP 自动创建 overlay 网络。*以下示例需要预先设置 Swarm 或 UCP*。
 
-```sh
+```bash
 #Create an overlay named "ovnet" with the overlay driver
 $ docker network create -d overlay --subnet 10.1.0.0/24 ovnet
 
@@ -355,7 +357,7 @@ $ docker service create --network ovnet nginx
 
 创建 overlay 网络时，请注意在主机内部创建了多个接口和网桥，以及此容器内的两个接口。
 
-```sh
+```bash
 # Peek into the container of this service to see its internal interfaces
 conatiner$ ip address
 
@@ -378,7 +380,7 @@ conatiner$ ip address
        valid_lft forever preferred_lft forever
 ```
 
-在容器内部创建了两个接口，这两个接口对应于主机上现在存在的两个网桥。在 overlay 网络上，每个容器至少有两个接口，分别将它连接到覆盖层和docker_gwbridge。
+在容器内部创建了两个接口，这两个接口对应于主机上现在存在的两个网桥。在 overlay 网络上，每个容器至少有两个接口，分别将它连接到覆盖层和 docker_gwbridge。
 
 |        网桥         | 目的                                                         |
 | :-----------------: | :----------------------------------------------------------- |
@@ -395,7 +397,7 @@ Swarm 和 UCP 支持对群集端口发布之外的服务访问。服务的入站
 
 `ingress` 模式端口发布利用 [Swarm Routing Mesh](https://success.docker.com/api/asset/.%2Frefarch%2Fnetworking%2F#routingmesh) 在服务中的任务之间实现负载均衡。`ingress` 模式在*每个* UCP/Swarm 节点上发布暴露的端口。传到发布端口的入站流量由路由网格进行负载平衡，并通过循环负载平衡定向到服务中*健康的*任务之一。即使给定主机未运行服务任务，端口也会在主机上发布，并对具有任务的主机进行负载平衡。
 
-```sh
+```bash
 $ docker service create --replicas 2 --publish mode=ingress,target=80,published=8080 nginx
 ```
 
@@ -405,7 +407,7 @@ $ docker service create --replicas 2 --publish mode=ingress,target=80,published=
 
 `host` 模式端口发布仅在运行特定服务任务的主机上公开端口。端口直接映射到该主机上的容器。每个主机上只能运行给定服务的单个任务，以防止端口冲突。
 
-```sh
+```bash
 $ docker service create --replicas 2 --publish mode=host,target=80,published=8080 nginx
 ```
 
@@ -415,7 +417,7 @@ $ docker service create --replicas 2 --publish mode=host,target=80,published=808
 
 发布模式有很多好的用例。`ingress` 模式适用于具有多个副本并需要在这些副本之间进行负载平衡的服务。如果其他工具已提供外部服务发现，则 `host` 模式已可以满足需求。`host` 模式的另一个良好用例是每个主机存在一次的全局容器。这些容器可能会公开与本主机相关的特定信息（例如监视或日志记录），因此您不希望在访问该服务时进行负载平衡。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/ingress-vs-host.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/ingress-vs-host.png)
 
 ## MACVLAN
 
@@ -428,15 +430,15 @@ MACVLAN 的使用场景包括：
 - 超低延时应用
 - 设计一个网络，要求容器在同一子网内，并使用和外部主机网络相同的 IP 地址
 
-`macvlan` 驱动程序使用父接口的概念。此接口可以是物理接口，例如 `eth0`，用于802.1q VLAN 标记的子接口，如 `eth0.10`（`.10`表示 `VLAN 10`），或者甚至是绑定的主机适配器，它将两个以太网接口捆绑到一个逻辑接口中。
+`macvlan` 驱动程序使用父接口的概念。此接口可以是物理接口，例如 `eth0`，用于 802.1q VLAN 标记的子接口，如 `eth0.10`（`.10` 表示 `VLAN 10`），或者甚至是绑定的主机适配器，它将两个以太网接口捆绑到一个逻辑接口中。
 
-在 MACVLAN 网络配置期间需要网关地址。网关必须位于网络基础架构提供的主机外部。MACVLAN网络允许在同一网络上的容器之间进行访问。如果没有在主机外部路由，则无法在同一主机上的不同 MACVLAN 网络之间进行访问。
+在 MACVLAN 网络配置期间需要网关地址。网关必须位于网络基础架构提供的主机外部。MACVLAN 网络允许在同一网络上的容器之间进行访问。如果没有在主机外部路由，则无法在同一主机上的不同 MACVLAN 网络之间进行访问。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/macvlanarch.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/macvlanarch.png)
 
 此示例将 MACVLAN 网络绑定到主机上的 `eth0`。它还将两个容器连接到名为 `mvnet`  的 MACVLAN 网络，并展示了它们可以相互 ping 通。每个容器在 `192.168.0.0/24` 物理网络子网上都有一个地址，其默认网关是物理网络中的接口。
 
-```sh
+```bash
 #Creation of MACVLAN network "mvnet" bound to eth0 on the host
 $ docker network create -d macvlan --subnet 192.168.0.0/24 --gateway 192.168.0.1 -o parent=eth0 mvnet
 
@@ -448,17 +450,17 @@ PING 127.0.0.1 (127.0.0.1): 56 data bytes
 64 bytes from 127.0.0.1: icmp_seq=0 ttl=64 time=0.052 ms
 ```
 
-正如您在此图中所见，`c1` 和 `c2` 通过MACVLAN网络连接，该网络名为 `macvlan`，连接到主机上的 `eth0`。
+正如您在此图中所见，`c1` 和 `c2` 通过 MACVLAN 网络连接，该网络名为 `macvlan`，连接到主机上的 `eth0`。
 
 ### 使用 MACVLAN 进行 VLAN 中继
 
 对于许多运营商而言，将 802.1q 中继到 Linux 主机是非常痛苦的。它需要更改配置文件才能在重新启动时保持持久性。如果涉及网桥，则需要将物理网卡移入网桥，然后网桥获取 IP 地址。`macvlan` 驱动程序通过创建、销毁和主机重新启动来完全管理 MACVLAN 网络的子接口和其他组件。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/trunk-macvlan.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/trunk-macvlan.png)
 
 当使用子接口实例化 `macvlan` 驱动程序时，它允许 VLAN 中继到主机并在 L2 层隔离容器。`macvlan` 驱动程序自动创建子接口并将它们连接到容器接口。因此，每个容器都位于不同的 VLAN 中，除非在物理网络中路由流量，否则它们之间无法进行通信。
 
-```sh
+```bash
 #Creation of  macvlan10 network in VLAN 10
 $ docker network create -d macvlan --subnet 192.168.10.0/24 --gateway 192.168.10.1 -o parent=eth0.10 macvlan10
 
@@ -476,7 +478,7 @@ $ docker run -it --name c2--net macvlan20 --ip 192.168.20.2 busybox sh
 
 ## None 网络驱动（隔离）
 
-与 `host` 网络驱动程序类似，`none` 网络驱动程序本质上是一种不经管理的网络选项。Docker Engine 不会在容器内创建接口、建立端口映射或安装连接路由。使用 `--net=none` 的容器与其他容器和主机完全隔离。网络管理员或外部工具必须负责提供此管道。使用none的容器只有一个 `loopback` 接口而没有其他接口。
+与 `host` 网络驱动程序类似，`none` 网络驱动程序本质上是一种不经管理的网络选项。Docker Engine 不会在容器内创建接口、建立端口映射或安装连接路由。使用 `--net=none` 的容器与其他容器和主机完全隔离。网络管理员或外部工具必须负责提供此管道。使用 none 的容器只有一个 `loopback` 接口而没有其他接口。
 
 与 `host` 驱动程序不同，`none` 驱动程序为每个容器创建单独的命名空间。这可以保证任何容器和主机之间的网络隔离。
 
@@ -484,7 +486,7 @@ $ docker run -it --name c2--net macvlan20 --ip 192.168.20.2 busybox sh
 
 ## 物理网络设计要求
 
-Docker EE 和 Docker 网络旨在运行在通用数据中心网络基础架构和拓扑上。其集中控制器和容错集群可确保在各种网络环境中兼容。提供网络功能的组件（网络配置，MAC学习，覆盖加密）要么是 Docker Engine的一部分，即UCP，要么是 Linux 内核本身。运行任何原生 Docker 网络驱动程序都不需要额外的组件或特殊网络功能。
+Docker EE 和 Docker 网络旨在运行在通用数据中心网络基础架构和拓扑上。其集中控制器和容错集群可确保在各种网络环境中兼容。提供网络功能的组件（网络配置，MAC 学习，覆盖加密）要么是 Docker Engine 的一部分，即 UCP，要么是 Linux 内核本身。运行任何原生 Docker 网络驱动程序都不需要额外的组件或特殊网络功能。
 
 更具体地说，Docker 原生网络驱动程序对以下内容没有任何要求：
 
@@ -504,13 +506,13 @@ Docker 使用嵌入式 DNS 为在单个 Docker Engine 上运行的容器和在 D
 
 如果目标容器或服务不属于与源容器相同的网络，则 Docker Engine 会将 DNS 查询转发到配置的默认 DNS 服务器。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/DNS.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/DNS.png)
 
-在这个例子中，有两个名为 `myservice` 的容器服务。另一个服务（`client`）存在于同一网络上。`client` 向 `docker.com` 和 `myservice` 执行两个curl操作。以下是由此产生的结果：
+在这个例子中，有两个名为 `myservice` 的容器服务。另一个服务（`client`）存在于同一网络上。`client` 向 `docker.com` 和 `myservice` 执行两个 curl 操作。以下是由此产生的结果：
 
 - `client` 初始化关于 `docker.com` 和 `myservice` 的 DNS 查询。
-- 容器的内置解析器拦截 127.0.0.11:53 上的DNS查询，并将它们发送到 Docker Engine 的 DNS 服务器。
-- `myservice` 解析为该服务的虚拟IP（VIP），该服务由内部负载均衡分发到各个任务 IP 地址。容器名称也会解析，尽管直接与其IP地址相关。
+- 容器的内置解析器拦截 127.0.0.11:53 上的 DNS 查询，并将它们发送到 Docker Engine 的 DNS 服务器。
+- `myservice` 解析为该服务的虚拟 IP（VIP），该服务由内部负载均衡分发到各个任务 IP 地址。容器名称也会解析，尽管直接与其 IP 地址相关。
 - `docker.com` 不是 `mynet` 网络中的服务名称，因此请求将转发到配置的默认 DNS 服务器。
 
 ## Docker 原生负载均衡
@@ -521,11 +523,11 @@ Docker Swarm 集群具有内置的内部和外部负载均衡功能，这些功�
 
 创建 Docker 服务时，会自动实例化内部负载均衡。在 Docker Swarm 集群中创建服务时，会自动为它们分配一个虚拟 IP（VIP），该虚拟 IP 是服务网络的一部分。解析服务名称时返回 VIP。到该 VIP 的流量将自动发送到 overlay 网络上该服务的所有健康任务。这种方法避免了任何客户端负载均衡，因为只有一个 IP 返回给客户端。Docker 负责路由并在健康的服务任务中平均分配流量。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/ipvs.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/ipvs.png)
 
 要查看 VIP，请运行 `docker service inspect my_service`，如下所示：
 
-```sh
+```bash
 # Create an overlay network called mynet
 $ docker network create -d overlay mynet
 a59umzkdj2r0ua7x8jxd84dhr
@@ -539,14 +541,14 @@ $ docker service inspect myservice
 ...
 
 "VirtualIPs": [
-                {
-                    "NetworkID": "a59umzkdj2r0ua7x8jxd84dhr",
-                    "Addr": "10.0.0.3/24"
-                },
+    {
+        "NetworkID": "a59umzkdj2r0ua7x8jxd84dhr",
+        "Addr": "10.0.0.3/24"
+    },
 ]
 ```
 
-> DNS循环（DNS RR）负载平衡是服务的另一个负载平衡选项（使用 `--endpoint-mode` 配置）。在 DNS RR 模式下，不为每个服务创建 VIP。Docker DNS 服务器以循环方式将服务名称解析为单个容器 IP。
+> DNS 循环（DNS RR）负载平衡是服务的另一个负载平衡选项（使用 `--endpoint-mode` 配置）。在 DNS RR 模式下，不为每个服务创建 VIP。Docker DNS 服务器以循环方式将服务名称解析为单个容器 IP。
 
 ### UCP 外部 L4 负载均衡（Docker 路由网络）
 
@@ -556,7 +558,7 @@ $ docker service inspect myservice
 
 启动服务后，您可以为应用程序创建外部 DNS 记录，并将其映射到任何或所有 Docker Swarm 节点。您无需担心容器的运行位置，因为群集中的所有节点都与路由网状路由功能一样。
 
-```sh
+```bash
 #Create a service with two replicas and export port 8000 on the cluster
 $ docker service create --name app --replicas 2 --network appnet -p 8000:80 nginx
 ```
@@ -572,9 +574,9 @@ $ docker service create --name app --replicas 2 --network appnet -p 8000:80 ngin
 
 ### UCP 外部 L7 负载均衡（HTTP 路由网络）
 
-UCP通过 HTTP 路由网络提供L7 HTTP/HTTPS 负载均衡。URL 可以对服务进行负载均衡，并在服务副本之间进行负载均衡。
+UCP 通过 HTTP 路由网络提供 L7 HTTP/HTTPS 负载均衡。URL 可以对服务进行负载均衡，并在服务副本之间进行负载均衡。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/ucp-hrm.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/ucp-hrm.png)
 
 转到 [UCP 负载均衡参考架构](https://success.docker.com/Architecture/Docker_Reference_Architecture%3A_Universal_Control_Plane_2.0_Service_Discovery_and_Load_Balancing) 了解有关 UCP L7 负载均衡设计的更多信息。
 
@@ -607,7 +609,7 @@ Docker 支持开箱即用的 overlay 网络的 IPSec 加密。Swarm 和 UCP 管�
 
 此图说明了如何保护在 Docker Swarm 中的不同主机上运行的两个容器之间的通信。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/ipsec.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/ipsec.png)
 
 通过添加 `--opt encrypted=true` 选项（例如 `docker network create -d overlay --opt encrypted=true <NETWORK_NAME>`），可以在创建时为每个网络启用此功能。创建网络后，您可以在该网络上启动服务（例如，`docker service create --network <NETWORK_NAME> <IMAGE> <COMMAND>`）。当在两个不同的主机上创建相同服务的两个任务时，会在它们之间创建 IPsec 隧道，并且流量在离开源主机时会被加密，并在进入目标主机时被解密。
 
@@ -617,13 +619,13 @@ Docker 支持开箱即用的 overlay 网络的 IPSec 加密。Swarm 和 UCP 管�
 
 使用 UCP 创建网络时，团队和标签定义对容器资源的访问。资源许可标签定义了谁可以查看、配置和使用某些 Docker 网络。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/ucp-network.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/ucp-network.png)
 
 此 UCP 屏幕截图显示了使用标签生产团队来控制对该网络的成员的访问。此外，可以通过 UCP 切换网络加密等选项。
 
 ## IP 地址管理
 
-容器网络模型（CNM）提供了管理IP地址的灵活性。IP地址管理有两种方法：
+容器网络模型（CNM）提供了管理 IP 地址的灵活性。IP 地址管理有两种方法：
 
 - CNM 具有原生 IPAM 驱动程序，可以为集群全局简单分配 IP 地址，并防止重复分配。如果未指定其他驱动程序，则默认使用本机 IPAM 驱动程序。
 - CNM 具有使用来自其他供应商和社区的远程 IPAM 驱动程序的接口。这些驱动程序可以提供与现有供应商或自建 IPAM 工具的集成。
@@ -653,7 +655,7 @@ Docker 支持开箱即用的 overlay 网络的 IPSec 加密。Swarm 和 UCP 管�
 
 以下示例使用名为 **[Docker Pets](https://github.com/mark-church/docker-pets)** 的虚构应用程序来说明**网络部署模型**。它在网页上提供宠物图像，同时计算后端数据库中页面的点击次数。
 
-- `web` 是一个前端 web 服务器，基于 `chrch/docker-pets:1.0` 镜像
+- `web` 是一个前端 Web 服务器，基于 `chrch/docker-pets:1.0` 镜像
 - `db` 是一个 `consul` 后端
 
 `chrch/docker-pets` 需要一个环境变量 `DB` 来告诉它如何查找后端数据库服务。
@@ -662,25 +664,25 @@ Docker 支持开箱即用的 overlay 网络的 IPSec 加密。Swarm 和 UCP 管�
 
 此模型是 Docker 原生 `bridge` 网络驱动程序的默认配置。 `bridge` 驱动程序在主机内部创建专用网络，并在主机接口上提供外部端口映射以进行外部连接。
 
-```sh
+```bash
 $ docker network create -d bridge petsBridge
 
 $ docker run -d --net petsBridge --name db consul
 
-$ docker run -it --env "DB=db" --net petsBridge --name web -p 8000:5000 chrch/docker-pets:1.0
-Starting web container e750c649a6b5
+$ docker run -it --env "DB=db" --net petsBridge --name Web -p 8000:5000 chrch/docker-pets:1.0
+Starting Web container e750c649a6b5
  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
 ```
 
-如果未指定 IP 地址，则会在主机的所有接口上公开端口映射。在这种情况下，容器的应用程序在 0.0.0.0:8000 上发布。如要使用特定IP地址，需要提供额外的标志 `-p IP:host_port:container_port`。可以在 [Docker 文档](https://docs.docker.com/engine/reference/run/#/expose-incoming-ports) 中找到更多暴露端口的选项。
+如果未指定 IP 地址，则会在主机的所有接口上公开端口映射。在这种情况下，容器的应用程序在 0.0.0.0:8000 上发布。如要使用特定 IP 地址，需要提供额外的标志 `-p IP:host_port:container_port`。可以在 [Docker 文档](https://docs.docker.com/engine/reference/run/#/expose-incoming-ports) 中找到更多暴露端口的选项。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/singlehost-bridge.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/singlehost-bridge.png)
 
 应用程序本地发布在主机所有接口上的 8000 端口。还设置了 `DB=db`，提供后端容器的名称。Docker Engine 的内置 DNS 将此容器名称解析为 `db` 的 IP 地址。由于 `bridge` 是本地驱动程序，因此 DNS 解析的范围仅限于单个主机。
 
 下面的输出显示，我们的容器已经从 `petsBridge` 网络的 `172.19.0.0/24` 网段分配了私有 IP。如果未指定其他 IPAM 驱动程序，Docker 将使用内置 IPAM 驱动程序从相应的子网提供 IP。
 
-```sh
+```bash
 $ docker inspect --format {{.NetworkSettings.Networks.petsBridge.IPAddress}} web
 172.19.0.3
 
@@ -696,7 +698,7 @@ $ docker inspect --format {{.NetworkSettings.Networks.petsBridge.IPAddress}} db
 
 在以下示例中，手动配置每个服务的位置，模拟外部服务发现。`db` 服务的位置通过 `DB` 环境变量传递给 `web`。
 
-```sh
+```bash
 #Create the backend db service and expose it on port 8500
 host-A $ docker run -d -p 8500:8500 --name db consul
 
@@ -705,13 +707,13 @@ host-A $ ip add show eth0 | grep inet
     inet 172.31.21.237/20 brd 172.31.31.255 scope global eth0
     inet6 fe80::4db:c8ff:fea0:b129/64 scope link
 
-#Create the frontend web service and expose it on port 8000 of host-B
-host-B $ docker run -d -p 8000:5000 -e 'DB=172.31.21.237:8500' --name web chrch/docker-pets:1.0
+#Create the frontend Web service and expose it on port 8000 of host-B
+host-B $ docker run -d -p 8000:5000 -e 'DB=172.31.21.237:8500' --name Web chrch/docker-pets:1.0
 ```
 
 `web` 服务现在应该在 `host-B` IP 地址的 8000 端口上提供其网页。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/multi-host-bridge.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/multi-host-bridge.png)
 
 > 在此示例中，我们没有指定要使用的网络，因此会自动选择默认的 Docker `bridge` 网络。
 
@@ -729,7 +731,7 @@ host-B $ docker run -d -p 8000:5000 -e 'DB=172.31.21.237:8500' --name web chrch/
 
 下面显示了如何检查 Swarm、创建覆盖网络，然后在该 overlay 网络上配置服务。所有这些命令都在 UCP/swarm 控制器节点上运行。
 
-```sh
+```bash
 #Display the nodes participating in this swarm cluster that was already created
 $ docker node ls
 ID                           HOSTNAME          STATUS  AVAILABILITY  MANAGER STATUS
@@ -743,17 +745,17 @@ host-A $ docker network create -d overlay petsOverlay
 host-A $ docker service create --network petsOverlay --name db consul
 
 #Create the frontend service and expose it on port 8000 externally
-host-A $ docker service create --network petsOverlay -p 8000:5000 -e 'DB=db' --name web chrch/docker-pets:1.0
+host-A $ docker service create --network petsOverlay -p 8000:5000 -e 'DB=db' --name Web chrch/docker-pets:1.0
 
 host-A $ docker service ls
 ID            NAME  MODE        REPLICAS  IMAGE
 lxnjfo2dnjxq  db    replicated  1/1       consul:latest
-t222cnez6n7h  web   replicated  0/1       chrch/docker-pets:1.0
+t222cnez6n7h  Web   replicated  0/1       chrch/docker-pets:1.0
 ```
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/overlay-pets-example.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/overlay-pets-example.png)
 
-与在单主机 bridge 驱动示例中一样，我们将 `DB=db` 作为环境变量传递给 `web` 服务。overlay 驱动程序将服务名称 `db` 解析为容器的 overlay IP 地址。`web` 和 `db`之间的通信仅使用 overlay IP 子网进行。
+与在单主机 bridge 驱动示例中一样，我们将 `DB=db` 作为环境变量传递给 `web` 服务。overlay 驱动程序将服务名称 `db` 解析为容器的 overlay IP 地址。`web` 和 `db` 之间的通信仅使用 overlay IP 子网进行。
 
 > 在 overlay 和 bridge 网络内部，所有到容器的 TCP 和 UDP 端口都是开放的，并且可以连接到 overlay 网络的所有其他容器。
 
@@ -770,11 +772,11 @@ t222cnez6n7h  web   replicated  0/1       chrch/docker-pets:1.0
 
 在某些情况下，应用程序或网络环境要求容器具有可作为底层子网一部分的可路由 IP 地址。MACVLAN 驱动程序实现了此功能。如 [MACVLAN 体系结构](https://success.docker.com/api/asset/.%2Frefarch%2Fnetworking%2F#macvlan) 部分所述，MACVLAN 网络将自身绑定到主机接口。这可以是物理接口，逻辑子接口或绑定的逻辑接口。它充当虚拟交换机，并在同一 MACVLAN 网络上的容器之间提供通信。每个容器接收唯一的 MAC 地址和该节点所连接的物理网络的 IP 地址。
 
-![logo](https://github.com/studygolang/gctt-images/blob/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/2node-macvlan-app.png?raw=true)
+![logo](https://raw.githubusercontent.com/studygolang/gctt-images/master/Docker-Reference-Architecture-Designing-Scalable-Portable-Docker-Container-Networks/2node-macvlan-app.png)
 
 本例中，Pets 应用部署在 `host-A` 和 `host-B` 上。
 
-```sh
+```bash
 #Creation of local macvlan network on both hosts
 host-A $ docker network create -d macvlan --subnet 192.168.0.0/24 --gateway 192.168.0.1 -o parent=eth0 petsMacvlan
 host-B $ docker network create -d macvlan --subnet 192.168.0.0/24 --gateway 192.168.0.1 -o parent=eth0 petsMacvlan
@@ -782,13 +784,13 @@ host-B $ docker network create -d macvlan --subnet 192.168.0.0/24 --gateway 192.
 #Creation of db container on host-B
 host-B $ docker run -d --net petsMacvlan --ip 192.168.0.5 --name db consul
 
-#Creation of web container on host-A
-host-A $ docker run -it --net petsMacvlan --ip 192.168.0.4 -e 'DB=192.168.0.5:8500' --name web chrch/docker-pets:1.0
+#Creation of Web container on host-A
+host-A $ docker run -it --net petsMacvlan --ip 192.168.0.4 -e 'DB=192.168.0.5:8500' --name Web chrch/docker-pets:1.0
 ```
 
 这可能看起来与多主机桥示例非常相似，但有几个显着的差异：
 
-- 从 `web` 到 `db` 的引用使用 `db` 本身的IP地址而不是主机 IP。请记住，使用 `macvlan` 驱动时，容器 IP 可以在底层网络上路由。
+- 从 `web` 到 `db` 的引用使用 `db` 本身的 IP 地址而不是主机 IP。请记住，使用 `macvlan` 驱动时，容器 IP 可以在底层网络上路由。
 - 我们不暴露 `db` 或 `web` 的任何端口，因为容器中打开的任何端口都可以使用容器 IP 地址直接访问。
 
 虽然 `macvlan` 驱动程序提供了这些独特的优势，但它牺牲的是可移植性。MACVLAN 配置和部署与底层网络密切相关。除了防止重叠地址分配之外，容器寻址必须遵守容器放置的物理位置。因此，必须注意在 MACVLAN 网络外部维护 IPAM。重复的 IP 地址或不正确的子网可能导致容器连接丢失。
@@ -805,12 +807,12 @@ Docker 是一种快速发展的技术，网络选项日益增多，每天都在�
 
 本文档详述了一些可行的部署方案和现有的 CNM 网络驱动程序，但并不完全。虽然有许多单独的驱动程序以及更多配置这些驱动程序的方法，但我们希望您可以看到，用于常规部署的常用模型很少。了解每种模型之间的优劣权衡是取得长期成功的关键所在。
 
-------
+---
 
 via: https://success.docker.com/article/networking
 
-作者：[Play with Docker classroom](https://training.play-with-docker.com)
+作者：[Mark Church](https://success.docker.com/author/markchurch)
 译者：[Mockery-Li](https://github.com/Mockery-Li)
-校对：[校对](https://github.com/)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
