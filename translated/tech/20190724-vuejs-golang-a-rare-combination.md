@@ -1,6 +1,6 @@
 # Vuejs + Golang = 一个稀缺的组合
 
-![](https://miro.medium.com/max/2000/0*SJ43Bk4fxc44mgVR)  
+![](https://miro.medium.com/max/2000/0*SJ43Bk4fxc44mgVR)
 
 时间回到 2018 年，我写了一篇获得 15k 阅读的文章：Django + Angular 4 = A powerful web application。出于好奇心，我尝试了Angular4 和 Django 的组合。接着上个系列，这是一篇使用 Vuejs 和 Golang 来帮助你构建极佳应用的文章。
 
@@ -22,7 +22,7 @@
 
 ### Vue.js
 
-1. 体积 —— 经过 gzip 压缩后，它的大小仅为 18kB ，对比压缩后的jQuery，gzip压缩后的大小为 29kB。
+1. 体积 —— 经过 gzip 压缩后，它的大小仅为 18kB ，对比压缩后的 jQuery，gzip 压缩后的大小为 29kB。
 
 2. 可读性 —— Vue.js 的源码和语法非常清晰简单。
 
@@ -32,7 +32,7 @@
 
 5. Vue CLI 3 —— cli 提供了一系列的功能让你很快的上手，尝试着使用它你会喜欢上它。
 
-Golang and Vuejs 在运行时都很快，所以，让他们一起合作构建一个很快的单页面应用。
+Golang 和 Vuejs 在运行时都很快，所以让他们一起合作构建一个很快的单页面应用。
 
 我们开始构建：
 
@@ -40,11 +40,11 @@ Golang and Vuejs 在运行时都很快，所以，让他们一起合作构建一
 
 首先，像下面这样初始化你的文件目录，为 Git 添加 “LICENSE” 、“README.md” 等文件.
 
-![](https://miro.medium.com/max/508/1*vtaJKeFNo6dKujZYsEi6hw.png)  
+![](https://miro.medium.com/max/508/1*vtaJKeFNo6dKujZYsEi6hw.png)
 
 在 backend 文件夹创建一个 'server.go'文件：
 
-![](https://miro.medium.com/max/536/1*-Kc01BeHC7_k3AzYblaVxA.png)  
+![](https://miro.medium.com/max/536/1*-Kc01BeHC7_k3AzYblaVxA.png)
 
 前端部分，在命令行输入以下命令来创建一个新的 app 应用：
 
@@ -54,11 +54,11 @@ Golang and Vuejs 在运行时都很快，所以，让他们一起合作构建一
 
 它会询问你选择 `preset` 预设，选择默认的即可（babel, eslint).
 
-![](https://miro.medium.com/max/1296/1*tbr9X84OEsJCrWgEOJSHvA.png)  
+![](https://miro.medium.com/max/1296/1*tbr9X84OEsJCrWgEOJSHvA.png)
 
 现在文件目录结构如下：
 
-![](https://miro.medium.com/max/518/1*IUbOGEl5b4ozSYWQmuDM_w.png)  
+![](https://miro.medium.com/max/518/1*IUbOGEl5b4ozSYWQmuDM_w.png)
 
 代码的结构准备好了!
 
@@ -74,15 +74,13 @@ Golang 很快是因为它的编译器，它不允许你定义多余的变量。�
 
 ![](https://miro.medium.com/max/522/1*bBx8qYZkWpg8R92e8gT_5g.png)
 
-
 现在，我们将会写一个简单的方法来做数字的运算。这里，我们需要明确指定返回数据的类型。
 
-![](https://miro.medium.com/max/868/1*AR0TlByqhirRpm8s7R5FUA.png) 
-
+![](https://miro.medium.com/max/868/1*AR0TlByqhirRpm8s7R5FUA.png)
 
 我们需要写一个方法，当我们使用 POST 方法发送 JSON 格式的请求时，这个方法能够被执行。
 
-![](https://miro.medium.com/max/1258/1*JaFzDlfYH0LwTwLTOIs2Iw.png)  
+![](https://miro.medium.com/max/1258/1*JaFzDlfYH0LwTwLTOIs2Iw.png)
 
 在代码第 33 行，我们定义了一个 `JSON`的译码器来转译从请求的实体中的传过来的 JSON 数据。
 
@@ -94,7 +92,7 @@ Golang 很快是因为它的编译器，它不允许你定义多余的变量。�
 
 最后，在这个主函数上，我们可以定义 HTTP 路由，例如 53 行为每个 URL 请求分别定义响应函数。后端服务将运行在 `8090` 端口上。
 
-![](https://miro.medium.com/max/720/1*ug8QMqiNpF9QefRl9uuNuQ.png)  
+![](https://miro.medium.com/max/720/1*ug8QMqiNpF9QefRl9uuNuQ.png)
 
 完整的代码如下：
 
@@ -110,7 +108,7 @@ npm install --save bootstrap-vue bootstrap axios vee-validate
 
 在 `src/Calculator.vue` 文件里编写前端部分代码：
 
-![](https://miro.medium.com/max/1400/1*13qy_tphvGcHiOM1wR3KIg.png)  
+![](https://miro.medium.com/max/1400/1*13qy_tphvGcHiOM1wR3KIg.png)
 
 从 17 行到 25 行，我们定义 input 输入框和 label 标签来获取数据。在Vue 中使用 `v-model`指令获取数据。
 
@@ -118,7 +116,7 @@ npm install --save bootstrap-vue bootstrap axios vee-validate
 
 我们在 `script` 标签内写 `JavaScript` 代码，首先引入依赖：
 
-![](https://miro.medium.com/max/1400/1*2oy5ZoqYZVh0bF_iml9onw.png)  
+![](https://miro.medium.com/max/1400/1*2oy5ZoqYZVh0bF_iml9onw.png)
 
 54-59 行是必须的，用于引入`axios` 和 `vee-validate`。
 然后在 64-69 行我们定义一些变量，这些 `data` 变量用来存储计算器组件的变量的值。
@@ -159,9 +157,9 @@ npm run serve
 
 via: https://medium.com/@adeshg7/vuejs-golang-a-rare-combination-53538b6fb918
 
-作者：[Adesh Gautam](https://medium.com/@adeshg7)  
-译者：[M1seRy](https://github.com/M1seRy)  
-校对：[校对者ID](https://github.com/校对者ID)  
+作者：[Adesh Gautam](https://medium.com/@adeshg7)
+译者：[M1seRy](https://github.com/M1seRy)
+校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
