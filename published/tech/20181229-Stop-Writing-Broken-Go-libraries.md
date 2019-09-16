@@ -1,5 +1,7 @@
 首发于：https://studygolang.com/articles/22835
 
+# 停止写破坏性(Broken) Go 库
+
 不久前我和朋友们想出一个主意，准备合并我们的 IRC bots，并用 Go 重写它们。为了防止重写大部分现有功能，我们试图找到支持 bots 程序中使用的 `Web API` 的现有库。我们的项目需要一个 Reddit API 的库。这篇文章启发于我找到的前三个库，我不打算说出它们的名字，以免羞辱它们的作者。
 
 上面说的每一个库都存在一些基本问题以至于它们在真实场景中不可用。并且每个库都以这样一种方式编写：不以非向后兼容的方式修改现有库的 API，这样是不可能修复问题的。不幸的是，由于很多其他的库也存在同样的问题，所以我会在下面列出一些作者错误的地方。
@@ -101,12 +103,12 @@ func New(config Config) *LibraryStruct {
 - 在不破坏原有代码的前提下，有没有一种非侵入式的方式来扩展你的库？
 - 在不破坏原有代码的前提下，是否可以添加额外配置参数？
 
-​																															2018-12-29
+---
 
 via: https://0x46.net/thoughts/2018/12/29/go-libraries/
 
-作者：[*Filip Borkiewicz*](https://0x46.net/)
-译者：[Alihanniba](https://github.com/Alihanniba) / 柒呀
+作者：[Filip Borkiewicz](https://0x46.net/)
+译者：[Alihanniba](https://github.com/Alihanniba)
 校对：[zhoudingding](https://github.com/dingdingzhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
