@@ -4,7 +4,7 @@
 
 时间回到 2018 年，我写了一篇获得 15k 阅读的文章：Django + Angular 4 = A powerful web application。出于好奇心，我尝试了Angular4 和 Django 的组合。接着上个系列，这是一篇使用 Vuejs 和 Golang 来帮助你构建极佳应用的文章。
 
-我知道这两者一起用不是很常见，不过，让我们试试。
+我知道这两者一起用不是很常见，但是，让我们试一试。
 
 ## 背景
 
@@ -22,7 +22,7 @@
 
 ### Vue.js
 
-1. 体积 —— 经过 gzip 压缩后，它的大小仅为 18kB ，对比压缩后的 jQuery，gzip 压缩后的大小为 29kB。
+1. 体积 —— 经过 gzip 压缩后，它的大小仅为 18kb ，对比压缩后的 jQuery，gzip 压缩后的大小为 29kb。
 
 2. 可读性 —— Vue.js 的源码和语法非常清晰简单。
 
@@ -86,7 +86,7 @@ Golang 很快是因为它的编译器，它不允许你定义多余的变量。�
 
 `numsData` 和 `numsResData` 是定义好的数据结构。
 
-接收的数据存储在 `numsData`中 并且在38行被转译。
+接收的数据存储在 `numsData`中 并且在 38 行被转译。
 
 然后我们设置 `ResponseWriter` 的 header 头部，并且在 47 行返回 JSON 格式的响应数据以及检查错误。
 
@@ -112,7 +112,7 @@ npm install --save bootstrap-vue bootstrap axios vee-validate
 
 从 17 行到 25 行，我们定义 input 输入框和 label 标签来获取数据。在Vue 中使用 `v-model`指令获取数据。
 
-30-35 行完成 计算器 UI 层的展示，并且 43 行定义了一个按钮，将会被触发 `postreq` 方法，这个方法会在接下来完成。
+30-35 行完成计算器 UI 层的展示，并且 43 行定义了一个按钮，将会被触发 `postreq` 方法，这个方法会在接下来完成。
 
 我们在 `script` 标签内写 `JavaScript` 代码，首先引入依赖：
 
