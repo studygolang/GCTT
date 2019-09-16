@@ -132,7 +132,7 @@ func main() {
 
 ### structtag
 
-标签是结构中的字符串，应该遵循[反射包中的约定](http://golang.org/pkg/reflect/#StructTag)。随意使用将使标签无效，并可能很难调试没有审查命令:
+标签是结构中的字符串，应该遵循[反射包中的约定](http://golang.org/pkg/reflect/#StructTag)。随意使用将使标签无效，并可能很难调试没有审查命令:一个多余的空格都会使 tag 失效，如果没有 `vet` 命令其将难以调试
 
 ```go
 type Foo struct {
@@ -211,6 +211,6 @@ via: <https://medium.com/a-journey-with-go/go-vet-command-is-more-powerful-than-
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[TomatoAres](https://github.com/TomatoAres)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[DingdingZhou](https://github.com/DingdingZhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
