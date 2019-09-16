@@ -1,6 +1,6 @@
 # Vet 命令：超出预期的强大
 
-!["Golang 之旅"插图，由 Go Gopher 的 Renee French 创作](https://raw.githubusercontent.com/studygolang/gctt-images2/blob/master/go-vet-command-is-more-powerful-than-you-think/go-vet.png)
+!["Golang 之旅"插图，由 Go Gopher 的 Renee French 创作](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-vet-command-is-more-powerful-than-you-think/go-vet.png)
 
 Go `vet` 命令在编写代码时非常有用。它可以帮助您检测应用程序中任何可疑、异常或无用的代码。该命令实际上由几个子分析器组成，甚至可以与您的自定义分析器一起工作。让我们首先回顾一下内置的分析器。
 
