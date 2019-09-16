@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/23438
+
 # Go：关于 Cobra 的想法
 
-!["Golang之旅"插图，来自 Go Gopher 的 Renee French 创作](https://github.com/studygolang/gctt-images2/blob/master/go-thoughts-about-cobra/A%20Journey%20With%20Go.png)
+!["Golang之旅"插图，来自 Go Gopher 的 Renee French 创作](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-thoughts-about-cobra/A%20Journey%20With%20Go.png)
 
 Cobra 是 Golang 生态系统中最着名的项目之一。它简单，高效，并得到 Go 社区的大力支持。让我们来深入探索一下。
 
