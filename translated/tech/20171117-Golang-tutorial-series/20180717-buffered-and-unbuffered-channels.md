@@ -1,12 +1,12 @@
 # 无缓冲和有缓冲通道
 
-!["Go 之旅 插图，由 Go Gopher 的 Renee French 创作](https://github.com/studygolang/gctt-images2/blob/master/buffered-and-unbufferd-channel/next-recvier.png)
+!["Go 之旅 插图，由 Go Gopher 的 Renee French 创作](https://raw.githubusercontent.com/studygolang/gctt-images2/master/buffered-and-unbufferd-channel/next-recvier.png)
 
-Go 中的通道（channel）机制十分强大，但是理解内在的概念甚至可以使它更强大。实际上，选择缓冲通道或非缓冲通道将改变应用程序的行为和性能。
+Go 中的通道（channel）机制十分强大，但是理解内在的概念甚至可以使它更强大。实际上，选择缓冲通道或无缓冲通道将改变应用程序的行为和性能。
 
 ## 无缓冲通道
 
-无缓冲通道是在消息发送到通道时需要接收器的通道。声明一个无缓冲通道时，你不需要声明容量。例如：
+无缓冲通道是在消息发送到通道时需要接收器的通道。声明一个无缓冲通道时，你仅仅不需要声明容量。例如：
 
 ```go
 package main
@@ -38,28 +38,28 @@ func main() {
 }
 ```
 
-由于没有准备好的接收者，第一个`goroutine`在发送消息`foo`时将被阻塞。这个[范式](https://golang.org/ref/spec#Channel_types)很好地解释了这种行为:
+由于没有准备就绪的接收者，第一个`goroutine`在发送消息`foo`时将被阻塞。这个[说明文档](https://golang.org/ref/spec#Channel_types)很好地解释了这种行为:
 
 > 如果容量为零或未设置，则通道将被无缓冲，只有在发送方和接收方都准备就绪时通信才能成功。
 
 这一点，[《Effective Go》](https://golang.org/doc/effective_go.html#channels)中描述的也很清晰：
 
-> 如果一个通道无缓冲，发送将被阻塞，直到接收者接收到值。
+> 如果通道是无缓冲的，发送者将被阻塞，直到接收者接收到值。
 
-从通道的内部结构可以看出关于此行为的更有趣的细节。
+通道的内部描绘可以给我们更多关于此行为的有趣的细节
 
-## 内部结构
+## 无缓冲通道内部结构
 
-通道结构`hchan`可以在`runtime`包中的`chan.go`中使用。该结构包含与通道缓冲区相关的属性，但是为了说明未缓存的通道，我将省略我们稍后将看到的那些属性。下面是未缓冲通道的表示
+`channel` 结构体 在 `runtime` 包的 `chan.go` 文件中可以找到。该结构包含与通道缓冲区相关的属性，但是为了说明无缓存的通道，我将省略我们稍后将看到的那些属性。下面是无缓冲通道的示意图：
 
-![hchan 结构](https://github.com/studygolang/gctt-images2/blob/master/buffered-and-unbufferd-channel/hchan-struct.png)
+![hchan 结构](https://raw.githubusercontent.com/studygolang/gctt-images2/master/buffered-and-unbufferd-channel/hchan-struct.png)
 
-通道维护了指向接收方 `recvq` 和发送方 `sendq` 列表的指针，由链表 `waitq` 表示。`sudog` ，包含指向 （next）下一个 和（previous）上一个元素的指针，以及与处理 *接收方/发送方* 的 goroutine 相关的信息。有了这些信息，就很容易知道，如果没有了发送方，通道什么时候应该阻塞接收方，反之亦然。
+通道维护了指向接收方（ `recvq` ）和发送方（ `sendq` ）列表的指针，由链表 `waitq.sudog` ，包含指向下一个元素的指针（next）和指向上一个元素的指针（previous），以及与处理 *接收方/发送方* 的 goroutine 相关的信息。有了这些信息，Go 程序就很容易知道，如果没有了发送方，通道就应该阻塞接收方，反之，没有了接收方，通道就应该阻塞发送方。
 
 下面是我们前面示例的工作流:
 
 1. 通道是用一个空的接收方和发送方列表创建的。
-2. 在第 16 行我们的第一个 goroutine 将值 `foo` 发送到通道。
+2. 第 16 行，我们的第一个 goroutine 将值 `foo` 发送到通道。
 3. 通道从表示发送方的池（pool）中获取 `sudog` 结构体。这个结构将维护对 goroutine 和值 `foo` 的引用。
 4. 这个发送者现在进入队列（enqueued ） `sendq` 。
 5. 由于“*chan send*”阻塞，goroutine 进入等待状态。
@@ -70,7 +70,7 @@ func main() {
 
 正如我们在工作流中再次看到的，goroutine 必须切换到等待，直到接收器可用为止。但是，如果需要，这种阻塞行为可以通过缓冲通道避免。
 
-## 缓冲通道
+## 缓冲通道内部结构
 
 稍微改动之前的例子：添加一个缓冲通道：
 
@@ -109,7 +109,7 @@ func main() {
 
 现在让我们根据这个例子分析结构`hchan`和与缓冲区相关的字段:
 
-![缓冲通道的 hchan 结构](https://github.com/studygolang/gctt-images2/blob/master/buffered-and-unbufferd-channel/hchan%20structure%20with%20buffer%20attributes.png)
+![缓冲通道的 hchan 结构](https://raw.githubusercontent.com/studygolang/gctt-images2/master/buffered-and-unbufferd-channel/hchan%20structure%20with%20buffer%20attributes.png)
 
 buffer（缓冲）由以下五个属性组成：
 
@@ -121,7 +121,7 @@ buffer（缓冲）由以下五个属性组成：
 
 通过`sendx`和`recvx`，这个缓冲区就像一个循环队列:
 
-![通道结构中的循环队列](https://github.com/studygolang/gctt-images2/blob/master/buffered-and-unbufferd-channel/circular%20queue%20in%20the%20channel%20struct.png)
+![通道结构中的循环队列](https://raw.githubusercontent.com/studygolang/gctt-images2/master/buffered-and-unbufferd-channel/circular%20queue%20in%20the%20channel%20struct.png)
 
 这个循环队列允许我们在缓冲区中维护一个顺序，而不需要在其中一个元素从缓冲区弹出时不断移动元素。
 
@@ -131,7 +131,7 @@ buffer（缓冲）由以下五个属性组成：
 
 ## 由于缓冲区大小不足造成的延迟
 
-<!-- todo  fan-out pattern -->
+<!-- todo  fan-out pattern 有点问题 -->
 我们在通道创建期间定义的缓冲区大小可能会极大地影响性能。我将使用密集使用通道，以查看不同缓冲区大小的影响。以下是一些压力测试:
 
 ```go
@@ -213,13 +213,13 @@ WithBufferSizeExceedsNumberOfWorker-8   134µs ± 2%
 ## 追踪延迟
 
 跟踪基准测试将使您访问同步阻塞概要文件，该概要文件显示等待同步原语的 goroutines 阻塞位于何处。
-Goroutines 在同步过程中花费了 9ms 的时间来等待未缓冲通道的值，而 50 大小的缓冲区只等待 1.9ms:
+Goroutines 在同步过程中花费了 9ms 的时间来等待无缓冲通道的值，而 50 大小的缓冲区只等待 1.9ms:
 
-![同步阻塞概要](https://github.com/studygolang/gctt-images2/blob/master/buffered-and-unbufferd-channel/synchronization%20blocking%20profile.png)
+![同步阻塞概要](https://raw.githubusercontent.com/studygolang/gctt-images2/master/buffered-and-unbufferd-channel/synchronization%20blocking%20profile.png)
 
 由于缓冲的存在，接收值的延迟减小了 5 倍：
 
-![同步阻塞概要](https://github.com/studygolang/gctt-images2/blob/master/buffered-and-unbufferd-channel/synchronization%20blocking%20profile2.png)
+![同步阻塞概要](https://raw.githubusercontent.com/studygolang/gctt-images2/master/buffered-and-unbufferd-channel/synchronization%20blocking%20profile2.png)
 
 我们现在确实证实了我们以前的怀疑。缓冲区的大小对应用程序的性能有重要影响。
 
