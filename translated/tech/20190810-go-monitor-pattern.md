@@ -63,8 +63,8 @@ func main() {
 
 `Queue` 是一个非常简单的结体构，由一个切片和 `sync.Cond` 结构组成。然后，我们做两件事：
 
-- 启动 10 个 goroutines，并将尝试一行消费 X 个元素。如果这些元素不够数目，那么 goroutine 将进去睡眠状态并等待被唤醒
-- 主 goroutine 将用 100 个元素填满队列。对于添加的元素，它将唤醒满足条件的正在睡眠的一个 goroutine。
+- 启动 10 个 goroutines，并将尝试一次消费 X 个元素。如果这些元素不够数目，那么 goroutine 将进去睡眠状态并等待被唤醒
+- 主 goroutine 将用 100 个元素填入队列。每添加一个元素，它将唤醒一个等待消费的 goroutine。
 
 程序的输出，
 
@@ -210,10 +210,10 @@ type notifyList struct {
 
 ---
 
-via: https://pliutau.com/rate-limit-http-requests/
+https://medium.com/a-journey-with-go/go-monitor-pattern-9decd26fb28
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[咔叽咔叽](https://github.com/watermelo)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[DingdingZhou](https://github.com/DingdingZhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
