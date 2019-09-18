@@ -6,7 +6,7 @@ Go 中的通道（channel）机制十分强大，但是理解内在的概念甚�
 
 ## 无缓冲通道
 
-无缓冲通道是在消息发送到通道时需要接收器的通道。声明一个无缓冲通道时，你仅仅不需要声明容量。例如：
+无缓冲通道是在消息发送到通道时需要接收器的通道。声明一个无缓冲通道时，你不需要声明容量。例如：
 
 ```go
 package main
@@ -54,13 +54,13 @@ func main() {
 
 ![hchan 结构](https://raw.githubusercontent.com/studygolang/gctt-images2/master/buffered-and-unbufferd-channel/hchan-struct.png)
 
-通道维护了指向接收方（ `recvq` ）和发送方（ `sendq` ）列表的指针，由链表 `waitq.sudog` ，包含指向下一个元素的指针（next）和指向上一个元素的指针（previous），以及与处理 *接收方/发送方* 的 goroutine 相关的信息。有了这些信息，Go 程序就很容易知道，如果没有了发送方，通道就应该阻塞接收方，反之，没有了接收方，通道就应该阻塞发送方。
+通道维护了指向接收方（ `recvq` ）和发送方（ `sendq` ）列表的指针，由链表 `waitq.sudog`表示 ，包含指向下一个元素的指针（next）和指向上一个元素的指针（previous），以及与处理 *接收方/发送方* 的 goroutine 相关的信息。有了这些信息，Go 程序就很容易知道，如果没有了发送方，通道就应该阻塞接收方，反之，没有了接收方，通道就应该阻塞发送方。
 
 下面是我们前面示例的工作流:
 
 1. 通道是用一个空的接收方和发送方列表创建的。
 2. 第 16 行，我们的第一个 goroutine 将值 `foo` 发送到通道。
-3. 通道从表示发送方的池（pool）中获取 `sudog` 结构体。这个结构将维护对 goroutine 和值 `foo` 的引用。
+3. 通道从（缓冲）池中获取一个结构体 `sudog`，用以表示发送者。这个结构将维护对 goroutine 和值 `foo` 的引用。
 4. 这个发送者现在进入队列（enqueued ） `sendq` 。
 5. 由于“*chan send*”阻塞，goroutine 进入等待状态。
 6. 第 23 行，我们的第二个 goroutine 将读取来自通道的消息。
@@ -72,7 +72,7 @@ func main() {
 
 ## 缓冲通道内部结构
 
-稍微改动之前的例子：添加一个缓冲通道：
+稍微改动之前的例子，以添加一个缓冲区：
 
 ```go
 package main
@@ -131,8 +131,7 @@ buffer（缓冲）由以下五个属性组成：
 
 ## 由于缓冲区大小不足造成的延迟
 
-<!-- todo  fan-out pattern 有点问题 -->
-我们在通道创建期间定义的缓冲区大小可能会极大地影响性能。我将使用密集使用通道，以查看不同缓冲区大小的影响。以下是一些压力测试:
+我们在通道创建期间定义的缓冲区大小可能会极大地影响性能。我使用扇出模式来密集使用通道，以查看不同缓冲区大小的影响。以下是一些压力测试:
 
 ```go
 package bench
@@ -217,7 +216,7 @@ Goroutines 在同步过程中花费了 9ms 的时间来等待无缓冲通道的�
 
 ![同步阻塞概要](https://raw.githubusercontent.com/studygolang/gctt-images2/master/buffered-and-unbufferd-channel/synchronization%20blocking%20profile.png)
 
-由于缓冲的存在，接收值的延迟减小了 5 倍：
+由于缓冲的存在，来自发送值的等待延迟减小了 5 倍：
 
 ![同步阻塞概要](https://raw.githubusercontent.com/studygolang/gctt-images2/master/buffered-and-unbufferd-channel/synchronization%20blocking%20profile2.png)
 
@@ -229,6 +228,6 @@ via: <https://medium.com/a-journey-with-go/go-buffered-and-unbuffered-channels-2
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[TomatoAres](https://github.com/TomatoAres)
-校对：[校对者 ID](https://github.com/校对者ID)
+校对：[DingdingZhou](https://github.com/DingdingZhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
