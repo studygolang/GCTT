@@ -19,7 +19,7 @@ Russ Cox 撰写了一篇 [关于接口内部结构的精彩文章](https://resea
 
 * 指向存储类型信息的指针
 * 指向关联数据的指针
-  
+
 以下是 Russ 在 2009 年画的示意图，[当时 `runtime` 包还是用 C 语言编写](https://go.googlesource.com/go/+/refs/heads/release-branch.go1/src/pkg/runtime/iface.c)：
 
 ![internal-representation](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-understand-the-empty-interface/internal-representation.png)
