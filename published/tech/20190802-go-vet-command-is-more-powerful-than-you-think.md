@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/23498
+
 # Vet 命令：超出预期的强大
 
 !["Golang 之旅"插图，由 Go Gopher 的 Renee French 创作](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-vet-command-is-more-powerful-than-you-think/go-vet.png)
