@@ -110,9 +110,8 @@ func makeHTTPServer() *http.Server {
 	mux := &http.ServeMux{}
 	mux.HandleFunc("/", handleIndex)
 	// ... 可能会添加更多处理器
-	
 
-	var handler http.Handler = mux 
+	var handler http.Handler = mux
 	// 用我们的日志记录器包装 mux 。 this will (译者注：应当是注释没写全)
 	handler = logRequestHandler(handler)
 	// ... 可能会添加更多中间件处理器
@@ -371,8 +370,6 @@ panicIfErr(err)
 ## Go 程序员出租
 
 如果你正在寻找程序员一起工作，[希望一起谈一下](https://blog.kowalczyk.info/goconsultantforhire.html)。
-
-
 
 由 [Krzysztof Kowalczyk](https://blog.kowalczyk.info/) 所著。
 
