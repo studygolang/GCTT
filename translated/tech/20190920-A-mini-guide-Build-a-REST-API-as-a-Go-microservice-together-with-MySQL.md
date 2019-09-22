@@ -14,7 +14,7 @@
 
 简单起见，我们将会创建一个用于打印一条信息的端点
 
-```lang
+```go
 package main
 
 import (
@@ -52,7 +52,7 @@ func main() {
 
 让我们把上面的代码和 MySQL 数据库连接起来。Go 为 SQL 数据库提供了一个接口，但它还需要一个驱动。在这个例子中我使用 [go-sql-driver](https://medium.com/r/?url=https%3A%2F%2Fgithub.com%2Fgo-sql-driver%2Fmysql) 作为驱动。
 
-```lang
+```go
 package db
 
 import (
@@ -81,7 +81,7 @@ func CreateDatabase() (*sql.DB, error) {
 
 让我们更新一下上一个代码片段的 *postFunction*  来使用数据库。
 
-```lang
+```go
 func postFunction(w http.ResponseWriter, r *http.Request) {
 	database, err := db.CreateDatabase()
 	if err != nil {
@@ -103,7 +103,7 @@ func postFunction(w http.ResponseWriter, r *http.Request) {
 
 如果你检查了上面的代码，你可能已经注意到了每次 API 调用时都会打开一个数据库连接，虽然已经被打开的数据库 [对并发使用是安全的](https://golang.org/pkg/database/sql/#Open) 。我们需要一些依赖管理手段来确保我们只打开一次数据库，为此，我们将要使用结构体。
 
-```lang
+```go
 package app
 
 import (
@@ -141,7 +141,7 @@ func (app *App) postFunction(w http.ResponseWriter, r *http.Request) {
 
 main 包以及其中的方法也需要一点小改变来使用新的 *App* 结构体。我们从 main 包中移除 *postFunction* 方法和 *setupRouter* 方法，因为这俩方法已经在 app 包中了。我们留下这些：
 
-```lang
+```go
 package main
 
 import (
@@ -176,7 +176,7 @@ func main() {
 
 在最后一步中，我们会在路由中添加一个返回 JSON 数据的 GET 方法。我们从添加一个用于填充我们的数据的结构体开始，并且把这些字段映射为 JSON。
 
-```lang
+```go
 package app
 
 import (
@@ -192,7 +192,7 @@ type DbData struct {
 
 接着，我们在 *app.go* 文件中添加一个用于处理请求并且把数据写回客户端响应的新方法 *getFunction*。这个文件最后看起来是这个样子的。
 
-```lang
+```go
 package app
 
 import (
@@ -258,7 +258,7 @@ func (app *App) postFunction(w http.ResponseWriter, r *http.Request) {
 
 就是下面这些相当长的嵌入的代码片段。
 
-```lang
+```go
 package db
 
 import (
