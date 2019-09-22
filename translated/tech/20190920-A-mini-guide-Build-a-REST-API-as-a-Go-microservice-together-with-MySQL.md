@@ -1,8 +1,8 @@
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/a-mini-guide-build-a-rest-api-as-a-go-microservice-together-with-mysql/a-mini-guide-build-a-rest.jpg)
 
-# 一个迷你指南——结合 MySQL 构建一个 REST API 作为 Go 微服务
+# 迷你指南——结合 MySQL 构建一个基于 Go 的 REST API 微服务
 
-我最近发现我已经编写和部署了很多基于 Go 的微服务，不管是在 Storytel 公司的日常工作还是在我自己的小项目 [Wiseer](https://wiseer.io/) 中。在本篇小指导中，我会结合 MySQL 数据库创建一个简单的 REST-API。完整项目的代码会在文章的最后给出。
+我最近发现我在 Storytel 公司的日常工作和我自己的小项目 [Wiseer](https://wiseer.io/) 中已经编写和部署了很多基于 Go 的微服务。在本篇迷你指导中，我会结合 MySQL 数据库创建一个简单的 REST-API。完整项目的代码会在文章的最后给出。
 
 如果你还不熟悉 Go 语言，那么我推荐 [这篇 Go 指南](https://wiseer.io/) 作为本篇文章的补充。
 
@@ -10,9 +10,9 @@
 
 ## 准备 API
 
-我们在着手时需要做的第一件事是选择一个用于路由的库。路由就是将一个 URL 与一个可执行的函数连接在一起。[mux 库](https://github.com/gorilla/mux)在路由功能上表现得很好，当然还有其他可选的库在性能也没有很大的不同，如 [httprouter](https://github.com/gorilla/mux) 和 [pat](https://github.com/bmizerany/pat)。在本文中我将会使用 mux。
+我们在着手时需要做的第一件事是选择一个用于路由的库。路由就是将一个 URL 与一个可执行的函数连接在一起。我觉得 [mux 库](https://github.com/gorilla/mux) 在路由功能上表现得很好，当然还有其他可选的库如 [httprouter](https://github.com/gorilla/mux) 和 [pat](https://github.com/bmizerany/pat)在性能上也差不多。在本文中我将会使用 mux。
 
-简单起见，我们将会创建一个用于打印一条信息的端点。
+简单起见，我们将会创建一个用于打印一条信息的端点
 
 ```lang
 package main
@@ -50,7 +50,7 @@ func main() {
 
 ## 连接数据库
 
-让我们把上面的代码和 MySQL 数据库连接起来。Go 为 SQL 数据库提供了一个接口，但它还需要一个驱动。在这个例子中我使用 [go-sql-driver](https://medium.com/r/?url=https%3A%2F%2Fgithub.com%2Fgo-sql-driver%2Fmysql)作为驱动。
+让我们把上面的代码和 MySQL 数据库连接起来。Go 为 SQL 数据库提供了一个接口，但它还需要一个驱动。在这个例子中我使用 [go-sql-driver](https://medium.com/r/?url=https%3A%2F%2Fgithub.com%2Fgo-sql-driver%2Fmysql) 作为驱动。
 
 ```lang
 package db
@@ -97,11 +97,11 @@ func postFunction(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-就是这样！它相当简单，当然上面的代码还有一些问题以及功能缺失。这的确有些棘手，但不要跳过这些！⚓️
+就是这样！它相当简单，当然上面的代码还有一些问题以及功能缺失。这的确有些棘手，但不要放弃！⚓️
 
 ## 结构体和依赖
 
-如果你检查了上面的代码，你可能已经注意到了每次 API 调用时都会打开一个数据库连接，虽然已经被打开的数据库[对并发使用是安全的](https://golang.org/pkg/database/sql/#Open)。我们需要一些依赖管理手段来确保我们只打开一次数据库，为此，我们将要使用结构体。
+如果你检查了上面的代码，你可能已经注意到了每次 API 调用时都会打开一个数据库连接，虽然已经被打开的数据库 [对并发使用是安全的](https://golang.org/pkg/database/sql/#Open) 。我们需要一些依赖管理手段来确保我们只打开一次数据库，为此，我们将要使用结构体。
 
 ```lang
 package app
@@ -137,9 +137,9 @@ func (app *App) postFunction(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-我们先创建一个叫做 *app* 的新的包来存放我们的结构体和它的[方法](https://gobyexample.com/methods)。我们的 *App* 结构体有两个字段；一个是在第17行被调用的 *Router*，另一个是在第24行被调用的 *Database*。我们同时在第30行方法结束的时候手动设置了返回状态码。
+我们先创建一个叫做 *app* 的新的包来存放我们的结构体和它的 [方法](https://gobyexample.com/methods)。我们的 *App* 结构体有两个字段；一个是在第 17 行被调用的 *Router*，另一个是在第 24 行被调用的 *Database*。我们同时在第 30 行方法结束的时候手动设置了返回状态码。
 
-main 包以及其中的方法也需要一点小改变以便于使用新的 *App* 结构体。我们从 main 包中移除 *postFunction* 方法和 *setupRouter* 方法，因为这俩方法已经在 app 包中了。我们留下这些：
+main 包以及其中的方法也需要一点小改变来使用新的 *App* 结构体。我们从 main 包中移除 *postFunction* 方法和 *setupRouter* 方法，因为这俩方法已经在 app 包中了。我们留下这些：
 
 ```lang
 package main
@@ -190,7 +190,7 @@ type DbData struct {
 }
 ```
 
-接着，我们在 *app.go* 文件中添加一个用于处理并且把数据写到客户端响应的新方法 *getFunction*。这个文件最后看起来是这个样子的。
+接着，我们在 *app.go* 文件中添加一个用于处理请求并且把数据写回客户端响应的新方法 *getFunction*。这个文件最后看起来是这个样子的。
 
 ```lang
 package app
@@ -254,7 +254,7 @@ func (app *App) postFunction(w http.ResponseWriter, r *http.Request) {
 
 ## 数据库迁移
 
-我们来为项目添加最后一个功能。可以通过适当的处理数据库迁移来解决数据库与一个应用或者服务耦合过深造成的令人头疼的问题。我们会使用 [migrate 库](https://github.com/golang-migrate/migrate)来做这件事情，然后扩展我们的 *db* 包。
+我们来为项目添加最后一个功能。可以通过适当的处理数据库迁移来解决数据库与一个应用或者服务耦合过深造成的令人头疼的问题。我们会使用 [migrate 库](https://github.com/golang-migrate/migrate) 来做这件事情，然后扩展我们的 *db* 包。
 
 就是下面这些相当长的嵌入的代码片段。
 
@@ -324,7 +324,7 @@ func migrateDatabase(db *sql.DB) error {
 }
 ```
 
-数据库连接打开后，我们添加的 *migrateDatabase* 函数调用会被执行来开始迁移过程。
+数据库连接打开后，我们添加的 *migrateDatabase* 函数会被调用来开始迁移过程。
 
 我们也会添加一个 MigrationLogger 结构体来处理迁移过程中的日志，代码可以在 [这里](https://github.com/johan-lejdung/go-microservice-api-guide/blob/master/rest-api/db/migrationlogger.go) 被看到，而且这个结构体在第45行被使用。
 
@@ -332,13 +332,13 @@ func migrateDatabase(db *sql.DB) error {
 
 每当数据库被打开后，所有未被应用的数据库迁移将会被应用。这样将会使数据库在不需要人为干预的情况下保持最新。
 
-在 *docker-compose* 文件中保存了数据库的方式使得多机开发变得很简单。
+在 *docker-compose* 文件中保存了数据库使得多机开发变得很简单。
 
 ## 打包
 
 终于走到这一步了 👏  👏 
 
-一个不能部署的微服务是没有用的，因此我们加一个 Dockerfile 来打包这个应用以便于能够简单的分发——*然后本文就到此结束了。*
+一个不能部署的微服务是没有用的，因此我们加一个 Dockerfile 来打包这个应用以便于能够很容易的进行的分发——*然后本文就到此结束了。*
 
 ```dockerfile
 FROM golang:1.11 as builder
@@ -358,9 +358,15 @@ CMD ["/rest-api"]
 
 [go-microservice-api-guide](https://github.com/johan-lejdung/go-microservice-api-guide)
 
+---
 
+我希望你能觉得这很有趣并且能从中学到些东西！
 
+当然这个项目还有很多地方可以进行完善，但这个任务就交给你和你的创造力了👍
 
+如果你喜欢这篇文章，把它分享给你的朋友，当然在 Twitter 上分享是最好的！
+
+我计划在尽可能短的文章中涉及到更多的进阶话题。目前我想到的话题有：中间件的使用，测试，依赖注入和服务层。
 
 ---
 
