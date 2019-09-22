@@ -1,5 +1,4 @@
 # Go 编译器内核：给 Go 新增一个语句 —— 第一部分
->Go compiler internals: adding a new statement to Go - Part 1 译文
 
 这是两部分系列文章中的第一部分，该文章采用教程的方式来探讨 Go 编译器。Go 编译器复杂而庞大，需要一本书才可能描述清楚，所以这个系列文章旨在提供一个快速而深度优先的方式进入学习。我计划在以后会写更多关于编译器领域的描述文章。
 
@@ -43,7 +42,7 @@ until i := 4; i == 0 {
 }
 ```
 
-我们的目标实现将会支持这个。
+我们的目标是支持这个特性。
 
 特别声明 —— 这只是一个玩具性的探索。我觉得在 Go 中添加 `until` 并不好，因为 Go 的极简主义设计思想本身就是非常正确的理念。
 
@@ -376,7 +375,7 @@ case OUNTIL:
   o.cleanTemp(t)
 ```
 
-在 `order`、`compile` 调用位于 `gc/walk.go` 中的 `walk` 后。这个传递过程收集了一系列 AST 转换，这些语句在后面有助于降低 AST 的维度成为 SSA。比如，在 `for` 循环中重写 `range` 子句为更简单的具有具体变量的 `for` 循环形式 [\[1\]](https://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-1/#id2)。[运行时重写调用 map 的访问方式](https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-efficiently-without-generics)等等。
+在 `order`、`compile` 调用位于 `gc/walk.go` 中的 `walk` 后。这个传递过程收集了一系列 AST 转换，这些语句在后面有助于降低 AST 的维度成为 SSA。比如，在 for 循环中重写 range语句，转变成更为简单的、有具体变量的for循环的形式 [\[1\]](https://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-1/#id2)。[运行时重写调用 map 的访问方式](https://dave.cheney.net/2018/05/29/how-the-go-runtime-implements-maps-efficiently-without-generics)等等。
 
 为了支持 `walk` 中的新语句，我们必须在 `walkstmt` 函数中添加一个 switch 子句。顺便说一下，这也是我们实现 `until` 语句要修改的地方，主要是将它重写为编译器能识别的 AST 节点。在 `until` 的例子中，这比较简单 —— 如文章开头所示，我们只是用倒装条件将它重写为一个 `for` 循环。具体转换代码如下：
 
@@ -451,6 +450,6 @@ via: [Go compiler internals: adding a new statement to Go - Part 1](https://eli.
 
 作者：[Eli Bendersky](https://eli.thegreenplace.net)
 译者：[suhanyujie](https://github.com/suhanyujie)
-校对：
+校对：[JYSDeveloper](https://github.com/JYSDeveloper)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
