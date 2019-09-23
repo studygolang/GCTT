@@ -44,7 +44,7 @@ func main() {
 }
 ```
 
-上面的代码创建了一个路由，将一个 URL 与一个处理函数（代码中是 postFunction）连接在一起，然后使用这个路由并在8080端口打开了一个服务器。
+上面的代码创建了一个路由，将一个 URL 与一个处理函数（代码中是 postFunction）连接在一起，然后启动了一个服务，并将8080端口给这个路由使用。
 
 很简单，嗯哼？🤠
 
@@ -172,7 +172,7 @@ func main() {
 
 为了使用我们的新结构体，我们打开了一个数据库连接并创建了一个新*路由*。然后我们把他们存放到我们新的 *App* 结构体对应字段中。
 
-恭喜！现在你已经有了一个可以对所有 API 调用并发使用的数据库连接了。
+恭喜！现在你已经有了一个数据库连接了，可以对即将进入的 API 请求并发调用了。
 
 在最后一步中，我们会在路由中添加一个返回 JSON 数据的 GET 方法。我们从添加一个用于填充我们的数据的结构体开始，并且把这些字段映射为 JSON。
 
@@ -254,7 +254,7 @@ func (app *App) postFunction(w http.ResponseWriter, r *http.Request) {
 
 ## 数据库迁移
 
-我们来为项目添加最后一个功能。可以通过适当的处理数据库迁移来解决数据库与一个应用或者服务耦合过深造成的令人头疼的问题。我们会使用 [migrate 库](https://github.com/golang-migrate/migrate) 来做这件事情，然后扩展我们的 *db* 包。
+我们来为项目添加最后一个功能。当数据库与一个应用或者服务耦合过深时，会造成令人头疼的问题，可以通过适当的处理数据库迁移来解决这个问题。我们会使用 [migrate 库](https://github.com/golang-migrate/migrate) 来做这件事情，然后扩展我们的 *db* 包。
 
 就是下面这些相当长的嵌入的代码片段。
 
@@ -374,6 +374,6 @@ via: https://dev.to/johanlejdung/a-mini-guide-build-a-rest-api-as-a-go-microserv
 
 作者：[Johan Lejdung](http://github.com/johan-lejdung)
 译者：[Ollyder](https://github.com/Ollyder)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[JYSDeveloper](https://github.com/JYSDeveloper)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
