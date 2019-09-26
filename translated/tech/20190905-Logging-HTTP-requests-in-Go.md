@@ -1,16 +1,16 @@
 # Go 中记录 HTTP 请求
 
-如果你有运行 HTTP 服务器，你可能想记录 HTTP 请求。
+如果你有运行 的 HTTP 服务，你可能想记录 HTTP 请求。
 
-记录请求有助于诊断问题。（哪些请求失败了？我们一天处理多少请求？哪些请求比较慢？）
+请求日志有助于诊断问题。（哪些请求失败了？我们一天处理多少请求？哪些请求比较慢？）
 
 这对于分析是必需的。（哪个页面受欢迎？网页的浏览者都来自哪里？）
 
-这篇文章介绍了在个人的 Go web 服务器中记录 HTTP 请求中需要了解的全部内容。
+这篇文章介绍了在 Go web 服务器中，记录 HTTP 请求日志相关的全部内容。
 
 这不是关于可复用的库，而是关于实现你自己的解决方案需要知道的事情，以及关于我日志记录的选择的描述。
 
-你可以在样本应用上查看全部内容： https://github.com/essentialbooks/books/tree/master/code/go/logging_http_requests
+你可以在示例应用上查看详细内容： https://github.com/essentialbooks/books/tree/master/code/go/logging_http_requests
 
 我在 web 服务 [OnePage](https://onepage.nopub.io/) 中用到了这个记录系统。
 
@@ -26,11 +26,9 @@
 
 [更多的 Go 资源](https://onepage.nopub.io/p/Logging-HTTP-requests-in-Go-233de7fe59a747078b35b82a1b035d36#4405e240-bd60-45a8-ba47-65e175eb7f8f)
 
-[Go 开发者出租](https://onepage.nopub.io/p/Logging-HTTP-requests-in-Go-233de7fe59a747078b35b82a1b035d36#5076eef2-d176-43f3-bab5-c0d3030efa23)
+[招聘Go 开发者](https://onepage.nopub.io/p/Logging-HTTP-requests-in-Go-233de7fe59a747078b35b82a1b035d36#5076eef2-d176-43f3-bab5-c0d3030efa23)
 
 ## 记录什么信息
-
-To show what information is typically logged, here's a sample log entry in Apache's Extended Log File Format:
 
 为了展示通常会记录什么信息，这里有一条 Apache 的扩展日志文件格式的日志记录样本。
 
@@ -78,7 +76,7 @@ Go 中标准HTTP处理函数的签名如下：
 func(w http.ResponseWriter, r *http.Request)
 ```
 
-我们会把日志记录作为所谓的中间件，这是把可复用的代码片段添加到 HTTP 处理管道的一个方法。
+我们会把日志记录作为所谓的中间件，这是一种向 HTTP 服务管道中添加可复用功能的一个方法。
 
 我们有`logReqeustHandler`函数，它以`http.Handler`接口作为参数，然后返回另一个包装了原有处理器并添加了日志记录功能的`http.Handler`。
 
@@ -367,7 +365,7 @@ panicIfErr(err)
 
 - [dailyrotate](https://github.com/kjk/dailyrotate) 是我写的库，实现了文件每日滚动。
 
-## Go 程序员出租
+## 招聘 Go 程序员
 
 如果你正在寻找程序员一起工作，[希望一起谈一下](https://blog.kowalczyk.info/goconsultantforhire.html)。
 
