@@ -66,8 +66,8 @@ func main() {
 
 `Queue` 是一个非常简单的结体构，由一个切片和 `sync.Cond` 结构组成。然后，我们做两件事：
 
--   启动 10 个 goroutines，并将尝试一次消费 X 个元素。如果这些元素不够数目，那么 goroutine 将进去睡眠状态并等待被唤醒
--   主 goroutine 将用 100 个元素填入队列。每添加一个元素，它将唤醒一个等待消费的 goroutine。
+- 启动 10 个 goroutines，并将尝试一次消费 X 个元素。如果这些元素不够数目，那么 goroutine 将进去睡眠状态并等待被唤醒
+- 主 goroutine 将用 100 个元素填入队列。每添加一个元素，它将唤醒一个等待消费的 goroutine。
 
 程序的输出，
 
