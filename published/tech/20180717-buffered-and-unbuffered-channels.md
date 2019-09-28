@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/23538
+
 # 无缓冲和有缓冲通道
 
 !["Go 之旅 插图，由 Go Gopher 的 Renee French 创作](https://raw.githubusercontent.com/studygolang/gctt-images2/master/buffered-and-unbufferd-channel/next-recvier.png)
