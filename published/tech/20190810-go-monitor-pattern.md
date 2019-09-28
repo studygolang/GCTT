@@ -1,10 +1,13 @@
+首发于：https://studygolang.com/articles/23658
+
 # Go: 监控模式
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-monitor-pattern/1.png)
 
-Go 能实现[监控模式](https://en.wikipedia.org/wiki/Monitor_(synchronization))，归功于 `sync` 包和 `sync.Cond` 结构体。监控模式允许 goroutine 在进入睡眠模式前等待一个定特定条件，而不会阻塞执行或消耗资源。
+Go 能实现[监控模式](<https://en.wikipedia.org/wiki/Monitor_(synchronization)>)，归功于 `sync` 包和 `sync.Cond` 结构体。监控模式允许 goroutine 在进入睡眠模式前等待一个定特定条件，而不会阻塞执行或消耗资源。
 
 ## 条件变量
+
 我们举个例子，来看看这个模式可以带来的好处。我将使用 [Bryan Mills 的演示文稿](https://drive.google.com/file/d/1nPdvhB0PutEJzdCq5ms6UI58dp50fcAN/view)中提供的示例：
 
 ```go
@@ -63,8 +66,8 @@ func main() {
 
 `Queue` 是一个非常简单的结体构，由一个切片和 `sync.Cond` 结构组成。然后，我们做两件事：
 
-- 启动 10 个 goroutines，并将尝试一次消费 X 个元素。如果这些元素不够数目，那么 goroutine 将进去睡眠状态并等待被唤醒
-- 主 goroutine 将用 100 个元素填入队列。每添加一个元素，它将唤醒一个等待消费的 goroutine。
+-   启动 10 个 goroutines，并将尝试一次消费 X 个元素。如果这些元素不够数目，那么 goroutine 将进去睡眠状态并等待被唤醒
+-   主 goroutine 将用 100 个元素填入队列。每添加一个元素，它将唤醒一个等待消费的 goroutine。
 
 程序的输出，
 
@@ -84,9 +87,10 @@ func main() {
 如果多次运行此程序，将获得不同的输出。我们可以看到，由于是按批次检索值的，每个 goroutine 获取的值是一个连续的序列。这一点对于理解 `sync.Cond` 与 `channels` 的差异很重要。
 
 ## sync.Cond vs Channels
+
 用单个 `channel` 解决这个问题并不容易，因为它会被消费者一个接一个地拉出来。
 
-为了解决这个问题，Bryan Mills 编写了一个包含两个通道组合的[等价解决方案（第65页）](https://drive.google.com/file/d/1nPdvhB0PutEJzdCq5ms6UI58dp50fcAN/view)：
+为了解决这个问题，Bryan Mills 编写了一个包含两个通道组合的[等价解决方案（第 65 页）](https://drive.google.com/file/d/1nPdvhB0PutEJzdCq5ms6UI58dp50fcAN/view)：
 
 ```go
 type Item = int
@@ -161,6 +165,7 @@ func (q *Queue) GetMany(n int) []Item {
 在可读性和语义方面，条件变量在这里可能有一个小优势。但是，它也有限制。
 
 ## 注意事项
+
 我们运行包含 100 个元素的基准测试，如示例所示：
 
 ```text
@@ -175,13 +180,14 @@ WithCond-8  2.84ms ± 1%
 WithChan-8   917µs ± 1%
 ```
 
-可以看到 `channel` 的速度要快得多。 [Bryan Mills 在“饥饿”部分（第45页）](https://drive.google.com/file/d/1nPdvhB0PutEJzdCq5ms6UI58dp50fcAN/view)中解释了这个问题：
+可以看到 `channel` 的速度要快得多。 [Bryan Mills 在“饥饿”部分（第 45 页）](https://drive.google.com/file/d/1nPdvhB0PutEJzdCq5ms6UI58dp50fcAN/view)中解释了这个问题：
 
 > 假设我们调用 GetMany(3000) 的同时有一个调用者在密集的循环中执行 GetMany(3)。两个服务可能几乎同时醒来，但 GetMany(3) 调用将能够消耗三个元素，而 GetMany(3000) 将没有足够的元素就绪。队列将保持耗尽状态，较大的调用将一直阻塞。
 
 该演示文稿还强调了在处理条件变量时我们可能面临的其他问题。如果模式看起来很简单，我们在使用它时应该小心。之前看到的例子向我们展示了如何更有效地使用 `channel` 并通过通信进行共享。
 
 ## 内部流程
+
 内部实现非常简单，基于发号系统。以下是上一个示例的简单表示：
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-monitor-pattern/2.png)
