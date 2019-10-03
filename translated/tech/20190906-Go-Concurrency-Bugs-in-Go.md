@@ -1,17 +1,16 @@
 # Go中的并发bug
 
-Go 目前正在借助新的并发原语（concurrency primitives）goroutine 和 channel 来简化并发编程并减少报错。但是，实际情况好像并不是这样。两位来自宾夕法尼亚州立大学和普渡大学的研究员 [Yiying Zhang](https://www.linkedin.com/in/yiyingzhang) 和 [Linhai Song](https://songlh.github.io/) 对 Go 中的 [并发bug在真实场景的情况](https://songlh.github.io/paper/go-study.pdf) 进行了研究。
+Go 目前正在通过新的并发原语（concurrency primitives）goroutine 和 channel 试图简化并发编程并减少报错。但是，实际情况怎么样呢？两位来自宾夕法尼亚州立大学和普渡大学的研究员 [Yiying Zhang](https://www.linkedin.com/in/yiyingzhang) 和 [Linhai Song](https://songlh.github.io/) 对 Go 中的 [并发bug在真实场景的情况](https://songlh.github.io/paper/go-study.pdf) 进行了研究。
 
 ## 共享内存与 channel 的对比
 
-该研究的分析之一是 Go 并发原语在用 Go 构建的大项目中的使用分布情况，包括共享内存类型（Mutex，RWMutex，atomic 和 condition 变量）和新的并发类型 channel：
+该研究首先分析了 Go 并发原语在用 Go 构建的大项目中的使用分布情况，包括共享内存类型（Mutex，RWMutex，atomic 和 condition 变量）和新的并发类型 channel：
 
 ![共享内存通信仍然是最常见的用法](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-concurrency-bugs-in-go/primitives-usages-over-time.png)
 
-从上图来看，各种并发原语在各个项目中使用分布情况在时间的跨度上基本稳定，因此该研究的结论可能在接下来的几年中仍然有效。基于此，该研究系统分析了以下流行 Go 项目中的并发 bug：
+从上图来看，各种并发原语在各个项目中使用分布情况在时间的跨度上基本稳定，因此该研究的结论可能在接下来的几年中仍然有效。基于此，研究员们系统分析了以下流行 Go 项目中的并发 bug 以及它们的原因和修复方式：
 
 ![taxonomy](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-concurrency-bugs-in-go/taxonomy.png)
-以及它们的原因和修复方式。
 
 ## 研究发现
 
