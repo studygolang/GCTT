@@ -1,6 +1,6 @@
-如果你想限制一个正在运行的 HTTP 服务的请求量，你可以使用现有的轮子工具，比如说 [github.com/didip/tollbooth](https://github.com/didip/tollbooth)，但是如果写一些简单的东西，你自己去实现也没有那么难。
+如果你想限制一个正在运行的 HTTP 服务的请求量，你可以使用现有的轮子工具，比如说 [github.com/didip/tollbooth](https://github.com/didip/tollbooth) ，但是如果写一些简单的东西，你自己去实现也没有那么难。
 
-我们可以用这个包 `x/time/rate`。
+我们可以用这个包 `x/time/rate` 。
 
 在这篇教程中，我们将基于用户的 IP 地址构造一个简单的限流中间件。
 
@@ -35,7 +35,7 @@ func okHandler(w http.ResponseWriter, r *http.Request) {
 
 ### golang.org/x/time/rate
 
-我们将用 `x/time/rate` 这个包，它提供了一个令牌桶限流算法。 [rate#Limiter](https://godoc.org/golang.org/x/time/rate#Limiter) 控制事件允许发生的频率，它实现了一个容量为 b 的“令牌桶”，最初是满的并以每秒 r 个令牌的速度重新填充。在足够的时间间隔里，限流器限制速度为每秒 r 个令牌，最多为桶的最大容量 b。
+我们将用 `x/time/rate` 这个包，它提供了一个令牌桶限流算法。 [rate#Limiter](https://godoc.org/golang.org/x/time/rate#Limiter) 控制事件允许发生的频率，它实现了一个容量为 b 的“令牌桶”，最初是满的并以每秒 r 个令牌的速度重新填充。在足够的时间间隔里，限流器限制速度为每秒 r 个令牌，最多为桶的最大容量 b 。
 
 因为我们想根据 IP 地址来限流，我们需要维护一个限流器字典。
 
@@ -102,9 +102,9 @@ func (i *IPRateLimiter) GetLimiter(ip string) *rate.Limiter {
 
 ### Middleware
 
-让我们来升级我们的 HTTP Server 并在所有的控制器中添加中间件。所以如果 IP 达到限制将返回429表示大量请求，否则，它将继续执行请求。
+让我们来升级我们的 HTTP Server 并在所有的控制器中添加中间件。所以如果 IP 达到限制将返回 429 表示大量请求，否则，它将继续执行请求。
 
-在 `limitMiddleware` 方法中，每一次中间件接受一个请求，我们都会调用全局限制器的 `Allow()` 方法。如果桶里没有令牌了，`Allow()` 方法将返回 false 并且我们返回给用户 429。否则，调用 `Allow()` 将从桶里消耗一个令牌并且我们将控制权传递给下一个处理程序。
+在 `limitMiddleware` 方法中，每一次中间件接受一个请求，我们都会调用全局限制器的 `Allow()` 方法。如果桶里没有令牌了，`Allow()` 方法将返回 false 并且我们返回给用户 429 。否则，调用 `Allow()` 将从桶里消耗一个令牌并且我们将控制权传递给下一个处理程序。
 
 ```go
 package main
@@ -165,13 +165,13 @@ brew install vegeta
 GET http://localhost:8888/
 ```
 
-运行10秒钟，每个单位时间发100个请求。
+运行 10 秒钟，每个单位时间发 100 个请求 。
 
 ```go
 vegeta attack -duration=10s -rate=100 -targets=vegeta.conf | vegeta report
 ```
 
-结果你将会看到一些请求返回200，但是大部分返回429。
+结果你将会看到一些请求返回 200 ，但是大部分返回 429 。
 
 
 
