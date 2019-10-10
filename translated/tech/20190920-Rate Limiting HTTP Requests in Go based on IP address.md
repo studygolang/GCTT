@@ -4,7 +4,7 @@
 
 在这篇教程中，我们将基于用户的 IP 地址构造一个简单的限流中间件。
 
-### Pure HTTP Server
+# Pure HTTP Server
 
 我们来开始构建一个简单的 HTTP 服务，这是一个大流量的服务，这也是我们为什么要在这里加上限制的原因。
 
@@ -33,7 +33,7 @@ func okHandler(w http.ResponseWriter, r *http.Request) {
 
 在 `main.go` 文件中，我们用 `:8888` 端口启动了一个仅有单一控制器的服务。
 
-### golang.org/x/time/rate
+# golang.org/x/time/rate
 
 我们将用 `x/time/rate` 这个包，它提供了一个令牌桶限流算法。 [rate#Limiter](https://godoc.org/golang.org/x/time/rate#Limiter) 控制事件允许发生的频率，它实现了一个容量为 b 的“令牌桶”，最初是满的并以每秒 r 个令牌的速度重新填充。在足够的时间间隔里，限流器限制速度为每秒 r 个令牌，最多为桶的最大容量 b 。
 
@@ -100,7 +100,7 @@ func (i *IPRateLimiter) GetLimiter(ip string) *rate.Limiter {
 
 `NewIPRateLimiter` 创建了一个 IP 限流器的实例，HTTP 服务将调用这个实例的 `GetLimiter` 来获取指定的 IP 限流器（从字典里获取或者构造一个新的）。
 
-### Middleware
+# Middleware
 
 让我们来升级我们的 HTTP Server 并在所有的控制器中添加中间件。所以如果 IP 达到限制将返回 429 表示大量请求，否则，它将继续执行请求。
 
@@ -143,7 +143,7 @@ func okHandler(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-### Build & Run
+# Build & Run
 
 ```go
 go get golang.org/x/time/rate
@@ -151,7 +151,7 @@ go build -o server .
 ./server
 ```
 
-### Test
+# Test
 
 [vegeta](https://github.com/tsenart/vegeta)（它是用 Go 写的）是一个很不错的工具，我喜欢用它来做 HTTP 负荷测试。
 
@@ -172,8 +172,6 @@ vegeta attack -duration=10s -rate=100 -targets=vegeta.conf | vegeta report
 ```
 
 结果你将会看到一些请求返回 200 ，但是大部分返回 429 。
-
-
 
 via:https://dev.to/plutov/rate-limiting-http-requests-in-go-based-on-ip-address-542g
 
