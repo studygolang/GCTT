@@ -1,4 +1,6 @@
-# GoLang 初体验
+首发于：https://studygolang.com/articles/23985
+
+# Golang 初体验
 
 我最近决定在一个新项目中使用 GoLang 来实现一组增删改查的 API。在此之前，我较为熟悉 Java，Groovy，了解一些 Python。
 
@@ -90,7 +92,7 @@ if err2 !=nil {
 
 在我写本文时，[GoLang 1.13](https://golang.org/doc/go1.13) 支持谷歌的模块代理，文档上是这样说的：
 
->从 Go 1.13 开始，go 命令在默认情况下将使用由 Google 运行的 Go 模块镜像、 Go 检验和数据库来进行模块的下载与认证。参看 [https://proxy.golang.org/privac](https://proxy.golang.org/privacy) 来了解有关这些服务的隐私信息，参看 [go 命令文档](https://golang.org/cmd/go/#hdr-Module_downloading_and_verification) 了解怎么停止使用这些服务或者使用另外的服务的详细配置。如果你依赖于一个不公开的模块，参见 [环境配置文档](https://golang.org/cmd/go/#hdr-Module_configuration_for_non_public_modules)
+> 从 Go 1.13 开始，go 命令在默认情况下将使用由 Google 运行的 Go 模块镜像、 Go 检验和数据库来进行模块的下载与认证。参看 [https://proxy.golang.org/privac](https://proxy.golang.org/privacy) 来了解有关这些服务的隐私信息，参看 [go 命令文档](https://golang.org/cmd/go/#hdr-Module_downloading_and_verification) 了解怎么停止使用这些服务或者使用另外的服务的详细配置。如果你依赖于一个不公开的模块，参见 [环境配置文档](https://golang.org/cmd/go/#hdr-Module_configuration_for_non_public_modules)
 
 ## 结束语
 
@@ -107,9 +109,8 @@ if err2 !=nil {
 
 via: https://dev.to/dbh/golang-initial-experience-oa6
 
-作者：[David Harrison ](http://github.com/dbh)
+作者：[David Harrison](http://github.com/dbh)
 译者：[Ollyder](https://github.com/Ollyder)
 校对：[DingdingZhou](https://github.com/DingdingZhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
