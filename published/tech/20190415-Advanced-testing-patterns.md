@@ -1,6 +1,8 @@
-![image](https://scene-si.org/images/2019-04-15-next-level-go-testing/heading.jpg)
+首发于：https://studygolang.com/articles/23980
 
 # Go 中的进阶测试模式
+
+![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/advanced-testing-patterns/heading.jpg)
 
 Go 使编写测试非常简单。实际上，测试工具是内置在标准工具链里的，你可以简单地运行 `go test` 来运行你的测试，无需安装任何额外的依赖或任何别的东西。测试包是标准库的一部分，我很高兴地看到它的使用范围非常广泛。
 
@@ -14,19 +16,19 @@ Go 使编写测试非常简单。实际上，测试工具是内置在标准工�
 
 > RANK ®; 在 8.0.2 版增加 (为保留字) 见 [MySQL 8.0 的关键词和保留字](https://dev.mysql.com/doc/refman/8.0/en/keywords.html)
 
-模拟是单元测试的一种扩展，而由于集成测试可能意味着高昂的成本，今天做集成测试比过去容易得多。随着 Docker 的不断发展，并有了像 [Drone CI](https://drone.io/) 这样 Docker-first 的 CI，我们可以在 CI 测试套件里声明我们的服务。让我们看一下我定义的 mysql 服务：
+模拟是单元测试的一种扩展，而由于集成测试可能意味着高昂的成本，今天做集成测试比过去容易得多。随着 Docker 的不断发展，并有了像 [Drone CI](https://drone.io/) 这样 Docker-first 的 CI，我们可以在 CI 测试套件里声明我们的服务。让我们看一下我定义的 MySQL 服务：
 
 ```yml
 services:
 - name: crust-db
   image: percona:8.0
   ports:
-    - 3306
+	- 3306
   environment:
-    MYSQL_ROOT_PASSWORD: bRxJ37sJ6Qu4
-    MYSQL_DATABASE: crust
-    MYSQL_USER: crust
-    MYSQL_PASSWORD: crust
+	MYSQL_ROOT_PASSWORD: bRxJ37sJ6Qu4
+	MYSQL_DATABASE: crust
+	MYSQL_USER: crust
+	MYSQL_PASSWORD: crust
 ```
 
 这基本上就是随我们的测试和构建一起开启数据库所需的全部。虽然在过去，这可能意味着你需要一个一直在线的数据库实例，你需要在某处进行管理，而今天大门已经打开，基本上你可以在你所用的 CI 框架里声明服务的一切所需。
@@ -41,14 +43,14 @@ services:
 
 我正在开发一个项目，目前有 53 个测试文件，其中 28 个是需要外部服务（例如上述的数据库）的集成测试。你可能并不总是处理完整的环境，或者可能只对在项目中分散的一小部分测试感兴趣，并且你希望能够运行这些（且只运行这些）。
 
-查看 `testing` 包的 API 面（API surface），我们注意到有一个 [Short()](https://golang.org/pkg/testing/#Short) 函数可用，它在运行 go test 时对 `-test.short` 起作用。这使得我们在想运行测试的某个子集时可以跳过一些测试：
+查看 `testing` 包的 API 面（API surface），我们注意到有一个 [Short()](https://golang.org/pkg/testing/#Short) 函数可用，它在运行 Go test 时对 `-test.short` 起作用。这使得我们在想运行测试的某个子集时可以跳过一些测试：
 
 ```go
 func TestTimeConsuming(t *testing.T) {
-    if testing.Short() {
-        t.Skip("skipping test in short mode.")
-    }
-    ...
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+	...
 }
 ```
 
@@ -62,7 +64,7 @@ func TestTimeConsuming(t *testing.T) {
 
 现在，传统观点会说“运行所有的测试”。作为真正了解人们如何处理问题，提出问题以及确立实践准则的工程师中的一个 —— 现在，这可以帮助你找到一个更好的解决办法，解决并不只是你遇到的问题。
 
-在 2016 年，以及2016 年晚些时候，Peter Bourgon 写了两篇极好的长篇幅文章，这些文章对需要实现实际服务并超出基本实现的人来说，是参考书一样的存在：
+在 2016 年，以及 2016 年晚些时候，Peter Bourgon 写了两篇极好的长篇幅文章，这些文章对需要实现实际服务并超出基本实现的人来说，是参考书一样的存在：
 
 - [Go best practices for production environments (2014)](https://peter.bourgon.org/go-in-production/)
 - [Go best practices, six years in (2016)](https://peter.bourgon.org/go-best-practices-2016/)
@@ -71,7 +73,7 @@ func TestTimeConsuming(t *testing.T) {
 
 > 包测试主要针对单元测试，但对集成测试来说，事情有点棘手。启动外部服务的过程通常依赖于你的集成环境，不过我们确实找到了一个针对它们进行集成测试的好习惯。写一个 integration_test.go 并给它一个 integration 的构建标记。为服务地址以及连接字符串等定义（全局的）flag，并在测试中使用它们。
 
-事实上，Peter 建议使用 go 的构建标记来标识集成测试。如果你需要一个单独的环境来运行这些测试，你只要使用 `-tags=intergration` 作为 go test 的参数。
+事实上，Peter 建议使用 Go 的构建标记来标识集成测试。如果你需要一个单独的环境来运行这些测试，你只要使用 `-tags=intergration` 作为 Go test 的参数。
 
 这完全合乎情理 —— 尽管我在的这个项目的集成测试需要花费一分钟左右，但我知道在有的项目里需要几个小时。这些项目可能有很特殊的专用测试设置，这样你也可以不测试这些服务的配置 —— 它们只在测试环境中使用。
 
@@ -83,12 +85,12 @@ func TestTimeConsuming(t *testing.T) {
 
 ## 边界情况
 
-将你的应用程序与第三方服务集成是很常见的，由于API弃用是可能发生的，所以集成测试可能还需要验证应用程序的响应是否仍然有意义。 因此，Peter 的文章需要一点改进。
+将你的应用程序与第三方服务集成是很常见的，由于 API 弃用是可能发生的，所以集成测试可能还需要验证应用程序的响应是否仍然有意义。 因此，Peter 的文章需要一点改进。
 
 你不能总是依赖你正在使用的 API；它会在未来几年都保持原样吗？没有人希望你创建一堆 GitHub 用户和组织来测试你的 webhook 端点和集成，但这并不意味着你不会偶尔需要这样做。
 
 一个最近的例子是 [larger deprecation of Bitbucket APIs due to GDPR](https://developer.atlassian.com/cloud/bitbucket/bbc-gdpr-api-migration-guide/). 这篇弃用通知是在大约一年前宣布的，
-从10月开始，并计划在2019年4月底废弃各种API及返回的数据，可能会对现有的各种 CI 集成造成严重破坏。
+从 10 月开始，并计划在 2019 年 4 月底废弃各种 API 及返回的数据，可能会对现有的各种 CI 集成造成严重破坏。
 
 考虑到这一点，我这样扩展了 Peter 的建议：
 
@@ -187,6 +189,6 @@ via: https://scene-si.org/2019/04/15/next-level-go-testing/
 
 作者：[Tit Petric](https://scene-si.org/about)
 译者：[krystollia](https://github.com/krystollia)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
