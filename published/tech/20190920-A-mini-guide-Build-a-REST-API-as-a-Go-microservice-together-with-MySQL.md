@@ -1,6 +1,8 @@
-![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/a-mini-guide-build-a-rest-api-as-a-go-microservice-together-with-mysql/a-mini-guide-build-a-rest.jpg)
+首发于：https://studygolang.com/articles/23981
 
 # 迷你指南——结合 MySQL 构建一个基于 Go 的 REST API 微服务
+
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/a-mini-guide-build-a-rest-api-as-a-go-microservice-together-with-mysql/a-mini-guide-build-a-rest.jpg)
 
 我最近发现我在 Storytel 公司的日常工作和我自己的小项目 [Wiseer](https://wiseer.io/) 中已经编写和部署了很多基于 Go 的微服务。在本篇迷你指导中，我会结合 MySQL 数据库创建一个简单的 REST-API。完整项目的代码会在文章的最后给出。
 
@@ -44,7 +46,7 @@ func main() {
 }
 ```
 
-上面的代码创建了一个路由，将一个 URL 与一个处理函数（代码中是 postFunction）连接在一起，然后启动了一个服务，并将8080端口给这个路由使用。
+上面的代码创建了一个路由，将一个 URL 与一个处理函数（代码中是 postFunction）连接在一起，然后启动了一个服务，并将 8080 端口给这个路由使用。
 
 很简单，嗯哼？🤠
 
@@ -326,9 +328,9 @@ func migrateDatabase(db *sql.DB) error {
 
 数据库连接打开后，我们添加的 *migrateDatabase* 函数会被调用来开始迁移过程。
 
-我们也会添加一个 MigrationLogger 结构体来处理迁移过程中的日志，代码可以在 [这里](https://github.com/johan-lejdung/go-microservice-api-guide/blob/master/rest-api/db/migrationlogger.go) 被看到，而且这个结构体在第45行被使用。
+我们也会添加一个 MigrationLogger 结构体来处理迁移过程中的日志，代码可以在 [这里](https://github.com/johan-lejdung/go-microservice-api-guide/blob/master/rest-api/db/migrationlogger.go) 被看到，而且这个结构体在第 45 行被使用。
 
-迁移是通过普通的 sql 语句实现的。迁移文件从第37行显示的文件夹中被读取。
+迁移是通过普通的 sql 语句实现的。迁移文件从第 37 行显示的文件夹中被读取。
 
 每当数据库被打开后，所有未被应用的数据库迁移将会被应用。这样将会使数据库在不需要人为干预的情况下保持最新。
 
@@ -344,7 +346,7 @@ func migrateDatabase(db *sql.DB) error {
 FROM golang:1.11 as builder
 WORKDIR $GOPATH/src/github.com/johan-lejdung/go-microservice-api-guide/rest-api
 COPY ./ .
-RUN GOOS=linux GOARCH=386 go build -ldflags="-w -s" -v
+RUN GOOS=linux GOARCH=386 Go build -ldflags="-w -s" -v
 RUN cp rest-api /
 
 FROM alpine:latest
