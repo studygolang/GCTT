@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/23978
+
 # Vuejs + Golang = 一个稀缺的组合
 
-![](https://miro.medium.com/max/2000/0*SJ43Bk4fxc44mgVR)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/vuejs-golang/0*SJ43Bk4fxc44mgVR.jpg)
 
 时间回到 2018 年，我写了一篇获得 15k 阅读的文章：Django + Angular 4 = A powerful web application。出于好奇心，我尝试了Angular4 和 Django 的组合。接着上个系列，这是一篇使用 Vuejs 和 Golang 来帮助你构建极佳应用的文章。
 
@@ -40,11 +42,13 @@ Golang 和 Vuejs 在运行时都很快，所以让他们一起合作构建一个
 
 首先，像下面这样初始化你的文件目录，为 Git 添加 “LICENSE” 、“README.md” 等文件.
 
-![](https://miro.medium.com/max/508/1*vtaJKeFNo6dKujZYsEi6hw.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/vuejs-golang/1*vtaJKeFNo6dKujZYsEi6hw.png)
 
-在 backend 文件夹创建一个 'server.go'文件：
+在 backend 文件夹创建一个 'server.go' 文件：
 
-![](https://miro.medium.com/max/536/1*-Kc01BeHC7_k3AzYblaVxA.png)
+```bash
+server.go
+```
 
 前端部分，在命令行输入以下命令来创建一个新的 app 应用：
 
@@ -54,11 +58,11 @@ Golang 和 Vuejs 在运行时都很快，所以让他们一起合作构建一个
 
 它会询问你选择 `preset` 预设，选择默认的即可（babel, eslint).
 
-![](https://miro.medium.com/max/1296/1*tbr9X84OEsJCrWgEOJSHvA.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/vuejs-golang/1*tbr9X84OEsJCrWgEOJSHvA.png)
 
 现在文件目录结构如下：
 
-![](https://miro.medium.com/max/518/1*IUbOGEl5b4ozSYWQmuDM_w.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/vuejs-golang/1*IUbOGEl5b4ozSYWQmuDM_w.png)
 
 代码的结构准备好了!
 
@@ -72,15 +76,15 @@ Golang 很快是因为它的编译器，它不允许你定义多余的变量。�
 
 因此，我们将会使用 `encoding/json` and `net/http` 包。然后，我们定义 JSON 类型的数据结构。
 
-![](https://miro.medium.com/max/522/1*bBx8qYZkWpg8R92e8gT_5g.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/vuejs-golang/1*bBx8qYZkWpg8R92e8gT_5g.png)
 
 现在，我们将会写一个简单的方法来做数字的运算。这里，我们需要明确指定返回数据的类型。
 
-![](https://miro.medium.com/max/868/1*AR0TlByqhirRpm8s7R5FUA.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/vuejs-golang/1*AR0TlByqhirRpm8s7R5FUA.png)
 
 我们需要写一个方法，当我们使用 POST 方法发送 JSON 格式的请求时，这个方法能够被执行。
 
-![](https://miro.medium.com/max/1258/1*JaFzDlfYH0LwTwLTOIs2Iw.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/vuejs-golang/1*JaFzDlfYH0LwTwLTOIs2Iw.png)
 
 在代码第 33 行，我们定义了一个 `JSON`的译码器来转译从请求的实体中的传过来的 JSON 数据。
 
@@ -92,7 +96,7 @@ Golang 很快是因为它的编译器，它不允许你定义多余的变量。�
 
 最后，在这个主函数上，我们可以定义 HTTP 路由，例如 53 行为每个 URL 请求分别定义响应函数。后端服务将运行在 `8090` 端口上。
 
-![](https://miro.medium.com/max/720/1*ug8QMqiNpF9QefRl9uuNuQ.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/vuejs-golang/1*ug8QMqiNpF9QefRl9uuNuQ.png)
 
 完整的代码如下：
 
@@ -108,7 +112,7 @@ npm install --save bootstrap-vue bootstrap axios vee-validate
 
 在 `src/Calculator.vue` 文件里编写前端部分代码：
 
-![](https://miro.medium.com/max/1400/1*13qy_tphvGcHiOM1wR3KIg.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/vuejs-golang/1*13qy_tphvGcHiOM1wR3KIg.png)
 
 从 17 行到 25 行，我们定义 input 输入框和 label 标签来获取数据。在Vue 中使用 `v-model`指令获取数据。
 
@@ -137,8 +141,8 @@ npm install --save bootstrap-vue bootstrap axios vee-validate
 
 ```go
 go run server.go
-
 ```
+
 运行前端可以使用：
 
 ```shell
@@ -147,9 +151,9 @@ npm run serve
 
 祝贺！你的 App 完成了。
 
-整个代码托管在这个[Github厂库](https://github.com/adesgautam/Calculator)上。
+整个代码托管在这个 [Github 仓库](https://github.com/adesgautam/Calculator)上。
 
-并且，如果你想看另一个我使用Vue.js 和 Golang 构建的应用 Rocket Engine Designer，请点击[这里](https://github.com/adesgautam/Proton)
+并且，如果你想看另一个我使用 Vue.js 和 Golang 构建的应用 Rocket Engine Designer，请点击[这里](https://github.com/adesgautam/Proton)
 
 如果你喜欢这篇文章，请点击 👏 按钮给与你对这篇文章的喜爱。
 
@@ -159,7 +163,6 @@ via: https://medium.com/@adeshg7/vuejs-golang-a-rare-combination-53538b6fb918
 
 作者：[Adesh Gautam](https://medium.com/@adeshg7)
 译者：[M1seRy](https://github.com/M1seRy)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
