@@ -26,21 +26,17 @@
 
 2. 为你的网站的文件夹起一个名字。我们使用 `<PORTFOLIO_NAME>` 来作为占位符。
 
-3. 就像下面这样生成你的站点。 
+3. 就像下面这样生成你的站点。
 
    ```shell
    hugo new site <PORTFOLIO_NAME>
    ```
-
-   
 
 4. 使用 `cd` 命令进入刚新生成的文件夹并且初始化为一个 git 仓库。
 
    ```shell
    cd <PORTFOLIO_NAME> && git init
    ```
-
-   
 
 ## 第二步：选择并添加一个主题
 
@@ -132,26 +128,26 @@
    **b. 添加专业信息**
 
    * 因为我们已经复制了 `data` 文件夹，所以我们需要做的就是修改对应文件中信息，使其能够反映在站点上。举例来说，我们可以通过修改 `experience.json` 文件来修改 `Experience` 。
-   
+
    **c. 改变站点图标**
-   
+
    * 如果一个主题没有提供能够改变站点图标的配置设置项，那需要将其添加到站点的头部中。
    * 在本文示例中，头文件存放在主题的 `layouts/partials` 文件夹中。
    * 为了增加图标，复制头文件到作品集的 `layout/partials` 文件夹中并且修改必要项。
    * 另外，如果图标不是一个链接而是文件的话，记得把这个图标文件添加到 `static` 文件夹中。
-   
+
    **d. 增加项目栏**
-   
+
    * 这个主题没有提供**项目栏**。
    * 因为项目栏与 **服务栏** 是相似的，所以我复制它的 HTML 文件（ `layouts/partials/project.html` ），修改它使得项目栏可以被链接，为它增加一个数据文件（ `data/projects.json` ）并且把它添加到 `layout/index.html` 文件中（我从主题中复制过来的）。
    * 在这个示例中，你没有提供服务，所有你所做的事情只是更改了 `data/services.json` 文件中的内容来反映到 **项目** 或其他地方，而不是 **服务**。
-   
+
    **e. 增加社交信息**
-   
+
    * 已经提供了 `data/socials.json` 和 `data/socialsfas.json` （用于 Awesome-Font 实体风格图标）文件可以用来列举社交信息。
-   
+
    最后站点看起来像这样：
-   
+
    ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/create-your-developer-portfolio-using-hugo-and-github-pages-35en/pic3.png)
 
 ## 第五步：在 Github 上创建仓库并把源码推上去
@@ -196,8 +192,6 @@
 ## 结语
 
 我希望本篇教程是有用的。尽管在 Github 页面上得到一个静态作品集是很容易的，但我更喜欢 Hugo 的方式，因为它的可定制性，题材广泛的主题和模板内建的东西，如谷歌分析，DIsqus 等等。在此，我也很感激 Github 的用户页面免费静态站点。
-
-
 
 ---
 
