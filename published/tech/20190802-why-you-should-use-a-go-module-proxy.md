@@ -30,11 +30,11 @@
 
 * 假设发布的依赖 `tag` 是 `v1.3.0` ，并且已经 `go get` 获取它到本地缓存。此时，依赖的所有者可以通过推送具有相同 `tag` 的恶意内容来破坏代码库。如果在具有干净缓存的计算机上重建 `Go module`，它现在将使用被破坏的包。 为了防止这种情况，需要将 `go.sum` 和 `go.mod` 文件放在一起 。
 
-* 一些依赖使用不只使用 `git` 作为 ` 版本管理系统 `，还有可能使用 `hg(Mercurial)`，`bzr(Bazaar`) 或 `svn(Subversion)`。而你的机器没有安装装或者 Dockerfile 没有配置这些工具，这都将引发问题。
+* 一些依赖使用不只使用 `git` 作为 `版本管理系统`，还有可能使用 `hg(Mercurial)`，`bzr(Bazaar`) 或 `svn(Subversion)`。而你的机器没有安装装或者 Dockerfile 没有配置这些工具，这都将引发问题。
 
 * `go get` 需要获取 `go.mod` 列出的每个依赖项的源代码来解决递归依赖（需相应的 `go.mod` 文件）。因为它意味着必须下载（例如 `git clone` ）每个存储库以[获取单个文件](https://about.sourcegraph.com/go/gophercon-2019-go-module-proxy-life-of-a-query)，这显然会使得整个构建过程变慢。
 
-` 那我们怎么解决这些问题呢？`
+`那我们怎么解决这些问题呢？`
 
 ## 使用 Go module proxy 的好处
 
