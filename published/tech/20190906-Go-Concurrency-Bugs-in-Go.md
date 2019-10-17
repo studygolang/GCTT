@@ -1,6 +1,8 @@
-# Go中的并发bug
+首发于：https://studygolang.com/articles/24041
 
-Go 目前正在通过新的并发原语（concurrency primitives）goroutine 和 channel 试图简化并发编程并减少报错。但是，实际情况怎么样呢？两位来自宾夕法尼亚州立大学和普渡大学的研究员 [Yiying Zhang](https://www.linkedin.com/in/yiyingzhang) 和 [Linhai Song](https://songlh.github.io/) 对 Go 中的 [并发bug在真实场景的情况](https://songlh.github.io/paper/go-study.pdf) 进行了研究。
+# Go 中的并发 bug
+
+Go 目前正在通过新的并发原语（concurrency primitives）goroutine 和 channel 试图简化并发编程并减少报错。但是，实际情况怎么样呢？两位来自宾夕法尼亚州立大学和普渡大学的研究员 [Yiying Zhang](https://www.linkedin.com/in/yiyingzhang) 和 [Linhai Song](https://songlh.github.io/) 对 Go 中的 [并发 bug 在真实场景的情况](https://songlh.github.io/paper/go-study.pdf) 进行了研究。
 
 ## 共享内存与 channel 的对比
 
@@ -49,6 +51,6 @@ via: https://medium.com/a-journey-with-go/go-concurrency-bugs-in-go-7d3677a1f2a2
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[zhiyu-tracy-yang](https://github.com/zhiyu-tracy-yang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[zhoudingding](https://github.com/dingdingzhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
