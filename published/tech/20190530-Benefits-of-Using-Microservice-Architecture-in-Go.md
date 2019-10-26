@@ -1,7 +1,9 @@
+首发于：https://studygolang.com/articles/24267
+
 # 在 Go 中使用微服务架构的好处
 
 ## 前言
-我们已经讨论“微服务架构”很长一段时间了。它是软件架构中最新的热门话题。那么什么是微服务呢?我们为什么要使用它?为什么要在 Golang 中使用微服务架构?它有哪些优点？
+我们已经讨论“微服务架构”很长一段时间了。它是软件架构中最新的热门话题。那么什么是微服务呢？我们为什么要使用它？为什么要在 Golang 中使用微服务架构?它有哪些优点？
 
 本文中，我将会探讨一些相关的问题。废话不多说，让我们开始吧。
 
@@ -93,6 +95,6 @@ via: https://medium.com/datadriveninvestor/benefits-of-using-microservice-archit
 
 作者：[Katy Slemon](https://medium.com/@katyslemon)
 译者：[Alex1996a](https://github.com/Alex1996a)
-校对：[magichan](https://github.com/magichan)
+校对：[dingdingzhou](https://github.com/zhoudingding)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
