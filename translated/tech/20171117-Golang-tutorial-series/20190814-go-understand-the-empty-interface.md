@@ -81,8 +81,8 @@ type rtype struct {
 * `kind`  包含类型有：int8，int16，bool 等。
 * `align` 是变量与此类型的对齐方式
 
-<!-- TODO （译者注：*字段和方法*从嵌入的 `rtype` 中可以间接得到：先判断 `rtype` 的 `tflag` 字段判断是结构体，紧接着 `structType` 结构体的 `fields` 字段存储着字段的地址，可以得到方法） -->
 根据空接口嵌入的类型，我们可以映射导出字段或列出方法：
+| 译者注：方法在结构体最下面，这篇文章中是看不到的；需要先将这个 `rtye` 映射成 结构体才能看到，映射是基于 `tflag` 做的
 
 ```go
 type structType struct {
