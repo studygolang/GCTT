@@ -49,7 +49,6 @@ import "github.com/ardanlabs/conf"
 // 和仓库的规范名相匹配。
 $GOPATH/src/github.com/ardanlabs/conf
 
-
 // Module 模式：包在磁盘上的物理位置与仓库的规范名称
 // 不一致。
 /users/bill/conf
