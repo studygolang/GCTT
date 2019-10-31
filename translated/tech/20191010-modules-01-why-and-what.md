@@ -14,7 +14,7 @@
 
 使用 GOPATH 在磁盘上为 Go 工作区提供物理位置已经为 Go 语言开发者提供了很好的服务。不幸的是，对于非 Go 语言开发者来说，这却是一个瓶颈，因为他们可能需要时不时的进行 Go 项目，并且没有设置 Go 工作区。Go 语言团队想要解决的问题之一便是允许将 Go 代码仓库克隆到磁盘上的任何位置（GOPATH 之外），同时 Go 工具能够对其进行定位，构建和测试。
 
-图1  
+图1
 
 ![108_figure1.png](https://www.ardanlabs.com/images/goinggo/108_figure1.png)
 
@@ -24,7 +24,7 @@
 
 ## 解析导入
 
-清单 1  
+清单 1
 [github.com/ardanlabs/conf/blob/master/conf_test.go](https://www.ardanlabs.com/blog/2019/10/github.com/ardanlabs/conf/blob/master/conf_test.go)
 
 ```go
@@ -41,11 +41,11 @@
 
 假使 GOPATH 不再存在并且包所处于的文件夹结构与仓库的规范名称也不再一致时，会怎样呢？
 
-清单 2  
+清单 2
 ```go
 import "github.com/ardanlabs/conf"
 
-// GOPATH 模式：包在磁盘上的物理位置与 GOPATH 
+// GOPATH 模式：包在磁盘上的物理位置与 GOPATH
 // 和仓库的规范名相匹配。
 $GOPATH/src/github.com/ardanlabs/conf
 
@@ -60,7 +60,7 @@ $GOPATH/src/github.com/ardanlabs/conf
 
 这个特殊的文件被命名为 [go.mod](https://golang.org/cmd/go/#hdr-The_go_mod_file)，而在其中定义的仓库规范名将代表称为 module 的新实体 。
 
-清单 3  
+清单 3
 [github.com/ardanlabs/conf/blob/v1.1.0/go.mod](https://www.ardanlabs.com/blog/2019/10/github.com/ardanlabs/conf/blob/v1.1.0/go.mod)
 
 ```go
@@ -78,7 +78,7 @@ $GOPATH/src/github.com/ardanlabs/conf
 
 大多数版本控制系统都允许我们对代码仓库的任意提交点打标签（例如：v1.0.0、v2.3.8 等），这些标签被认为是不可变的，通常被用于发布新功能。
 
-图 2  
+图 2
 
 ![108_figure2.png](https://www.ardanlabs.com/images/goinggo/108_figure2.png)
 
@@ -132,12 +132,17 @@ $GOPATH/src/github.com/ardanlabs/conf
 
 有许多关于 Go 语言的文档，下面是由 Go 语言团队发布的一些文章和视频。
 
-[Modules The Wiki](https://github.com/golang/go/wiki/Modules)  
-[1.13 Go Release Notes](https://golang.org/doc/go1.13#modules)  
-[Go Blog: Module Mirror and Checksum Database Launched](https://blog.golang.org/module-mirror-launch)  
-[Go Blog: Publishing Go Modules](https://blog.golang.org/publishing-go-modules)  
-[Proposal: Secure the Public Go Module Ecosystem](https://go.googlesource.com/proposal/+/master/design/25530-sumdb.md)  
-[GopherCon 2019: Katie Hockman - Go Module Proxy: Life of a Query](https://www.youtube.com/watch?v=KqTySYYhPUE) 
+[Modules The Wiki](https://github.com/golang/go/wiki/Modules)
+
+[1.13 Go Release Notes](https://golang.org/doc/go1.13#modules)
+
+[Go Blog: Module Mirror and Checksum Database Launched](https://blog.golang.org/module-mirror-launch)
+
+[Go Blog: Publishing Go Modules](https://blog.golang.org/publishing-go-modules)
+
+[Proposal: Secure the Public Go Module Ecosystem](https://go.googlesource.com/proposal/+/master/design/25530-sumdb.md)
+
+[GopherCon 2019: Katie Hockman - Go Module Proxy: Life of a Query](https://www.youtube.com/watch?v=KqTySYYhPUE)
 
 ---
 
