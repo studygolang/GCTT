@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/24407
+
 # 理解 Go 的空接口
 
 <!-- https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-vet-command-is-more-powerful-than-you-think/go-vet.png 图片链接模板 -->
@@ -97,12 +99,11 @@ type structType struct {
 
 下边是我们看到的空结构体的表示：
 
-<div align=center><img src ="https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-understand-the-empty-interface/interface-representation.png" alt="图片名称"/></div>
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-understand-the-empty-interface/interface-representation.png)
 
-<!-- 无法居中 -->
-<!-- ![结构体由两个词构成](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-understand-the-empty-interface/interface-representation.png) -->
-
-<center>结构体由两个词构成</center>
+<div align="center">
+结构体由两个词构成
+</div>
 
 现在让我们看看空接口实际上可以实现哪种转换。
 
