@@ -104,7 +104,7 @@ func GoTraverse(filename string, cbs *GoCallbacks) {
 
 `Cgo`指针传递规则不允许将 Go 函数值直接传递给 C，因此要注册回调，我们需要在 C 中创建包装器函数。
 
-而且，我们也不能直接传递 Go 程序分配的指针到 C 程序中，因为 Go 到并发垃圾回收器会移动数据。
+而且，我们也不能直接传递 Go 程序分配的指针到 C 程序中，因为 Go 的并发垃圾回收器会移动数据。
 `Cgo`的[Wiki](https://github.com/golang/go/wiki/cgo#function-variables)提供了使用间接寻址的解决方法。
 在这里，我将使用go-pointer程序包，该程序包以稍微更方便，更通用的方式实现了相同目的。
 
@@ -129,7 +129,7 @@ func GoTraverse(filename string, v Visitor) {
 }
 ````
 
-我们先在 Go 代码中创建 C 的回调结构，然后封装。因为我们不能直接将 Go 函数赋值给C函数指针，我们将在独立的 Go 文件[注1]中定义这些包装函数。
+我们先在 Go 代码中创建 C 的回调结构，然后封装。因为我们不能直接将 Go 函数赋值给 C 函数指针，我们将在独立的 Go 文件[注1]中定义这些包装函数。
 
 ````
 /*
@@ -147,9 +147,9 @@ void endCgo(void* user_data, int a, int b) {
 import "C"
 ````
 
-这些是调用 Go 函数的非常薄的包装函数——我们不得不为每一类的回调写这样一个 C 函数。我们很快就会看到 Go 函数 goStart 和 goEnd。
-在封装这个 C 回调结构体后，GoTraverse 会将文件名从 Go 字符串转换为 C 字符串（`Wiki`中有详细信息）。
-之后，它创建一个代表 Go 访问者的值，我们可以使用 go-pointer 包将其传递给 C。最后，它调用遍历。
+这些是非常轻量的、调用 go 函数的包装器——我们不得不为每一类的回调写这样一个 C 函数。我们很快就会看到 Go 函数 goStart 和 goEnd。
+在填充这个 C 回调结构体后，GoTraverse 会将文件名从 Go 字符串转换为 C 字符串（`Wiki`中有详细信息）。
+之后，它创建一个代表 Go 访问者的值，我们可以使用 go-pointer 包将其传递给 C。最后，它调用 traverse。
 
 完成这个实现，goStart 和 goEnd 代码如下：
 
@@ -174,8 +174,8 @@ func goEnd(user_data unsafe.Pointer, a C.int, b C.int) {
 ## 详细的调用流程
 
 让我们研究一下“开始”事件的回调调用流程，以更好地了解各个部分是如何连接在一起的。
-GoTraverse 将 startCgo 分配给传递给 traverse 的 Callbacks 结构中的 start 指针。因此，traverse 遇到启动事件时，它将调用 startCgo。
-参数是传递给 traverse 的 user_data 指针以及事件特定的参数（在这种情况下为单个`int`）。
+GoTraverse 将 startCgo 赋值给 Callbacks 结构体中的 start 指针，Callbacks 结构体将被传递给 traverse。因此，traverse 遇到 start 事件时，它将调用 startCgo。
+回调的参数包括：传递给 traverse 的 user_data 指针以及事件特定的参数（该例中为一个 int 类型的参数）。
 
 startCgo 是 goStart 的填充程序，并使用相同的参数调用它。
 
@@ -203,7 +203,7 @@ goStart 解压缩由 GoTraverse 打包到 user_data 中的 Visitor 实现，并�
 
 ## 如果没有 user_data 呢？
 
-看到我们如何使用 user_data 通过 C 代码将特定于用户的 Visitor 实现通过隧道传送回我们的通用回调，人们可能会想-如果没有可用的 user_data 怎么办？
+看到我们如何使用 user_data 穿过 C 代码回调到我们的回调函数，以传输特定于用户 Visitor 的实现，人们可能会想-如果没有可用的 user_data 怎么办？
 事实证明，在大多数情况下，都存在诸如 user_data 之类的东西，因为没有它，原始的 C `API`就有缺陷。再次考虑遍历示例，但是这项没有 user_data：
 
 ````
