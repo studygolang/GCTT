@@ -1,4 +1,6 @@
-# 传递回调函数和指针到Cgo
+首发于：https://studygolang.com/articles/24447
+
+# 传递回调函数和指针到 Cgo
 
 `Cgo`允许 Go 程序调用 C 库或其他暴露了 C 接口的库。正是如此，这也成为 Go 程序员工具箱的重要组成部分。
 
@@ -16,7 +18,8 @@
 
 如下是一个虚构的C库的头文件，该库处理（输入）数据，并基于事件调用回调函数。
 
-````cgo
+
+```c
 typedef void (*StartCallbackFn)(void* user_data, int i);
 typedef void (*EndCallbackFn)(void* user_data, int a, int b);
 
@@ -28,21 +31,20 @@ typedef struct {
 // file, each with its own relevant data. user_data is passed through to the
 // callbacks.
 void traverse(char* filename, Callbacks cbs, void* user_data);
-````
+```
 
 回调标签是由几个重要的模式组成，所展示的这些模式在现实中也同样普遍:
 
 * 每一个回调拥有自己的类型签名，这里为了简便，我们使用`int`类型的参数，这个参数可以是其他任何类型。
-* 当只有较小数量的回调被调用时，它们可能作为独立的参数被传递到 traverse 中；然而，回调的数量会非常大（比如说，超过三个），
-然后几乎总是有一个汇集它们的结构体被传递。
+* 当只有较小数量的回调被调用时，它们可能作为独立的参数被传递到 traverse 中；然而，回调的数量非常大时（比如说，超过三个），后几乎总是有一个汇集它们的结构体被传递。
 允许用户将某些回调参数设置为 null 很常见，以向底层库传达：对于某些特定事件并没有意义，也不应为此调用任何用户代码。
 * 每个回调都获得一个不透明指针 user_data，该指针从调用者传递到 traverse （最终传递到回调函数）。它用于区分互不相同的遍历，并传递用户特定的状态。
-典型的，traverse 会透传user_data，而不尝试访问他； 由于它是`void *`，因此它对于库是完全模糊的，
+典型的，traverse 会透传 user_data，而不尝试访问他； 由于它是`void *`，因此它对于库是完全模糊的，
 并且用户代码会将其强制转换为回调中的某些具体类型。
 
 我们对 traverse 的实现仅是一个简单的模拟：
 
-````cgo
+```c
 void traverse(char* filename, Callbacks cbs, void* user_data) {
   // 模拟某些遍历，调用 start 回调，之后调用 end 回调
   // callback, if they are defined.
@@ -53,7 +55,7 @@ void traverse(char* filename, Callbacks cbs, void* user_data) {
     cbs.end(user_data, 2, 3);
   }
 }
-````
+```
 
 我们的任务是包装这个库，在 Go 代码中进行使用。我们想要在遍历中调用 Go 回调，不用再写任何多余的 C 代码。
 
@@ -61,7 +63,7 @@ void traverse(char* filename, Callbacks cbs, void* user_data) {
 
 让我们从构思在 Go 代码中我们接口的样式开始，如下是一个方式：
 
-````
+```go
 type Visitor interface {
   Start(int)
   End(int, int)
@@ -81,7 +83,7 @@ func GoTraverse(filename string, v Visitor) {
 
 一个可替换的方法是模仿我们在 C 语言中拥有的方式；也就是说，创建一个整合函数对象的结构体：
 
-````
+```go
 type GoStartCallback func(int)
 type GoEndCallback func(int, int)
 
@@ -92,7 +94,7 @@ type GoCallbacks struct {
 func GoTraverse(filename string, cbs *GoCallbacks) {
   // ... 实现
 }
-````
+```
 
 这立即解决了两个缺点：函数对象的默认值为`nil`，GoTraverse 可以将其解释为“对此事件不感兴趣”，其中可以将相应的 C 回调设置为`NULL`。
 由于 Go 函数对象可以是闭包或绑定方法，因此在不同的回调之间保留状态没有困难。
@@ -106,11 +108,11 @@ func GoTraverse(filename string, cbs *GoCallbacks) {
 
 而且，我们也不能直接传递 Go 程序分配的指针到 C 程序中，因为 Go 的并发垃圾回收器会移动数据。
 `Cgo`的[Wiki](https://github.com/golang/go/wiki/cgo#function-variables)提供了使用间接寻址的解决方法。
-在这里，我将使用go-pointer程序包，该程序包以稍微更方便，更通用的方式实现了相同目的。
+在这里，我将使用 go-pointer 程序包，该程序包以稍微更方便，更通用的方式实现了相同目的。
 
 考虑到这些，让我们之间进行实现。该代码初步看起来可能会比较晦涩，但这很快就会展现出他的意义。如下是 GoTraverse 的代码。
 
-````
+```go
 import gopointer "github.com/mattn/go-pointer"
 
 func GoTraverse(filename string, v Visitor) {
@@ -127,11 +129,11 @@ func GoTraverse(filename string, v Visitor) {
 
   C.traverse(cfilename, cCallbacks, p)
 }
-````
+```
 
 我们先在 Go 代码中创建 C 的回调结构，然后封装。因为我们不能直接将 Go 函数赋值给 C 函数指针，我们将在独立的 Go 文件[注1]中定义这些包装函数。
 
-````
+```c
 /*
 extern void goStart(void*, int);
 extern void goEnd(void*, int, int);
@@ -145,7 +147,7 @@ void endCgo(void* user_data, int a, int b) {
 }
 */
 import "C"
-````
+```
 
 这些是非常轻量的、调用 go 函数的包装器——我们不得不为每一类的回调写这样一个 C 函数。我们很快就会看到 Go 函数 goStart 和 goEnd。
 在填充这个 C 回调结构体后，GoTraverse 会将文件名从 Go 字符串转换为 C 字符串（`Wiki`中有详细信息）。
@@ -153,7 +155,7 @@ import "C"
 
 完成这个实现，goStart 和 goEnd 代码如下：
 
-````
+```go
 //export goStart
 func goStart(user_data unsafe.Pointer, i C.int) {
   v := gopointer.Restore(user_data).(Visitor)
@@ -165,7 +167,7 @@ func goEnd(user_data unsafe.Pointer, a C.int, b C.int) {
   v := gopointer.Restore(user_data).(Visitor)
   v.End(int(a), int(b))
 }
-````
+```
 
 导出指令意味着这些功能对于 C 代码是可见的。 它们的签名应具有 C 类型或可转换为 C 类型的类型。 它们的行为类似：
 1. 从 user_data 解压缩访问者对象
@@ -203,10 +205,10 @@ goStart 解压缩由 GoTraverse 打包到 user_data 中的 Visitor 实现，并�
 
 ## 如果没有 user_data 呢？
 
-看到我们如何使用 user_data 穿过 C 代码回调到我们的回调函数，以传输特定于用户 Visitor 的实现，人们可能会想-如果没有可用的 user_data 怎么办？
+看到我们如何使用 user_data， 使其穿越 C 代码回到我们的回调函数，以传输特定于用户 Visitor 的实现，人们可能会想-如果没有可用的 user_data 怎么办？
 事实证明，在大多数情况下，都存在诸如 user_data 之类的东西，因为没有它，原始的 C `API`就有缺陷。再次考虑遍历示例，但是这项没有 user_data：
 
-````
+```c
 typedef void (*StartCallbackFn)(int i);
 typedef void (*EndCallbackFn)(int a, int b);
 
@@ -216,15 +218,15 @@ typedef struct {
 } Callbacks;
 
 void traverse(char* filename, Callbacks cbs);
-````
+```
 
 假设我们提供一个回调作为开始：
 
-````
+```c
 void myStart(int i) {
     // ...
 }
-````
+```
 
 在 myStart 中，我们有些困惑了。我们不知道调用哪个遍历-可能有许多不同的遍历，不同的文件和数据结构满足不同的需求。我们也不知道在哪里记录事件的结果。这里唯一的办法是使用全局数据。这是一个不好的`API`！
 
