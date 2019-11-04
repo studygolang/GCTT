@@ -18,7 +18,6 @@
 
 如下是一个虚构的C库的头文件，该库处理（输入）数据，并基于事件调用回调函数。
 
-
 ```c
 typedef void (*StartCallbackFn)(void* user_data, int i);
 typedef void (*EndCallbackFn)(void* user_data, int a, int b);
