@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/24562
+
 # Go 垃圾回收：第三部分 - GC 的步调
 
 ## 前言
@@ -72,7 +74,7 @@
 在我的机器上运行这个版本的 `freq` 时，我得到了如下的结果：
 
 **清单 2**
-```sh
+```c
 $ time ./trace
 2019/07/02 13:40:49 Searching 4000 files, found president 28000 times.
 ./trace  2.54s user 0.12s system 105% cpu 2.512 total
@@ -94,7 +96,7 @@ $ time ./trace
 有了这段代码，现在你可以重新编译和运行这个程序了。不要忘了把标准输出重定向到一个文件。
 
 **清单 4**
-```sh
+```c
 $ go build
 $ time ./trace > t.out
 Searching 4000 files, found president 28000 times.
@@ -106,7 +108,7 @@ Searching 4000 files, found president 28000 times.
 为了查看追踪结果，需要使用追踪工具来运行追踪数据。
 
 **清单 5**
-```sh
+```c
 $ go tool trace t.out
 ```
 
@@ -210,7 +212,7 @@ $ go tool trace t.out
 有了代码，现在你可以重新编译和运行这个程序了。
 
 **清单 7**
-```sh
+```c
 $ go build
 $ time ./trace > t.out
 Searching 4000 files, found president 28000 times.
@@ -315,7 +317,7 @@ Searching 4000 files, found president 28000 times.
 有了代码，现在你可以重新编译和运行这个程序了。
 
 **清单 9**
-```sh
+```c
 $ go build
 $ time ./trace > t.out
 Searching 4000 files, found president 28000 times.
@@ -370,7 +372,7 @@ via: https://www.ardanlabs.com/blog/2019/07/garbage-collection-in-go-part3-gcpac
 
 作者：[William Kennedy](https://github.com/ardanlabs)
 译者：[Stonelgh](https://github.com/stonglgh)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[DingdingZhou](https://github.com/DingdingZhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
