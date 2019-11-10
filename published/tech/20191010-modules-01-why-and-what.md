@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/24580
+
 # Modules 第 1 部分：为什么和做什么
 
 ## 引言
@@ -150,6 +152,6 @@ via: https://www.ardanlabs.com/blog/2019/10/modules-01-why-and-what.html
 
 作者：[William Kennedy](https://www.ardanlabs.com/)
 译者：[anxk](https://github.com/anxk)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[DingdingZhou](https://github.com/DingdingZhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
