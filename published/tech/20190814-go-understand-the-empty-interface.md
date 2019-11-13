@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/24407
+
 # 理解 Go 的空接口
 
 <!-- https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-vet-command-is-more-powerful-than-you-think/go-vet.png 图片链接模板 -->
@@ -15,16 +17,16 @@
 
 因此，空接口作为参数的方法可以接受任何类型。Go 将继续转换为接口类型以满足这个函数。
 
-Russ Cox 撰写了一篇 [关于接口内部结构的精彩文章](https://research.swtch.com/interfaces)，并解释了接口由两个单词组成：
+Russ Cox 撰写了一篇 [关于接口内部结构的精彩文章](https://research.swtch.com/interfaces)，并解释了接口由两个指针组成：
 
-* 指向存储类型信息的指针
-* 指向关联数据的指针
+* 指向类型相关信息的指针
+* 指向数据相关信息的指针
 
 以下是 Russ 在 2009 年画的示意图，[当时 `runtime` 包还是用 C 语言编写](https://go.googlesource.com/go/+/refs/heads/release-branch.go1/src/pkg/runtime/iface.c)：
 
 ![internal-representation](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-understand-the-empty-interface/internal-representation.png)
 
-`runtime` 包现在用 Go 编写，但结构未变。我们可以通过打印空接口来验证：
+现在，`runtime` 包改用 Go 编写，但结构未变。我们可以通过打印空接口来验证：
 
 ```go
 func main() {
@@ -46,12 +48,12 @@ func read(i interface{}) {
 
 ## 底层结构
 
-空接口的底层结构记录在反射包中：
+空接口的底层结构记录在反射包中 `reflect/value.go`：
 
 ```go
 type emptyInterface struct {
-   typ  *rtype            // word 1 with type description
-   word unsafe.Pointer    // word 2 with the value
+   typ  *rtype            // 类型描述
+   word unsafe.Pointer    // 值
 }
 ```
 
@@ -75,15 +77,14 @@ type rtype struct {
 }
 ```
 
-在这些字段中，有些非常简单，很容易可以看出：
+在这些字段中，有些非常简单，且广为人知：
 
-<!--    TODO 以下怎么看出来的？？ -->
 * `size`  是以字节为单位的大小
 * `kind`  包含类型有：int8，int16，bool 等。
 * `align` 是变量与此类型的对齐方式
 
-<!-- TODO 从哪能获取到方法？ -->
 根据空接口嵌入的类型，我们可以映射导出字段或列出方法：
+| 译者注：方法在结构体最下面，这篇文章中是看不到的；需要先将这个 `rtye` 映射成 结构体才能看到，映射是基于 `tflag` 做的
 
 ```go
 type structType struct {
@@ -93,15 +94,16 @@ type structType struct {
 }
 ```
 
-<!-- TODO  a flat conversion 怎么理解？ 先：不需要做额外的处理 -->
 <!-- 从哪看出两个映射？ -->
-这个结构还有两个映射，包含字段列表。它清楚地表明，将内建类型转换为空接口将导致平面转换(不需要做其他额外的处理)，其中字段的描述及值将存储在内存中。
+这个结构还有两个映射，包含字段列表。它清楚地表明，将内建类型转换为空接口将导致*扁平转换*(译者注：不需要做其他额外的处理)，其中字段的描述及值将存储在内存中。
 
 下边是我们看到的空结构体的表示：
 
-![结构体由两个词构成](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-understand-the-empty-interface/interface-representation.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-understand-the-empty-interface/interface-representation.png)
 
+<div align="center">
 结构体由两个词构成
+</div>
 
 现在让我们看看空接口实际上可以实现哪种转换。
 
@@ -141,15 +143,16 @@ exit status 2
 
 有以下几个步骤：
 <!-- TODO 很别扭，自己也没有完全理解 -->
-* 步骤 1：比较（指令`CMPQ`）`int16`类型（加载指令`LEAQ`(Load Effective Address，加载有效地址）到空接口的内部类型（从空接口`MOVQ`的内存段读取 48 字节偏移量的内存的指令）
+* 步骤 1：比较 `int16` 类型与`空接口`的内部类型：比较（指令`CMPQ`）`int16`类型（加载有效地址`LEAQ`(Load Effective Address）到空接口的内部类型（从空接口`MOVQ`的内存段读取 48 字节偏移量的内存的指令）
 
-* step 2：`JNE` 指令（Jump if Not Equal），将跳转到生成的指令，这些指令将在步骤中处理错误 3
+* step 2：`JNE` 指令，即不相等则跳转指令（Jump if Not Equal），会跳转到已生成的处理错误的指令，这些指令将在步骤中处理错误 3
 
-* 步骤 3：代码将发生混乱并生成我们之前看到的错误消息
+* 步骤 3：代码将 `panic` 并生成我们上面看到的错误信息
 
 * 步骤 4：这是错误指令的结束。此特定指令由显示指令的错误消息引用：`main.go:10 +0x7d`
 
-在转换原始类型之后，应该从空接口的内部类型进行任意类型转换。这种转换为空接口，然后转换回原始类型会导致程序损耗。让我们运行一些基准测试来简单了解一下。
+任何从空接口内部类型的转换，都应该在原始类型转换完成后进行。这种转换为空接口，然后转换回原始类型会导致程序损耗。让我们运行一些基准测试来简单了解一下。
+| 译者注：这句话是说，比如 `interface{}` 存了一个 `int16`; 需要转换为 `int32` 时，不能直接 `interface{}-> int32`;应该是 `interface{}->int16->int32`，这也是上面的例子 panic 的原因
 
 ## 性能
 
@@ -209,7 +212,7 @@ BenchmarkWithType-8               300000000           4.24 ns/op
 BenchmarkWithEmptyInterface-8      20000000           60.4 ns/op
 ```
 
-与复制结构相比，将双重转换（类型转换为空接口然后再转换回类型）多消耗 55 纳秒以上的时间。如果结构中字段的数量增加，时间还会增加：
+与结构副本（typed 函数）相比，使用空接口需要双重转换（原始类型转换为空接口然后再转换回原始类型）多消耗 55 纳秒以上的时间。如果结构中字段的数量增加，时间还会增加：
 
 ```shell
 BenchmarkWithType-8             100000000         17 ns/op
@@ -250,6 +253,6 @@ via: <https://medium.com/a-journey-with-go/go-understand-the-empty-interface-2d9
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[TomatoAres](https://github.com/TomatoAres)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[DingdingZhou](https://github.com/DingdingZhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
