@@ -1,10 +1,12 @@
+首发于：https://studygolang.com/articles/24686
+
 # Go 项目的布局
 Kyle C. Quest
 2017年9月12日 · 5 min 阅读
 
-读过了 [‘Tour of Go’](https://tour.golang.org/?source=post_page---------------------------)，在 [https://play.golang.org/](https://play.golang.org/?source=post_page---------------------------) 上把玩过，然后你感觉你准备好写一些代码了。很棒！但是，你不确定该如何组织你的项目。可以将代码放在你想放的任意地方吗？有没有组织代码的标准方式？如果想有多个应用程序的二进制文件呢？“go getable” 是指什么？你可能会问自己这些问题。
+读过了 [`Tour of Go`](https://tour.golang.org/?source=post_page---------------------------)，在 [https://play.golang.org/](https://play.golang.org/?source=post_page---------------------------) 上把玩过，然后你感觉你准备好写一些代码了。很棒！但是，你不确定该如何组织你的项目。可以将代码放在你想放的任意地方吗？有没有组织代码的标准方式？如果想有多个应用程序的二进制文件呢？“go getable” 是指什么？你可能会问自己这些问题。
 
-首先，你必须了解 Go 的工作空间。 [‘How to Write Go Code’](https://golang.org/doc/code.html?source=post_page---------------------------) 是个很好的起点。缺省地，Go 将所有代码保管在同一个工作空间，并期望所有代码都在同一个工作空间。这个地方由环境变量 `GOPATH` 来标识。对你来说这意味着什么？意味着你必须**将代码放在默认的工作空间**或者必须修改 `GOPATH` 环境变量，指向你自己的代码位置。不管哪种方式，项目的真正源代码都需要放在 `src` 子目录下（即 **`$GOPATH/src/your_project`** 或 `$GOPATH/src/github.com/your_github_username/your_project`）。技术上讲，如果你无需导入外部包且使用相对路径导入自己的代码，你的工程不一定非要放在工作空间里，但不推荐这样做。不过玩具项目或概念验证（Poc）项目这么做是可以的。Go 1.1 确实引入了模块的概念，允许你将项目代码放在 `GOPATH` 之外，且不受上述的导入限制，但直到现在这还是一个实验性的功能。
+首先，你必须了解 Go 的工作空间。 [`How to Write Go Code`](https://golang.org/doc/code.html?source=post_page---------------------------) 是个很好的起点。缺省地，Go 将所有代码保管在同一个工作空间，并期望所有代码都在同一个工作空间。这个地方由环境变量 `GOPATH` 来标识。对你来说这意味着什么？意味着你必须**将代码放在默认的工作空间**或者必须修改 `GOPATH` 环境变量，指向你自己的代码位置。不管哪种方式，项目的真正源代码都需要放在 `src` 子目录下（即 **`$GOPATH/src/your_project`** 或 `$GOPATH/src/github.com/your_github_username/your_project`）。技术上讲，如果你无需导入外部包且使用相对路径导入自己的代码，你的工程不一定非要放在工作空间里，但不推荐这样做。不过玩具项目或概念验证（Poc）项目这么做是可以的。Go 1.1 确实引入了模块的概念，允许你将项目代码放在 `GOPATH` 之外，且不受上述的导入限制，但直到现在这还是一个实验性的功能。
 
 你已经将你的项目目录放在正确的地方。接下来呢？
 
@@ -30,10 +32,10 @@ Kyle C. Quest
 
 现在是时候写些代码了！如果你还没安装 Go 请查看这个 [quick setup guide for Mac OS X](https://medium.com/golang-learn/quick-go-setup-guide-on-mac-os-x-956b327222b8?source=post_page---------------------------) （其他平台的安装也是类似的）。如果还没浏览过请你浏览 [‘Tour of Go’](https://tour.golang.org/?source=post_page---------------------------) ，然后读一下 [’50 Shades of Go’](https://tour.golang.org/?source=post_page---------------------------) 去了解 Go 中最常见的坑，这会在你开始写代码和调试代码时节省很多时间。
 
-[Golang](https://medium.com/tag/golang)
-[Go](https://medium.com/tag/go)
-[Standards](https://medium.com/tag/standards)
-[Project Structure](https://medium.com/tag/project-structure)
+* [Golang](https://medium.com/tag/golang)
+* [Go](https://medium.com/tag/go)
+* [Standards](https://medium.com/tag/standards)
+* [Project Structure](https://medium.com/tag/project-structure)
 
 ---
 
@@ -41,6 +43,6 @@ via: https://medium.com/golang-learn/go-project-layout-e5213cdcfaa2
 
 作者：[Kyle C. Quest](https://medium.com/@CloudImmunity)
 译者：[krystollia](https://github.com/krystollia)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[DingdingZhou](https://github.com/DingdingZhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
