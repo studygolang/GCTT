@@ -181,8 +181,8 @@ $
 
 via: https://blog.golang.org/publishing-go-modules
 
-作者：Tyler Bui-Palsulich
-译者：[lxbwolf](https://github.com/lxbwolf)
+作者：Tyler Bui-Palsulich <br>
+译者：[lxbwolf](https://github.com/lxbwolf) <br>
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
