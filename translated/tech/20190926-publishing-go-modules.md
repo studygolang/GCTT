@@ -9,7 +9,7 @@
 - Part 1: [使用`Go Modules`](https://blog.golang.org/using-go-modules)
 - Part 2: [迁移到`Go Modules`](https://blog.golang.org/migrating-to-go-modules)
 - Part 3: 发布 `go modules`(本文)
-- Part 4: [Go Modules: v2 及以后的版本]((https://blog.golang.org/v2-go-modules))
+- Part 4: [Go Modules: v2 及以后的版本](https://blog.golang.org/v2-go-modules)
 
 
 
