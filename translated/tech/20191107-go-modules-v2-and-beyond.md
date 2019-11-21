@@ -9,12 +9,11 @@
 - Part 3: [发布 Go Modules](https://blog.golang.org/publishing-go-modules)
 - Part 4: [Go Modules : v2 及更高版本](https://blog.golang.org/v2-go-modules) (本文) 
 
-
 随着成功的项目逐渐成熟以及新需求的加入，早期的功能和设计决策可能不再适用。 开发者们可能希望通过删除废弃使用的功能、重命名类型或将复杂的程序拆分为可管理的小块来融入他们的经验教训。这种类型的变更要求下游用户进行更改才能将其代码迁移到新的 API，因此在没有认真考虑收益成本比重的情况下，不应进行这种变更。
 
 对于还在早期开发阶段的项目（主版本号是 `v0`），用户会期望偶尔的重大变更。对于声称已经稳定的项目（主版本是 `v1` 或者更高版本），必须在新的主版本进行重大变更。这篇文章探讨了主版本语义、如何创建并发布新的主版本以及如何维护一个 Go Modules 的多个主版本。
 
-## 主版本和模块路径 
+## 主版本和模块路径
 
 模块在 Go 中确定了一个重要的原则，即 “[导入兼容性规则](https://research.swtch.com/vgo-import)”
 
@@ -140,7 +139,6 @@ $
 - [封面故事](https://blog.golang.org/cover)
 - [App Engine SDK 和工作区](https://blog.golang.org/the-app-engine-sdk-and-workspaces-gopath)
 - [组织 Go 代码](https://blog.golang.org/organizing-go-code)
-
 
 ---
 via: https://blog.golang.org/v2-go-modules
