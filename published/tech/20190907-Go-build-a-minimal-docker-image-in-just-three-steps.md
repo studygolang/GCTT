@@ -1,5 +1,5 @@
- 首发于：https://studygolang.com/articles/24875
- 
+首发于：https://studygolang.com/articles/24875
+
 # 只用 3 步构建 Go docker 最小镜像
 
 ![DockerGopher](https://raw.githubusercontent.com/studygolang/gctt-images/master/build-mini-docker-image/DockerGopher.png)

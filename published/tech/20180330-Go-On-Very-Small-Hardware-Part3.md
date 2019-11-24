@@ -1,5 +1,5 @@
- 首发于：https://studygolang.com/articles/24877
- 
+首发于：https://studygolang.com/articles/24877
+
 # Go 最小硬件编程（第三部分）
 
 [![STM32F030F4P6](https://ziutek.github.io/images/mcu/f030-demo-board/board.jpg)](https://ziutek.github.io/2018/05/03/go_on_very_small_hardware3.html)
