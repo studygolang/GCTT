@@ -1,10 +1,12 @@
+首发于：https://studygolang.com/articles/24877
+
 # Go 最小硬件编程（第三部分）
 
 [![STM32F030F4P6](https://ziutek.github.io/images/mcu/f030-demo-board/board.jpg)](https://ziutek.github.io/2018/05/03/go_on_very_small_hardware3.html)
 
 本系列的第一部分和第二部分中讨论的大多数示例都是以一种或另一种方式闪烁 LED。起初它可能很有趣，但过了一段时间它变得有点无聊。让我们做一些更有趣的事情......
 
-......让我们点亮更多LED！
+......让我们点亮更多 LED！
 
 ## WS281x LEDs
 
@@ -14,7 +16,7 @@
 
 它们可以串联连接，由于这个原因，你可以通过 MCU 的单个引脚控制长 LED 条。不幸的是，它们的内部控制器使用的物理协议并不适合你可以在 MCU 中找到的任何外设。你必须使用 bit-banging 或以不寻常的方式使用可用的外设。
 
-哪种可用解决方案最有效，取决于同时控制的 LED 灯条的数量。如果你必须驱动 4 到 16 个条带，最有效的方法是 [使用定时器和DMA](http://www.martinhubacek.cz/arm/improved-stm32-ws2812b-library)（不要忽视 Martin 的文章末尾的链接）。
+哪种可用解决方案最有效，取决于同时控制的 LED 灯条的数量。如果你必须驱动 4 到 16 个条带，最有效的方法是 [使用定时器和 DMA](http://www.martinhubacek.cz/arm/improved-stm32-ws2812b-library)（不要忽视 Martin 的文章末尾的链接）。
 
 如果你只需要控制一个或两个条带，请使用可用的 SPI 或 UART 外设。对于 SPI，你只能在发送的一个字节中编码两个 WS281x 位。通过巧妙地使用起始位和停止位，UART 允许更密集的编码：每个字节发送 3 位。
 
@@ -36,7 +38,7 @@
 
 我们的 STM32F030F4P6 MCU 和整个 STM32 F0、F3、F7、L4 系列有一个重要的东西，而 F1、F4、L1 MCU 没有：它允许反转 UART 信号，因此我们可以将环直接连接到 UART TXD 引脚。如果你不知道我们需要这样的反转，你可能没有阅读我上面提到的 [文章](https://translate.google.pl/translate?sl=pl&tl=en&u=http://mikrokontrolery.blogspot.com/2011/03/Diody-WS2812B-sterowanie-XMega-cz-2.html)。
 
-所以你不能用这种方式使用 [Blue Pill](https://jeelabs.org/article/1649a/) 或 [STM32F4-DISCOVERY](http://www.st.com/en/evaluation-tools/stm32f4discovery.html) 。使用 SPI 外设或外部逆变器。请参阅 [Christmas Tree Lights](https://github.com/ziutek/emgo/tree/master/egpath/src/stm32/examples/minidev/treelights) 项目作为 UART + 逆变器的示例或使用 SPI 的 NUCLEO-F411RE 的 [WS2812示例](https://github.com/ziutek/emgo/tree/master/egpath/src/stm32/examples/nucleo-f411re/ws2812)。
+所以你不能用这种方式使用 [Blue Pill](https://jeelabs.org/article/1649a/) 或 [STM32F4-DISCOVERY](http://www.st.com/en/evaluation-tools/stm32f4discovery.html) 。使用 SPI 外设或外部逆变器。请参阅 [Christmas Tree Lights](https://github.com/ziutek/emgo/tree/master/egpath/src/stm32/examples/minidev/treelights) 项目作为 UART + 逆变器的示例或使用 SPI 的 NUCLEO-F411RE 的 [WS2812 示例](https://github.com/ziutek/emgo/tree/master/egpath/src/stm32/examples/nucleo-f411re/ws2812)。
 
 顺便说一句，可能大多数 DISCOVERY 开发板都有一个问题：它们工作在 VDD = 3V 而不是 3.3V。对于 DI 高电平，WS281x 至少需要 0.7 倍 *供给电压*。对于 5V 电源就是 3.5V，如果是 4.7V，则可以在 DISCOVERY 的 5V 引脚上找到 3.3V。如你所见，即使在我们的情况下，第一个 LED 工作电压低于额定电压 0.2V。在 DISCOVERY 的情况下，如果供电 4.7V，则工作电压低于额定电压 0.3V，如果供电 5V，则工作电压低于额定电压 0.5V。
 
@@ -139,7 +141,7 @@ type Strip []Pixel
 
 ### *init* 函数
 
-*init* 函数没有太多新奇之处。UART 波特率从 115200 变为 3000000000/1390≈2158273，相当于每个 WS2812 位耗费 1390 纳秒。CR2 寄存器中的 *TxInv* 位设置为反转 TXD 信号。
+*init* 函数没有太多新奇之处。UART 波特率从 115200 变为 3000000000/1390 ≈ 2158273，相当于每个 WS2812 位耗费 1390 纳秒。CR2 寄存器中的 *TxInv* 位设置为反转 TXD 信号。
 
 ### *main* 函数
 
@@ -160,7 +162,7 @@ strip.Clear()
 
 ### 中断
 
-该程序使用处理中断的代码，与前一个 [UART示例](https://ziutek.github.io/2018/04/14/go_on_very_small_hardware2.html#uart) 相同。
+该程序使用处理中断的代码，与前一个 [UART 示例](https://ziutek.github.io/2018/04/14/go_on_very_small_hardware2.html#uart) 相同。
 
 让我们编译并运行：
 
@@ -391,8 +393,8 @@ $ arm-none-eabi-size cortexm0.elf
 
 via: https://ziutek.github.io/2018/05/03/go_on_very_small_hardware3.html
 
-作者：[Michał Derkacz ](https://ziutek.github.io)
+作者：[Michał Derkacz](https://ziutek.github.io)
 译者：[PotoYang](https://github.com/PotoYang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
