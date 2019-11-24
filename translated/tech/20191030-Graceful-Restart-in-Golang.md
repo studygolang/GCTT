@@ -185,6 +185,6 @@ via: https://grisha.org/blog/2014/06/03/graceful-restart-in-golang/
 
 作者：[humblehack](https://twitter.com/humblehack)
 译者：[咔叽咔叽](https://github.com/watermelo)
-校对：[校对者 ID](https://github.com/校对者ID)
+校对：[lxbwolf](https://github.com/lxbwolf)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com)
