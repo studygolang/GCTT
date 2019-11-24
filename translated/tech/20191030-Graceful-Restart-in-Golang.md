@@ -2,7 +2,7 @@
 
 （2015 年 4 月更新）：[Florian von Bock](https://github.com/fvbock) 已将本文中描述的内容实现成了一个名为[Endless](https://github.com/fvbock/endless)的 Go 程序包。
 
-对于 Golang HTTP 的服务，我们可能需要重启来升级或者更改某些配置。并且，如果你（像我一样）通过网络服务器来处理它并进行正常的重启，那么你会发现此方法非常方便，因为使用了 Golang，我们需要自己动手来实现这个功能。
+对于 Golang HTTP 的服务，我们可能需要重启来升级或者更改某些配置。如果你（像我曾经一样）因为网络服务器对优雅重启很重视就理所当然地认为它（优雅重启）早已实现了，那么这份教程将会对你很有用处。因为在 Golang 中，你需要自己动手来实现。
 
 实际上，这里需要解决两个问题。首先是 UNIX 端的优雅重启，即进程无需关闭监听套接字即可自行重启的机制。第二个问题是确保所有进行中的请求被正确完成或超时。
 
@@ -12,7 +12,7 @@
 - 之后，子进程立即向父进程发送信号，使父进程停止接收连接并终止。
 
 ### 派生一个新的进程
-使用 Golang 派生进程有多种方法，但是在这种情况下，[exec.Command](https://golang.org/pkg/os/exec/#Command)是必经之路。这是因为此函数返回的 [Cmd 结构体](https://golang.org/pkg/os/exec/#Cmd) 具有 `ExtraFiles` 成员，该成员可以使打开的文件（除了`stdin/err/out` 之外）被新进程继承。
+有多种使用 Golang 的库去实现派生进程的方法，在本文中的例子中，我们选择用 [exec.Command](https://golang.org/pkg/os/exec/#Command)。这是因为此函数返回的 [Cmd 结构体](https://golang.org/pkg/os/exec/#Cmd) 具有 `ExtraFiles` 成员，该成员可以使打开的文件（除了`stdin/err/out` 之外）被新进程继承。
 
 看起来如下所示：
 
