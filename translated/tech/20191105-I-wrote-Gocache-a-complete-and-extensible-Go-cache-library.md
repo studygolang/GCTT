@@ -93,7 +93,7 @@ memcacheStore := store.NewMemcache(
 
 cacheManager := cache.New(memcacheStore)
 err := cacheManager.Set("my-key", []byte("my-value"), &cache.Options{
-	Expiration: 15*time.Second, // Override default value of 10 seconds defined in the store
+	Expiration: 15*time.Second, // 设置过期时间
 })
 if err != nil {
     panic(err)
@@ -103,13 +103,13 @@ value := cacheManager.Get("my-key")
 
 cacheManager.Delete("my-key")
 
-cacheManager.Clear() // Clears the entire cache, in case you want to flush all cache
+cacheManager.Clear() // 清空缓存
 ```
 
 现在，假设你想要将已有的缓存修改为一个链式缓存，该缓存包含Ristretto（内存型）和Redis集群，并且具备缓存数据序列化和监控特性：
 
 ``` go
-// Initialize Ristretto cache and Redis client
+// 初始化 Ristretto 和 Redis 客户端
 ristrettoCache, err := ristretto.NewCache(&ristretto.Config{NumCounters: 1000, MaxCost: 100, BufferItems: 64})
 if err != nil {
     panic(err)
@@ -117,26 +117,26 @@ if err != nil {
 
 redisClient := redis.NewClient(&redis.Options{Addr: "127.0.0.1:6379"})
 
-// Initialize stores
+// 初始化存储器
 ristrettoStore := store.NewRistretto(ristrettoCache, nil)
 redisStore := store.NewRedis(redisClient, &cache.Options{Expiration: 5*time.Second})
 
-// Initialize Prometheus metrics
+// 初始化 Prometheus 监控
 promMetrics := metrics.NewPrometheus("my-amazing-app")
 
-// Initialize chained cache
+// 初始化链式缓存
 cacheManager := cache.NewMetric(promMetrics, cache.NewChain(
     cache.New(ristrettoStore),
     cache.New(redisStore),
 ))
 
-// Initializes a marshaler
+// 初始化序列化工具
 marshal := marshaler.New(cacheManager)
 
 key := BookQuery{Slug: "my-test-amazing-book"}
 value := Book{ID: 1, Name: "My test amazing book", Slug: "my-test-amazing-book"}
 
-// Set the value in cache using given key
+// 插入缓存
 err = marshal.Set(key, value)
 if err != nil {
     panic(err)
