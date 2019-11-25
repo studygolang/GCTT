@@ -1,4 +1,4 @@
-#Go：协程，操作系统线程和 CPU 管理
+# Go：协程，操作系统线程和 CPU 管理
 
 ![Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.](https://github.com/studygolang/gctt-images2/blob/master/go-goroutines-os-thread-and-cpu-management/00.png?raw=true)
 
