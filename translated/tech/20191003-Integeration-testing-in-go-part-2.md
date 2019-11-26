@@ -2,14 +2,32 @@
 
 ## 序幕
 
+这篇文章是集成测试系列两个部分中的第二部分。你可以先读[第一部分](https://www.ardanlabs.com/blog/2019/03/integration-testing-in-go-executing-tests-with-docker.html)：使用 Docker 在有限的环境中执行测试。本文中的实列可以从[代码仓库](https://github.com/george-e-shaw-iv/integration-tests-example)获取。
+
 ## 简介
 
-## 管理种子数据
+> “比起测试行为，设计测试行为是已知的最好的错误预防程序之一。” —— Boris Beizer
 
-<!-- todo 确定以下 -->
-## 播种数据库
+在执行集成测试之前，必须正确配置该测试将涉及的外部系统。否则，测试结果将无效、不可靠。例如，数据库需要加载定义良好的数据，该数据对于要测试的行为是正确的。测试期间更新的数据需要进行验证，尤其是如果要求更新的数据对于后续测试而言是准确的时侯。
 
-### 清单 1
+Go 测试工具提供了有在执行测试功能前执行代码的能力，使用叫做 `TestMain` 的入口函数实现。它类似于 Go 应用程序的 `Main` 函数。由于 `TestMain` 函数，我们可以在执行测试之前做类似数据库连接之类的其他系统配置。在本文中，我将分享如何使用它 `TestMain` 来配置和植入 Postgres 数据库，以及如何针对该数据库编写和运行测试。
+
+## 构造填充数据
+
+为了填充数据库，需要定义数据并将其放置在测试工具可以访问的位置。一种常见的方法是定义一个 SQL 文件，该文件是项目的一部分，并且包含所有需要执行的SQL命令。另一种方法是将 SQL 命令存储在代码内部的常量中。不同于这两种方法，我将只使用 Go 实现来解决此问题。
+
+通常情况下，你已将你的数据结构定义为 Go 结构体类型，用于数据库通信。我将利用这些已存在的数据结构，已经可以控制数据从数据库中流入流出。基于已有的数据结构声明变量，构造所有填充数据，而无需 SQL 语句构造填充数据。
+
+我喜欢这种解决方式，因为它使编写集成测试和验证数据是否正确流入和流出数据库和应用程序变得容易得多。不必将数据直接与JSON比较，就可以将数据解编为适当的类型，然后直接与为种子数据定义的变量进行比较。这不仅可以最大程度地减少测试中的语法比较错误，还可以使您的测试更具可维护性，可扩展性和可读性。
+
+## 填充数据库
+
+所有用于填充册数数据库功的能本都在叫做 `testdb` 的[项目](https://github.com/george-e-shaw-iv/integration-tests-example)中。
+<!-- /todo -->
+
+下边是 `SeedLists` 函数：
+
+### 代码清单 1
 
 ```golang
 func SeedLists(dbc *sqlx.DB) ([]list.List, error) {
@@ -58,7 +76,11 @@ func SeedLists(dbc *sqlx.DB) ([]list.List, error) {
 }
 ```
 
-### 清单 2
+代码清单 1 展示了 `SeedLists` 函数及其如何创建测试数据。在第 59-75 行之间，list.List 定义了一个用于插入的数据表。然后在 77-96 行，将测试数据插入数据库。为了帮助将插入的数据与测试期间进行的任何数据库调用的结果进行比较，测试数据集在第 98 行返回给调用方。
+
+接下来，我们看看将更多测试数据插入数据库的 `SeedItems` 函数。
+
+### 代码清单 2
 
 ```golang
 func SeedItems(dbc *sqlx.DB, lists []list.List) ([]item.Item, error) {
@@ -112,7 +134,10 @@ func SeedItems(dbc *sqlx.DB, lists []list.List) ([]item.Item, error) {
     return items, nil
 }
 ```
-### 清单 3
+
+代码清单 2 显示了 `SeedItems` 函数如何创建测试数据。除了使用 item.Item 数据类型,该代码与清单 1 基本相同。`testdb` 包中唯一要共享的函数只有 `Truncate`。
+
+### 代码清单 3
 
 ```golang
 func Truncate(dbc *sqlx.DB) error {
@@ -126,9 +151,13 @@ func Truncate(dbc *sqlx.DB) error {
 }
 ```
 
+代码清单 3 展示了 `Truncate` 函数。顾名思义，它用于删除 `SeedLists` 和 `SeedItems` 函数插入的所有数据。
+
 ## 使用 testing.M 创建 TestMain
 
-### 清单 4
+使用便于`填充/清除`数据库的软件包后，该集中精力配置以运行集成测试了。Go 自带的测试工具可以让你在 `TestMain` 函数中定义需要的行为，在测试功能执行前执行。
+
+### 代码清单 4
 
 ```golang
 func TestMain(m *testing.M) {
@@ -136,7 +165,11 @@ func TestMain(m *testing.M) {
 }
 ```
 
-### 清单 5
+代码清单 4 是 `TestMain` 函数，它在所有集成测试之前执行。在 23 行，叫做 `testMain` 的未导出的函数被 `os.Exit` 调用。
+<!-- todo -->
+下边是 `testMain` 的实现。
+
+### 代码清单 5
 
 ```golang
 func testMain(m *testing.M) int {
@@ -152,6 +185,8 @@ func testMain(m *testing.M) int {
     return m.Run()
 }
 ```
+
+在代码清单 5 中，你可以看到 `testMain` 只有 8 行代码。28行，函数调用 `testdb.Open()` 开始连接到数据库。
 
 ## 编写 Web 服务的集成测试
 
@@ -323,6 +358,8 @@ func GenerateTempFile(t *testing.T) *os.File {
 ```
 
 ## 结论
+
+如果不配置程序运行时所需的外部系统，则无法在集成测试的上下文中完全验证程序的行为。此外，需要持续监测那些外部系统（特别是当它们包含应用程序状态数据的情况下），以确保它们包含有效和有意义的数据。Go 使开发人员不仅可以在测试过程中进行配置，还可以无需标准库之外的包就能维护外部数据。因此，我们可以编写可读性，一致性，性能和可靠性同时都能保证的集成测试。Go 的真正魅力正在于其简约而功能齐全的工具集，它为开发人员提供了无需依赖外部库或任何非常规限制的功能。
 
 ---
 
