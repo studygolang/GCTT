@@ -184,13 +184,17 @@ func testMain(m *testing.M) int {
 }
 ```
 
-在代码清单 5 中，你可以看到 `testMain` 只有 8 行代码。28 行，函数调用 `testdb.Open()` 开始建立数据库连接。此调用的配置参数在 `testdb` 包中设置为常量。重要的是要注意，如果测试用的数据库未运行，调用 `Opne` 连接数据库会失败。该测试数据库是由 `docker-compose` 创建并提供的，详细说明在本系列的第 1 部分中（单击 [此处](https://www.ardanlabs.com/blog/2019/03/integration-testing-in-go-executing-tests-with-docker.html) 阅读第 1 部分）。
+在代码清单 5 中，你可以看到 `testMain` 只有 8 行代码。28 行，函数调用 `testdb.Open()` 开始建立数据库连接。此调用的配置参数在 `testdb` 包中设置为常量。重要的是要注意，如果测试用的数据库未运行，调用 `Opne` 连接数据库会失败。该测试数据库是由 `docker-compose` 创建提供的，详细说明在本系列的第 1 部分中（单击 [这里](https://www.ardanlabs.com/blog/2019/03/integration-testing-in-go-executing-tests-with-docker.html) 阅读第 1 部分）。
 
-成功连接测试数据库后，连接将传递到 `handlers.NewApplication()`，并且此函数的返回值用于初始化 type 的包级变量 `*handlers.Application`。`handlers.Application` 类型对此项目是自定义的，并且具有用于 http.Handler 接口的 struct 字段，以简化 Web 服务的路由以及对已创建的开放数据库连接的引用。
+成功连接测试数据库后，连接将传递给 `handlers.NewApplication()`，并且此函数的返回值用于初始化的包级变量 `*handlers.Application` 类型。`handlers.Application` 类型是这个项目自定义的结构体，有用于 `http.Handler` 接口的字段，以简化 Web 服务的路由以及对已创建的数据库连接的引用。
 
-现在，应用程序值已初始化，m.Run 可以调用它执行任何测试功能。对的调用 m.Run 处于阻塞状态，直到所有确定要运行的测试功能都执行完之后，该调用才会返回。非零退出代码表示失败，0 表示成功。
+现在，应用程序值已初始化，可以调用 `m.Run` 来执行任何测试功能。对 `m.Run` 的调用处于阻塞状态，直到所有确定要运行的测试函数都执行完之后，该调用才会返回。非零退出代码表示失败，0 表示成功。
 
 ## 编写 Web 服务的集成测试
+
+集成测试将多个代码单元以及所有集成服务（例如数据库）组合在一起，并测试各个单元的功能以及各个单元之间的关系。为 Web 服务编写集成测试通常意味着每个集成测试的所有入口点都是一个路由。`http.Handler` 接口是任何 Web 服务的必需组件，它包含的 `ServeHTTP` 功能使我们能够利用应用程序中定义的路由。
+
+在 web 服务的集成测试中，构建初始化数据并且以 go 类型返回初始数据，对返回的响应体的结构进行断言非常有用。在接下来的代码清单中，我将一个典型的 API 路由集成测试分解成几个不同的部分。第一步是使用代码清单 1 和代码清单 2 中定义的种子数据。
 
 ### 清单 6
 
@@ -214,6 +218,8 @@ func Test_getItems(t *testing.T) {
 }
 ```
 
+在获取种子数据失败前，必须设置延迟函数清理数据库，这样，无论函数失败与否，测试结束后保证数据库是干净的。然后，调用 `testdb` 中的种子函数并获取他们的返回值，以便在集成测试中使用本示例中 web 服务定义的路由。如果这两个种子函数中的任何一个失败，测试就会调用 `t.Fatalf` 。
+
 ### 清单 7
 
 ```golang
@@ -231,6 +237,8 @@ func (a *Application) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 ```
 
+为了调用注册的路由，`Application` 类型实现 `http.Handler` 接口。`http.Handler`作为`Application`的内嵌结构体字段，因此 `Application` 可以调用 `http.Handler` 接口实现的 `ServeHTTP` 函数
+
 ### 清单 8
 
 ```golang
@@ -243,6 +251,10 @@ w := httptest.NewRecorder()
 a.ServeHTTP(w, req)
 ```
 
+回顾一下代码清单 5，构造 `Application` 是为了在测试中使用。`ServeHTTP` 函数需要两个参数： `http.ResponseWriter`  和 `http.Request`。直接使用 `http.ResponseRecorder` 和 http.NewRequest 创建的 http.Request 调用 ServeHTTP 。
+
+71 行调用 `http.NewRecorder` 函数并返回 `ResponseRecorder` 值由 `ResponseWriter` 接口实现。调用路由请求后，`ResponseRecorder` 可以用来分析了。`ResponseRecorder` 最关键的字段是 `Code`，包含了该返回的响应码和响应体（`Body`），这是一个指向响应内容的 `bytes.Buffer` 类型的指针。
+
 ### 清单 9
 
 ```golang
@@ -250,6 +262,8 @@ if want, got := http.StatusOK, w.Code; want != got {
     t.Errorf("expected status code: %v, got status code: %v", want, got)
 }
 ```
+
+清单 9 中，实际的响应码和预期的响应码做对比。如果不同，将调用 `t.Errorf`，它将说明失败原因。
 
 ### 清单 10
 
@@ -267,6 +281,8 @@ if d := cmp.Diff(expectedItems, items); d != "" {
     t.Errorf("unexpected difference in response body:\n%v", d)
 }
 ```
+
+示例中使用自定义响应体 `web.Response`
 
 ### 清单 11
 
