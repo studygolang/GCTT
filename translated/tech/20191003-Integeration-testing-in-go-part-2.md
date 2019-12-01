@@ -251,7 +251,7 @@ w := httptest.NewRecorder()
 a.ServeHTTP(w, req)
 ```
 
-回顾一下代码清单 5，构造 `Application` 是为了在测试中使用。`ServeHTTP` 函数需要两个参数： `http.ResponseWriter`  和 `http.Request`。直接使用 `http.ResponseRecorder` 和 http.NewRequest 创建的 http.Request 调用 ServeHTTP 。
+回顾一下代码清单 5，构造 `Application` 是为了在测试中使用。`ServeHTTP` 函数需要两个参数： `http.ResponseWriter`  和 `http.Request`。直接使用 `http.ResponseRecorder` 和 `http.NewRequest` 创建的 `http.Request` 调用 `ServeHTTP` 。
 
 71 行调用 `http.NewRecorder` 函数并返回 `ResponseRecorder` 值由 `ResponseWriter` 接口实现。调用路由请求后，`ResponseRecorder` 可以用来分析了。`ResponseRecorder` 最关键的字段是 `Code`，包含了该返回的响应码和响应体（`Body`），这是一个指向响应内容的 `bytes.Buffer` 类型的指针。
 
@@ -263,7 +263,7 @@ if want, got := http.StatusOK, w.Code; want != got {
 }
 ```
 
-清单 9 中，实际的响应码和预期的响应码做对比。如果不同，将调用 `t.Errorf`，它将说明失败原因。
+清单 9 中，实际的响应码和预期的响应码做对比。如果不同，将调用 `t.Errorf`，它将输出失败原因。
 
 ### 清单 10
 
@@ -282,7 +282,19 @@ if d := cmp.Diff(expectedItems, items); d != "" {
 }
 ```
 
-示例中使用自定义响应体 `web.Response`
+示例中使用自定义响应体 `web.Response`，使用 键为 `results` 的 json 字符串存储路由返回信息。代码清单 10 中声明了一个 []item.Item 类型的变量 items，用于和预期值对比。 初始化 items 变量传递给 resp 的字段 results。接下来，items 会随着解析路由响应体数据到 resp 中，从而包含响应体的数据。
+
+Google 的 [go-cmp](https://github.com/google/go-cmp) 包可替代 `reflect.DeepEqual` ，在对比 struct,map,slice 和 array 时更安全，更易用。调用 cmp.Diff 对比清单 6 中定义的种子数据和实际响应体中返回的数据，如果不等，测试将失败，并且将差异输出到标准输出（stdout）中。
+
+## 测试技巧
+
+就测试而言，最好的建议是尽早并且经常进行测试。测试不应该在开发后，而是应该推动应用程序的开发。这既是“测试驱动开发（TDD）”一词的提出。默认情况下，代码不能随时进行测试。在编写代码时，将测试的想法抛到脑后，默认编写的代码是可测试的。单元测试太少，甚至可以忽略。你的服务进行越多测试，未知的就越少，隐藏的副作用（bug）就越少。
+
+下面这些技巧会使你的测试更具有洞察力，更易读，更快。
+
+### 表测试
+
+表测试是一种编写测试的方式，可以防止针对同一代码单元的不同可测试结果重复测试断言。以下面的求和函数为例：
 
 ### 清单 11
 
@@ -299,6 +311,16 @@ func Add(operands ...int) int {
     return sum
 }
 ```
+
+在测试中，我想确保函数可以处理以下情况：
+
+* 没有参数（operands），应返回 0。
+* 一个参数，直接返回参数值。
+* 两个参数，返回这两个数之和。
+* 三个参数，则返回这三个数之和。
+
+彼此独立地编写这些测试将导致重复许多相同的调用和断言。我认为，更好的方法是利用表测试。为了编写表测试，必须定义一片匿名声明的结构，其中包含我们每个测试用例的元数据。然后可以使用循环遍历不同测试用例的这些条目，并可以对用例进行测试和独立运行 `t.Run`。`t.Run` 需要两个参数，子测试函数和这个子测试函数的函数名，子测试函数必须符合这种类型：`func(*testing.T)`。
+
 ### 清单 12
 
 ```golang
@@ -343,6 +365,12 @@ func TestAdd(t *testing.T) {
 }
 ```
 
+测试清单 12 中，使用匿名声明的结构体定义了不同的情况。遍历这些情况，执行这些测试用例。比较实际返回值和预期值，如果不等，则调用 `t.Errorf`，返回测试失败的信息。清单中，遍历调用 t.Run 执行每个测试用例。
+
+### t.Helper() 和 t.Parallel()
+
+标准库中的 `testing` 包提供了很多有用的程序（函数）辅助测试，而不用导入之外的第三方包。其中我最喜欢的两个函数是 t.Helper() 和 t.Parallel()，它们都定义为 testing.T 接收者，是在 _test.go 文件中每个 Test 函数都需要的唯一的参数。
+
 ### 清单 13
 
 ```golang
@@ -357,6 +385,8 @@ func GenerateTempFile() (*os.File, error) {
     return f, nil
 }
 ```
+
+在代码清单 13 中，为特定的测试包定义了一个辅助函数。这个函数返回 `os.File` 指针和 `error`。每次测试调用这个辅助函数必须判断 error 是一个 non-nil 。通常情况这也没什么，但是有一个更好的方式：使用 t.Helper() ，这种方式省略了 `error` 返回。
 
 ### 清单 14
 
@@ -374,6 +404,10 @@ func GenerateTempFile(t *testing.T) *os.File {
     return f
 }
 ```
+
+清单14 和清单 13 相同，只是使用 `t.Helper()`。这个函数定义使用了 `*testing.T`作为参数，省略了 error 的返回。函数先调用 `t.Helper()`，这在编译测试二进制文件时发出信号：如果 t 在这个函数中调用任何接收器函数，则将其报告给调用函数（Test*）。与辅助函数不同，所有行号和文件信息会都会关联到这个函数。
+
+一些测试可以进行安全的并行进行，并且 go testing 包原生支持并行运行测试。在所有 Test* 函数开始调用 t.Parallel(),可以编译出可以安全并行运行的测试二进制文件。就是这么简单，就是这么强大！
 
 ## 结论
 
