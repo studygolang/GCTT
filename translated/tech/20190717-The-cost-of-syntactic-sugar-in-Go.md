@@ -40,7 +40,7 @@ type Animal interface {
   Noise() string
 }
 type Dog struct{}
-func (Dog) Noise() string { 
+func (Dog) Noise() string {
   return "Woof!"
 }
 func PrintNoises(as []Animal) {
