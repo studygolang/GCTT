@@ -1,5 +1,5 @@
  首发于：https://studygolang.com/articles/25100
- 
+
 # Go 标准库 `encoding/json` 真的慢吗？
 
 ![](https://github.com/studygolang/gctt-images2/blob/master/go-is-the-encoding-json-package-really-slow/A-Journey-With-Go.png)
