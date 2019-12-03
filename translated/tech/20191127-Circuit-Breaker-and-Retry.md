@@ -1,5 +1,3 @@
-
-
 # 熔断器和重试
 
 今天我们来讨论微服务架构中的自我恢复能力。通常情况下，服务间会通过同步或异步的方式进行通信。我们假定把一个庞大的系统分解成一个个的小块能将各个服务解耦。管理服务内部的通信可能有点困难了。你可能听说过这两个著名的概念：熔断和重试。
@@ -197,8 +195,6 @@ func callWithRetryV1() (err error) {
 ![Example configuration of both tools](https://github.com/studygolang/gctt-images2/blob/master/circuit-breaker-and-retry/06.png)
 
 熔断器被广泛用在无状态线上事务系统中，尤其是在聚合点上。重试应该用于调度作业或不被 timeout 约束的 worker。经过深思熟虑后我们可以同时用熔断器和重试。在大型系统中，service mesh 是一种能更精确地编排不同配置的理想架构。
-
-
 
 ## 参考文章
 
