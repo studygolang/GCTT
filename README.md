@@ -53,6 +53,7 @@ GCTT (Go Chinese Translation Team) 是 Go 中文网（https://studygolang.com) �
 * 2019/09/11 提升 DingdingZhou 为核心成员。
 * 2019/09/16 提升 TomatoAres 为核心成员。
 * 2019/09/29 提升 Watermelo 为核心成员。
+* 2019/11/24 提升 lxbwolf 为核心成员。
 
 ## Inspire By LCTT
 
