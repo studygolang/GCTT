@@ -1,10 +1,14 @@
+首发于：https://studygolang.com/articles/25121
+
+# Go 中基于 IP 地址的 HTTP 限流
+
 如果你想限制一个正在运行的 HTTP 服务的请求量，你可以使用现有的轮子工具，比如说 [github.com/didip/tollbooth](https://github.com/didip/tollbooth) ，但是如果写一些简单的东西，你自己去实现也没有那么难。
 
 我们可以用这个包 `x/time/rate` 。
 
 在这篇教程中，我们将基于用户的 IP 地址构造一个简单的限流中间件。
 
-# Pure HTTP Server
+## Pure HTTP Server
 
 我们来开始构建一个简单的 HTTP 服务，这是一个大流量的服务，这也是我们为什么要在这里加上限制的原因。
 
@@ -33,7 +37,7 @@ func okHandler(w http.ResponseWriter, r *http.Request) {
 
 在 `main.go` 文件中，我们用 `:8888` 端口启动了一个仅有单一控制器的服务。
 
-# golang.org/x/time/rate
+## golang.org/x/time/rate
 
 我们将用 `x/time/rate` 这个包，它提供了一个令牌桶限流算法。 [rate#Limiter](https://godoc.org/golang.org/x/time/rate#Limiter) 控制事件允许发生的频率，它实现了一个容量为 b 的“令牌桶”，最初是满的并以每秒 r 个令牌的速度重新填充。在足够的时间间隔里，限流器限制速度为每秒 r 个令牌，最多为桶的最大容量 b 。
 
@@ -100,7 +104,7 @@ func (i *IPRateLimiter) GetLimiter(ip string) *rate.Limiter {
 
 `NewIPRateLimiter` 创建了一个 IP 限流器的实例，HTTP 服务将调用这个实例的 `GetLimiter` 来获取指定的 IP 限流器（从字典里获取或者构造一个新的）。
 
-# Middleware
+## Middleware
 
 让我们来升级我们的 HTTP Server 并在所有的控制器中添加中间件。所以如果 IP 达到限制将返回 429 表示大量请求，否则，它将继续执行请求。
 
@@ -143,7 +147,7 @@ func okHandler(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-# Build & Run
+## Build & Run
 
 ```go
 go get golang.org/x/time/rate
@@ -151,17 +155,17 @@ go build -o server .
 ./server
 ```
 
-# Test
+## Test
 
 [vegeta](https://github.com/tsenart/vegeta)（它是用 Go 写的）是一个很不错的工具，我喜欢用它来做 HTTP 负荷测试。
 
-```go
+```
 brew install vegeta
 ```
 
 我们需要创建一个简单的配置文件说明我们想测试什么请求。
 
-```go
+```
 GET http://localhost:8888/
 ```
 
@@ -173,10 +177,12 @@ vegeta attack -duration=10s -rate=100 -targets=vegeta.conf | vegeta report
 
 结果你将会看到一些请求返回 200 ，但是大部分返回 429 。
 
-via:https://dev.to/plutov/rate-limiting-http-requests-in-go-based-on-ip-address-542g
+---
 
-作者：[*[Alex Pliutau](https://dev.to/plutov)*](https://dave.cheney.net/)
-译者：[Alihanniba](https://github.com/Alihanniba) / 柒呀
-校对：
+via: https://dev.to/plutov/rate-limiting-http-requests-in-go-based-on-ip-address-542g
+
+作者：[Alex Pliutau](https://dev.to/plutov)
+译者：[Alihanniba](https://github.com/Alihanniba)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
