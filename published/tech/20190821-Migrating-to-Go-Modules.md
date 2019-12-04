@@ -1,4 +1,4 @@
-首发于：https://studygolang.com/articles/12399
+首发于：https://studygolang.com/articles/23133
 
 # 使用 Go Modules（模块）进行依赖项迁移
 
