@@ -1,6 +1,8 @@
-# Go 程序的包含物；Go 程序中的非 go 后缀文件
+首发于：https://studygolang.com/articles/25119
 
-静态文件，也有人叫资产或资源，是一些被程序使用、没有代码的文件。在 Go 中，这类文件就是非 `.go` 的文件。它们大部分被用在 web 内容，像 HTML 、javascript 还有网络服务器处理的图片，然而它们也可以以模板、配置文件、图片等等形式被用在任何程序中。主要问题是这些文件不会随代码一起被编译。开发一个程序时，我们可以通过本地的文件系统访问它们，但是当软件被编译和部署后，这些文件就不再在部署环境中的本地文件系统了，我们必须提供给程序一种访问它们的方式。Go 语言对这个问题并没有提供一种开箱即用的解决方案。本文会讨论这个问题，此问题的通用解决方案，以及 [gitfs](https://github.com/posener/gitfs) 中处理它的方法。[这部分](https://posener.github.io/static-files/#fsutil) 额外赠送，讲述下 `http.FileSystem` 接口一些有趣的方面。
+# Go 程序的包含物：Go 程序中的非 Go 后缀文件
+
+静态文件，也有人叫资产或资源，是一些被程序使用、没有代码的文件。在 Go 中，这类文件就是非 `.go` 的文件。它们大部分被用在 Web 内容，像 HTML 、javascript 还有网络服务器处理的图片，然而它们也可以以模板、配置文件、图片等等形式被用在任何程序中。主要问题是这些文件不会随代码一起被编译。开发一个程序时，我们可以通过本地的文件系统访问它们，但是当软件被编译和部署后，这些文件就不再在部署环境中的本地文件系统了，我们必须提供给程序一种访问它们的方式。Go 语言对这个问题并没有提供一种开箱即用的解决方案。本文会讨论这个问题，此问题的通用解决方案，以及 [gitfs](https://github.com/posener/gitfs) 中处理它的方法。[这部分](https://posener.github.io/static-files/#fsutil) 额外赠送，讲述下 `http.FileSystem` 接口一些有趣的方面。
 
 我希望能听到你的想法。请用文末评论平台来讨论。
 
@@ -46,7 +48,7 @@ gitfs 是一个集上述几个方案众家之所长的库。它的设计目的�
 
 想象一个不用二进制包来访问静态内容的生产环境系统。`gitfs` 可以通过调 Github 的公开接口的方式来从获取文件系统结构和文件内容进而实现这种系统。程序创建文件系统时会通过 Github 的公开接口加载文件结构。文件自己的内容可以通过两个模式来获取：懒加载，仅在被访问时加载；文件系统加载时预获取所有内容。
 
-`gitfs` 也实现了二进制打包，但是它（比一般意义上的二进制打包）体验更流畅平顺。第一，生成Go 代码包的 CLI 工具会探测所有用 `gitfs.New` 创建文件系统的请求，因此开发者们运行 CLI 时不需要指定特定的文件系统，因为它能自动推断出来。而后，它下载所有依赖的内容并保存在生成的 Go 文件中。 这个 Go 文件在 `init()` 函数中注册有效的内容。当 `gitfs.New` 函数在程序里再次被调用来创建一个文件系统时，它会检查被注册过的内容，如果被已经被注册了，就直接使用注册的内容，而不是从远程仓库里获取。这样做的结果就是无缝衔接 -- 如果二进制中的内容是有效的，就直接使用，否则，从远程服务器上拉取。
+`gitfs` 也实现了二进制打包，但是它（比一般意义上的二进制打包）体验更流畅平顺。第一，生成 Go 代码包的 CLI 工具会探测所有用 `gitfs.New` 创建文件系统的请求，因此开发者们运行 CLI 时不需要指定特定的文件系统，因为它能自动推断出来。而后，它下载所有依赖的内容并保存在生成的 Go 文件中。 这个 Go 文件在 `init()` 函数中注册有效的内容。当 `gitfs.New` 函数在程序里再次被调用来创建一个文件系统时，它会检查被注册过的内容，如果被已经被注册了，就直接使用注册的内容，而不是从远程仓库里获取。这样做的结果就是无缝衔接 -- 如果二进制中的内容是有效的，就直接使用，否则，从远程服务器上拉取。
 
 前面提到过，生成二进制内容的缺点之一就是静态内容和打包好的内容会有差异的可能性。如果开发者修改了静态文件而没有运行 `go generate`  ，程序就可能不按预期运行。`gitfs` 处理这个问题的方式是，额外生成一个加载和比较生成的内容和静态文件（差异）的 Go 测试文件，如果本地有修改而没有重新运行 `go generate` ， 测试会不通过。
 
@@ -58,7 +60,7 @@ gitfs 是一个集上述几个方案众家之所长的库。它的设计目的�
 
 ```go
 // Add debug mode environment variable. When running with
-// `LOCAL_DEBUG=.`, the local git repository will be used
+// `LOCAL_DEBUG=.`, the local Git repository will be used
 // instead of the remote github.
 var localDebug = os.Getenv("LOCAL_DEBUG")
 
@@ -71,7 +73,7 @@ func main() {
 		"github.com/posener/gitfs/examples/templates",
 		gitfs.OptLocal(localDebug))
 	if err != nil {
-		log.Fatalf("Failed initializing git filesystem: %s.", err)
+		log.Fatalf("Failed initializing Git filesystem: %s.", err)
 	}
 	// Parse templates from the loaded filesystem using a glob
 	// pattern.
@@ -84,7 +86,7 @@ func main() {
 }
 ```
 
-通过命令 `go run main.go` 来运行这段代码，运行后会从 Github 加载模板。如果执行的命令是 `LOCAL_DEBUG=. go run main.go` 则会加载本地文件。
+通过命令 `go run main.go` 来运行这段代码，运行后会从 Github 加载模板。如果执行的命令是 `LOCAL_DEBUG=. Go run main.go` 则会加载本地文件。
 
 ## fsutil
 
@@ -104,10 +106,12 @@ Go 语言标准库模板加载函数只能访问本地文件系统。 `fsutil` �
 
 Go 程序中的非 Go 文件需要特殊对待。文本中我试着阐述现在面临的挑战、现有的有效的解决方案和 `gitfs` 是怎样让使用静态文件变得简单地。我们已经学习过 http.FileSystem interface，及它对文件系统操作进行抽象的强大能力。最后的想法：新的 Go 模块系统是否为对静态文件进行内建处理保留了一席之地。
 
+---
+
 via: https://posener.github.io/static-files/
 
 作者：[Eyal Posener](https://posener.github.io/)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

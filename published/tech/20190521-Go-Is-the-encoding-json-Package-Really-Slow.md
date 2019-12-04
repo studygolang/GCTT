@@ -1,4 +1,4 @@
- 首发于：https://studygolang.com/articles/25100
+首发于：https://studygolang.com/articles/25100
 
 # Go 标准库 `encoding/json` 真的慢吗？
 

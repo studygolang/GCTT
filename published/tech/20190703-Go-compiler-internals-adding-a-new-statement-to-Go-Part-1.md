@@ -1,4 +1,4 @@
- 首发于：https://studygolang.com/articles/25101
+首发于：https://studygolang.com/articles/25101
 
 # Go 编译器内核：给 Go 新增一个语句 —— 第一部分
 
