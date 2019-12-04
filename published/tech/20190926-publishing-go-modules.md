@@ -1,32 +1,36 @@
+首发于：https://studygolang.com/articles/25129
+
 # 发布 Go Modules
 
 ## 简介
 
-本文是go modules系统的第三部分
+本文是 go modules 系统的第三部分
 
-- Part 1: [使用`Go Modules`](https://blog.golang.org/using-go-modules)
-- Part 2: [迁移到`Go Modules`](https://blog.golang.org/migrating-to-go-modules)
-- Part 3: 发布 `go modules`(本文)
+- Part 1: [使用 Go Modules](https://blog.golang.org/using-go-modules)  [译文](https://studygolang.com/articles/19334)
+- Part 2: [迁移到 Go Modules](https://blog.golang.org/migrating-to-go-modules)  [译文](https://studygolang.com/articles/23133)
+- Part 3: 发布 `go modules` (本文)
 - Part 4: [Go Modules: v2 及以后的版本](https://blog.golang.org/v2-go-modules)
 
-本文讨论如何编码和发布go模块，发布后就可以被其他模块依赖使用了。
+本文讨论如何编码和发布 go 模块，发布后就可以被其他模块依赖使用了。
 
 注意： 本文只涉及到 v1 及以前的版本， 如果你想了解 v2 版本， 请参照 [Go Modules: v2 及以后的版本](https://blog.golang.org/v2-go-modules) 。
 
-本文中列出的例子使用的是 git ，其他版本控制工具如 `Mercurial`、`Bazaar` 等等也支持。
+本文中列出的例子使用的是 Git ，其他版本控制工具如 `Mercurial`、`Bazaar` 等等也支持。
 
 ## 工程配置
 
-本文的前期准备：有一个已经建好的工程。让我们以 [使用`Go Modules`](https://blog.golang.org/using-go-modules) 篇尾的文章来开始示例。
+本文的前期准备：有一个已经建好的工程。让我们以 [使用 `Go Modules`](https://blog.golang.org/using-go-modules) 篇尾的文章来开始示例。
 
-```go
+```bash
 $ cat go.mod
 module example.com/hello
 
 go 1.12
 
 require rsc.io/quote/v3 v3.1.0
+```
 
+```bash
 $ cat go.sum
 golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c h1:qgOY6WgZOaTkIIMiVjBQcw93ERBE4m30iBm00nkL0i8=
 golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
@@ -34,7 +38,9 @@ rsc.io/quote/v3 v3.1.0 h1:9JKUTTIUgS6kzR9mK1YuGKv6Nl+DijDNIc0ghT58FaY=
 rsc.io/quote/v3 v3.1.0/go.mod h1:yEA65RcK8LyAZtP9Kv3t0HmxON59tX3rD+tICJqUlj0=
 rsc.io/sampler v1.3.0 h1:7uVkIFmeBqHfdjD+gZwtXXI+RODJ2Wc4O7MPEh/QiW4=
 rsc.io/sampler v1.3.0/go.mod h1:T1hPZKmBbMNahiBKFy5HrXp6adAjACjK9JXDnKaTXpA=
+```
 
+```go
 $ cat hello.go
 package hello
 
@@ -47,7 +53,9 @@ func Hello() string {
 func Proverb() string {
     return quote.Concurrency()
 }
+```
 
+```go
 $ cat hello_test.go
 package hello
 
@@ -85,7 +93,7 @@ $
 
 `go.mod` 中每一个被依赖的模块都有一个语义版本，该语义版本是依赖该模块构建本模块时使用的最小版本。
 
-语义版本格式：`vMAJOR.MINOR.PATCH` (v主版本号.次版本号.修订版本号)
+语义版本格式：`vMAJOR.MINOR.PATCH` (v 主版本号.次版本号.修订版本号)
 
 - 当你模块的公开接口作了向后不兼容的修改后，需要增加主版本号。不到万不得已时，不要这么做。
 - 当你作了向后兼容的修改，如修改依赖或增加新的函数、方法、结构体的字段或类型时，增加次版本号。
@@ -121,7 +129,7 @@ $ git push origin v0.1.0
 $
 ```
 
-现在其他的工程就可以依赖 `example.com/hello` 的`v0.1.0` 版本了。对于你自己的模块，你可以执行 `go list -m example.com/hello@v0.1.0` 来确认最新的版本可用（本例中的模块并不存在，所以不可用）。如果你没有即时看到最新的版本且你用了 `Go module proxy`（Go 1.13后的版本默认使用），给代理一点加载新版本的时间，几分钟后再试一试。
+现在其他的工程就可以依赖 `example.com/hello` 的 `v0.1.0` 版本了。对于你自己的模块，你可以执行 `go list -m example.com/hello@v0.1.0` 来确认最新的版本可用（本例中的模块并不存在，所以不可用）。如果你没有即时看到最新的版本且你用了 `Go module proxy`（Go 1.13 后的版本默认使用），给代理一点加载新版本的时间，几分钟后再试一试。
 
 如果你修改了公开接口、在版本为 `v0` 的模块基础上做出了重大改变、抑或更新了你依赖的某个模块的次版本或（完整）版本，那么在你的下次发布中增加次版本号。例如，`v0.1.0` 的下一个版本为 `v0.2.0` 。
 
@@ -177,12 +185,12 @@ $
 - [The App Engine SDK and workspaces (GOPATH)](https://blog.golang.org/the-app-engine-sdk-and-workspaces-gopath)
 - [Organizing Go code](https://blog.golang.org/organizing-go-code)
 
-----------------
+---
 
 via: https://blog.golang.org/publishing-go-modules
 
-作者：Tyler Bui-Palsulich <br>
-译者：[lxbwolf](https://github.com/lxbwolf) <br>
-校对：[校对者ID](https://github.com/校对者ID)
+作者：[Tyler Bui-Palsulich](https://blog.golang.org/publishing-go-modules)
+译者：[lxbwolf](https://github.com/lxbwolf)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
