@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/25123
+
 # Golang Http 服务的优雅重启
 
 （2015 年 4 月更新）：[Florian von Bock](https://github.com/fvbock) 已将本文中描述的内容实现成了一个名为[Endless](https://github.com/fvbock/endless)的 Go 程序包。
@@ -7,12 +9,14 @@
 实际上，这里需要解决两个问题。首先是 UNIX 端的优雅重启，即进程无需关闭监听套接字即可自行重启的机制。第二个问题是确保所有进行中的请求被正确完成或超时。
 
 ## 在不关闭套接字的情况下重启
+
 - 派生一个继承监听中的套接字的新进程。
 - 新进程执行初始化并开始接受套接字上的连接。
 - 之后，子进程立即向父进程发送信号，使父进程停止接收连接并终止。
 
 ### 派生一个新的进程
-有多种使用 Golang 的库去实现派生进程的方法，在本文中的例子中，我们选择用 [exec.Command](https://golang.org/pkg/os/exec/#Command)。这是因为此函数返回的 [Cmd 结构体](https://golang.org/pkg/os/exec/#Cmd) 具有 `ExtraFiles` 成员，该成员可以使打开的文件（除了`stdin/err/out` 之外）被新进程继承。
+
+有多种使用 Golang 的库去实现派生进程的方法，在本文中的例子中，我们选择用 [exec.Command](https://golang.org/pkg/os/exec/#Command)。这是因为此函数返回的 [Cmd 结构体](https://golang.org/pkg/os/exec/#Cmd) 具有 `ExtraFiles` 成员，该成员可以使打开的文件（除了 `stdin/err/out` 之外）被新进程继承。
 
 看起来如下所示：
 
@@ -42,6 +46,7 @@ if err != nil {
 最后，`args` 数组包含 `-graceful` 选项：你的程序将需要某种方式来通知子进程这是正常重启的一部分，并且子进程应重新使用套接字，而不是打开新的套接字。还有一种方法是通过环境变量来实现这个功能。
 
 ### 初始化子进程
+
 这是程序启动序列的一部分
 
 ```go
@@ -64,6 +69,7 @@ if gracefulChild {
 ```
 
 ### 通知父进程停止
+
 至此，子进程已经准备好接收请求，但是在此之前，需要告诉父进程停止接收请求并退出，这可能是这样的：
 
 ```go
@@ -77,6 +83,7 @@ server.Serve(l)
 ```
 
 ### 进行中的请求 完成/超时
+
 为此，我们需要使用 [sync.WaitGroup](https://golang.org/pkg/sync/#WaitGroup) 跟踪打开的连接。我们需要给每次新增的连接使用 `wg.Add`，并在每次关闭连接时使用 `wg.Done`。
 
 ```go
@@ -116,7 +123,7 @@ func (gl *gracefulListener) Accept() (c net.Conn, err error) {
 ```go
 func newGracefulListener(l net.Listener) (gl *gracefulListener) {
     gl = &gracefulListener{Listener: l, stop: make(chan error)}
-    go func() {
+    Go func() {
         _ = <-gl.stop
         gl.stopped = true
         gl.stop <- gl.Listener.Close()
@@ -125,9 +132,9 @@ func newGracefulListener(l net.Listener) (gl *gracefulListener) {
 }
 ```
 
-上面的函数启动 goroutine 的原因是因为在上面的 `Accept()` 中无法完成此操作，因为它会被 `gl.Listener.Accept()` 阻塞。 goroutine 通过关闭文件描述符来解除阻塞。
+上面的函数启动 Goroutine 的原因是因为在上面的 `Accept()` 中无法完成此操作，因为它会被 `gl.Listener.Accept()` 阻塞。 Goroutine 通过关闭文件描述符来解除阻塞。
 
-我们的 `Close()` 方法仅将 `nil` 发送给上述 goroutine 的 `stop channel` 即可完成其余工作。
+我们的 `Close()` 方法仅将 `nil` 发送给上述 Goroutine 的 `stop channel` 即可完成其余工作。
 
 ```go
 func (gl *gracefulListener) Close() error {
@@ -179,7 +186,7 @@ server := &http.Server{
         MaxHeaderBytes: 1 << 16}
 ```
 
-----------------
+---
 
 via: https://grisha.org/blog/2014/06/03/graceful-restart-in-golang/
 
