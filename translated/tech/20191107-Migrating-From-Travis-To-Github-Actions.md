@@ -12,9 +12,9 @@
 
 我不打算对比 workflow (流程) 、job(任务)、step(步骤) 等细节， GitHub 有广泛的文档来介绍 Actions 的 [用法](https://help.github.com/en/articles/workflow-syntax-for-github-actions) 和 [概念](https://help.github.com/en/articles/about-github-actions#core-concepts-for-github-actions)，我认为我想要的是很普通的一个 CI/CD 流程：
 
-. push 代码到分支后运行一些单元测试，最好能够使用 Go 的多个版本 
-. 在 PR 上，我还希望运行一些更广泛的集成测试，用来测试面向公众的 API 和 CLI 
-. 推送 tag 后，我想触发 [goreleaser](https://github.com/goreleaser/goreleaser) 来构建一个 Docker 镜像并推送到 [Docker Hub](https://hub.docker.com/r/markphelps/flipt)，同时打包一个发版的压缩文件 
+. push 代码到分支后运行一些单元测试，最好能够使用 Go 的多个版本
+. 在 PR 上，我还希望运行一些更广泛的集成测试，用来测试面向公众的 API 和 CLI
+. 推送 tag 后，我想触发 [goreleaser](https://github.com/goreleaser/goreleaser) 来构建一个 Docker 镜像并推送到 [Docker Hub](https://hub.docker.com/r/markphelps/flipt)，同时打包一个发版的压缩文件
 . 在新版本更新文档时更新 [文档网站](https://flipt.dev/)
 
 前两个步骤主要的 TravisCI 工作是在这个 [config文件](https://github.com/markphelps/flipt/blob/90bafa834aec29cdaa3620b8ea30aa89466fe7d0/.travis.yml)配置的，虽然有一些差异:
@@ -175,8 +175,8 @@ services:
 
 via: https://www.markphelps.me/2019/09/migrating-from-travis-to-github-actions/
 
-作者：[Mark Phelps ](https://www.markphelps.me/) 
-译者：[M1seRy](https://github.com/M1seRy) 
+作者：[Mark Phelps ](https://www.markphelps.me/) <br>
+译者：[M1seRy](https://github.com/M1seRy) <br>
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
