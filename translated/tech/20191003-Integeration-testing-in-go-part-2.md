@@ -10,9 +10,9 @@
 
 在执行集成测试之前，必须正确配置该测试相关的外部系统。否则，测试结果是无效和不可靠的。例如，数据库需要有定义好的数据，这些数据对于要测试的行为是正确的。测试期间更改的数据需要进行验证，尤其是如果要求更改的数据对于后续测试而言是准确的时侯。
 
-Go 测试工具提供了有在执行测试功能前执行代码的能力，使用叫做 `TestMain` 的入口函数实现。它类似于 Go 应用程序的 `Main` 函数。有了 `TestMain` 函数，我们可以在执行测试之前做其他系统配置，比如数据库连接之类的。在本文中，我将分享如何使用它 `TestMain` 来配置和连接 Postgres 数据库，以及如何针对该数据库编写和运行测试。
+Go 测试工具提供了有在执行测试函数前执行代码的能力，使用叫做 `TestMain` 的入口函数实现。它类似于 Go 应用程序的 `Main` 函数。有了 `TestMain` 函数，我们可以在执行测试之前做其他系统配置，比如数据库连接之类的。在本文中，我将分享如何使用它 `TestMain` 来配置和连接 Postgres 数据库，以及如何针对该数据库编写和运行测试。
 
-## 构造填充数据
+## 填充初始数据
 
 为了填充数据库，需要定义数据并将其放置在测试工具可以访问的位置。一种常见的方法是定义一个 SQL 文件，该文件是项目的一部分，并且包含所有需要执行的 SQL 命令。另一种方法是将 SQL 命令存储在代码内部的常量中。不同于这两种方法，我将只使用 Go 语言实现来解决此问题。
 
@@ -22,7 +22,9 @@ Go 测试工具提供了有在执行测试功能前执行代码的能力，使�
 
 ## 填充数据库
 
-在我分享的项目中，所有用于填充数数据库功能本都在叫做 [`testdb`](https://github.com/george-e-shaw-iv/integration-tests-example) 的包中。这个包仅用于测试，不用做第三方依赖。用来辅助填充测试数据库的三个主要的函数分别是：`SeedLists`, `SeedItems`, 和 `Truncate`，如下：
+> 译者注：原文为 `Seeding The Database`，下面部分相关功能函数就称为种子函数
+
+本文提到的，所有用于填充数数据库功能函数，都在 [`testdb`](https://github.com/george-e-shaw-iv/integration-tests-example) 包中。这个包仅用于测试，不用做第三方依赖。用来辅助填充测试数据库的三个核心函数分别是：`SeedLists`, `SeedItems`, 和 `Truncate`，如下：
 
 这是 `SeedLists` 函数：
 
@@ -75,7 +77,7 @@ func SeedLists(dbc *sqlx.DB) ([]list.List, error) {
 }
 ```
 
-代码清单 1 展示了 `SeedLists` 函数及其如何创建测试数据。在第 35-51 行，list.List 定义了一个用于插入的数据表。然后在 53-72 行，将测试数据插入数据库。为了帮助将插入的数据与测试期间进行的任何数据库调用的结果进行比较，测试数据集在第 74 行返回给调用方。
+代码清单 1 展示了 `SeedLists` 函数及其如何创建测试数据。`list.List` 定义了一个用于插入的数据表。然后，将测试数据插入数据库。为了帮助将插入的数据与测试期间进行的任何数据库调用的结果进行比较，测试数据集返回给调用方。
 
 接下来，我们看看将更多测试数据插入数据库的 `SeedItems` 函数。
 
@@ -134,7 +136,7 @@ func SeedItems(dbc *sqlx.DB, lists []list.List) ([]item.Item, error) {
 }
 ```
 
-代码清单 2 显示了 `SeedItems` 函数如何创建测试数据。除了使用 `item.Item` 数据类型，该代码与清单 1 基本相同。`testdb` 包中唯一要共用的函数只有 `Truncate`。
+代码清单 2 显示了 `SeedItems` 函数如何创建测试数据。除了使用 `item.Item` 数据类型，该代码与清单 1 基本相同。`testdb` 包中还有一个未提到的函数 `Truncate`。
 
 ### 代码清单 3
 
@@ -154,7 +156,7 @@ func Truncate(dbc *sqlx.DB) error {
 
 ## 使用 testing.M 创建 TestMain
 
-使用便于`填充/清除`数据库的软件包后，该集中精力配置以运行真正的集成测试了。Go 自带的测试工具可以让你在 `TestMain` 函数中定义需要的行为，在测试功能执行前执行。
+使用便于`填充/清除`数据库的软件包后，该集中精力配置以运行真正的集成测试了。Go 自带的测试工具可以让你在 `TestMain` 函数中定义需要的行为，在测试函数执行前执行。
 
 ### 代码清单 4
 
@@ -188,11 +190,11 @@ func testMain(m *testing.M) int {
 
 成功连接测试数据库后，连接将传递给 `handlers.NewApplication()`，并且此函数的返回值用于初始化的包级变量 `*handlers.Application` 类型。`handlers.Application` 类型是这个项目自定义的结构体，有用于 `http.Handler` 接口的字段，以简化 Web 服务的路由以及对已创建的数据库连接的引用。
 
-现在，应用程序值已初始化，可以调用 `m.Run` 来执行任何测试功能。对 `m.Run` 的调用处于阻塞状态，直到所有确定要运行的测试函数都执行完之后，该调用才会返回。非零退出代码表示失败，0 表示成功。
+现在，应用程序值已初始化，可以调用 `m.Run` 来执行所有测试函数。对 `m.Run` 的调用处于阻塞状态，直到所有确定要运行的测试函数都执行完之后，该调用才会返回。非零退出代码表示失败，0 表示成功。
 
 ## 编写 Web 服务的集成测试
 
-集成测试将多个代码单元以及所有集成服务（例如数据库）组合在一起，并测试各个单元的功能以及各个单元之间的关系。为 Web 服务编写集成测试通常意味着每个集成测试的所有入口点都是一个路由。`http.Handler` 接口是任何 Web 服务的必需组件，它包含的 `ServeHTTP` 功能使我们能够利用应用程序中定义的路由。
+集成测试将多个代码单元以及所有集成服务（例如数据库）组合在一起，并测试各个单元的功能以及各个单元之间的关系。为 Web 服务编写集成测试通常意味着每个集成测试的所有入口点都是一个路由。`http.Handler` 接口是任何 Web 服务的必需组件，它包含的 `ServeHTTP` 函数使我们能够利用应用程序中定义的路由。
 
 在 web 服务的集成测试中，构建初始化数据并且以 go 类型返回初始数据，对返回的响应体的结构进行断言非常有用。在接下来的代码清单中，我将一个典型的 API 路由集成测试分解成几个不同的部分。第一步是使用代码清单 1 和代码清单 2 中定义的种子数据。
 
@@ -218,7 +220,7 @@ func Test_getItems(t *testing.T) {
 }
 ```
 
-在获取种子数据失败前，必须设置延迟函数清理数据库，这样，无论函数失败与否，测试结束后保证数据库是干净的。然后，调用 `testdb` 中的种子函数并获取他们的返回值，以便在集成测试中使用本示例中 web 服务定义的路由。如果这两个种子函数中的任何一个失败，测试就会调用 `t.Fatalf` 。
+在获取种子数据失败前，必须设置延迟函数清理数据库，这样，无论函数失败与否，测试结束后保证数据库是干净的。然后，调用 `testdb` 中的种子函数（`testdb.SeedLists` 和 `testdb.SeedItems` ）构造初始数据，并获取他们的返回值作为预期值，以便在集成测试中与实际路由请求结果（真实值）做对比。如果这两个种子函数中的任何一个失败，测试就会调用 `t.Fatalf` 。
 
 ### 清单 7
 
@@ -251,9 +253,11 @@ w := httptest.NewRecorder()
 a.ServeHTTP(w, req)
 ```
 
-回顾一下代码清单 5，构造 `Application` 是为了在测试中使用。`ServeHTTP` 函数需要两个参数： `http.ResponseWriter`  和 `http.Request`。直接使用 `http.ResponseRecorder` 和 `http.NewRequest` 创建的 `http.Request` 调用 `ServeHTTP` 。
+回顾一下代码清单 5，构造 `Application` 是为了在测试中使用。`ServeHTTP` 函数需要两个参数： `http.ResponseWriter`  和 `http.Request`。`http.NewRequest` 构造 `http.Request`，`httptest.NewRecorder` 构造 `http.ResponseRecorder`——即 `http.Response` 。
 
-71 行调用 `http.NewRecorder` 函数并返回 `ResponseRecorder` 值由 `ResponseWriter` 接口实现。调用路由请求后，`ResponseRecorder` 可以用来分析了。`ResponseRecorder` 最关键的字段是 `Code`，包含了该返回的响应码和响应体（`Body`），这是一个指向响应内容的 `bytes.Buffer` 类型的指针。
+ `http.NewRecorder` 函数的返回 `ResponseRecorder` 值实现了 `ResponseWriter` 接口。调用路由请求后，`ResponseRecorder` 可以用来分析了。其中最关键的字段 `Code` 和 `Body`，前者是该请求的实际响应码，后者是一个指向响应内容的 `bytes.Buffer` 类型的指针。
+
+> 译者注：这里的 `http.ResponseWriter`  和 `http.Request` 实现了 golang 中常见的 `Writer` 和 `Reader` 接口，即 **输出** 和 **输入**，在 http 请求中即 `Response` 和 `Request`。
 
 ### 清单 9
 
@@ -288,9 +292,11 @@ Google 的 [go-cmp](https://github.com/google/go-cmp) 包可替代 `reflect.Deep
 
 ## 测试技巧
 
-就测试而言，最好的建议是尽早并且经常进行测试。测试不应该在开发后，而是应该推动应用程序的开发。这既是“测试驱动开发（TDD）”一词的提出。默认情况下，代码不能随时进行测试。在编写代码时，将测试的想法抛到脑后，默认编写的代码是可测试的。单元测试太少，甚至可以忽略。你的服务进行越多测试，未知的就越少，隐藏的副作用（bug）就越少。
+<!-- todo  A segment of code, by default, is not always readily available to be tested.  别扭 -->
+就测试而言，最好的建议是尽早测试，并且经常测试，而不是将测试放到开发之后考虑，而且测试应该推动、驱动应用程序的开发。这就是“测试驱动开发（TDD）”。通常情况下，没有随时测试代码。在编写代码时，将测试的想法抛到脑后，自己（开发人员）默认编写的代码是可测试的。代码单元（通常是一个函数）不管再小都能进行测试。你的服务进行越多测试，未知的就越少，隐藏的副作用（bug）就越少。
 
-下面这些技巧会使你的测试更具有洞察力，更易读，更快。
+<!-- todo 也挺别扭的 -->
+有了下面这些技巧，你的测试将洞察力，更易读，更快。
 
 ### 表测试
 
@@ -369,7 +375,7 @@ func TestAdd(t *testing.T) {
 
 ### t.Helper() 和 t.Parallel()
 
-标准库中的 `testing` 包提供了很多有用的程序（函数）辅助测试，而不用导入之外的第三方包。其中我最喜欢的两个函数是 t.Helper() 和 t.Parallel()，它们都定义为 testing.T 接收者，是在 _test.go 文件中每个 Test 函数都需要的唯一的参数。
+标准库中的 `testing` 包提供了很多有用的程序（函数）辅助测试，而不用导入之外的第三方包。其中我最喜欢的两个函数是 `t.Helper()` 和 `t.Parallel()`，它们都定义为 `testing.T` 接收者，它是在 `_test.go` 文件中每个 `Test` 函数都必需的一个的参数。
 
 ### 清单 13
 
@@ -419,6 +425,6 @@ via: <https://www.ardanlabs.com/blog/2019/10/integration-testing-in-go-set-up-an
 
 作者：[George Shaw](https://github.com/george-e-shaw-iv/)
 译者：[TomatoAres](https://github.com/TomatoAres)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[lxbwolf](https://github.com/lxbwolf)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
