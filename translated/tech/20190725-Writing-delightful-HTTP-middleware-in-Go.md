@@ -1,6 +1,6 @@
-# 在Go中编写令人愉快的HTTP中间件 
+# 在Go中编写令人愉快的HTTP中间件
 
-在使用 go 编写复杂的服务时，您将遇到一个典型的主题是中间件。这个话题在网上被讨论了一次又一次。本质上，中间件为我们做了如下事情： 
+在使用 go 编写复杂的服务时，您将遇到一个典型的主题是中间件。这个话题在网上被讨论了一次又一次。本质上，中间件为我们做了如下事情：
 
 * 拦截`ServeHTTP`调用，执行任意代码
 * 对调用链（Continuation Chain) 上的请求/响应流进行更改
@@ -50,7 +50,7 @@ chain := MiddlewareHandlerFunc(HomeRouter).
   Intercept(NewElapsedTimeInterceptor()).
   Intercept(NewRequestIdInterceptor())
 
-// 像普通般注册 HttpHandler 
+// 像普通般注册 HttpHandler
 mux.Path("/home").HandlerFunc(http.HandlerFunc(chain))
 ```
 
