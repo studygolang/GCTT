@@ -1,22 +1,22 @@
-# 如何调用 Golang 中的私有函数（绑定到隐藏符号）
+# 如何调用 Golang 私有函数（绑定到隐藏符号）
 
-变量名称在 Golang 中的重要性和任何其他语言一样。它们甚至具有语义效应：包外部名称的可见性取决于它的第一个字符是否为大写。
+变量名称在 Golang 中的重要性和任何其他语言一样。它们甚至具有语义效应：包名称的外部可见性取决于它的第一个字符是否为大写。
 
-有时为了更好地组织代码，或者访问外部包中隐藏的函数，需要克服这个限制。
+有时为了更好地组织代码，或者访问包中对外隐藏的函数，需要突破这个限制。
 
-这些技术在 golang 源代码中大量使用，这是它的主要来源。互联网上关于这个话题的信息明显不足。
+这些技术 golang 源码中大量使用，这也是相关技术信息的主要来源。而网上相关信息明显不足。
 
 在过去，有两种方法可以绕过编译器检查：`cannot refer to unexported name pkg.symbol`（不能引用未导出的名称）:
 
-* 旧的那个，现在已经不用了——装配级隐式链接所需的符号，称为 `assembly stubs`, 比如： [go runtime, os/signal: use //go:linkname instead of assembly stubs to get access to runtime functions](https://groups.google.com/forum/#!topic/golang-codereviews/J0HK9GLc76M).
+* 之前的方法，现在已经不用了——配置隐式链接所需的符号，称为 `assembly stubs`, 比如： [go runtime, os/signal: use //go:linkname instead of assembly stubs to get access to runtime functions](https://groups.google.com/forum/#!topic/golang-codereviews/J0HK9GLc76M).
 
 * 现在实际使用的—— 编译器级别支持通过 `go:linkname` 链接名称重定向 ，详细信息来自 2014 年 11 月 11 日的文章——[dev.cc code review 169360043: cmd/gc: changes for removing runtime C code](https://groups.google.com/forum/#!topic/golang-codereviews/5Ps_El_RpNE)，github 上的这个 issue 也有提到—— [cmd/compile: “missing function body” error when using the //go:linkname compiler directive #15006](https://github.com/golang/go/issues/15006)
 
-使用这些技术，我已经设法绑定到内部 golang 运行时调度相关的功能，以突破使用 goroutines 线程中止和内部锁定机制。
+使用这些技术，我已经设法绑定到内部 golang 运行时调度相关的功能，以突破使用 `goroutines` 线程中止和内部锁定机制。
 
 ## 使用 `assembly stubs`
 
-方法很简单：组装时为需导出符号的打上显示存根（stub）的标记 `JMP`. 链接器不知道哪些信息需要导出，哪些不需要导出。
+方法很简单：组装时为需导出的符号打上显示存根（stub）的标记 `JMP`。因为链接器不知道哪些信息需要导出，哪些不需要导出。
 
 比如：旧版本中的 `src/os/signal/sig.s`
 
@@ -52,7 +52,7 @@ TEXT ·signal_recv(SB),NOSPLIT,$0
 
 `signal_unix.go` 绑定：
 
-```c
+```go
 // +build darwin dragonfly freebsd linux nacl netbsd openbsd solaris windows
 
 package signal
@@ -71,11 +71,11 @@ func signal_recv() uint32
 
 ## 使用 `go:linkname`
 
-为了使用这个功能，源文件必须 `import _“unsafe”` (导入 `unsafe` 包）。 为了突破 `-complete` go 编译器限制，有一个方法是：将空的程序集存根文件（assembly stub）放在主源文件附近以禁用此检查。
+为了使用这个功能，源文件必须 `import _"unsafe"` (导入 `unsafe` 包）。 为了跳过 `-complete` go 编译器限制，有一个方法是：将空的程序集存根文件（assembly stub）放在主源文件附近以禁用此检查。
 
 例如： `os/signal/sig.s`:
 
-```shell
+```go
 // The runtime package uses //go:linkname to push a few functions into this
 // package but we still need a .s file so the Go tool does not pass -complete
 // to the go tool compile so the latter does not complain about Go functions
@@ -195,7 +195,7 @@ func main() {
 via: <https://sitano.github.io/2016/04/28/golang-private/>
 
 作者：[JohnKoepi](https://sitano.github.io/)
-译者：[译者 ID](https://github.com/译者 ID)
-校对：[TomatoAres](https://github.com/TomatoAres)
+译者：[TomatoAres](https://github.com/TomatoAres)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
