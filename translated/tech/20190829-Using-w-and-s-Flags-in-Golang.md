@@ -1,6 +1,6 @@
 # 在 Golang 中使用 -w 和 -s 标志
 
-今天的博客文章来自 Valery，这是 [Spiral Scout](https://spiralscout.com/) 的一名高级软件工程师，专门从事 Golang（Go）开发。 
+今天的博客文章来自 Valery，这是 [Spiral Scout](https://spiralscout.com/) 的一名高级软件工程师，专门从事 Golang（Go）开发。
 作为在 Golang 以及许多其他编程语言方面具有专业知识的软件开发机构，
 我们知道对于我们的工程师和质量保证专家而言，能够与社区分享他们的知识和经验非常重要。 感谢 Valery 这篇出色的文章和有用的 Golang 测试技巧！
 
@@ -10,7 +10,7 @@
 
 本文致力于说明在 Go 中实现 `-w` 和 `-s` 标志的效果，并提供可以更有效地使用它们的方法。
 
-## `-w` 和 `-s` 标志如何与 DWARF 和 ELF 配合使用 
+## `-w` 和 `-s` 标志如何与 DWARF 和 ELF 配合使用
 
 在讨论何时以及如何使用 `-w` 和 `-s` 标志之前，先简要介绍一下我的测试环境。 我使用的硬件/软件组合包括：
 
@@ -64,7 +64,6 @@ go build -o simple_build cmd/main.go
 
 ![](https://cdn.jsdelivr.net/gh/studygolang/gctt-images2@master/using-w-and-s-flags-in-golang/objdump-pc.png)
 
-
 很棒。现在我们使用 `-w` 标志编译程序并且和不使用标志编译出来的程序进行比较。
 
 5. 运行下面的命令
@@ -89,7 +88,7 @@ dlv — listen=:43671 — headless=true — api-version=2 — accept-multiclient
 ... 返回了你所期待的结果：
 
 ```shell
-API server listening at: [::]:43671 
+API server listening at: [::]:43671
 could not launch process: could not open debug info
 ```
 
@@ -113,8 +112,6 @@ could not launch process: could not open debug info
 下面是一些有用的示例，说明在 Golang 中使用这些标志时**不执行哪些操作**。
 尽管两个标志似乎比一个标志好，但是对于 `-w` 和 `-s`标志，情况却并非如此：
 ![](https://cdn.jsdelivr.net/gh/studygolang/gctt-images2@master/using-w-and-s-flags-in-golang/github-search.png)
-
-
 
 ---
 
