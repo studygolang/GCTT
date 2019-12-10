@@ -2,6 +2,7 @@
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-How-Does-the-Garbage-Collector-Watch-Your-Application/1.png)
 
+<p align="center">Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.</p>
 >  这篇文章是基于Go的 *1.13* 版本
 
 Go 语言的垃圾收集器 （下文简称 GC ）能够帮助到开发者，通过自动地释放掉一些程序中不再需要使用的内存。但是，跟踪并清理掉这些内存也可能影响我们程序的性能。Go 语言的 GC 旨在实现 [这些目标](https://blog.golang.org/ismmkeynote) 并且关注如下几个问题：
@@ -10,7 +11,7 @@ Go 语言的垃圾收集器 （下文简称 GC ）能够帮助到开发者，通
 - 一个 GC 周期的时间要少于 10 毫秒。
 - 一次 GC 循环不能占用超过 25% 的 CPU 资源。
 
-这是一些很有挑战性的目标。
+这是一些很有挑战性的目标，如果 GC 从我们的程序中了解到足够多的信息，它就能去解决这些问题。
 
 ## 到达堆阈值
 
@@ -50,9 +51,9 @@ gc 9 @0.389s 0%: 0.005+0.11+0.007 ms clock, 0.041+0/0.090/0.11+0.062 ms cpu, 16-
 gc 10 @0.526s 0%: 0.046+0.24+0.014 ms clock, 0.37+0/0.14/0.23+0.11 ms cpu, 16->16->8 MB, 17 MB goal, 8 P
 ```
 
-第九个循环就是我们之前看到的那个循环，运行在第 389 ms 。有意思的部分是 `16->16->8 MB` ，它展示了在 GC 被调用前堆使用的内存有多大，以及在 GC 执行后它们还剩下多少。我们可以清楚地看到，当第八个循环将堆大小减少到8 MB 时，第九个 GC 周期将在16 MB 时刻触发。
+第九个循环就是我们之前看到的那个循环，运行在第 389 ms 。有意思的部分是 `16->16->8 MB` ，它展示了在 GC 被调用前堆使用的内存有多大，以及在 GC 执行后它们还剩下多少。我们可以清楚地看到，当第八个循环将堆大小减少到 8 MB 时，第九个 GC 周期将在 16 MB 时刻触发。
 
-这个阈值的比例由环境变量 GOGC 决定，默认值为100% —— 也就是说，在堆的大小增加了一倍之后，GC 就会被调用。出于性能原因，并且为了避免经常启动一个循环，当堆的大小低于4 MB * GOGC 的时候， GC 将不会被执行。——当 GOGC被设置为 100%时，在堆内存低于4 MB 时 GC 将不会被触发。
+这个阈值的比例由环境变量 GOGC 决定，默认值为 100 % —— 也就是说，在堆的大小增加了一倍之后，GC 就会被调用。出于性能原因，并且为了避免经常启动一个循环，当堆的大小低于 4 MB * GOGC 的时候， GC 将不会被执行。——当 GOGC 被设置为 100 % 时，在堆内存低于 4 MB 时 GC 将不会被触发。
 
 ## 到达时间阈值
 
@@ -72,37 +73,43 @@ GC 主要由两个主要阶段组成：
 - 标记仍在使用的内存
 - 交换未标记为使用中的内存
 
-在标记期间，Go 必须确保 GC 标记内存的速度比新分配内存的速度更快。事实是，如果 GC 正在标记4 MB 大小的内存，然而同时程序正在分配同样大小的内存，那么 GC 必须在完成后立即触发。
+在标记期间，Go 必须确保 GC 标记内存的速度比新分配内存的速度更快。事实是，如果 GC 正在标记 4 MB 大小的内存，然而同时程序正在分配同样大小的内存，那么 GC 必须在完成后立即触发。
 
 为了解决这个问题，Go 在标记内存的同时会跟踪新的内存分配，并关注 GC 何时过载。第一步在 GC 触发时执行，它会首先为每一个即将休眠的处理器准备一个 goroutine，等待标记阶段。
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-How-Does-the-Garbage-Collector-Watch-Your-Application/3.png)
 
+<p align="center">Goroutines for marking phase</p>
 跟踪器能够显示出这些 goroutines：
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-How-Does-the-Garbage-Collector-Watch-Your-Application/4.png)
 
+<p align="center">Goroutines for marking phase</p>
 一旦生成这些 goroutines 之后， GC 将会开始标记阶段，该阶段会检查应收集并清除哪些变量。被标记为`GC dedicated` 的 goroutines 会在没有抢占的情况下运行标记，而那些标记为`GC idle` 的 goroutines 则在工作，因为他们没有任何其他事情。那些可以被抢占。
 
 GC 现在已经能够去标记那些不再使用的变量。对于每一个被扫描到的变量，它会增加一个计数器，以便继续跟踪当前的工作并且也能够获得当前工作的快照。当一个 goroutine 在 GC 期间被安排了任务，Go 将会比较所需要的分配和已经扫描到的，以便对比扫描的速度和分配的需求。如果比较的结果是扫描内容较多，那么当前的 goroutine 并不需要去提供帮助。换句话说，如果扫描与分配相比有所欠缺，那么 Go 就会使用 goroutine来协助。这有一个图表来反应这个逻辑：
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-How-Does-the-Garbage-Collector-Watch-Your-Application/5.png)
 
-在我们的示例中，因为扫描 / 分配的差值为负数，所以 goroutine 14被请求工作：
+<p align="center">Mark assist based on scanning debt</p>
+在我们的示例中，因为扫描 / 分配的差值为负数，所以 goroutine 14 被请求工作：
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-How-Does-the-Garbage-Collector-Watch-Your-Application/6.png)
 
+<p align="center">Assistance for marking</p>
 ## CPU限制
 
-Go 语言 GC 的目标之一是不占用 25% 的CPU。这就意味着 Go 在标记阶段不应分配超过四分之一的处理器。实际上，这正是我们在前面的示例中所看到的，只有两个 goroutine超出了处理器的峰值，被 GC 充分利用：
+Go 语言 GC 的目标之一是不占用 25 % 的CPU。这就意味着 Go 在标记阶段不应分配超过四分之一的处理器。实际上，这正是我们在前面的示例中所看到的，只有两个 goroutine 超出了处理器的峰值，被 GC 充分利用：
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-How-Does-the-Garbage-Collector-Watch-Your-Application/7.png)
 
-正如我们所看到的，其他的 goroutine 仅在没有其他事情要做的情况下才会在标记阶段工作。但是，在 GC 的协助请求下，Go 程序可能会在高峰时间最终占用超过 25% 的 CPU ，如 goroutine 14 所示：
+<p align="center">Dedicated goroutine for marking phase</p>
+正如我们所看到的，其他的 goroutine 仅在没有其他事情要做的情况下才会在标记阶段工作。但是，在 GC 的协助请求下，Go 程序可能会在高峰时间最终占用超过 25 % 的 CPU ，如 goroutine 14 所示：
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-How-Does-the-Garbage-Collector-Watch-Your-Application/8.png)
 
-在我们的示例中，短时间内将我们处理器的 37.5% 分配给了标记阶段。这可能很少见，只有在分配很高的情况下才会发生。
+<p align="center">Mark assistance with dedicated goroutines</p>
+在我们的示例中，短时间内将我们处理器的 37.5 % 分配给了标记阶段。这可能很少见，只有在分配很高的情况下才会发生。
 
 
 
