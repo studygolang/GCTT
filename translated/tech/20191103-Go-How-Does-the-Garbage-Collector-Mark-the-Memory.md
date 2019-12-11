@@ -126,8 +126,6 @@ Go 提供的工具使我们可以对每一步进行可视化，观察 GC 在我�
 
 ![marking worker](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191103-Go-How-Does-the-Garbage-Collector-Mark-the-Memory/11.png)
 
-
-
 ----------------
 
 via: https://medium.com/a-journey-with-go/go-how-does-the-garbage-collector-mark-the-memory-72cfc12c6976
@@ -135,3 +133,4 @@ via: https://medium.com/a-journey-with-go/go-how-does-the-garbage-collector-mark
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent) 译者：[lxbwolf](https://github.com/lxbwolf) 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
+
