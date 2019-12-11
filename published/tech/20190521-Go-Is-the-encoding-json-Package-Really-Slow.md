@@ -2,7 +2,7 @@
 
 # Go 标准库 `encoding/json` 真的慢吗？
 
-![](https://github.com/studygolang/gctt-images2/blob/master/go-is-the-encoding-json-package-really-slow/A-Journey-With-Go.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-is-the-encoding-json-package-really-slow/A-Journey-With-Go.png)
 
 插图来自于“A Journey With Go”，由 Go Gopher 组织成员 Renee French 创作。
 
@@ -105,11 +105,11 @@ JsonUnmarshal      519B ± 0%      368B ± 0%  -29.09%
 
 想了解标准库性能较差的原因的最好的办法就是读源码，以下为 Go1.12 版本中 `json.Marshal` 函数的执行流程：
 
-![](https://github.com/studygolang/gctt-images2/blob/master/go-is-the-encoding-json-package-really-slow/json-marshal.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-is-the-encoding-json-package-really-slow/json-marshal.png)
 
 在了解了 `json.Marshal` 函数的执行流程后，再来比较下在 Go1.10 和 Go1.12 版本中的 `json.Marshal` 函数在实现上有什么变化。通过之前的测试，可以发现从 Go1.10 至 Go1.12 版本中的 `json.Marshal` 函数的内存消耗上有了很大的改善。从源码的变化中可以发现在 Go1.12 版本中的 `json.Marshal` 函数添加了 encoder（编码器）的内存缓存：
 
-![](https://github.com/studygolang/gctt-images2/blob/master/go-is-the-encoding-json-package-really-slow/json-marshal-diff.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/blob/master/go-is-the-encoding-json-package-really-slow/json-marshal-diff.png)
 
 在使用了 `sync.Pool` 缓存 encoder 后，`json.Marshal` 函数极大地减少了内存分配操作。实际上 `newEncodeState()` 函数在 Go1.10 版本中就[已经存在了](https://github.com/golang/go/commit/c0547476f342665514904cf2581a62135d2366c3#diff-e79d4db81e8544657cb631be813f89b4)，只不过没有被使用。为验证是添加了内存缓存带来了性能提升的猜想，可以在 Go1.10 版本中修改 `json.Marshal` 函数后，再进行测试：
 
@@ -128,7 +128,7 @@ go test encoding/json -bench=BenchmarkCodeMarshal -benchmem -count=10 -run=^$
 
 以下为 Go1.12 版本中，`json.Unmarshal` 函数的执行流程：
 
-![](https://github.com/studygolang/gctt-images2/blob/master/go-is-the-encoding-json-package-really-slow/json-unmarshal.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/blob/master/go-is-the-encoding-json-package-really-slow/json-unmarshal.png)
 
 `json.Unmarshal` 函数同样使用 `sync.Pool` 缓存了 decoder。
 对于 json 序列化和反序列化而言，其性能瓶颈是迭代、反射 json 结构中每个字段。
