@@ -111,8 +111,6 @@ Go 语言 GC 的目标之一是不占用 25 % 的CPU。这就意味着 Go 在标
 <p align="center">Mark assistance with dedicated goroutines</p>
 在我们的示例中，短时间内将我们处理器的 37.5 % 分配给了标记阶段。这可能很少见，只有在分配很高的情况下才会发生。
 
-
-
 ---
 
 via：https://medium.com/a-journey-with-go/go-how-does-the-garbage-collector-watch-your-application-dbef99be2c35
