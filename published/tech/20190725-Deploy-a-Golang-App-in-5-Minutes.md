@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/25297
+
 # 在 5 分钟之内部署一个 Go 应用
 
 在有些程序人写完了他们的 Go 应用之后，这总会成为一个大问题——“我刚写的这个 Go 应用，当它崩溃的时候我要怎么重启？”，因为你没法用 `go run main.go` 或者 `./main` 这样的命令让它持续运行，并且当程序崩溃的时候能够重启。
@@ -25,7 +27,6 @@ sudo addgroup --system supervisor
 （为了方便演示，我们会让代码简单些）
 
 ```go
-
 package main
 
 import (
@@ -144,7 +145,7 @@ var middleware = func(next http.Handler) http.Handler {
 }
 ```
 
-现在，如果我们想要用 Supervisor 来运行这个程序，我们需要构建程序的二进制文件。同时在项目的根目录下创建一个 .env 文件——如果你想把配置文件和项目放在一起的话，在这个文件中写上 MySQL 数据库需要的变量。
+现在，如果我们想要用 Supervisor 来运行这个程序，我们需要构建程序的二进制文件。同时在项目的根目录下创建一个 `.env` 文件 —— 如果你想把配置文件和项目放在一起的话，在这个文件中写上 MySQL 数据库需要的变量。
 
 将这个仓库克隆到你想要运行的服务器上。确保你遵循了 Go 目录路径的惯例：
 
@@ -156,7 +157,7 @@ Go 的这个命令最终会创建一个以项目根目录命名的二进制文�
 
 现在，在服务器上创建 Supervisor 的配置文件 `/etc/supervisor/conf.d`。
 
-```
+```bash
 #/etc/supervisor/conf.d/myapp.conf
 
 [program:myapp]
@@ -206,10 +207,8 @@ $ cat /var/log/myapp.log
 
 ---
 
-via:https://medium.com/@monirz/deploy-golang-app-in-5-minutes-ff354954fa8e
+via: https://medium.com/@monirz/deploy-golang-app-in-5-minutes-ff354954fa8e
 
 作者：[Monir Zaman](https://medium.com/@monirz)
-
 译者：[maxwellhertz](https://github.com/maxwellhertz)
-
-校对：校对者ID
+校对：[polaris1119](https://github.com/polaris1119)
