@@ -12,35 +12,35 @@
 
 在过去的几年，我曾经使用过以下语言：
 
-* Bash
-* IBM RPG
-* Java
-* Scala
-* C#
-* C++
-* Ruby
-* JavaScript, CoffeeScript
-* Clojure
-* Objective-C
-* Elixir
-* GO
+- Bash
+- IBM RPG
+- Java
+- Scala
+- C#
+- C++
+- Ruby
+- JavaScript, CoffeeScript
+- Clojure
+- Objective-C
+- Elixir
+- GO
 
 我说的使用并不是只读过一些教程，而是至少在一个生产项目上工作过一整年。
 
 如果算上一些练习程序、学生项目、训练营和研讨会，我使用过更多：
 
-* Pascal
-* PHP
-* Swift
-* Kotlin
-* Groovy
-* Python
-* TypeScript
-* Crystal
-* OCaml
-* MATLAB
-* Visual Basic
-* Solidity
+- Pascal
+- PHP
+- Swift
+- Kotlin
+- Groovy
+- Python
+- TypeScript
+- Crystal
+- OCaml
+- MATLAB
+- Visual Basic
+- Solidity
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/blob/master/how-to-choose-a-programming-language/2.jpg)
 
