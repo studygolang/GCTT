@@ -1,3 +1,5 @@
+ 首发于：https://studygolang.com/articles/25281
+ 
 # 使用 Hugo 和 Github Pages 创建你的开发者作品集
 
 拥有一个作品集网站可以使你在寻找一个开发外包时脱颖而出。作品集网站可以让潜在的客户或雇主了解你是一个专家，了解你过去和正在做的工作。不幸的是，一些常见的困难阻碍了许多人拥有作品集网站，包括最近的我--害怕所有的工作，计划并且从一个草图中构建一个网站，选择一个主机提供商，如果你想域名可用，那些主机和域名会让你破费（特别当你缺钱的时候）等等。
@@ -32,40 +34,40 @@
    hugo new site <PORTFOLIO_NAME>
    ```
 
-4. 使用 `cd` 命令进入刚新生成的文件夹并且初始化为一个 git 仓库。
+4. 使用 `cd` 命令进入刚新生成的文件夹并且初始化为一个 Git 仓库。
 
    ```shell
-   cd <PORTFOLIO_NAME> && git init
+   cd <PORTFOLIO_NAME> && Git init
    ```
 
 ## 第二步：选择并添加一个主题
 
-1. 前往 [Hugo的作品集主题页](https://themes.gohugo.io/tags/portfolio/) 然后选择一个你喜欢的主题。在本篇教程中，我选择了一个叫做 [UILite](https://themes.gohugo.io/tags/portfolio/) 的主题。它简洁，看起来相当酷而且满足一个作品集的基本需求。当然那儿也有很多其他很酷的主题可供选择。
+1. 前往 [Hugo 的作品集主题页](https://themes.gohugo.io/tags/portfolio/) 然后选择一个你喜欢的主题。在本篇教程中，我选择了一个叫做 [UILite](https://themes.gohugo.io/tags/portfolio/) 的主题。它简洁，看起来相当酷而且满足一个作品集的基本需求。当然那儿也有很多其他很酷的主题可供选择。
    UILite 主题看起来像这样。
    ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/create-your-developer-portfolio-using-hugo-and-github-pages-35en/pic1.png)
 
-2. 把这个主题作为一个 git 子模块添加到 `<PORTFOLIO_NAME>`。这步因主题不同而异，但差不多都鼓励作为一个子模块来使用主题。你可以通过下面的命令添加主题：
+2. 把这个主题作为一个 Git 子模块添加到 `<PORTFOLIO_NAME>`。这步因主题不同而异，但差不多都鼓励作为一个子模块来使用主题。你可以通过下面的命令添加主题：
 
    ```shell
-   git submodule add <LINK_TO_THEME_REPO> themes/<THEME_NAME>
+   Git submodule add <LINK_TO_THEME_REPO> themes/<THEME_NAME>
    ```
 
    在我们的例子中需要这样：
 
    ```shell
-   git submodule add https://github.com/uicardiodev/hugo-uilite themes/hugo-uilite
+   Git submodule add https://github.com/uicardiodev/hugo-uilite themes/hugo-uilite
    ```
 
 3. 在已经自动生成的 **config.toml** 文件中指明你将在你的作品集网站中使用的 `<THEME_NAME>`。这个 **config.toml** 文件允许你对于你的整个站点进行详细设定。
 
    ```shell
-   echo 'theme = "<THEME_NAME>"' >> config.toml
+   Echo 'theme = "<THEME_NAME>"' >> config.toml
    ```
 
    对于我们的主题，我们这样写：
 
    ```shell
-   echo 'theme = "hugo-uilite"' >> config,toml
+   Echo 'theme = "hugo-uilite"' >> config,toml
    ```
 
    在这一步的最后，你的 **config.toml** 文件应该看起来像这个样子：
@@ -165,7 +167,7 @@
 6. 然后我们需要把本地编辑站点生成的 `public` 文件夹与我们创建的 `<USERNAME>.github.io` 仓库连接起来。我们会使 `<USERNAME>.github.io` 仓库作为 public 文件夹的远程源，并且使 `public` 文件夹作为我们 `<PORTFOLIO_NAME>` 项目的一个子模块。运行下面这个命令：
 
    ```shell
-   git submodule add -b master git@github.com:<USERNAME>/<USERNAME>.github.io.git public
+   Git submodule add -b master git@github.com:<USERNAME>/<USERNAME>.github.io.git public
    ```
 
 7. 我们可能会经常修改我们的站点，那么就需要能够在更改后能够很容易的进行我们作品集的部署。 Hugo 提供了一个能够把你的更改推送到源（带有可选的提交信息）并且部署作品集网站的脚本。它可以被添加到你的 `<PORTFOLIO_NAME>` 项目中并且当你做出更改后只要简单的运行一下就可以了。脚本叫做 **deploy.sh** ，在 [这里](https://gohugo.io/hosting-and-deployment/hosting-on-github/#put-it-into-a-script) 。如果你已经复制好了这个脚本，在第一次部署的时候你需要做的事情就是：
@@ -197,8 +199,8 @@
 
 via: https://dev.to/zaracooper/create-your-developer-portfolio-using-hugo-and-github-pages-35en
 
-作者：[Zara Cooper ](http://github.com/zaracooper)
+作者：[Zara Cooper](http://github.com/zaracooper)
 译者：[Ollyder](https://github.com/Ollyder)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
