@@ -1,12 +1,14 @@
+首发于：https://studygolang.com/articles/25290
+
 # 从 Travis 迁移至 GitHub Actions
 
 周末的时候，我决定将我 Go 语言的开源项目 [Flipt](https://github.com/markphelps/flipt) 的 CI 流程从 TravisCI 转移到 GitHub Actions，我想要替换我现有的 CI，并尝试使用新的 GitHub Actions 将手动发版过程自动化。
 
-*说明*：我在 GitHub 工作，但不在 Actions 团队。我想在我的开源项目中配置 Actions，并且不从 Actions 团队或 GitHub 的任何人那里获得任何帮助。我没有被 Github 的同事要求写这篇文章，我的目的是简单，以一个用户的经验来使用这个平台。仅代表个人观点和想法。
+*说明*：我在 GitHub 工作，但不在 Actions 团队。我想在我的开源项目中配置 Actions，并且不从 Actions 团队或 GitHub 的任何人那里获得任何帮助。我没有被 Github 的同事要求写这篇文章，我的目的很简单，以一个用户的经验来使用这个平台。仅代表个人观点和想法。
 
 不用说，经过我几个小时的调试，我成功了[twitter 链接](https://twitter.com/mark_a_phelps/status/1172935552947118081?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1172935552947118081&ref_url=https%3A%2F%2Fmarkphelps.me%2F2019%2F09%2Fmigrating-from-travis-to-github-actions%2F)。
 
-![推特截图](https://i.loli.net/2019/11/30/BDy3YCr5ZwgEbdL.png)
+![推特截图](https://raw.githubusercontent.com/studygolang/gctt-images/master/migrating-from-travis-to-action/BDy3YCr5ZwgEbdL.png)
 
 ## 管道
 
@@ -17,7 +19,7 @@
 . 推送 tag 后，我想触发 [goreleaser](https://github.com/goreleaser/goreleaser) 来构建一个 Docker 镜像并推送到 [Docker Hub](https://hub.docker.com/r/markphelps/flipt)，同时打包一个发版的压缩文件
 . 在新版本更新文档时更新 [文档网站](https://flipt.dev/)
 
-前两个步骤主要的 TravisCI 工作是在这个 [config文件](https://github.com/markphelps/flipt/blob/90bafa834aec29cdaa3620b8ea30aa89466fe7d0/.travis.yml)配置的，虽然有一些差异:
+前两个步骤主要的 TravisCI 工作是在这个 [config 文件](https://github.com/markphelps/flipt/blob/90bafa834aec29cdaa3620b8ea30aa89466fe7d0/.travis.yml)配置的，虽然有一些差异:
 
 1. 我只测试了 Go 一个版本 (1.12.x)，我知道我可以使用 travis-ci 的 [matrix](https://docs.travis-ci.com/user/build-matrix/)设置来测试多个版本，只是我从来没有这样去用。
 2. 我只针对 PR 在 Postgres DB 实体环境上运行测试，
@@ -33,7 +35,7 @@
 
 我(最终)把它连接起来作为发布工作流程的最后一步:
 
-```sh
+```bash
 name: Publish Docs
 uses: ./.github/actions/publish-docs
 env:
@@ -46,11 +48,11 @@ env:
 
 接下来我做的是让管道的单元测试部分运作起来。因为 [Flipt](https://github.com/markphelps/flipt) 是一个服务端应用程序，所以我目前只针对 Linux 环境，因此我不需要测试 Windows 或 MacOS 环境。虽然我知道 Actions 很酷并且也支持 😉。
 
-然而，我确实希望能够使用多个版本的 Go 进行测试(撰写本文时为 1.12 和 1.13 )。Actions的 [matrix strategy]矩阵策略特性让这一切变得超级简单。
+然而，我确实希望能够使用多个版本的 Go 进行测试(撰写本文时为 1.12 和 1.13 )。Actions 的 [matrix strategy]矩阵策略特性让这一切变得超级简单。
 
 对于我的 workflow 工作流，它看起来像这样:
 
-```sh
+```bash
 test:
   name: Test
   runs-on: ubuntu-latest
@@ -64,7 +66,7 @@ test:
 
 稍后在工作流文件中，我创建了一个步骤，这些值来将被用来在虚拟机上安装可用版本的 Go:
 
-```sh
+```bash
 steps:
 - name: Setup Go
   uses: actions/setup-go@v1
@@ -73,9 +75,9 @@ steps:
   id: go
 ```
 
-它使用 [actions/setup-go](https://github.com/actions/setup-go) action 来安装我们指定的Go版本。这很酷。
+它使用 [actions/setup-go](https://github.com/actions/setup-go) action 来安装我们指定的 Go 版本。这很酷。
 
-实际上，我几乎立刻就看到了使用多个 Go 版本运行测试的好处，因为 Go 1.13增 加了一些新功能，我的一些测试代码已经无法通过。
+实际上，我几乎立刻就看到了使用多个 Go 版本运行  测试的好处，因为 Go 1.13 增 加了一些新功能，我的一些测试代码已经无法通过。
 
 查看发布说明:
 
@@ -97,7 +99,7 @@ steps:
 
 事实证明，`services` 指令正是我所需要的:
 
-```sh
+```bash
 services:
   postgres:
     image: postgres:11
@@ -119,7 +121,7 @@ services:
 
 同样，看起来 Actions 的虚拟机并没有安装 bats，但是 GitHub Actions 的 fork 版本似乎已经意识到到了这一点，可以构建了一个你可以在工作流程中引用的 [bats action](https://github.com/actions/bin/tree/master/bats)。我就是这么做的:
 
-```sh
+```bash
 - name: Test CLI
   uses: actions/bin/bats@master
   with:
@@ -147,9 +149,9 @@ services:
 
 我已经在本地[使用脚本](https://github.com/markphelps/flipt/blob/c82b47b7522caf80bc3f5219ea62e9e37c416dd2/script/build/release)运行，这意味着在调用脚本之前，我必须在本地机器上设置 `GITHUB_TOKEN`、`DOCKER_USERNAME` 和 `DOCKER_PASSWORD`。
 
-为了将这个过程转移到 GitHub Actions 操作，我需要一种安全的方法来存储这些值并将它们注入到工作流中。幸运的是 GitHub 也为我们提供了对[保密](https://help.github.com/en/articles/virtual-environments-for-github-actions#creating-and-using-secrets-encrypted-variables)的支持:
+为了将这个过程转移到 GitHub Actions 操作，我需要一种安全的方法来存储这些值并将它们注入到工作流中。幸运的是 GitHub 也为我们提供了对[保密](https://help.github.com/en/articles/virtual-environments-for-github-actions#creating-and-using-secrets-encrypted-variables)的  支持:
 
-```sh
+```bash
 - name: Release
   run: ./script/build/release
   env:
@@ -162,7 +164,7 @@ services:
 
 ## 小结
 
-如果你决定迁移你的 pipelines 管道，这里有一些 ProTips™，可以帮助你:
+如果你决定迁移你的 pipelines 管道，这里有一些 ProTips ™，可以帮助你:
 
 1. **从简单的开始**。不要试图一下就替换掉整个 CI/CD 方案。看看是否有一些可以先迁移的非关键任务。
 2. **保证现有 CI 系统正常运行**。这个不用说，不要删除你的 `travis.yml` 文件，直到你确信新的 Actions 设置一切运行正常。
@@ -173,10 +175,12 @@ services:
 
 我引用的所有工作流文件都可以在[这里](https://github.com/markphelps/flipt/tree/master/.github/workflows)找到。
 
+---
+
 via: https://www.markphelps.me/2019/09/migrating-from-travis-to-github-actions/
 
-作者：[Mark Phelps ](https://www.markphelps.me/) <br>
-译者：[M1seRy](https://github.com/M1seRy) <br>
-校对：[校对者ID](https://github.com/校对者ID)
+作者：[Mark Phelps](https://www.markphelps.me/)
+译者：[M1seRy](https://github.com/M1seRy)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
