@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/25294
+
 # Go 微服务中的熔断器和重试
 
 今天我们来讨论微服务架构中的自我恢复能力。通常情况下，服务间会通过同步或异步的方式进行通信。我们假定把一个庞大的系统分解成一个个的小块能将各个服务解耦。管理服务内部的通信可能有点困难了。你可能听说过这两个著名的概念：熔断和重试。
@@ -206,7 +208,7 @@ func callWithRetryV1() (err error) {
 
 ---
 
-https://medium.com/@trongdan_tran/circuit-breaker-and-retry-64830e71d0f6
+via: https://medium.com/@trongdan_tran/circuit-breaker-and-retry-64830e71d0f6
 
 作者：[Dan Tran](https://medium.com/@trongdan_tran)
 译者：[lxbwolf](https://github.com/lxbwolf)
