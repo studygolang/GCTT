@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/25292
+
 # Go：协程，操作系统线程和 CPU 管理
 
-![Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.](https://github.com/studygolang/gctt-images2/blob/master/go-goroutines-os-thread-and-cpu-management/00.png?raw=true)
+![Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-goroutines-os-thread-and-cpu-management/00.png)
 
 ℹ️ *本文运行环境为 Go 1.13*
 
@@ -10,7 +12,7 @@
 
 为了解决这个问题，Go 有它自己的在线程间调度协程的调度器。这个调度器定义了三个主要概念，如源码中解释的这样：
 
-```go
+```
 The main concepts are:
 G - goroutine.
 M - worker thread, or machine.
@@ -51,7 +53,7 @@ func main() {
 
 ![OS thread creation](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-goroutines-os-thread-and-cpu-management/03.png)
 
-然而，像 `P` 那样，系统调用返回的甚至被 gc 强行停止的空闲的`M` — 比如没有协程在等待运行 — 也会被加到一个空闲 list：
+然而，像 `P` 那样，系统调用返回的甚至被 gc 强行停止的空闲的 `M` — 比如没有协程在等待运行 — 也会被加到一个空闲 list：
 
 ![M and P idle list](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-goroutines-os-thread-and-cpu-management/04.png)
 
@@ -137,14 +139,14 @@ func main() {
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-goroutines-os-thread-and-cpu-management/09.png)
 
-由于Go 优化了线程使用，所以当协程阻塞时，它仍可复用，这就解释了为什么图中的数跟示例代码循环中的数不一致。
+由于 Go 优化了线程使用，所以当协程阻塞时，它仍可复用，这就解释了为什么图中的数跟示例代码循环中的数不一致。
 
-----------------
+---
 
 via: https://medium.com/a-journey-with-go/go-goroutine-os-thread-and-cpu-management-2f5a5eaf518a
 
-作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent) <br>
-译者：[lxbwolf](https://github.com/lxbwolf) <br>
-校对：[校对者ID](https://github.com/校对者ID)
+作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
+译者：[lxbwolf](https://github.com/lxbwolf)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
