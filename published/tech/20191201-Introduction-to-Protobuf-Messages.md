@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/25295
+
 # Go 语言 Protobuf 教程之 Message
 
 在序列化结构数据的各种方式中，protocol buffer（或 protobuf）是资源开销最小的一种。protobuf 需要客户端和服务端都知道数据结构而且兼容，不像 JSON 那样结构本身就是编码的一部分。
@@ -44,7 +46,7 @@ type ListThreadRequest struct {
 - 对字段重命名在 JSON 中是破坏性改动
 - 修改字段的类型在 protobuf 中是破坏性改动，在大部分 JSON 中也是
 - JSON 中修改数字类型如 uint16 改为 uint32 通常是安全的
-- 如果你调用 javascript 的 API，JSON 和 unit64 不建议使用
+- 如果你调用 JavaScript 的 API，JSON 和 unit64 不建议使用
 
 因此，如果你开发过程中需要修改 protobuf message 的定义，请保持客户端和服务端的同步。如果你用移动客户端（Android 和 iPhone）调用 protobuf API，那么这（保持同步）将尤其重要，因为做了重大变更后是有破坏性影响的。增加新的字段或删除字段是修改 API 最安全的方式，这样 protobuf 定义能保持兼容。
 
@@ -79,11 +81,11 @@ message PushResponse {}
 1. 安装 Drone CI drone-cli
 2. 安装 `protoc` 和 `protoc-gen-go` 的 docker 环境
 3. 长远着想，加一个 `Makefile` 文件
-4. 加一个 `.drone.yml` 配置文件，写明生成 go 代码的构建步骤
+4. 加一个 `.drone.yml` 配置文件，写明生成 Go 代码的构建步骤
 
 ### 安装 Drone CI
 
-安装 drone-cli 很简单。如果你使用的是 amd64 linux 机器，执行下面的命令。或者从 [drone/drone-cli](https://github.com/drone/drone-cli) 发布页拉取你需要的版本解包到你机器的 `/usr/local/bin` 或通用的执行路径。
+安装 drone-cli 很简单。如果你使用的是 amd64 Linux 机器，执行下面的命令。或者从 [drone/drone-cli](https://github.com/drone/drone-cli) 发布页拉取你需要的版本解包到你机器的 `/usr/local/bin` 或通用的执行路径。
 
 ```bash
 cd /usr/local/bin
@@ -102,7 +104,7 @@ FROM golang:1.13
 ENV PB_VER 3.10.1
 ENV PB_URL https://github.com/google/protobuf/releases/download/v${PB_VER}/protoc-${PB_VER}-linux-x86_64.zip
 
-RUN apt-get -qq update && apt-get -qqy install curl git make unzip gettext rsync
+RUN apt-get -qq update && apt-get -qqy install curl Git make unzip gettext rsync
 
 RUN mkdir -p /tmp/protoc && \
     curl -L ${PB_URL} > /tmp/protoc/protoc.zip && \
@@ -115,10 +117,10 @@ RUN mkdir -p /tmp/protoc && \
     rm -r /tmp/protoc
 
 # Get the source from GitHub
-RUN go get -u google.golang.org/grpc
+RUN Go get -u google.golang.org/grpc
 
 # Install protoc-gen-go
-RUN go get -u github.com/golang/protobuf/protoc-gen-go
+RUN Go get -u github.com/golang/protobuf/protoc-gen-go
 ```
 
 在 `Makefile` 中实现 `make && make push` ，这样就可以快速构建和发布我们的镜像到 docker 注册中心。本例中的镜像发布在 `titpetric/microservice-build`，但我建议这里你用自己的镜像来操作。
@@ -170,9 +172,9 @@ steps:
   pull: always
   commands:
     - protoc --proto_path=$GOPATH/src:. -Irpc/stats --go_out=paths=source_relative:. rpc/stats/stats.proto
-    - go mod tidy > /dev/null 2>&1
-    - go mod download > /dev/null 2>&1
-    - go fmt ./... > /dev/null 2>&1
+    - Go mod tidy > /dev/null 2>&1
+    - Go mod download > /dev/null 2>&1
+    - Go fmt ./... > /dev/null 2>&1
 ```
 
 这几步操作是为了处理我们的 go.mod/go.sum 文件，在我们的基础代码上运行 `go fmt` 也是。
@@ -202,14 +204,12 @@ steps:
 - [API Foundations in Go](https://leanpub.com/api-foundations)
 - [12 Factor Apps with Docker and Go](https://leanpub.com/12fa-docker-golang)
 
-后面为广告， 不再翻译
-
-----------------
+---
 
 via: https://scene-si.org/2019/12/01/introduction-to-protobuf-messages/
 
 作者：[Tit Petric](http://github.com/titpetric)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
