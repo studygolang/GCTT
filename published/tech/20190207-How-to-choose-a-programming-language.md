@@ -29,7 +29,7 @@
 
 如果算上一些练习程序、学生项目、训练营和研讨会，我使用过更多：
 
-* Pascal
+- Pascal
 - PHP
 - Swift
 - Kotlin
