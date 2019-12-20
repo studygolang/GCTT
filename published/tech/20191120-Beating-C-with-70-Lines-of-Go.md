@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/25291
+
 # 用 70 行 Go 代码击败 C 语言
 
 Chris Penner 最近发布的一篇文章 [Beating C with 80 Lines of Haskell](https://chrispenner.ca/posts/wc) 引发了 Internet 领域内广泛的论战，进而引发了一场用不同语言实现 `wc` 的圣战：
@@ -14,13 +16,13 @@ Chris Penner 最近发布的一篇文章 [Beating C with 80 Lines of Haskell](ht
 
 虽然 `wc` 也被设计为从 stdin 读取信息，处理 non-ASCII 文本编码，从命令行解析 flags（[manpage](https://ss64.com/osx/wc.html)），但我们并不去这样做。我们要做的是，像前面提到的那篇文章一样，让我们的实现尽可能简单。
 
-本文涉及的源码可以在 [这里](https://github.com/ajeetdsouza/blog-wc-go) 可以找到。
+本文涉及的源码可以在 [这里](https://github.com/ajeetdsouza/blog-wc-go) 找到。
 
 ```bash
 $ /usr/bin/time -f "%es %MKB" wc test.txt
 ```
 
-我们使用 [与原文相同版本的 `wc`](https://opensource.apple.com/source/text_cmds/text_cmds-68/wc/wc.c.auto.html) ，用 gcc 9.2.1 编译，编译优化选项为 `-O3`。在我们的实现中，使用 go 1.13.4（我确实也试过用 gccgo，但结果不是很理想）。我们用以下配置来运行所有的基准：
+我们使用 [与原文相同版本的 `wc`](https://opensource.apple.com/source/text_cmds/text_cmds-68/wc/wc.c.auto.html) ，用 gcc 9.2.1 编译，编译优化选项为 `-O3`。在我们的实现中，使用 Go 1.13.4（我确实也试过用 gccgo，但结果不是很理想）。我们用以下配置来运行所有的基准：
 
 - Intel Core i5-6200U @ 2.30 GHz (2 physical cores, 4 threads)
 - 4+4 GB RAM @ 2133 MHz
@@ -231,7 +233,7 @@ chunks := make(chan Chunk)
 counts := make(chan Count)
 
 for i := 0; i < numWorkers; i++ {
-    go ChunkCounter(chunks, counts)
+    Go ChunkCounter(chunks, counts)
 }
 ```
 
@@ -344,7 +346,7 @@ fileReader := &FileReader{
 counts := make(chan Count)
 
 for i := 0; i < numWorkers; i++ {
-    go FileReaderCounter(fileReader, counts)
+    Go FileReaderCounter(fileReader, counts)
 }
 
 totalCount := Count{}
@@ -375,12 +377,10 @@ close(counts)
 
 ---
 
-via: https://ajeetdsouza.github.io/blog/posts/beating-c-with-70-lines-of-go/ <br>
+via: https://ajeetdsouza.github.io/blog/posts/beating-c-with-70-lines-of-go/
 
-作者： [Ajeet D'Souza](https://ajeetdsouza.github.io/blog/) <br>
-
-译者： [lxbwolf](https://github.com/lxbwolf) <br>
-
-校对：[校对者ID](https://github.com/校对者ID)
+作者：[Ajeet D'Souza](https://ajeetdsouza.github.io/blog/)
+译者：[lxbwolf](https://github.com/lxbwolf)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
