@@ -22,7 +22,7 @@
 
 在我们仔细查看 `-w` 标志并拆解二进制代码以检查 DWARF 符号表是否消失之前，我建议先明确 DWARF 符号表的定义。
 
-DWARF 是一种可以包含在二进制文件中的调试数据格式。 根据维基百科 [DWARF 条目](https://en.wikipedia.org/wiki/DWARF)，此格式是与称为 ELF（可执行和可链接格式）的标准通用文件格式一起开发的。 [这篇文章](https://eli.thegreenplace.net/2011/02/07/how-debuggers-work-part-3-debugging-information/) 在很好地解释了调试器如何与 DWARF 表配合工作。
+DWARF 是一种可以包含在二进制文件中的调试数据格式。 根据维基百科 [DWARF 条目](https://en.wikipedia.org/wiki/DWARF)，此格式是与称为 ELF（可执行和可链接格式）的标准通用文件格式一起开发的。 [这篇文章](https://eli.thegreenplace.net/2011/02/07/how-debuggers-work-part-3-debugging-information/) 很好地解释了调试器如何与 DWARF 表配合工作。
 
 Golang 的创建者们在 [Go DWARF 源代码](https://golang.org/src/cmd/link/internal/ld/dwarf.go) 中分享了更多信息，包括有关如何形成此表并将其嵌入以 Go 编写的二进制文件的详细信息。
 
@@ -109,7 +109,7 @@ could not launch process: could not open debug info
 
 如果只想删除调试信息，只使用 `-w` 标志是最合适的。如果要另外删除符号和字符串表以减小二进制文件的大小，请使用 `-s` 标志。
 
-下面是一些有用的示例，说明在 Golang 中使用这些标志时**不执行哪些操作**。
+下面是在 Golang 中使用这些 flag 的的**反面教材**，不建议大家这样使用。
 尽管两个标志似乎比一个标志好，但是对于 `-w` 和 `-s`标志，情况却并非如此：
 ![](https://cdn.jsdelivr.net/gh/studygolang/gctt-images2@master/using-w-and-s-flags-in-golang/github-search.png)
 
