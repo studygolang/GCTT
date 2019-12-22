@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/25537
+
 # Go 字符串中的潜在问题
 
 在我之前的文章 [Go 中我喜欢的东西](https://utcc.utoronto.ca/~cks/space/blog/programming/GoThingsILike)中提到过，我喜欢的 [Go](https://golang.org/) 的东西其中之一就是它的字符串（通常还有切片）。从一个 Python 开发者的角度看，它们之所以伟大，是因为创建它们时开销很少，因为它们通常不需要复制。在 Python 中，任何时候操作字符串都需要复制一部分或全部字符串，而 [这很容易对性能造成影响](https://utcc.utoronto.ca/~cks/space/blog/python/StringSpeedSurprises)。想要写高性能的 Python 代码需要谨慎考虑复制的问题。在 Go 中，几乎所有的字符串操作都是不复制的，仅仅是从原字符串取一个子集（例如去除字符串首尾的空白字符），因此你可以更自由地操作字符串。这个机制可以非常直接地解决你的问题，并且非常高效。
@@ -18,12 +20,12 @@
 
 所有的主动转换函数像 `ToUpper()` 和 `ToTitle()` 是用 `strings.Map()` 和 [unicode 包](http://golang.org/pkg/unicode/) 中的函数实现的。`Map()` 足够智能，在映射的函数返回一个与已存在的 `rune` 不同的结果之前不会创建新的字符串。因此，你代码中所有类似的直接使用 `Map()` 的地方都不会有内存开销。
 
-----------------
+---
 
 via: https://utcc.utoronto.ca/~cks/space/blog/programming/GoStringsMemoryHolding
 
 作者：[Chris Siebenmann](https://utcc.utoronto.ca/~cks/space/People/ChrisSiebenmann)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[dingdingzhou](https://github.com/dingdingzhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
