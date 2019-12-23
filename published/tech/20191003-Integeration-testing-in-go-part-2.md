@@ -1,8 +1,10 @@
+首发于：https://studygolang.com/articles/25564
+
 # Go 语言中的集成测试：第二部分 - 设计和编写测试
 
 ## 序幕
 
-这篇文章是集成测试系列两个部分中的第二部分。你可以先读 [第一部分：使用 Docker 在有限的环境中执行测试](https://www.ardanlabs.com/blog/2019/03/integration-testing-in-go-executing-tests-with-docker.html)。本文中的示例可以从 [代码仓库](https://github.com/george-e-shaw-iv/integration-tests-example) 获取。
+这篇文章是集成测试系列两个部分中的第二部分。你可以先读 [第一部分：使用 Docker 在有限的环境中执行测试](https://studygolang.com/articles/21759)。本文中的示例可以从 [代码仓库](https://github.com/george-e-shaw-iv/integration-tests-example) 获取。
 
 ## 简介
 
@@ -30,7 +32,7 @@ Go 测试工具提供了有在执行测试函数前执行代码的能力，使�
 
 ### 代码清单 1
 
-```golang
+```go
 func SeedLists(dbc *sqlx.DB) ([]list.List, error) {
     now := time.Now().Truncate(time.Microsecond)
 
@@ -83,7 +85,7 @@ func SeedLists(dbc *sqlx.DB) ([]list.List, error) {
 
 ### 代码清单 2
 
-```golang
+```go
 func SeedItems(dbc *sqlx.DB, lists []list.List) ([]item.Item, error) {
     now := time.Now().Truncate(time.Microsecond)
 
@@ -140,7 +142,7 @@ func SeedItems(dbc *sqlx.DB, lists []list.List) ([]item.Item, error) {
 
 ### 代码清单 3
 
-```golang
+```go
 func Truncate(dbc *sqlx.DB) error {
     stmt := "TRUNCATE TABLE list, item;"
 
@@ -156,22 +158,21 @@ func Truncate(dbc *sqlx.DB) error {
 
 ## 使用 testing.M 创建 TestMain
 
-使用便于`填充/清除`数据库的软件包后，该集中精力配置以运行真正的集成测试了。Go 自带的测试工具可以让你在 `TestMain` 函数中定义需要的行为，在测试函数执行前执行。
+使用便于 ` 填充/清除 ` 数据库的软件包后，该集中精力配置以运行真正的集成测试了。Go 自带的测试工具可以让你在 `TestMain` 函数中定义需要的行为，在测试函数执行前执行。
 
 ### 代码清单 4
 
-```golang
+```go
 func TestMain(m *testing.M) {
     os.Exit(testMain(m))
 }
 ```
 
-<!-- markdown 代码行号问题 -->
 代码清单 4 是 `TestMain` 函数，它在所有集成测试之前执行。在 23 行，叫做 `testMain` 的未导出的函数被 `os.Exit` 调用。这样做是为了 `testMain` 可以执行其中的延迟函数，并且仍可以在 `os.Exit` 调用内部设置适当的整数值。以下是 `testMain` 函数的实现。
 
 ### 代码清单 5
 
-```golang
+```go
 func testMain(m *testing.M) int {
     dbc, err := testdb.Open()
     if err != nil {
@@ -186,7 +187,7 @@ func testMain(m *testing.M) int {
 }
 ```
 
-在代码清单 5 中，你可以看到 `testMain` 只有 8 行代码。28 行，函数调用 `testdb.Open()` 开始建立数据库连接。此调用的配置参数在 `testdb` 包中设置为常量。重要的是要注意，如果测试用的数据库未运行，调用 `Opne` 连接数据库会失败。该测试数据库是由 `docker-compose` 创建提供的，详细说明在本系列的第 1 部分中（单击 [这里](https://www.ardanlabs.com/blog/2019/03/integration-testing-in-go-executing-tests-with-docker.html) 阅读第 1 部分）。
+在代码清单 5 中，你可以看到 `testMain` 只有 8 行代码。28 行，函数调用 `testdb.Open()` 开始建立数据库连接。此调用的配置参数在 `testdb` 包中设置为常量。重要的是要注意，如果测试用的数据库未运行，调用 `Opne` 连接数据库会失败。该测试数据库是由 `docker-compose` 创建提供的，详细说明在本系列的第 1 部分中（单击 [这里](https://studygolang.com/articles/21759) 阅读第 1 部分）。
 
 成功连接测试数据库后，连接将传递给 `handlers.NewApplication()`，并且此函数的返回值用于初始化的包级变量 `*handlers.Application` 类型。`handlers.Application` 类型是这个项目自定义的结构体，有用于 `http.Handler` 接口的字段，以简化 Web 服务的路由以及对已创建的数据库连接的引用。
 
@@ -196,11 +197,11 @@ func testMain(m *testing.M) int {
 
 集成测试将多个代码单元以及所有集成服务（例如数据库）组合在一起，并测试各个单元的功能以及各个单元之间的关系。为 Web 服务编写集成测试通常意味着每个集成测试的所有入口点都是一个路由。`http.Handler` 接口是任何 Web 服务的必需组件，它包含的 `ServeHTTP` 函数使我们能够利用应用程序中定义的路由。
 
-在 web 服务的集成测试中，构建初始化数据并且以 go 类型返回初始数据，对返回的响应体的结构进行断言非常有用。在接下来的代码清单中，我将一个典型的 API 路由集成测试分解成几个不同的部分。第一步是使用代码清单 1 和代码清单 2 中定义的种子数据。
+在 Web 服务的集成测试中，构建初始化数据并且以 Go 类型返回初始数据，对返回的响应体的结构进行断言非常有用。在接下来的代码清单中，我将一个典型的 API 路由集成测试分解成几个不同的部分。第一步是使用代码清单 1 和代码清单 2 中定义的种子数据。
 
 ### 清单 6
 
-```golang
+```go
 func Test_getItems(t *testing.T) {
     defer func() {
         if err := testdb.Truncate(a.DB); err != nil {
@@ -224,7 +225,7 @@ func Test_getItems(t *testing.T) {
 
 ### 清单 7
 
-```golang
+```go
 // Application is the struct that contains the server handler as well as
 // any references to services that the application needs.
 type Application struct {
@@ -239,11 +240,11 @@ func (a *Application) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 ```
 
-为了调用注册的路由，`Application` 类型实现 `http.Handler` 接口。`http.Handler`作为`Application`的内嵌结构体字段，因此 `Application` 可以调用 `http.Handler` 接口实现的 `ServeHTTP` 函数
+为了调用注册的路由，`Application` 类型实现 `http.Handler` 接口。`http.Handler` 作为 `Application` 的内嵌结构体字段，因此 `Application` 可以调用 `http.Handler` 接口实现的 `ServeHTTP` 函数
 
 ### 清单 8
 
-```golang
+```go
 req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/list/%d/item", test.ListID), nil)
 if err != nil {
    t.Errorf("error creating request: %v", err)
@@ -257,11 +258,11 @@ a.ServeHTTP(w, req)
 
  `http.NewRecorder` 函数的返回 `ResponseRecorder` 值实现了 `ResponseWriter` 接口。调用路由请求后，`ResponseRecorder` 可以用来分析了。其中最关键的字段 `Code` 和 `Body`，前者是该请求的实际响应码，后者是一个指向响应内容的 `bytes.Buffer` 类型的指针。
 
-> 译者注：这里的 `http.ResponseWriter`  和 `http.Request` 实现了 golang 中常见的 `Writer` 和 `Reader` 接口，即 **输出** 和 **输入**，在 http 请求中即 `Response` 和 `Request`。
+> 译者注：这里的 `http.ResponseWriter`  和 `http.Request` 实现了 Golang 中常见的 `Writer` 和 `Reader` 接口，即 **输出** 和 **输入**，在 http 请求中即 `Response` 和 `Request`。
 
 ### 清单 9
 
-```golang
+```go
 if want, got := http.StatusOK, w.Code; want != got {
     t.Errorf("expected status code: %v, got status code: %v", want, got)
 }
@@ -271,7 +272,7 @@ if want, got := http.StatusOK, w.Code; want != got {
 
 ### 清单 10
 
-```golang
+```go
 var items []item.Item
 resp := web.Response{
     Results: items,
@@ -286,16 +287,14 @@ if d := cmp.Diff(expectedItems, items); d != "" {
 }
 ```
 
-示例中使用自定义响应体 `web.Response`，使用 键为 `results` 的 json 字符串存储路由返回信息。代码清单 10 中声明了一个 []item.Item 类型的变量 items，用于和预期值对比。 初始化 items 变量传递给 resp 的字段 results。接下来，items 会随着解析路由响应体数据到 resp 中，从而包含响应体的数据。
+示例中使用自定义响应体 `web.Response`，使用 键为 `results` 的 JSON 字符串存储路由返回信息。代码清单 10 中声明了一个 []item.Item 类型的变量 items，用于和预期值对比。 初始化 items 变量传递给 resp 的字段 results。接下来，items 会随着解析路由响应体数据到 resp 中，从而包含响应体的数据。
 
 Google 的 [go-cmp](https://github.com/google/go-cmp) 包可替代 `reflect.DeepEqual` ，在对比 struct,map,slice 和 array 时更安全，更易用。调用 cmp.Diff 对比清单 6 中定义的种子数据和实际响应体中返回的数据，如果不等，测试将失败，并且将差异输出到标准输出（stdout）中。
 
 ## 测试技巧
 
-<!-- todo  A segment of code, by default, is not always readily available to be tested.  别扭 -->
 就测试而言，最好的建议是尽早测试，并且经常测试，而不是将测试放到开发之后考虑，而且测试应该推动、驱动应用程序的开发。这就是“测试驱动开发（TDD）”。通常情况下，没有随时测试代码。在编写代码时，将测试的想法抛到脑后，自己（开发人员）默认编写的代码是可测试的。代码单元（通常是一个函数）不管再小都能进行测试。你的服务进行越多测试，未知的就越少，隐藏的副作用（bug）就越少。
 
-<!-- todo 也挺别扭的 -->
 有了下面这些技巧，你的测试将洞察力，更易读，更快。
 
 ### 表测试
@@ -304,7 +303,7 @@ Google 的 [go-cmp](https://github.com/google/go-cmp) 包可替代 `reflect.Deep
 
 ### 清单 11
 
-```golang
+```go
 // Add takes an indefinite amount of operands and adds them together, returning
 // the sum of the operation.
 func Add(operands ...int) int {
@@ -329,7 +328,7 @@ func Add(operands ...int) int {
 
 ### 清单 12
 
-```golang
+```go
 // TestAdd tests the Add function.
 func TestAdd(t *testing.T) {
     tt := []struct {
@@ -379,7 +378,7 @@ func TestAdd(t *testing.T) {
 
 ### 清单 13
 
-```golang
+```go
 // GenerateTempFile generates a temp file and returns the reference to
 // the underlying os.File and an error.
 func GenerateTempFile() (*os.File, error) {
@@ -396,7 +395,7 @@ func GenerateTempFile() (*os.File, error) {
 
 ### 清单 14
 
-```golang
+```go
 // GenerateTempFile generates a temp file and returns the reference to
 // the underlying os.File.
 func GenerateTempFile(t *testing.T) *os.File {
@@ -411,9 +410,9 @@ func GenerateTempFile(t *testing.T) *os.File {
 }
 ```
 
-清单 14 和清单 13 相同，只是使用 `t.Helper()`。这个函数定义使用了 `*testing.T`作为参数，省略了 error 的返回。函数先调用 `t.Helper()`，这在编译测试二进制文件时发出信号：如果 t 在这个函数中调用任何接收器函数，则将其报告给调用函数（Test*）。与辅助函数不同，所有行号和文件信息会都会关联到这个函数。
+清单 14 和清单 13 相同，只是使用 `t.Helper()`。这个函数定义使用了 `*testing.T` 作为参数，省略了 error 的返回。函数先调用 `t.Helper()`，这在编译测试二进制文件时发出信号：如果 t 在这个函数中调用任何接收器函数，则将其报告给调用函数（Test*）。与辅助函数不同，所有行号和文件信息会都会关联到这个函数。
 
-一些测试可以进行安全的并行进行，并且 go testing 包原生支持并行运行测试。在所有 Test* 函数开始调用 t.Parallel(), 可以编译出可以安全并行运行的测试二进制文件。就是这么简单，就是这么强大！
+一些测试可以进行安全的并行进行，并且 Go testing 包原生支持并行运行测试。在所有 Test* 函数开始调用 t.Parallel(), 可以编译出可以安全并行运行的测试二进制文件。就是这么简单，就是这么强大！
 
 ## 结论
 
@@ -421,7 +420,7 @@ func GenerateTempFile(t *testing.T) *os.File {
 
 ---
 
-via: <https://www.ardanlabs.com/blog/2019/10/integration-testing-in-go-set-up-and-writing-tests.html>
+via: https://www.ardanlabs.com/blog/2019/10/integration-testing-in-go-set-up-and-writing-tests.html
 
 作者：[George Shaw](https://github.com/george-e-shaw-iv/)
 译者：[TomatoAres](https://github.com/TomatoAres)

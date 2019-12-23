@@ -1,5 +1,5 @@
- 首发于：https://studygolang.com/articles/25559
- 
+首发于：https://studygolang.com/articles/25559
+
 # GopherCon 2019 - Go 模块代理：查询的生命周期
 
 ## 概述
