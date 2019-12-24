@@ -21,7 +21,7 @@ Doug Mcllory 看到这里然后写了 `tr -cs A-Za-z '\n' | tr A-Z a-z | sort | 
 
 现在你应该被说服了吧， 让我们来讨论以下怎么使你的 Go 命令行程序变得友好。
 
-# 设计
+## 设计
 
 当你在写命令行应用程序的时候， 试试遵守 基础的 [Unix 哲学](http://www.catb.org/esr/writings/taoup/html/ch01s06.html)
 
@@ -39,7 +39,7 @@ Doug Mcllory 看到这里然后写了 `tr -cs A-Za-z '\n' | tr A-Z a-z | sort | 
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/writing-friendly-command-line-application/1.png)
 
-# 帮助
+## 帮助
 
 让我们来假定你们团队有一个叫做 `nuke-db` 的实用工具 。 你忘了怎么调用它然后你：
 
@@ -110,7 +110,7 @@ usage: ./nuke-db [DATABASE]
 Delete all data and tables from DATABASE.
 ```
 
-# 结构化输出
+## 结构化输出
 
 纯文本是通用的接口。 然而，当输出变得复杂的时候， 对机器来说处理格式化的输出会更容易。最普遍的一种格式当然是 JSON。
 
@@ -179,13 +179,13 @@ $ ./finfo -json finfo.go
 
 ```
 
-# 处理
+## 处理
 
 有些操作是比较耗时的，一个是他们更快的方法不是优化代码，而是显示一个旋转加载符或者进度条。不要不信我，这有一个来自 [Nielsen 的研究](https://www.nngroup.com/articles/progress-indicators/) 的引用
 
 > 看到运动的进度条的人们会有更高的满意度体验而且比那些得不到任何反馈的人平均多出三倍的愿意等待时间。
 
-# 旋转加载
+## 旋转加载
 
 添加一个旋转加载不需要任何特别的库
 
@@ -239,7 +239,7 @@ func main() {
 
 运行它你就能看到一个小的旋转加载在运动。
 
-# 进度条
+## 进度条
 
 对于进度条， 你可能需要一个额外的库如 `github.com/cheggaaa/pb/v3`
 
@@ -266,7 +266,7 @@ func main() {
 }
 ```
 
-# 结语
+## 结语
 
 现在差不多 2020 年了，命令行应用程序仍然会存在。 它们是自动化的关键，如果写得好，能提供优雅的“类似乐高”的组件来构建复杂的流程。
 
