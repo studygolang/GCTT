@@ -6,7 +6,7 @@
 
 ## Goroutine 队列
 
-Go 使用两级队列来管理等待中的 goroutine，分别是本地队列和全局队列。每一个处理器都拥有本地队列，而全局队列是唯一的，且能被所有的处理器访问到：
+Go 使用两级队列来管理等待中的 goroutine，分别为本地队列和全局队列。每一个处理器都拥有本地队列，而全局队列是唯一的，且能被所有的处理器访问到：
 
 ![Global and local queues](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-work-stealing-in-go-Scheduler/ws-1.png)
 
