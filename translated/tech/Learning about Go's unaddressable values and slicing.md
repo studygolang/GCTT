@@ -2,7 +2,7 @@
 
 Dave Cheney 最近在 Twitter 上发布了一个 Go 的小测验，和往常一样，我从中学到了一些有趣的东西。让我们从他的推文开始：
 
- #golang 小测验：该程序打印什么？
+\#golang 小测验：该程序打印什么？
 
 ```go
 package main
