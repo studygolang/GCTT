@@ -6,13 +6,9 @@
 
 ## Goroutine 队列
 
-
-
 Go 使用两级队列来管理等待中的 goroutine，分别是本地队列和全局队列。每一个处理器都拥有本地队列，而全局队列是唯一的，且能被所有的处理器访问到：
 
 ![Global and local queues](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-work-stealing-in-go-Scheduler/ws-1.png)
-
-
 
 每个本地队列都有最大容量，为 256。在容量满了之后，任意新到来的 goroutine 都会被放置到全局队列。下面的例子是，生产了上千个 goroutine 的程序：
 
@@ -48,8 +44,6 @@ func main() {
 下面是上一个例子的图示：
 
 ![Local queues have up to 256 goroutines](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-work-stealing-in-go-Scheduler/ws-3.png)
-
-
 
 不过，我们还想知道，为什么本地队列 `P0` 在上一个列子中不为空。因为Go使用了其他策略确保每个处理器都有任务处理。
 
@@ -88,7 +82,6 @@ func main() {
       wg.Add(1)
       go func() {
          a := 0
-
          for i := 0; i < 1e6; i++ {
             a += 1
             if i == 1e6/2 {
@@ -97,7 +90,6 @@ func main() {
                a += inc
             }
          }
-
          wg.Done()
       }()
    }
