@@ -103,8 +103,6 @@ https://localhost:10000/example.UserService/AddUser
 
 如果你对本文感兴趣，或者有任何问题和想法，请在 [@johanbrandhorst](https://twitter.com/JohanBrandhorst) 上或 在Gophers Slack `jbrandhorst`下联系我。很高兴听到你的想法。
 
-
-
 ---
 via: https://jbrandhorst.com/post/grpc-json/
 
