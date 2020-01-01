@@ -117,7 +117,7 @@ via：https://medium.com/a-journey-with-go/go-how-does-the-garbage-collector-wat
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent?source=post_page-----dbef99be2c35----------------------)
 译者：[sh1luo](https://github.com/sh1luo)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[lxbwolf](https://github.com/lxbwolf)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出shi
 
