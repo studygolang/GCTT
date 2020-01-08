@@ -1,10 +1,12 @@
+首发于：https://studygolang.com/articles/25914
+
 # 在 Golang 中使用 -w 和 -s 标志
 
 今天的博客文章来自 Valery，这是 [Spiral Scout](https://spiralscout.com/) 的一名高级软件工程师，专门从事 Golang（Go）开发。
-作为在 Golang 以及许多其他编程语言方面具有专业知识的软件开发机构，
-我们知道对于我们的工程师和质量保证专家而言，能够与社区分享他们的知识和经验非常重要。 感谢 Valery 这篇出色的文章和有用的 Golang 测试技巧！
 
-当我在 github 上查找一些良好的工程实践以备应用时，我注意到许多开发人员编译他们的 Go 程序时经常出现的问题，他们中许多人都使用链接器标记（linker flags）来减小输出文件大小，尤其是同时使用 `-w` 和 `-s` 标记所带来的叠加效果。
+作为在 Golang 以及许多其他编程语言方面具有专业知识的软件开发机构，我们知道对于我们的工程师和质量保证专家而言，能够与社区分享他们的知识和经验非常重要。 感谢 Valery 这篇出色的文章和有用的 Golang 测试技巧！
+
+当我在 GitHub 上查找一些良好的工程实践以备应用时，我注意到许多开发人员编译他们的 Go 程序时经常出现的问题，他们中许多人都使用链接器标记（linker flags）来减小输出文件大小，尤其是同时使用 `-w` 和 `-s` 标记所带来的叠加效果。
 
 在软件测试中，标记也被称为参数。当从命令行运行程序时，它们用于标识特定的状态或条件。 标记可以打开或关闭，并且在整个软件开发过程中大量语言和框架都采用这种方式。
 
@@ -30,7 +32,7 @@ Golang 的创建者们在 [Go DWARF 源代码](https://golang.org/src/cmd/link/i
 
 首先，我们要使用以下步骤读取 DWARF 信息：
 
-1. 编译 Go 程序（开始我们仅使用 go build 命令）
+1. 编译 Go 程序（开始我们仅使用 Go build 命令）
 
 ```shell
 go build -o simple_build cmd/main.go
@@ -60,7 +62,7 @@ go build -o simple_build cmd/main.go
 
 ![](https://cdn.jsdelivr.net/gh/studygolang/gctt-images2@master/using-w-and-s-flags-in-golang/objdump.png)
 
-为了根据地址查找必要的函数，我们需要知道 PC （程序计数器）。你可以在 EIP 寄存器中找到 PC 值，它由DW_AT_low_pc 和 DW_AT_high_pc 表示。举个例子，对于 `main.main` 函数（`main` 是 go 运行时的函数）使用 `low_pc` ，并尝试使用 `objdump -d` 在二进制文件的位置 `0x44f930` 找到它。
+为了根据地址查找必要的函数，我们需要知道 PC （程序计数器）。你可以在 EIP 寄存器中找到 PC 值，它由 DW_AT_low_pc 和 DW_AT_high_pc 表示。举个例子，对于 `main.main` 函数（`main` 是 Go 运行时的函数）使用 `low_pc` ，并尝试使用 `objdump -d` 在二进制文件的位置 `0x44f930` 找到它。
 
 ![](https://cdn.jsdelivr.net/gh/studygolang/gctt-images2@master/using-w-and-s-flags-in-golang/objdump-pc.png)
 
@@ -110,15 +112,15 @@ could not launch process: could not open debug info
 如果只想删除调试信息，只使用 `-w` 标志是最合适的。如果要另外删除符号和字符串表以减小二进制文件的大小，请使用 `-s` 标志。
 
 下面是在 Golang 中使用这些 flag 的的**反面教材**，不建议大家这样使用。
-尽管两个标志似乎比一个标志好，但是对于 `-w` 和 `-s`标志，情况却并非如此：
+尽管两个标志似乎比一个标志好，但是对于 `-w` 和 `-s` 标志，情况却并非如此：
 ![](https://cdn.jsdelivr.net/gh/studygolang/gctt-images2@master/using-w-and-s-flags-in-golang/github-search.png)
 
 ---
 
-via: https://blog.spiralscout.com/using-w-and-s-flags-in-golang-97ae59b50e26?gi=fa744d857cf2
+via: https://blog.spiralscout.com/using-w-and-s-flags-in-golang-97ae59b50e26
 
 作者：[John Griffin](https://blog.spiralscout.com/@johnwgriffin)
 译者：[befovy](https://github.com/befovy)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
