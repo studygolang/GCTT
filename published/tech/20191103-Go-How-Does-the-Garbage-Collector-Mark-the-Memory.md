@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/25916
+
 # Go GC 怎么标记内存？
 
 ![Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191103-Go-How-Does-the-Garbage-Collector-Mark-the-Memory/00.png)
@@ -122,15 +124,16 @@ Go 提供的工具使我们可以对每一步进行可视化，观察 GC 在我�
 
 ![traces of the garbage collector](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191103-Go-How-Does-the-Garbage-Collector-Mark-the-Memory/10.png)
 
-标记 worker 的生命周期也可以在追踪结果中以协程等级可视化。下面是在启动之前先在后台等待标记内存的 goroutine #33 的例子。
+标记 worker 的生命周期也可以在追踪结果中以协程等级可视化。下面是在启动之前先在后台等待标记内存的 Goroutine #33 的例子。
 
 ![marking worker](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191103-Go-How-Does-the-Garbage-Collector-Mark-the-Memory/11.png)
 
-----------------
+---
 
 via: https://medium.com/a-journey-with-go/go-how-does-the-garbage-collector-mark-the-memory-72cfc12c6976
 
-作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent) 译者：[lxbwolf](https://github.com/lxbwolf) 校对：[校对者ID](https://github.com/校对者ID)
+作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
+译者：[lxbwolf](https://github.com/lxbwolf)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-

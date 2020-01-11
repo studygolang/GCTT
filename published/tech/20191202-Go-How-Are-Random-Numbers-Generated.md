@@ -1,8 +1,10 @@
+首发于：https://studygolang.com/articles/25930
+
 # Go：随机数是怎样产生的？
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191202-Go-How-Are-Random-Numbers-Generated/01.png)
-
 <p align="center">Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.</p>
+
 *这篇文章基于 Go 1.13 版本*
 
 Go 实现了两个包来产生随机数：
@@ -14,7 +16,7 @@ Go 实现了两个包来产生随机数：
 
 ## 确定的结果
 
-Go 的`rand`包会使用相同的源来产生一个确定的伪随机数序列。这个源会产生一个不变的数列，稍后在执行期间使用。将你的程序运行多次将会读到一个完全相同的序列并产生相同的结果。让我们用一个简单的例子来尝试一下：
+Go 的 `rand` 包会使用相同的源来产生一个确定的伪随机数序列。这个源会产生一个不变的数列，稍后在执行期间使用。将你的程序运行多次将会读到一个完全相同的序列并产生相同的结果。让我们用一个简单的例子来尝试一下：
 
 ```go
 func main() {
@@ -86,7 +88,7 @@ func main() {
 
 ## 随机数生成器
 
-Go 的标准库也提供了一个适用于加密应用的随机数生成器。因此，理所当然的，生成的随机数并不固定，并且一定会提供更好的随机性。这有一个例子使用了这个新包`cryto/rand` ：
+Go 的标准库也提供了一个适用于加密应用的随机数生成器。因此，理所当然的，生成的随机数并不固定，并且一定会提供更好的随机性。这有一个例子使用了这个新包 `cryto/rand` ：
 
 ```go
 func main() {
@@ -106,13 +108,13 @@ func main() {
 19
 ```
 
-多次运行这个程序将会得到不同的结果。在内部，Go应用了如下规则：
+多次运行这个程序将会得到不同的结果。在内部，Go 应用了如下规则：
 
 > *在 Linux 和 FreeBSD 系统上，Reader 会使用 getrandom(2) （如果可用的话），否则使用 /dev/urandom。*
 >
 > *在 OpenBSD 上，Reader 会使用 getentropy(2)。*
 >
-> *在其他的类 Unix系统上，Reader 会读取 /dev/urandom。*
+> *在其他的类 Unix 系统上，Reader 会读取 /dev/urandom。*
 >
 > *在 Windows 系统上，Reader 会使用 CryptGenRandom API.*
 >
@@ -154,10 +156,10 @@ RandWithMathNoLock-8  10.7ns ± 4%
 
 ---
 
-via：<u>[来源链接](https://medium.com/a-journey-with-go/go-how-are-random-numbers-generated-e58ee8696999)</u>
+via：https://medium.com/a-journey-with-go/go-how-are-random-numbers-generated-e58ee8696999
 
-作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent?source=post_page-----e58ee8696999----------------------)
+作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[sh1luo](https://github.com/sh1luo)
 校对：[lxbwolf](https://github.com/lxbwolf)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
