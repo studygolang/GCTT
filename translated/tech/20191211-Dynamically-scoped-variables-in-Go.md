@@ -1,6 +1,6 @@
 # Go中的动态作用域变量
 
-这是一个API设计的思想实验。它从典型的Go单元测试惯用形式开始：
+这是一个API设计的思想实验，它从典型的Go单元测试惯用形式开始：
 
 ```go
 func TestOpenFile(t *testing.T) {
@@ -13,7 +13,7 @@ func TestOpenFile(t *testing.T) {
 }
 ```
 
-这段代码有什么问题？断言if err != nil { ... } 是重复的，并且需要检查多个条件的情况下，如果测试的作者使用t.Error而不是t.Fatal的话会容易出错，例如：
+这段代码有什么问题？断言 `if err != nil { ... }` 是重复的，并且需要检查多个条件的情况下，如果测试的作者使用 `t.Error` 而不是 `t.Fatal` 的话会容易出错，例如：
 
 ```go
 f, err := os.Open("notfound")
@@ -41,10 +41,10 @@ func check(t *testing.T, err error) {
 }
 ```
 
-使用check辅助函数使得这段代码更简洁一些，并且更加清晰地检查错误，同时有望解决t.Error与t.Fatal的混淆使用。
-将断言抽象为一个辅助函数的缺点是，现在你需要将一个testing.T传递到每一个调用上。更糟糕的是，为了以防万一，你需要传递*testing.T到每一个需要调用check的地方。
+使用 `check` 辅助函数使得这段代码更简洁一些，并且更加清晰地检查错误，同时有望解决 `t.Error` 与 `t.Fatal` 的混淆使用。
+将断言抽象为一个辅助函数的缺点是，现在你需要将一个 `testing.T` 传递到每一个调用上。更糟糕的是，为了以防万一，你需要传递 `*testing.T` 到每一个需要调用 `check` 的地方。
 
-我猜，这并没有关系。但我会观察到只有在断言失败的时候才会用到变量t——即使在测试场景下，大部分时候，大部分的测试是通过的，因此在相对罕见的测试失败的情况下，这些变量t对阅读和书写都是固定开销。
+我猜，这并没有关系。但我会观察到只有在断言失败的时候才会用到变量 t —— 即使在测试场景下，大多数时候，大部分的测试是通过的，因此在相对罕见的测试失败的情况下，会产生对这些变量 t 的固定读写开销。
 
 如果我们这样做怎么样？
 
@@ -87,9 +87,9 @@ created by testing.(*T).Run
 exit status 2
 ```
 
-先从好的地方开始，我们不需要传递一个testing.T到每一个调用check函数的地方，测试立即失败，我们从panic中获得了一条不错的信息——尽管有两次。但是哪里断言失败却不容易看到。它发生在expect_test.go:11，你不知道这一点是可以原谅的。
+先从好的方面说起，我们不需要传递一个 `testing.T` 到每一个调用 `check` 函数的地方，且测试会立即失败。我们还从panic 中获得了一条不错的信息 —— 尽管重复出现了两次。但是，哪里断言失败却不容易看到。它发生在`expect_test.go:11`，你知道这一点是不可以原谅的。
 
-所以panic不是一个好的解决办法，但是在堆栈跟踪信息里面有什么——你能看到吗？这有一个提示，github.com/pkg/expect_test.TestOpenFile(0xc0000b4400)。
+所以 panic 不是一个好的解决办法，但是你能从堆栈跟踪信息里面看到什么有用的信息吗？这有一个提示：`github.com/pkg/expect_test.TestOpenFile(0xc0000b4400)`。
 
 TestOpenFile有一个t的值，它由tRunner传递过来，所以testing.T在内存中位于地址 0xc0000b4400上。如果我们可以在check函数内部获取t会怎样？那我们可以通过它来调用t.Helper来t.Fatal。这可能吗？
 
@@ -142,7 +142,7 @@ func TestOpenFile(t *testing.T) {
 讽刺的是，这恰恰是我对[context.Context](https://dave.cheney.net/2017/01/26/context-is-for-cancelation)的评价。我会将这个问题留给你自己判断是否合理。
 
 ## 最后的话
-这是个坏主意，这点没有异议。这不是你可以在生产模式中使用的模式。但是，这也不是生产代码。这是在测试，也许有着不同的规则适用于测试代码。毕竟，我们使用模拟（mocks）,桩（stubs），猴子补丁（monkey patching），类型断言，反射，辅助函数，构建标志以及全局变量，所有这些使得我们更加有效率得测试代码。所有这些，嗯，*黑客*是不会让它们出现在生产代码里面的，所以这真的是世界末日吗。
+这是个坏主意，这点没有异议。这不是你可以在生产模式中使用的模式。但是，这也不是生产代码。这是在测试，也许有着不同的规则适用于测试代码。毕竟，我们使用模拟（mocks）、桩（stubs）、猴子补丁（monkey patching）、类型断言、反射、辅助函数、构建标志以及全局变量，所有这些使得我们更加有效率得测试代码。所有这些，*奇技淫巧*是不会让它们出现在生产代码里面的，所以这真的是世界末日吗？
 
 如果你读完本文，你也许会同意我的观点，尽管不太符合常规，并无必要将*testing.T传递到所有需要断言的函数中去，从而使测试代码更加清晰。
 
@@ -154,6 +154,6 @@ via: https://dave.cheney.net/2019/12/08/dynamically-scoped-variables-in-go
 
 作者：[Dave Cheney](https://dave.cheney.net/)
 译者：[dust347](https://github.com/dust347)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[@unknwon](https://github.com/unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
