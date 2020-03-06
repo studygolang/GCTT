@@ -22,7 +22,6 @@
 就性能角度来看，`allocBits` 代表了一个初始态并且会保持不变，但是它会由`freeIndex`（一个指向第一个空闲位置的增量计数器）所协助。
 
 然后，第一个分配就开始了：
-
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191109-Go-Memory-Management-and-Memory-Sweep/04.png)
 
 <p align="center">Free objects tracking with allocBits</p>
