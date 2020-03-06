@@ -33,8 +33,7 @@
 
 <p align="center">Memory tracking during the garbage collector</p>
 正在被使用的内存被标记为黑色，然而当前执行并不能够到达的那些内存会保持为白色。
-> 有关更多关于标记和着色阶段的信息，我建议你阅读我的这篇文章 [Go：GC 是如何标记内存的？]() 
-
+> 有关更多关于标记和着色阶段的信息，我建议你阅读我的这篇文章 [Go：GC 是如何标记内存的？]()
 现在，我们可以使用 `gomarkBits`精确查看可用于分配的内存。Go 现在也使用`gomarkBits` 代替了`allocBits` ，这个操作就是内存清理：
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191109-Go-Memory-Management-and-Memory-Sweep/06.png)
