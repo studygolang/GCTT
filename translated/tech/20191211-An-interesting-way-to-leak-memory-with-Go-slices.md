@@ -18,3 +18,13 @@
 slc = slc[:newlen:newlen]
 ```
 不幸的是，这样并不会达到你想要的效果，而且会适得其反。设置新切片的容量完全不会改变底层的依赖数组，也不会让Go分配一个新的内存，但这却意味着你无法获取数组大小的信息（否则可以通过切片的容量来得到它）。这样造成的唯一影响是强制随后的```append()```重新分配新的底层数组。
+
+---
+
+via: https://utcc.utoronto.ca/~cks/space/blog/programming/GoSlicesMemoryLeak
+
+作者：[ChrisSiebenmann](https://utcc.utoronto.ca/~cks/space/People/ChrisSiebenmann)
+译者：[dust347](https://github.com/dust347)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
