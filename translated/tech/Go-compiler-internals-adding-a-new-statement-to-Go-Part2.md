@@ -1,15 +1,15 @@
 # Go编译器内部知识：向Go添加新语句-第2部分
 
-这是探讨Go编译器的两部分系列文章的第二篇。在[第1部分中](https://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-1/)，通过构建编译器的自定义版本，我们向Go语言添加了一条新语句。为此，我们按照此图介绍了编译器的前五个阶段:
+这是探讨Go编译器两篇文章的最后一篇。在[第1部分中](https://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-1/)，我们通过构建自定义的编译器，向Go语言添加了一条新语句。为此，我们按照此图介绍了编译器的前五个阶段:
 
 ![go compiler flow](https://eli.thegreenplace.net/images/2019/go-compiler-flow.png)
 
-我们最终实现，until把它降低到for在“重写AST”的阶段; 具体来说，在gc/walk.go中，在编译器进行SSA转换和代码生成之前，已进行了类似的转换。
+在"rewrite AST"阶段前，我们实现了until到for的转换；具体来说，在[gc/walk.go](https://github.com/golang/go/blob/master/src/cmd/compile/internal/gc/walk.go)文件中中，编译器进行SSA转换和代码生成之前，已进行了类似的转换。
 
 在这一部分中，我们将通过之后在编译流程中处理新的until语句来覆盖编译器的其余阶段。
 
 ## SSA
-之后GC运行walk变换，它调用buildssa(在gc/ssa.go)将AST转换成一个新的中间表示(IR)，这是在[静态单赋值(SSA)形式](https://en.wikipedia.org/wiki/Static_single_assignment_form)。
+之后GC运行walk变换，它调用buildssa([gc/ssa.go](https://github.com/golang/go/blob/master/src/cmd/compile/internal/gc/ssa.go#L281))函数将AST转换成一个新的中间表示(IR)，这是在[静态单赋值(SSA)形式](https://en.wikipedia.org/wiki/Static_single_assignment_form)。
 
 SSA是什么意思，为什么编译器会这样做？让我们从第一个问题开始；我建议阅读上面链接的SSA维基百科页面和其他资源，但这里一个快速说明。
 
@@ -22,6 +22,7 @@ x = y
 y = func()
 // do more stuff with x and y
 ```
+
 这不是SSA，因为名称x和y被分配了多次。如果将此代码片段转换为SSA，我们可能会得到：
 ```
 x = 1
@@ -31,13 +32,15 @@ x_1 = y
 y_1 = func()
 // do more stuff with x_1 and y_1
 ```
+
 注意每个赋值如何得到唯一的变量名。当x被重新分配一个不同的值时，将创建一个新名称x_1。你可能想知道这在一般情况下是如何工作的……像这样的代码会发生什么：
 ```
 x = 1
 if condition: x = 2
 use(x)
 ```
-如果我们简单地将第二次赋值重命名为x_1 = 2，那么user呢？x或x_1或...？为了处理这一重要情况，SSA形式的IR具有特殊的phi（originally phony）功能，它将根据代码路径选择一个值。它看起来是这样的：
+
+如果我们简单地将第二次赋值重命名为x_1 = 2，那么use呢？x或x_1或...呢？为了处理这一重要情况，SSA形式的IR具有特殊的phi（originally phony）功能，它将根据代码路径选择一个值。它看起来是这样的：
 
 ![simple ssa phi](https://eli.thegreenplace.net/images/2019/simple-ssa-phi.png)
 
@@ -45,7 +48,7 @@ use(x)
 
 SSA名称的静态部分起着与静态类型类似的作用；这意味着在查看源代码时（在编译时或静态时），每个名称的分配都是唯一的，而它可以在运行时发生多次。如果上面显示的代码片段是在一个循环中，那么实际的x_1 = 2的赋值可能会发生很多次。
 
-现在我们对SSA 是什么有了基本的了解，接下来的问题是为什么。
+现在我们对SSA是什么有了基本的了解，接下来的问题是为什么。
 
 优化是编译器后端的重要组成部分[1](#jump1)，并且通常通常对后端进行结构化以促进有效和高效的优化。再次查看此代码段：
 ```
@@ -62,7 +65,7 @@ z = x + y
 ```
 
 一般情况下，编译器必须执行数据流分析才能找到：
-1. x和y指的是哪个定义?再有控制语句情况下并不容易，并且还需相对重要性分析。
+1. x和y指的是哪个定义？再有控制语句情况下并不容易，并且还需相对重要性分析。
 2. z在这个定义之后用在哪里，这个定义同样具有挑战性。
 
 无论在时间还是空间上，创建和维护这样的分析都是非常昂贵的。此外，它必须在每次优化之后重新运行(至少一部分)。
@@ -70,12 +73,12 @@ z = x + y
 SSA提供了一个很好的选择。如果z = x + y在SSA中，我们立即知道x和y的定义(只能有一个)，我们立即知道z在哪里使用(在这个语句之后对z的所有引用)。在SSA中，使用和定义编码在IR中，并且优化不违反不变式。
 
 ## Go编译器中的SSA
-我们继续描述Go编译器中如何构造和使用SSA。SSA是Go的一个[相对较新的功能](https://blog.golang.org/go1.7)。它的大部分代码都位于ssa /中，除了将AST转换为SSA的大量代码(位于gc/ssa.go中)。ssa目录中的README文件是对Go SSA的非常有用的说明,请阅读一下！
 
-Go SSA实现还拥有我见过的一些最好的编译器工具(从事编译器工作多年)。通过设置GOSSAFUNC 环境变量，我们将获得一个HTML页面，其中包含所有编译阶段以及每个编译阶段之后的IR，因此我们可以轻松地检测出需要进行哪些优化。额外的设置可以将控制流图绘制成SVG的形式。
+我们继续描述Go编译器中如何构造和使用SSA。SSA是Go的一个[相对较新的功能](https://blog.golang.org/go1.7)。它的大部分代码都位于[ssa](https://github.com/golang/go/tree/master/src/cmd/compile/internal/ssa)目录中，除了将AST转换为SSA的大量代码([gc/ssa.go](https://github.com/golang/go/blob/master/src/cmd/compile/internal/gc/ssa.go))。ssa目录中的README文件是对Go SSA的非常有用的说明，请阅读一下！
+
+Go SSA实现还拥有我见过的一些最好的编译器工具(从事编译器工作多年)。通过设置GOSSAFUNC 环境变量，我们将获得一个HTML页面，其中包含所有编译阶段以及每个编译阶段之后的IR，因此我们可以轻松地检测出需要进行哪些优化。额外的设置可以将控制流程图绘制成SVG的形式。
 
 让我们研究一下为以下代码片段从AST创建的SSA：
-
 ``` go
 func usefor() {
   i := 4
@@ -90,9 +93,9 @@ func sayhi() {
 }
 ```
 
-我将打印输出移动到它自己的函数的原因是为了使结果SSA更简洁。使用-l进行编译以禁用内联，这使得对sayhi()很小的调用（由于常量字符串而生成更多的代码，对fmt.Println()的调用会生成更多代码）。
-产生的SSA为：
+我将创建打印输出函数的原因是为了使结果SSA更简洁。使用-l进行编译以禁用内联，这使得对sayhi()是微小的调用（由于常量字符串而生成更多的代码，对fmt.Println()[2](#jump2)的调用会生成更多代码）。
 
+产生的SSA为：
 ```
 b1:
 
@@ -133,14 +136,15 @@ b1:
 - Phi节点是显式的。最有趣的是对v5的分配。这恰恰是分配给i的选择器；一条路径来自V4（初始化），从另一个v10（在i--）内循环中。
 - 出于本练习的目的，请忽略带有<mem>的节点。Go有一种有趣的方式来显式地在其IR中传播内存状态，在这篇文章中我们不讨论它。如果感兴趣，请参阅前面提到的README。
 
-顺便说一句，这里的for循环正是我们想要将until语句转换成的类型。
+顺便说一句，这里的for循环正是我们想要将until语句转换的类型。
 
-## 将until AST节点转换为SSA
+## 将AST until节点转换为SSA
 与往常一样，我们的代码将对for语句的处理进行建模。首先，让我们从控制流图开始,应该如何查找until语句:
 
 ![until cfg](https://eli.thegreenplace.net/images/2019/until-cfg.png)
 
-现在我们只需要在代码中构建这个CFG。提醒：我们在在[第1部分](https://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-1/)中添加的新AST节点类型 为OUNTIL。我们将在gc / ssa.go中的state.stmt方法中添加一个新的switch子句，以将具有OUNTIL op 的AST节点转换为SSA。块和注释的命名应使代码易于阅读，并与上面显示的CFG相关。
+现在我们只需要在代码中构建这个CFG。提醒：我们在[第1部分](https://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-1/)中添加的新AST节点类型为OUNTIL。我们将在gc/ssa.go中的state.stmt方法中添加一个新的switch子句，以将具有OUNTIL操作的AST节点转换为SSA。块和注释的命名应使代码易于阅读，并与上面显示的CFG相关。
+
 ``` go
 case OUNTIL:
   // OUNTIL: until Ninit; Left { Nbody }
@@ -196,9 +200,9 @@ case OUNTIL:
   s.startBlock(bEnd)
 ```
 
-如果您想知道n.Ninit的处理位置-它在switch之前完成 ，适用于所有节点类型。
+如果您想知道n.Ninit的处理位置——它在switch之前完成 ，适用于所有节点类型。
 
-实际上，这是我们要做的全部工作，直到在编译器的最后阶段执行语句为止！如果我们像以前一样在这段代码上运行编译器转储SSA：
+实际上，这就是我们在编译器的最后阶段处理until语句所要做的全部工作！如果我们像以前一样在这段代码上运行编译器转储SSA：
 ``` go
 func useuntil() {
   i := 4
@@ -220,12 +224,12 @@ func sayhi() {
 1. 执行优化
 2. 将其降低到更接近机器代码的形式
 
-所有这些都可以在找到在compile.go中的passes且片中以及它们运行顺序的一些限制passOrder切片。这些优化对于现代编译器来说是相当标准的。降低由我们正在编译的特定体系结构的指令选择和寄存器分配组成。
+所有这些都可以在找到在ssa/compile.go中的[passes](https://github.com/golang/go/blob/master/src/cmd/compile/internal/ssa/compile.go#L413)切片中以及它们运行顺序的一些限制[passOrder](https://github.com/golang/go/blob/master/src/cmd/compile/internal/ssa/compile.go#L475)切片。这些优化对于现代编译器来说是相当标准的。降低由我们正在编译的特定体系结构的指令选择和寄存器分配组成。
 
 有关这些遍的更多详细信息，请参见[SSA README](https://github.com/golang/go/blob/master/src/cmd/compile/internal/ssa/README.md)和[这篇帖子](https://quasilyte.dev/blog/post/go_ssa_rules/)，其中详细介绍了如何指定SSA优化规则。
 
 ## 生成机器码
-最后，编译器调用genssa（在gc/ssa.go）从SSA IR发出机器代码。我们不必修改任何代码，因为until语句包含在编译器其他地方使用的构造块，我们才为之发出的SSA-我们不添加新的指令类型，等等。
+最后，编译器调用genssa函数([gc/ssa.go](https://github.com/golang/go/blob/master/src/cmd/compile/internal/gc/ssa.go#L5903))从SSA IR发出机器代码。我们不必修改任何代码，因为until语句包含在编译器其他地方使用的构造块，我们才为之发出的SSA-我们不添加新的指令类型，等等。
 
 但是，它的指导性研究机器代码生成的我们until函数。Go有[自己的具有历史根源的程序集语法](https://golang.org/doc/asm)。我不会在这里讨论所有细节，但是以下是带注释的（带有＃注释）程序集转储，应该相当容易遵循。我删除了一些垃圾回收器的指令（PCDATA和FUNCDATA）以使输出变小。
 ```
@@ -276,14 +280,14 @@ func sayhi() {
   0x004a 00074 (useuntil.go:5)  JMP  0
 ```
 
-如果您要注意的话，您可能已经注意到“cond”块移到了函数的末尾，而不是最初在SSA表示中的位置。是什么赋予了？
+如果您注意的话，您可能已经注意到“cond”块移到了函数的末尾，而不是最初在SSA表示中的位置。是什么赋予了？
 
-答案是，“循环旋转”遍历将在SSA的最末端运行。此遍对块重新排序，以使主体直接流入cond，从而避免每次迭代产生额外的跳跃。如果您有兴趣，请参阅ssa/looprotate.go了解更多详细信息。
+答案是，“loop rotate”遍历将在SSA的最末端运行。此遍历对块重新排序，以使主体直接流入cond，从而避免每次迭代产生额外的跳跃。如果您有兴趣，请参阅[ssa/looprotate.go](https://github.com/golang/go/blob/master/src/cmd/compile/internal/ssa/looprotate.go)了解更多详细信息。
 
 ## 结论
 就是这样！在这两篇文章中，我们以两种不同的方式实现了一条新语句，从而检查了Go编译器的内部结构。当然，这只是冰山一角，但我希望它为您自己开始探索提供了一个良好的起点。
 
-最后一点：我们在这里构建了一个可运行的编译器，但是Go工具都无法识别新的直到关键字。不幸的是，此时Go工具使用了完全不同的路径来解析Go代码，并且没有与Go编译器本身共享此代码。我将在以后的文章中详细介绍如何使用工具处理Go代码。
+最后一点：我们在这里构建了一个可运行的编译器，但是Go工具都无法识别新的until关键字。不幸的是，此时Go工具使用了完全不同的路径来解析Go代码，并且没有与Go编译器本身共享此代码。我将在以后的文章中详细介绍如何使用工具处理Go代码。
 
 ## 附录-复制这些结果
 要重现我们到此为止的Go工具链的版本，您可以从第1部分开始 ，还原walk.go中的AST转换代码，然后添加上述的AST-> SSA转换。或者，您也可以从[我的fork中](https://github.com/eliben/go/tree/adduntil2)获取 [adduntil2分支](https://github.com/eliben/go/tree/adduntil2)。
@@ -306,7 +310,7 @@ GOSSAFUNC=useuntil <src checkout>/bin/go tool compile -l useuntil.go
 
 在Go中，情况不是很糟糕，并且边界已明确明确地确定。AST在语法上接近输入语言，而SSA在语法上接近。从AST到SSA的转换非常适合作为Go编译器的前/后拆分。
 
-[2] -S 告诉编译器将程序集源代码转储到stdout； -l 禁用内联，这会通过内联fmt.Println的调用而使主循环有些模糊。
+<span id="jump2">[2] -S 告诉编译器将程序集源代码转储到stdout； -l 禁用内联，这会通过内联fmt.Println的调用而使主循环有些模糊。
 
 ---
 via: https://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-statement-to-go-part-1/
