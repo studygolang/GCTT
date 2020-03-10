@@ -4,7 +4,7 @@
 
 ![go compiler flow](https://eli.thegreenplace.net/images/2019/go-compiler-flow.png)
 
-在"rewrite AST"阶段前，我们实现了until到for的转换；具体来说，在[gc/walk.go](https://github.com/golang/go/blob/master/src/cmd/compile/internal/gc/walk.go)文件中中，编译器进行SSA转换和代码生成之前，已进行了类似的转换。
+在"rewrite AST"阶段前，我们实现了until到for的转换；具体来说，在[gc/walk.go](https://github.com/golang/go/blob/master/src/cmd/compile/internal/gc/walk.go)文件中，在编译器进行SSA转换和代码生成之前，就已进行了类似的转换。
 
 在这一部分中，我们将通过之后在编译流程中处理新的until语句来覆盖编译器的其余阶段。
 
