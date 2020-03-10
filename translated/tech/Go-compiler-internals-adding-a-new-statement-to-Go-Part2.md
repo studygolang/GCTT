@@ -6,7 +6,7 @@
 
 在"rewrite AST"阶段前，我们实现了until到for的转换；具体来说，在[gc/walk.go](https://github.com/golang/go/blob/master/src/cmd/compile/internal/gc/walk.go)文件中，在编译器进行SSA转换和代码生成之前，就已进行了类似的转换。
 
-在这一部分中，我们将通过之后在编译流程中处理新的until语句来覆盖编译器的其余阶段。
+在这一部分中，我们将通过在编译流程中处理新的until语句来覆盖编译器的剩余阶段。
 
 ## SSA
 之后GC运行walk变换，它调用buildssa([gc/ssa.go](https://github.com/golang/go/blob/master/src/cmd/compile/internal/gc/ssa.go#L281))函数将AST转换成一个新的中间表示(IR)，这是在[静态单赋值(SSA)形式](https://en.wikipedia.org/wiki/Static_single_assignment_form)。
