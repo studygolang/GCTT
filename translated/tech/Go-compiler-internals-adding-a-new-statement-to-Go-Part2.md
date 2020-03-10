@@ -317,6 +317,6 @@ via: https://eli.thegreenplace.net/2019/go-compiler-internals-adding-a-new-state
 
 作者：[Eli Bendersky](https://eli.thegreenplace.net/)
 译者：[keob](https://github.com/keob)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[@unknwon](https://github.com/unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
