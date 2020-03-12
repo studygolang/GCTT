@@ -1,4 +1,9 @@
-# Go: Go 调度器的任务窃取（Work-Stealing）
+首发于：https://studygolang.com/articles/27146
+
+# Go 调度器的任务窃取（Work-Stealing）
+
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-work-stealing-in-go-Scheduler/cover.png)
+> Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.
 
 ℹ️ *这篇文章基于 Go 1.13 环境。*
 
@@ -12,7 +17,7 @@ Go 使用两级队列来管理等待中的 goroutine，分别为本地队列和�
 
 每个本地队列都有最大容量，为 256。在容量满了之后，任意新到来的 Goroutine 都会被放置到全局队列。下面的例子是，生产了上千个 Goroutine 的程序：
 
-```
+```go
 func main() {
    var wg sync.WaitGroup
 
@@ -74,7 +79,7 @@ goroutine 被合理地分发，然后因为没有 I/O，goroutine 被链式执�
 
 一起看下涉及到文件操作的例子：
 
-```
+```go
 func main() {
    var wg sync.WaitGroup
 
@@ -113,6 +118,6 @@ via: https://medium.com/a-journey-with-go/go-work-stealing-in-go-scheduler-d4392
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[LSivan](https://github.com/LSivan)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
