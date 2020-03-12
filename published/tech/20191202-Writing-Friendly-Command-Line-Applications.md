@@ -1,8 +1,10 @@
+首发于：https://studygolang.com/articles/27145
+
 # 编写友好的命令行应用程序
 
 我来给你讲一个故事...
 
-1986 年 ， [Knuth](https://en.wikipedia.org/wiki/Donald_Knuth) 编写了一个程序来演示[文学式编程](https://en.wikipedia.org/wiki/Literate_programming) 。
+1986 年，[Knuth](https://en.wikipedia.org/wiki/Donald_Knuth) 编写了一个程序来演示[文学式编程](https://en.wikipedia.org/wiki/Literate_programming) 。
 
 这段程序目的是读取一个文本文件，找到 n 个最常使用的单词，然后有序输出这些单词以及它们的频率。 Knuth 写了一个完美的 10 页程序。
 
@@ -25,7 +27,7 @@ Doug Mcllory 看到这里然后写了 `tr -cs A-Za-z '\n' | tr A-Z a-z | sort | 
 
 当你在写命令行应用程序的时候， 试试遵守 基础的 [Unix 哲学](http://www.catb.org/esr/writings/taoup/html/ch01s06.html)
 
-* 模块性规则： 编写通过清晰的接口连接起来的简单的部门
+* 模块性规则： 编写通过清晰的接口连接起来的简单的部件
 * 组合性规则： 设计可以和其他程序连接起来的程序
 * 缄默性规则：当一个程序没有什么特别的事情需要说的时候，它就应该闭嘴
 
@@ -277,6 +279,6 @@ via: https://blog.gopheracademy.com/advent-2019/cmdline/
 
 作者：[Miki Tebeka](https://blog.gopheracademy.com)
 译者：[Ollyder](https://github.com/Ollyder)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
