@@ -1,4 +1,4 @@
-# 在Go语言中，我为什么使用接口
+# 在 Go 语言中，我为什么使用接口
 
 强调一下是**我个人**的见解以及在接口在 **Go 语言**中的意义。
 
@@ -13,13 +13,13 @@
 
 用 Go 的 `io.Reader` 接口举个例子。`io.Reader` 接口的所有实现都有 `Read(p []byte) (n int, err error)` 函数。使用 `io.Reader` 接口的使用者不需要知道使用这个 `Read` 函数的时候那些字节从何而来。
 
-## 具体到Go语言
+## 具体到 Go 语言
 
 在我使用 Go 语言的过程中，与我使用过的其他任何编程语言相比，我经常发现其他的、不那么明显的使用接口的原因。今天，我将介绍一个很普遍的，也是我遇到了很多次的使用接口的原因。
 
 ## Go 语言没有构造函数
 
-很多编程语言都有构造函数。构造函数是定义自定义类型（即OO语言中的类）时使用的一种建立对象的方法，它可以确保必须执行的任何初始化逻辑均已执行。
+很多编程语言都有构造函数。构造函数是定义自定义类型（即 OO 语言中的类）时使用的一种建立对象的方法，它可以确保必须执行的任何初始化逻辑均已执行。
 
 例如，假设所有 `widgets` 都必须有一个不变的，系统分配的标识符。在 Java 中，这很容易实现：
 
@@ -129,7 +129,7 @@ func main() {
 
 执行该程序，我们得到了想要的结果。
 
-但是仍然存在一个严重问题！我们的 `widgets` 包没有强制用户在初始一个 `widget`的时候使用我们的构造函数。
+但是仍然存在一个严重问题！我们的 `widgets` 包没有强制用户在初始一个 `widget` 的时候使用我们的构造函数。
 
 ## 变量私有化
 
@@ -174,7 +174,7 @@ import uuid "github.com/satori/go.uuid"
 
 // Widget is a ...
 type Widget interface {
-    // ID 返回这个widget的唯一标识符
+    // ID 返回这个 widget 的唯一标识符
     ID() string
 }
 
@@ -182,7 +182,7 @@ type widget struct {
     id string
 }
 
-// NewWidget() 返回一个新的Widget实例
+// NewWidget() 返回一个新的 Widget 实例
 func NewWidget() Widget {
     return widget{
         id: uuid.NewV4().String(),
@@ -206,6 +206,6 @@ via: https://medium.com/@kent.rancourt/go-pointers-why-i-use-interfaces-in-go-33
 
 作者：[Kent Rancourt](https://medium.com/@kent.rancourt)
 译者：[zhiyu-tracy-yang](https://github.com/zhiyu-tracy-yang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
