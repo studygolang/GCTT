@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/27152
+
 # 在 Go 语言中，我为什么使用接口
 
-强调一下是**我个人**的见解以及在接口在 **Go 语言**中的意义。
+强调一下是**我个人**的见解以及接口在 **Go 语言**中的意义。
 
 如果您写代码已经有了一段时间，我可能不需要过多解释接口所带来的好处，但是在深入探讨 Go 语言中的接口前，我想花一两分钟先来简单介绍一下接口。
 如果您对接口很熟悉，请先跳过下面这段。
@@ -206,6 +208,6 @@ via: https://medium.com/@kent.rancourt/go-pointers-why-i-use-interfaces-in-go-33
 
 作者：[Kent Rancourt](https://medium.com/@kent.rancourt)
 译者：[zhiyu-tracy-yang](https://github.com/zhiyu-tracy-yang)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
