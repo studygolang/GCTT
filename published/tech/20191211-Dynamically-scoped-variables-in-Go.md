@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/27147
+
 # Go 中的动态作用域变量
 
 这是一个 API 设计的思想实验，它从典型的 Go 单元测试惯用形式开始：
@@ -66,7 +68,7 @@ func check(err error) {
 是的，可以，但是有一些问题。
 
 ```
-% Go test
+% go test
 --- FAIL: TestOpenFile (0.00s)
 panic: open notfound: no such file or directory [recovered]
         panic: open notfound: no such file or directory
@@ -135,6 +137,7 @@ func TestOpenFile(t *testing.T) {
 综上，在预期打开文件所产生的 err 为 nil 后，我们消除了断言样板，并且是测试看起来更加清晰易读。
 
 ## 这样好吗？
+
 这时你应该会问，*这样好吗？*答案是，不，这不好。此时你应该会感到震惊，但是这些不好的感觉可能值得反思。除了在 goroutine 的调用堆栈乱窜的固有不足以外，同样存在一些严重的设计问题：
 1.  expect.Nil 的行为依赖于谁调用它。同样的参数，由于调用堆栈位置的原因可能导致行为的不同——这是不可预期的。
 2.  采取极端的动态作用域，将传递给单个函数之前的所有函数的所有变量纳入单个函数的作用域中。这是一个在函数申明没有明确记录的情况下将数据传入和传出的辅助手段。
@@ -142,6 +145,7 @@ func TestOpenFile(t *testing.T) {
 讽刺的是，这恰恰是我对[context.Context](https://dave.cheney.net/2017/01/26/context-is-for-cancelation)的评价。我会将这个问题留给你自己判断是否合理。
 
 ## 最后的话
+
 这是个坏主意，这点没有异议。这不是你可以在生产模式中使用的模式。但是，这也不是生产代码。这是在测试，也许有着不同的规则适用于测试代码。毕竟，我们使用模拟（mocks）、桩（stubs）、猴子补丁（monkey patching）、类型断言、反射、辅助函数、构建标志以及全局变量，所有这些使得我们更加有效率得测试代码。所有这些，*奇技淫巧*是不会让它们出现在生产代码里面的，所以这真的是世界末日吗？
 
 如果你读完本文，你也许会同意我的观点，尽管不太符合常规，并无必要将*testing.T 传递到所有需要断言的函数中去，从而使测试代码更加清晰。
