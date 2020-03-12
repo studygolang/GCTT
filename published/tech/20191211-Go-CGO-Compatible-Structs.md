@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/27148
+
 # 用 cgo 生成用于 cgo 的 C 兼容的结构体
 
-假设（[并非完全假设，这里有 demo](https://github.com/siebenmann/go-kstat/)）你正在编写一个程序包，用于连接 Go 和其它一些提供大量 C 结构体内存的程序。这些结构可能是系统调用的结果，也可能是一个库给你提供的纯粹信息性内容。无论哪种情况，你都希望将这些结构传递给你的程序包的用户，以便他们可以使用这些结构执行操作。在你的包中，你可以直接使用 cgo 提供的 C.<whatever> 类型。但这有点恼人（这些整型它们没有对应的原生 Go 类型，使得与常规 Go 代码交互需要换七八糟的强制转换），并且对于其它导入你的包的代码没有帮助。因此，你需要以某种方式使用原生的 Go 结构体。
+假设（[并非完全假设，这里有 demo](https://github.com/siebenmann/go-kstat/)）你正在编写一个程序包，用于连接 Go 和其它一些提供大量 C 结构体内存的程序。这些结构可能是系统调用的结果，也可能是一个库给你提供的纯粹信息性内容。无论哪种情况，你都希望将这些结构传递给你的程序包的用户，以便他们可以使用这些结构执行操作。在你的包中，你可以直接使用 cgo 提供的 C.<whatever> 类型。但这有点恼人（这些整型它们没有对应的原生 Go 类型，使得与常规 Go 代码交互需要乱七八糟的强制转换），并且对于其它导入你的包的代码没有帮助。因此，你需要以某种方式使用原生的 Go 结构体。
 
 一种方式是手动为这些 C 结构体的定义你自己的 Go 版本。这有两个缺点。这太枯燥了（还很容易出错），并且不能保证你能获得与 C 完全相同的内存布局（后者通常但并非总是很重要）。幸运的是有一种更好的方法，那就是使用 cgo 的 `-godefs` 功能或多或少地为你自动生成结构体声明。生成结果并不总是完美的，但可能会为你带来最大的收益。
 
@@ -102,11 +104,7 @@ PS：`-godefs` 的输入文件被设置为不被正常 `go build` 过程构建�
 via: https://utcc.utoronto.ca/~cks/space/blog/programming/GoCGoCompatibleStructs
 
 作者：[ChrisSiebenmann](https://utcc.utoronto.ca/~cks/space/People/ChrisSiebenmann)
-译者：[译者 ID](https://github.com/befovy)
-校对：[校对者 ID](https://github.com/校对者 ID)
+译者：[befovy](https://github.com/befovy)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
-```
-
-```
