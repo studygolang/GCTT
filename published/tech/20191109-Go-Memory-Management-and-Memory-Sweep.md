@@ -1,8 +1,11 @@
+首发于：https://studygolang.com/articles/27144
+
 # Go：内存管理与内存清理
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191109-Go-Memory-Management-and-Memory-Sweep/01.png)
 
 <p align="center">Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.</p>
+
 *这篇文章基于 Go 1.13 版本。有关内存管理的讨论在我的文章  ”[Go:内存管理与分配](https://medium.com/a-journey-with-go/go-memory-management-and-allocation-a7396d430f44) ” 中有解释。*
 
 清理内存是一个过程，它能够让 Go 知道哪些内存段最近可用于分配。但是，它并不会使用将位置 0 的方式来清理内存。
@@ -14,11 +17,13 @@
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191109-Go-Memory-Management-and-Memory-Sweep/02.png)
 
 <p align="center">Zeroing the memory</p>
+
 但是，我们可能想知道 Go 采用什么样的策略去知道哪些对象能够用于分配。由于在每个范围内有一个内部位图 `allocBits` ，Go 实际上会追踪那些空闲的对象。让我们从初始态开始来回顾一下它的工作流程，
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191109-Go-Memory-Management-and-Memory-Sweep/03.png)
 
 <p align="center">Free objects tracking with allocBits</p>
+
 就性能角度来看，`allocBits` 代表了一个初始态并且会保持不变，但是它会由 `freeIndex`（一个指向第一个空闲位置的增量计数器）所协助。
 
 然后，第一个分配就开始了：
@@ -80,9 +85,9 @@ Go 提供了两种方式来清理内存：
 但是，如果开发者没有强制调用 GC，这个情况并不会发生。在后台运行的清理工作以及在执行过程中的清理工作应该足够多，因为清理内存块的数量和去触发一个新的周期（译者注：GC 周期）的所需的分配的数量成正比。
 
 ---
-via：[来源链接](https://medium.com/a-journey-with-go/go-memory-management-and-memory-sweep-cc71b484de05)
-作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent?source=post_page-----dbef99be2c35----------------------)
+via：<https://medium.com/a-journey-with-go/go-memory-management-and-memory-sweep-cc71b484de05>
+作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[sh1luo](https://github.com/sh1luo)
-校对：[](https://github.com/
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
