@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/27149
+
 # 在 Go 语言中，有时 nil 并不是一个 nil
 
 今天，我遇到了一个 [Go FAQ](http://golang.org/doc/faq#nil_error)。首先，作为一个小小的 Go 语言测验，看看您是否在 Go playground 中运行该程序之前就能推断出它应该打印出的内容（我已经将程序放在侧边栏中，以防它在 Go playground 上消失）。该程序的关键代码是：
@@ -95,6 +97,6 @@ via: https://utcc.utoronto.ca/~cks/space/blog/programming/GoNilNotNil
 
 作者：[ChrisSiebenmann](https://utcc.utoronto.ca/~cks/space/People/ChrisSiebenmann)
 译者：[anxk](https://github.com/anxk)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
