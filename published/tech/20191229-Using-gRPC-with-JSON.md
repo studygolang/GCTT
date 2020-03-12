@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/27151
+
 # 使用 JSON 协议的 gRPC
 
 JSON payload 实现简易的请求和响应的内省。
@@ -108,6 +110,6 @@ via: https://jbrandhorst.com/post/grpc-json/
 
 作者：[Johan Brandhorst](https://jbrandhorst.com/)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
