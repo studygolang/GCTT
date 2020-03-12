@@ -38,7 +38,7 @@ func main() {
 更有趣的是，现在我们可以用 cURL 写出请求（和读取响应）！请求示例：
 
 ```bash
-$ echo -en '\x00\x00\x00\x00\x17{"id":1,"role":"ADMIN"}' | curl -ss -k --http2 \
+$ Echo -en '\x00\x00\x00\x00\x17{"id":1,"role":"ADMIN"}' | curl -ss -k --http2 \
         -H "Content-Type: application/grpc+json" \
         -H "TE:trailers" \
         --data-binary @- \
@@ -46,7 +46,7 @@ $ echo -en '\x00\x00\x00\x00\x17{"id":1,"role":"ADMIN"}' | curl -ss -k --http2 \
 0000000 000 000 000 000 002 173 175
          \0  \0  \0  \0 002   {   }
 0000007
-$ echo -en '\x00\x00\x00\x00\x17{"id":2,"role":"GUEST"}' | curl -ss -k --http2 \
+$ Echo -en '\x00\x00\x00\x00\x17{"id":2,"role":"GUEST"}' | curl -ss -k --http2 \
         -H "Content-Type: application/grpc+json" \
         -H "TE:trailers" \
         --data-binary @- \
@@ -54,7 +54,7 @@ $ echo -en '\x00\x00\x00\x00\x17{"id":2,"role":"GUEST"}' | curl -ss -k --http2 \
 0000000 000 000 000 000 002 173 175
          \0  \0  \0  \0 002   {   }
 0000007
-$ echo -en '\x00\x00\x00\x00\x02{}' | curl -k --http2 \
+$ Echo -en '\x00\x00\x00\x00\x02{}' | curl -k --http2 \
         -H "Content-Type: application/grpc+json" \
         -H "TE:trailers" \
         --data-binary @- \
@@ -101,13 +101,13 @@ https://localhost:10000/example.UserService/AddUser
 
 我们已经展示了我们可以轻易地在 gRPC 中使用 JSON payload，甚至可以用 JSON payload 直接发送 cURL 请求到我们的 gRPC 服务，没有代理，没有 grpc 网关，除了引入一个必要的包也没有其他的准备工作。
 
-如果你对本文感兴趣，或者有任何问题和想法，请在 [@johanbrandhorst](https://twitter.com/JohanBrandhorst) 上或 在Gophers Slack `jbrandhorst`下联系我。很高兴听到你的想法。
+如果你对本文感兴趣，或者有任何问题和想法，请在 [@johanbrandhorst](https://twitter.com/JohanBrandhorst) 上或 在 Gophers Slack `jbrandhorst` 下联系我。很高兴听到你的想法。
 
 ---
 via: https://jbrandhorst.com/post/grpc-json/
 
 作者：[Johan Brandhorst](https://jbrandhorst.com/)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

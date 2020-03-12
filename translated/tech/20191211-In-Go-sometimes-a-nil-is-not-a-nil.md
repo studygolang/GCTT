@@ -18,7 +18,7 @@ func main() {
 }
 ```
 
-由于 Go 语言中的变量是使用它们的零值显式创建的，在指针的情况下，例如 `lp` 将会是 `nil`，您可能期待上述代码会正常运行（即不执行任何操作）。实际上，它会在对 `fred()` 的第二次调用时崩溃。原因是，在 Go 语言中，有时以 `nil` 为值的变量，如果直接打印的话，它虽然看起来像 `nil`，但实际上并不是真的 `nil` 。简而言之，Go 语言区别对待 `nil` 接口值和转换为接口的值为 `nil` 的具体类型。只有前者确实为 `nil`，因此与字面上的 `ni​​l` 相等，就像 `fred()` 在这里做的一样。
+由于 Go 语言中的变量是使用它们的零值显式创建的，在指针的情况下，例如 `lp` 将会是 `nil`，您可能期待上述代码会正常运行（即不执行任何操作）。实际上，它会在对 `fred()` 的第二次调用时崩溃。原因是，在 Go 语言中，有时以 `nil` 为值的变量，如果直接打印的话，它虽然看起来像 `nil`，但实际上并不是真的 `nil` 。简而言之，Go 语言区别对待 `nil` 接口值和转换为接口的值为 `nil` 的具体类型。只有前者确实为 `nil`，因此与字面上的 `ni ​​ l` 相等，就像 `fred()` 在这里做的一样。
 
 （因此，可以使用 `nil f` 调用 `(f *fake)` 上的具体方法。它也许是一个 `nil` 指针，但是它是类型化的 `nil` 指针，所以可以拥有有方法。甚至在接口转换后依然可以拥有方法，正如上述的例子。）
 
@@ -95,6 +95,6 @@ via: https://utcc.utoronto.ca/~cks/space/blog/programming/GoNilNotNil
 
 作者：[ChrisSiebenmann](https://utcc.utoronto.ca/~cks/space/People/ChrisSiebenmann)
 译者：[anxk](https://github.com/anxk)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

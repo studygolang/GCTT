@@ -30,12 +30,12 @@
 
 4. [Why I think Go package management is important](https://dave.cheney.net/2013/10/10/why-i-think-go-package-management-is-important)
 
-   ​																										2019-01-08
+---
 
 via:https://dave.cheney.net/2019/01/08/avoid-package-names-like-base-util-or-common
 
-作者：[*[Dave Cheney](https://dave.cheney.net/)*](https://dave.cheney.net/)
-译者：[Alihanniba](https://github.com/Alihanniba) / 柒呀
+作者：[Dave Cheney](https://dave.cheney.net/)
+译者：[Alihanniba](https://github.com/Alihanniba)
 校对：[zhoudingding](https://github.com/dingdingzhou)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

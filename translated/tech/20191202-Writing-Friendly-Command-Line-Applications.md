@@ -2,13 +2,13 @@
 
 我来给你讲一个故事...
 
-1986年 ， [Knuth](https://en.wikipedia.org/wiki/Donald_Knuth) 编写了一个程序来演示[文学式编程](https://en.wikipedia.org/wiki/Literate_programming) 。
+1986 年 ， [Knuth](https://en.wikipedia.org/wiki/Donald_Knuth) 编写了一个程序来演示[文学式编程](https://en.wikipedia.org/wiki/Literate_programming) 。
 
 这段程序目的是读取一个文本文件，找到 n 个最常使用的单词，然后有序输出这些单词以及它们的频率。 Knuth 写了一个完美的 10 页程序。
 
 Doug Mcllory 看到这里然后写了 `tr -cs A-Za-z '\n' | tr A-Z a-z | sort | uniq -c | sort -rn | sed ${1}q` 。
 
-现在是2019年了，为什么我还要给你们讲一个发生在33年前（可能比一些读者出生的还早）的故事呢？ 计算领域已经发生了很多变化了，是吧？
+现在是 2019 年了，为什么我还要给你们讲一个发生在 33 年前（可能比一些读者出生的还早）的故事呢？ 计算领域已经发生了很多变化了，是吧？
 
 [林迪效应](https://en.wikipedia.org/wiki/Lindy_effect) 是指如一个技术或者一个想法之类的一些不易腐烂的东西的未来预期寿命与他们的当前存活时间成正比。 太长不看版——老技术还会存在。
 
@@ -16,7 +16,7 @@ Doug Mcllory 看到这里然后写了 `tr -cs A-Za-z '\n' | tr A-Z a-z | sort | 
 
 * [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh) 在 GitHub 上已经快有了 100,000 个 星星了
 * [《命令行中的数据科学》](https://www.datascienceatthecommandline.com/)
-* [命令行工具能够比你的 Hadoop 集群快235倍](https://adamdrake.com/command-line-tools-can-be-235x-faster-than-your-hadoop-cluster.html)
+* [命令行工具能够比你的 Hadoop 集群快 235 倍](https://adamdrake.com/command-line-tools-can-be-235x-faster-than-your-hadoop-cluster.html)
 * ...
 
 现在你应该被说服了吧， 让我们来讨论以下怎么使你的 Go 命令行程序变得友好。
@@ -277,6 +277,6 @@ via: https://blog.gopheracademy.com/advent-2019/cmdline/
 
 作者：[Miki Tebeka](https://blog.gopheracademy.com)
 译者：[Ollyder](https://github.com/Ollyder)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
