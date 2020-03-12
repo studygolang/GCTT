@@ -1,4 +1,4 @@
-首发于：https://studygolang.com/articles/22773
+首发于：https://studygolang.com/articles/22778
 
 # Go: 并发访问 Map — Part III
 
