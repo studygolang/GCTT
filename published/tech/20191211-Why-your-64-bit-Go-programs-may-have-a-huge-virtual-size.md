@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/27150
+
 # 为什么你的 64-bit 程序可能占用巨大的虚拟空间
 
 出于很多目的，我从最新的 Go 系统内核开发源码复制了一份代码，在一个正常的运行环境中构建（和重新构建）它，在构建版本基础上周期性地重新构建 Go 程序。近期我在用 `ps` 查看我的[一个程序](https://github.com/siebenmann/smtpd/)的内存使用情况时，发现它占用了约 138 GB 的巨大虚拟空间（Linux ps 命令结果的 `VSZ` 字段），尽管它的常驻内存还不是很大。某个进程的常驻内存很小，但是需要内存很大，通常是表示有内存泄露，因此我心里一颤。
@@ -30,6 +32,6 @@ via: https://utcc.utoronto.ca/~cks/space/blog/programming/GoBigVirtualSize
 
 作者：[ChrisSiebenmann](https://utcc.utoronto.ca/~cks/space/People/ChrisSiebenmann)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
