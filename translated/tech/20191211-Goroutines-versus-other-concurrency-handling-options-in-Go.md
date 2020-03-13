@@ -16,7 +16,7 @@ Go 语言让使用 goroutine 和通道变得非常有吸引力，作为在 Go �
 
 （另一方面，[有时通道是解决看似与它们无关的问题的绝佳方案](http://blog.golang.org/two-go-talks-lexical-scanning-in-go-and)，在看到该文章之前，我从未想过在词法分析器中使用 goroutine 和通道。）
 
-### 侧边栏：我所采用的 Go 锁模式
+## 侧边栏：我所采用的 Go 锁模式
 
 这不是我的原创，而是来源于 Go blog 中的 [Go maps 实战](http://blog.golang.org/go-maps-in-action)一文，如下所示：
 
