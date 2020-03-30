@@ -4,9 +4,6 @@
 ## 目录
 
 <!-- vim-markdown-toc GFM --> 
-
-- [Go 语言如何实现垃圾回收中的 Stop the World (STW)](#go-%e8%af%ad%e8%a8%80%e5%a6%82%e4%bd%95%e5%ae%9e%e7%8e%b0%e5%9e%83%e5%9c%be%e5%9b%9e%e6%94%b6%e4%b8%ad%e7%9a%84-stop-the-world-stw)
-  - [目录](#%e7%9b%ae%e5%bd%95)
 - [Stop The World(STW)](#stop-the-worldstw)
 - [系统调用](#%e7%b3%bb%e7%bb%9f%e8%b0%83%e7%94%a8)
 - [延迟](#%e5%bb%b6%e8%bf%9f)
