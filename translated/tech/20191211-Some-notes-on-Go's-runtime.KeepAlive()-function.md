@@ -20,10 +20,7 @@
 
 PS：虽然很容易说对于一个栈上分配的局部变量（包括入参）由于栈直到函数返回才会清理空间从而不需要调用 `runtime.KeepAlive`，但我认为这是一种很危险的假设。编译器可以非常聪明地为两个不同的、没有重叠生存期的变量重用堆栈槽，或者简单地告诉垃圾收集它已经完成了某些工作（例如，用nil覆盖指向对象的指针）。
 
-
-
 ---
-
 via: https://utcc.utoronto.ca/~cks/space/blog/programming/GoRuntimeKeepAliveNotes
 
 作者：[ChrisSiebenmann](https://utcc.utoronto.ca/~cks/space/People/ChrisSiebenmann)
