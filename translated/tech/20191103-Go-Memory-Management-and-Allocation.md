@@ -86,3 +86,12 @@ Go 并不适用本地缓存来管理较大的内存空间分配。对于超过32
 
 ## 灵感来源
 该内存分配最初基于 TCMalloc，一个 Google 创建的，并发环境优化的内存分配器。这个 [TCMalloc 的文档](http://goog-perftools.sourceforge.net/doc/tcmalloc.html)值得阅读；你会发现上面解释过的概念。
+
+---
+via: https://medium.com/a-journey-with-go/go-memory-management-and-allocation-a7396d430f44
+
+作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
+译者：[dust347](https://github.com/dust347)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
