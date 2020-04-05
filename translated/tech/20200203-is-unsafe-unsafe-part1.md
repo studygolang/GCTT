@@ -10,7 +10,7 @@
 
 附带一段简单的警告：
 
-> 引用 unsafe 包可能会导致你代码的可移植性，并且不再受到 Go 1 兼容性规约的保护。[golang.org](https://golang.org/pkg/unsafe/#pkg-overview)
+> 引用 unsafe 包可能会导致你代码的不具备可移植性，并且不再受到 Go 1 兼容性规约的保护。[golang.org](https://golang.org/pkg/unsafe/#pkg-overview)
 
 函数功能的描述看起来非常的抽象，我们来瞅一眼这些 "unsafe" 的操作：
 
@@ -26,7 +26,7 @@ type Pointer
 
 > 只是为了文档记录的目的而存在，实际上它没有参与到 unsafe 包的实现。这个类型代表了任意的 Go 语言表达式。
 
-所以实际上 unsafe 包就只包含三个函数和一个类型，既然就这么点东西，那我们试着把这个包全部过一遍。现在我们手头上以及有了 Go 研发团队给我的文档和源码，下一步要怎么做？这时候不妨复习一句名人名言：
+所以实际上 unsafe 包就只包含三个函数和一个类型，既然就这么点东西，那我们试着把这个包全部过一遍。现在我们手头上已经有了 Go 研发团队给我的文档和源码，下一步要怎么做？这时候不妨重温一句名人名言：
 
 > 多说无益，放码过来 —— [Linus Torvalds](https://lkml.org/lkml/2000/8/25/132)
 
@@ -149,7 +149,7 @@ fmt.Println("Offset of x.b: ", unsafe.Offsetof(x.b))
 fmt.Println("Offset of x.c: ", unsafe.Offsetof(x.c))
 ```
 
-上述的三个方法都是在[编译期](https://en.wikipedia.org/wiki/Compile_time)执行的，这意味着只要它们在编译器没有报错，在运行时不会有问题发生。但是我们的下一位嘉宾 `unsafe.Pointer` 可就没那么好惹了，它有可能会发生[运行时的错误](https://en.wikipedia.org/wiki/Runtime_(program_lifecycle_phase))。我将会在本文的 part2 详细介绍 `unsafe.Pointer` 以及使用它的过程中容易出现的问题。
+上述的三个方法都是在[编译期](https://en.wikipedia.org/wiki/Compile_time)执行的，这意味着只要它们在编译器没有报错，在运行时不会有问题发生。但是我们的下一位嘉宾 `unsafe.Pointer` 可就没那么好惹了，它有可能会发生[运行时的错误](https://en.wikipedia.org/wiki/Runtime_(program_lifecycle_phase))。我将会在本文的第二部分详细介绍 `unsafe.Pointer` 以及使用它的过程中容易出现的问题。
 
 ---
 
@@ -157,6 +157,6 @@ via: https://www.dnahurnyi.com/is-unsafe-...unsafe-pt.-1/
 
 作者：[Denys Nahurnyi](https://www.dnahurnyi.com/)
 译者：[Alex-liutao](https://github.com/Aelx-liutao)
-校对：[polaris1119](https://github.com/polaris1119)
+校对：[@unknwon](https://github.com/unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
