@@ -24,6 +24,10 @@ GCTT (Go Chinese Translation Team) 是 Go 中文网（https://studygolang.com) �
 
 请首先加入翻译组的 QQ 群，群号是：423373670，加群时请说明是“志愿者”。加入后记得修改您的群名片为您的 GitHub 的 ID。**同时强烈建议注册 Go 中文网账号并和 GitHub 账号绑定，这样无论是翻译提醒和后期译文发布，都会和你的中文网账号关联。**
 
+关注微信公众号：Go语言中文网
+
+![](wechat.png)
+
 ## 如何开始
 
 加入的成员，请先阅读 [WIKI 如何开始](https://github.com/studygolang/GCTT/wiki)。
