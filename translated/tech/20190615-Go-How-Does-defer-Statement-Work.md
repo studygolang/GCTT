@@ -39,7 +39,7 @@ func newdefer(siz int32) *_defer {
    gp := getg() // 获取当前 goroutine
    [...]
    // 延迟列表现在被附加到新的 _defer 结构体
-   d.link = gp._defer 
+   d.link = gp._defer
    gp._defer = d // 新的结构现在是第一个被调用的
    return d
 }
@@ -199,7 +199,6 @@ Defer-4  51.3ns ± 3%  45.8ns ± 1%  -10.72%  (p=0.000 n=10+10)
 ```
 
 由于第二个优化，现在速度也提高了10%。
-
 
 ---
 via: https://medium.com/a-journey-with-go/go-how-does-defer-statement-work-1a9492689b6e
