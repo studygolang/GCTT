@@ -1,4 +1,4 @@
-# Go：defer 申明如何工作
+# Go：defer 语句如何工作
 ℹ️ *这篇文章基于 Go 1.12。*
 
 [```defer``` 语句](https://golang.org/ref/spec#Defer_statements)是在函数返回前执行一段代码的便捷方法，如 [Golang 规范](https://golang.org/ref/spec#Defer_statements)所描述：
