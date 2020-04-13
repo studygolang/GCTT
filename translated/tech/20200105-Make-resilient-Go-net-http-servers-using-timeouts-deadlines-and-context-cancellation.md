@@ -27,7 +27,7 @@ srv := &http.Server{
 }
 ```
 
-`http.Server` 类型的服务可以用四个不同的 timeout 来初始化： 
+`http.Server` 类型的服务可以用四个不同的 timeout 来初始化：
 
 - `ReadTimeout`：读取包括请求体的整个请求的最大时长
 - `WriteTimeout`：写响应允许的最大时长
@@ -410,16 +410,12 @@ func WithDeadline(parent Context, d time.Time) (Context, CancelFunc) {
 2. 不要忘记上下文取消。`context` 包使用起来很简单，并且可以节省你服务器上的很多处理资源。尤其是在处理异常或网络状况不好时。
 3. 一定要用截止时间。确保做了完整的测试，验证了能提供你期望的所有功能。
 
-
-
 更多关于此主题的文章：
 
 - “The complete guide to Go net/http timeouts” on [Cloudflare's blog](https://blog.cloudflare.com/the-complete-guide-to-golang-net-http-timeouts/)
 - “So you want to expose Go on the Internet” on [Cloudflare's blog](https://blog.cloudflare.com/exposing-go-on-the-internet/)
 - “Use http.TimeoutHandler or ReadTimeout/WriteTimeout?” on [Stackoverflow](https://stackoverflow.com/questions/51258952/use-http-timeouthandler-or-readtimeout-writetimeout)
 - “Standard net/http config will break your production environment” on [Simon Frey's blog](https://blog.simon-frey.eu/go-as-in-golang-standard-net-http-config-will-break-your-production)
-
-
 
 ---
 
