@@ -78,7 +78,7 @@ Go 也提供了 `go generate` 命令通过扫描用 `//go:generate` 指示的代
 
 这个新版本，[发布时间推移](https://docs.google.com/document/d/106hMEZj58L9nq9N9p7Zll_WKfo-oyZHFyI6MttuZmBU/edit#)了两个月，目的是在以后每年八月和二月发布新版本：
 
-![https://github.com/golang/go/wiki/Go-Release-Cycle](https://raw.githubusercontent.com/studygolang/gctt-images2/master/Go-Retrospective/09.png) 
+![https://github.com/golang/go/wiki/Go-Release-Cycle](https://raw.githubusercontent.com/studygolang/gctt-images2/master/Go-Retrospective/09.png)
 
 这个版本对 [gc](https://golang.org/doc/go1.5#gc) 进行了[重新设计](https://docs.google.com/document/d/1wmjrocXIWTr1JxU-3EQBI6BK6KgtiFArkG47XK73xIQ/edit#)。归功于并发的回收，在回收期间的等待时间大大减少。下面是一个 Twitter 生产环境的服务器的例子，等待时间由 300ms 降到 30ms：
 
