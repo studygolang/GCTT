@@ -78,17 +78,17 @@ exit status 2
 - 这个文件描述符被传递给读取文件的函数
 - 这个函数首先做一些繁重的工作：
 
-[图01](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/01.png)
+![图01](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/01.png)
 
 allocate 函数触发 gc：
 
-[02.png](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/02.png)
+![02.png](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/02.png)
 
 因为文件描述符是个整型，并以副本传递，所以打开文件的函数返回的结构体 `*File*` 不再被引用。Gc 把它标记为可以被回收的。之后触发这个变量注册的 finalizer，关闭文件。
 
 然后，主协程读取文件：
 
-[03.png](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/03.png)
+![03.png](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/03.png)
 
 因为文件已经被 finalizer 关闭，所以会出现 panic。
 
@@ -96,7 +96,7 @@ allocate 函数触发 gc：
 
 `runtime` 包暴露了一个方法，用来在 Go 程序中避免出现这种情况，并显式地声明了让变量不被回收。在运行到这个调用这个方法的地方之前，gc 不会清除指定的变量。下面是加了对这个方法的调用的新代码：
 
-[04.png](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/04.png)
+![04.png](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/04.png)
 
 在运行到 `keepAlive` 方法之前，gc 不能回收变量 `p`。如果你再运行一次程序，它会正常读取文件并成功终止。
 
@@ -104,15 +104,15 @@ allocate 函数触发 gc：
 
 `keepAlive` 方法本身没有做什么：
 
-[05.png](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/05.png)
+![05.png](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/05.png)
 
 运行时，Go 编译器会以很多种方式优化代码：函数内联，死码消除，等等。这个函数不会被内联，Go 编译器可以轻易地探测到哪里调用了 `keepAlive`。编译器很容易追踪到调用它的地方，它会发射一个特殊的 SSA 指令，以此来确保它不会被 gc 回收。
 
-[06.png](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/06.png)
+![06.png](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/06.png)
 
 在生成的 SSA 代码中也可以看到这个 SSA 指令：
 
-[07.png](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/07.png)
+![07.png](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/07.png)
 
 在我的文章 [Go 编译器概述](https://medium.com/a-journey-with-go/go-overview-of-the-compiler-4e5a153ca889) 中你可以看到更多关于 Go 编译器和 SSA 的信息。
 
