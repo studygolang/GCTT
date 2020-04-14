@@ -2,7 +2,7 @@
 ![Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/00.png)
 本文基于 Go 1.13。
 
-在 Go 中，我不需要自己管理内存分配和释放。然而，有些时候我们需要对程序进行更细粒度的控制。Go 运行时提供了很多种控制运行时状态及其与内存管理器之间相互影响的方式。本文中，我们来审查让变量不被 GC 回收的能力。
+在 Go 中，我们不需要自己管理内存分配和释放。然而，有些时候我们需要对程序进行更细粒度的控制。Go 运行时提供了很多种控制运行时状态及其与内存管理器之间相互影响的方式。本文中，我们来审查让变量不被 GC 回收的能力。
 
 ## 场景
 
@@ -59,7 +59,7 @@ func doSomeAllocation() {
 
 [源码地址](https://gist.githubusercontent.com/blanchonvincent/a247b6c2af559b62f93377b5d7581b7f/raw/6488ec2a36c28c46f942b7ac8f24af4e75c19a2f/main.go)
 
-这个程序中一个函数打开文件，另一个函数读取文件。表示文件的结构体注册了一个 finalizer，在 gc 释放结构体时自动关闭文件。运行这个程序，会出现 panic：
+这个程序中一个函数打开文件，另一个函数读取文件。代表文件的结构体注册了一个 finalizer，在 gc 释放结构体时自动关闭文件。运行这个程序，会出现 panic：
 
 ```bash
 panic: bad file descriptor
