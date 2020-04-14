@@ -1,5 +1,5 @@
 # 延长变量的生命周期
-[Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/00.png)
+![Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/00.png)
 本文基于 Go 1.13。
 
 在 Go 中，我不需要自己管理内存分配和释放。然而，有些时候我们需要对程序进行更细粒度的控制。Go 运行时提供了很多种控制运行时状态及其与内存管理器之间相互影响的方式。本文中，我们来审查让变量不被 GC 回收的能力。
