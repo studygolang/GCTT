@@ -94,3 +94,11 @@ gomaxprocs=2 idleprocs=1 runqueue=0 [0 0]
 ## 更多关于协程
 
 如果你想提升创建协程的方式，那么 Go 的调度器和并发是很重要的内容。Wiliam Kennedy 的 [Go 的调度机制](https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part1.html) 可能是最好的在线资源之一，我强烈推荐。
+---
+via: https://medium.com/a-journey-with-go/go-improve-the-usage-of-your-goroutines-with-godebug-4d1f33970c33
+
+作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
+译者：[译者ID](https://github.com/lxbwolf)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
