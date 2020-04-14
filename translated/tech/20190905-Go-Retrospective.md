@@ -170,6 +170,7 @@ Go 1.11 带来了一个重要的新功能：[Go modules](https://blog.golang.org
 重写了逃逸分析，减少了 Go 程序中堆上的内存申请的空间。下面是对这个新的逃逸分析运行基准的结果：
 
 ![https://github.com/golang/go/issues/23109](https://raw.githubusercontent.com/studygolang/gctt-images2/master/Go-Retrospective/17.png)
+
 ---
 via: https://medium.com/a-journey-with-go/go-retrospective-b9723352e9b0
 
