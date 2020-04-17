@@ -62,3 +62,12 @@ v := <-ch
 - 栈增长。当需要的时候，Go 会增加 goroutine 的大小。这个操作是由 ```g0``` 的 prolog 函数完成的。
   
 这个特殊的 goroutine 涉及许多其他操作（较大空间的对象分配，cgo 等），需要较大的栈来保证我们的程序进行更高效的管理操作，以保持程序的低内存打印效率。
+
+---
+via: https://medium.com/a-journey-with-go/go-g0-special-goroutine-8c778c6704d8
+
+作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
+译者：[dust347](https://github.com/dust347)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
