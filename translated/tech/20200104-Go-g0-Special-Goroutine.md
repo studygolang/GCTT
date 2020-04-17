@@ -54,13 +54,13 @@ v := <-ch
 ![](https://github.com/studygolang/gctt-images2/blob/master/20200104-Go-g0-Special-Goroutine/goroutine-creation.png?raw=true)
 
 新创建的 goroutine 优先运行，并且被放在本地队列的顶部。
- 
+
 建议阅读我的文章“[Go：并发与调度器亲和性（ Go: Concurrency & Scheduler Affinity ）](https://medium.com/a-journey-with-go/go-concurrency-scheduler-affinity-3b678f490488)”了解更多关于 goroutine 优先级的信息。
 
 - defer 函数分配。
 - 垃圾收集操作，比如 STW（ stopping the world ），扫描 goroutine 的栈，以及一些标记清理操作。
 - 栈增长。当需要的时候，Go 会增加 goroutine 的大小。这个操作是由 ```g0``` 的 prolog 函数完成的。
- 
+
 这个特殊的 goroutine 涉及许多其他操作（较大空间的对象分配，cgo 等），需要较大的栈来保证我们的程序进行更高效的管理操作，以保持程序的低内存打印效率。
 
 ---
