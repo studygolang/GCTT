@@ -1,7 +1,7 @@
 # Go：defer 语句如何工作
 ℹ️ *这篇文章基于 Go 1.12。*
 
-[```defer``` 语句](https://golang.org/ref/spec#Defer_statements)是在函数返回前执行一段代码的便捷方法，如 [Golang 规范](https://golang.org/ref/spec#Defer_statements)所描述：
+[`defer` 语句](https://golang.org/ref/spec#Defer_statements)是在函数返回前执行一段代码的便捷方法，如 [Golang 规范](https://golang.org/ref/spec#Defer_statements)所描述：
 > 延迟函数（ deferred functions ）在所在函数返回前，以与声明相反的顺序立即被调用
 
 以下是 LIFO (后进先出)实现的例子：
@@ -92,9 +92,9 @@ func deferreturn(arg0 uintptr) {
 0x0070 00112 (main.go:10)  ADDQ   $24, SP
 0x0074 00116 (main.go:10)  RET
 ```
-```deferproc``` 方法被调用了两次，并且内部调用了 ```newdefer``` 方法，我们之前已经看到该方法将我们的函数注册为延迟函数。之后，在函数的最后，在 ```deferreturn``` 函数的帮助下，延迟方法会被一个接一个地调用。
+`deferproc` 方法被调用了两次，并且内部调用了 `newdefer` 方法，我们之前已经看到该方法将我们的函数注册为延迟函数。之后，在函数的最后，在 `deferreturn` 函数的帮助下，延迟方法会被一个接一个地调用。
 
-Go 标准库向我们展示了结构体 ```_defer``` 同样链接了一个 ```_panic *_panic``` 属性。来通过另一个例子看下它在哪里会起作用。
+Go 标准库向我们展示了结构体 `_defer` 同样链接了一个 `_panic *_panic` 属性。来通过另一个例子看下它在哪里会起作用。
 
 ## 延迟和返回值
 如规范所描述，延迟函数访问返回的结果的唯一方法是使用[命名返回参数](https://golang.org/ref/spec#Function_types)：
@@ -124,7 +124,7 @@ without named param, x: 1
 确实就像这篇“[defer, panic 和 recover](https://blog.golang.org/defer-panic-and-recover)”博客所描述的一样，一旦确定这一行为，我们可以将其与 recover 函数混合使用：
 > **recover函数** 是一个用于重新获取对恐慌（panicking）goroutine 控制的内置函数。recover 函数仅在延迟函数内部时才有效。
 
-如我们所见，```_defer``` 结构体链接了一个 ```_panic``` 属性，该属性在 panic 调用期间被链接。
+如我们所见，`_defer` 结构体链接了一个 `_panic` 属性，该属性在 panic 调用期间被链接。
 ```go
 func gopanic(e interface{}) {
    [...]
@@ -137,7 +137,7 @@ func gopanic(e interface{}) {
 }
 ```
 
-确实，在发生 panic 的情况下，调用延迟函数之前会调用 ```gopanic``` 方法：
+确实，在发生 panic 的情况下，调用延迟函数之前会调用 `gopanic` 方法：
 ```
 0x0067 00103 (main.go:21)   CALL   runtime.gopanic(SB)
 0x006c 00108 (main.go:21)  UNDEF
