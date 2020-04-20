@@ -144,6 +144,6 @@ via: https://medium.com/a-journey-with-go/go-how-does-go-stop-the-world-1ffab8bc
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent?source=post_page-----72cfc12c6976----------------------)
 译者：[SarahChenBJ](https://github.com/SarahChenBJ)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[@unknwon](https://github.com/unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
