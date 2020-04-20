@@ -22,14 +22,14 @@ func smallAllocation() *smallStruct {
    return &smallStruct{}
 }
 ```
-注释 ```//go:noinline``` 会禁用内联，以避免内联通过移除函数的方式优化这段代码，从而造成最终没有分配内存的情况出现。
+注释 `//go:noinline` 会禁用内联，以避免内联通过移除函数的方式优化这段代码，从而造成最终没有分配内存的情况出现。
 
-通过运行逃逸分析命令 ```go tool compile "-m" main.go``` 可以确认Go执行了的分配：
+通过运行逃逸分析命令 `go tool compile "-m" main.go` 可以确认Go执行了的分配：
 ```
 main.go:14:9: &smallStruct literal escapes to heap
 ```
 
-借助 ```go tool compile -S main.go``` 命令得到这段程序的汇编代码，可以同样明确地向我们展示具体的分配细节：
+借助 `go tool compile -S main.go` 命令得到这段程序的汇编代码，可以同样明确地向我们展示具体的分配细节：
 ```
 0x001d 00029 (main.go:14)   LEAQ   type."".smallStruct(SB), AX
 0x0024 00036 (main.go:14)  PCDATA $0, $0
@@ -37,14 +37,14 @@ main.go:14:9: &smallStruct literal escapes to heap
 0x0028 00040 (main.go:14)  CALL   runtime.newobject(SB)
 ```
 
-函数 ```newobject``` 是用于新对象的分配以及代理 ```mallocgc``` 的内置函数，该函数在堆上管理这些内存。在Go语言中有两种策略，一种用于较小的内存空间的分配，而另一种则用于较大的内存空间的分配。
+函数 `newobject` 是用于新对象的分配以及代理 `mallocgc` 的内置函数，该函数在堆上管理这些内存。在Go语言中有两种策略，一种用于较小的内存空间的分配，而另一种则用于较大的内存空间的分配。
 
 ## 较小内存空间的分配策略
-对于小于32kb的，较小的内存空间的分配策略，Go 会从被叫做 ```mcache``` 的本地缓存中尝试获取内存。 这个缓存持有一个被叫做 ```mspan``` 的内存块(span ，32kb大小的内存块)列表, mspan包含着可用于分配的内存：
+对于小于32kb的，较小的内存空间的分配策略，Go 会从被叫做 `mcache` 的本地缓存中尝试获取内存。 这个缓存持有一个被叫做 `mspan` 的内存块(span ，32kb大小的内存块)列表, mspan包含着可用于分配的内存：
 
 ![用mcache分配内存](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191103-Go-Memory-Management-and-Allocation/allocation-with-mcache.png)
 
-每个线程 ```M``` 被分配一个处理器 ```P```，并且一次最多处理一个goroutine。在分配内存时，当前的goroutine会使用它当前的P的本地缓存，在 span 链表中寻找第一个可用的空闲对象。使用这种本地缓存不需要锁操作，从而分配效率更高。
+每个线程 `M` 被分配一个处理器 `P`，并且一次最多处理一个goroutine。在分配内存时，当前的goroutine会使用它当前的P的本地缓存，在 span 链表中寻找第一个可用的空闲对象。使用这种本地缓存不需要锁操作，从而分配效率更高。
 
 span 链表被划分为8字节大小到32k字节大小的，约70个的大小等级，每个等级可以存储不同大小的对象。
 
@@ -56,11 +56,11 @@ span 链表被划分为8字节大小到32k字节大小的，约70个的大小等
 
 ![](https://github.com/studygolang/gctt-images2/blob/master/20191103-Go-Memory-Management-and-Allocation/previous-example.png?raw=true)
 
-现在，我们可能会好奇，如果在分配期间span 没有空闲的插槽会发生什么。Go 维护着每个大小等级的 span 的中央链表，该中央链表被叫做 ```mcentral```，其中维护着包含空闲对象的 span 和没有空闲对象的 span ：
+现在，我们可能会好奇，如果在分配期间span 没有空闲的插槽会发生什么。Go 维护着每个大小等级的 span 的中央链表，该中央链表被叫做 `mcentral`，其中维护着包含空闲对象的 span 和没有空闲对象的 span ：
 
 ![span 的中央链表](https://github.com/studygolang/gctt-images2/blob/master/20191103-Go-Memory-Management-and-Allocation/central-lists-of-spans.png?raw=true)
 
-```mcentral```维护着 span 的双向链表；其中每个链表节点有着指向前一个 span 和后一个 span 的引用。非空链表中的 span 可能包含着一些正在使用的内存，“非空”表示在链表中至少有一个空闲的插槽可供分配。当垃圾收集器清理内存时，可能会清理一部分 span，将这部分标记为不再使用，并将其放回非空链表。
+`mcentral`维护着 span 的双向链表；其中每个链表节点有着指向前一个 span 和后一个 span 的引用。非空链表中的 span 可能包含着一些正在使用的内存，“非空”表示在链表中至少有一个空闲的插槽可供分配。当垃圾收集器清理内存时，可能会清理一部分 span，将这部分标记为不再使用，并将其放回非空链表。
 
 我们的程序现在可以在没有插槽的情况下向中央链表请求 span ：
 
@@ -70,7 +70,7 @@ span 链表被划分为8字节大小到32k字节大小的，约70个的大小等
 
 ![从堆上分配 span ](https://github.com/studygolang/gctt-images2/blob/master/20191103-Go-Memory-Management-and-Allocation/span-allocation-from-the-heap.png?raw=true)
 
-堆会在需要的时候从系统（ OS ）获取内存，如果需要更多的内存，堆会分配一个叫做 ```arena``` 的大块内存，在64位架构下为64Mb，在其他架构下大多为4Mb。arena 同样适用 span 映射内存。
+堆会在需要的时候从系统（ OS ）获取内存，如果需要更多的内存，堆会分配一个叫做 `arena` 的大块内存，在64位架构下为64Mb，在其他架构下大多为4Mb。arena 同样适用 span 映射内存。
 
 ![堆由 arena 组成](https://github.com/studygolang/gctt-images2/blob/master/20191103-Go-Memory-Management-and-Allocation/heap-is-composed-by-arenas.png?raw=true)
 
