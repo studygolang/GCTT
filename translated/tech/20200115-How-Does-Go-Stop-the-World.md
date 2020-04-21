@@ -21,33 +21,33 @@ func main() {
 ```
 这段代码中， 调用 `runtime.GC()` 执行垃圾回收， 会触发 "Stop the World"的三个步骤。
 
-(关于关于垃圾回收机制， 可以参考我的另外一篇文章 ["Go： 内存标记在垃圾回收中的实现"](https：//medium.com/a-journey-with-go/go-how-does-the-garbage-collector-mark-the-memory-72cfc12c6976))：
+(关于关于垃圾回收机制， 可以参考我的另外一篇文章 ["Go： 内存标记在垃圾回收中的实现"](https://medium.com/a-journey-with-go/go-how-does-the-garbage-collector-mark-the-memory-72cfc12c6976))：
 
 这个阶段的第一步， 是抢占所有正在运行的 goroutine(即图中`G`)：
 
-![STW_goroutines_preemption](https：//github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/STW_goroutines_preemption.png?raw=true)
+![STW_goroutines_preemption](https://github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/STW_goroutines_preemption.png?raw=true)
 <br>
 
 被抢占之后， 这些goroutine 会被悬停在一个相对安全的状态。 同时，承载 goroutine 的处理器 `P` (无论是正在运行代码的处理器还是已在 idle 列表中的处理器)， 都会被被标记成停止状态 (stopped)， 不再运行任何代码：
 
-![STW_P_stopped](https：//github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/STW_P_stopped.png?raw=true)
+![STW_P_stopped](https://github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/STW_P_stopped.png?raw=true)
 <br>
 
 接下来， Go 调度器 (Scheduler) 开始调度， 把每个处理器的 Marking Worker (即图中`M`) 从各自对应的处理器 `P`分离出来， 放到 idle 列表中去， 如下图：
 
-![STW_M_Detach](https：//github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/STW_M_Detach.png?raw=true)
+![STW_M_Detach](https://github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/STW_M_Detach.png?raw=true)
 <br>
 
 在停止了处理器和 Marking Worker 之后， 对于 goroutine 本身， 他们会被放到一个全局队列中等待：
 
-![STW_G_Queue](https：//github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/STW_G_Queue.png?raw=true)
+![STW_G_Queue](https://github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/STW_G_Queue.png?raw=true)
 <br>
 
 到目前为止， 整个"世界"被停止. 至此， 仅存的 "Stop The World" (STW)goroutine 可以开始接下来的回收工作， 在一些列的操作结束之后， 再启动整个"世界"。
 
 我们也可以在 Tracing 工具中看到一次 STW 的运行状态：
 
-![STW_TRACING](https：//github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/STW_TRACING.png?raw=true)
+![STW_TRACING](https://github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/STW_TRACING.png?raw=true)
 <br>
 
 ## 系统调用
@@ -74,7 +74,7 @@ func main() {
 
 这是一段简单的系统调用的程序， 我们通过 Tracing 工具看一下它是如何被处理的：
 
-![SC_tracing](https：//github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/SC_tracing.png?raw=true)
+![SC_tracing](https://github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/SC_tracing.png?raw=true)
 <br>
 
 我们可以看到， 这个系统调用goroutine (即图中`G30`) 在"世界"被停止的时候， 就已经存在了。
@@ -108,7 +108,7 @@ func main() {
 
 我们还是来看一下这段代码运行的 Tracing 情况， 从下图我们可以看到STW 阶段总共耗时2.6秒：
 
-![STW_26S](https：//github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/STW_26S.png?raw=true)
+![STW_26S](https://github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/STW_26S.png?raw=true)
 <br>
 
 我们来简单分析为什么会出现这么长的 STW： 正如例子中的 main 函数， 一个没有函数调用的 goroutine 一般不会被抢占， 那么这个 goroutine 对应的处理器`P`在任务结束之前不会被释放。
@@ -117,7 +117,7 @@ func main() {
 
 为了提高整体程序的效率， 我们一般需要避免或者改进这种情况。
 
-关于这部分， 大家可以参考我的另一篇文章 ["Go： Goroutine 和抢占"](https：//medium.com/a-journey-with-go/go-goroutine-and-preemption-d6bc2aa2f4b7)
+关于这部分， 大家可以参考我的另一篇文章 ["Go: Goroutine 和抢占"](https://medium.com/a-journey-with-go/go-goroutine-and-preemption-d6bc2aa2f4b7)
 
 ----------------
 
@@ -127,4 +127,4 @@ via： https：//medium.com/a-journey-with-go/go-how-does-go-stop-the-world-1ffa
 译者：[SarahChenBJ](https://github.com/SarahChenBJ)
 校对：[@unknwon](https://github.com/unknwon)
 
-本文由 [GCTT](https：//github.com/studygolang/GCTT) 原创编译，[Go 中文网](https：//studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
