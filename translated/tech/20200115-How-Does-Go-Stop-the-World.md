@@ -1,12 +1,10 @@
 # Go 语言如何实现垃圾回收中的 Stop the World (STW)
 
-
 ## 目录
 
-  - [Stop The World(STW)](#stop-the-worldstw)
-  - [系统调用](#%e7%b3%bb%e7%bb%9f%e8%b0%83%e7%94%a8)
-  - [延迟](#%e5%bb%b6%e8%bf%9f)
-
+- [Stop The World(STW)](#stop-the-worldstw)
+- [系统调用](#%e7%b3%bb%e7%bb%9f%e8%b0%83%e7%94%a8)
+- [延迟](#%e5%bb%b6%e8%bf%9f)
 
 *本篇文章讨论实现原理基于Go 1.13.*
 
@@ -44,7 +42,6 @@ func main() {
 
 ![STW_G_Queue](https：//github.com/SarahChenBJ/gctt-images/blob/master/how-does-go-stop-the-world/STW_G_Queue.png?raw=true)
 <br>
-
 
 到目前为止， 整个"世界"被停止. 至此， 仅存的 "Stop The World" (STW)goroutine 可以开始接下来的回收工作， 在一些列的操作结束之后， 再启动整个"世界"。
 
