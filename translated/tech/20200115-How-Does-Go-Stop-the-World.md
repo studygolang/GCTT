@@ -121,7 +121,7 @@ func main() {
 
 ----------------
 
-via： https：//medium.com/a-journey-with-go/go-how-does-go-stop-the-world-1ffab8bc8846
+via: https://medium.com/a-journey-with-go/go-how-does-go-stop-the-world-1ffab8bc8846
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent?source=post_page-----72cfc12c6976----------------------)
 译者：[SarahChenBJ](https://github.com/SarahChenBJ)
