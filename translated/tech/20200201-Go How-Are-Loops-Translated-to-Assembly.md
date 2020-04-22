@@ -1,6 +1,6 @@
- # 20200201-Go: How-Are-Loops-Translated-to-Assembly?
+# 20200201-Go: How-Are-Loops-Translated-to-Assembly?
 
-*本本基于 go 1.13 版本*
+*本文基于 go 1.13 版本*
 
 循环在编程中是一个重要的概念，且易于上手。但是，循环必须被翻译成计算机能理解的底层指令。它的编译方式也会在一定程度上影响到标准库中的其他组件。让我们开始分析循环吧。
 
@@ -88,9 +88,6 @@ println(t)
 之后，`INCQ` 表示自增，然后会增加循环的当前位置：
 
 ![](https://miro.medium.com/max/1400/1*P5B20uTio7cI03LQpl3Q5Q.png)
-
-
-
 循环主体的最后一条指令是 `ADDQ DX, CX` ,表示把 `DX` 的值加在 `CX`，所以我们可以看出，`DX`所包含的值是目前循环所代表的的值，而 `CX` 代表了变量 `t` 的值。
 
 ![](https://miro.medium.com/max/1400/1*_cASAicNq2cy2bvwzN4h8g.png)
