@@ -98,9 +98,9 @@ func (c *conn) readRequest(ctx context.Context) (w *response, err error) {
 
 所以，deadline 是什么？工作机制是什么？如果我们的请求耗时过长，它们会取消我们的连接吗？
 
-一种简单地理解 deadline 的思路是，把它理解为对作用于连接上的特定的行为的发生限制的一个时间点。例如，如果我们设置了一个写的 deadline，当过了这个这个 deadline 后，所有对这个连接的写操作都会被拒绝。
+一种简单地理解 deadline 的思路是，把它理解为对作用于连接上的特定的行为的发生限制的一个时间点。例如，如果我们设置了一个写的 deadline，当过了这个 deadline 后，所有对这个连接的写操作都会被拒绝。
 
-尽管我们可以使用 deadline 来模拟超时操作，但我们还是不能控制处理器完成操作所需的耗时。deadline 作用于连接，因此我们的服务仅在处理器尝试访问连接的属性（如对 `http.ResponseWriter` 进行写操作）时才会不返回结果。
+尽管我们可以使用 deadline 来模拟超时操作，但我们还是不能控制处理器完成操作所需的耗时。deadline 作用于连接，因此我们的服务仅在处理器尝试访问连接的属性（如对 `http.ResponseWriter` 进行写操作）之后才会返回（错误）结果。
 
 为了实际验证上面的论述，我们来创建一个小的 handler，这个 handler 完成操作所需的耗时相对于我们为服务设置的超时更长：
 
@@ -154,7 +154,7 @@ curl localhost:8888  0.01s user 0.01s system 0% cpu 2.021 total
 
 在 Go 和一些其它编程语言中，组合往往是设计和开发中最好的方式。标准库的 [`net/http`  包](https://golang.org/pkg/net/http)有很多相互兼容的元素，开发者可以不需经过复杂的设计考虑就可以轻易将它们组合在一起。
 
-从那个角度看，`net/http` 包提供了[`TimeoutHandler`](https://golang.org/pkg/net/http/#TimeoutHandler) — 返回了一个在给定的时间限制内运行的 handler。
+基于此，`net/http` 包提供了[`TimeoutHandler`](https://golang.org/pkg/net/http/#TimeoutHandler) — 返回了一个在给定的时间限制内运行的 handler。
 
 函数签名：
 
@@ -196,8 +196,8 @@ func main() {
 
 两个需要留意的地方是：
 
-- 我们在 `http.TimetoutHandler` 里封装`slowHanlder`，超时时间设为 1s，超时信息为 “Timeout!”。
-- 我们把`WriteTimeout` 增加到 5s，以给与 `http.TimeoutHandler` 足够的时间执行。如果我们不这么做，当 `TimeoutHandler` 开始执行时，已经过了 deadline，不能再写到响应。
+- 我们在 `http.TimetoutHandler` 里封装 `slowHanlder`，超时时间设为 1s，超时信息为 “Timeout!”。
+- 我们把 `WriteTimeout` 增加到 5s，以给予 `http.TimeoutHandler` 足够的时间执行。如果我们不这么做，当 `TimeoutHandler` 开始执行时，已经过了 deadline，不能再写到响应。
 
 如果我们再启动服务，当程序运行到 slow handler 时，会有如下输出：
 
@@ -316,6 +316,7 @@ func slowAPICall(ctx context.Context) string {
 	case <-ctx.Done():
 		log.Printf("slowAPICall was supposed to take %s seconds, but was canceled.", d)
 		return ""
+        //time.After() 可能会导致内存泄漏
 	case <-time.After(time.Duration(d) * time.Second):
 		log.Printf("Slow API call done after %d seconds.\n", d)
 		return "foobar"
