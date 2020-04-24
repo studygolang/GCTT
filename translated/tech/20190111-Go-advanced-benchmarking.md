@@ -1,4 +1,5 @@
 # Go 高级基准测试
+
 ## 背景
 有时你必须解决不同类型的问题。通常来说复杂的问题并不会只有单一的解决方案，但是解决方案的优劣取决于程序在运行时所要解决问题的子集。
 
@@ -45,7 +46,7 @@ func (b bufferedScanner) Close() error{
 
 就初始化的内存空间而言，这个方案有着更大的开销（用来构建 scanner 以及其他额外的数据结构），但是在同一个链接发送几十kb数据之后，这个方案在内存和计算方面变得更加的高效。
 
-流式的解决方案实现起来比较棘手，但是得益于 `bufio` 包，这些困难是可控的。实现代码仅仅是有着自定义 [`SplitFunc`](https://golang.org/pkg/bufio/#SplitFunc) 的 [`scanner`](https://golang.org/pkg/bufio/#Scanner) 的包装。 
+流式的解决方案实现起来比较棘手，但是得益于 `bufio` 包，这些困难是可控的。实现代码仅仅是有着自定义 [`SplitFunc`](https://golang.org/pkg/bufio/#SplitFunc) 的 [`scanner`](https://golang.org/pkg/bufio/#Scanner) 的包装。
 
 ## 核心问题
 不管我的解决方案如何，我现在有两段代码，它们各有利弊：对于低流量生存周期短的连接，第一种方案更好，但是对于流量密集的场景，第二种方案是唯一可行的。
