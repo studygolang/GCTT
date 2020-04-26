@@ -106,7 +106,7 @@ allocate 函数触发 gc：
 
 ![05.png](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/05.png)
 
-运行时，Go 编译器会以很多种方式优化代码：函数内联，死码消除，等等。这个函数不会被内联，Go 编译器可以轻易地探测到哪里调用了 `keepAlive`。编译器很容易追踪到调用它的地方，它会发射一个特殊的 SSA 指令，以此来确保它不会被 gc 回收。
+运行时，Go 编译器会以很多种方式优化代码：函数内联，死码消除，等等。这个函数不会被内联，Go 编译器可以轻易地探测到哪里调用了 `keepAlive`。编译器很容易追踪到调用它的地方，它会发出一个特殊的 SSA 指令，以此来确保它不会被 gc 回收。
 
 ![06.png](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/06.png)
 
