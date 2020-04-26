@@ -76,7 +76,7 @@ Go 也提供了 `go generate` 命令通过扫描用 `//go:generate` 指示的代
 
 ## [Go 1.5](https://blog.golang.org/go1.5) — 2015 年 8 月：
 
-这个新版本，[发布时间推移](https://docs.google.com/document/d/106hMEZj58L9nq9N9p7Zll_WKfo-oyZHFyI6MttuZmBU/edit#)了两个月，目的是在以后每年八月和二月发布新版本：
+这个新版本，[发布时间推迟](https://docs.google.com/document/d/106hMEZj58L9nq9N9p7Zll_WKfo-oyZHFyI6MttuZmBU/edit#)了两个月，目的是在以后每年八月和二月发布新版本：
 
 ![https://github.com/golang/go/wiki/Go-Release-Cycle](https://raw.githubusercontent.com/studygolang/gctt-images2/master/Go-Retrospective/09.png)
 
