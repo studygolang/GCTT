@@ -20,11 +20,10 @@ Go中的约定是使用`MixedCaps`或`mixedCaps`这种形式（简称为**驼峰
 package awesome
 type Awesomeness struct {
 }
-//Do is an exported method and is accessible in other packages
+//Do方法是一个外部方法，可以被别的包调用
 func (a Awesomeness) Do() string {
  return a.doMagic("Awesome")
 }
-//doMagic is where magic happens and only visible inside awesome 
 func (a Awesomeness) doMagic(input string) string {
  return input
 }
