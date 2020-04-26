@@ -1,15 +1,15 @@
-#Go：Goroutine 与抢占机制
+# Go：Goroutine 与抢占机制
 
-##目录
+## 目录
 - [调度器与抢占机制](#调度器与抢占机制)
 - [强制抢占](#强制抢占)
 - [后续改进](#后续改进)
-  
+
 *本篇文章讨论实现原理基于Go 1.13.*
 
 Go 通过一个内部调度器（scheduler）来管理 goroutines。该调度器负责切换和调度多个 goroutine，保证每个 goroutine 都可以得到执行时间。同时，为了执行这些切换调度操作，调度器需要一种抢占机制，用以抢占运行的 goroutine。
 
-##调度器与抢占机制
+## 调度器与抢占机制
 
 我们先看一个简单的例子, 以初步了解调度器是如何工作的：
 *为了方便阅读，本文的代码示例都是非原子操作*
@@ -103,7 +103,7 @@ func (g gen) readNumber() int {
 
 大部分情况，goroutine 会允许调度器来执行他们，但是如果一个循环没有任何函数调用，它是不会被调度器切换调度的，这个是一个典型的需要强制抢占的例子。
 
-##强制抢占
+## 强制抢占
 
 我们还是通过一个例子来看探究一个没有函数调用的循环是如何无法被调度的：
 
@@ -146,7 +146,7 @@ func main() {
 <br>
 
 - 通过Go 的配置，使得循环可以被抢占。具体来说，我们可以通过 `GOEXPERIMENT=preemptibleloops` 指令来重建 Go 的工具链（toolchain）或者在使用`go build`的时候，加上`-gcflags -d=ssa/insert_resched_checks/on` 这个参数。
-  
+
    我们回到之前那段没有被抢占的循环代码，通过修改配置，循环被抢占，下面是 tracing 状态：
    ![STW_goroutines_preemption](https://github.com/SarahChenBJ/gctt-image/blob/master/20191213-goroutin-and-preemption/force_preemption_tracing2.png?raw=true)
    <br>
@@ -168,7 +168,7 @@ func main() {
    Loop-8   2.18s ± 2%   2.05s ± 1%  -6.23%
    ```
 
-##后续改进
+## 后续改进
 
 目前，调度器使用协作式抢占技术，这种技术在可以支持大部分使用场景。但是，在一些特殊场景中，它也会成为痛点所在。所以，一篇文章提出了另一种 “非协作式抢占”方案，旨在解决如下问题：
 
