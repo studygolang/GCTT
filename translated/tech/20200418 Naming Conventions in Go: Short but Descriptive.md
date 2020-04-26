@@ -21,19 +21,16 @@ Go中的约定是使用`MixedCaps`或`mixedCaps`这种形式（简称为**驼峰
 ```go
 package awesome
 type Awesomeness struct {
- 
 }
-// Do is an exported method and is accessible in other packages
+//Do is an exported method and is accessible in other packages
 func (a Awesomeness) Do() string {
  return a.doMagic("Awesome")
 }
-// doMagic is where magic happens and only visible inside awesome 
+//doMagic is where magic happens and only visible inside awesome 
 func (a Awesomeness) doMagic(input string) string {
  return input
 }
 ```
-
-
 
 如果你尝试在外部使用`doMagic`方法，你会得到一个编译错误。
 
@@ -99,15 +96,11 @@ addr // good (refers to Address)
 
 在Go中没有长度限制，不过避免特别长的内容也是值得推荐的。
 
-
-
 ## 结论
 
 我总结了Go语言中的一些常用的命名规范，在什么时候以及场景应用他们。我也解释了Go语言中简短命名背后主要的思想——在简洁和描述之间找到平衡点。
 
 规定是为了引导你，而不是阻碍你。所以只要是更合适的并且能满足一般厂家，就应该轻松地打破既有的规定。
-
-
 
 via: https://medium.com/better-programming/naming-conventions-in-go-short-but-descriptive-1fa7c6d2f32a
 
