@@ -2,7 +2,7 @@
 
 ℹ️*这篇文章基于 Go 1.13 编写。*
 
-Go 的一系列内存管理手段（内存分配，垃圾回收，内存访问检查）使许多开发者的开发工作变得很轻松。编译器通过在代码中引入“边界检查” 来确保对内存的安全访问。
+Go 的一系列内存管理手段（内存分配，垃圾回收，内存访问检查）使许多开发者的开发工作变得很轻松。编译器通过在代码中引入“边界检查” 来确保安全地访问内存。
 
 ## 生成的指令
 
@@ -59,7 +59,7 @@ Go 先使用 `MOVQ` 指令将 list 变量的长度放入寄存器 `CX` 中
 
 ![https://github.com/studygolang/gctt-images2/raw/master/20200304-Go-Memory-Safety-with-Bounds-Check/00.png](https://github.com/studygolang/gctt-images2/raw/master/20200304-Go-Memory-Safety-with-Bounds-Check/00.png)
 
-*通过将栈指针偏移 48 个字节就可以访问长度*
+*通过将栈指针移动 48 个字节就可以访问长度*
 
 下一条指令将 slice 的长度与程序即将访问的偏移量进行比较
 
@@ -133,6 +133,6 @@ via: [https://medium.com/a-journey-with-go/go-memory-safety-with-bounds-check-13
 
 译者：[yxlimo](https://github.com/yxlimo)
 
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[Alex.Jiang](https://github.com/JYSDeveloper)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
