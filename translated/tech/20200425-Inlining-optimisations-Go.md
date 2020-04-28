@@ -14,9 +14,9 @@
 
 ### 函数调用的虚耗
 
-在任何语言中，调用一个函数 <sup>[1][2]</sup> 都会有消耗。把参数编组进寄存器或放入栈中（取决于 ABI），在返回结果时倒序取出时会有虚耗。引入一次函数调用会导致程序计数器从指令流的一点跳到另一点，这可能导致管道阻塞。函数内部通常有前置处理，需要为函数执行准备新的栈帧，还有与前置相似的后续处理，需要在返回给调用方之前释放栈帧空间。
+在任何语言中，调用一个函数 <sup>[1](https://dave.cheney.net/2020/04/25/inlining-optimisations-in-go#easy-footnote-bottom-1-4053)</sup> 都会有消耗。把参数编组进寄存器或放入栈中（取决于 ABI），在返回结果时倒序取出时会有虚耗。引入一次函数调用会导致程序计数器从指令流的一点跳到另一点，这可能导致管道阻塞。函数内部通常有前置处理，需要为函数执行准备新的栈帧，还有与前置相似的后续处理，需要在返回给调用方之前释放栈帧空间。
 
-在 Go 中函数调用会消耗额外的资源来支持栈的动态增长。在进入函数时，goroutine 可用的栈空间与函数需要的空间大小相等。如果可用空间不同，前置处理就会跳到把数据复制到一块新的、更大的空间的运行时逻辑，而这会导致栈空间变大。当这个复制完成后，运行时跳回到原来的函数入口，再执行栈空间检查，函数调用继续执行。这种方式下，goroutine 开始时可以申请很小的栈空间，在有需要时再申请更大的空间。<sup>[2][3]</sup>
+在 Go 中函数调用会消耗额外的资源来支持栈的动态增长。在进入函数时，goroutine 可用的栈空间与函数需要的空间大小相等。如果可用空间不同，前置处理就会跳到把数据复制到一块新的、更大的空间的运行时逻辑，而这会导致栈空间变大。当这个复制完成后，运行时跳回到原来的函数入口，再执行栈空间检查，函数调用继续执行。这种方式下，goroutine 开始时可以申请很小的栈空间，在有需要时再申请更大的空间。<sup>[2](https://dave.cheney.net/2020/04/25/inlining-optimisations-in-go#easy-footnote-bottom-2-4053)</sup>
 
 这个检查消耗很小 — 只有几个指令 — 而且由于 goroutine 是成几何级数增长的，因此这个检查很少失败。这样，现代处理器的分支预测单元会通过假定检查肯定会成功来隐藏栈空间检查的消耗。当处理器预测错了栈空间检查，必须要抛弃它推测性执行的操作时，与为了增加 goroutine 的栈空间运行时所需的操作消耗的资源相比，管道阻塞的代价更小。
 
@@ -56,7 +56,7 @@ func BenchmarkMax(b *testing.B) {
 }
 ```
 
-运行这个基准，会得到如下结果：[3][4]
+运行这个基准，会得到如下结果：[3](https://dave.cheney.net/2020/04/25/inlining-optimisations-in-go#easy-footnote-bottom-3-4053)
 
 ```bash
 % go test -bench=.
@@ -80,7 +80,7 @@ Max-4  2.21ns ± 1%  0.49ns ± 6%  -77.96%  (p=0.000 n=18+19)
 
 这个提升是从哪儿来的呢？
 
-首先，移除掉函数调用以及与之关联的前置处理 [4][5] 是主要因素。把 `max` 函数的函数体在调用处展开，减少了处理器执行的指令数量并且消除了一些分支。
+首先，移除掉函数调用以及与之关联的前置处理 [4](https://dave.cheney.net/2020/04/25/inlining-optimisations-in-go#easy-footnote-bottom-4-4053) 是主要因素。把 `max` 函数的函数体在调用处展开，减少了处理器执行的指令数量并且消除了一些分支。
 
 现在由于编译器优化了 `BenchmarkMax`，因此它可以看到 `max` 函数的内容，进而可以做更多的提升。当 `max` 被内联后，`BenchmarkMax` 呈现给编译器的样子，看起来是这样的：
 
@@ -106,7 +106,7 @@ name   old time/op  new time/op  delta
 Max-4  2.21ns ± 1%  0.48ns ± 3%  -78.14%  (p=0.000 n=18+18)
 ```
 
-现在编译器能看到在 `BenchmarkMax` 里内联 `max` 的结果，可以执行以前不能执行的优化措施。例如，编译器注意到 `i` 初始值为 `0`，仅做自增操作，因此所有与 `i` 的比较都可以假定 `i` 不是负值。这样条件表达式 `-1 > i` 永远不是 true。[5][6]
+现在编译器能看到在 `BenchmarkMax` 里内联 `max` 的结果，可以执行以前不能执行的优化措施。例如，编译器注意到 `i` 初始值为 `0`，仅做自增操作，因此所有与 `i` 的比较都可以假定 `i` 不是负值。这样条件表达式 `-1 > i` 永远不是 true。[5](https://dave.cheney.net/2020/04/25/inlining-optimisations-in-go#easy-footnote-bottom-5-4053)
 
 证明了 `-1 > i` 永远不为 true 后，编译器可以把代码简化为：
 
@@ -155,13 +155,14 @@ func BenchmarkMaxMaxMax(b *testing.B) {
 与之前的例子中的代码运行速度一样快，因为编译器可以对上面的代码重复地进行内联，也把代码简化到 `r = i` 表达式。
 
 下一篇文章中，我会论述当 Go 编译器想要内联函数调用栈中间的某个函数时选用的另一种内联策略。最后我会论述编译器为了内联代码准备好要达到的极限，这个极限 Go 现在的能力还达不到。
-
+<!--
 1. 在 Go 中，一个方法就是一个有预先定义的形参和接受者的函数。假设这个方法不是通过接口调用的，调用一个无消耗的函数所消耗的代价与引入一个方法是相同的。[][7]
 2. 在 Go 1.14 以前，栈检查的前置处理也被 gc 用于 STW，通过把所有活跃的 goroutine 栈空间设为 0，来强制它们切换为下一次函数调用时的运行时状态。这个机制[最近被替换][8]为一种新机制，新机制下运行时可以不用等 goroutine 进行函数调用就可以暂停 goroutine。[][9]
 3. 我用 `//go:noinline` 编译指令来阻止编译器内联 `max`。这是因为我想把内联 `max` 的影响与其他影响隔离开，而不是用 `-gcflags='-l -N'` 选项在全局范围内禁止优化。关于 `//go:` 注释在[这篇文章][10]中详细论述。[][11]
 4. 你可以自己通过比较 `go test -bench=. -gcflags=-S`有无 `//go:noinline` 注释时的不同结果来验证一下。[][12]
 5. 你可以用 `-gcflags=-d=ssa/prove/debug=on` 选项来自己验证一下。[][13]
 
+-->
 ## 相关文章：
 
 1. [使 Go 变快的 5 件事](https://dave.cheney.net/2014/06/07/five-things-that-make-go-fast)
@@ -177,7 +178,7 @@ via: https://dave.cheney.net/2020/04/25/inlining-optimisations-in-go
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
+<!--
 [a]: https://dave.cheney.net/author/davecheney
 [b]: https://github.com/lujun9972
 [1]: https://github.com/golang/go
@@ -197,3 +198,4 @@ via: https://dave.cheney.net/2020/04/25/inlining-optimisations-in-go
 [15]: https://dave.cheney.net/2013/06/02/why-is-a-goroutines-stack-infinite "Why is a Goroutine’s stack infinite ?"
 [16]: https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go "How to write benchmarks in Go"
 [17]: https://dave.cheney.net/2018/01/08/gos-hidden-pragmas "Go’s hidden #pragmas"
+-->
