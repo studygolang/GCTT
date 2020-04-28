@@ -1,4 +1,4 @@
-#Go 中的内联优化
+# Go 中的内联优化
 
 本文讨论 Go 编译器是如何实现内联的以及这种优化方法如何影响你的 Go 代码。
 
@@ -59,14 +59,14 @@ func BenchmarkMax(b *testing.B) {
 运行这个基准，会得到如下结果：[3][4]
 
 ```bash
-% go test -bench=. 
+% go test -bench=.
 BenchmarkMax-4   530687617         2.24 ns/op
 ```
 
 在我的 2015 MacBook Air 上  `max(-1, i)` 的耗时约为 2.24 纳秒。现在去掉 `//go:noinline` 编译指令，再看下结果：
 
 ```bash
-% go test -bench=. 
+% go test -bench=.
 BenchmarkMax-4   1000000000         0.514 ns/op
 ```
 
