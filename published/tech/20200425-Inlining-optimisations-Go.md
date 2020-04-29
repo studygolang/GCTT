@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/28335
+
 # Go 中的内联优化
 
 本文讨论 Go 编译器是如何实现内联的以及这种优化方法如何影响你的 Go 代码。
@@ -18,7 +20,7 @@
 
 在 Go 中函数调用会消耗额外的资源来支持栈的动态增长。在进入函数时，goroutine 可用的栈空间与函数需要的空间大小相等。如果可用空间不同，前置处理就会跳到把数据复制到一块新的、更大的空间的运行时逻辑，而这会导致栈空间变大。当这个复制完成后，运行时跳回到原来的函数入口，再执行栈空间检查，函数调用继续执行。这种方式下，goroutine 开始时可以申请很小的栈空间，在有需要时再申请更大的空间。<sup>[2](https://dave.cheney.net/2020/04/25/inlining-optimisations-in-go#easy-footnote-bottom-2-4053)</sup>
 
-这个检查消耗很小 — 只有几个指令 — 而且由于 goroutine 是成几何级数增长的，因此这个检查很少失败。这样，现代处理器的分支预测单元会通过假定检查肯定会成功来隐藏栈空间检查的消耗。当处理器预测错了栈空间检查，必须要抛弃它推测性执行的操作时，与为了增加 goroutine 的栈空间运行时所需的操作消耗的资源相比，管道阻塞的代价更小。
+这个检查消耗很小 — 只有几个指令 — 而且由于 Goroutine 是成几何级数增长的，因此这个检查很少失败。这样，现代处理器的分支预测单元会通过假定检查肯定会成功来隐藏栈空间检查的消耗。当处理器预测错了栈空间检查，必须要抛弃它推测性执行的操作时，与为了增加 Goroutine 的栈空间运行时所需的操作消耗的资源相比，管道阻塞的代价更小。
 
 虽然现代处理器可以用预测性执行技术优化每次函数调用中的泛型和 Go 特定的元素的开销，但那些开销不能被完全消除，因此在每次函数调用执行必要的工作过程中都会有性能消耗。一次函数调用本身的开销是固定的，与更大的函数相比，调用小函数的代价更大，因为在每次调用过程中它们做的有用的工作更少。
 
@@ -59,14 +61,14 @@ func BenchmarkMax(b *testing.B) {
 运行这个基准，会得到如下结果：[3](https://dave.cheney.net/2020/04/25/inlining-optimisations-in-go#easy-footnote-bottom-3-4053)
 
 ```bash
-% go test -bench=.
+% Go test -bench=.
 BenchmarkMax-4   530687617         2.24 ns/op
 ```
 
 在我的 2015 MacBook Air 上  `max(-1, i)` 的耗时约为 2.24 纳秒。现在去掉 `//go:noinline` 编译指令，再看下结果：
 
 ```bash
-% go test -bench=.
+% Go test -bench=.
 BenchmarkMax-4   1000000000         0.514 ns/op
 ```
 
@@ -155,47 +157,21 @@ func BenchmarkMaxMaxMax(b *testing.B) {
 与之前的例子中的代码运行速度一样快，因为编译器可以对上面的代码重复地进行内联，也把代码简化到 `r = i` 表达式。
 
 下一篇文章中，我会论述当 Go 编译器想要内联函数调用栈中间的某个函数时选用的另一种内联策略。最后我会论述编译器为了内联代码准备好要达到的极限，这个极限 Go 现在的能力还达不到。
-<!--
-1. 在 Go 中，一个方法就是一个有预先定义的形参和接受者的函数。假设这个方法不是通过接口调用的，调用一个无消耗的函数所消耗的代价与引入一个方法是相同的。[][7]
-2. 在 Go 1.14 以前，栈检查的前置处理也被 gc 用于 STW，通过把所有活跃的 goroutine 栈空间设为 0，来强制它们切换为下一次函数调用时的运行时状态。这个机制[最近被替换][8]为一种新机制，新机制下运行时可以不用等 goroutine 进行函数调用就可以暂停 goroutine。[][9]
-3. 我用 `//go:noinline` 编译指令来阻止编译器内联 `max`。这是因为我想把内联 `max` 的影响与其他影响隔离开，而不是用 `-gcflags='-l -N'` 选项在全局范围内禁止优化。关于 `//go:` 注释在[这篇文章][10]中详细论述。[][11]
-4. 你可以自己通过比较 `go test -bench=. -gcflags=-S`有无 `//go:noinline` 注释时的不同结果来验证一下。[][12]
-5. 你可以用 `-gcflags=-d=ssa/prove/debug=on` 选项来自己验证一下。[][13]
 
--->
-## 相关文章：
+文中的引用说明：
 
-1. [使 Go 变快的 5 件事](https://dave.cheney.net/2014/06/07/five-things-that-make-go-fast)
-2. [为什么 Goroutine 的栈空间会无限增长？](https://dave.cheney.net/2013/06/02/why-is-a-goroutines-stack-infinite)
-3. [Go 中怎么写基准测试](https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go)
-4. [Go 中隐藏的编译指令](https://dave.cheney.net/2018/01/08/gos-hidden-pragmas)
+1. 在 Go 中，一个方法就是一个有预先定义的形参和接受者的函数。假设这个方法不是通过接口调用的，调用一个无消耗的函数所消耗的代价与引入一个方法是相同的。
+2. 在 Go 1.14 以前，栈检查的前置处理也被 gc 用于 STW，通过把所有活跃的 Goroutine 栈空间设为 0，来强制它们切换为下一次函数调用时的运行时状态。这个机制[最近被替换][https://github.com/golang/proposal/blob/master/design/24543-non-cooperative-preemption.md]为一种新机制，新机制下运行时可以不用等 Goroutine 进行函数调用就可以暂停 goroutine。[][9]
+3. 我用 `//go:noinline` 编译指令来阻止编译器内联 `max`。这是因为我想把内联 `max` 的影响与其他影响隔离开，而不是用 `-gcflags='-l -N'` 选项在全局范围内禁止优化。关于 `//go:` 注释在[这篇文章][https://dave.cheney.net/2018/01/08/gos-hidden-pragmas]中详细论述。
+4. 你可以自己通过比较 `go test -bench=. -gcflags=-S` 有无 `//go:noinline` 注释时的不同结果来验证一下。
+5. 你可以用 `-gcflags=-d=ssa/prove/debug=on` 选项来自己验证一下。
 
 ---
+
 via: https://dave.cheney.net/2020/04/25/inlining-optimisations-in-go
 
 作者：[Dave Cheney](https://dave.cheney.net/)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-<!--
-[a]: https://dave.cheney.net/author/davecheney
-[b]: https://github.com/lujun9972
-[1]: https://github.com/golang/go
-[2]: tmp.gBQ2tEtMHc#easy-footnote-bottom-1-4053 "在 Go 中，一个方法就是一个有预先定义的形参和接受者的函数。假设这个方法不是通过接口调用的，调用一个无消耗的函数所消耗的代价与引入一个方法是相同的。"
-[3]: tmp.gBQ2tEtMHc#easy-footnote-bottom-2-4053 "Up until Go 1.14 the stack check preamble was also used by the garbage collector to stop the world by setting all active goroutine’s stacks to zero, forcing them to trap into the runtime the next time they made a function call. This system was <a href="https://github.com/golang/proposal/blob/master/design/24543-non-cooperative-preemption.md">recently replaced</a> with a mechanism which allowed the runtime to pause an goroutine without waiting for it to make a function call."
-[4]: tmp.gBQ2tEtMHc#easy-footnote-bottom-3-4053 "I’m using the <code>//go:noinline</code> pragma to prevent the compiler from inlining <code>max</code>. This is because I want to isolate the effects of inlining on <code>max</code> rather than disabling optimisations globally with <code>-gcflags='-l -N'</code>. I go into detail about the <code>//go:</code> comments in <a href="https://dave.cheney.net/2018/01/08/gos-hidden-pragmas">this presentation</a>."
-[5]: tmp.gBQ2tEtMHc#easy-footnote-bottom-4-4053 "You can check this for yourself by comparing the output of <code>go test -bench=. -gcflags=-S</code> with and without the <code>//go:noinline</code> annotation."
-[6]: tmp.gBQ2tEtMHc#easy-footnote-bottom-5-4053 "You can check this yourself with the <code>-gcflags=-d=ssa/prove/debug=on</code> flag."
-[7]: tmp.gBQ2tEtMHc#easy-footnote-1-4053
-[8]: https://github.com/golang/proposal/blob/master/design/24543-non-cooperative-preemption.md
-[9]: tmp.gBQ2tEtMHc#easy-footnote-2-4053
-[10]: https://dave.cheney.net/2018/01/08/gos-hidden-pragmas
-[11]: tmp.gBQ2tEtMHc#easy-footnote-3-4053
-[12]: tmp.gBQ2tEtMHc#easy-footnote-4-4053
-[13]: tmp.gBQ2tEtMHc#easy-footnote-5-4053
-[14]: https://dave.cheney.net/2014/06/07/five-things-that-make-go-fast "Five things that make Go fast"
-[15]: https://dave.cheney.net/2013/06/02/why-is-a-goroutines-stack-infinite "Why is a Goroutine’s stack infinite ?"
-[16]: https://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go "How to write benchmarks in Go"
-[17]: https://dave.cheney.net/2018/01/08/gos-hidden-pragmas "Go’s hidden #pragmas"
--->
