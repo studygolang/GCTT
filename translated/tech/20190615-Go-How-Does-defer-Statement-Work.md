@@ -183,7 +183,7 @@ error from err2: recovered
 作为这篇关于延迟函数的文章的总结，让我们来看看延迟函数的提升。
 
 ## 性能提升
-[Go 1.8](https://golang.org/doc/go1.8#defer)是提升 defer 的最近的一个版本，我们可以通过运行 Go 的基准测试来看到这些提升（在1.7和1.8之间进行对比）：
+[Go 1.8](https://golang.org/doc/go1.8#defer)是提升 defer 的最近的一个版本（译者注：目前 Go 1.14 才是提升 defer 性能的最近的一个版本），我们可以通过运行 Go 的基准测试来看到这些提升（在1.7和1.8之间进行对比）：
 ```
 name         old time/op  new time/op  delta
 Defer-4      99.0ns ± 9%  52.4ns ± 5%  -47.04%  (p=0.000 n=9+10)
@@ -205,6 +205,6 @@ via: https://medium.com/a-journey-with-go/go-how-does-defer-statement-work-1a949
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[dust347](https://github.com/dust347)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[@unknwon](https://github.com/unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
