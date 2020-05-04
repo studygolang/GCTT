@@ -14,11 +14,11 @@ via: [原文链接](https://medium.com/a-journey-with-go/go-ordering-in-select-s
 
 ![](https://blog-image-1253555052.cos.ap-guangzhou.myqcloud.com/20200429220520.png)
 
-> 本文基于 go 1.14 
+> 本文基于 go 1.14
 
 `select` 允许在一个goroutine中管理多个channel。但是，当所有channel同时就绪的时候，go需要在其中选择一个执行。此外，go还需要处理没有channel就绪的情况，我们先从就绪的channel开始。
 
-# 顺序
+## 顺序
 
 `select` 不会按照任何规则或者优先级选择就绪的channel。go标准库在每次执行的时候，都会将他们顺序打乱，也就是说不能保证任何顺序。
 
@@ -112,7 +112,7 @@ func main() {
 
 当所有channel同时准备就绪时，有80％的机会选择通道a。下面来看一下channel未就绪的情况。
 
-# 没有就绪 channels
+## 没有就绪 channels
 
 `select` 运行时，如果没有一个case channel就绪，那么他就会运行`default:`,如果 `select`中没有写default，那么他就进入等待状态，如下面这个例子
 
@@ -143,13 +143,13 @@ func main() {
 
 ![](https://blog-image-1253555052.cos.ap-guangzhou.myqcloud.com/20200429225528.png)
 
-Goroutine(G7)订阅所有频道并在列表末尾等待。 如果channel发送了一条消息，channel将通知已在等待该消息的另一个Goroutine。一旦收到通知，`select `将取消订阅所有channel，并且返回到代码运行.
+Goroutine(G7)订阅所有频道并在列表末尾等待。 如果channel发送了一条消息，channel将通知已在等待该消息的另一个Goroutine。一旦收到通知，`select`将取消订阅所有channel，并且返回到代码运行.
 
 更多关于channel与等待队列的信息，请查看作者另外一篇文章[*Go: Buffered and Unbuffered Channels*](https://medium.com/a-journey-with-go/go-buffered-and-unbuffered-channels-29a107c00268)*.*
 
 上面介绍的逻辑，都是针对于有两个或者以上的活动的channel，实际上如果只有一个活动的channel，go乐意简化select
 
-# 简化
+## 简化
 
 如果只有一个case 加上一个default，例子：
 
