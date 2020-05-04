@@ -7,17 +7,16 @@
 1. 数组拥有固定的大小；`[5]int`即表明是一个有 5 个`int`的数组，又与`[3]int`相区分开
 
 2. 他们是值类型。思考下面这个例子
-
-   ```
-   package main 
-   import "fmt"
-   func main() {
-           var a [5]int
-           b := a
-           b[2] = 7
-           fmt.Println(a, b) // prints [0 0 0 0 0] [0 0 7 0 0]
-   }
-   ```
+ ```
+ package main 
+ import "fmt"
+ func main() {
+        var a [5]int
+        b := a
+        b[2] = 7
+        fmt.Println(a, b) // prints [0 0 0 0 0] [0 0 7 0 0]
+} 
+ ```
 
    声明语句`b:=a`声明一个新变量`b`，一个`[5]int`的数据类型，并把`a`的内容拷贝到`b`中，更改`b`中的值并不会对`a`中内容造成影响，因为`a`和`b`是独立的。
 *作者注：这并不是数组的特殊属性，在 Go 中，每次分配其实都是副本值传递* 
@@ -29,7 +28,7 @@ Go 的切片类型与数组类型有两个不同的地方：
 *作者注：这有时也被成为后台数组（backing arrays)*
 由于第二个特性，两个数组可以同时分享一个后台数组，思考以下例子：
 ### 例1：对切片再切片
-```
+ ```
 package main
 
 import "fmt"
@@ -40,7 +39,7 @@ func main() {
         b[0] = 0
         fmt.Println(a, b) // prints [1 2 0 4 5] [0 4 5]
 }
-```
+ ```
 
 *译者注：`a`也是个切片，而不是数组，只要`[]`内没有数字，就是切片，在本例中，`a`是数组{1,2,3,4,5}的一个切片*
 
@@ -198,3 +197,7 @@ via: https://dave.cheney.net/2018/07/12/slices-from-the-ground-up
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
+
+```
+
+```

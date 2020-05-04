@@ -75,7 +75,7 @@ func main() {
 
 如果是引用变量的话，`main`中的`m`被传到`fn`中，那么经过函数的处理`m`应该已经被初始化了才对，但是可以看出`fn`的处理对`m`并没有影响，所以`map`也不是引用。
 
-##  map 是一个指向 runtime.hmap 结构的指针
+##  map 是一个指向runtime.hmap结构的指针
 如果你还有疑问的话，请继续阅读下去。
 
 ## map类型是什么
@@ -94,7 +94,7 @@ m := make(map[int]int)
 // can be created on the stack, h and/or bucket may be non-nil.
 // If h != nil, the map can be created directly in h.
 // If h.buckets != nil, bucket pointed to can be used as the first bucket.
-func makemap(t *maptype, hint int, h *hmap) *hmap 
+func makemap(t *maptype, hint int, h *hmap)*hmap
 ```
 可以看到，`makemap`函数返回`*hmap`，一个指向[hmap](https://golang.org/src/runtime/map.go?h=hmap#L115)结构的指针，我们可以从go源码中看到这些，除此之外，我们还可以证明map值的大小和`uintptr`一样。
 ```
@@ -121,8 +121,6 @@ Ian Taylor [在这个回答](https://groups.google.com/forum/#!msg/golang-nuts/S
 In the very early days what we call maps now were written as pointers, so you wrote *map[int]int. We moved away from that when we realized that no one ever wrote `map` without writing `*map`.
 ```
 所以说，Go 把`*map[int]int`重命名为`map[int]int`
-
-
 
 via:https://dave.cheney.net/2017/04/29/there-is-no-pass-by-reference-in-go
 作者：[[Dave Cheney](https://dave.cheney.net/)](https://dave.cheney.net/about)
