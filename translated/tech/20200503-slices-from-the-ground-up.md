@@ -7,19 +7,19 @@
 1. 数组拥有固定的大小；`[5]int`即表明是一个有 5 个`int`的数组，又与`[3]int`相区分开
 
 2. 他们是值类型。思考下面这个例子
-```
-package main 
+```go
+package main
 import "fmt"
 func main() {
       var a [5]int
       b := a
       b[2] = 7
       fmt.Println(a, b) // prints [0 0 0 0 0] [0 0 7 0 0]
-} 
+}
 ```
 
 声明语句`b:=a`声明一个新变量`b`，一个`[5]int`的数据类型，并把`a`的内容拷贝到`b`中，更改`b`中的值并不会对`a`中内容造成影响，因为`a`和`b`是独立的。
-*作者注：这并不是数组的特殊属性，在 Go中，每次分配其实都是副本值传递* 
+*作者注：这并不是数组的特殊属性，在Go中，每次分配其实都是副本值传递* 
 
 ## 切片 slices
 Go 的切片类型与数组类型有两个不同的地方：
@@ -68,9 +68,8 @@ func main() {
 在例2中，`a`被传值给`negate`函数作为形式参数`s`,函数遍历`s`中的元素，将他们转为相反数，尽管`negate`函数没有返回任何值或者用任何方式去在`main`中访问`a`，但是`a`中的内容还是被`negate`所修改了。大多程序员程序员对Go中的切片与数组有一个直观的了解，应为这样的概念在其他语言中也有，例如
 
 ### Python重写例1
-
 ```
-Python 2.7.10 (default, Feb  7 2017, 00:08:15) 
+Python 2.7.10 (default, Feb  7 2017, 00:08:15)
 [GCC 4.2.1 Compatible Apple LLVM 8.0.0 (clang-800.0.34)] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
 >>> a = [1,2,3,4,5]
@@ -79,7 +78,6 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> a
 [1, 2, 0, 4, 5]
 ```
-
 ### Ruby
 
 ```
@@ -196,8 +194,3 @@ via: https://dave.cheney.net/2018/07/12/slices-from-the-ground-up
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
-
-```
-
-```
