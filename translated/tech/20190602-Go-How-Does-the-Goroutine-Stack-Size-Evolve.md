@@ -52,9 +52,9 @@ func max(a int, b int) int {
 
 这里有两个指令涉及到堆栈变化的：
 
-*  `CALL runtime.morestack_noctxt`：这个方法将会分配更多堆栈，如果需要的话。
-* `NOSPLIT`这个指令代表不需要栈溢出检查。与其相似的有 [编译指令](https://golang.org/cmd/compile/)  `//go:nosplit`。
+* `CALL runtime.morestack_noctxt`：这个方法将会分配更多堆栈，如果需要的话。
 
+* `NOSPLIT`这个指令代表不需要栈溢出检查。与其相似的有 [编译指令](https://golang.org/cmd/compile/)  `//go:nosplit`。
 如果我们查阅方法 `runtime.morestack_noctxt`，它会从  `runtime/stack.go `调用方法 `newstack`：
 
 ```go
