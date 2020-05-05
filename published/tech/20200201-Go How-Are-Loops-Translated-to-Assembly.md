@@ -1,12 +1,16 @@
-# 20200201-Go: How-Are-Loops-Translated-to-Assembly?
+首发于：https://studygolang.com/articles/28455
 
-*本文基于 go 1.13 版本*
+# Go 中的循环是如何转为汇编的？
+
+![Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200201-how-are-loops/cover.png)
+
+*本文基于 Go 1.13 版本*
 
 循环在编程中是一个重要的概念，且易于上手。但是，循环必须被翻译成计算机能理解的底层指令。它的编译方式也会在一定程度上影响到标准库中的其他组件。让我们开始分析循环吧。
 
 ## 循环的汇编代码
 
-使用循坏迭代 `array`，`slice`，`channel`，以下是一个使用循环对 `slice`计算总和的例子。
+使用循坏迭代 `array`，`slice`，`channel`，以下是一个使用循环对 `slice` 计算总和的例子。
 
 ```go
 func main() {
@@ -45,19 +49,19 @@ func main() {
 
 寄存器 `AX` 包含着当前循环所处位置，而 `CX` 包含着变量 `t` 的值，下面为带有指令和通用寄存器的直观表示：
 
-![](https://miro.medium.com/max/1400/1*B2jl6bdU80U9dFzRCKn5_g.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200201-how-are-loops/1.png)
 
 循环从表示「跳转到指令 82 」的 `JMP 82` 开始，这条指令的作用可以通过第二行来判断：
 
-![](https://miro.medium.com/max/1400/1*PNIhFlWL7FmDjpBO_kZxGA.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200201-how-are-loops/2.png)
 
 接下来的指令 `CMPQ AX,$5` 表示「比较寄存器 `AX` 和 `5`」，事实上，这个操作是把 `AX` 中的值减去 5 ，然后储存在另一个寄存器中，这个值可以被用在下一条指令 `JLT 71` 中，它的含义是 「如果值小于 0 则跳转到指令 71 」，以下是更新后的直观表示：
 
-![](https://miro.medium.com/max/1400/1*7UxdEPDKWVNBg4g5EVjCJw.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200201-how-are-loops/3.png)
 
 如果不满足条件，则程序将会跳转到循环体之后的下一条指令执行。
 
-所以，我们现在有了对循环的基本框架，以下是转换后的 go 循环：
+所以，我们现在有了对循环的基本框架，以下是转换后的 Go 循环：
 
 ```go
 goto end
@@ -87,10 +91,10 @@ println(t)
 
 之后，`INCQ` 表示自增，然后会增加循环的当前位置：
 
-![](https://miro.medium.com/max/1400/1*P5B20uTio7cI03LQpl3Q5Q.png)
-循环主体的最后一条指令是 `ADDQ DX, CX` ,表示把 `DX` 的值加在 `CX`，所以我们可以看出，`DX`所包含的值是目前循环所代表的的值，而 `CX` 代表了变量 `t` 的值。
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200201-how-are-loops/4.png)
+循环主体的最后一条指令是 `ADDQ DX, CX` ,表示把 `DX` 的值加在 `CX`，所以我们可以看出，`DX` 所包含的值是目前循环所代表的的值，而 `CX` 代表了变量 `t` 的值。
 
-![](https://miro.medium.com/max/1400/1*_cASAicNq2cy2bvwzN4h8g.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200201-how-are-loops/5.png)
 
 他会一直循环至计数器到 5 ，之后循环体之后的指令表示为将寄存器 `CX` 的值赋予 `t` ：
 
@@ -100,9 +104,9 @@ println(t)
 
 以下为最终状态的示意图：
 
-![](https://miro.medium.com/max/1400/1*5JFEWSyFFJVYomMirMmBEQ.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200201-how-are-loops/6.png)
 
-我们可以完善 go 中循环的转换：
+我们可以完善 Go 中循环的转换：
 
 ```go
 func main() {
@@ -130,7 +134,7 @@ end:
 
 ## 改进
 
-循环的内部转换方式可能会对其他特性(如Go调度器)产生影响。在 go 1.10之前，循环像下面的代码一样编译：
+循环的内部转换方式可能会对其他特性(如 Go 调度器)产生影响。在 Go 1.10 之前，循环像下面的代码一样编译：
 
 ```go
 func main() {
@@ -159,12 +163,12 @@ end:
 
 这种实现方式的问题是，当 `i` 达到 5 时，指针 `p` 已经超过了内存分配空间的尾部。这个问题使得循环不容易抢占，因为它的主体是不安全的。循环编译的优化确保它不会创建任何越界的指针。这个改进是为 Go 调度器中的非合作抢占做准备的。你可以在这篇 [Proposal](https://github.com/golang/proposal/blob/master/design/24543-non-cooperative-preemption.md) 中到更详细的讨论。
 
-----------------
+---
 
 via: https://medium.com/a-journey-with-go/go-how-are-loops-translated-to-assembly-835b985309b3
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[Jun10ng](https://github.com/Jun10ng)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
