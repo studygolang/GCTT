@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/28432
+
 # Go：跨团队协作时共享对象
 
 ![Illustration created for “A Journey With Go”, made from *the original Go Gopher, created by Renee French.*](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190622-Go-Shared-Objects-for-Cross-Team-Collaboration/00.png)
@@ -85,7 +87,7 @@ from ctypes import *
 # loading shared object
 matching = cdll.LoadLibrary("main.so")
 
-# go type
+# Go type
 class GoSlice(Structure):
     _fields_ = [("data", POINTER(c_void_p)), ("len", c_longlong), ("cap", c_longlong)]
 
@@ -139,10 +141,11 @@ matching.CalculateDistance(lead, property)
 这个 Go/Python 的通信方式很适合跨团队测试，但我不建议在大型的项目或以后在生产环境中用。因为这种开发方式很复杂，容易耗费较长时间。
 
 ---
+
 via: https://medium.com/a-journey-with-go/go-shared-objects-for-cross-team-collaboration-b3af7d9e73af
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
