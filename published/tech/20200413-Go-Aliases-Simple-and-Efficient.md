@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/28459
+
 # Go 中使用别名，简单且高效
 
 ![Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.](https://raw.githubusercontent.com/studygolang/gctt-images2/master/Go-Aliases-Simple-and-Efficient/00.png)
@@ -134,7 +136,6 @@ via: https://medium.com/a-journey-with-go/go-aliases-simple-and-efficient-8506d9
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
