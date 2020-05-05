@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/28458
+
 # 用 Golang 实现 RSA 加密和签名（有示例）
 
 本文介绍 RSA 干了什么，以及我们怎样用 Go 实现它。
@@ -167,6 +169,6 @@ via: https://www.sohamkamani.com/golang/rsa-encryption/
 
 作者：[Soham Kamani](https://twitter.com/sohamkamani)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
