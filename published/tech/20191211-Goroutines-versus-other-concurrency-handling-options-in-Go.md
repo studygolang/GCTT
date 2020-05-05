@@ -1,8 +1,10 @@
-# Go 中的 goroutine 和其他并发处理方案的对比
+首发于：https://studygolang.com/articles/28441
 
-Go 语言让使用 goroutine 和通道变得非常有吸引力，作为在 Go 中进行并发的主要方式，它们是被有意识的提出的。因此对于你所遇到的任何与并发相关的问题，它们都可能成为首选方案。但是我不确定它们是否适合于我遇到的所有问题，我仍在考虑其中的平衡点。
+# Go 中的 Goroutine 和其他并发处理方案的对比
 
-通道和 goroutine 对于查询共享状态（或从共享状态中获取某些信息）这类问题看起来似乎并不完全契合。假设你想要记录那些与服务端建立 TLS 通信失败的 SMTP 客户端的 IP，以便在 TLS 握手失败的情况下，不再提供 TLS 通信（或至少在给定的时间段内不提供）。大多数基于通道的解决方案都很直白：一个主 goroutine 维护一个 IP 集合，通过通道向主 goroutine 发送一条消息来向其添加 IP。但是，如何询问主 goroutine 某个 IP 是否已经存在？问题的关键在于，无法在共享通道上收到来自主 goroutine 的答复，因为主 goroutine 无法专门答复你。
+Go 语言让使用 Goroutine 和通道变得非常有吸引力，作为在 Go 中进行并发的主要方式，它们是被有意识的提出的。因此对于你所遇到的任何与并发相关的问题，它们都可能成为首选方案。但是我不确定它们是否适合于我遇到的所有问题，我仍在考虑其中的平衡点。
+
+通道和 Goroutine 对于查询共享状态（或从共享状态中获取某些信息）这类问题看起来似乎并不完全契合。假设你想要记录那些与服务端建立 TLS 通信失败的 SMTP 客户端的 IP，以便在 TLS 握手失败的情况下，不再提供 TLS 通信（或至少在给定的时间段内不提供）。大多数基于通道的解决方案都很直白：一个主 Goroutine 维护一个 IP 集合，通过通道向主 Goroutine 发送一条消息来向其添加 IP。但是，如何询问主 Goroutine 某个 IP 是否已经存在？问题的关键在于，无法在共享通道上收到来自主 Goroutine 的答复，因为主 Goroutine 无法专门答复你。
 
 针对这个问题，目前我看到的基于通道的解决方案是将一个回复通道作为查询消息的一部分一起发送给主 goroutine（通过共享通道发送）。但是这种方法的有个副作用，那就是通道的频繁分配和释放，每次请求都会对通道进行分配、初始化、使用一次然后销毁（我认为这些通道必须通过垃圾回收机制回收，而不是在栈上分配和释放）。另一种方案是提供一个由 sync 包中锁或其他同步工具显式保护的数据结构，这是更底层的解决方案，需要更多的管理操作，但是却避免了通道的频繁分配和释放。
 
@@ -12,9 +14,9 @@ Go 语言让使用 goroutine 和通道变得非常有吸引力，作为在 Go �
 
 （可以通过各种手段将这些类型合并在一起从而减少通道方案中所需类型的数量，但是此时便开始失去类型的安全性，尤其是编译时类型检查。我喜欢 Go 中的编译时类型检查，因为它会很靠谱的告诉我是否遇到了明显的错误，并且这也有助于加快重构的速度。）
 
-从某种意义上说，我认为通道和 goroutine 是 Turing tarpit 的一种形式，因为如果你足够聪明的话，可以将它们应用于所有问题。
+从某种意义上说，我认为通道和 Goroutine 是 Turing tarpit 的一种形式，因为如果你足够聪明的话，可以将它们应用于所有问题。
 
-（另一方面，[有时通道是解决看似与它们无关的问题的绝佳方案](http://blog.golang.org/two-go-talks-lexical-scanning-in-go-and)，在看到该文章之前，我从未想过在词法分析器中使用 goroutine 和通道。）
+（另一方面，[有时通道是解决看似与它们无关的问题的绝佳方案](http://blog.golang.org/two-go-talks-lexical-scanning-in-go-and)，在看到该文章之前，我从未想过在词法分析器中使用 Goroutine 和通道。）
 
 ## 侧边栏：我所采用的 Go 锁模式
 
@@ -60,6 +62,6 @@ via: https://utcc.utoronto.ca/~cks/space/blog/programming/GoGoroutinesVsLocks
 
 作者：[ChrisSiebenmann](https://utcc.utoronto.ca/~cks/space/People/ChrisSiebenmann)
 译者：[anxk](https://github.com/anxk)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/)
