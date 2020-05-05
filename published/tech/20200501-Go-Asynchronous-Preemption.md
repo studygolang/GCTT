@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/28460
+
 # Go：异步抢占
 
 ![Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200501-Go-Asynchronous-Preemption/00.png)
@@ -58,11 +60,11 @@
 最后，这个特性被封装在一个参数中，你可以用这个参数关闭异步抢占。你可以用 `GODEBUG=asyncpreemptoff=1` 来运行你的程序，如果你因为升级到了 Go 1.14 发现了不正常的现象就可以调试你的程序，或者观察你的程序有无异步抢占时的不同表现。
 
 ---
+
 via: https://medium.com/a-journey-with-go/go-asynchronous-preemption-b5194227371c
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
