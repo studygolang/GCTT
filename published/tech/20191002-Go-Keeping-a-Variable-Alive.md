@@ -1,5 +1,9 @@
-# 延长变量的生命周期
+首发于：https://studygolang.com/articles/28437
+
+# Go: 延长变量的生命周期
+
 ![Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/00.png)
+
 本文基于 Go 1.13。
 
 在 Go 中，我们不需要自己管理内存分配和释放。然而，有些时候我们需要对程序进行更细粒度的控制。Go 运行时提供了很多种控制运行时状态及其与内存管理器之间相互影响的方式。本文中，我们来审查让变量不被 GC 回收的能力。
@@ -78,7 +82,7 @@ exit status 2
 - 这个文件描述符被传递给读取文件的函数
 - 这个函数首先做一些繁重的工作：
 
-![图01](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/01.png)
+![图 01](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-Keeping-a-Variable-Alive/01.png)
 
 allocate 函数触发 gc：
 
@@ -120,7 +124,7 @@ allocate 函数触发 gc：
 via: https://medium.com/a-journey-with-go/go-keeping-a-variable-alive-c28e3633673a
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
-译者：[译者ID](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+译者：[lxbwolf](https://github.com/lxbwolf)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
