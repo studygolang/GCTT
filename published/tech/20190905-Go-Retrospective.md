@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/28435
+
 # Go 各版本回顾
 
 ![Illustration created for “A Journey With Go”, made from *the original Go Gopher, created by Renee French.](https://raw.githubusercontent.com/studygolang/gctt-images2/master/Go-Retrospective/00.png)
@@ -24,7 +26,7 @@ Go 的第一个版本，带着一份[兼容性说明文档](https://golang.org/d
 
 ![https://rakyll.org/scheduler/](https://raw.githubusercontent.com/studygolang/gctt-images2/master/Go-Retrospective/02.png)
 
-`M` 是一个 OS 线程，`P` 表示一个处理器（`P` 的数量不能大于 GOMAXPROCS），每个 `P` 作为一个本地协程队列。在 1.1 之前`P` 不存在，协程是用一个全局的 mutex 在全局范围内管理的。随着这些优化，工作窃取也被实现了，允许一个 `P` 窃取另一个 `P` 的协程：
+`M` 是一个 OS 线程，`P` 表示一个处理器（`P` 的数量不能大于 GOMAXPROCS），每个 `P` 作为一个本地协程队列。在 1.1 之前 `P` 不存在，协程是用一个全局的 mutex 在全局范围内管理的。随着这些优化，工作窃取也被实现了，允许一个 `P` 窃取另一个 `P` 的协程：
 
 ![https://rakyll.org/scheduler/](https://raw.githubusercontent.com/studygolang/gctt-images2/master/Go-Retrospective/03.png)
 
@@ -50,7 +52,7 @@ Go 的第一个版本，带着一份[兼容性说明文档](https://golang.org/d
 
 使用连续的栈修复了这个元素效率低下的问题。下面是另一个例子，`html/template` 包的性能对栈大小也很敏感：
 
-![图7](https://raw.githubusercontent.com/studygolang/gctt-images2/master/Go-Retrospective/07.png)
+![图 7](https://raw.githubusercontent.com/studygolang/gctt-images2/master/Go-Retrospective/07.png)
 
 *阅读我的[Go 协程栈空间的发展](https://medium.com/a-journey-with-go/go-how-does-the-goroutine-stack-size-evolve-447fc02085e5)查看更多信息。*
 
@@ -60,13 +62,13 @@ Go 的第一个版本，带着一份[兼容性说明文档](https://golang.org/d
 
 Go 团队也[对通道作了改进](https://docs.google.com/document/d/1yIAYmbvL3JxOKOjuCyon7JhW4cSv1wy5hC0ApeGMV9s/pub)，让它们变得更快。下面是以 Go 1.2 和 Go 1.3 作对比运行的基准：
 
-![图8](https://raw.githubusercontent.com/studygolang/gctt-images2/master/Go-Retrospective/08.png)
+![图 8](https://raw.githubusercontent.com/studygolang/gctt-images2/master/Go-Retrospective/08.png)
 
 ## [Go 1.4](https://blog.golang.org/go1.4) — 2014 年 12 月：
 
 此版本带来了官方对 Android 的支持，[golang.org/x/mobile]([Go 1.4](https://blog.golang.org/go1.4) ) 让我们可以只用 Go 代码就能写出简单的 Android 程序。
 
-归功于更高效的 gc，之前用 C 和汇编写的运行时代码被翻译成 Go后，堆的大小降低了 10% 到 30%。
+归功于更高效的 gc，之前用 C 和汇编写的运行时代码被翻译成 Go 后，堆的大小降低了 10% 到 30%。
 
 与版本无关的一个巧合是，Go 项目管理从 Mercurial 移植到了 Git，代码从 Google Code 移到了 Github。
 
@@ -155,7 +157,7 @@ Go 1.11 带来了一个重要的新功能：[Go modules](https://blog.golang.org
 
 ![https://blog.golang.org/survey2018-results](https://raw.githubusercontent.com/studygolang/gctt-images2/master/Go-Retrospective/16.png)
 
-第二个特性是实验性的 [WebAssembly](https://webassembly.org/)，为开发者提供了把 Go 程序编译成一个可兼容四大主流  web 浏览器的二进制格式的能力。
+第二个特性是实验性的 [WebAssembly](https://webassembly.org/)，为开发者提供了把 Go 程序编译成一个可兼容四大主流  Web 浏览器的二进制格式的能力。
 
 ## [Go 1.12](https://blog.golang.org/go1.12) — 2019 年 2 月:
 
@@ -171,11 +173,18 @@ Go 1.11 带来了一个重要的新功能：[Go modules](https://blog.golang.org
 
 ![https://github.com/golang/go/issues/23109](https://raw.githubusercontent.com/studygolang/gctt-images2/master/Go-Retrospective/17.png)
 
+## [Go1.14](https://blog.golang.org/go1.14) - 2020 年 2 月：
+
+现在 Go Module 已经可以用于生产环境，鼓励所有用户迁移到 Module。该版本支持嵌入具有重叠方法集的接口。性能方面做了较大的改进，包括：进一步提升 defer 性能、页分配器更高效，同时 timer 也更高效。
+
+现在，Goroutine 支持异步抢占。
+
 ---
+
 via: https://medium.com/a-journey-with-go/go-retrospective-b9723352e9b0
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
-译者：[译者ID](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+译者：[lxbwolf](https://github.com/lxbwolf)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
