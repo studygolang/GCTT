@@ -1,4 +1,6 @@
-# 关于 CGo 的字符串函数的解释
+首发于：https://studygolang.com/articles/28440
+
+# 关于 CGO 的字符串函数的解释
 
 [cgo](https://github.com/golang/go/wiki/cgo) 的大量文档都提到过，它提供了四个用于转换 Go 和 C 类型的字符串的函数，都是通过复制数据来实现。在 CGo 的文档中有简洁的解释，但我认为解释得太简洁了，因为文档只涉及了定义中的某些特定字符串，而忽略了两个很重要的注意事项。我曾经踩过这里的坑，现在我要详细解释一下。
 
@@ -67,6 +69,6 @@ via: https://utcc.utoronto.ca/~cks/space/blog/programming/GoCGoStringFunctions
 
 作者：[ChrisSiebenmann](https://utcc.utoronto.ca/~cks/space/People/ChrisSiebenmann)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
