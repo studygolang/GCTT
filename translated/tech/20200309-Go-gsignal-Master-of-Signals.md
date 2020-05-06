@@ -20,9 +20,7 @@ Go 也赋予了通道停止被通知的能力（`Stop(os.Signal)` 函数）和�
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200309-Go-gsignal-Master-of-Signals/03.png)
 
-这个程序不能被 `CTRL`+`C` 中断，而且由于从通道第二次接收终端大小变化的信号之前通道停止了对该信号的监听，因此程序用于不会停止。
-
-现在我们来看下处理发送来的信号的 `listener` 和 `process` 两个阶段是如何内建的。
+这个程序无法被 `CTRL + C` 中断，并且永远不会停止，因为在第二次从该通道接收信号之前，该通道已停止侦听终端调整大小的信号。现在我们来看下处理发送来的信号的 `listener` 和 `process` 两个阶段是如何内建的。
 
 ## gsignal
 
@@ -48,7 +46,7 @@ Go 也赋予了通道停止被通知的能力（`Stop(os.Signal)` 函数）和�
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200309-Go-gsignal-Master-of-Signals/08.png)
 
-`gsignal` 的阻塞或锁会让信号处理陷入麻烦。由于是它的栈空间固定，因此不能再申请内存。这就是在信号处理链中有两个独立的协程很重要的原因：一个协程用于在信号到达时尽快排列信号，另一个协程用循环处理该队列中的信号。
+`gsignal` 的阻塞或锁会让信号处理陷入麻烦。由于它的栈空间固定，因此不能再申请内存。这就是在信号处理链中有两个独立的协程很重要的原因：一个协程用于在信号到达时尽快排列信号，另一个协程用循环处理该队列中的信号。
 
 现在我们可以用新的组件来更新第一节的插图了：
 
