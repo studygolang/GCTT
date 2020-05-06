@@ -132,7 +132,7 @@ func main() {
 
 为了解决这个问题，Go 提供了多种的解决办法：
 
-- 强制调度器为`runtime.Gosched()`方法执行 `thanks`:
+- 通过调用 `runtime.Gosched()`强制调度器进行调度操作:
   ```go
   for j := 0; j < 1e8; j++ {
    if j % 1e7 == 0 {
@@ -182,6 +182,6 @@ via: https://medium.com/a-journey-with-go/go-goroutine-and-preemption-d6bc2aa2f4
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[SarahChenBJ](https://github.com/SarahChenBJ)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[unknwon](https://github.com/unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
