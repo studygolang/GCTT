@@ -1,10 +1,12 @@
+首发于：https://studygolang.com/articles/28433
+
 # unsafe 真就 unsafe 吗 - part1
 
 ## unsafe 包详解
 
-在乌克兰的利沃夫举行的 [Lviv Golang community event](https://www.facebook.com/events/470065893928934/482981832637340/?notif_t=admin_plan_mall_activity&notif_id=1580732874088578) 中，我发表了一个关于`unsafe` 包的演讲，这个演讲中我尝试回答了标题中提到的问题：`unsafe` 包究竟有多 unsafe。
+在乌克兰的利沃夫举行的 [Lviv Golang community event](https://www.facebook.com/events/470065893928934/482981832637340/?notif_t=admin_plan_mall_activity&notif_id=1580732874088578) 中，我发表了一个关于 `unsafe` 包的演讲，这个演讲中我尝试回答了标题中提到的问题：`unsafe` 包究竟有多 unsafe。
 
-从 `unsafe` 包的名字就能感受到 go 研发团队的警告：使用这个包的代价将是巨大的。我觉得这个包名起的非常巧妙，它完美地符合了 《Effective Go》中对包名的所有建议。在使用 unsafe 包的时候，我们应当严格遵循 Go 研发团队的文档和建议。这个包的官方概述就只有简单的一段话：
+从 `unsafe` 包的名字就能感受到 Go 研发团队的警告：使用这个包的代价将是巨大的。我觉得这个包名起的非常巧妙，它完美地符合了 《Effective Go》中对包名的所有建议。在使用 unsafe 包的时候，我们应当严格遵循 Go 研发团队的文档和建议。这个包的官方概述就只有简单的一段话：
 
 > unsafe 包里面包含了一些能让你践踏 Go 语言的类型安全特性的操作。[golang.org](https://golang.org/pkg/unsafe/#pkg-overview)
 
@@ -32,9 +34,9 @@ type Pointer
 
 好，既然如此我们就直接看源码吧……
 
-![Gif](https://tva1.sinaimg.cn/large/00831rSTgy1gcy7aqxlrbg30bu05xnpd.gif)
+![Gif](https://raw.githubusercontent.com/studygolang/gctt-images2/master/is-unsafe/1.gif)
 
-神奇的事情发生了——这个 unsafe 包压根就[没有源码](https://golang.org/src/unsafe/unsafe.go)呀。它有函数的签名和类型定义，但是没有实现的代码：无论是 go 还是汇编的代码都没有。之所以会出现这个情况，是因为 unsafe 包的功能需要在层次更低的编译器层面实现，所以这个包其实是内置在编译器里面实现的，这个 .go 文件只是为了达到文档记录的目的。所以我在上文反复强调要严格遵循 Go 研发团队的文档和建议，因为你也只能看到这些文档。废话不多说，先来看看 `Sizeof` 函数吧。
+神奇的事情发生了——这个 unsafe 包压根就[没有源码](https://golang.org/src/unsafe/unsafe.go)呀。它有函数的签名和类型定义，但是没有实现的代码：无论是 Go 还是汇编的代码都没有。之所以会出现这个情况，是因为 unsafe 包的功能需要在层次更低的编译器层面实现，所以这个包其实是内置在编译器里面实现的，这个 .go 文件只是为了达到文档记录的目的。所以我在上文反复强调要严格遵循 Go 研发团队的文档和建议，因为你也只能看到这些文档。废话不多说，先来看看 `Sizeof` 函数吧。
 
 ### `func Sizeof(x ArbitraryType) uintptr`
 
@@ -59,7 +61,7 @@ type X struct {
 
 它在内存中的布局是这样的
 
-![Sizeof memory usage](https://tva1.sinaimg.cn/large/00831rSTgy1gcy7aizlppj30q60ba0u8.jpg)
+![Sizeof memory usage](https://raw.githubusercontent.com/studygolang/gctt-images2/master/is-unsafe/2.jpg)
 
 `X` 结构体有两个字段，其中每一个都占 2 个字节，所以整个结构体占用 size(`n1`) + size(`n2`) + size(`X`) = 2 + 2 + 0 = 4。显然，下面语句是成立的：
 
@@ -80,9 +82,9 @@ type X struct {
 
 现在我们已经知道他在内存里面是怎样布局的了，这一次我们来看看每个字段各占多少个字节，内存分配的情况如下图：
 
-![Offsetof memory usage](https://tva1.sinaimg.cn/large/00831rSTgy1gcy7ayn8bnj30r20bggn3.jpg)
+![Offsetof memory usage](https://raw.githubusercontent.com/studygolang/gctt-images2/master/is-unsafe/3.jpg)
 
-不难猜到，内存的布局是这样的：第一个字段`X.n1` 占了前 2 个字节，而第二个字段 `X.n2` 占了接下来的 2 个字节。所以下面两个语句都是成立的：
+不难猜到，内存的布局是这样的：第一个字段 `X.n1` 占了前 2 个字节，而第二个字段 `X.n2` 占了接下来的 2 个字节。所以下面两个语句都是成立的：
 
 ```go
 unsafe.Offsetof(X.n1) == 0 // true
@@ -106,9 +108,9 @@ type X struct {
 
 不是的，因为 alignment 的缘故，`X` 结构体在内存的结构如下：
 
-![Alignof memory usage](https://tva1.sinaimg.cn/large/00831rSTgy1gcy7b90qipj30qq0beq4o.jpg)
+![Alignof memory usage](https://raw.githubusercontent.com/studygolang/gctt-images2/master/is-unsafe/4.jpg)
 
-由于 alignment 机制的要求，`n2` 的**内存起始地址应该是自身大小的整数倍**，也就是说它的起始地址只能是 0、2、4、6、8 等偶数，所以 `n2` 的起始地址没有紧接着 `n1` 后面，而是空出了 1 个字节。最后导致结构体 `X` 的大小是 4 而不是 3。机智的读者可能会想到：`n1` 和 `n2` 换个位置会怎样呢？这样一来，`n2` 的起始地址是 0，而`n1` 的其实地址是 2，这么一来结构体 `X` 的大小就变成 3 了吧？答案是……不对的。原因还是因为 alignment，因为 alignment 除了要求字段的其实地址应该是自身大小的整数倍，还要求**整个结构体的大小，是结构体中最大的字段的大小的整数倍**，这使得结构体可以由多个内存块组成，其中每个内存块的大小都等于最大的字段的大小。我们可以利用这个知识来减少结构体的内存占用。考察以下代码：
+由于 alignment 机制的要求，`n2` 的**内存起始地址应该是自身大小的整数倍**，也就是说它的起始地址只能是 0、2、4、6、8 等偶数，所以 `n2` 的起始地址没有紧接着 `n1` 后面，而是空出了 1 个字节。最后导致结构体 `X` 的大小是 4 而不是 3。机智的读者可能会想到：`n1` 和 `n2` 换个位置会怎样呢？这样一来，`n2` 的起始地址是 0，而 `n1` 的其实地址是 2，这么一来结构体 `X` 的大小就变成 3 了吧？答案是……不对的。原因还是因为 alignment，因为 alignment 除了要求字段的其实地址应该是自身大小的整数倍，还要求**整个结构体的大小，是结构体中最大的字段的大小的整数倍**，这使得结构体可以由多个内存块组成，其中每个内存块的大小都等于最大的字段的大小。我们可以利用这个知识来减少结构体的内存占用。考察以下代码：
 
 ```go
 type First struct {
@@ -126,7 +128,7 @@ type Second struct {
 fmt.Println("Big brain time: ", unsafe.Sizeof(First{}) == unsafe.Sizeof(Second{}))
 ```
 
-上面两个结构体大小不同，是因为 `First` 结构体由三个大小为 8 字节的内存块组成：`Sizeof(First.a) +  7 个空闲的字节 + Sizeof(First.b) + Sizeof(First.c) + 7 个空闲的字节 = 24 字节`。而 `Second` 结构体只包含  2 个 大小为 8 字节的内存块：`Sizeof(Second.a) + Sizeof(Second.b) + 6 个空闲的字节 + Sizeof(Second.b) = 16 字节`。下次你定义结构体的时候可以用上这个小知识🙂。
+上面两个结构体大小不同，是因为 `First` 结构体由三个大小为 8 字节的内存块组成：`Sizeof(First.a) + 7 个空闲的字节 + Sizeof(First.b) + Sizeof(First.c) + 7 个空闲的字节 = 24 字节`。而 `Second` 结构体只包含  2 个 大小为 8 字节的内存块：`Sizeof(Second.a) + Sizeof(Second.b) + 6 个空闲的字节 + Sizeof(Second.b) = 16 字节`。下次你定义结构体的时候可以用上这个小知识🙂。
 
 下面的代码片段总结了上述三个函数的用法：
 

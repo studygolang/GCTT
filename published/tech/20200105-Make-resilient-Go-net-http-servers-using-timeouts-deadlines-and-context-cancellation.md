@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/28444
+
 # 使用 timeout、deadline 和 context 取消参数使 Go net/http 服务更灵活
 
 关于超时，可以把开发者分为两类：一类是了解超时多么难以捉摸的人，另一类是正在感受超时如何难以捉摸的人。
@@ -36,7 +38,7 @@ srv := &http.Server{
 
 对上述超时的图表展示：
 
-![Server lifecycle and timeouts](https://ieftimov.com/make-resilient-golang-net-http-servers-using-timeouts-deadlines-context-cancellation/request-lifecycle-timeouts.png)服务生命周期和超时
+![Server lifecycle and timeouts](https://raw.githubusercontent.com/studygolang/gctt-images2/master/context-cancel-deadline-timeout/request-lifecycle-timeouts.png)服务生命周期和超时
 
 当心！不要以为这些就是你所需要的所有的超时了。除此之外还有很多超时，这些超时提供了更小的粒度控制，对于我们的持续运行的 HTTP 处理器不会生效。
 
@@ -139,7 +141,7 @@ func main() {
 ```shell
 $ time curl localhost:8888
 curl: (52) Empty reply from server
-curl localhost:8888  0.01s user 0.01s system 0% cpu 2.021 total
+curl localhost:8888  0.01s user 0.01s system 0% CPU 2.021 total
 ```
 
 这个请求需要两秒来完成处理，服务返回的响应是空的。虽然我们的服务知道在 1 秒之后我们写不了响应了，但 handler 还是多耗了 100% 的时间（2 秒）来完成处理。
@@ -204,7 +206,7 @@ func main() {
 ```shell
 $ time curl localhost:8888
 Timeout!
-curl localhost:8888  0.01s user 0.01s system 1% cpu 1.023 total
+curl localhost:8888  0.01s user 0.01s system 1% CPU 1.023 total
 ```
 
 1s 后，我们的 `TimeoutHandler` 开始执行，阻止运行 `slowHandler`，返回文本信息 ”Timeout!“。如果我们设置信息为空，handler 会返回默认的超时响应信息，如下：
@@ -250,7 +252,7 @@ func slowHandler(w http.ResponseWriter, r *http.Request) {
 
 我们假设最初我们不知道 `slowHandler` 由于通过 `slowAPICall` 函数向 API 发请求导致需要耗费这么长时间才能处理完成，
 
-`slowAPICall` 函数很简单：使用 `select` 和一个能阻塞 0 到 5秒的 `time.After` 。当经过了阻塞的时间后，`time.After` 方法通过它的 channel 发送一个值，返回 `"foobar"` 。
+`slowAPICall` 函数很简单：使用 `select` 和一个能阻塞 0 到 5 秒的 `time.After` 。当经过了阻塞的时间后，`time.After` 方法通过它的 channel 发送一个值，返回 `"foobar"` 。
 
 （另一种方法是，使用 `sleep(time.Duration(rand.Intn(5)) * time.Second)`，但我们仍然使用 `select`，因为它会使我们下面的例子更简单。）
 
@@ -259,19 +261,19 @@ func slowHandler(w http.ResponseWriter, r *http.Request) {
 ```shell
 $ time curl localhost:8888
 Timeout!
-curl localhost:8888  0.01s user 0.01s system 1% cpu 1.021 total
+curl localhost:8888  0.01s user 0.01s system 1% CPU 1.021 total
 ```
 
 通过观察服务的输出，我们会发现，它是在几秒之后打出日志的，而不是在超时 handler 生效时打出：
 
 ```shell
-$ go run server.go
+$ Go run server.go
 2019/12/29 17:20:03 Slow API call done after 4 seconds.
 ```
 
 这个现象表明：虽然 1 秒之后请求超时了，但是服务仍然完整地处理了请求。这就是在 4 秒之后才打出日志的原因。
 
-虽然在这个例子里问题很简单，但是类似的现象在生产中可能变成一个严重的问题。例如，当 `slowAPICall` 函数开启了几个百个协程，每个协程都处理一些数据时。或者当它向不同系统发出多个不同的API发出请求时。这种耗时长的的进程，它们的请求方/客户端并不会使用服务端的返回结果，会耗尽你系统的资源。
+虽然在这个例子里问题很简单，但是类似的现象在生产中可能变成一个严重的问题。例如，当 `slowAPICall` 函数开启了几个百个协程，每个协程都处理一些数据时。或者当它向不同系统发出多个不同的 API 发出请求时。这种耗时长的的进程，它们的请求方/客户端并不会使用服务端的返回结果，会耗尽你系统的资源。
 
 所以，我们怎么保护系统，使之不会出现类似的未优化的超时或取消请求呢？
 
@@ -305,9 +307,9 @@ func slowHandler(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-在例子中我们利用了请求上下文，实际中怎么用呢？[`Context` 类型](https://golang.org/pkg/context/#Context)有个 `Done` 属性，类型为 `<-chan struct{}`。当进程处理完成时，`Done`关闭，此时表示上下文应该被取消，而这正是例子中我们需要的。
+在例子中我们利用了请求上下文，实际中怎么用呢？[`Context` 类型](https://golang.org/pkg/context/#Context)有个 `Done` 属性，类型为 `<-chan struct{}`。当进程处理完成时，`Done` 关闭，此时表示上下文应该被取消，而这正是例子中我们需要的。
 
-我们在`slowAPICall` 函数中用 `select` 处理`ctx.Done` 通道。当我们通过 `Done` 通道接收一个空的 `struct` 时，意味着上下文取消，我们需要让 `slowAPICall` 函数返回一个空字符串。
+我们在 `slowAPICall` 函数中用 `select` 处理 `ctx.Done` 通道。当我们通过 `Done` 通道接收一个空的 `struct` 时，意味着上下文取消，我们需要让 `slowAPICall` 函数返回一个空字符串。
 
 ```go
 func slowAPICall(ctx context.Context) string {
@@ -336,7 +338,7 @@ $ curl localhost:8888
 Timeout!
 
 # The server output:
-$ go run server.go
+$ Go run server.go
 2019/12/30 00:07:15 slowAPICall was supposed to take 2 seconds, but was canceled.
 ```
 
@@ -359,7 +361,7 @@ func (h *timeoutHandler) ServeHTTP(w ResponseWriter, r *Request) {
 }
 ```
 
-上面例子中，我们通过调用 `context.WithTimeout` 来使用请求上下文。超时值 `h.dt`  （`TimeoutHandler` 的第二个参数）设置给了上下文。返回的上下文是请求上下文设置了超时值后的一份拷贝。随后，它作为请求上下文传给`r.WithContext(ctx)`。
+上面例子中，我们通过调用 `context.WithTimeout` 来使用请求上下文。超时值 `h.dt`  （`TimeoutHandler` 的第二个参数）设置给了上下文。返回的上下文是请求上下文设置了超时值后的一份拷贝。随后，它作为请求上下文传给 `r.WithContext(ctx)`。
 
 `context.WithTimeout` 方法执行了上下文取消。它返回了 `Context` 设置了一个超时值之后的副本。当到达超时时间后，就取消上下文。
 
@@ -424,6 +426,6 @@ via: https://ieftimov.com/post/make-resilient-golang-net-http-servers-using-time
 
 作者：[Ilija Eftimov](https://ieftimov.com/)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
