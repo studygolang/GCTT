@@ -87,7 +87,7 @@ via: https://medium.com/a-journey-with-go/go-samples-collection-with-pprof-2a63c
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[unknwon](https://github.com/unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
@@ -99,4 +99,3 @@ via: https://medium.com/a-journey-with-go/go-samples-collection-with-pprof-2a63c
 [5]: https://medium.com/a-journey-with-go/go-g0-special-goroutine-8c778c6704d8	"Go: g0, Special Goroutine"
 [6]: https://medium.com/a-journey-with-go/go-gsignal-master-of-signals-329f7ff39391	"Go: gsignal, Master of Signals"
 [7]: https://github.com/golang/go/issues/35057
-
