@@ -69,7 +69,7 @@ Go 官方文档的描述：
 ```go
 u, _ := url.Parse("http://localhost:8080")
 rp := httputil.NewSingleHostReverseProxy(u)
- 
+
 // initialize your server and add this as handler
 http.HandlerFunc(rp.ServeHTTP)
 ```
