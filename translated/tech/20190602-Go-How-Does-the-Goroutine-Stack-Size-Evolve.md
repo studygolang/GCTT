@@ -39,7 +39,7 @@ func max(a int, b int) int {
 }
 ```
 
-这个例子演示了取得两个整数中较高的数字。为了知道 Go 如何管理协程的堆栈，我们可以看下 Go 的汇编代码，使用命令 `go build -gcflags -S main.go`。整理得到有关堆栈分配的输出，它们能告诉我们 Go 都做了什么？
+这个例子演示了取得两个整数中较大的数字。为了知道 Go 如何管理协程的堆栈，我们可以看下 Go 的汇编代码，使用命令 `go build -gcflags -S main.go`。整理得到有关堆栈分配的输出，它们能告诉我们 Go 都做了什么？
 
 ```
 "".main STEXT size=186 args=0x0 locals=0x70
@@ -52,7 +52,7 @@ func max(a int, b int) int {
 
 这里有两个指令涉及到堆栈变化的：
 
-* `CALL runtime.morestack_noctxt`：这个方法将会分配更多堆栈，如果需要的话。
+* `CALL runtime.morestack_noctxt`：这个方法会根据需要分配更多堆栈。
 
 * `NOSPLIT`这个指令代表不需要栈溢出检查。与其相似的有 [编译指令](https://golang.org/cmd/compile/)  `//go:nosplit`。
 如果我们查阅方法 `runtime.morestack_noctxt`，它会从 `runtime/stack.go`调用方法 `newstack`：
@@ -187,7 +187,7 @@ stack grow done
 
 ![img](https://miro.medium.com/max/1030/1*VrBv2bDe-99chjDBIC4biA.png)
 
-指令 `copystack` 制整个堆栈，并将所有内容移动到这个新分配的堆栈。我们可以很容易地验证这个逻辑，通过以下简单的代码：
+指令 `copystack` 复制整个堆栈，并将所有内容移动到这个新分配的堆栈。我们可以通过以下简单的代码来地验证这个逻辑：
 
 ```go
 func main() {
@@ -210,7 +210,7 @@ func main() {
 
 另外，有趣的是，当触发 GC 时，堆栈将视情况而缩小。
 
-在我们的例子中，所有函数调用后，除了 `main`函数中的堆栈外，不再有其它堆栈，因此系统将会缩小堆栈，当 GC 运行。为此，我们可以强制 GC 运行。
+在我们的例子中，所有函数调用后，除了 `main`函数中的堆栈外，不再有其它堆栈，因此当 GC 运行时系统将会缩小堆栈。为此，我们可以强制 GC 运行。
 
 ```go
 func main() {
