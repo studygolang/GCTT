@@ -87,7 +87,7 @@ panic: xml: comments must not contain "--"
 如之前所见，[go-fuzz](https://github.com/dvyukov/go-fuzz) 的工作流程包含两个步骤：
 
 - 通过命令 `go-fuzz-build` 从你代码中定义的指令来构建工具：
- 
+
 ![](https://github.com/studygolang/gctt-images2/blob/master/20191025-Go-Fuzz-Testing-in-Go/go-fuzz-build.png?raw=true)
 
 由于构建嵌入了 `Fuzz` 方法，如果修改了这些方法，不要忘了运行 `go-fuzz-build`。
@@ -104,7 +104,7 @@ panic: xml: comments must not contain "--"
 
 - **mutation 方法**，该方法对语料进行字节上的微小修改，比如消除，插入，重复，交换，翻转等修改。这里是一个发现崩溃前发生的不同突变（mutation）的例子：
 
-``` 
+```
 <a><!------
 
 <a><!------>
@@ -136,9 +136,12 @@ panic: xml: comments must not contain "--"
 ```
 
 Go-Fuzz 运行期间主要使用 mutation 方法（占90%的迭代），但是组合使用两种方法对发现 bug 是有帮助的：
-> 对 xml 文本进行2.5小时的模糊测试后：  
-> 没有使用验证（versifier）的模糊测试发现了902个（有问题的）输入。  
-> 使用了验证的模糊测试发现了1055个（有问题的）输入，其中验证方法发现了83个。  
+> 对 xml 文本进行2.5小时的模糊测试后：
+>
+> 没有使用验证（versifier）的模糊测试发现了902个（有问题的）输入。
+>
+> 使用了验证的模糊测试发现了1055个（有问题的）输入，其中验证方法发现了83个。
+>
 > 验证方法生成了新的输入，并且增加了25%的模糊验证效率。
 
 这个工作流程十分高效且易于集成。有助于所有处理文本的包，不论是 Go 标准库还是你自己的代码。
