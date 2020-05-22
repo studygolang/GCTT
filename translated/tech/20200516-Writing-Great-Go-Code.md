@@ -221,7 +221,7 @@ body := struct {
 
 > 更正：匿名结构体不是不可能返回，只是做起来很麻烦：[playground](https://play.golang.org/p/turu_Yg--6h)
 >
-> - 感谢 @Ikearens at [Discord Gophers](https://discord.gg/quNN7yP) #golang channel
+> 感谢 @Ikearens at [Discord Gophers](https://discord.gg/quNN7yP) #golang channel
 
 第二个用例是数据库驱动的 API 设计，我之前写过一些[有关内容](https://scene-si.org/2018/02/07/sql-as-an-api/)，我想指出的是，实现一个完全由数据库驱动的 API 是非常可能的。这也意味着添加和修改字段是*仅仅在数据库中*完成的，而不会以 ORM 的形式添加额外的间接层。显然，你仍然需要声明类型才能在数据库中插入数据，但是从数据库中读取数据可以省略声明。
 
