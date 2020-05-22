@@ -8,18 +8,18 @@
 
 包很重要，你可能会反对 - 但是如果你在用 Go 写微服务，_你可以将所有代码放在一个包中_。当然，下面也有一些反对的观点：
 
-1.  将定义的类型放入单独的包中
-2.  维护与传输无关的服务层
-3.  在服务层之外，维护一个数据存储(repository)层
+1. 将定义的类型放入单独的包中
+2. 维护与传输无关的服务层
+3. 在服务层之外，维护一个数据存储(repository)层
 
 我们可以计算一下，一个微服务包的最小数量是 1。如果你有一个大型的微服务，它拥有 websocket 和 http 网关，你最终可能需要 5 个包（类型，数据存储，服务，websocket 和 http 包）。
 
 简单的微服务实际上并不关心从数据存储层(repository)，或者从传输层(websocket，http)抽离业务逻辑。你可以写简单的代码，转换数据然后响应，也是可以运行的。但是，添加更多的包可以解决一些问题。例如，如果你熟悉  SOLID 原则，`S` 代表单一职责。如果我们拆分成包，这些包就可以是单一职责的。
 
-*   `types` - 声明一些结构，可能还有一些结构的别名等
-*   `repository` - 数据存储层，用来处理存储和读取结构
-*   `service` - 服务层，包装存储层的具体业务逻辑实现
-*   `http`, `websocket`, ... - 传输层，用来调用服务层
+* `types` - 声明一些结构，可能还有一些结构的别名等
+* `repository` - 数据存储层，用来处理存储和读取结构
+* `service` - 服务层，包装存储层的具体业务逻辑实现
+* `http`, `websocket`, ... - 传输层，用来调用服务层
 
 当然，根据你使用的情况，还可以进一步细分，例如，可以使用 `types/request` 和 `types/response` 来更好的分隔一些结构。这样就可以拥有 `request.Message` 和 `response.Message` 而不是 `MessageRequest` 和 `MessageResponse`。如果一开始就像这样拆分开，可能会更有意义。
 
@@ -35,9 +35,9 @@
 
 如果是描述性的 Errors 可能是开发人员检查生产问题的唯一工具。这就是为什么我们要优雅地处理错误，要么将它们一直传递到应有程序的某一层，如果错误无法处理，该层就接收错误并记录下来，这一点非常重要。以下是标准库错误类型缺少的一些特性：
 
-*   错误信息不含堆栈跟踪
-*   不能堆积错误
-*   errors 是预实例化的
+* 错误信息不含堆栈跟踪
+* 不能堆积错误
+* errors 是预实例化的
 
 但是，通过使用第三方错误包(我最喜欢的是[pkg/Errors](https://github.com/pkg/errors).))可以帮助解决这些问题。也有其他的第三方错误包，但是这个是 [Dave Cheney](https://dave.cheney.net) (Go 语言大神)编写的，它在错误处理的方式在一定程度上是一种标准。他的文章 [Don’t just check errors, handle them gracefully](https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully) 是推荐必读的。
 
@@ -112,7 +112,7 @@ type error interface {
 
 接下来是日志，或者更恰当的说，结构化日志。这里提供了许多软件包，类似于 [sirupsen/logrus](https://github.com/sirupsen/logrus)或我最喜欢的[APEX/LOG](https://github.com/apex/log)。这些包也支持将日志发送到远程的机器或者服务，我们可以用工具来监控这些日志。
 
-当谈到标准日志包时，我不常看到的一个选项是创建一个自定义 logger，并将 `log.LShorfile` 或 `log.LUTC` 等标志传递给它，以再次获得一点上下文，这能让你的工作变轻松 - 尤其在处理不同时区的服务器时。 
+当谈到标准日志包时，我不常看到的一个选项是创建一个自定义 logger，并将 `log.LShorfile` 或 `log.LUTC` 等标志传递给它，以再次获得一点上下文，这能让你的工作变轻松 - 尤其在处理不同时区的服务器时。
 
 ```go
 const (
