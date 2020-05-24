@@ -17,7 +17,7 @@ type Writer interface {
 
 type Closer interface {
     Close() error
-} 
+}
 ```
 
 在结构体中嵌入类型时，如果在结构体中声明了被嵌入的类型，那么该类型的字段和方法允许被访问[^1]，对于接口来说这个处理也成立。因此下面两种方式：显式声明
