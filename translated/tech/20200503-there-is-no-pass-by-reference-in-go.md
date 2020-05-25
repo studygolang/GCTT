@@ -1,4 +1,4 @@
-# 20200503-Go中没有引用变量
+# Go中没有引用变量
 
 先说清楚，在go中没有引用变量，所以更不存在什么引用传值了。
 
@@ -121,8 +121,9 @@ In the very early days what we call maps now were written as pointers, so you wr
 所以说，Go 把`*map[int]int`重命名为`map[int]int`
 
 via:https://dave.cheney.net/2017/04/29/there-is-no-pass-by-reference-in-go
+
 作者：[[Dave Cheney](https://dave.cheney.net/)](https://dave.cheney.net/about)
 译者：[Jun10ng](https://github.com/Jun10ng)
-校对：[校对者ID](https://github.com/校对者ID)
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
+校对：[unknwon](https://github.com/unknwon)
 
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
