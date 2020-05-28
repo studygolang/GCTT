@@ -42,7 +42,7 @@ Go 允许 `GOMAXPROCS` 在程序执行期间的任何时候进行更新。更新
 
 ![](https://github.com/studygolang/gctt-images2/blob/master/20191210-Go-GOMAXPROCS-And-Live-Updates/example-of-the-tracing.png?raw=true)
 
-# GOMAXPROCS=1
+## GOMAXPROCS=1
 调整 `GOMAXPROCS` 到一个更大的值并不意味着你的程序一定会运行的更快。Go 文档解释地很清楚：
 
 > 这取决于程序的性质。本质上是顺序处理的问题无法通过增加 goroutine 的方式提高处理速度。当问题本质上是并行处理的时候，并发才会变成并行。
