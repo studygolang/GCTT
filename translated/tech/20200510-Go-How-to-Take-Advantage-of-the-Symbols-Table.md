@@ -27,7 +27,7 @@ func main() {
 0000000001170b00 d runtime.buildVersion
 ```
 
-用 `b`（全称为 [bss](https://en.wikipedia.org/wiki/.bss)）标记的符号是未初始化的数据。由于我们前面的变量 `AppVersion` 没有初始化，因此它属于 `b`。符号 `d` 表示已初始化的数据，`t` 表示文本符号，用来比较函数。
+用 `b`（全称为 [bss](https://en.wikipedia.org/wiki/.bss)）标记的符号是未初始化的数据。由于我们前面的变量 `AppVersion` 没有初始化，因此它属于 `b`。符号 `d` 表示已初始化的数据，`t` 表示文本符号， 函数属于其中之一。
 
 Go 也封装了 `nm` 命令，可以用命令 `go tool nm` 来使用它，也能生成相同的结果：
 
@@ -79,7 +79,7 @@ B main.AppVersion
 D runtime.buildVersion
 ```
 
-在列表中我们看到了之前的变量和 `DefaultGoroot`，它们都是被构建器自动设置的。我们来卡看一下运行时这些符号的意义。
+在列表中我们看到了之前的变量和 `DefaultGoroot`，它们都是被构建器自动设置的。我们来看一下运行时这些符号的意义。
 
 ## 调试
 
