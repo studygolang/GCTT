@@ -35,12 +35,12 @@
 为了展示通常会记录什么信息，这里有一条 Apache 的扩展日志文件格式的日志记录样本。
 
 ```
-111.222.333.123 HOME - [01/Feb/1998:01:08:39 -0800] "GET /bannerad/ad.htm HTTP/1.0" 200 198 "http://www.referrer.com/bannerad/ba_intro.htm" "Mozilla/4.01 (Macintosh; I; PPC)"
+111.222.233.123 HOME - [01/Feb/1998:01:08:39 -0800] "GET /bannerad/ad.htm HTTP/1.0" 200 198 "http://www.referrer.com/bannerad/ba_intro.htm" "Mozilla/4.01 (Macintosh; I; PPC)"
 ```
 
 我们能看到：
 
-- `111.222.333.123` ：客户端发起 HTTP 请求的 IP 地址。
+- `111.222.233.123` ：客户端发起 HTTP 请求的 IP 地址。
 - `HOME` ： 域（适用单个 Web 服务器提供多个域的情况）。
 - `-` ：用户认证信息（这个例子下为空）。
 - `[01/Feb/1998:01:08:39 -0800]` ：请求被记录的时间。
@@ -286,7 +286,7 @@ func logHTTPReq(ri *HTTPReqInfo) {
 
 ## 日志每日滚动
 
-我通常在 Ubuntu 上部署服务器，并把日志记录到 `/data/<service-name./log` 目录。
+我通常在 Ubuntu 上部署服务器，并把日志记录到 `/data/<service-name>/log` 目录。
 
 我们不能一直往同一个日志文件里写。否则到最后会用完所有空间。
 
@@ -333,7 +333,7 @@ panicIfErr(err)
 
 为了长期存储我把它们压缩成 gzip 并把文件上传到线上存储。这有很多选择：S3, Google Storage, Digital Ocean Spaces, BackBlaze。
 
-我倾向于使用 Digital Ocean Spaces 或者 BackBlaze，因为他们足够廉价（存储成本和贷款成本）。
+我倾向于使用 Digital Ocean Spaces 或者 BackBlaze，因为他们足够廉价（存储成本和带宽成本）。
 
 它们均支持 S3 协议，所以我使用 [go-minio](https://github.com/minio/minio-go) 库。
 
