@@ -1,15 +1,17 @@
-# [Building an API With GraphQL And GO](https://medium.com/@bradford_hamilton/building-an-api-with-graphql-and-go-9350df5c9356)
->本博客中将使用**Go**、**GraphQL**、**PostgreSQL**创建一个API.我已在项目结构上迭代几个版本，这个是我最新欢的一个。在大部分的时间,我创建web APIs都是通过**Node.js**和**Ruby/Rails**.
+# 使用 Go 构建 GraphQL API
+
+> 本博客中将使用**Go**、**GraphQL**、**PostgreSQL**创建一个API.我已在项目结构上迭代几个版本，这个是我最新欢的一个。在大部分的时间,我创建web APIs都是通过**Node.js**和**Ruby/Rails**.
 >而第一次使用**Go**设计 web apis时,需要费很大的劲儿。***Ben Johnson***的[Structuring Applications in Go ](https://medium.com/@benbjohnson/structuring-applications-in-go-3b04be4ff091) 文章
 >对我有很大的帮助,本博客中的部分代码就得益于***Ben Johnson***文章的指导,推荐阅读。
 
+## 配置
 
-#### 配置
 首先,从项目的配置开始。在本篇博客中，我将在macOS中完成,但这并不重要。
 如果在你的macOS上还没有**Go**和**PostGreSQL**,[bradford-hamilton/go-graphql-api](https://github.com/github.com/bradford-hamilton/go-graphql-api) 详细讲解了如何在macOS上配置**Go**和**PostgreSQL**.
 
 创建一个新项目--**go-graphal-api**,整体项目结构如下：
-```go
+
+```bash
 ├── gql
 │   ├── gql.go
 │   ├── queries.go
@@ -21,9 +23,10 @@
 └── server
     └── server.go
 ```
-有一些额外依赖需要安装。开发中热加载的[realize](https://github.com/oxequa/realize) ,go-chi的轻量级路由 [chi](https://github.com/go-chi/chi) 和 
-管理request/response负载的 [render](https://github.com/go-chi/render) ,以及 [graphql-go/graphql](https://github.com/graphql-go/graphql)
-```
+
+有一些额外依赖需要安装。开发中热加载的[realize](https://github.com/oxequa/realize) ,go-chi的轻量级路由 [chi](https://github.com/go-chi/chi) 和管理request/response负载的 [render](https://github.com/go-chi/render) ,以及 [graphql-go/graphql](https://github.com/graphql-go/graphql)。
+
+```bash
 go get github.com/oxequa/realize
 go get github.com/go-chi/chi
 go get github.com/go-chi/render
@@ -62,7 +65,7 @@ INSERT INTO users VALUES
 
 我们创建了一个基础的用户表并新增了6条新用户数据，对本博客来说已经足够.接下来开始构建我们的API!
 
-#### API
+## API
 在这篇博客中,所有的代码片段都会包含一些注释,以帮助理解每一步.
 
 从**main.go**开始:
@@ -338,8 +341,8 @@ var User = graphql.NewObject(
 ```
 类似的,在这里添加我们不同的类型,每一个字段都指定了类型.在**main.go**文件的42行使用root query创建了一个新的查询.
 
+## Almost there
 
-#### Almost there !
 在**main.go**往下的51行处,创建一个新的server,server持有GraphQL schema的指针。下面是**server.go**的内容:
 ```go
 package server
@@ -457,8 +460,7 @@ schema:
 
 在查询中可以只请求一个属性或者多个属性的组合.在GraphQL的正式版中,可以只请求我们希望通过网络发送的信息。
 
-
-#### Great Success!
+## Great Success!
 This's it!希望这篇博客对你在Go中编写GraphQL API有帮助。我尝试将功能分解到不同的包或文件中，使其更容易扩展,而且每一块也很容易测试。
 
 ---
@@ -466,9 +468,7 @@ This's it!希望这篇博客对你在Go中编写GraphQL API有帮助。我尝试
 via: https://medium.com/@bradford_hamilton/building-an-api-with-graphql-and-go-9350df5c9356
 
 作者：[Bradford Lamson-Scribner](https://medium.com/@bradford_hamilton?source=post_header_lockup)
-
 译者：[HelloJavaWorld123](https://github.com/HelloJavaWorld123)
-
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
