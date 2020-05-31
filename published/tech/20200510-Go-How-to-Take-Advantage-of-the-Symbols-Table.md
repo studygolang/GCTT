@@ -1,4 +1,10 @@
+首发于：https://studygolang.com/articles/28991
+
 # Go：如何利用符号表
+
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-hwo-to-take-symbol-table/cover.png)
+
+> Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.
 
 ℹ️ *本文基于 Go 1.13。*
 
@@ -12,7 +18,7 @@ Go 编译的所有二进制文件默认内嵌了符号表。我们来举一个�
 var AppVersion string
 
 func main() {
-   fmt.Println(`Version: `+AppVersion)
+	fmt.Println(`Version: `+AppVersion)
 }
 ```
 
@@ -121,15 +127,15 @@ No symbol table is loaded.  Use the "file" command.
 去掉符号表后会让调试器用起来很困难，但是会减少二进制文件的大小。下面是有无符号表的二进制文件的区别：
 
 ```bash
-2,0M  7 fév 15:59 ex
-1,5M  7 fév 15:22 ex-s
+2,0M  7 f é v 15:59 ex
+1,5M  7 f é v 15:22 ex-s
 ```
 
 没有符号表比有符号表会小 25%。下面是编译 `cmd/go` 源码的另一个例子：
 
 ```bash
-14M  7 fév 16:58 go
-11M  7 fév 16:58 go-s
+14M  7 f é v 16:58 go
+11M  7 f é v 16:58 go-s
 ```
 
 这里没有符号表和 DWARF 信息，也小了 25%。
@@ -137,10 +143,11 @@ No symbol table is loaded.  Use the "file" command.
 *如果你想了解为什么二进制文件会变小，我推荐你阅读 WebKit 团队的 [Benjamin Poulain](https://twitter.com/awfulben) 的文章“[不寻常的加速：二进制文件大小](https://webkit.org/blog/2826/unusual-speed-boost-size-matters/)”。*
 
 ---
+
 via: https://medium.com/a-journey-with-go/go-how-to-take-advantage-of-the-symbols-table-360dd52269e5
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
