@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/28992
+
 # Go 1.14 中接口的菱形组合
 
 按照[部分重叠的接口提议](https://github.com/golang/proposal/blob/master/design/6977-overlapping-interfaces.md)，Go 1.14 现在允许嵌入有部分方法重叠的接口。本文是一篇解释这次修改的简要说明。
@@ -8,15 +10,15 @@
 package io
 
 type Reader interface {
-    Read([]byte) (int, error)
+	Read([]byte) (int, error)
 }
 
 type Writer interface {
-    Write([]byte) (int, error)
+	Write([]byte) (int, error)
 }
 
 type Closer interface {
-    Close() error
+	Close() error
 }
 ```
 
@@ -24,8 +26,8 @@ type Closer interface {
 
 ```go
 type ReadCloser interface {
-    Read([]byte) (int, error)
-    Close() error
+	Read([]byte) (int, error)
+	Close() error
 }
 ```
 
@@ -33,8 +35,8 @@ type ReadCloser interface {
 
 ```go
 type ReadCloser interface {
-    Reader
-    Closer
+	Reader
+	Closer
 }
 ```
 
@@ -44,8 +46,8 @@ type ReadCloser interface {
 
 ```go
 type WriteCloser interface {
-    Write([]byte) (int, error)
-    Closer
+	Write([]byte) (int, error)
+	Closer
 }
 ```
 
@@ -53,15 +55,15 @@ type WriteCloser interface {
 
 ```go
 type ReadWriteCloser interface {
-    ReadCloser
-    WriterCloser
+	ReadCloser
+	WriterCloser
 }
 ```
 
 编译错误：
 
 ```bash
-% go build interfaces.go
+% Go build interfaces.go
 command-line-arguments
 ./interfaces.go:27:2: duplicate method Close
 ```
@@ -72,19 +74,21 @@ command-line-arguments
 
 我理解的编译过程中 Go 语言规范所使用的版本的规则似乎是这样的：
 
-1. 如果你的源码是在 GOPATH下（或者你用 GO111MODULE=off *关闭*了 module），那么 Go 语言规范会使用你编译器的版本来编译。换句话说，如果安装了 Go 1.13，那么你的 Go 版本就是 1.13。如果你安装了 Go 1.14，那么你的版本就是 1.14。这里符合认知。
-2. 如果你的源码保存在 GOPATH 外（或你用 GO111MODULE=on 强制开启了 module），那么 go tool 会从 go.mod 文件中获取 Go 版本。
+1. 如果你的源码是在 GOPATH 下（或者你用 GO111MODULE=off *关闭*了 module），那么 Go 语言规范会使用你编译器的版本来编译。换句话说，如果安装了 Go 1.13，那么你的 Go 版本就是 1.13。如果你安装了 Go 1.14，那么你的版本就是 1.14。这里符合认知。
+2. 如果你的源码保存在 GOPATH 外（或你用 GO111MODULE=on 强制开启了 module），那么 Go tool 会从 go.mod 文件中获取 Go 版本。
 3. 如果 go.mod 中没有列出 Go 版本，那么语言规范会使用安装的 Go 的版本。这跟第 1 点是一致的。
 4. 如果你用的是 Go module 模式，不管是源码在 GOPATH 外还是设置了 GO111MODULE=on，但是在当前目录或所有父目录中都没有 go.mod 文件，那么 Go 语言规范会默认用 Go 1.13 版本来编译你的代码。
 
 我曾经遇到过第 4 点的情况。
 
-## 相关文章：
-
-1. [Go 的结构体组合](https://dave.cheney.net/2015/05/22/struct-composition-with-go)
-2. [术语：高等级接口的低等级序列](https://dave.cheney.net/2014/05/08/term-low-level-serial-with-a-high-level-interface)
-3. [意外的方法值](https://dave.cheney.net/2014/05/19/accidental-method-value)
-4. [go build 命令是怎样运行的](https://dave.cheney.net/2013/10/15/how-does-the-go-build-command-work)
-
 [^1]: 也就是说，嵌入提升了类型的字段和方法。
 
+---
+
+via: https://dave.cheney.net/2020/05/24/diamond-interface-composition-in-go-1-14
+
+作者：[Dave Cheney](https://dave.cheney.net/)
+译者：[lxbwolf](https://github.com/lxbwolf)
+校对：[polaris1119](https://github.com/polaris1119)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
