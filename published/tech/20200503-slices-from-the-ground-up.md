@@ -109,7 +109,7 @@ irb(main):004:0> a
 
 `slicet Header` 看起来就像这样：
 
-![Slice Header.png](https://github.com/Jun10ng/go_blog_translation/blob/master/Dave%E5%8D%9A%E5%AE%A2%E7%BF%BB%E8%AF%91/%E4%BB%8E%E5%A4%B4%E5%BC%80%E5%A7%8BSlice/Slice%20Header.png?raw=true)
+![Slice Header.png](https://raw.githubusercontent.com/studygolang/gctt-images/master/slice-from-the-ground-up/Slice%20Header.png)
 
 ```go
 package runtime
