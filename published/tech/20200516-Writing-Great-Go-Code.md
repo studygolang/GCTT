@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/28983
+
 # 如何写好 Go 代码
 
 我写了多年的 Go 微服务，并在写完两本关于 ([API Foundations in Go](https://leanpub.com/api-foundations) 和 [12 Factor Applications with Docker and Go](https://leanpub.com/12fa-docker-golang)) 主题的书之后，有了一些关于如何写好 Go 代码的想法
@@ -45,32 +47,32 @@
 
 `pkg/errors` 包在调用 `errors.New` 时，会将上下文(堆栈跟踪)添加到新建的错误中。
 
-```plain
+```bash
 users_test.go:34: testing error Hello world
-        github.com/crusttech/crust/rbac_test.TestUsers
-                /go/src/github.com/crusttech/crust/rbac/users_test.go:34
-        testing.tRunner
-                /usr/local/go/src/testing/testing.go:777
-        runtime.goexit
-                /usr/local/go/src/runtime/asm_amd64.s:2361
+	github.com/crusttech/crust/rbac_test.TestUsers
+		/go/src/github.com/crusttech/crust/rbac/users_test.go:34
+	testing.tRunner
+		/usr/local/go/src/testing/testing.go:777
+	runtime.goexit
+		/usr/local/go/src/runtime/asm_amd64.s:2361
 ```
 
-考虑到完整的错误信息是 "Hello world"，使用 `fmt.Printf` 带有`%+v` 的参数或者类似的方式来打印少量的上下文 - 对于查找错误的而言，是一件很棒的事。你可以确切知道是哪里创建了错误（关键字）。当然，当涉及到标准库时，`errors` 包和本地 `error` 类型 - 不提供堆栈跟踪。但是，使用 `pkg/errors` 可以很容易地添加一个。例如：
+考虑到完整的错误信息是 "Hello world"，使用 `fmt.Printf` 带有 `%+v` 的参数或者类似的方式来打印少量的上下文 - 对于查找错误的而言，是一件很棒的事。你可以确切知道是哪里创建了错误（关键字）。当然，当涉及到标准库时，`errors` 包和本地 `error` 类型 - 不提供堆栈跟踪。但是，使用 `pkg/errors` 可以很容易地添加一个。例如：
 
 ```go
 resp, err := u.Client.Post(fmt.Sprintf(resourcesCreate, resourceID), body)
 if err != nil {
-        return errors.Wrap(err, "request failed")
+	return errors.Wrap(err, "request failed")
 }
 ```
 
-在上面这个例子中，`pkg/errors`包将上下文添加 err 中，加的错误消息(`"request failed"`) 和堆栈跟踪都会抛出来。通过调用 `errors.Wrap` 来添加堆栈跟踪，所以你可以精准追踪到此行的错误。
+在上面这个例子中，`pkg/errors` 包将上下文添加到 err 中，加的错误消息(`"request failed"`) 和堆栈跟踪都会抛出来。通过调用 `errors.Wrap` 来添加堆栈跟踪，所以你可以精准追踪到此行的错误。
 
 ### 堆积错误
 
 你的文件系统，数据库，或者其他可能抛出相对不太好描述的错误。例如，Mysql 可能会抛出这种强制错误：
 
-```go
+```bash
 ERROR 1146 (42S02): Table 'test.no_such_table' doesn't exist
 ```
 
@@ -78,7 +80,7 @@ ERROR 1146 (42S02): Table 'test.no_such_table' doesn't exist
 
 ```go
 type causer interface {
-       Cause() error
+	Cause() error
 }
 ```
 
@@ -86,13 +88,13 @@ type causer interface {
 
 ```go
 if driverErr, ok := err.(*mysql.MySQLError); ok {
-    if driverErr.Number == mysqlerr.ER_ACCESS_DENIED_ERROR {
-        // Handle the permission-denied error
-    }
+	if driverErr.Number == mysqlerr.ER_ACCESS_DENIED_ERROR {
+		// Handle the permission-denied error
+	}
 }
 ```
 
-此例子来自于 [this stackoverflow thread](https://stackoverflow.com/questions/47009068/how-to-get-the-mysql-error-type-in-golang)。
+此例子来自于 [this Stack Overflow thread](https://stackoverflow.com/questions/47009068/how-to-get-the-mysql-error-type-in-golang)。
 
 ### 错误预实例化
 
@@ -116,13 +118,13 @@ type error interface {
 
 ```go
 const (
-        Ldate         = 1 << iota     // the date in the local time zone: 2009/01/23
-        Ltime                         // the time in the local time zone: 01:23:23
-        Lmicroseconds                 // microsecond resolution: 01:23:23.123123.  assumes Ltime.
-        Llongfile                     // full file name and line number: /a/b/c/d.go:23
-        Lshortfile                    // final file name element and line number: d.go:23. overrides Llongfile
-        LUTC                          // if Ldate or Ltime is set, use UTC rather than the local time zone
-        LstdFlags     = Ldate | Ltime // initial values for the standard logger
+	Ldate         = 1 << iota     // the date in the local time zone: 2009/01/23
+	Ltime                         // the time in the local time zone: 01:23:23
+	Lmicroseconds                 // microsecond resolution: 01:23:23.123123.  assumes Ltime.
+	Llongfile                     // full file name and line number: /a/b/c/d.go:23
+	Lshortfile                    // final file name element and line number: d.go:23. overrides Llongfile
+	LUTC                          // if Ldate or Ltime is set, use UTC rather than the local time zone
+	LstdFlags     = Ldate | Ltime // initial values for the standard logger
 )
 ```
 
@@ -143,7 +145,7 @@ func main() {
 
 结果如下：
 
-```plain
+```bash
 2009/11/10 23:00:00 main.go:9: Hello, playground
 ```
 
@@ -202,7 +204,7 @@ var _ fmt.Stringer = &YourStruct{}
 
 ## 空接口
 
-与上面的观点相比，这可能是更有争议的观点 - 但是我觉得使用 ``interface{}`` 有时非常有效。在 HTTP API 响应的例子中，最后一步通常是 json 编码，它接收一个接口参数：
+与上面的观点相比，这可能是更有争议的观点 - 但是我觉得使用 ``interface{}`` 有时非常有效。在 HTTP API 响应的例子中，最后一步通常是 JSON 编码，它接收一个接口参数：
 
 ```go
 func (enc *Encoder) Encode(v interface{}) error
@@ -249,8 +251,7 @@ func (api *API) getThread(params *CommentListThread) (comments []interface{}, er
 
 ## 结束语
 
-关于 Go 的最佳实践和最差实践的另一本值得注意的好书应该是[Idiomatic Go](https://about.sourcegraph.com/go/idiomatic-go/)。
-如果你不熟悉的话，可以阅读一下 - 它是与本文很好的搭配。
+关于 Go 的最佳实践和最差实践的另一篇文章应该是[Idiomatic Go](https://about.sourcegraph.com/go/idiomatic-go/)。如果你不熟悉的话，可以阅读一下 - 它是与本文很好的搭配。
 
 我想在这里引用[Jeff Atwood post - The Best Code is No Code At All](https://blog.codinghorror.com/the-best-code-is-no-code-at-all/)文章的一句话，这是一句令人难忘的结束语：
 
@@ -259,10 +260,11 @@ func (api *API) getThread(params *CommentListThread) (comments []interface{}, er
 但是，一定要编写那些单元测试。_完结_。
 
 ---
+
 via: https://scene-si.org/2018/07/24/writing-great-go-code/
 
-作者：[Ljubljana, Slovenia](https://scene-si.org/)
+作者：[Tit Petric](https://scene-si.org/)
 译者：[咔叽咔叽](https://github.com/watermelo)
-校对：[校对者 ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
