@@ -121,7 +121,7 @@ Total: 630 samples
 via: https://medium.com/a-journey-with-go/go-concurrency-scheduler-affinity-3b678f490488
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
-译者：[dust347](https://raw.githubusercontent.com/dust347)
-校对：[polaris1119](https://raw.githubusercontent.com/polaris1119)
+译者：[dust347](https://github.com/dust347)
+校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://raw.githubusercontent.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
