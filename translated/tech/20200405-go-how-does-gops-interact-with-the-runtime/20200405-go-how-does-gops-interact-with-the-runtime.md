@@ -4,7 +4,7 @@
 
 本文基于 Go 1.13 和 gops 0.3.7。
 
-`gops` 旨在帮助开发人员诊断 Go 进程并与之交互。它提供了能力来追踪运行中的程序数秒时间，通过 `pprof` 获取 CPU 的 profile，甚至直接与垃圾回收器交互。
+`gops` 旨在帮助开发人员诊断 Go 进程并与之交互。它提供了追踪运行中的程序数秒钟，通过 `pprof` 获取 CPU 的 profile，甚至直接与垃圾回收器交互的能力。
 
 ## 发现
 
@@ -25,7 +25,7 @@
 
 *有关符号表的更多信息，我建议你阅读我的文章“Go：如何使用符号表”。了解关于主 goroutine 的更多信息，建议阅读我的文章“[Go: g0，特殊的 Goroutine](https://medium.com/a-journey-with-go/go-g0-special-goroutine-8c778c6704d8)”*
 
-`gops` 还会通过读取符号表的 `runtime.buildVersion` 来读取 Go 的版本。然而，由于二进制文件中的符号表可以被剥离，`gops` 需要另一种方法来检测 Go 二进制文件。然我们用剥离后的二进制文件再试一次：
+`gops` 还会通过读取符号表的 `runtime.buildVersion` 来读取 Go 的版本。然而，由于二进制文件中的符号表可以被剥离，`gops` 需要另一种方法来检测 Go 二进制文件。我们用剥离后的二进制文件再试一次：
 
 ```bash
 295 1 gops            go1.13             /go/src/..../gops
