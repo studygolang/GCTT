@@ -1,10 +1,8 @@
 # Go 中可取消的读取操作
 
-> April 23, 2020 • 7 minutes
-
 在使用 Go 进行工作时，使用 `io.Reader` 和 `io.Writer` 接口是最常见的情场景之一。这很合理，它们是数据传输的主力接口。
 
-关于 `io.Reader` 接口，有一点令我困惑：它的 `Read()` 方法是阻塞的，一旦读取操作开始，你没有办法去抢占它。同样，也无法在读取操作上执行 `select` 操作，异步协调多个 `io.Reader`s 的读取操作会有点棘手。
+关于 `io.Reader` 接口，有一点令我困惑：它的 `Read()` 方法是阻塞的，一旦读取操作开始，你没有办法去抢占它。同样，也无法在读取操作上执行 `select` 操作，异步协调多个 `io.Reader` 时的读取操作会有点棘手。
 
 `io.ReadCloser` 是 Go 提供的一个常用的退出通道，在许多情况下，它确实允许你抢占一个读取操作。在某些实现中，调用 reader 的 `Close()` 方法将会取消剩余的读取操作。但是，你只能执行一次，当一个 reader 被关闭后，后续的读取操作将会失败。
 
@@ -185,6 +183,6 @@ via: [https://benjamincongdon.me/blog/2020/04/23/Cancelable-Reads-in-Go/](https:
 
 作者：[Ben Congdon](https://benjamincongdon.me/)
 译者：[DoubleLuck](https://github.com/doubleluck)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[unknwon](https://github.com/unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
