@@ -67,7 +67,7 @@ AST 生成后，它允许编译器使用 SSA 表示转到较低级别的中间�
 
 使用 `GOSSAFUNC=main Go tool compile main.go && open ssa.html` 命令，生成 HTML 文档的命令将在 SSA 包中完成所有不同的过程，因此可以转储 SSA 代码：
 
-![SSA 过程](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-overview-of-compile/SSA%20code.png)
+![SSA 过程](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-overview-of-compile/SSA%20passes.png)
 
 生成的 SSA 位于 “start” 选项卡中：
 
