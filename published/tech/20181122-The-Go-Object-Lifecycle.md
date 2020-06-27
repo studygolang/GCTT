@@ -97,7 +97,7 @@ type Client struct {
 
 ```go
 type Client struct {
-    mu      sync.Mutex
+    mu      sync.RWMutex
     timeout time.Duration
 
     // Host and port of remote server. Must be set before Open().
@@ -197,7 +197,7 @@ func OpenClient(opts ...ClientOption) (*Client, error) {
     c := &Client{}
     for _, opt := range opts {
         if err := opt(c); err != nil {
-            return err
+            return nil, err
         }
     }
     // open client...
