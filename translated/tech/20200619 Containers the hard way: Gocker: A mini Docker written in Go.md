@@ -11,15 +11,15 @@ Linux 下没有创建容器的单个系统调用。它们是利用 Linux namespa
 Gocker 可以模拟 Docker 的核心，让你管理 Docker 镜像（从 Docker Hub 获取），运行容器，列出正在运行的容器或在已运行的容器中执行进程：
 
 - 在容器中运行进程
-    - gocker run <--cpus=cpus-max> <--mem=mem-max> <--pids=pids-max> <image[:tag]> </path/to/command>
+  - gocker run <--cpus=cpus-max> <--mem=mem-max> <--pids=pids-max> <image[:tag]> </path/to/command>
 - 列出正在运行的容器
-    - gocker ps
+  - gocker ps
 - 在运行的容器中执行进程
-    - gocker exec </path/to/command>
+  - gocker exec </path/to/command>
 - 列出本地可用的镜像
-    - gocker images
+  - gocker images
 - 删除本地可用的镜像
-    - gocker rmi
+  - gocker rmi
 
 ## 其他功能
 - Gocker 使用 Ovelay 文件系统快速创建容器而无需复制整个文件系统，同时还可以在多容器实例间共享容器镜像。
@@ -111,7 +111,7 @@ lrwxrwxrwx 1 shuveb shuveb 0 Jun 13 11:44 uts -> 'uts:[4026531838]'
 USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
 root           1  0.5  0.0   8296  4944 pts/1    S    08:59   0:00 /bin/bash
 root           2  0.0  0.0   8816  3336 pts/1    R+   08:59   0:00 ps aux
-[root@kodai shuveb]# 
+[root@kodai shuveb]#
 ```
 
 上面的命令中 unshare 创建一个新进程，调用 unshare() 系统调用来创建一个新的 PID 命名空间，然后在其中执行 /bin/bash。我们还告诉 unshare 在新进程中挂载 proc 文件系统，这是 ps 获取信息的地方。从 ps 命令的输出中，确实可以看到该 shell 有一个新的 PID 命名空间，PID 为 1，并且由于 ps 是由具有新 PID 命名空间的 shell 程序启动的，因此它继承了命名空间并获得 PID 为 2。作为练习，你可以找出此容器中运行的 shell 进程在主机上具有哪些 PID。
@@ -243,7 +243,7 @@ Gocker 源代码通过命令（如参数）组织在文件中。例如，主要�
 在 [main.go](https://github.com/shuveb/containers-the-hard-way/blob/master/main.go) 中，你可以看到是否运行了 Gocker 命令，我们检查以确保 gocker0 桥接器已启动并正在运行。否则我们通过调用完成工作的 setupGockerBridge() 来启动它。最后，我们调用函数 initContainer()，该函数在 run.go 中实现。让我们仔细看看该函数：
 
 ```go
-func initContainer(mem int, swap int, pids int, cpus float64, 
+func initContainer(mem int, swap int, pids int, cpus float64,
                                 src string, args []string) {
   containerID := createContainerID()
   log.Printf("New container ID: %s\n", containerID)
@@ -254,7 +254,7 @@ func initContainer(mem int, swap int, pids int, cpus float64,
   if err := setupVirtualEthOnHost(containerID); err != nil {
     log.Fatalf("Unable to setup Veth0 on host: %v", err)
   }
-  prepareAndExecuteContainer(mem, swap, pids, cpus, containerID, 
+  prepareAndExecuteContainer(mem, swap, pids, cpus, containerID,
                                 imageShaHex, args)
   log.Printf("Container done.\n")
   unmountNetworkNamespace(containerID)
@@ -278,7 +278,7 @@ func initContainer(mem int, swap int, pids int, cpus float64,
 func setupNewNetworkNamespace(containerID string) {
   _ = createDirsIfDontExist([]string{getGockerNetNsPath()})
   nsMount := getGockerNetNsPath() + "/" + containerID
-  if _, err := syscall.Open(nsMount, 
+  if _, err := syscall.Open(nsMount,
                 syscall.O_RDONLY|syscall.O_CREAT|syscall.O_EXCL,
                 0644); err != nil {
     log.Fatalf("Unable to open bind mount file: :%v\n", err)
@@ -293,7 +293,7 @@ func setupNewNetworkNamespace(containerID string) {
   if err := syscall.Unshare(syscall.CLONE_NEWNET); err != nil {
     log.Fatalf("Unshare system call failed: %v\n", err)
   }
-  if err := syscall.Mount("/proc/self/ns/net", nsMount, 
+  if err := syscall.Mount("/proc/self/ns/net", nsMount,
                                 "bind", syscall.MS_BIND, ""); err != nil {
     log.Fatalf("Mount system call failed: %v\n", err)
   }
@@ -411,12 +411,12 @@ fetch http://dl-cdn.alpinelinux.org/alpine/v3.12/community/x86_64/APKINDEX.tar.g
 Executing busybox-1.31.1-r16.trigger
 OK: 53 MiB in 24 packages
 / # python3
-Python 3.8.3 (default, May 15 2020, 01:53:50) 
+Python 3.8.3 (default, May 15 2020, 01:53:50)
 [GCC 9.3.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> while True:
 ...     pass
-... 
+...
 ```
 
 我们在主机运行 top，查看在容器内部运行的 python 进程占用了多少 CPU。
@@ -424,23 +424,22 @@ Type "help", "copyright", "credits" or "license" for more information.
 ![Top_command_cgroups](https://raw.githubusercontent.com/alandtsang/gctt-images2/master/20200619-Containers-the-hard-way-Gocker-A-mini-Docker-written-in-Go/Top_command_cgroups.png)
 Cgroup 限制 CPU 为 20%
 
-
 从另一个终端，让我们使用 gocker exec 命令在同一容器内启动另一个 python 进程，并在其中运行 while 循环。
 
 ```
-➜  sudo ./gocker ps                       
+➜  sudo ./gocker ps
 2020/06/13 18:21:10 Cmd args: [./gocker ps]
 CONTAINER ID  IMAGE    COMMAND
 d87d44b4d823  alpine:latest  /usr/bin/python3.8
 ➜  sudo ./gocker exec d87d44b4d823 /bin/sh
 2020/06/13 18:21:24 Cmd args: [./gocker exec d87d44b4d823 /bin/sh]
 / # python3
-Python 3.8.3 (default, May 15 2020, 01:53:50) 
+Python 3.8.3 (default, May 15 2020, 01:53:50)
 [GCC 9.3.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> while True:
 ...     pass
-... 
+...
 ```
 
 现在有 2 个 python 进程，如果不受 Cgroup 的限制，它们将消耗 2 个完整的 CPU 核数。现在，让我们看一下主机上 top 命令的输出：
@@ -456,7 +455,7 @@ Cgroup 限制 2 个进程的 CPU 为 20%
 
 ```
 ➜  sudo ./gocker run --pids=7 alpine /bin/sh
-[sudo] password for shuveb: 
+[sudo] password for shuveb:
 2020/06/13 18:28:00 Cmd args: [./gocker run --pids=7 alpine /bin/sh]
 2020/06/13 18:28:00 New container ID: 920a577165ef
 2020/06/13 18:28:00 Image already exists. Not downloading.
@@ -466,7 +465,7 @@ Cgroup 限制 2 个进程的 CPU 为 20%
 2020/06/13 18:28:00 Cmd args: [/proc/self/exe child-mode --pids=7 --img=a24bb4013296 920a577165ef /bin/sh]
 / # ls -l
 /bin/sh: can't fork: Resource temporarily unavailable
-/ # 
+/ #
 ```
 
 ## 限制 RAM
@@ -498,12 +497,12 @@ fetch http://dl-cdn.alpinelinux.org/alpine/v3.12/community/x86_64/APKINDEX.tar.g
 Executing busybox-1.31.1-r16.trigger
 OK: 53 MiB in 24 packages
 / # python3
-Python 3.8.3 (default, May 15 2020, 01:53:50) 
+Python 3.8.3 (default, May 15 2020, 01:53:50)
 [GCC 9.3.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> a1 = bytearray(100 * 1024 * 1024)
 Killed
-/ # 
+/ #
 ```
 
 需要注意的一件事是，我们使用 --swap = 0 将分配给该容器的 swap 设置为零。否则 Cgroup 虽然限制 RAM 使用，但它允许容器使用无限的交换空间。当 swap 设置为零时，容器将完全限制为允许的 RAM 总量。
