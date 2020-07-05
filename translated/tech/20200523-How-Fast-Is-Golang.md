@@ -2,7 +2,7 @@
 ![Photo by Max Duzij on Unsplash](https://github.com/studygolang/gctt-images2/blob/master/20200523-How-Fast-Is-Golang/Photo.jpeg?raw=true)
 时间宝贵，所以为什么浪费时间等待程序运行？除非过去几年与世隔绝，否则不会错过 Go 的兴起。由谷歌工程师 Robert Griesemer，Rob Pike 和 Ken Thompson [创造的](https://golang.org/doc/faq#Origins) 新颖的编程语言，Go 被誉为[近乎完美](https://towardsdatascience.com/why-we-deploy-machine-learning-models-with-go-not-python-a4e35ec16deb)，在易用性上可以与 Python 相媲美，而在执行速度上又可以与 C 语言相媲美。真的如传闻所说吗？今天，我们会分别使用 Go 和 Python 实现埃拉托色尼筛选法，并以耗时为结果。最终，得到的问题的结果，也就是“Golang 到底有多快？”
 
-## Eratosthenes 筛选法 
+## Eratosthenes 筛选法
 Eratosthenes 是古希腊博学家。对很多领域均有涉猎（数学，地理，诗歌，天文学，音乐 —— 还不仅仅只是这些）他是一位著名的学者，[据称他是第一个](https://en.wikipedia.org/wiki/Eratosthenes)测量地球周长及其轴线倾斜度的人。要知道当时是公元前3世纪，就会足够让人惊奇。
 
 ![Eratosthenes 的蚀刻（维基共享资源/公共领域）](https://github.com/studygolang/gctt-images2/blob/master/20200523-How-Fast-Is-Golang/An-etching-of-Eratosthenes.jpg?raw=true)
