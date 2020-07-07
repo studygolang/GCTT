@@ -95,3 +95,13 @@ log.WithFields(log.Fields{
 
 阅读这些库的编写方式对于每个Go开发人员来说都是一个很好的练习，以便了解如何优化我们的代码和潜在的好处。大多数情况下，对于非关键应用程序，您不需要深入研究，但是如果像 Zap 或 Zerolog 这样的外部包免费提供这些优化，我们绝对应该利用它。
 如果您想了解使用池的潜在好处，我建议您阅读我的文章“[Understand the design of sync.Pool](https://medium.com/@blanchon.vincent/go-understand-the-design-of-sync-pool-2dde3024e277)”.
+
+---
+
+via: https://medium.com/a-journey-with-go/go-how-zap-package-is-optimized-dbf72ef48f2d
+
+作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
+译者：[译者ID](https://github.com/lts8989)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
