@@ -3,7 +3,7 @@
 
 Go 生态系统有许多流行的记录器，选择一个可以在所有项目中使用的记录器对于保持最小的一致性至关重要。易用性和性能通常是我们在记录器中考虑的两个指标。接下来我们回顾一下 [Uber](https://github.com/uber-go) 开发的 [Zap](https://github.com/uber-go/zap) 记录器。
 
-# 核心思想
+## 核心思想
 
 Zap 基于三个概念优化性能，第一个是：
 - 避免使用 `interface{}` 有利于强类型的设计。
@@ -28,7 +28,7 @@ logger.Info("failed to fetch URL",
 
 每个字段的显式声明将允许包在日志记录过程中高效地工作。让我们回顾一下包的设计，以了解这些优化将在何处发生。
 
-# 设计
+## 设计
 在高亮显示包的优化部分之前，让我们绘制记录器的全局工作流：
 
 ![Zap 包工作流](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1_4mn192sJdR0rU8RQ3aQo4w.png)
@@ -45,7 +45,7 @@ logger.Info("failed to fetch URL",
 
 与Go生态系统中可用的其他包相比，所有这些优化使包的速度相当快，并显著减少了分配。让我们参观一下并比较一下可用的替代方案。
 
-# 其他选择
+## 其他选择
 
 Zap提供的 [基准](https://github.com/uber-go/zap/tree/v1.10.0/benchmarks) 测试清楚地表明 [Zerolog](https://github.com/rs/zerolog) 是与Zap竞争最激烈的一个。Zerolog还提供了结果非常相似的 [基准](https://github.com/rs/logbench) ：
 
@@ -91,7 +91,7 @@ log.WithFields(log.Fields{
 
 该包还为钩子添加了一层额外的锁，如果需要，可以将其移除，但默认情况下会激活。
 
-# 没有优化
+## 没有优化
 
 阅读这些库的编写方式对于每个Go开发人员来说都是一个很好的练习，以便了解如何优化我们的代码和潜在的好处。大多数情况下，对于非关键应用程序，您不需要深入研究，但是如果像 Zap 或 Zerolog 这样的外部包免费提供这些优化，我们绝对应该利用它。
 如果您想了解使用池的潜在好处，我建议您阅读我的文章“[Understand the design of sync.Pool](https://medium.com/@blanchon.vincent/go-understand-the-design-of-sync-pool-2dde3024e277)”.
@@ -101,7 +101,7 @@ log.WithFields(log.Fields{
 via: https://medium.com/a-journey-with-go/go-how-zap-package-is-optimized-dbf72ef48f2d
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
-译者：[译者ID](https://github.com/lts8989)
+译者：[lts8989](https://github.com/lts8989)
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
