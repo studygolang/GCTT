@@ -1,5 +1,5 @@
 # zap包是如何被优化的
-![插图由“go之旅”提供，原图由 Renee French 创作](https://raw.githubusercontent.com/lts8989/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1__mMI_UYf-DsS04MU5AnRQg.png)
+![插图由“go之旅”提供，原图由 Renee French 创作](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1__mMI_UYf-DsS04MU5AnRQg.png)
 
 Go 生态系统有许多流行的记录器，选择一个可以在所有项目中使用的记录器对于保持最小的一致性至关重要。易用性和性能通常是我们在记录器中考虑的两个指标。接下来我们回顾一下 [Uber](https://github.com/uber-go) 开发的 [Zap](https://github.com/uber-go/zap) 记录器。
 
@@ -31,13 +31,13 @@ logger.Info("failed to fetch URL",
 # 设计
 在高亮显示包的优化部分之前，让我们绘制记录器的全局工作流：
 
-![Zap 包工作流](https://raw.githubusercontent.com/lts8989/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1_4mn192sJdR0rU8RQ3aQo4w.png)
+![Zap 包工作流](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1_4mn192sJdR0rU8RQ3aQo4w.png)
 
 第一步优化，为了避免进行系统分配，我们看到优化使用同步池在记录消息。每个要记录的消息都将重用之前创建的结构体(structure)，并将其释放到池中。
 
 第二部优化，涉及编码器和 JSON 的存储方式。要记录的每个字段都是强类型的，如前一节所示。它允许编码器通过直接将值转储到缓冲区来避免反射和分配：
 
-![优化过的 JSON 编码器](https://raw.githubusercontent.com/lts8989/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1_9aSmDmZ1ccHfcSSwxLGsUw.png)
+![优化过的 JSON 编码器](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1_9aSmDmZ1ccHfcSSwxLGsUw.png)
 
 这个缓冲区的管理要感谢 `sync.Pool`.
 
@@ -49,7 +49,7 @@ logger.Info("failed to fetch URL",
 
 Zap提供的 [基准](https://github.com/uber-go/zap/tree/v1.10.0/benchmarks) 测试清楚地表明 [Zerolog](https://github.com/rs/zerolog) 是与Zap竞争最激烈的一个。Zerolog还提供了结果非常相似的 [基准](https://github.com/rs/logbench) ：
 
-![来自 https://github.com/rs/zerolog 的基准](https://raw.githubusercontent.com/lts8989/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1_M9cZcDqAkoq82Del0TndNQ.png)
+![来自 https://github.com/rs/zerolog 的基准](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1_M9cZcDqAkoq82Del0TndNQ.png)
 
 它清楚地展示 Zerolog 和 Zap 在性能方面比其他软件包要好得多，速度快5到27倍。
 
@@ -67,7 +67,7 @@ l.Info().
 
 写法上非常接近，并且我们可以看到 Zerolog 也引入强类型参数以优化性能。如 encoder 接口所述，JSON编码器还根据类型转储数据：
 
-![zerolog 编码器接口](https://raw.githubusercontent.com/lts8989/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1_aLID1ZKFpryk6IkxOyoWow.png)
+![zerolog 编码器接口](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1_aLID1ZKFpryk6IkxOyoWow.png)
 
 发送到记录器的每个条目（ Zerolog 中称为 `event` ）也使用 `sync` 包中的池，以避免在记录消息时进行系统分配。
 
