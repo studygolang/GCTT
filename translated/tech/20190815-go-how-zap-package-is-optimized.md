@@ -16,7 +16,6 @@ Zap 基于三个概念优化性能，第一个是：
 
 对于开发人员来说，这些点的成本很小，这迫使他们在记录消息时声明每种类型：
 
-
 ```go
 logger.Info("failed to fetch URL",
 	// Structured context as strongly typed Field values.
@@ -55,7 +54,6 @@ Zap提供的 [基准](https://github.com/uber-go/zap/tree/v1.10.0/benchmarks) �
 
 现在让我们比较一下用 Zerolog 编写的同一段代码：
 
-
 ```go
 l := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr})
 l.Info().
@@ -74,7 +72,6 @@ l.Info().
 正如我们所看到的，这些软件包非常相似。这解释了为什么他们的性能很接近。让我们尝试另一个具有不同设计的包，以了解在这些包中缺少的优化。
 
 现在让我们将这些 logger 与 Golang 生态系统中另一个著名的包 [Logrus](https://github.com/sirupsen/logrus) 进行比较。以下是相同功能的代码：
-
 
 ```go
 log.SetOutput(os.Stdout)
