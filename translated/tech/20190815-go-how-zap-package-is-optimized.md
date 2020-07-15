@@ -1,7 +1,7 @@
 # zap包是如何被优化的
 ![插图由“go之旅”提供，原图由 Renee French 创作](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1__mMI_UYf-DsS04MU5AnRQg.png)
 
-Go 生态系统有许多流行的记录器，选择一个可以在所有项目中使用的记录器对于保持最小的一致性至关重要。易用性和性能通常是我们在记录器中考虑的两个指标。接下来我们回顾一下 [Uber](https://github.com/uber-go) 开发的 [Zap](https://github.com/uber-go/zap) 记录器。
+Go 生态系统有许多流行的日志库，选择一个可以在所有项目中使用的日志库对于保持最小的一致性至关重要。易用性和性能通常是我们在日志库中考虑的两个指标。接下来我们回顾一下 [Uber](https://github.com/uber-go) 开发的 [Zap](https://github.com/uber-go/zap) 日志库。
 
 ## 核心思想
 
@@ -12,9 +12,9 @@ Zap 基于三个概念优化性能，第一个是：
 
 - 无反射。反射是有代价的，而且可以避免，因为包能够决定被调用的类型。
 
-在JSON编码中没有分配。 如果对标准库进行了优化，则可以轻松避免在此处进行分配，因为 package 包含所有已发送参数的类型。
+在JSON编码中没有额外内存分配。 如果对标准库进行了优化，则可以轻松避免在此处进行内存分配，因为 package 包含所有已发送参数的类型。
 
-对于开发人员来说，这些点的成本很小，这迫使他们在记录消息时声明每种类型：
+以上几点，对开发人员来说成本不高，因此他们需要在记录消息时声明每种类型：
 
 ```go
 logger.Info("failed to fetch URL",
@@ -28,7 +28,7 @@ logger.Info("failed to fetch URL",
 每个字段的显式声明将允许包在日志记录过程中高效地工作。让我们回顾一下包的设计，以了解这些优化将在何处发生。
 
 ## 设计
-在高亮显示包的优化部分之前，让我们绘制记录器的全局工作流：
+在高亮显示包的优化部分之前，让我们绘制日志库的全局工作流：
 
 ![Zap 包工作流](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1_4mn192sJdR0rU8RQ3aQo4w.png)
 
@@ -40,9 +40,9 @@ logger.Info("failed to fetch URL",
 
 这个缓冲区的管理要感谢 `sync.Pool`.
 
-最终调用方的性能/成本的权衡非常有趣，因为显式声明每个字段不需要开发人员付出太多努力。但是，该库为 logger 提供了一层封装，它公开了一个对开发人员更友好的接口，您不需要定义要记录的每个字段的每种类型。可从 `logger.Sugar()` 方法中获取，它将稍微减慢并增加记录器的分配数。
+最终调用方的性能/成本的权衡非常有趣，因为显式声明每个字段不需要开发人员付出太多努力。但是，该库为 logger 提供了一层封装，它公开了一个对开发人员更友好的接口，您不需要定义要记录的每个字段的每种类型。可从 `logger.Sugar()` 方法中获取，它将稍微减慢并增加日志库的分配数。
 
-与Go生态系统中可用的其他包相比，所有这些优化使包的速度相当快，并显著减少了分配。让我们参观一下并比较一下可用的替代方案。
+与Go生态系统中可用的其他包相比，所有这些优化使包的速度相当快，并显著减少了内存分配。让我们浏览并比较一下可用的替代方案。
 
 ## 其他选择
 
@@ -67,7 +67,7 @@ l.Info().
 
 ![zerolog 编码器接口](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1_aLID1ZKFpryk6IkxOyoWow.png)
 
-发送到记录器的每个条目（ Zerolog 中称为 `event` ）也使用 `sync` 包中的池，以避免在记录消息时进行系统分配。
+发送到日志库的每个条目（ Zerolog 中称为 `event` ）也使用 `sync` 包中的池，以避免在记录消息时进行系统分配。
 
 正如我们所看到的，这些软件包非常相似。这解释了为什么他们的性能很接近。让我们尝试另一个具有不同设计的包，以了解在这些包中缺少的优化。
 
@@ -82,7 +82,7 @@ log.WithFields(log.Fields{
 }).Info("failed to fetch URL")
 ```
 
-在内部，Logrus 还将为 entry 对象使用一个池，但是在检查与消息一起发送的字段时将添加一个反射层。此反射允许记录器检测传递给记录器的所有参数是否有效，但会稍微减慢执行速度。
+在内部，Logrus 还将为 entry 对象使用一个池，但是在检查与消息一起发送的字段时将添加一个反射层。此反射允许日志库检测传递给日志库的所有参数是否有效，但会稍微减慢执行速度。
 
 另外，与 Zap 或 Zerolog 相反，参数不是类型化的，这将导致将起始类型转换为空接口，然后返回起始类型以便对其进行编码。
 
