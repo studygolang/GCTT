@@ -2,7 +2,7 @@
 
 ![When to choose Kubernetes?](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200603-Why-Not-Use-Kubernetes/00.png)
 
-很多团队都很兴奋地开始使用 Kubernetes。其中一些团队希望能充分利用它的抗逆力、灵活性、可移植性、可靠性以及其他的一些 Kubernetes 能原生地提供的优势。也有些团队只是热衷于技术，仅仅想使用下这个平台，来更好地了解它。还有一些开发者想获得一些使用它的经验，这样他们的简历上就可以添加一项很多公司急需的技能。总之，现在大部分开发者出于不同的目的都想要使用 Kubernetes。
+很多团队都很兴奋地开始使用 Kubernetes。其中一些团队希望能充分利用它的弹性、灵活性、可移植性、可靠性以及其他的一些 Kubernetes 能原生地提供的优势。也有些团队只是热衷于技术，仅仅想使用下这个平台，来更好地了解它。还有一些开发者想获得一些使用它的经验，这样他们的简历上就可以添加一项很多公司急需的技能。总之，现在大部分开发者出于不同的目的都想要使用 Kubernetes。
 
 使用 Kubernetes 有好处也有坏处。
 
@@ -20,7 +20,7 @@
 >
 > — [编排是什么？RedHat 官方网站](https://www.redhat.com/en/topics/automation/what-is-orchestration)
 
-换句话说，当管理复杂的方案时，如果没有一套合适的编排系统，维护起来会很困难，而 Kubernetes 让管理变得容器起来。虽然你可以自己实现 DevOps 工程实践，但是当你的实例从几十到几百个时，扩展性将很难实现。
+换句话说，Kubernetes 使管理复杂的解决方案变得更加容易，而如果没有适当的编排系统，这些解决方案将很难维护。虽然您可以自己实施 DevOps 工程实践，但如果要从数十种服务扩展到数百种服务，则无法扩展。
 
 ## Kubernetes 很复杂
 
