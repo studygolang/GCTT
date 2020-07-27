@@ -1,28 +1,28 @@
 # Go语言的HTML安全编码
-免责声明：这不是一个正式的谷歌帖子或公告，本文只是我理解的一些可以用的理论方法。
 
-谷歌信息安全小组谷歌发布了
-[Go 语言 “safehtml” 包](https://github.com/google/safehtml)。如果您有兴趣使您的应用程序能够自适应服务器端XSS，那么您可能希望采用它而不是“html/template”。迁移到 safehtml 会非常简单，因为它只是原始 html/template 标准包的一个强化分支。如果你的应用程序没有大的缺陷，那么将它转换为使用安全版本应该不会太复杂。
+>免责声明：这不是一个官方的谷歌帖子或公告，本文只是我理解的一些可以用的理论方法。
+
+谷歌信息安全小组谷歌发布了 [Go 语言 “safehtml” 包](https://github.com/google/safehtml) 。如果你有兴趣使你的应用程序能够自适应服务器端XSS，那么你可能希望采用它来替代“html/template”。（将你的应用程序中的HTML类库）迁移到 safehtml 会非常简单，因为它只是原始 html/template 标准包的一个强化分支。如果你的应用程序没有大的缺陷，那么将它转换为使用安全版本应该不会太复杂。
 
 这是谷歌内部用来保护产品免受 XSS 攻击的方法。
 
-如果你只想使用它而不阅读解释，你可以跳到[结论列表](#checklist)。
+如果你只想使用它而不想了解其中的原理，可以跳到[结论列表](#checklist)。
 
 ## "html/template" 的问题
 
-“html/template” 没有 ”tainting“（污染）的概念，也没有保持追踪这类危险类型的模板。HTML被构造后，只有一行文档说明：
+“html/template” 没有 ”tainting“（污染）的概念，也没有跟踪像 [template.HTML](https://golang.org/pkg/html/template/#HTML) 这样危险的类型。HTML被构造后，只有一行文档说明：
 
-使用这种类型会带来安全风险：封装的内容应该来自受信任的源，因为它将被逐字包含在模板的输出中。
+>使用这种类型会带来安全风险：封装的内容应该来自受信任的源，因为它将被逐字逐句包含在模板的输出中。
 
-这不仅缺乏对“为什么”和“如何”使用该类型的解释，而且它的使用也非常普遍，这使得它与doc中有该行的所有其他类型（总共七个）一起成为一个非常危险的陷阱。
+这不仅缺乏对“为什么”和“如何”使用该类型的解释，而且它的使用也非常普遍，这使得它与文档中一同被提及的所有其他类型（总共七个）一起成为一个非常危险的隐患。
 
-此外，“html/template”还有一些长期存在的问题，在不破坏向后兼容性的情况下，没有一种很好的方法来正确地修复这些问题。破坏可能性和安全性之间的权衡还不清楚，因此，如果您想选择更安全的方式，您可能应该放弃 “html/template”。
+此外，“html/template”还有一些长期存在的问题，在不破坏向后兼容性的情况下，没有一种很好的方法来正确地修复这些问题。破坏可能性和安全性之间的权衡还不清楚，因此，如果你想 **选择** 更安全的方式，你可能应该放弃使用 “html/template”。
 
-请注意，我正在维护“html/template”（我在 [这个项目](https://dev.golang.org/owners) 的昵称是 empijei ），所以我告诉您一些被那个包坑过的背景。我将会很神奇地将所有用户迁移到安全版本。
+请注意，我正在维护“html/template”（我在 [这个项目](https://dev.golang.org/owners) 的昵称是 empijei ），所以我告诉你一些被那个包坑过的背景。我将会很神奇地将所有用户迁移到安全版本。
 
 ## 结构
 
-safehtml 由几个包组成。根据您的构建系统或公司的工具栈，您应该约束一些限制条件。你公司的安全团队或安全意识强的人应该为每个人灌输这个观点。
+safehtml 由几个包组成。根据你的构建系统或公司的工具栈，你应该约束一些限制条件。你公司的安全团队或安全意识强的人应该为每个人灌输这个观点。
 
 ### safehtml
 
@@ -34,21 +34,21 @@ safehtml 由几个包组成。根据您的构建系统或公司的工具栈，�
 - [ ] [通过提供一个安全模板](https://godoc.org/github.com/google/safehtml/template#Template.ExecuteToHTML) ，它使用上下文自动转义，所以它是安全的（你可以在 [我之前的文章](https://blogtitle.github.io/robn-go-security-pearls-cross-site-scripting-xss/) 中阅读更多关于这部分内容）
 - [ ] [通过连接已经被信任的HTML](https://godoc.org/github.com/google/safehtml#HTMLConcat) ，这基本上是安全的，实际上只有心怀不轨的开发者才能制造出错误。
 
-这保证了HTML类型的每个实例都是安全的。脚本类型的行为类似，但它不是模板，而是只能从常量或数据构建。为了表达“编译时常量”的概念，它有接受未报告字符串类型的构造函数，因此调用它们的唯一方法是使用字符串文本（我发现这是一个非常巧妙的技巧）。
+这保证了 HTML 类型的每个实例都是安全的。[脚本类型](https://godoc.org/github.com/google/safehtml#Script) 的行为类似，但它不是模板，而是只能从常量或数据构建。为了表达“编译时常量”的概念，它有[接受不可被包外访问字符串类型的构造函数](https://godoc.org/github.com/google/safehtml#ScriptFromConstant)，因此调用它们的唯一方法是使用 [字符串文本](https://golang.org/ref/spec#String_literals) （我发现这是一个非常巧妙的技巧）。
 
 此包中的所有其他类型都遵循类似的模式。
 
 ### safehtml/template
 
-这是真正的“html/template”替代品，也是每个人都应该使用的包。如果不使用“legacyconversions”和“uncheckedconversions”（请参阅下文），并且**您的所有HTML响应都是由这个包生成的**，那么您可以保证在您的产品中不会有任何服务器端 XSS。
+这是真正的“html/template”替代品，也是每个人都应该使用的包。如果不使用“legacyconversions”和“uncheckedconversions”（请参阅下文），并且**你的所有HTML响应都是由这个包生成的**，那么你可以保证在你的程序(products)中不会有任何服务器端 XSS。
 
 我们正在研究确保最后一个条件为真的工具，但这需要一些时间。请 [继续关注](https://blogtitle.github.io/index.xml) 最新消息。
 
 ### safehtml/legacyconversions
 
-此包只能用于转换到安全API。它允许任何任意字符串都是安全类型，这样转换到safehtml可以非常迅速，所有新代码都将是安全的。
+此包只能用于转换到安全 API 。它允许任何任意字符串都是安全类型，这样转换到 safehtml 可以非常迅速，所有新代码都将是安全的。
 ++一旦迁移发生，就应该阻止使用这个包。++
-顾名思义：这只是针对遗留代码，不应该有新代码使用它，并且应该逐步重构此包的所有用法，以使用安全构造函数。
+顾名思义：这只是针对遗留代码，不应该有新代码使用它，**并且应该逐步重构此包的所有用法，以使用安全构造函数**。
 
 ### safehtml/testconversions
 
@@ -56,19 +56,19 @@ safehtml 由几个包组成。根据您的构建系统或公司的工具栈，�
 
 ### safehtml/uncheckedconversions
 
-这是最微妙的问题。有时safehtmlapi太不方便，甚至无法使用。有时你不得不使用不安全的模式，因为你想做一些不能被证明是安全的事情（例如，从数据库中获取一些你信任的HTML并将其提供给客户端）。
+这是最微妙的问题。有时safehtmlapi太不方便，甚至无法使用。有时你*不得不*使用不安全的模式，因为你想做一些不能被证明是安全的事情（例如，从数据库中获取一些你信任的HTML并将其发送给客户端）。
 
-对于这些**非常罕见**的情况，您可以使用此软件包。导入它应该限制在一组手工挑选的依赖项，并且每一个新的导入都需要一些安全意识强的人来审查它。
+对于这些**非常罕见**的情况，你可以使用此软件包。导入它应该限制在一组手工挑选的依赖项，并且每一个新的导入都需要一些安全意识强的人来审查它。
 
-确保使用是**安全的，并将保持安全**，因为 uncheckedconversions  不会增加安全性。它们只是通知编译器您已经检查了代码，并希望它是可信的。遵循以下准则：
+确保使用是**安全的，并将保持安全**，因为 uncheckedconversions  不会增加安全性。它们只是通知编译器你已经检查了代码，并希望它是可信的。遵循以下准则：
 
 - 仅在严格必要的情况下使用（例如，如果使用 safehtml/template 需要更多的工作，但需要做额外的工作）。
 - 为将来的审查者和维护者提供安全使用方法的文档。
 - 通过减少 uncheckedconversion  对闭包参数、结构不确定类型字段的依赖性，缩小上下文范围。
 
-这个包的用法是您的单点故障，所以请确保您遵循这些。（这句话假设您最终将摆脱 legacyconversions ）。
+这个包的用法是你的单点故障，所以请确保你遵循这些。（这句话假设你最终将摆脱 legacyconversions ）。
 
-正确使用这个包的一个例子是（HTML）清理器的输出。（原文 sanitizer 这里译为清理器）如果您需要将用户提供的一些 HTML 嵌入到响应中（例如，因为您呈现 markdown 或网页邮箱），您将清理该 HTML 。一旦它被清理（如果你的清理器程序被正确实现），就可以使用未经检查的转换（unchecked conversion）将其升级为 HTML 类型。
+正确使用这个包的一个例子是（HTML）清理器的输出。（原文 sanitizer 这里译为清理器）如果你需要将用户提供的一些 HTML 嵌入到响应中（例如，因为你呈现 markdown 或网页邮箱），你将清理该 HTML 。一旦它被清理（如果你的清理器程序被正确实现），就可以使用未经检查的转换（unchecked conversion）将其升级为 HTML 类型。
 
 ### safehtml/raw
 
@@ -82,7 +82,7 @@ safehtml 由几个包组成。根据您的构建系统或公司的工具栈，�
 
 ### `Printf` 和嵌套模板
 
-您可能拥有的一个代码示例是
+你可能有这样一段代码
 
 
 ``` go
@@ -90,7 +90,7 @@ var theLink template.HTML = fmt.Sprintf("<a href=%q>the link</a>", myLink)
 myTemplate.Execute(httpResponseWriter, theLink)
 ```
 
-要重构它，您有多种选择：要么用另一个模板构建字符串（注意这里的“template”变量是“safehtml/template”类型）。
+要重构它，你有多种选择：要么用另一个模板构建字符串（注意这里的“template”变量是“safehtml/template”类型）。
 
 ``` go
 myLinkTpl := template.Must(template.New("myUrl").Parse("<a href={{.}}>the link</a>"))
@@ -120,6 +120,13 @@ t.ExecuteTemplate(os.Stdout, "outer", map[string]string{"URL": myLink})
 var myHtml template.HTML := `<h1> This is a title </h1>`
 ```
 
+改成这样：
+
+``` go
+myHtml := template.MustParseAndExecuteToHTML(`<h1> This is a title </h1>`)
+```
+
+
 <span id="checklist">结论列表</span>
 
 1. 组织访问这些包
@@ -127,7 +134,7 @@ var myHtml template.HTML := `<h1> This is a title </h1>`
 - 只允许测试构建时导入“testconversions”包。
 2. 从“html/template”迁移并替换为“safehtml/template”。
 - 对于每一个破损或每一个问题，使用“legacyconversions”调用。可能需要一些手动重构，但迁移应该相当简单。
-- **运行所有的集成和E2E测试**。这很重要，所以我用 SHIFT 而不是 CAPS 来输入。
+- **运行所有的集成测试和E2E测试**。这很**重要**，所以我全使用大写字母来强调它。
 - 封锁 legacyconversions 列表：从现在起，禁止新导入“legacyconversions”包。
 - 禁止使用“html/template”，这样所有新代码都是安全的。
 3. 重构 legacyconversions 以使用安全模式。
@@ -136,7 +143,7 @@ var myHtml template.HTML := `<h1> This is a title </h1>`
 
 ## 结论
 
-如果您想确保Go代码中没有服务器端XSS，这可能是最好的方法。如果您有任何问题或需要更多的重构示例，请让我知道，您可以[通过twitter](https://twitter.com/empijei)（直接消息是开放的）或通过[电子邮件](mailto:empijei@gmail.com)与我联系。
+如果你想确保 Go 代码中没有服务器端 XSS，这可能是最好的方法。如果你有任何问题或需要更多的重构示例，请让我知道，你可以[通过twitter](https://twitter.com/empijei)（直接消息是开放的）或通过[电子邮件](mailto:empijei@gmail.com)与我联系。
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 via: https://blogtitle.github.io/go-safe-html/
