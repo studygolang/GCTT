@@ -84,7 +84,6 @@ safehtml 由几个包组成。根据你的构建系统或公司的工具栈，�
 
 您可能拥有的一个代码示例是
 
-
 ``` go
 var theLink template.HTML = fmt.Sprintf("<a href=%q>the link</a>", myLink)
 myTemplate.Execute(httpResponseWriter, theLink)
@@ -114,7 +113,6 @@ t.ExecuteTemplate(os.Stdout, "outer", map[string]string{"URL": myLink})
 如果代码中有一个HTML `常量`，那么可以将其用作模板并将其执行为HTML。这将检查所有标签是否配对以及其他内容，并返回一个HTML类型的实例。
 
 如下：
-
 
 ``` go
 var myHtml template.HTML := `<h1> This is a title </h1>`
