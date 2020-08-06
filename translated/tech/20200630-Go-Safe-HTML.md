@@ -52,7 +52,7 @@ safehtml 由几个包组成。根据你的构建系统或公司的工具栈，�
 
 ### safehtml/testconversions
 
-此软件包只能在测试目标中使用，并且仅在必要时使用。你应该设置一些[过梁](https://godoc.org/golang.org/x/tools/go/analysis)来确保这一点。
+此软件包只能在测试目标中使用，并且仅在必要时使用。你应该设置一些 [linters](https://godoc.org/golang.org/x/tools/go/analysis) 来确保这一点。
 
 ### safehtml/uncheckedconversions
 
