@@ -2,7 +2,7 @@
 
 > August 19, 2019
 
-7月底，Go 团队推出了 [Go 2 范型设计的修订版](https://go.googlesource.com/proposal/+/master/design/go2draft-contracts.md)，完全重写了合约，其中明确规定了范型方法等接受的约束（令我惊讶的是，修订版设计尚未链接到 [wiki 反馈页面](https://github.com/golang/go/wiki/Go2GenericsFeedback)，但据我所知，该设计完全是官方的）。自从修订版设计问世，我一直在考虑对它的看法，简而言之，我并不想说什么，换一种说法，是因为新的合约设计很无聊。
+7 月底，Go 团队推出了 [Go 2 范型设计的修订版](https://go.googlesource.com/proposal/+/master/design/go2draft-contracts.md)，完全重写了合约，其中明确规定了范型方法等接受的约束（令我惊讶的是，修订版设计尚未链接到 [wiki 反馈页面](https://github.com/golang/go/wiki/Go2GenericsFeedback)，但据我所知，该设计完全是官方的）。自从修订版设计问世，我一直在考虑对它的看法，简而言之，我并不想说什么，换一种说法，是因为新的合约设计很无聊。
 
 你会对[初版设计](https://go.googlesource.com/proposal/+/master/design/go2draft.md)中的合约有很多评论，但是他们确实并不无聊。尽管合约复用了现有的 Go 语法（用于方法体），它们与 Go 中其他任何内容都存在明显差异，[一种我觉得非常聪明的差异](https://utcc.utoronto.ca/~cks/space/blog/programming/Go2ContractsTooClever)。为了尽量减少新语法，初版合约设计通常[间接的描述事情](https://utcc.utoronto.ca/~cks/space/blog/programming/Go2ContractsMoreReadable)，导致了一些问题，例如有许多方式可以表示同一种约束（尽管 [Go 可能要求最少的合约](https://utcc.utoronto.ca/~cks/space/blog/programming/Go2RequireMinimalContracts)）。
 

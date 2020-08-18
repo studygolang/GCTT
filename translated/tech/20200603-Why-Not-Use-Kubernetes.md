@@ -24,7 +24,7 @@
 
 ## Kubernetes 很复杂
 
-为了充分利用它的各个功能，开发者和 IT 操作者们必须掌握容器、网络、安全、移植性、弹性和 Kubernetes 本身相关的知识。为了合理地使用它的负载，你应该先了解每个组件是如何工作的。为了管理一个集群，你应该了解它的架构、存储、API和后台管理系统，而这可能与传统的虚拟化环境不一样。为了实施某个方案，你应该先了解如何集成工具来部署、监控以及追踪服务，诸如 [Helm](https://helm.sh/) 和 [Istio](https://istio.io/)。这里涉及大量的新概念，因此你的团队要做好充足的准备来迎接挑战。
+为了充分利用它的各个功能，开发者和 IT 操作者们必须掌握容器、网络、安全、移植性、弹性和 Kubernetes 本身相关的知识。为了合理地使用它的负载，你应该先了解每个组件是如何工作的。为了管理一个集群，你应该了解它的架构、存储、API 和后台管理系统，而这可能与传统的虚拟化环境不一样。为了实施某个方案，你应该先了解如何集成工具来部署、监控以及追踪服务，诸如 [Helm](https://helm.sh/) 和 [Istio](https://istio.io/)。这里涉及大量的新概念，因此你的团队要做好充足的准备来迎接挑战。
 
 ## Kubernetes 对于小的解决方案花费很大
 
@@ -44,7 +44,7 @@
 
 如果你的应用都是独立的，或者只连接了少量的应用，也许在同一个虚拟网络中组合使用 Azure Web Apps 和 [容器实例](https://azure.microsoft.com/en-us/services/container-instances/)就足够了。
 
-然而，如果你的容器化的应用数量会增长，那么使用 Kubernetes 管理他们会很有趣。你会在单一的、集中式的环境中管理像 web 应用，API 和 循环的任务等不同类型的应用。你的团队也能把精力放在 Kubernetes 而不是浪费在选择不同的云原生解决方案上。
+然而，如果你的容器化的应用数量会增长，那么使用 Kubernetes 管理他们会很有趣。你会在单一的、集中式的环境中管理像 Web 应用，API 和 循环的任务等不同类型的应用。你的团队也能把精力放在 Kubernetes 而不是浪费在选择不同的云原生解决方案上。
 
 如果你要处理分布式的场景，像微服务，那么请选择 Kubernetes。分布式架构很复杂，而 Kubernetes 就是为它设计的。能完全契合分布式的应用，以及可以根据应用的需求进行扩展，除了 Kubernetes，我想不到更好的任何其他平台。
 
@@ -67,6 +67,6 @@ via: https://medium.com/better-programming/why-not-use-kubernetes-52a89ada5e22
 
 作者：[Grazi Bonizi](https://medium.com/@grazibonizi)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
