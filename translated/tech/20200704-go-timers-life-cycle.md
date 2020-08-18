@@ -1,6 +1,6 @@
 # Go: 定时器的生命周期
 
-![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200704-go-timers-life-cycle/图0)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200704-go-timers-life-cycle/图0.png)
 
 > 本篇文章基于Go `1.14`
 
