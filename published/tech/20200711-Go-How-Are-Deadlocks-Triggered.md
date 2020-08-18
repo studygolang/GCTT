@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/30260
+
 # Go：死锁是如何触发的？
 
 ![illustration](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200711-Go-How-Are-Deadlocks-Triggered/illustration.png)
@@ -38,7 +40,7 @@
 
 每当线程空闲时，就会通知检测器。调试的每一行显示空闲线程的递增数量。当空闲线程数等于活动线程数减去系统线程数时，就会发生死锁。在本例中，我们有三个空闲线程和三个活动线程（四个线程减去系统线程）。由于没有活动线程能够解除阻塞空闲线程，因此存在死锁情况。
 
-但是，这种行为有一些限制。实际上，任何旋转的 Goroutine 都会使死锁检测器失效，因为线程将保持活动状态。
+但是，这种行为有一些限制。实际上，任何自旋的 Goroutine 都会使死锁检测器失效，因为线程将保持活动状态。
 
 ## 限制
 
@@ -75,10 +77,11 @@
 ![no-activity](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200711-Go-How-Are-Deadlocks-Triggered/no-activity.png)
 
 ---
+
 via: https://medium.com/a-journey-with-go/go-how-are-deadlocks-triggered-2305504ac019
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[alandtsang](https://github.com/alandtsang)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
