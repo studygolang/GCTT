@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/30246
+
 # Go：gops 如何与 runtime 交互？
 
-![img](https://github.com/studygolang/gctt-images2/blob/master/20200405-go-how-does-gops-interact-with-the-runtime/1_3PCyB5PhH_NEZoNnj693dA.png?raw=true)
+![](hhttps://raw.githubusercontent.com/studygolang/gctt-images2/master/20200405-go-how-does-gops-interact-with-the-runtime/1_3PCyB5PhH_NEZoNnj693dA.png)
 
 本文基于 Go 1.13 和 gops 0.3.7。
 
@@ -19,11 +21,11 @@
 
 首先，`gops` 列出所有的进程。接着，对于每个进程，它打开二进制文件读取符号表：
 
-![img](https://github.com/studygolang/gctt-images2/blob/master/20200405-go-how-does-gops-interact-with-the-runtime/1_LyVcQzBGP3i4aCwzwmzoFA.png?raw=true)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200405-go-how-does-gops-interact-with-the-runtime/1_LyVcQzBGP3i4aCwzwmzoFA.png)
 
-如果符号表包含了 `runtime.man` （主 goroutine 的入口）或者 `main.main` （我们程序的入口），则可以将其标记为一个 Go 程序。
+如果符号表包含了 `runtime.man` （主 Goroutine 的入口）或者 `main.main` （我们程序的入口），则可以将其标记为一个 Go 程序。
 
-*有关符号表的更多信息，我建议你阅读我的文章“Go：如何使用符号表”。了解关于主 goroutine 的更多信息，建议阅读我的文章“[Go: g0，特殊的 Goroutine](https://medium.com/a-journey-with-go/go-g0-special-goroutine-8c778c6704d8)”*
+*有关符号表的更多信息，我建议你阅读我的文章“Go：如何使用符号表”。了解关于主 Goroutine 的更多信息，建议阅读我的文章“[Go: g0，特殊的 Goroutine](https://medium.com/a-journey-with-go/go-g0-special-goroutine-8c778c6704d8)”*
 
 `gops` 还会通过读取符号表的 `runtime.buildVersion` 来读取 Go 的版本。然而，由于二进制文件中的符号表可以被剥离，`gops` 需要另一种方法来检测 Go 二进制文件。我们用剥离后的二进制文件再试一次：
 
@@ -66,17 +68,18 @@ Couldn't resolve addr or pid 168 to TCPAddress: couldn't get port for PID 168
 
 `gops` 通过 TCP 和要读取的程序暴露的 endpoint 来与其通信：
 
-![img](https://github.com/studygolang/gctt-images2/blob/master/20200405-go-how-does-gops-interact-with-the-runtime/1_V5turxRPbzzq9rHbqOjpbg.png?raw=true)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200405-go-how-does-gops-interact-with-the-runtime/1_V5turxRPbzzq9rHbqOjpbg.png)
 
 分配给每个程序的端口都写在一个配置文件中，例如 `path/to/config/{processID}` ，这使得 `gops` 很容易知道暴露的端口。然后，`gops` 可以将命令标记发送给程序，agent 将会收集数据并响应：
 
-![img](https://github.com/studygolang/gctt-images2/blob/master/20200405-go-how-does-gops-interact-with-the-runtime/1_PvRmDO4yXEdm6Z7xeysh8A.png?raw=true)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200405-go-how-does-gops-interact-with-the-runtime/1_PvRmDO4yXEdm6Z7xeysh8A.png)
 
 ---
-via: [https://medium.com/a-journey-with-go/go-how-does-gops-interact-with-the-runtime-778d7f9d7c18](https://medium.com/a-journey-with-go/go-how-does-gops-interact-with-the-runtime-778d7f9d7c18)
+
+via: <https://medium.com/a-journey-with-go/go-how-does-gops-interact-with-the-runtime-778d7f9d7c18>
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[DoubleLuck](https://github.com/DoubleLuck)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

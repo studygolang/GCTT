@@ -1,5 +1,5 @@
-# zap包是如何被优化的
-![插图由“go之旅”提供，原图由 Renee French 创作](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1__mMI_UYf-DsS04MU5AnRQg.png)
+# zap 包是如何被优化的
+![插图由“go 之旅”提供，原图由 Renee French 创作](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1__mMI_UYf-DsS04MU5AnRQg.png)
 
 Go 生态系统有许多流行的日志库，选择一个可以在所有项目中使用的日志库对于保持最小的一致性至关重要。易用性和性能通常是我们在日志库中考虑的两个指标。接下来我们回顾一下 [Uber](https://github.com/uber-go) 开发的 [Zap](https://github.com/uber-go/zap) 日志库。
 
@@ -12,7 +12,7 @@ Zap 基于三个概念优化性能，第一个是：
 
 - 无反射。反射是有代价的，而且可以避免，因为包能够决定被调用的类型。
 
-在JSON编码中没有额外内存分配。 如果对标准库进行了优化，则可以轻松避免在此处进行内存分配，因为 package 包含所有已发送参数的类型。
+在 JSON 编码中没有额外内存分配。 如果对标准库进行了优化，则可以轻松避免在此处进行内存分配，因为 package 包含所有已发送参数的类型。
 
 以上几点，对开发人员来说成本不高，因此他们需要在记录消息时声明每种类型：
 
@@ -42,15 +42,15 @@ logger.Info("failed to fetch URL",
 
 最终调用方的性能/成本的权衡非常有趣，因为显式声明每个字段不需要开发人员付出太多努力。但是，该库为 logger 提供了一层封装，它公开了一个对开发人员更友好的接口，您不需要定义要记录的每个字段的每种类型。可从 `logger.Sugar()` 方法中获取，它将稍微减慢并增加日志库的分配数。
 
-与Go生态系统中可用的其他包相比，所有这些优化使包的速度相当快，并显著减少了内存分配。让我们浏览并比较一下可用的替代方案。
+与 Go 生态系统中可用的其他包相比，所有这些优化使包的速度相当快，并显著减少了内存分配。让我们浏览并比较一下可用的替代方案。
 
 ## 其他选择
 
-Zap提供的 [基准](https://github.com/uber-go/zap/tree/v1.10.0/benchmarks) 测试清楚地表明 [Zerolog](https://github.com/rs/zerolog) 是与Zap竞争最激烈的一个。Zerolog还提供了结果非常相似的 [基准](https://github.com/rs/logbench) ：
+Zap 提供的 [基准](https://github.com/uber-go/zap/tree/v1.10.0/benchmarks) 测试清楚地表明 [Zerolog](https://github.com/rs/zerolog) 是与 Zap 竞争最激烈的一个。Zerolog 还提供了结果非常相似的 [基准](https://github.com/rs/logbench) ：
 
 ![来自 https://github.com/rs/zerolog 的基准](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1_M9cZcDqAkoq82Del0TndNQ.png)
 
-它清楚地展示 Zerolog 和 Zap 在性能方面比其他软件包要好得多，速度快5到27倍。
+它清楚地展示 Zerolog 和 Zap 在性能方面比其他软件包要好得多，速度快 5 到 27 倍。
 
 现在让我们比较一下用 Zerolog 编写的同一段代码：
 
@@ -63,7 +63,7 @@ l.Info().
   Msg("failed to fetch URL")
 ```
 
-写法上非常接近，并且我们可以看到 Zerolog 也引入强类型参数以优化性能。如 encoder 接口所述，JSON编码器还根据类型转储数据：
+写法上非常接近，并且我们可以看到 Zerolog 也引入强类型参数以优化性能。如 encoder 接口所述，JSON 编码器还根据类型转储数据：
 
 ![zerolog 编码器接口](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1_aLID1ZKFpryk6IkxOyoWow.png)
 
@@ -90,7 +90,7 @@ log.WithFields(log.Fields{
 
 ## 没有优化
 
-阅读这些库的编写方式对于每个Go开发人员来说都是一个很好的练习，以便了解如何优化我们的代码和潜在的好处。大多数情况下，对于非关键应用程序，您不需要深入研究，但是如果像 Zap 或 Zerolog 这样的外部包免费提供这些优化，我们绝对应该利用它。
+阅读这些库的编写方式对于每个 Go 开发人员来说都是一个很好的练习，以便了解如何优化我们的代码和潜在的好处。大多数情况下，对于非关键应用程序，您不需要深入研究，但是如果像 Zap 或 Zerolog 这样的外部包免费提供这些优化，我们绝对应该利用它。
 如果您想了解使用池的潜在好处，我建议您阅读我的文章“[Understand the design of sync.Pool](https://medium.com/@blanchon.vincent/go-understand-the-design-of-sync-pool-2dde3024e277)”.
 
 ---
@@ -99,6 +99,6 @@ via: https://medium.com/a-journey-with-go/go-how-zap-package-is-optimized-dbf72e
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[lts8989](https://github.com/lts8989)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

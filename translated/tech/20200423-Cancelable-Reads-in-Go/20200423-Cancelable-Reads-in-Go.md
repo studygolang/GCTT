@@ -11,7 +11,7 @@
 ```go
 func asyncReader(r io.Reader) {
     ch := make(chan []byte)
-    go func() {
+    Go func() {
         defer close(ch)
         for {
             var b []byte
@@ -33,7 +33,7 @@ func asyncReader(r io.Reader) {
 }
 ```
 
-当必须将 `Read()` 方法和一些其他异步数据源，如 gRPC 流一起混用时，我们使用上述模式。你生成一个 goroutine 从 reader 中不停地读取数据，将接收到的数据从一个 channel 中发送出去，当 reader 关闭时执行一些清理操作。
+当必须将 `Read()` 方法和一些其他异步数据源，如 gRPC 流一起混用时，我们使用上述模式。你生成一个 Goroutine 从 reader 中不停地读取数据，将接收到的数据从一个 channel 中发送出去，当 reader 关闭时执行一些清理操作。
 
 当你尝试清理整个系统时，会遇到棘手的部分：如果我们想要发送结束该过程的信号，该怎么办？考虑一个改造过的例子：
 
@@ -41,7 +41,7 @@ func asyncReader(r io.Reader) {
 func asyncReader(r io.Reader, doneCh <-chan struct{}) {
     ch := make(chan []byte)
     continueReading := false
-    go func() {
+    Go func() {
         defer close(ch)
         for !continueReading {
             var b []byte
@@ -63,9 +63,9 @@ func asyncReader(r io.Reader, doneCh <-chan struct{}) {
 }
 ```
 
-当上面的 `doneCh` 被关闭时，`asyncReader` 方法将返回。我们创建的 goroutine 也将在下次计算 `for` 循环中的条件时返回。但是，如果 goroutine 阻塞在 `r.Read()` 该怎么办？那样的话，我们实质上泄露了一个 goroutine。在 reader 离开阻塞状态之前，我们将一直陷入困境。
+当上面的 `doneCh` 被关闭时，`asyncReader` 方法将返回。我们创建的 Goroutine 也将在下次计算 `for` 循环中的条件时返回。但是，如果 Goroutine 阻塞在 `r.Read()` 该怎么办？那样的话，我们实质上泄露了一个 goroutine。在 reader 离开阻塞状态之前，我们将一直陷入困境。
 
-reader 有可能永远阻塞下去吗？也许会，也许不会。这取决于底层的 reader。至关重要的是，接口无法向你保证它一定会解除阻塞，因此仍然存在着 goroutine 泄露的可能性。
+reader 有可能永远阻塞下去吗？也许会，也许不会。这取决于底层的 reader。至关重要的是，接口无法向你保证它一定会解除阻塞，因此仍然存在着 Goroutine 泄露的可能性。
 
 如果只有 `io.Reader` 接口，那么你现在就陷入了困境。如果你可以切换到 `io.ReadCloser` 接口，并且控制 Close() 方法的行为，你可以将其用作取消最后读取操作的辅助通道。但是，也只能这样。
 
@@ -89,7 +89,7 @@ interface Reader {
 }
 ```
 
-这究竟是什么意思呢？<sup>[1](#fn1)</sup>实际上，接口规定：“拿着字节切片 `p`，向里面写入一些内容。告诉我你写了多少字节（`n`），以及在执行过程中是否某处遇到了错误（`err`）”。
+这究竟是什么意思呢？<sup>[1](#fn1)</sup> 实际上，接口规定：“拿着字节切片 `p`，向里面写入一些内容。告诉我你写了多少字节（`n`），以及在执行过程中是否某处遇到了错误（`err`）”。
 
 这个接口令人惊讶的通用，因为它需要适应多种用途。从内存缓冲到 HTTP 响应到数据库事务结果的所有内容都可以实现为一个 `io.Reader` 接口。因此，许多 `io.Reader` 的实现有内部状态。
 
@@ -155,16 +155,16 @@ func New(ctx context.Context, r io.Reader) *CancelableReader {
         ctx:  ctx,
         data: make(chan []byte),
     }
-    go c.begin()
+    Go c.begin()
     return c
 }
 ```
 
 上述是 `io.Reader` 接口的包装，它的构造器中包含了 `context.Context`。当 context 被取消，任何进行中的读取操作都会立即返回。稍微调整一下，上述方法也可以很好的适用于 `io.ReadCloser`。
 
-`CancelableReader` 包装器上有一个*巨大的星号*：它仍然存在 goroutine 泄漏。如果底层的 `io.Reader` 永远不返回，那么 `begin()` 中的 goroutine 将永远不会被清理。
+`CancelableReader` 包装器上有一个*巨大的星号*：它仍然存在 Goroutine 泄漏。如果底层的 `io.Reader` 永远不返回，那么 `begin()` 中的 Goroutine 将永远不会被清理。
 
-至少，使用这种方法可以更清楚的知道泄漏发生的位置，你可以在 struct 上存储一些额外的状态来追踪 goroutine 是否结束。或许，你可以将这些 `CancelableReader` 组成一个池，并在读取全部完成时回收它们。
+至少，使用这种方法可以更清楚的知道泄漏发生的位置，你可以在 struct 上存储一些额外的状态来追踪 Goroutine 是否结束。或许，你可以将这些 `CancelableReader` 组成一个池，并在读取全部完成时回收它们。
 
 ---
 

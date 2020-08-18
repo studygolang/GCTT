@@ -2,11 +2,11 @@
 
 ![illustration](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200711-Go-How-Are-Deadlocks-Triggered/illustration.png)
 
-由创作原始 Go Gopher 作品的 Renee French 为“ Go的旅程”创作的插图。
+由创作原始 Go Gopher 作品的 Renee French 为“ Go 的旅程”创作的插图。
 
 *本文基于 Go 1.14。*
 
-死锁是当 goroutine 被阻塞而无法解除阻塞时产生的一种状态。Go 提供了一个死锁检测器，可以帮助开发人员避免陷入这种情况。
+死锁是当 Goroutine 被阻塞而无法解除阻塞时产生的一种状态。Go 提供了一个死锁检测器，可以帮助开发人员避免陷入这种情况。
 
 ## 检测
 
@@ -14,7 +14,7 @@
 
 ![example](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200711-Go-How-Are-Deadlocks-Triggered/example.png)
 
-主 goroutine 在 channel 上被阻塞，并等待另一个 goroutine 将数据写入 channel。然而，没有其他的 goroutine 在运行，它不能被解除阻塞。这种情况将触发死锁错误:
+主 Goroutine 在 channel 上被阻塞，并等待另一个 Goroutine 将数据写入 channel。然而，没有其他的 Goroutine 在运行，它不能被解除阻塞。这种情况将触发死锁错误:
 
 ![deadlock](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200711-Go-How-Are-Deadlocks-Triggered/deadlock.png)
 
@@ -28,9 +28,9 @@
 
 - 一个叫做 `sysmon`，用于监视系统。
 
-- 一个专用于垃圾收集器的 goroutine 启动的。
+- 一个专用于垃圾收集器的 Goroutine 启动的。
 
-- 在初始化过程中阻塞主 goroutine 时创建的一个线程。由于此 goroutine 被锁定在它的线程上，因此 Go 需要创建一个新的 goroutine 来为其他 goroutine 提供运行时间。
+- 在初始化过程中阻塞主 Goroutine 时创建的一个线程。由于此 Goroutine 被锁定在它的线程上，因此 Go 需要创建一个新的 Goroutine 来为其他 Goroutine 提供运行时间。
 
 每次调用死锁检测器时，也可以通过一些调试信息将其可视化：
 
@@ -38,7 +38,7 @@
 
 每当线程空闲时，就会通知检测器。调试的每一行显示空闲线程的递增数量。当空闲线程数等于活动线程数减去系统线程数时，就会发生死锁。在本例中，我们有三个空闲线程和三个活动线程（四个线程减去系统线程）。由于没有活动线程能够解除阻塞空闲线程，因此存在死锁情况。
 
-但是，这种行为有一些限制。实际上，任何旋转的 goroutine 都会使死锁检测器失效，因为线程将保持活动状态。
+但是，这种行为有一些限制。实际上，任何旋转的 Goroutine 都会使死锁检测器失效，因为线程将保持活动状态。
 
 ## 限制
 
@@ -50,7 +50,7 @@
 
 ![output](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200711-Go-How-Are-Deadlocks-Triggered/output.png)
 
-通过键盘发送中断信号后，程序停止了。不再检测到死锁。具有 `signal.Notify` 的任何活动程序都将运行后台 goroutine，等待输入信号。该 goroutine 保持活动状态，并且永远不会使活动线程数等于空闲线程数。这是此 goroutine 的跟踪：
+通过键盘发送中断信号后，程序停止了。不再检测到死锁。具有 `signal.Notify` 的任何活动程序都将运行后台 goroutine，等待输入信号。该 Goroutine 保持活动状态，并且永远不会使活动线程数等于空闲线程数。这是此 Goroutine 的跟踪：
 
 ![trace](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200711-Go-How-Are-Deadlocks-Triggered/trace.png)
 
@@ -70,7 +70,7 @@
 
 ![profile](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200711-Go-How-Are-Deadlocks-Triggered/profile.png)
 
-没有 goroutine 一直在运行。可以使用以下命令通过 CPU 配置文件进行确认 `go tool pprof http://localhost:6060/debug/pprof/profile?seconds=5`。下面是未显示活动的配置文件：
+没有 Goroutine 一直在运行。可以使用以下命令通过 CPU 配置文件进行确认 `go tool pprof http://localhost:6060/debug/pprof/profile?seconds=5`。下面是未显示活动的配置文件：
 
 ![no-activity](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200711-Go-How-Are-Deadlocks-Triggered/no-activity.png)
 
@@ -79,6 +79,6 @@ via: https://medium.com/a-journey-with-go/go-how-are-deadlocks-triggered-2305504
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[alandtsang](https://github.com/alandtsang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

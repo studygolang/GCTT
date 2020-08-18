@@ -264,7 +264,7 @@ func initContainer(mem int, swap int, pids int, cpus float64,
 }
 ```
 
-首先，我们通过调用 createContainerID() 创建唯一的容器ID。然后，我们调用 downloadImageIfRequired()，以便可以从 Docker Hub 下载容器镜像（如果本地尚不可用）。 Gocker 使用 /var/run/gocker/containers 中的子目录来挂载容器根文件系统。createContainerDirectories() 会解决这个问题。mountOverlayFileSystem() 知道如何处理多层 Docker 镜像，并在 /var/run/gocker/containers/<container-id>/fs/mnt 上为可用镜像安装合并的文件系统。尽管这看起来令人生畏，但如果阅读源代码并不难理解。覆盖文件系统允许创建一个堆叠的文件系统，其中较低的层（在这种情况下是 Docker 根文件系统）是只读的，而任何更改都将保存到“upperdir” 而无需更改较低层中的任何文件。这允许多容器共享一个 Docker 镜像。当我们在虚拟机上下文中说“镜像”时，它通常是指磁盘镜像。但是在这里，它只是一个目录或一组目录（奇特的名字：layers），带有构成 Docker“镜像”根文件系统的文件，这些文件可以使用 Overlay 文件系统挂载它，为新容器创建根文件系统。
+首先，我们通过调用 createContainerID() 创建唯一的容器 ID。然后，我们调用 downloadImageIfRequired()，以便可以从 Docker Hub 下载容器镜像（如果本地尚不可用）。 Gocker 使用 /var/run/gocker/containers 中的子目录来挂载容器根文件系统。createContainerDirectories() 会解决这个问题。mountOverlayFileSystem() 知道如何处理多层 Docker 镜像，并在 /var/run/gocker/containers/<container-id>/fs/mnt 上为可用镜像安装合并的文件系统。尽管这看起来令人生畏，但如果阅读源代码并不难理解。覆盖文件系统允许创建一个堆叠的文件系统，其中较低的层（在这种情况下是 Docker 根文件系统）是只读的，而任何更改都将保存到“upperdir” 而无需更改较低层中的任何文件。这允许多容器共享一个 Docker 镜像。当我们在虚拟机上下文中说“镜像”时，它通常是指磁盘镜像。但是在这里，它只是一个目录或一组目录（奇特的名字：layers），带有构成 Docker“镜像”根文件系统的文件，这些文件可以使用 Overlay 文件系统挂载它，为新容器创建根文件系统。
 
 接下来，我们创建一个虚拟的以太网配对设备，它非常类似于调用 setupVirtualEthOnHost() 的管道。它们采用名称 veth0_<container-id> 和 veth1_<container-id> 的形式。我们将一对中的 veth0 部分连接到主机上的网桥 gocker0。稍后我们将在容器内部使用该对的 veth1 部分。这对就像管道一样，是从具有自己的网络命令空间的容器内部进行网络通信的密钥。随后，我们将介绍如何在容器内设置 veth1 部件。
 
@@ -303,7 +303,7 @@ func setupNewNetworkNamespace(containerID string) {
 }
 ```
 
-每当 Linux 内核中的最后一个进程终止时，它都会自动删除该命名空间。但是，有一种技术可以通过绑定安装来保留命名空间，即使其中没有任何进程。我们在 setupNewNetworkNamespace() 函数中使用此技术。我们首先打开进程的网络命名空间文件，该文件位于 /proc/self/ns/net 中。然后，我们使用 CLONE_NEWNET参数调用 unshare() 系统调用。这将调用过程与其所属的命名空间解除关联，创建一个新的新网络命名空间，并将其设置为该进程的网络命名空间。然后，我们将此进程的网络命名空间专用文件的安装挂载绑定到已知文件名，即 /var/run/gocker/net-ns/<container-id>。该文件可随时用于引用该网络命名空间。现在，我们可以退出此进程，但是由于此进程的新网络命名空间已绑定安装到新文件上，因此内核将保留此命名空间。
+每当 Linux 内核中的最后一个进程终止时，它都会自动删除该命名空间。但是，有一种技术可以通过绑定安装来保留命名空间，即使其中没有任何进程。我们在 setupNewNetworkNamespace() 函数中使用此技术。我们首先打开进程的网络命名空间文件，该文件位于 /proc/self/ns/net 中。然后，我们使用 CLONE_NEWNET 参数调用 unshare() 系统调用。这将调用过程与其所属的命名空间解除关联，创建一个新的新网络命名空间，并将其设置为该进程的网络命名空间。然后，我们将此进程的网络命名空间专用文件的安装挂载绑定到已知文件名，即 /var/run/gocker/net-ns/<container-id>。该文件可随时用于引用该网络命名空间。现在，我们可以退出此进程，但是由于此进程的新网络命名空间已绑定安装到新文件上，因此内核将保留此命名空间。
 
 接下来，使用 setup-veth 参数调用 gocker。 这将调用函数 setupContainerNetworkInterfaceStep1() 和 setupContainerNetworkInterfaceStep2()。在第一个函数中，我们查找 veth1_<container-id> 接口，并将其命名空间设置为在上一步中创建的新网络命名空间。现在，该接口将不再在主机上可见。 但问题是：由于它与 veth0_<container-id> 接口配对，该接口在主机上仍然可见，因此，加入此网络命名空间的任何进程都可以与主机进行通信。 第二个功能将 IP 地址添加到网络接口，并将 gocker0 网桥设置为其默认网关设备。
 
@@ -516,6 +516,6 @@ via: https://unixism.net/2020/06/containers-the-hard-way-gocker-a-mini-docker-wr
 
 作者：[unixism](https://unixism.net/about-unixism/)
 译者：[alandtsang](https://github.com/alandtsang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
