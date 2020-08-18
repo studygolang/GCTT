@@ -1,4 +1,7 @@
-# zap 包是如何被优化的
+首发于：https://studygolang.com/articles/30250
+
+# zap 包是如何优化的
+
 ![插图由“go 之旅”提供，原图由 Renee French 创作](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1__mMI_UYf-DsS04MU5AnRQg.png)
 
 Go 生态系统有许多流行的日志库，选择一个可以在所有项目中使用的日志库对于保持最小的一致性至关重要。易用性和性能通常是我们在日志库中考虑的两个指标。接下来我们回顾一下 [Uber](https://github.com/uber-go) 开发的 [Zap](https://github.com/uber-go/zap) 日志库。
@@ -6,6 +9,7 @@ Go 生态系统有许多流行的日志库，选择一个可以在所有项目�
 ## 核心思想
 
 Zap 基于三个概念优化性能，第一个是：
+
 - 避免使用 `interface{}` 有利于强类型的设计。
 
 这一点隐藏另外两个概念：
@@ -28,6 +32,7 @@ logger.Info("failed to fetch URL",
 每个字段的显式声明将允许包在日志记录过程中高效地工作。让我们回顾一下包的设计，以了解这些优化将在何处发生。
 
 ## 设计
+
 在高亮显示包的优化部分之前，让我们绘制日志库的全局工作流：
 
 ![Zap 包工作流](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20190815-go-how-zap-package-is-optimized/1_4mn192sJdR0rU8RQ3aQo4w.png)
@@ -95,10 +100,10 @@ log.WithFields(log.Fields{
 
 ---
 
-via: https://medium.com/a-journey-with-go/go-how-zap-package-is-optimized-dbf72ef48f2d
+via: <https://medium.com/a-journey-with-go/go-how-zap-package-is-optimized-dbf72ef48f2d>
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[lts8989](https://github.com/lts8989)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
