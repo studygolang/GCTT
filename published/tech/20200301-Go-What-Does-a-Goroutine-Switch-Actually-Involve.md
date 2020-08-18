@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/30251
+
 # Go：Goroutine 的切换过程实际上涉及了什么
 
-![Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.](https://miro.medium.com/max/1400/1*CieXcIc9Bv11JWFOECjHyw.png)
+![Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-what-does-a-goroutine/1.png)
 
 本文基于 Go 1.13 版本。
 
@@ -23,11 +25,11 @@ Go 根据两种断点将 Goroutine 调度到线程上：
 
 * 将运行中的 `g` 切换到 `g0`：
 
-  ![](https://miro.medium.com/max/888/1*-w8MTDEUqis5mIX-s_KfPg.png)
+  ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-what-does-a-goroutine/2.png)
 
 * 将 `g0` 切换到下一个将要运行的 `g`：
 
-  ![](https://miro.medium.com/max/892/1*6Qoa7ugcwsoQgs2cktKMvA.png)
+  ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-what-does-a-goroutine/3.png)
 
 在 Go 中，goroutine 的切换相当轻便，其中需要保存的状态仅仅涉及以下两个：
 
@@ -41,21 +43,21 @@ Go 根据两种断点将 Goroutine 调度到线程上：
 
 这里通过基于通道的 ` 生产者/消费者模式 ` 来举例说明，其中一个 Goroutine 产生数据，而另一些则消费数据，代码如下：
 
-![](https://miro.medium.com/max/1400/1*TZobNBH4mKyaN8B_ru7tUA.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-what-does-a-goroutine/4.png)
 
 消费者仅仅是打印从 0 到 99 的偶数。我们将注意力放在第一个 goroutine（生产者）上，它将数字添加到缓冲区。当缓冲区已满时，它将在发送消息时被阻塞。此时，Go 必须切换到 `g0` 并调度另一个 Goroutine 来运行。
 
 如前所述，Go 首先需要保存当前执行的指令，以便稍后在同一条指令上恢复 goroutine。程序计数器（`PC`）保存在 Goroutine 的内部结构中：
 
-![](https://miro.medium.com/max/958/1*ArVyzi31WBefg4RhhX5Pdw.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-what-does-a-goroutine/5.png)
 
 可以通过 `go tool objdump` 命令找到对应的指令及其地址，这是生产者的指令：
 
-![](https://miro.medium.com/max/1400/1*E9HFNIw4ZhDirUh4dgWbsw.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-what-does-a-goroutine/6.png)
 
 程序逐条指令的执行直到在函数 `runtime.chansend1` 处阻塞在通道上。 Go 将当前程序计数器保存到当前 Goroutine 的内部属性中。在我们的示例中，Go 使用运行时的内部地址 `0x4268d0` 和方法 `runtime.chansend1` 保存程序计数器：
 
-![](https://miro.medium.com/max/1400/1*i1SaUH3K7pjijTtW-O1TKw.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-what-does-a-goroutine/7.png)
 
 然后，当 `g0` 唤醒 Goroutine 时，它将在同一指令处继续执行，继续将数值循环的推入通道。现在，让我们将视线移到 Goroutine 切换期间堆栈的管理。
 
@@ -63,15 +65,15 @@ Go 根据两种断点将 Goroutine 调度到线程上：
 
 在被阻塞之前，正在运行的 Goroutine 具有其原始堆栈，该堆栈包含临时存储器，例如变量 `i`：
 
-![](https://miro.medium.com/max/1194/1*8oa7ziZBpHZqKVihpQ3b8g.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-what-does-a-goroutine/8.png)
 
 然后，当它在通道上阻塞时，goroutine 将切换到 `g0` 及其堆栈（更大的堆栈）：
 
-![](https://miro.medium.com/max/1194/1*I42dKDU2BV6kTwWMWiA1JQ.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-what-does-a-goroutine/9.png)
 
 在切换之前，堆栈将被保存，以便在 Goroutine 再次运行时进行恢复：
 
-![](https://miro.medium.com/max/958/1*kmufEth8mfd7OLnkl9oC7Q.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-what-does-a-goroutine/10.png)
 
 现在，我们对 Goroutine 切换中涉及的不同操作有了一个完整的了解，让我们继续看看它是如何影响性能的。
 
@@ -94,17 +96,18 @@ Go 根据两种断点将 Goroutine 调度到线程上：
 
 结果如下：
 
-![](https://miro.medium.com/max/1400/1*MDJam9-EE-XEIccguKXOkQ.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-what-does-a-goroutine/11.png)
 
 从 `g` 到 `g0` 或从 `g0` 到 `g` 的切换是相当迅速的，它们只包含少量固定的指令。相反，对于调度阶段，调度程序需要检查许多资源以便确定下一个要运行的 goroutine，根据程序的不同，此阶段可能会花费更多的时间。
 
 该基准测试给出了性能的数量级估计，由于没有标准的工具可以衡量它，所以我们并不能完全依赖于这个结果。此外，性能也取决于 CPU 架构、机器（本文使用的机器是 Mac 2.9 GHz 双核 Intel Core i5）以及正在运行的程序。
 
 ---
-via: https://medium.com/a-journey-with-go/go-what-does-a-goroutine-switch-actually-involve-394c202dddb7
+
+via: <https://medium.com/a-journey-with-go/go-what-does-a-goroutine-switch-actually-involve-394c202dddb7>
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[anxk](https://github.com/anxk)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
