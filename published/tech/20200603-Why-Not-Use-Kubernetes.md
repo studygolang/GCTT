@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/30256
+
 # 为什么不使用 Kubernetes
 
 ![When to choose Kubernetes?](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200603-Why-Not-Use-Kubernetes/00.png)
@@ -67,6 +69,6 @@ via: https://medium.com/better-programming/why-not-use-kubernetes-52a89ada5e22
 
 作者：[Grazi Bonizi](https://medium.com/@grazibonizi)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
