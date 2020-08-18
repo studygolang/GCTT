@@ -179,7 +179,8 @@ func New(ctx context.Context, r io.Reader) *CancelableReader {
 </span>
 
 ---
-via: [https://benjamincongdon.me/blog/2020/04/23/Cancelable-Reads-in-Go/](https://benjamincongdon.me/blog/2020/04/23/Cancelable-Reads-in-Go/)
+
+via: <https://benjamincongdon.me/blog/2020/04/23/Cancelable-Reads-in-Go/>
 
 作者：[Ben Congdon](https://benjamincongdon.me/)
 译者：[DoubleLuck](https://github.com/doubleluck)
