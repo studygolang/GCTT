@@ -12,5 +12,5 @@ jobs:
   include:
     - stage: markdownlint
       script:
-        - gem install mdl
+        - gem install mdl --version 0.9.0
         - mdl .
