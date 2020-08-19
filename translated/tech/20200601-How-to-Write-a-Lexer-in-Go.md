@@ -1,6 +1,6 @@
 # 如何用 Go 编写词法分析器
 
-*词法分析去是所有现代编译器的第一阶段，但是如何编写呢？让我们用 Go 从头开始构建一个。*
+*词法分析器是所有现代编译器的第一阶段，但是如何编写呢？让我们用 Go 从头开始构建一个。*
 
 ![lexer](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200601-How-to-Write-a-Lexer-in-Go/how-to-write-a-lexer-in-go-featured.jpg)
 
@@ -378,6 +378,6 @@ via: https://www.aaronraff.dev/blog/how-to-write-a-lexer-in-go
 
 作者：[Aaron RaffLogo](https://www.aaronraff.dev/)
 译者：[alandtsang](https://github.com/alandtsang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[unknwon](https://github.com/unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
