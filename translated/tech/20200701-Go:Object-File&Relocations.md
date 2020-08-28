@@ -4,7 +4,8 @@
 ### 时间: 2020-07-01
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_HxAju6n33e9Y8AJwMuQL3w.png)
 
-**本文章基于Go 1.14**
+**本文章基于Go 1.14**    
+
 重定位是链接过程中的一个阶段，
 重定位是链接过程中为每个外部符号分配适当地址。由于每个包都是单独编译的，因此它们不知道来自其它包的函数或者变量在哪里。 让我们从一个需要重定位的简单示例开始。
 
@@ -60,7 +61,7 @@ TEXT %22%22.main(SB)
 ```
 go tool nm main.o
 ```
-可以检查生成的文件 `main.o`，并列出其中包含的符号。这里是输出
+可以检查生成的文件 `main.o`，并列出其中包含的符号。下图是输出
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1__cz0Ozr4acR3Sj0GbirP2Q.png)
       
 我们可以注意到，它需要使用go工具nm命令而不是本机nm命令。 实际上，Go生成的目标文件（.o）具有自定义格式。    
