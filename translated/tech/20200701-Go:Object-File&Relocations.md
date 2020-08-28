@@ -10,8 +10,10 @@
 
 ## 编译
 以下程序涉及两个不同的程序包：main和fmt。
-![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_4_DaAwHmqJbhwP8Tn10Dzg.png)
-构建此程序将首先涉及编译器，该编译器分别编译每个包
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_4_DaAwHmqJbhwP8Tn10Dzg.png)     
+
+构建此程序将首先涉及编译器，该编译器分别编译每个包     
+
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_4HLpept1qBXFJvL_r4qptQ.png)
 
 
@@ -70,12 +72,17 @@ go tool nm main.o
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_WwlsAnj0J9-dUkvBYWS5sQ.png)
 
     
-该文件由依赖项，调试信息(DWARF), 索引符号列表，数据段以及符号列表。符号列表中包含每个符号都需要我们进行重定向。以下是它的格式：
-![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_so340hPaauZOPChu3tvSCA.png)
-每个符号均以十六进制字节fe开头。可以使用十六进制编辑器打开目标文件main.o时。例如，对于Mac，可以使用xxd(译者注:xxd是mac下的一个命令)。 下面是内容的一部分，对符号(译者注:实际是对符号开头的标志"fe")进行了高亮显示。
-![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_PL_o1t7dokehoO3X6rbUaw.png)
+该文件由依赖项，调试信息(DWARF), 索引符号列表，数据段以及符号列表。符号列表中包含每个符号都需要我们进行重定向。以下是它的格式：     
 
-符号`main.main`是符号列表中的第一个符号。
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_so340hPaauZOPChu3tvSCA.png)     
+
+每个符号均以十六进制字节fe开头。可以使用十六进制编辑器打开目标文件main.o时。例如，对于Mac，可以使用xxd(译者注:xxd是mac下的一个命令)。 下面是内容的一部分，对符号(译者注:实际是对符号开头的标志"fe")进行了高亮显示。     
+
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_PL_o1t7dokehoO3X6rbUaw.png)    
+
+
+符号`main.main`是符号列表中的第一个符号。   
+
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_KOng-8Ed1XkprfvxSsqaXg.png)
 
 前几个字节 `0102 00dc 0100 dc01 0a`  代表了前面定义的一系列属性：type、flag、size、data、以及重定位的次数。     
@@ -97,15 +104,18 @@ go tool nm main.o
 ```
 objdump -h my-binary
 ```
-可视化每个段的地址。下面是前面示例的输出
+可视化每个段的地址。下面是前面示例的输出     
+
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_JGMu2mnGI-HTp35GHqx3mg.png)
      
 函数`main`位于__text段，它也能通过命令
 ```
 objdump -d my-binary
 ```
-找到，这个命令显示了指令的地址。
-![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_tZX5Ills5d4Dnk0Z5iZ1pA.png)
+找到，这个命令显示了指令的地址。    
+
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_tZX5Ills5d4Dnk0Z5iZ1pA.png)     
+
 
 函数`main`入口地址是`109cfa0`，函数`fmt.Println`的入口地址是`1096a00`。一旦虚地址被分配，就会非常容易的重定位`fmt.Println`的入口地址。链接器将会用`fmt.Println`的入口地址依次减去`main`的入口地址、指令的偏移值、指令所占的字节大小。这样我们就能得到调用`fmt.Println`的全局偏移。对于前面的例子中，我们可以进行如下的操作：
 ```
