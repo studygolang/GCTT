@@ -118,4 +118,11 @@ func main() {
 
 综上所述，由于异步抢占和`work-stealing`机制，导致延迟发生的可能性很小。
 
+---
+via: https://medium.com/a-journey-with-go/go-timers-life-cycle-403f3580093a
+
+作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[double12gzh](https://github.com/double12gzh)
+校对：[polaris1119](https://github.com/polaris1119)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
