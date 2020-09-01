@@ -89,8 +89,8 @@ func CreateHandle(c Creatable) func(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-如果你想要为 handler 编写测试的话，不论 resource 的实现有多复杂，你只需要确保 mock 对象实现了 `Creatable` 接口，这意味着你的 mock 
-对象只需要实现一个方法（因为 `Creatable` 接口只包含一个方法）。 文中描述的仅仅是一个简单的例子，假设你希望增加验证的逻辑，那么你仅需要在 
+如果你想要为 handler 编写测试的话，不论 resource 的实现有多复杂，你只需要确保 mock 对象实现了 `Creatable` 接口，这意味着你的 mock
+对象只需要实现一个方法（因为 `Creatable` 接口只包含一个方法）。 文中描述的仅仅是一个简单的例子，假设你希望增加验证的逻辑，那么你仅需要在
 `Creatable` 接口中添加方法 `func Valid() error`。
 
 ```golang
