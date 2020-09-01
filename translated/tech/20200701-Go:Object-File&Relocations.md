@@ -1,10 +1,10 @@
 # GO:对象文件&重定位
 
-### 作者: Vincent Blanchon
-### 时间: 2020-07-01
+## 作者: Vincent Blanchon
+## 时间: 2020-07-01
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_HxAju6n33e9Y8AJwMuQL3w.png)
 
-**本文章基于Go 1.14**    
+**本文章基于Go 1.14**
 
 重定位是链接过程中的一个阶段，
 重定位是链接过程中为每个外部符号分配适当地址。由于每个包都是单独编译的，因此它们不知道来自其它包的函数或者变量在哪里。 让我们从一个需要重定位的简单示例开始。
@@ -16,7 +16,6 @@
 构建此程序将首先涉及编译器，该编译器分别编译每个包     
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_4HLpept1qBXFJvL_r4qptQ.png)
-
 
 通过命令
 ```
@@ -72,7 +71,6 @@ go tool nm main.o
 这篇[文档](https://golang.org/pkg/cmd/internal/objabi/)解释了目标文件的内容和格式
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_WwlsAnj0J9-dUkvBYWS5sQ.png)
 
-    
 该文件由依赖项，调试信息(DWARF), 索引符号列表，数据段以及符号列表。符号列表中包含每个符号都需要我们进行重定向。以下是它的格式：     
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_so340hPaauZOPChu3tvSCA.png)     
@@ -80,7 +78,6 @@ go tool nm main.o
 每个符号均以十六进制字节fe开头。可以使用十六进制编辑器打开目标文件main.o时。例如，对于Mac，可以使用xxd(译者注:xxd是mac下的一个命令)。 下面是内容的一部分，对符号(译者注:实际是对符号开头的标志"fe")进行了高亮显示。     
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_PL_o1t7dokehoO3X6rbUaw.png)    
-
 
 符号`main.main`是符号列表中的第一个符号。   
 
@@ -117,7 +114,6 @@ objdump -d my-binary
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_tZX5Ills5d4Dnk0Z5iZ1pA.png)     
 
-
 函数`main`入口地址是`109cfa0`，函数`fmt.Println`的入口地址是`1096a00`。一旦虚地址被分配，就会非常容易的重定位`fmt.Println`的入口地址。链接器将会用`fmt.Println`的入口地址依次减去`main`的入口地址、指令的偏移值、指令所占的字节大小。这样我们就能得到调用`fmt.Println`的全局偏移。对于前面的例子中，我们可以进行如下的操作：
 ```
 1096a00 (fmt.Println) — 109cfa0 (main) — 84 (offset inside the main function) — 4 (size) = -26109
@@ -130,14 +126,7 @@ via: https://medium.com/a-journey-with-go/go-object-file-relocations-804438ec379
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[vearne](https://github.com/vearne)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[unknwon](https://github.com/unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
-
-
-
-
-
-
 
