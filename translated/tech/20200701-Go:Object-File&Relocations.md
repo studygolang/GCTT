@@ -69,6 +69,7 @@ go tool nm main.o
 
 ## 目标文件
 这篇[文档](https://golang.org/pkg/cmd/internal/objabi/)解释了目标文件的内容和格式
+
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200701-Go:Object-File%26Relocations/1_WwlsAnj0J9-dUkvBYWS5sQ.png)
 
 该文件由依赖项，调试信息(DWARF), 索引符号列表，数据段以及符号列表。符号列表中包含每个符号都需要我们进行重定向。以下是它的格式：
