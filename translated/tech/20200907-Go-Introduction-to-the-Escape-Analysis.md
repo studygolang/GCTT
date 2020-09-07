@@ -1,5 +1,7 @@
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200907-Go-Introduction-to-the-Escape-Analysis/图0.png)
 
+# GoLang逃逸分析简介
+
 > 本篇文章基于GoLang 1.13.
 
 `逃逸分析`是GoLang编译器中的一个阶段，它通过分析用户源码，决定哪些变量应该在堆栈上分配，哪些变量应该逃逸到堆中。
@@ -55,7 +57,6 @@ F:\hello>go build -gcflags="-m" main.go
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200907-Go-Introduction-to-the-Escape-Analysis/图2.png)
 
 由于该树暴露了定义的变量(用`NAME`表示)和对指针的操作(用`ADDR`或`DEREF`表示)，故它可以向GoLang提供进行`逃逸分析`所需要的所有信息。一旦建立了树，并解析了函数和参数，GoLang现在就可以应用`逃逸分析`逻辑来查看哪些应该是堆或栈分配的。
-
 
 ## 超过堆栈框架的生命周期
 
@@ -183,7 +184,6 @@ func func2() *int {
 
 变量`n1`超过了堆栈框架，但它的权重不是负数，因为`func1`没有在任何地方引用它的地址。
 然而，`n2`会超过栈帧并被取消引用，Go 可以安全地在堆上分配它。
-
 
 ---
 via: https://medium.com/a-journey-with-go/go-introduction-to-the-escape-analysis-f7610174e890
