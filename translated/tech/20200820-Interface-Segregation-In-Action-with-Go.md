@@ -113,6 +113,6 @@ via: https://gianarb.it/blog/interface-segreation-in-action-with-go
 
 作者：[gianarb](https://twitter.com/gianarb)
 译者：[jamesxuhaozhe](https://github.com/jamesxuhaozhe)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[unknwon](https://github.com/unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
