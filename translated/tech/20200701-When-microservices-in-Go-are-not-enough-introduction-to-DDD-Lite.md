@@ -27,7 +27,7 @@
 
 **你需要慢下来，才能走得更快**
 
-以最简单的方式实现项目或许是诱人的，甚至当你感受到来自“上层”的压力时会更加诱人。我们用了微服务吗？如果需要的话，我们会仅仅重写改服务吗？我听到这种事情好多次了，绝大部分最后都不如人意。😉**老实说最简单方式实现会短期节省一些时间。但仅仅是短期。**
+以最简单的方式实现项目或许是诱人的，甚至当你感受到来自“上层”的压力时会更加诱人。我们用了微服务吗？如果需要的话，我们会仅仅重写该服务吗？我听到这种事情好多次了，绝大部分最后都不如人意。😉**老实说最简单方式实现会短期节省一些时间。但仅仅是短期。**
 
 考虑下任何形式的测试用例的例子。你可以在项目开始时省略写测试用例。你明显会节省一些时间，并且管理者也会满意。**计算方式似乎很简单——项目更快交付了。**
 
@@ -327,7 +327,7 @@ type Repository interface {
 
 我对我们的 gRPC 端点进行了小小的重构，提供更“行为导向”而不是 [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) 导向的 API。它更好地反映了领域的新特征。以我的经验来说，维护多个，小的方法，相比维护一个，“全能”的，可以让我们更新所有东西的方法要容易的多。
 
-```
+```diff
 --- a/api/protobuf/trainer.proto
 +++ b/api/protobuf/trainer.proto
 @@ -6,7 +6,9 @@ import "google/protobuf/timestamp.proto";
@@ -410,6 +410,6 @@ via: https://threedots.tech/post/ddd-lite-in-go-introduction/
 
 作者：[Robert Laszczak](https://twitter.com/roblaszczak)
 译者：[dust347](https://github.com/dust347)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[unknwon](https://github.com/unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
