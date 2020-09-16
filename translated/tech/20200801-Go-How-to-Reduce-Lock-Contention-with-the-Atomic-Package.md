@@ -318,3 +318,12 @@ goroutines运行时不间断，能够完成任务。对于带有`mutex`的程序
 在这种情况下，`atomic`包肯定会带来优势。但是，在某些方面可能会降低性能。例如，如果你要存储一张大地图，每次更新地图时都要复制它，这样效率就很低。
 
 > 更多关于`mutex`的内容可以参考[Go: Mutex and Starvation](https://medium.com/a-journey-with-go/go-mutex-and-starvation-3f4f4e75ad50)
+
+---
+via: https://medium.com/a-journey-with-go/go-how-to-reduce-lock-contention-with-the-atomic-package-ba3b2664b549
+
+作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
+译者：[double12gzh](https://github.com/double12gzh)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
