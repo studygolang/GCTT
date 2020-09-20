@@ -6,12 +6,12 @@
 
 ```go
 func TestOpenFile(t *testing.T) {
-        f, err := os.Open("notfound")
-        if err != nil {
-                t.Fatal(err)
-        }
+	f, err := os.Open("notfound")
+	if err != nil {
+		t.Fatal(err)
+	}
 
-        // ...
+	// ...
 }
 ```
 
@@ -19,27 +19,27 @@ func TestOpenFile(t *testing.T) {
 
 ```go
 f, err := os.Open("notfound")
-        if err != nil {
-                t.Error(err)
-        }
-        f.Close() // boom!
+if err != nil {
+	t.Error(err)
+}
+f.Close() // boom!
 ```
 
 有什么解决方案？当然，通过将重复的断言逻辑移到辅助函数中，来达到 DRY（Don't Repeat Yourself）。
 
 ```go
 func TestOpenFile(t *testing.T) {
-        f, err := os.Open("notfound")
-        check(t, err)
+	f, err := os.Open("notfound")
+	check(t, err)
 
-        // ...
+	// ...
 }
 
 func check(t *testing.T, err error) {
        if err != nil {
-                t.Helper()
-                t.Fatal(err)
-        }
+		t.Helper()
+		t.Fatal(err)
+	}
 }
 ```
 
@@ -52,16 +52,16 @@ func check(t *testing.T, err error) {
 
 ```go
 func TestOpenFile(t *testing.T) {
-        f, err := os.Open("notfound")
-        check(err)
+	f, err := os.Open("notfound")
+	check(err)
 
-        // ...
+	// ...
 }
 
 func check(err error) {
-        if err != nil {
-                panic(err.Error())
-        }
+	if err != nil {
+		panic(err.Error())
+	}
 }
 ```
 
@@ -71,21 +71,21 @@ func check(err error) {
 % go test
 --- FAIL: TestOpenFile (0.00s)
 panic: open notfound: no such file or directory [recovered]
-        panic: open notfound: no such file or directory
+	panic: open notfound: no such file or directory
 
 goroutine 22 [running]:
 testing.tRunner.func1(0xc0000b4400)
-        /Users/dfc/go/src/testing/testing.go:874 +0x3a3
+	/Users/dfc/go/src/testing/testing.go:874 +0x3a3
 panic(0x111b040, 0xc0000866f0)
-        /Users/dfc/go/src/runtime/panic.go:679 +0x1b2
+	/Users/dfc/go/src/runtime/panic.go:679 +0x1b2
 github.com/pkg/expect_test.check(...)
-        /Users/dfc/src/github.com/pkg/expect/expect_test.go:18
+	/Users/dfc/src/github.com/pkg/expect/expect_test.go:18
 github.com/pkg/expect_test.TestOpenFile(0xc0000b4400)
-        /Users/dfc/src/github.com/pkg/expect/expect_test.go:10 +0xa1
+	/Users/dfc/src/github.com/pkg/expect/expect_test.go:10 +0xa1
 testing.tRunner(0xc0000b4400, 0x115ac90)
-        /Users/dfc/go/src/testing/testing.go:909 +0xc9
+	/Users/dfc/go/src/testing/testing.go:909 +0xc9
 created by testing.(*T).Run
-        /Users/dfc/go/src/testing/testing.go:960 +0x350
+	/Users/dfc/go/src/testing/testing.go:960 +0x350
 exit status 2
 ```
 
@@ -104,18 +104,18 @@ TestOpenFile 有一个 t 的值，它由 tRunner 传递过来，所以 testing.T
 // 说明 getT 在主测试 goroutine 没有被调用，
 // 这时 getT 返回 nil.
 func getT() *testing.T {
-        var buf [8192]byte
-        n := runtime.Stack(buf[:], false)
-        sc := bufio.NewScanner(bytes.NewReader(buf[:n]))
-        for sc.Scan() {
-                var p uintptr
-                n, _ := fmt.Sscanf(sc.Text(), "testing.tRunner(%v", &p)
-                if n != 1 {
-                        continue
-                }
-                return (*testing.T)(unsafe.Pointer(p))
-        }
-        return nil
+	var buf [8192]byte
+	n := runtime.Stack(buf[:], false)
+	sc := bufio.NewScanner(bytes.NewReader(buf[:n]))
+	for sc.Scan() {
+		var p uintptr
+		n, _ := fmt.Sscanf(sc.Text(), "testing.tRunner(%v", &p)
+		if n != 1 {
+			continue
+		}
+		return (*testing.T)(unsafe.Pointer(p))
+	}
+	return nil
 }
 ```
 
@@ -127,10 +127,10 @@ func getT() *testing.T {
 import "github.com/pkg/expect"
 
 func TestOpenFile(t *testing.T) {
-        f, err := os.Open("notfound")
-        expect.Nil(err)
+	f, err := os.Open("notfound")
+	expect.Nil(err)
 
-        // ...
+	// ...
 }
 ```
 
