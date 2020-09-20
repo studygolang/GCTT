@@ -10,20 +10,22 @@ Go 协程是轻量的，在很多场景能提升你的程序性能。不幸的�
 
 在我的公司—[PropertyFinder](https://www.propertyfinder.ae/)—一个阿联酋的实业地产门户网站—我的团队维护一个微服务，用于为我们的客户和地产经纪人寻找潜在的机会。我们来通过一个算法 demo 概览下这个 Go 微服务：
 
-> **Variables:**
-> *lead* struct
-> **Start:**
-> // a profile of this lead is made based on its interest
-> MakeProfile(*lead*)
-> // we get all listing that are around of this kind of profile
-> *listings* <- GetListings()
-> For each chunk of 1000 in *listings*
->     Start goroutine
->         For each *listing* in chunk
->             *score* <- CalculateMatching(*listing*, *lead*)
->             Add the score to the bulk object
->         Bulk insert the 100 scores of the *chunk*
-> **Stop**
+```
+Variables:
+lead struct
+Start:
+// a profile of this lead is made based on its interest
+MakeProfile(lead)
+// we get all listing that are around of this kind of profile
+listings <- GetListings()
+For each chunk of 1000 in listings
+    Start goroutine
+        For each listing in chunk
+            score <- CalculateMatching(listing, lead)
+            Add the score to the bulk object
+        Bulk insert the 100 scores of the chunk
+Stop
+```
 
 因为这里的 *listings* 可能达到 10k 以上，所以我们决定每 1000 个作为一个块，创建一个协程。下面是我们对计算过程跑的基准测试以及 10k 个匹配结果的记录：
 
@@ -34,15 +36,17 @@ LeadMatchingGenerationFor10000Matches-4  626ms ± 6%
 
 我们在计算部分再增加更多的协程。我们对代码作如下更改：
 
->*// we get all listing that are around of this kind of profile
->listings* <- GetListings()
->For each *chunk* of 1000 in *listings*
->    Start goroutine
->        For each *listing* in *chunk*
->            **Start goroutine**
->          *score <- CalculateMatching(listing, lead)*
->                Add the score to the bulk object
->        Bulk insert the 1000 scores
+```
+// we get all listing that are around of this kind of profile
+listings <- GetListings()
+For each chunk of 1000 in listings
+    Start goroutine
+        For each listing in chunk
+            Start goroutine
+                score <- CalculateMatching(listing, lead)
+                Add the score to the bulk object
+        Bulk insert the 1000 scores
+```
 
 我们再运行一次：
 
