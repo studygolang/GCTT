@@ -5,20 +5,20 @@
 
 *本文基于 Ebiten 1.10。*
 
-[Ebiten](https://ebiten.org/) 是由 [Hajime Hosh](https://github.com/hajimehoshi) 用 Go 语言编写的成熟的 2D 游戏库。它是 Apple Store 上一些手机游戏如 [Bear's Restaurant](https://daigostudio.com/bearsrestaurant/en/) 或台式机游戏如 [OpenDiablo2](https://github.com/OpenDiablo2) 的引擎，OpenDiablo2 是 Go 版本暗黑2 的开源实现。现在，让我们深入了解电子游戏中的一些基本概念以及它们在 Ebiten 中的实现。
+[Ebiten](https://ebiten.org/) 是由 [Hajime Hosh](https://github.com/hajimehoshi) 用 Go 语言编写的成熟的 2D 游戏库。它是 Apple Store 上一些手机游戏如 [Bear's Restaurant](https://daigostudio.com/bearsrestaurant/en/) 或桌面游戏如 [OpenDiablo2](https://github.com/OpenDiablo2) 的引擎，OpenDiablo2 是 Go 版本暗黑2 的开源实现。现在，让我们深入了解电子游戏中的一些基本概念以及它们在 Ebiten 中的实现。
 
 ## 动画制作
-在电子游戏世界中，Ebiten 通过分离的静态图像来渲染动画。这些图像集合被组合成一个更大的图像，通常称为“[纹理图集](https://en.wikipedia.org/wiki/Texture_atlas)”，也称为“sprite sheet”。这是 [网站](https://ebiten.org/examples/animation.html) 上提供的示例：
+在电子游戏世界中，Ebiten 通过分离的静态图像来渲染动画。这些图像集合被组合成一个更大的图像，通常称为“[纹理图集](https://en.wikipedia.org/wiki/Texture_atlas)”，也称为“精灵图”。这是 [网站](https://ebiten.org/examples/animation.html) 上提供的示例：
 
 ![image1](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200205-Go-Image-Rendering-in-2D-Video-Games-with-Ebiten/image1.png)
 
-然后，在简单的数学运算就足够的情况下，将此图像加载到内存中并进行部分渲染。在前面的示例中，每个部分的宽度为 32 个像素。渲染每个图像非常简单，只需将 X 坐标移动 32 个像素。这是第一步：
+然后，经过简单的数学运算，这张图被加载到内存中，然后被一部分一部分地渲染。在前面的示例中，每个部分的宽度为 32 个像素。渲染每个图像非常简单，只需将 X 坐标移动 32 个像素。这是第一步：
 
 ![image2](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200205-Go-Image-Rendering-in-2D-Video-Games-with-Ebiten/image2.png)
 
 ![image3](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200205-Go-Image-Rendering-in-2D-Video-Games-with-Ebiten/image3.png)
 
-渲染动画时，只需要当前图像的值即可渲染 sprite sheet 的正确部分。Ebiten 提供了所有的 API 来轻松地渲染它，下面是之前第一步中 sprite sheet 的示例：
+渲染动画时，只需要当前图像的值即可渲染精灵图的正确部分。Ebiten 提供了所有的 API 来轻松地渲染它，下面是之前第一步中精灵图的示例：
 
 ```go
 screen.DrawImage(
@@ -39,7 +39,7 @@ Ebiten 的创建者 Hajime Hosh 还开发了“ [file2byteslice](https://github.
   -output=./images/sprite.go -var=Runner_png
 ```
 
-现在可以从以下代码的 `img.Runner_png` 变量中获取 sprite sheet：
+现在可以从以下代码的 `img.Runner_png` 变量中获取精灵图：
 
 ![image4](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200205-Go-Image-Rendering-in-2D-Video-Games-with-Ebiten/image4.png)
 
@@ -55,7 +55,7 @@ Ebiten 的创建者 Hajime Hosh 还开发了“ [file2byteslice](https://github.
 
 ![tiles2](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200205-Go-Image-Rendering-in-2D-Video-Games-with-Ebiten/tiles2.png)
 
-每个图块将分配一个数字，从 0 到最后一个数字加 1。由于每行图块具有相同数量的图块，因此可以通过除法和取模来获取图块的坐标。这是蓝色花朵的示例：
+每个图块将分配一个数字，从 0 开始，逐次加 1。由于每行都有相同数量的图块，因此可以通过除法和取模来获取图块的坐标。这是蓝色花朵的示例：
 
 ![tiles3](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200205-Go-Image-Rendering-in-2D-Video-Games-with-Ebiten/tiles3.png)
 
@@ -73,7 +73,7 @@ Ebiten 的创建者 Hajime Hosh 还开发了“ [file2byteslice](https://github.
 
 ![bg2](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200205-Go-Image-Rendering-in-2D-Video-Games-with-Ebiten/bg2.png)
 
-现在，这些层已经准备好了，我们只需要迭代两个层就可以得到最终结果：
+现在，这些图层已经准备好了，我们只需要迭代两个图层就可以得到最终结果：
 
 ![bg3](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200205-Go-Image-Rendering-in-2D-Video-Games-with-Ebiten/bg3.png)
 
@@ -103,7 +103,7 @@ Ebiten 还提供了对屏幕刷新的控制，这有助于调整性能。
 
 ## TPS 管理
 
-默认情况下，Ebiten 的运行速度为每秒 60 个 tick。 但是，这可以用 Ebiten 提供的 API `ebiten.SetMaxTPS()` 来轻松配置。它有助于减少机器上的压力。这是具有 25 TPS 的简单程序：
+Ebiten 的默认 TPS 是 60。但是，这可以用 Ebiten 提供的 API `ebiten.SetMaxTPS()` 来轻松配置。它有助于减少机器上的压力。这是具有 25 TPS 的简单程序：
 
 ![tps1](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200205-Go-Image-Rendering-in-2D-Video-Games-with-Ebiten/tps1.png)
 
@@ -112,7 +112,7 @@ TPS（每秒 tick 数）与 FPS（每秒帧数）不同。[Hajime Hosh](https://
 > 帧代表图形更新。这取决于用户显示屏上的刷新率。那么 FPS 可能是 60、70、120，依此类推。这个数字基本上是不可控制的。Ebiten 可以打开或关闭 vsync。如果关闭了 vsync，则 Ebiten 会尝试尽可能多地更新图形，那么 FPS 可以为 1000 左右。
 > tick 表示逻辑更新。TPS 表示每秒调用更新功能的次数。默认情况下固定为 60。游戏开发人员可以通过 SetMaxTPS 配置 TPS。如果设置了 UncappedTPS，则 Ebiten 会尝试尽可能多地调用更新函数。
 
-当窗口在后台运行时，Ebiten 为渲染带来了另一种优化。失去焦点时，游戏将进入休眠状态，直到重新获得焦点。实际上它睡了 1/60 秒，然后再次检查焦点。这是保存的资源的示例：
+当窗口在后台运行时，Ebiten 为渲染带来了另一种优化。失去焦点时，游戏将进入休眠状态，直到重新获得焦点。它实际上 sleep 了 1/60 秒，然后再次检查焦点。这是保存的资源的示例：
 
 ![tps2](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200205-Go-Image-Rendering-in-2D-Video-Games-with-Ebiten/tps2.png)
 
