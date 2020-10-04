@@ -1,4 +1,4 @@
-# 在 BigCache 中存储空接口
+# 在 BigCache 中存储任意类型（interface{}）
 
 这篇文章也发在我的个人 [博客](https://calebschoepp.com/blog)
 
