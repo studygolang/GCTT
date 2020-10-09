@@ -4,7 +4,7 @@
 
 ℹ️  这篇文章基于 Go 1.14。
 
-在 Go 语言中，将 byte 数组转换为 string 时，随着转换后字符传的拷贝，可能会触发内存分配。然而，将 bytes 转换为 string 仅仅是为了满足代码约束，比如在 switch 语句中的比较，又比如在 map 中的 key，这些场景下的转换绝对是在浪费 CPU 时间。来一起看一些案例，以及一些已有的优化。
+在 Go 语言中，将 byte 数组转换为 string 时，随着转换后字符串的拷贝，可能会触发内存分配。然而，将 bytes 转换为 string 仅仅是为了满足代码约束，比如在 switch 语句中的比较，又比如在 map 中的 key，这些场景下的转换绝对是在浪费 CPU 时间。来一起看一些案例，以及一些已有的优化。
 
 ## 转换操作（Conversion）
 将 byte 数组转换为 string 涉及的操作有：
@@ -47,7 +47,7 @@ Go 编译器同样提供一些优化，可以省略我们所见到的两个转�
 
 ![](https://github.com/studygolang/gctt-images2/blob/master/20200610-Go-String-and-Conversion-Optimization/the-exact-optimization.png?raw=true)
 
-Go 在比较操作中直接使用返回的 bytes。首先比较 byte 数组和 `case` 语句（case 后面的字符串）的大小，之后检查字符串本身（字面值）。再 `switch` 语句外分配 string，会导致内存的分配，因为编译器无法得知这个 string 后续是否还会使用。
+Go 在比较操作中直接使用返回的 bytes。首先比较 byte 数组和 `case` 语句（case 后面的字符串）的大小，之后检查字符串本身（字面值）。在 `switch` 语句外分配 string，会导致内存的分配，因为编译器无法得知这个 string 后续是否还会使用。
 
 ## 优化
 `switch` 并不是字符串转换的唯一的一个优化。Go 编译器会在其他示例中应用这样的优化，比如：
