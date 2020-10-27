@@ -12,13 +12,13 @@
 
 ![](https://github.com/studygolang/gctt-images2/blob/master/20201002-Go-How-Does-a-Program-Recover/build-the-first-frame-of-deferred-functions.png?raw=true)
 
-这个帧里面的代码没有 recover 这个 panic。之后，Go 构建父帧（译者注：level1 函数的帧），并在该帧中调用其中的每个 recover 函数：
+这个帧里面的代码没有 recover 这个 panic。之后，Go 构建父帧（译者注：level1 函数的帧），并在该帧中调用其中的每个延迟函数：
 
 ![](https://github.com/studygolang/gctt-images2/blob/master/20201002-Go-How-Does-a-Program-Recover/builds-the-parent-frame-and-calls-each-deferred-function.png?raw=true)
 
 *提醒一下，defer 函数 按照 LIFO（后进先出）的顺序执行。想要了解更多关于 defer 函数内部管理的方式，建议阅读我的文章“[Go: How Does defer Statement Work?](https://medium.com/a-journey-with-go/go-how-does-defer-statement-work-1a9492689b6e)”*
 
-一旦一个函数 recover 了 panic，Go 需要一种跟踪，并恢复这个程序的方法。为了达到这个目的，每一个 goroutine 嵌入了一个特殊的属性，指向一个代表该 panic 的对象：
+由于一个函数 recover 了 panic，Go 需要一种跟踪，并恢复这个程序的方法。为了达到这个目的，每一个 goroutine 嵌入了一个特殊的属性，指向一个代表该 panic 的对象：
 
 ![](https://github.com/studygolang/gctt-images2/blob/master/20201002-Go-How-Does-a-Program-Recover/special-attribute.png?raw=true)
 
