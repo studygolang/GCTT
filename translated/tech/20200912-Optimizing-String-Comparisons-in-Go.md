@@ -168,13 +168,13 @@ func compareString(a string, b string) bool {
 向 **compare.go** 添加下面的代码：
 
 ```go
-// EqualFold compare 
+// EqualFold compare
 func compareEF(a string, b string) bool {
     if strings.EqualFold(sampleString, compareString) {
-        return true 
-    } else { 
-        return false 
-    } 
+        return true
+    } else {
+        return false
+    }
 }
 ```
 
@@ -217,7 +217,7 @@ func BenchmarkEqualFold(b *testing.B) {
 **compare.go**
 
 ```go
-// operator compare 
+// operator compare
 func compareOperators(a string) bool {
   file, err := os.Open("names.txt")
   result := false;
