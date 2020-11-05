@@ -33,7 +33,7 @@ return false
 
 我们看到第一种方法相对简单点。我们不需要引入标准库的包，代码量也少一点。这看起来很好，但是哪一种更快呢？我们来验证一下。
 
-首先，我们会起一个独立的 app 外加一个测试文件。我们会使用 Go 测试工具中的<ruby>基准测试工具<rt>Benchmarking utility</rt></ruby>。
+首先，我们创建一个带有测试文件的应用。我们将使用 Go 测试工具中的 Benchmarking 实用工具。
 
 #### compare.go
 
@@ -157,7 +157,7 @@ func compareString(a string, b string) bool {
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200912-Optimizing-String-Comparisons-in-Go/04.png)
 
-它们耗时耗时一样的。但是为什么呢？
+它们耗时是一样的。但是为什么呢？
 
 其中一个原因是，我们在每一次执行过程中都加入了 [Strings.ToLower](https://golang.org/pkg/strings/#ToLower)。这会影响整体的性能。字符串就是 rune 字符的集合，ToLower() 方法会遍历每个 rune 字符，把每个字符转换成小写，然后再进行比较。而这段额外的时间掩盖了测量中的两种方式的差别。
 
