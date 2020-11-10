@@ -43,7 +43,7 @@ Go 还被一些大公司使用，例如 BBC、Uber、Novartis、Basecamp and Sou
 
 最喜欢和最想要使用的编程语言：
 - Go 很适合用于一般绩效导向的云计算软件。流行的 DevOps 工具是用 Go 编写的，例如 Docker ，甚至是开源的容器编排系统 Kubernetes 都是用 Go 编写的。自 2011 年以来，YouTube 一直在使用 [Vitess](https://opensource.google/projects/vitess) ，它是一个由 Google 构建的分布式数据库系统，而且这个分布式数据库的 MySQL 后端是由 Golang 构建。
-- 在 [2018 年的 Stack Overflow 调查结果](https://insights.stackoverflow.com/survey/2018/#technology)中，Golang 排名第五。根据 [GitHub 关于 2018 年的第二季度报告](https://madnight.github.io/githut/#/pull_requests/2019/4)，Golang 的整体增长率接近于 7% ，与上一季度相比增长 1.5 点。到 2019 年第四季度，Golang 的整体增长率已经达到 8% 。 
+- 在 [2018 年的 Stack Overflow 调查结果](https://insights.stackoverflow.com/survey/2018/#technology)中，Golang 排名第五。根据 [GitHub 关于 2018 年的第二季度报告](https://madnight.github.io/githut/#/pull_requests/2019/4)，Golang 的整体增长率接近于 7% ，与上一季度相比增长 1.5 点。到 2019 年第四季度，Golang 的整体增长率已经达到 8% 。
 
 ##  Go 如此受欢迎的原因
 - Go 是一种静态类型的编译语言，因此你可以更早地发现问题。
