@@ -34,14 +34,12 @@ Go 还被一些大公司使用，例如 BBC、Uber、Novartis、Basecamp and Sou
 以下是关于 Go 编程语言的 Google 趋势概览，它正在持续且稳定的增长。
 
 ## 为什么选择 Go ？
-
 对于具备 C/C++ 学习经验的程序员来讲，学习 Go 是一件毫不费力的事情，并且将祖传代码转换成 Go 程序也是非常简单的。作为一种编译型的静态语言，它比解释型语言要快得多，同时具备了大部分的性能优势。
 
 - Go 作为一种与 C 很相似的编程语言，但是除了具有 C 语言的特性之外，Go 还提供了内存安全性、[垃圾回收](https://dzone.com/articles/garbage-collection-a-brief-introduction)、[结构化类型](https://dzone.com/articles/dynamic-static-optional-structural-typing-and-engi)和 CSP 风格的并发性。
 - 在最近的 [Stack Overflow 2020 的调查结果](https://insights.stackoverflow.com/survey/2020#technology-most-loved-dreaded-and-wanted-languages-loved)中，Go 是开发人员中最喜欢和最想要使用的编程语言之一。
 
-
-最喜欢和最想要使用的编程语言：
+### 最喜欢和最想要使用的编程语言
 - Go 很适合用于一般绩效导向的云计算软件。流行的 DevOps 工具是用 Go 编写的，例如 Docker ，甚至是开源的容器编排系统 Kubernetes 都是用 Go 编写的。自 2011 年以来，YouTube 一直在使用 [Vitess](https://opensource.google/projects/vitess) ，它是一个由 Google 构建的分布式数据库系统，而且这个分布式数据库的 MySQL 后端是由 Golang 构建。
 - 在 [2018 年的 Stack Overflow 调查结果](https://insights.stackoverflow.com/survey/2018/#technology)中，Golang 排名第五。根据 [GitHub 关于 2018 年的第二季度报告](https://madnight.github.io/githut/#/pull_requests/2019/4)，Golang 的整体增长率接近于 7% ，与上一季度相比增长 1.5 点。到 2019 年第四季度，Golang 的整体增长率已经达到 8% 。
 
@@ -58,7 +56,6 @@ Go 还被一些大公司使用，例如 BBC、Uber、Novartis、Basecamp and Sou
 ## 让我们看一些是谁在使用 Go 的实际案例
 
 ### SendGrid 投入 Go
-
 SendGrid 是一个客户沟通的平台，并于 2014 年将 Go 作为主要开发语言。SendGrid 开发团队需要从根本上转变它们的开发语言，归结为 Scala、Java 和 Go 之间的竞争。当时，SendGrid 在开发中面临最大的挑战是并发编程。寻找具有并发的异步编程的特性，然后将其作为编程语言中的一部分，这是 SendGrid 选择 Go 最令人信服的原因之一。
 
 可以在他们的博客上阅读全文：[如何说服您的公司选择Golang？](https://sendgrid.com/blog/convince-company-go-golang/)
