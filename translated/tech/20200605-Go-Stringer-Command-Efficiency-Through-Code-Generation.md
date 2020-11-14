@@ -1,36 +1,36 @@
 # GO:`stringer`命令，通过代码生成提高效率
-![由Renee French创作的原始Go Gopher作品，为“ Go的旅程”创作的插图。](https://miro.medium.com/max/1400/1*lLJ2BlmnulX1WZGfUTt0vg.png)
+![由Renee French创作的原始Go Gopher作品，为“ Go的旅程”创作的插图。](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200605-Go-Stringer-Command-Efficiency-Through-Code-Generation/00.png)
 ℹ️  这篇文章基于 Go 1.13。
 
 `stringer`命令的目标是自动生成满足`fmt.Stringer`接口的方法。它将为指定的类型生成`String()`方法，`String()`返回的字符串用于描述该类型。
 
 ## 例子
 这个[命令的文档](https://godoc.org/golang.org/x/tools/cmd/stringer)中给我们提供了一个学习的例子，如下：
-![](https://miro.medium.com/max/1400/1*vucGVFa1Qju4pXxzRjiZ9w.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200605-Go-Stringer-Command-Efficiency-Through-Code-Generation/01.png)
 输出如下：
 ```
 1
 ```
 产生的日志是一个常量的值，这可能会让你感到困惑。
 让我们用命令`stringer -type=Pill`生成`String()`方法吧：
-![](https://miro.medium.com/max/1400/1*i-v4hKZD3vTMz-nxJaKj1A.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200605-Go-Stringer-Command-Efficiency-Through-Code-Generation/02.png)
 生成了新的`String()`函数，运行当前代码时输出如下：
 ```
 Aspirin
 ```
 现在描述该类型的是一个字符串，而不是它实际的常量值了。
 `stringer`也可以与`go generate`命令完美配合，使其功能更强大。只需在代码中添加以下指令即可：
-![](https://miro.medium.com/max/1400/1*BnPEnsqwZLxt9FFR-Jxm9g.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200605-Go-Stringer-Command-Efficiency-Through-Code-Generation/03.png)
 然后，运行`go generate`命令将会为你所有的类型自动生成新的函数。
 
 ## 效率
 `stringer`生成了一个包含每一个字符串的`长字符串`和一个包含每一个字符串索引的数组。在我们这个例子里，读`Aspirin`即是读`长字符串`的索引7到13组成的字符串：
-![](https://miro.medium.com/max/1400/1*TJs010AERv1mWUomMsu7qg.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200605-Go-Stringer-Command-Efficiency-Through-Code-Generation/04.png)
 
 但是它有多快、多高效？我们来和另外两种方案对比一下：
 * 硬编码`String()`函数
 
-![](https://miro.medium.com/max/1400/1*8HCJlcw_fP24lpooVhJT8g.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200605-Go-Stringer-Command-Efficiency-Through-Code-Generation/05.png)
 下面是一个包含20个常量的基准测试：
 ```
 name                  time/op
@@ -48,7 +48,7 @@ StringerWithSwitch-4  4.99ns ± 1%
 
 *  `String()`函数输出一个map
 
-![](https://miro.medium.com/max/1400/1*B7JjenIX_IIgWUL5Vf27XQ.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200605-Go-Stringer-Command-Efficiency-Through-Code-Generation/06.png)
 下面是一个包含20个常量的基准测试：
 ```
 name                  time/op
@@ -60,7 +60,7 @@ StringerWithMap-4     28.60ns ± 2%
 
 ## 自检器
 在生成的代码中，有一些纯粹是为了校验的目的。下面是这些指令：
-![](https://miro.medium.com/max/1400/1*_LaRSP60WqMzA3Lz9AhkcA.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200605-Go-Stringer-Command-Efficiency-Through-Code-Generation/07.png)
 `stringer`将常量的名称与值一起写入每行。在本例中，`Aspirin`的值为`2`。更新常量的名称或其值会产生错误
 * 更新名称但不重新生成`String()`函数：
 ```
