@@ -46,7 +46,7 @@ StringerWithSwitch-4  4.99ns ± 1%
 常量越多，效率越高。这是有道理的。从内存中加载一个值比一些跳转指令(表示if条件的汇编指令)更具有膨胀性。
 然而，当switch语句越大，跳转指令的数量就越多。从某种程度上来说，从内存中加载将会变得更有效。
 
-*  `String()`函数输出一个map
+* `String()`函数输出一个map
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200605-Go-Stringer-Command-Efficiency-Through-Code-Generation/06.png)
 下面是一个包含20个常量的基准测试：
@@ -81,7 +81,6 @@ Pill(3)
 "".Pill.String STEXT size=275 args=0x18 locals=0x50
 ```
 只有`String()`函数被编译到二进制文件中, 自检对性能或二进制大小没有影响。
-
 
 ---
 via: https://medium.com/a-journey-with-go/go-stringer-command-efficiency-through-code-generation-df49f97f3954
