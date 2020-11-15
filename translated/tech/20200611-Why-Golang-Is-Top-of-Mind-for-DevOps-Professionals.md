@@ -101,6 +101,6 @@ via: https://dzone.com/articles/why-golang-is-top-of-mind-for-devops-professiona
 
 作者：[Pavan Belagatti](https://dzone.com/users/2879134/pavanshippable.html)
 译者：[sunlingbot](https://github.com/sunlingbot)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[unknwon](https://github.com/unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
