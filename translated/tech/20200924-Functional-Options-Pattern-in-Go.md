@@ -209,13 +209,11 @@ type stuffClient struct {
     retries int
 }
 type Connection struct{}
-
 func NewStuffClient(conn Connection, opts ...StuffClientOption) StuffClient {
     client := defaultStuffClient
     for _, o := range opts {
         o(&client)
     }
-    
     client.conn = conn
     return client
 }
