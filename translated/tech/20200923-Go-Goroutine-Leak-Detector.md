@@ -4,8 +4,8 @@
 
 具有监控存活的goroutine数量功能的ARM (Application Performance Monitoring)
 应用程序性能监控可以轻松查出goroutine泄漏。例如NewRelic ARM 中goroutine的监控。
- 
-![https://docs.newrelic.com/docs/agents/go-agent/features/go-runtime-page-troubleshoot-performance-problems](https://github.com/CengSin/images/blob/main/goroutine_leak_detector/goroutinemonitor.png?raw=true) 
+
+![https://docs.newrelic.com/docs/agents/go-agent/features/go-runtime-page-troubleshoot-performance-problems](https://github.com/CengSin/images/blob/main/goroutine_leak_detector/goroutinemonitor.png?raw=true)
 
 goroutine泄漏会导致内存中存活的goroutine数量不断上升，直到服务宕机为止。因此，可以在代码部署之前，通过一些方法来检查程序中是否存在泄漏
 
