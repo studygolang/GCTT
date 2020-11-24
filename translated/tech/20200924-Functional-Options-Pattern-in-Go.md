@@ -231,6 +231,6 @@ via: https://halls-of-valhalla.org/beta/articles/functional-options-pattern-in-g
 
 作者：[ynori7](https://halls-of-valhalla.org/beta/user/ynori7)
 译者：[sunlingbot](https://github.com/sunlingbot)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[unknwon](https://github.com/unknwon)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
