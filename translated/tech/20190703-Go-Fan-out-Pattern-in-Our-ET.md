@@ -1,4 +1,4 @@
-# Go: 在我们的 ETL 中使用扇出模式（Go: Fan-out Pattern in Our ETL）
+# Go: 在我们的 ETL 中使用扇出模式
 
 ![](https://miro.medium.com/max/1400/1*r7OWMQAx6G2AGoKTXmHM6A.png)
 
@@ -61,7 +61,7 @@ Stop
 via: https://medium.com/a-journey-with-go/go-fan-out-pattern-in-our-etl-9357a1731257
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
-译者：[译者ID](https://github.com/gogeof)
-校对：[校对者ID](https://github.com/校对者ID)
+译者：[gogeof](https://github.com/gogeof)
+校对：[Xiaobin.Liu](https://github.com/lxbwolf)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
