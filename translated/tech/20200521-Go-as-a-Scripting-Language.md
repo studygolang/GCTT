@@ -3,7 +3,7 @@ Go 作为一种可用于创建高性能网络和并发系统的编程语言，�
 
 [正如来自 Codelang 的 Elton Minetto 所说的那样](https://dev.to/codenation/using-golang-as-a-scripting-language-jl2)，Go 作为一门脚本语言的同时，也具有相当大的吸引力，这不仅包括 Go 本身强大的功能和简洁的语法，还包括对 goroutines 的良好支持等。Google 公司的软件工程师 [Eyal Posener](https://posener.github.io/about/) 为 Go 用作脚本语言提供了[更多的理由](https://gist.github.com/posener/73ffd326d88483df6b1cb66e8ed1e0bd)，例如，丰富的标准库和语言的简洁性使得维护工作变得更加容易。与之相对的是，Go 的贡献者和前 Google 公司员工 David Crawshaw 则[强调了使用 Go 编写脚本任务的便利程度](https://news.ycombinator.com/item?id=15623106)，因为几乎所有的程序员都在花费大量的时间编写复杂的程序。
 
->基本上，我一直在编写 Go 程序，偶尔会写写 Bash、perl 和 python 。有时候，这些编程语言会落入我的脑海。 
+>基本上，我一直在编写 Go 程序，偶尔会写写 Bash、perl 和 python 。有时候，这些编程语言会落入我的脑海。
 
 对于日常任务和不太频繁的脚本编写任务，倘若能够使用相同的编程语言，它将会大大提高效率。Cloudflare 公司的工程师 Ignat Korchagin 指出，Go 是一种强类型语言，它能够[帮助 Go 脚本变得更加可靠，并且避免出现像拼写之类的小错误，从而不会出现发生在运行时的报错](https://blog.cloudflare.com/using-go-as-a-scripting-language-in-linux/)。
 
