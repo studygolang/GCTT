@@ -84,7 +84,6 @@ func (sh serverHandler) ServeHTTP(rw ResponseWriter, req *Request) {
 
 我们可以如下所示这样重写我们的示例代码，不再使用默认的 mux。只修改 `main` 函数，所以这里没有展示 `hello` 和 `headers` handler 函数，看是我们可以在这看[完整的代码](https://github.com/eliben/code-for-blog/blob/master/2021/go-life-http-request/basic-server-mux-object.go)。功能上没有任何变化[^1]：
 
-
 ```go
 func main() {
   mux := http.NewServeMux()
