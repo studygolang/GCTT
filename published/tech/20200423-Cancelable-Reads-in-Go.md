@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/30249
+
 # Go 中可取消的读取操作
 
 在使用 Go 进行工作时，使用 `io.Reader` 和 `io.Writer` 接口是最常见的情场景之一。这很合理，它们是数据传输的主力接口。

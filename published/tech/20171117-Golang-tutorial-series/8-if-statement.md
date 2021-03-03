@@ -188,4 +188,5 @@ via: https://golangbot.com/if-statement/
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[Dingo1991](https://github.com/Dingo1991)
 校对：[rxcai](https://github.com/rxcai)
+
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

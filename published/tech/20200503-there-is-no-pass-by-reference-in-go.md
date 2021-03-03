@@ -1,6 +1,6 @@
 首发于：https://studygolang.com/articles/28977
 
-# Go 中没有引用变量
+# Go 中没有引用传递
 
 先说清楚，在 go 中没有引用变量，所以更不存在什么引用传值了。
 

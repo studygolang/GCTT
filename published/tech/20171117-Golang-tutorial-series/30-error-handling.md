@@ -289,7 +289,7 @@ matched files []
 
 **上一教程 - [Defer](https://studygolang.com/articles/12719)**
 
-**下一教程 - 自定义错误（暂未发布，敬请期待）**
+**下一教程 - [自定义错误](https://studygolang.com/articles/12784)**
 
 ---
 

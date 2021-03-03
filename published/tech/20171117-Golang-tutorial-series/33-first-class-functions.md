@@ -421,6 +421,8 @@ func main() {
 
 **上一教程 - [panic 和 recover](https://studygolang.com/articles/12785)**
 
+**下一教程 - [反射](https://studygolang.com/articles/13178)**
+
 ---
 
 via: https://golangbot.com/first-class-functions/

@@ -29,7 +29,7 @@ type OutStream = streams.Out
 ```go
 type T2 struct {}
 
-// T1 is deprecated, please use T2
+// T2 is deprecated, please use T1
 type T1 = T2
 
 func main() {
@@ -48,7 +48,7 @@ func f(t T1) {
 ```go
 type T2 struct {}
 
-// T1 is deprecated, please use T2
+// T2 is deprecated, please use T1
 type T1 = T2
 
 func main() {
@@ -99,7 +99,7 @@ type SysProcAttr = syscall.SysProcAttr
 ```go
 type T2 struct {}
 
-// T1 is deprecated, please use T2
+// T2 is deprecated, please use T1
 type T1 = T2
 
 func main() {

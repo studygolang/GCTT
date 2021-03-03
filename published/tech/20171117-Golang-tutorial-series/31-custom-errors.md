@@ -388,7 +388,7 @@ error: width -9.00 is less than zero
 
 **上一教程 - [错误处理](https://studygolang.com/articles/12724)**
 
-**下一教程 - panic 和 recover（暂未发布，敬请期待）**
+**下一教程 - [panic 和 recover](https://studygolang.com/articles/12785)**
 
 ---
 
