@@ -1,4 +1,5 @@
 首发于：https://studygolang.com/articles/12402
+
 # 第 22 篇：信道（channel）
 
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2)的第 22 篇。
