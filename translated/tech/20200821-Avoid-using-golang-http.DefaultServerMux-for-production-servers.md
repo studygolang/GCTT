@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/30837
+
 # 不要在生产环境使用 Golang 的 http.DefaultServerMux
 
 我看到许多文章和帖子都显示了一种方便简单的方法来这样创建 go 的 Web 服务：
@@ -62,7 +64,7 @@ func commonAndBoringFunctionname(w http.ResponseWriter, r *http.Request){
 via: <https://sgrodriguez.github.io/2020/08/21/defaultServerMux.html>
 
 作者：[Santiago Rodriguez](https://sgrodriguez.github.io/about.html)
-译者：[译者 ID](https://github.com/译者 ID)
-校对：[TomatoAres](https://github.com/TomatoAres)
+译者：[TomatoAres](https://github.com/TomatoAres)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
