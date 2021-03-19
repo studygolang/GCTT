@@ -1,6 +1,6 @@
 首发于：https://studygolang.com/articles/14669
 
-# 读取文件
+# 第 35 篇：读取文件
 
 ![reading files](https://raw.githubusercontent.com/studygolang/gctt-images/master/golang-series/golang-read-files.png)
 
@@ -445,6 +445,8 @@ We have reached the end of the file.
 本教程到此结束。希望你能喜欢，祝你愉快。
 
 **上一教程** - [反射](https://studygolang.com/articles/13178)
+
+**下一教程** - [写入文件](https://studygolang.com/articles/19475)
 
 ---
 

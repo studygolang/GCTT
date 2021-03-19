@@ -483,7 +483,7 @@ normally returned from main
 
 **上一教程 - [自定义错误](https://studygolang.com/articles/12784)**
 
-**下一教程 - 函数是一等公民（暂未发布，敬请期待）**
+**下一教程 - [函数是一等公民](https://studygolang.com/articles/12789)**
 
 ---
 
