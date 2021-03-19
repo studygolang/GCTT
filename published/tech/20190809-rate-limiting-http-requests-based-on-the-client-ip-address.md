@@ -1,11 +1,12 @@
-# Go 中基于 IP 地址的 HTTP 请求限速
+首发于：https://studygolang.com/articles/33988
+
+# Go 中基于 IP 地址的 HTTP 请求限流
 
 如果你在运行 HTTP 服务并且想对 endpoints 进行限速，你可以使用维护良好的工具，例如 [github.com/didip/tollbooth](https://github.com/didip/tollbooth)。但是如果你在构建一些非常简单的东西，自己实现并不困难。
 
 我们可以使用已经存在的试验性的 Go 包 `x/time/rate`。
 
 在本教程中，我们将创建一个基于用户 IP 地址进行速率限制的简单的中间件。
-
 ## 「干净的」HTTP 服务
 
 让我们从构建一个简单的 HTTP 服务开始，该服务具有非常简单的 endpiont。这可能是个非常「重」的 endpoint，因此我们想在这里添加速率限制。
