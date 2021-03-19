@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/34004
+
 # GoLang AST简介
 
 ## 写在前面
@@ -36,7 +38,7 @@
 
 [ast/ast.go](https://github.com/golang/go/blob/0b7c202e98949b530f7f4011efd454164356ba69/src/go/ast/ast.go#L32-L54)
 
-```golang
+```go
 // All node types implement the Node interface.
 type Node interface {
 	Pos() token.Pos // position of first character belonging to the node
@@ -66,7 +68,7 @@ type Decl interface {
 
 下面我们将使用到如下代码：
 
-```golang
+```go
 package hello
 
 import "fmt"
@@ -78,7 +80,7 @@ func greet() {
 
 首先，我们尝试[生成上述这段简单的代码AST](https://golang.org/src/go/ast/example_test.go)：
 
-```golang
+```go
 package main
 
 import (
@@ -213,7 +215,7 @@ F:\hello>go run main.go
 
 代码如下：
 
-```golang
+```go
 package main
 
 import (
@@ -346,7 +348,7 @@ func greet() {
 
 **ast.Ident**
 
-```golang
+```go
 *ast.Ident {
 .  NamePos: dummy.go:5:6
 .  Name: "greet"
@@ -486,6 +488,6 @@ via: https://nakabonne.dev/posts/take-a-walk-the-go-ast/
 
 作者：[nakabonne](https://github.com/nakabonne)
 译者：[double12gzh](https://github.com/double12gzh)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
