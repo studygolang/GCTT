@@ -1,6 +1,8 @@
+首发于：https://studygolang.com/articles/33989
+
 # Go: 在我们的 ETL 中使用扇出模式
 
-![](https://miro.medium.com/max/1400/1*r7OWMQAx6G2AGoKTXmHM6A.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/20190703-go-fan-out-pattern/cover.png)
 
 Go 语言在构建微服务、特别是有使用 gRPC 的应用中，非常地流行，其实在构建命令行程序时也是特别地好用。为了学习扇出模式，我会基于我们公司使用 ETL 的例子，来介绍这个模式。
 
@@ -20,7 +22,7 @@ ETL 中有两个最重要的部分是提取（extracting）和加载（Load）�
 
 这种模式在快速输入流到分布式数据处理中，有一定的优势：
 
-![fan-out pattern with distributed work](https://miro.medium.com/max/754/1*pIc5IqD0qd6uPRVlrdzk5g.png)
+![fan-out pattern with distributed work](https://raw.githubusercontent.com/studygolang/gctt-images/master/20190703-go-fan-out-pattern/1.png)
 
 扇入，在 Google 这样定义：
 
@@ -28,13 +30,13 @@ ETL 中有两个最重要的部分是提取（extracting）和加载（Load）�
 
 这种模式，在有多个输入源，且需要快速地数据处理中，有一定的优势：
 
-![fan-in pattern with multiple inputs](https://miro.medium.com/max/754/1*WAoD1zJQfzvGENSJPmd6SA.png)
+![fan-in pattern with multiple inputs](https://raw.githubusercontent.com/studygolang/gctt-images/master/20190703-go-fan-out-pattern/2.png)
 
 ## 在实际中使用扇出模式（Fan-out in action）
 
 在我们的项目中，我们需要处理存储在 CSV 文件的大量数据，它们加载后，将在 elastic 中被检索。输入的处理必须快，否则（阻塞加载）加载就会变得很慢。因此，我们需要比输入生成器更多的数据处理器。扇出模式在这个例子中，看起来非常适合：
 
-![](https://miro.medium.com/max/734/1*8K93LJ5t-4z8nEXoZWQdJg.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images/master/20190703-go-fan-out-pattern/3.png)
 
 下面是我们的伪代码：
 
