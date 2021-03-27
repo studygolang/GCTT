@@ -78,7 +78,7 @@ type record struct {
 	age int8
 }
 func GetRecord() record {
-	return record{Name: "Michał", age: 29}
+	return record{Name: "Micha ł", age: 29}
 }
 
 
@@ -185,7 +185,7 @@ record.walk undefined (cannot refer to unexported field or method library.Record
 
 via: https://medium.com/golangspec/exported-identifiers-in-go-518e93cc98af
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[tingtingr](https://github.com/wentingrohwer)
 校对：[polaris1119](https://github.com/polaris1119)
 

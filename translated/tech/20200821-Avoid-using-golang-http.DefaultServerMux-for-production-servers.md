@@ -2,7 +2,7 @@
 
 # 不要在生产环境使用 Golang 的 http.DefaultServerMux
 
-我看到许多文章和帖子都显示了一种方便简单的方法来这样创建 go 的 Web 服务：
+我看到许多文章和帖子都显示了一种方便简单的方法来这样创建 Go 的 Web 服务：
 
 ```golang
 package main

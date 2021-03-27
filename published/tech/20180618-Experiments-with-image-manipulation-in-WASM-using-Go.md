@@ -4,7 +4,7 @@
 
 Go 的主分支最近完成了一个 WebAssembly 的工作原型实现。作为 WASM 的爱好者，我自然要把玩一下。
 
-这篇文章，我要记下周末我用 Go 做的处理图像实验的想法。这个演示只是从浏览器中获取图像输入，然后应用各种图像变换，如亮度，对比度，色调，饱和度等，最后将其转储回浏览器。这测试了两件事 - 简单的CPU绑定执行，这是图像转换应该做的事情，以及在 JS 和 Go 之间传递数据。
+这篇文章，我要记下周末我用 Go 做的处理图像实验的想法。这个演示只是从浏览器中获取图像输入，然后应用各种图像变换，如亮度，对比度，色调，饱和度等，最后将其转储回浏览器。这测试了两件事 - 简单的 CPU 绑定执行，这是图像转换应该做的事情，以及在 JS 和 Go 之间传递数据。
 
 ## 回调
 
@@ -59,21 +59,21 @@ func (s *Shimmer) setupHueCb() {
 
 ## 执行
 
-我吐槽的是图像数据从 Go 传给浏览器的方式。在图像上传时，我把 src 属性设置为整个图像的base64编码格式，该值传到 Go 代码中对其解码为二进制，应用转换然后再编回 base64 并设置目标图像的 src 属性。
+我吐槽的是图像数据从 Go 传给浏览器的方式。在图像上传时，我把 src 属性设置为整个图像的 base64 编码格式，该值传到 Go 代码中对其解码为二进制，应用转换然后再编回 base64 并设置目标图像的 src 属性。
 
 这使得 DOM 非常沉重，需要从 Go 传递一个巨大的字符串到 JS。 如果 WASM 中 SharedArrayBuffer 有所支持可能会改善。我也在研究在画布中直接设置像素，看看有没有任何好处。即使为了消减这个 base64 转换也应该花些时间。（请不吝赐教其他方法）
 
 ## 性能
 
-对于一个 100KB 的 JPEG图像，应用转换所需时间约为180～190毫秒。这个时间随着图像大小而增加。这是使用 Chrome 65 测试的。（FF一直报错，我也没时间调查）
+对于一个 100KB 的 JPEG 图像，应用转换所需时间约为 180 ～ 190 毫秒。这个时间随着图像大小而增加。这是使用 Chrome 65 测试的。（FF 一直报错，我也没时间调查）
 
 ![性能快照显示](https://raw.githubusercontent.com/studygolang/gctt-images/master/Experiments-with-image-manipulation-in-WASM-using-Go/wasm1.png)
 
 性能快照显示
 
-![堆相当大。堆快照大约1GB](https://raw.githubusercontent.com/studygolang/gctt-images/master/Experiments-with-image-manipulation-in-WASM-using-Go/wasm2.png)
+![堆相当大。堆快照大约 1GB](https://raw.githubusercontent.com/studygolang/gctt-images/master/Experiments-with-image-manipulation-in-WASM-using-Go/wasm2.png)
 
-堆相当大。堆快照大约1GB
+堆相当大。堆快照大约 1GB
 
 ## 整理想法
 

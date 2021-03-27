@@ -32,7 +32,7 @@ func main() {
 
 ![STW_goroutines_preemption](https://raw.githubusercontent.com/studygolang/gctt-images/master/how-does-go-stop-the-world/STW_goroutines_preemption.png)
 
-被抢占之后， 这些 goroutine 会被悬停在一个相对安全的状态。 同时，承载 Goroutine 的处理器 `P` (无论是正在运行代码的处理器还是已在 idle 列表中的处理器)， 都会被被标记成停止状态 (stopped)， 不再运行任何代码：
+被抢占之后， 这些 Goroutine 会被悬停在一个相对安全的状态。 同时，承载 Goroutine 的处理器 `P` (无论是正在运行代码的处理器还是已在 idle 列表中的处理器)， 都会被被标记成停止状态 (stopped)， 不再运行任何代码：
 
 ![STW_P_stopped](https://raw.githubusercontent.com/studygolang/gctt-images/master/how-does-go-stop-the-world/STW_P_stopped.png)
 
@@ -76,9 +76,9 @@ func main() {
 
 ![SC_tracing](https://raw.githubusercontent.com/studygolang/gctt-images/master/how-does-go-stop-the-world/SC_tracing.png)
 
-我们可以看到， 这个系统调用 goroutine (即图中 `G30`) 在"世界"被停止的时候， 就已经存在了。
+我们可以看到， 这个系统调用 Goroutine (即图中 `G30`) 在"世界"被停止的时候， 就已经存在了。
 
-但是， 我们之前提到， STW 把所有的处理器 `P` 都标为停止状态 (stopped) ， 所以， 这个系统调用的 Goroutine 也会被放到全局队列中， 等待 golang 世界恢复之后， 被重新启用。
+但是， 我们之前提到， STW 把所有的处理器 `P` 都标为停止状态 (stopped) ， 所以， 这个系统调用的 Goroutine 也会被放到全局队列中， 等待 Golang 世界恢复之后， 被重新启用。
 
 ## 延迟
 

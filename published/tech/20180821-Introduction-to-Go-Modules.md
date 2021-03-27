@@ -35,7 +35,7 @@ func Hi(name string) string {
 这个包已经写完了，但是现在还不是一个 module，我们来把它初始化为 module：
 
 ```bash
-$ go mod init github.com/robteix/testmod
+$ Go mod init github.com/robteix/testmod
 go: creating new go.mod: module github.com/robteix/testmod
 ```
 
@@ -50,10 +50,10 @@ module github.com/robteix/testmod
 我们现在可以把这个代码推送到代码仓库里面了：
 
 ```bash
-$ git init
-$ git add *
-$ git commit -am "First commit"
-$ git push -u origin master
+$ Git init
+$ Git add *
+$ Git commit -am "First commit"
+$ Git push -u origin master
 ```
 
 (译注：在 `git push` 之前，你可能还要添加远程仓库地址，例如：`git remote add origin https://github.com/robteix/testmod.git`)
@@ -61,7 +61,7 @@ $ git push -u origin master
 到目前为止，任何想要用这个包的人，都可以 `go get` 之:
 
 ```bash
-$ go get github.com/robteix/testmod
+$ Go get github.com/robteix/testmod
 ```
 
 上述的命令会获取 `master` 分支上最新的代码。这个方法依然凑效，但是我们现在最好不要再这么做了，因为我们有更棒的方法了。获取 `master` 分支有潜在的危险，因为我们不能确定，包作者对包的改动会不会破坏掉我们的项目对该包的使用方式。（译注：也就是说，我们不能确定当前 `master` 分支的代码是否保持了对旧版本代码的兼容性）。而这个就是 modules 机制旨在解决的问题。
@@ -81,8 +81,8 @@ Go 的 modules 是*版本化的*，并且某些版本有特殊的含义，你需
 我们的包已经准备好了，现在我们可以向全世界发布它。我们通过版本标签来实现这个发布，现在，我们一起来发布我们的 1.0.0 版本:
 
 ```bash
-$ git tag v1.0.0
-$ git push --tags
+$ Git tag v1.0.0
+$ Git push --tags
 ```
 
 上述命令在我们的仓库上面创建了一个标签，标记了我们当前的提交为 1.0.0 版本。
@@ -90,8 +90,8 @@ $ git push --tags
 虽然 Go 没有强制要求，但是我们最好创建还是一个叫 `v1` 的分支，这样我们可以把针对这个版本的 bug 修复推送到这个分支：
 
 ```bash
-$ git checkout -b v1
-$ git push -u origin v1
+$ Git checkout -b v1
+$ Git push -u origin v1
 ```
 
 现在我们可以切换到 `master` 分支，做自己要做的事情，而不用担心会影响到我们已经发布的 1.0.0 版本的代码。
@@ -117,7 +117,7 @@ func main() {
 到现在，你可以 `go get github.com/robteix/testmod` 来下载这个包。但是对于 module 来说，事情就变得有趣了。首先我们需要在我们新的程序里面启用 module 功能：
 
 ```bash
-$ go mod init mod
+$ Go mod init mod
 ```
 
 正如之前所发生的那样，上面的命令会创建一个 `go.mod` 文件，它的内容是：
@@ -129,7 +129,7 @@ module mod
 当我们尝试构建我们的程序时，事情变得更加有趣了：
 
 ```bash
-$ go build
+$ Go build
 go: finding github.com/robteix/testmod v1.0.0
 go: downloading github.com/robteix/testmod v1.0.0
 ```
@@ -163,9 +163,9 @@ func Hi(name string) string {
 我们在 `v1` 分支做这些改动，因为这个 bug 只在 `v1` 版本中存在。当然，在实际的情况中，我们很有可能需要把这个改动应用到多个版本，这时候你可能就需要在 `master` 分支做这些改动，然后再向后移植（译注：back-port 或称 backporting, 参考[维基百科](https://zh.wikipedia.org/wiki/%E5%90%91%E5%BE%8C%E7%A7%BB%E6%A4%8D) ）。无论怎样，我们都需要在 `v1` 分支上有这些改动，并且把它标记为一个新的发布：
 
 ```bash
-$ git commit -m "Emphasize our friendliness" testmod.go
-$ git tag v1.0.1
-$ git push --tags origin v1
+$ Git commit -m "Emphasize our friendliness" testmod.go
+$ Git tag v1.0.1
+$ Git push --tags origin v1
 ```
 
 ## 更新 modules
@@ -185,9 +185,9 @@ $ git push --tags origin v1
 因为我们的程序使用的是包 1.0.0 的版本，并且我们刚刚创建了 1.0.1 版本，下面任意一条命令都可以让我们程序使用的包更新到 1.0.1 版本：
 
 ```bash
-$ go get -u
-$ go get -u=patch
-$ go get github.com/robteix/testmod@v1.0.1
+$ Go get -u
+$ Go get -u=patch
+$ Go get github.com/robteix/testmod@v1.0.1
 ```
 
 运行完其中一个（比如说 `go get -u`）之后，我们的 `go.mod` 文件变成了：
@@ -230,7 +230,7 @@ func Hi(name, lang string) (string, error) {
 }
 ```
 
-以前使用我们的包的项目，如果直接使用现在这个新的版本，它们将不能编译通过，因为它们没有传递 `lang` 参数，并且它们没有接收返回的 `error` 错误。所以我们的 API 与 v1.x 版本的 API 不能兼容，是时候跃进新的2.0.0时代啦！
+以前使用我们的包的项目，如果直接使用现在这个新的版本，它们将不能编译通过，因为它们没有传递 `lang` 参数，并且它们没有接收返回的 `error` 错误。所以我们的 API 与 v1.x 版本的 API 不能兼容，是时候跃进新的 2.0.0 时代啦！
 
 我之前提到的，某些版本有特殊的含义，现在就是这种情况，版本 2 和更高版本需要改变导入路径，它们已经是不同的包了。
 
@@ -243,12 +243,12 @@ module github.com/robteix/testmod/v2
 剩下的事情跟我们之前做的一样，我们把它标记成 v2.0.0，并推送到远程仓库（并且可选地，我们还能添加一个 `v2` 分支）
 
 ```bash
-$ git commit testmod.go -m "Change Hi to allow multilang"
-$ git checkout -b v2 # 可选的，但是推荐这么做
-$ echo "module github.com/robteix/testmod/v2" > go.mod
-$ git commit go.mod -m "Bump version to v2"
-$ git tag v2.0.0
-$ git push --tags origin v2 # 如果没有新建 v2 分支，就推送到 master 分支
+$ Git commit testmod.go -m "Change Hi to allow multilang"
+$ Git checkout -b v2 # 可选的，但是推荐这么做
+$ Echo "module github.com/robteix/testmod/v2" > go.mod
+$ Git commit go.mod -m "Bump version to v2"
+$ Git tag v2.0.0
+$ Git push --tags origin v2 # 如果没有新建 v2 分支，就推送到 master 分支
 ```
 
 ## 更新到一个新的主要版本
@@ -313,7 +313,7 @@ require github.com/robteix/testmod/v2 v2.0.0
 默认情况下，Go 并不会在 `go.mod` 上面移除掉依赖项，除非你明确地指示它这么做。如果你希望能够清理掉那些不再需要的依赖项，你可以使用新的 `tidy` 命令：
 
 ```bash
-$ go mod tidy
+$ Go mod tidy
 ```
 
 现在剩下的依赖项都是我们项目中使用到的了。
@@ -323,18 +323,18 @@ $ go mod tidy
 默认情况下，Go modules 会忽略 `vendor/` 目录。这个想法是最终废除掉 vendor 机制[^1]。但如果我们仍然想要在我们的版本管理中添加 vendor 机制管理依赖，我们还是可以这么做的：
 
 ```bash
-$ go mod vendor
+$ Go mod vendor
 ```
 
-这会在你项目的根目录创建一个 `vendor/`目录，并包含你的项目的所有依赖项。
+这会在你项目的根目录创建一个 `vendor/` 目录，并包含你的项目的所有依赖项。
 
 即使如此，`go build` 默认还是会忽略这个目录的内容，如果你想要构建的时候从 `vendor/` 目录中获取依赖的代码来构建，那么你需要明确的指示：
 
 ```bash
-$ go build -mod vendor
+$ Go build -mod vendor
 ```
 
-我猜想大多数要使用 vendor 机制的开发者，在他们自己的开发机器上会使用 `go build` ，而在他们的CI系统（Continuous Integration，持续集成）上则使用 `-mod vendor` 选项
+我猜想大多数要使用 vendor 机制的开发者，在他们自己的开发机器上会使用 `go build` ，而在他们的 CI 系统（Continuous Integration，持续集成）上则使用 `-mod vendor` 选项
 
 还有，对于那些不想要直接依赖版本控制服务（译注：比如 github.com）上游代码的人来说，比起用 vendor 这种机制，更好的方法是使用 Go module 代理。
 
@@ -346,7 +346,7 @@ $ go build -mod vendor
 
 当我们构建程序的时候，它的依赖项会被自动地获取。Go 的 module 还消除了 `$GOPATH` 的使用， `$GOPATH` 曾经使得很多 Go 开发新手难以理解为什么所以东西都要放到一个特定的目录。
 
-~~Vendor 机制已经被使用 module 代理的方法取代了~~[^1]，我大概会专门新开一篇关于 Go module 代理的的文章。
+~~Vendor 机制已经被使用 module 代理的方法取代了 ~~[^1]，我大概会专门新开一篇关于 Go module 代理的的文章。
 
 ---
 

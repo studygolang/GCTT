@@ -27,8 +27,8 @@ func server2(ch chan string) {
 func main() {
     output1 := make(chan string)
     output2 := make(chan string)
-    go server1(output1)
-    go server2(output2)
+    Go server1(output1)
+    Go server2(output2)
     select {
     case s1 := <-output1:
         fmt.Println(s1)
@@ -43,7 +43,7 @@ func main() {
 
 而 `main` 函数在第 20 行和第 21 行，分别调用了 `server1` 和 `server2` 两个 Go 协程。
 
-在第 22 行，程序运行到了 `select` 语句。`select` 会一直发生阻塞，除非其中有 case 准备就绪。在上述程序里，`server1` 协程会在 6 秒之后写入 `output1` 信道，而`server2` 协程在 3 秒之后就写入了 `output2` 信道。因此 `select` 语句会阻塞 3 秒钟，等着 `server2` 向 `output2` 信道写入数据。3 秒钟过后，程序会输出：
+在第 22 行，程序运行到了 `select` 语句。`select` 会一直发生阻塞，除非其中有 case 准备就绪。在上述程序里，`server1` 协程会在 6 秒之后写入 `output1` 信道，而 `server2` 协程在 3 秒之后就写入了 `output2` 信道。因此 `select` 语句会阻塞 3 秒钟，等着 `server2` 向 `output2` 信道写入数据。3 秒钟过后，程序会输出：
 
 ```
 from server2
@@ -74,7 +74,7 @@ func process(ch chan string) {
 
 func main() {
     ch := make(chan string)
-    go process(ch)
+    Go process(ch)
     for {
         time.Sleep(1000 * time.Millisecond)
         select {
@@ -204,8 +204,8 @@ func server2(ch chan string) {
 func main() {
     output1 := make(chan string)
     output2 := make(chan string)
-    go server1(output1)
-    go server2(output2)
+    Go server1(output1)
+    Go server2(output2)
     time.Sleep(1 * time.Second)
     select {
     case s1 := <-output1:

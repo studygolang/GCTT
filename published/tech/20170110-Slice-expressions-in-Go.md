@@ -38,7 +38,7 @@ numbers := [5]int{1, 2, 3, 4, 5}
 fmt.Println((&numbers)[1:3]) // [2, 3]
 ```
 
-Slice 的索引 low 和 high 可以省略，low 的默认值是0，high 的默认值为 slice 的长度：
+Slice 的索引 low 和 high 可以省略，low 的默认值是 0，high 的默认值为 slice 的长度：
 
 ```go
 fmt.Println("foo"[:2]) // "fo"
@@ -83,7 +83,7 @@ main.main()
 
 ## 完整表达式
 
-这种方法可以控制结果 slice 的容量，但是只能用于 array 和指向 array 或 slice 的指针（ string 不支持），在简略表达式中结果 slice 的容量是从索引low开始的最大可能容量（ slice 的简略表达式）：
+这种方法可以控制结果 slice 的容量，但是只能用于 array 和指向 array 或 slice 的指针（ string 不支持），在简略表达式中结果 slice 的容量是从索引 low 开始的最大可能容量（ slice 的简略表达式）：
 
 ```go
 numbers := [10]int{0,1,2,3,4,5,6,7,8,9}
@@ -184,7 +184,7 @@ fmt.Println(cap(s2))
 
 via: https://medium.com/golangspec/slice-expressions-in-go-963368c20765
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[bizky]](https://github.com/bizky)
 校对：[polaris1119](https://github.com/polaris1119)
 

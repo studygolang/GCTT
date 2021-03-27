@@ -4,7 +4,7 @@
 
 创建一个 Golang app 是一件简单又轻松的事情，但是有时候你想给你的应用锦上添花：创建一个 GUI！
 
-在本篇文章中，我将通过使用 astilectron 工具中的 bootstrap 以及 bundler 给一个简单的 Golang 程序添加 GUI。
+在本篇文章中，我将通过使用 astilectron 工具中的 Bootstrap 以及 bundler 给一个简单的 Golang 程序添加 GUI。
 
 我们的带有 GUI 的 Golang app 能够打开一个文件夹并且展示其中的内容。
 
@@ -49,7 +49,7 @@
 
 ### Go
 
-首先我们需要在 `main.go` 中导入 [astilectron](https://github.com/asticode/go-astilectron) 的 bootstrap 源码包 :
+首先我们需要在 `main.go` 中导入 [astilectron](https://github.com/asticode/go-astilectron) 的 Bootstrap 源码包 :
 
 ```go
 package main
@@ -104,16 +104,16 @@ func main() {
 			Width:           astilectron.PtrInt(700),
 		},
 	}); err != nil {
-		astilog.Fatal(errors.Wrap(err, "running bootstrap failed"))
+		astilog.Fatal(errors.Wrap(err, "running Bootstrap failed"))
 	}
 }
 ```
 
 2 个全局变量 `AppName` 和 `BuiltAt` 将会通过 [bundler](https://github.com/asticode/go-astilectron-bundler) 打包自动添加进去。
 
-随后我们将发现我们的主页变成了 `index.html` ，我们将有一个含有 2 个项目( `about` 和 `close` )的菜单并且会出现一个 `700x700` , `中心对齐的` ， `#333` 背景色的窗口。
+随后我们将发现我们的主页变成了 `index.html` ，我们将有一个含有 2 个项目( `about` 和 `close` )的菜单并且会出现一个 `700x700` , ` 中心对齐的 ` ， `#333` 背景色的窗口。
 
-我们要在 go 上添加 `debug` 选项，因为我们需要使用 HTML/JS/CSS 调试工具。
+我们要在 Go 上添加 `debug` 选项，因为我们需要使用 HTML/JS/CSS 调试工具。
 
 最后我们将指向 `astilectron.Window` 的指针存入全局变量 `w`，以备后续在使用 `OnWait` 选项时，它包含一个在窗口、菜单及其他所有对象被创建时立即执行的回调函数。
 
@@ -155,7 +155,7 @@ func main() {
 </html>
 ```
 
-这里没什么特殊的地方，我们声明我们的 `css` 和 `js` 文件，我们设置 html 文件结构并且需要确保我们的 `js` 脚本通过 `index.init()` 进行了初始化
+这里没什么特殊的地方，我们声明我们的 `css` 和 `js` 文件，我们设置 HTML 文件结构并且需要确保我们的 `js` 脚本通过 `index.init()` 进行了初始化
 
 ### CSS
 
@@ -260,7 +260,7 @@ document.addEventListener('astilectron-ready', function() {
 })
 ```
 
-同时我们在 Go 中监听来自 Javascript 的消息，并且通过 bootstrap 的 `MessageHandler` 给 Javascript 发送消息：
+同时我们在 Go 中监听来自 Javascript 的消息，并且通过 Bootstrap 的 `MessageHandler` 给 Javascript 发送消息：
 
 ```go
 func main() {
@@ -285,7 +285,7 @@ func handleMessages(_ *astilectron.Window, m bootstrap.MessageIn) (payload inter
 }
 ```
 
-这是一个简单的例子，将在 js 的输出中打印出 `received hello world` 。
+这是一个简单的例子，将在 JS 的输出中打印出 `received hello world` 。
 
 在这种情形中，我们需要更多的逻辑因为我们想要允许打开一个文件夹并且展示其中的内容。
 
@@ -641,10 +641,10 @@ let index = {
 首先我们通过下面命令进行安装：
 
 ```
-$ go get -u github.com/asticode/go-astilectron-bundler/...
+$ Go get -u github.com/asticode/go-astilectron-bundler/...
 ```
 
-然后我们在 `main.go` 中给 bootstrap 添加配置项：
+然后我们在 `main.go` 中给 Bootstrap 添加配置项：
 
 ```go
 func main() {
@@ -682,7 +682,7 @@ $ astilectron-bundler -v
 
 ## 结论
 
-感谢 astilectron 的 bootstrap 和 bundler ，有了一点点的组织和结构，给你的 Golang 程序添加 GUI 从未如此简单。
+感谢 astilectron 的 Bootstrap 和 bundler ，有了一点点的组织和结构，给你的 Golang 程序添加 GUI 从未如此简单。
 
 需要指出的是这种方法有 2 个主要的缺点：
 

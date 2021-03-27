@@ -40,7 +40,7 @@ func WithStdLib(n int64) int64 {
 上边的代码中，将 n 先从 `int64` 转成 `float64`，通过 `math.Abs` 取到绝对值后再转回 `int64`，多次转换显然会造成性能开销。可以写一个基准测试来验证一下：
 
 ```console
-$ go test -bench=.
+$ Go test -bench=.
 goos: darwin
 goarch: amd64
 pkg: github.com/cavaliercoder/abs
@@ -52,7 +52,7 @@ ok      github.com/cavaliercoder/abs    2.320s
 
 测试结果：0.3 ns/op， `WithBranch` 要快两倍多，它还有一个优势：在将 int64 的大数转化为 IEEE-754 标准的 float64 不会发生截断（丢失超出精度的值）
 
-举个例子：`abs.WithBranch(-9223372036854775807)` 会正确返回 9223372036854775807。但 `WithStdLib(-9223372036854775807)` 则在类型转换区间发生了溢出，返回 -9223372036854775808，在大的正数输入时， `WithStdLib(9223372036854775807)` 也会返回不正确的负数结果。
+举个例子：`abs.WithBranch(-9223372036854775807)` 会正确返回 9223372036854775807。但 `WithStdLib(-9223372036854775807)` 则在类型转换区间发生了溢出，返回 -9223372036854775808，在  大的正数输入时， `WithStdLib(9223372036854775807)` 也会返回不正确的负数结果。
 
 不依赖分支控制的方法取绝对值的方法对有符号整数显然更快更准，不过还有更好的办法吗？
 
@@ -89,7 +89,7 @@ TEXT ·WithASM(SB),$0
 `WithASM` 的基准测试结果：
 
 ```shell
-$ go test -bench=.
+$ Go test -bench=.
 goos: darwin
 goarch: amd64
 pkg: github.com/cavaliercoder/abs
@@ -109,7 +109,7 @@ ok      github.com/cavaliercoder/abs    6.059s
 运行效果：
 
 ```console
-$ go tool compile -m abs.go
+$ Go tool compile -m abs.go
 # github.com/cavaliercoder/abs
 ./abs.go:11:6: can inline WithBranch
 ./abs.go:21:6: can inline WithStdLib
@@ -169,14 +169,14 @@ func WithBranch(n int64) int64 {
 重新编译，我们会看到编译器优化内容变少了：
 
 ```go
-$ go tool compile -m abs.go
+$ Go tool compile -m abs.go
 abs.go:22:23: inlining call to math.Abs
 ```
 
 基准测试的结果：
 
 ```console
-$ go test -bench=.
+$ Go test -bench=.
 goos: darwin
 goarch: amd64
 pkg: github.com/cavaliercoder/abs
@@ -209,7 +209,7 @@ func WithTwosComplement(n int64) int64 {
 编译结果说明我们的方法被内联了：
 
 ```shell
-$ go tool compile -m abs.go
+$ Go tool compile -m abs.go
 ...
 abs.go:26:6: can inline WithTwosComplement
 ```
@@ -217,7 +217,7 @@ abs.go:26:6: can inline WithTwosComplement
 但是性能怎么样呢？结果表明：当我们启用函数内联时，性能与 `WithBranch` 很相近了：
 
 ```shell
-$ go test -bench=.
+$ Go test -bench=.
 goos: darwin
 goarch: amd64
 pkg: github.com/cavaliercoder/abs
@@ -234,7 +234,7 @@ ok      github.com/cavaliercoder/abs    6.777s
 使用 `-S` 参数告诉编译器打印出汇编过程：
 
 ```shell
-$ go tool compile -S abs.go
+$ Go tool compile -S abs.go
 ...
 "".WithTwosComplement STEXT nosplit size=24 args=0x10 locals=0x0
 				0x0000 00000 (abs.go:26)        TEXT    "".WithTwosComplement(SB), NOSPLIT, $0-16

@@ -43,7 +43,7 @@ func (r *Reader) N() int64 {
 
 试试看你能不在自己写出 Writer 的计数部分，两者很类似。
 
-由于方法 N 返回（ 基于 atomic.LoadInt64 的安全调用）读取到的字节数，我们能在任意时刻使用另一个 goroutine 调用它，从而获取当前状况。
+由于方法 N 返回（ 基于 atomic.LoadInt64 的安全调用）读取到的字节数，我们能在任意时刻使用另一个 Goroutine 调用它，从而获取当前状况。
 
 ## 获取总共的字节数
 
@@ -128,7 +128,7 @@ duration := estimated.Sub(time.Now())
 
 ### 小助手
 
-我们还添加了一个小助手，它可以给你一个进度上的 go channel 来周期性报告。 你可以开启一个新的 goroutine 并打印进度，或更新进度，这取决于您的用例。
+我们还添加了一个小助手，它可以给你一个进度上的 Go channel 来周期性报告。 你可以开启一个新的 Goroutine 并打印进度，或更新进度，这取决于您的用例。
 
 ```go
 ctx := context.Background()
@@ -138,7 +138,7 @@ s := `Now that's what I call progress`
 size := len(s)
 r := progress.NewReader(strings.NewReader(s))
 
-// 开启一个 goroutine 打印进度
+// 开启一个 Goroutine 打印进度
 go func() {
 	progressChan := progress.NewTicker(ctx, r, size, 1*time.Second)
 	for p := range <-progressChan {

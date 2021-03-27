@@ -253,7 +253,7 @@ tags.go:4: struct field tag `one two three` not compatible with reflect.StructTa
 
 via: https://medium.com/golangspec/tags-in-golang-3e5db0b8ef3e
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[gogeof](https://github.com/gogeof)
 校对：[polaris1119](https://github.com/polaris1119)
 

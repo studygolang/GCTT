@@ -25,10 +25,10 @@ Golang 中的微服务系列总计十部分，预计每周更新。本系列的�
 
 ## 先决条件
 
-- 掌握 golang 语言和其开发环境
+- 掌握 Golang 语言和其开发环境
 - 安装 gRPC / protobuf [查看链接](https://grpc.io/docs/quickstart/go.html)
-- 安装 golang [查看链接](https://golang.org/doc/install)
-- 按照下列指令，安装 go 的第三方库
+- 安装 Golang [查看链接](https://golang.org/doc/install)
+- 按照下列指令，安装 Go 的第三方库
 
 ```
 go get -u google.golang.org/grpc
@@ -167,7 +167,7 @@ func (repo *Repository) Create(consignment *pb.Consignment) (*pb.Consignment, er
 }
 
 // 服务需要实现所有在 protobuf 里定义的方法。
-// 你可以参考 protobuf 生成的 go 文件中的接口信息。
+// 你可以参考 protobuf 生成的 Go 文件中的接口信息。
 type service struct {
     repo IRepository
 }
@@ -207,7 +207,7 @@ func main() {
 }
 ```
 
-请仔细阅读代码中的注释，有助于你对这个服务的理解。简单来说，这些代码实现的功能是：在 50051 端口创建一个的 gRPC 服务器，通过 protobuf 生成的消息格式，实现 gRPC 接口交互的逻辑。就这样，你完成了一个完整功能的 gRPC 服务！你可以输入指令 `$ go run main.go` 来运行这个程序，不过，目前，从界面上你还看不到任何东西。那如何能直观看到这个 gRPC 服务器正常工作了呢？我们来一起创建个与它对接的客户端吧！
+请仔细阅读代码中的注释，有助于你对这个服务的理解。简单来说，这些代码实现的功能是：在 50051 端口创建一个的 gRPC 服务器，通过 protobuf 生成的消息格式，实现 gRPC 接口交互的逻辑。就这样，你完成了一个完整功能的 gRPC 服务！你可以输入指令 `$ Go run main.go` 来运行这个程序，不过，目前，从界面上你还看不到任何东西。那如何能直观看到这个 gRPC 服务器正常工作了呢？我们来一起创建个与它对接的客户端吧！
 
 下面，我们来写一个命令行交互的程序，用来读取一个包含委托信息的 JSON 文件，和我们已创建的 gRPC 服务器交互。
 
@@ -285,7 +285,7 @@ func main() {
 }
 ```
 
-完成以上步骤后，在 `consignment-service` 下运行 `$ go run main.go`，然后打开一个新的终端界面，运行 `$ go run cli.go`，这时你就能看到一条消息 `Created: true`。不过，如何我们才能确认，这个委托真正地生成了？让我们继续更新我们的服务，添加一个 `GetConsignments` 方法，能够看到所有已创建的委托。
+完成以上步骤后，在 `consignment-service` 下运行 `$ Go run main.go`，然后打开一个新的终端界面，运行 `$ Go run cli.go`，这时你就能看到一条消息 `Created: true`。不过，如何我们才能确认，这个委托真正地生成了？让我们继续更新我们的服务，添加一个 `GetConsignments` 方法，能够看到所有已创建的委托。
 
 首先需要更新我们的 proto 定义（我在修改部分添加了备注）
 
@@ -376,7 +376,7 @@ func (repo *Repository) GetAll() []*pb.Consignment {
 }
 
 // 服务需要实现所有在 protobuf 里定义的方法。
-// 你可以参考 protobuf 生成的 go 文件中的接口信息。
+// 你可以参考 protobuf 生成的 Go 文件中的接口信息。
 type service struct {
     repo IRepository
 }
@@ -428,7 +428,7 @@ func main() {
 ```go
 func main() {
     ...
-    // ·...`表示和之前代码一致，这里不再重复
+    // ·...` 表示和之前代码一致，这里不再重复
 
     getAll, err := client.GetConsignments(context.Background(), &pb.GetRequest{})
     if err != nil {
@@ -440,7 +440,7 @@ func main() {
 }
 ```
 
-在原先 main 函数中，找到打印 `Created: success` 日志的位置，在这之后添加上述代码，然后运行 `$ go run cli.go`。程序就会创建一个委托，紧接着调用 `GetConsignments`。当你运行次数越多，委托列表就会越来越长。
+在原先 main 函数中，找到打印 `Created: success` 日志的位置，在这之后添加上述代码，然后运行 `$ Go run cli.go`。程序就会创建一个委托，紧接着调用 `GetConsignments`。当你运行次数越多，委托列表就会越来越长。
 
 *注意：为了看起来简洁，我有时会用 `...` 来表示和之前的代码完全一致。之后几行新增的代码，需要手动添加到原代码中*
 
@@ -450,7 +450,7 @@ func main() {
 
 如果对此文有任何 bug、错误或者反馈，请直接邮箱[联系我](ewan.valentine89@gmail.com)。
 
-本教程所包含的代码库[链接](https://github.com/ewanvalentine/shippy)，用 `git` 工具 checkout 分支`tutorial-1` 第一章。第二章也将在近期更新。
+本教程所包含的代码库[链接](https://github.com/ewanvalentine/shippy)，用 `git` 工具 checkout 分支 `tutorial-1` 第一章。第二章也将在近期更新。
 
 编写本文花了我很长的时间以及大量的精力。如果你觉得这个系列有帮助，请考虑顺手打赏我(完全取决于你的意愿)。十分感谢！[https://monzo.me/ewanvalentine](https://monzo.me/ewanvalentine)
 

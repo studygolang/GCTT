@@ -154,7 +154,7 @@ LOOP:
 
 via: https://medium.com/golangspec/blocks-in-go-2f68768868f6
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[sunzhaohao](https://github.com/sunzhaohao)
 校对：[polaris1119](https://github.com/polaris1119)
 

@@ -49,7 +49,7 @@ func main() {
 继续运行应用程序：
 
 ```
-$ go run main.go
+$ Go run main.go
 Listening...
 ```
 

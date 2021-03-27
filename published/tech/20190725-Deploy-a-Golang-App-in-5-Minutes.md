@@ -150,7 +150,7 @@ var middleware = func(next http.Handler) http.Handler {
 将这个仓库克隆到你想要运行的服务器上。确保你遵循了 Go 目录路径的惯例：
 
 ```bash
-$ go build .
+$ Go build .
 ```
 
 Go 的这个命令最终会创建一个以项目根目录命名的二进制文件，所以如果项目的根目录是 `myapp`，那么文件的名称就是 `myapp`。

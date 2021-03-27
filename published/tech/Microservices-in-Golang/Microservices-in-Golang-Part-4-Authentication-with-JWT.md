@@ -68,13 +68,13 @@ func (srv *service) Create(ctx context.Context, req *pb.User, res *pb.Response) 
 
 这里没做太多改动，除了增加了密码哈希功能，我们在保存新用户之前把哈希后的内容作为新的密码。同样的，在认证部分，我们会校验密码的哈希值。
 
-现在我们能够安全的认证数据库里的用户信息，我们需要一个机制，能使用接口和分布式服务来做认证。实现这样的功能有许多方法，但是我发现，能通过服务和 web 使用的最简单的认证方法是用 [JWT](https://jwt.io/)。
+现在我们能够安全的认证数据库里的用户信息，我们需要一个机制，能使用接口和分布式服务来做认证。实现这样的功能有许多方法，但是我发现，能通过服务和 Web 使用的最简单的认证方法是用 [JWT](https://jwt.io/)。
 
-不过在我们继续下面的内容之前，请查看下我在每个服务中的 Dockfiles 和 Makefiles 做的修改。为了匹配最新的 git 仓库，我也修改了 imports 。
+不过在我们继续下面的内容之前，请查看下我在每个服务中的 Dockfiles 和 Makefiles 做的修改。为了匹配最新的 Git 仓库，我也修改了 imports 。
 
 ## JWT
 
-[JWT](https://jwt.io/) 是 JSON web tokens 的缩写，是一个分布式的安全协议。类似 OAuth。 概念很简单，用算法给用户生成一个唯一的哈希，这个哈希值可以用来比较和校验。不仅如此，token 自身也会包含用户的元数据 (metadata)。也就是说，用户数据本身也可以是 token 的一部分。 我们看一个 JWT 的实例：
+[JWT](https://jwt.io/) 是 JSON Web tokens 的缩写，是一个分布式的安全协议。类似 OAuth。 概念很简单，用算法给用户生成一个唯一的哈希，这个哈希值可以用来比较和校验。不仅如此，token 自身也会包含用户的元数据 (metadata)。也就是说，用户数据本身也可以是 token 的一部分。 我们看一个 JWT 的实例：
 
 ```
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
@@ -352,7 +352,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 }
 ```
 
-然后我们执行 consignment-cli工具，cd 到新的 shippy-consignment-cli 仓库，执行 `$make build` 来创建新的 docker 镜像， 现在运行：
+然后我们执行 consignment-cli 工具，cd 到新的 shippy-consignment-cli 仓库，执行 `$make build` 来创建新的 docker 镜像， 现在运行：
 
 ```
 $ make build
@@ -362,7 +362,7 @@ $ docker run --net="host" \
 	  <TOKEN_HERE>
 ```
 
-注意下我们在运行 docker 容器的时候使用了 `--net="host"` 标记。用来告诉 Docker 在本地局域网来运行我们的容器，如127.0.0.1 或 localhost，而不是 Docker 的内网。注意，用这个方法不需要使用端口转发。因此只需要用 -p 8080 代替 -p 8080:8080 就可以了。 [更多关于 Docker 网络的内容请看这里](https://docs.docker.com/engine/userguide/networking/)。
+注意下我们在运行 docker 容器的时候使用了 `--net="host"` 标记。用来告诉 Docker 在本地局域网来运行我们的容器，如 127.0.0.1 或 localhost，而不是 Docker 的内网。注意，用这个方法不需要使用端口转发。因此只需要用 -p 8080 代替 -p 8080:8080 就可以了。 [更多关于 Docker 网络的内容请看这里](https://docs.docker.com/engine/userguide/networking/)。
 
 到这一步，你就能看到新的 consignment 被创建了。试着从 token 里删除几个字母，token 就会变无效。会出现错误。
 
@@ -438,7 +438,7 @@ run:
 
 via: https://ewanvalentine.io/microservices-in-golang-part-4/
 
-作者：[André Carvalho](https://ewanvalentine.io/microservices-in-golang-part-4/)
+作者：[Andr é Carvalho](https://ewanvalentine.io/microservices-in-golang-part-4/)
 译者：[ArisAries](https://github.com/ArisAries)
 校对：[polaris1119](https://github.com/polaris1119)
 

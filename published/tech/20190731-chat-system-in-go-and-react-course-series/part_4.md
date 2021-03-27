@@ -147,7 +147,7 @@ func main() {
 
 ```shell
 $ cd backend/
-$ go run main.go
+$ Go run main.go
 ```
 
 如果成功，我们可以继续扩展代码库来处理多客户端。
@@ -389,7 +389,7 @@ func main() {
 启动你的后端应用程序：
 
 ```shell
-$ go run main.go
+$ Go run main.go
 Distributed Chat App v0.01
 ```
 

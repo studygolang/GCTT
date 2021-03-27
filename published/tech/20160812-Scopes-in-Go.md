@@ -282,14 +282,14 @@ outer
 
 ## 参考资料
 
-- [《Go语言规范》](https://golang.org/ref/spec#Declarations_and_scope)
+- [《Go 语言规范》](https://golang.org/ref/spec#Declarations_and_scope)
 - [《Go 语言中的代码块》](https://studygolang.com/articles/12632)
 
 ---
 
 via: https://medium.com/golangspec/scopes-in-go-a6042bb4298c
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[MoodWu](https://github.com/MoodWu)
 校对：[polaris1119](https://github.com/polaris1119)
 

@@ -23,13 +23,13 @@ $ gcloud components install kubectl
 现在确保你连接到集群，并且认证正确。第一步，我们登录进去，确保已被认证。第二步我们设置下项目配置，确保我们使用正确的项目 ID 和可访问区域。
 
 ```
-$ echo "This command will open a web browser, and will ask you to login
+$ Echo "This command will open a Web browser, and will ask you to login
 $ gcloud auth application-default login
 
 $ gcloud config set project shippy-freight
 $ gcloud config set compute/zone eu-west2-a
 
-$ echo "Now generate a security token and access to your KB cluster"
+$ Echo "Now generate a security token and access to your KB cluster"
 $ gcloud container clusters get-credentials shippy-freight-cluster
 
 ```
@@ -40,13 +40,13 @@ $ gcloud container clusters get-credentials shippy-freight-cluster
 
 ```
 
-$ echo "This command will open a web browser, and will ask you to login
+$ Echo "This command will open a Web browser, and will ask you to login
 $ gcloud auth application-default login
 
 $ gcloud config set project <project-id>
 $ gcloud config set compute/zone <availability-zone>
 
-$ echo "Now generate a security token and access to your KB cluster"
+$ Echo "Now generate a security token and access to your KB cluster"
 $ gcloud container clusters get-credentials <cluster-name>
 
 ```
@@ -67,7 +67,7 @@ $ kubectl get pods
 
 ```
 
-你会看到 ... `No resources found.`。没关系，我们还没有部署任何内容。我们可以想想我们需要实际部署些什么。我们需要一个 Mongodb 实例。一般来说，我们会部署一个 mongodb 实例，或者为了完全分离，将数据库实例和每个服务放一起。但是这个例子里，我们耍点小聪明，就用一个中心化的实例。这是个单一故障点，但是在实际应用场景中，你要考虑下将数据库实例分开部署，和服务保持一致。不过我们这种方法也可以。
+你会看到 ... `No resources found.`。没关系，我们还没有部署任何内容。我们可以想想我们需要实际部署些什么。我们需要一个 Mongodb 实例。一般来说，我们会部署一个 MongoDB 实例，或者为了完全分离，将数据库实例和每个服务放一起。但是这个例子里，我们耍点小聪明，就用一个中心化的实例。这是个单一故障点，但是在实际应用场景中，你要考虑下将数据库实例分开部署，和服务保持一致。不过我们这种方法也可以。
 
 然后我需要部署服务了，vessel 服务，user 服务，consignment 服务和 email 服务。好了，很简单！
 
@@ -189,7 +189,7 @@ stateful set 和 deployment 有相似的地方，除了它会用一些存储方�
 
 实际情况里，Mongodb 将数据写入二进制数据存储格式，很多数据库都是这样做的。创建一个可回收的数据库实例，比如 docker 容器。如果容器重启数据会丢失。一般来说你需要在容器启动的时候使用分卷装载数据/文件。
 
-你可以在 Kubernetes 上做这些部署。但是 StatefulSets，在相关的集群点有一些额外的自动化操作。因此这个对 mongodb 容器天然的合适。
+你可以在 Kubernetes 上做这些部署。但是 StatefulSets，在相关的集群点有一些额外的自动化操作。因此这个对 MongoDB 容器天然的合适。
 
 ## Service
 
@@ -201,11 +201,11 @@ stateful set 和 deployment 有相似的地方，除了它会用一些存储方�
 
 load balancer，是一个轮询的负载均衡器，可以给你选的 node 节点创建一个 IP 地址给代理。通过代理把服务暴露给外部。
 
-node port 将 pod 暴露给上层的网络环境，这样他们可以被其他服务， 内部的pod/实例访问。这样对暴露 node 给其他的 pod 来说是有用的。这就是你能用来允许服务和其他服务通信的方式。这就是服务发现的本质。至少是一部分。
+node port 将 pod 暴露给上层的网络环境，这样他们可以被其他服务， 内部的 pod/实例访问。这样对暴露 node 给其他的 pod 来说是有用的。这就是你能用来允许服务和其他服务通信的方式。这就是服务发现的本质。至少是一部分。
 
 现在我们刚看了一点点 Kubernetes 的内容，我们来再多谈些，再挖掘挖掘。值得注意的是，如果你是个在本机上使用 docker ，比如如果你用的是 mac/windows 上的 docker 的 edge 版本，你可以把 Kubernetes 集群钉在本机上。测试时候很有用。
 
-那么我们已经创建了三个文件，一个用于存储，一个用于 stateful set，一个用于我们的服务。最后结果是有 mongodb 容器的副本，stateful 存储和通过 pod 保留给数据存储的服务。我们继续看看，创建，按正确的顺序，因为有些操作是需要依赖前面创建的内容。
+那么我们已经创建了三个文件，一个用于存储，一个用于 stateful set，一个用于我们的服务。最后结果是有 MongoDB 容器的副本，stateful 存储和通过 pod 保留给数据存储的服务。我们继续看看，创建，按正确的顺序，因为有些操作是需要依赖前面创建的内容。
 
 ```
 echo "shippy-infrastructure"
@@ -214,7 +214,7 @@ $ kubectl create -f ./deployments/mongodb-deployment.yml
 $ kubectl create -f ./deployments/mongodb-service.yml
 ```
 
-等几分钟，你可以查下 mongodb 容器的状态，运行：
+等几分钟，你可以查下 MongoDB 容器的状态，运行：
 
 ```
 $ kubectl get pods
@@ -538,7 +538,7 @@ $ curl localhost/rpc -XPOST -d '{
 
 ```
 
-你会看到一个返回 `created: true`。超简洁！这就是你的 gRPC 服务，被代理并且转成了 web 友好的格式，使用了分片的 mongodb 实例。没费多大劲！
+你会看到一个返回 `created: true`。超简洁！这就是你的 gRPC 服务，被代理并且转成了 Web 友好的格式，使用了分片的 MongoDB 实例。没费多大劲！
 
 ## 部署 UI
 

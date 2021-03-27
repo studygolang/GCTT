@@ -65,13 +65,13 @@ func TestAppend(t *testing.T) {
 如果我们执行这个测试时带上 `-race` flag ，我们可以注意到一个竞争条件。
 
 ```
-< go test -race .
+< Go test -race .
 ==================
 WARNING: DATA RACE
-Write at 0x00c4200be060 by goroutine 8:
+Write at 0x00c4200be060 by Goroutine 8:
 _/tmp.TestAppend.func2()
 /tmp/main_test.go:20 +0xcb
-Previous write at 0x00c4200be060 by goroutine 7:
+Previous write at 0x00c4200be060 by Goroutine 7:
 _/tmp.TestAppend.func1()
 /tmp/main_test.go:15 +0xcb
 Goroutine 8 (running) created at:
@@ -87,10 +87,10 @@ testing.tRunner()
 ==================
 ==================
 WARNING: DATA RACE
-Write at 0x00c4200be070 by goroutine 8:
+Write at 0x00c4200be070 by Goroutine 8:
 _/tmp.TestAppend.func2()
 /tmp/main_test.go:20 +0x11a
-Previous write at 0x00c4200be070 by goroutine 7:
+Previous write at 0x00c4200be070 by Goroutine 7:
 _/tmp.TestAppend.func1()
 /tmp/main_test.go:15 +0x11a
 Goroutine 8 (running) created at:
@@ -147,7 +147,7 @@ x 有更多的容量
 1. `x=append(x, ...)` 看起来你要获得一个新的 slice。
 2. 大多数返回值的函数都不会改变它们的输入。
 3. 我们使用 `append` 通常都是得到一个新的 slice。
-4. 错误地认为append是只读的。
+4. 错误地认为 append 是只读的。
 
 ## 认知这个 bug
 

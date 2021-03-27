@@ -37,13 +37,13 @@ From Smelter: [smeltedOre smeltedOre smeltedOre]
 
 ![ore mining concurrent program](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/ore-mining-concurrent-program.jpeg)
 
-这种设计使得 “挖矿” 更高效。现在多个线程 (gophers) 是独立运行的，从而 Gary 不再承担全部工作。其中一个 gopher 负责寻矿，一个负责挖矿，另一个负责练矿，这些工作可能同时进行。
+这种设计使得 “挖矿” 更高效。现在多个线程 (gophers) 是独立运行的，从而 Gary 不再承担全部工作。其中一个 Gopher 负责寻矿，一个负责挖矿，另一个负责练矿，这些工作可能同时进行。
 
 为了将这种并发特性引入我们的代码，我们需要创建独立运行的 gophers 的方法以及它们之间彼此通信 (传送矿石) 的方法。这就需要用到 Go 的并发原语：goroutines 和 channels。
 
 ## Goroutines
 
-Goroutines 可以看作是轻量级线程。创建一个 goroutine 非常简单，只需要把 *go* 关键字放在函数调用语句前。为了说明这有多么简单，我们创建两个 finder 函数，并用 *go* 调用，让它们每次找到 "ore" 就打印出来。
+Goroutines 可以看作是轻量级线程。创建一个 Goroutine 非常简单，只需要把 *go* 关键字放在函数调用语句前。为了说明这有多么简单，我们创建两个 finder 函数，并用 *go* 调用，让它们每次找到 "ore" 就打印出来。
 
 ![go myFunc()](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/go.jpeg)
 
@@ -75,7 +75,7 @@ Finder 2 found ore!
 
 ![communication](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/communication.jpeg)
 
-Channels 允许 go routines 之间相互通信。你可以把 channel 看作管道，goroutines 可以往里面发消息，也可以从中接收其它 go routines 的消息。
+Channels 允许 Go routines 之间相互通信。你可以把 channel 看作管道，goroutines 可以往里面发消息，也可以从中接收其它 Go routines 的消息。
 
 ![my first channel](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/channel.jpeg)
 
@@ -92,11 +92,11 @@ myFirstChannel <-"hello" // Send
 myVariable := <- myFirstChannel // Receive
 ```
 
-现在通过 channel 我们可以让寻矿 gopher 一找到矿石就立即传送给开矿 gopher ，而不用等发现所有矿石。
+现在通过 channel 我们可以让寻矿 Gopher 一找到矿石就立即传送给开矿 Gopher ，而不用等发现所有矿石。
 
 ![ore channel](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/ore-channel.jpeg)
 
-我重写了挖矿程序，把寻矿和开矿函数改写成了未命名函数。如果你从未见过 lambda 函数，不必过多关注这部分，只需要知道每个函数将通过 *go* 关键字调用并运行在各自的 goroutine 中。重要的是，要注意 goroutine 之间是如何通过 channel ```oreChan``` 传递数据的。别担心，我会在最后面解释未命名函数的。
+我重写了挖矿程序，把寻矿和开矿函数改写成了未命名函数。如果你从未见过 lambda 函数，不必过多关注这部分，只需要知道每个函数将通过 *go* 关键字调用并运行在各自的 Goroutine 中。重要的是，要注意 Goroutine 之间是如何通过 channel ```oreChan``` 传递数据的。别担心，我会在最后面解释未命名函数的。
 
 ```go
 func main() {
@@ -139,17 +139,17 @@ Channels 阻塞 goroutines 发生在各种情形下。这能在 goroutines 各�
 
 ![blocking on send](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/blocking-on-send.jpeg)
 
-一旦一个 goroutine(gopher) 向一个 channel 发送数据，它就被阻塞了，直到另一个 goroutine 从该 channel 取走数据。
+一旦一个 goroutine(gopher) 向一个 channel 发送数据，它就被阻塞了，直到另一个 Goroutine 从该 channel 取走数据。
 
 ### Blocking on a Receive
 
 ![blocking on receive](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/blocking-on-receive.jpeg)
 
-和发送时情形类似，一个 goroutine 可能阻塞着等待从一个 channel 获取数据，如果还没有其他 goroutine 往该 channel 发送数据。
+和发送时情形类似，一个 Goroutine 可能阻塞着等待从一个 channel 获取数据，如果还没有其他 Goroutine 往该 channel 发送数据。
 
-一开始接触阻塞的概念可能令人有些困惑，但你可以把它想象成两个 goroutines(gophers) 之间的交易。 其中一个 gopher 无论是等着收钱还是送钱，都需要等待交易的另一方出现。
+一开始接触阻塞的概念可能令人有些困惑，但你可以把它想象成两个 goroutines(gophers) 之间的交易。 其中一个 Gopher 无论是等着收钱还是送钱，都需要等待交易的另一方出现。
 
-既然已经了解 goroutine 通过 channel 通信可能发生阻塞的不同情形，让我们讨论两种不同类型的 channels: *unbuffered* 和 *buffered* 。选择使用哪一种 channel 可能会改变程序的运行表现。
+既然已经了解 Goroutine 通过 channel 通信可能发生阻塞的不同情形，让我们讨论两种不同类型的 channels: *unbuffered* 和 *buffered* 。选择使用哪一种 channel 可能会改变程序的运行表现。
 
 ### Unbuffered Channels
 
@@ -161,7 +161,7 @@ Channels 阻塞 goroutines 发生在各种情形下。这能在 goroutines 各�
 
 ![buffered channel](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/buffered-channel.jpeg)
 
-在并发程序中，时间协调并不总是完美的。在挖矿的例子中，我们可能遇到这样的情形：开矿 gopher 处理一块矿石所花的时间，寻矿 gohper 可能已经找到 3 块矿石了。为了不让寻矿 gopher 浪费大量时间等着给开矿 gopher 传送矿石，我们可以使用 *buffered* channel。我们先创建一个容量为 3 的 buffered channel。
+在并发程序中，时间协调并不总是完美的。在挖矿的例子中，我们可能遇到这样的情形：开矿 Gopher 处理一块矿石所花的时间，寻矿 gohper 可能已经找到 3 块矿石了。为了不让寻矿 Gopher 浪费大量时间等着给开矿 Gopher 传送矿石，我们可以使用 *buffered* channel。我们先创建一个容量为 3 的 buffered channel。
 
 ```go
 bufferedChan := make(chan string, 3)
@@ -210,7 +210,7 @@ third
 
 为了简单起见，我们在最终的程序中不使用 buffered channels。但知道该使用哪种 channel 是很重要的。
 
-> 注意: 使用 buffered channels 并不会避免阻塞发生。例如，如果寻矿 gopher 比开矿 gopher 执行速度快 10 倍，并且它们通过一个容量为 2 的 buffered channel 进行通信，那么寻矿 gopher 仍会发生多次阻塞。
+> 注意: 使用 buffered channels 并不会避免阻塞发生。例如，如果寻矿 Gopher 比开矿 Gopher 执行速度快 10 倍，并且它们通过一个容量为 2 的 buffered channel 进行通信，那么寻矿 Gopher 仍会发生多次阻塞。
 
 ## 把这些都放到一起
 
@@ -277,28 +277,28 @@ From Smelter: Ore is smelted
 
 ![anonymous goroutine](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/anonymous-go-routine.jpeg)
 
-类似于如何利用 *go* 关键字使一个函数运行在自己的 goroutine 中，我们可以用如下方式创建一个匿名函数并运行在它的 goroutine 中：
+类似于如何利用 *go* 关键字使一个函数运行在自己的 Goroutine 中，我们可以用如下方式创建一个匿名函数并运行在它的 Goroutine 中：
 
 ```go
-// Anonymous go routine
+// Anonymous Go routine
 go func() {
-	fmt.Println("I'm running in my own go routine")
+	fmt.Println("I'm running in my own Go routine")
 }()
 ```
 
-如果只需要调用一次函数，通过这种方式我们可以让它在自己的 goroutine 中运行，而不需要创建一个正式的函数声明。
+如果只需要调用一次函数，通过这种方式我们可以让它在自己的 Goroutine 中运行，而不需要创建一个正式的函数声明。
 
 ### main 函数是一个 goroutine
 
 ![main func](https://raw.githubusercontent.com/studygolang/gctt-images/master/Learning-Go-s-Concurrency-Through-Illustrations/main-func.jpeg)
 
-main 函数确实运行在自己的 goroutine 中！更重要的是要知道，一旦 main 函数返回，它将关掉当前正在运行的其他 goroutines。这就是为什么我们在 main 函数的最后设置了一个定时器—它创建了一个 channel，并在 5 秒后发送一个值。
+main 函数确实运行在自己的 Goroutine 中！更重要的是要知道，一旦 main 函数返回，它将关掉当前正在运行的其他 goroutines。这就是为什么我们在 main 函数的最后设置了一个定时器—它创建了一个 channel，并在 5 秒后发送一个值。
 
 ```go
 <-time.After(time.Second * 5) // Receiving from channel after 5 sec
 ```
 
-还记得 goroutine 从 channel 中读数据如何被阻塞直到有数据发送到里面吧？通过添加上面这行代码，main routine 将会发生这种情况。它会阻塞，以给其他 goroutines 5 秒的时间来运行。
+还记得 Goroutine 从 channel 中读数据如何被阻塞直到有数据发送到里面吧？通过添加上面这行代码，main routine 将会发生这种情况。它会阻塞，以给其他 goroutines 5 秒的时间来运行。
 
 现在有更好的方式阻塞 main 函数直到其他所有 goroutines 都运行完。通常的做法是创建一个 *done channel*， main 函数在等待读取它时被阻塞。一旦完成工作，向这个 channel 发送数据，程序就会结束了。
 
@@ -313,7 +313,7 @@ func main() {
 		doneChan <- "I'm all done!"
 	}()
 
-	<-doneChan // block until go routine signals work is done
+	<-doneChan // block until Go routine signals work is done
 }
 ```
 
@@ -336,11 +336,11 @@ go func() {
 
 由于 miner 需要读取 finder 发送给它的所有数据，遍历 channel 能确保我们接收到已经发送的所有数据。
 
-> 遍历 channel 会阻塞，直到有新数据被发送到 channel。在所有数据发送完之后避免 go routine 阻塞的唯一方法就是用 "close(channel)" 关掉 channel。
+> 遍历 channel 会阻塞，直到有新数据被发送到 channel。在所有数据发送完之后避免 Go routine 阻塞的唯一方法就是用 "close(channel)" 关掉 channel。
 
 ### 对 channel 进行非阻塞读
 
-但你刚刚告诉我们 channel 如何阻塞 goroutine 的各种情形？！没错，不过还有一个技巧，利用 Go 的 *select case* 语句可以实现对 channel 的非阻塞读。通过使用这这种语句，如果 channel 有数据，goroutine 将会从中读取，否则就执行默认的分支。
+但你刚刚告诉我们 channel 如何阻塞 Goroutine 的各种情形？！没错，不过还有一个技巧，利用 Go 的 *select case* 语句可以实现对 channel 的非阻塞读。通过使用这这种语句，如果 channel 有数据，goroutine 将会从中读取，否则就执行默认的分支。
 
 ```go
 myChan := make(chan string)

@@ -74,7 +74,7 @@ func main() {
 1:1: expected 'package', found 'var' (and 1 more errors)
 ```
 
-为了解析这个我们叫做 `ParseFile` 的声明，我们需要给出一个完整的 go 源文件格式（以 package 作为源文件开头）。
+为了解析这个我们叫做 `ParseFile` 的声明，我们需要给出一个完整的 Go 源文件格式（以 package 作为源文件开头）。
 
 > 注意：注释可以写在 package 前面
 
@@ -105,7 +105,7 @@ func main() {
 运行后输出如下：
 
 ```
-$ go run main.go
+$ Go run main.go
 &{<nil> 1 main [0xc420054100] scope 0xc42000e210 {
 		var a
 }
@@ -145,7 +145,7 @@ func main() {
 重新运行程序我们会得到更加易读的输出：
 
 ```
-$ go run main.go
+$ Go run main.go
 (*ast.File)(0xc42009c000)({
  Doc: (*ast.CommentGroup)(<nil>),
  Package: (token.Pos) 1,
@@ -339,7 +339,7 @@ func (v visitor) Visit(n ast.Node) ast.Visitor {
 执行这段代码我们将会得到所有来自命令行参数的文件的 AST。我们可以试试传入刚刚写的 main.go 文件。
 
 ```
-$ go build -o parser main.go  && parser main.go
+$ Go build -o parser main.go  && parser main.go
 # output removed for brevity
 ```
 

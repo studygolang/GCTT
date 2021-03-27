@@ -150,10 +150,10 @@ type Service interface {
 }
 ```
 
-最后一层，我们架构中的 Controller 是在 api 的内容中实现的:
+最后一层，我们架构中的 Controller 是在 API 的内容中实现的:
 
 ```
-cd api ; tree
+cd API ; tree
 .
 |____handler
 | |____company.go

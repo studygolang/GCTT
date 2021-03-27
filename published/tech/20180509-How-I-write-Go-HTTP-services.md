@@ -47,7 +47,7 @@ func (s *server) routes() {
 func (s *server) handleSomething() http.HandlerFunc { ... }
 ```
 
-handler 可以通过 s 这个server变量来访问依赖项。
+handler 可以通过 s 这个 server 变量来访问依赖项。
 
 ## 返回 handler
 

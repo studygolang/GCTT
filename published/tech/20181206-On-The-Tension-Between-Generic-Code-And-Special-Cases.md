@@ -2,7 +2,7 @@
 
 # 关于通用代码和特殊情况之间的冲突
 
-`io.Reader` 和 `io.Writer` 接口几乎出现在所有的 Go 程序中，并代表了处理数据流的基本构建块。Go 的一个重要特性是，对象如套接字、文件或内存缓冲区的抽象都是用这些接口表示的。当 Go 程序对外部世界说话的时候，它几乎是通过 `io.Reader`s 和 `io.Writer` s 来表达，无论它使用的是特殊的平台或通信媒介。这种普遍性是编码处理可组合和可重复使用的数据流代码的关键因素<sup><a href="#fn1" name="fnref1">1</a></sup>。
+`io.Reader` 和 `io.Writer` 接口几乎出现在所有的 Go 程序中，并代表了处理数据流的基本构建块。Go 的一个重要特性是，对象如套接字、文件或内存缓冲区的抽象都是用这些接口表示的。当 Go 程序对外部世界说话的时候，它几乎是通过 `io.Reader`s 和 `io.Writer` s 来表达，无论它使用的是特殊的平台或通信媒介。这种普遍性是编码处理可组合和可重复使用的数据流代码的关键因素 <sup><a href="#fn1" name="fnref1">1</a></sup>。
 
 这篇文章研究了 `io.Copy` 的设计和实现，该函数用可能是最简单的方法连接一个 `Reader` 到一个 `Writer`：该函数从一个地方传输数据到另一个地方。
 
@@ -137,7 +137,7 @@ func (cw *CountingWriter) Write(b []byte) (int, error) {
 
 via: https://blog.gopheracademy.com/advent-2018/generic-code-vs-special-cases/
 
-作者：[Andrei Tudor Călin](https://blog.gopheracademy.com/advent-2018/generic-code-vs-special-cases/)
+作者：[Andrei Tudor C ă lin](https://blog.gopheracademy.com/advent-2018/generic-code-vs-special-cases/)
 译者：[PotoYang](https://github.com/PotoYang)
 校对：[polaris1119](https://github.com/polaris1119)
 

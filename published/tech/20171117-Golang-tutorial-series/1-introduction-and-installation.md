@@ -39,7 +39,7 @@ Golang 支持三个平台：Mac，Windows 和 Linux（译注：不只是这三�
 
 请添加 `/usr/local/go/bin` 到 `PATH` 环境变量中。Go 就已经成功安装在 `Linux` 上了。
 
-在本系列下一部分 *Golang系列教程第2部分: Hello World* 中，我们将会建立 Go 的工作区，编写我们第一个Go程序 :)
+在本系列下一部分 *Golang 系列教程第 2 部分: Hello World* 中，我们将会建立 Go 的工作区，编写我们第一个 Go 程序 :)
 
 请提供给我们宝贵的反馈和意见。感谢您的阅读 :)
 

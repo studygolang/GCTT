@@ -4,7 +4,7 @@
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/vuejs-golang/0*SJ43Bk4fxc44mgVR.jpg)
 
-时间回到 2018 年，我写了一篇获得 15k 阅读的文章：Django + Angular 4 = A powerful web application。出于好奇心，我尝试了Angular4 和 Django 的组合。接着上个系列，这是一篇使用 Vuejs 和 Golang 来帮助你构建极佳应用的文章。
+时间回到 2018 年，我写了一篇获得 15k 阅读的文章：Django + Angular 4 = A powerful Web application。出于好奇心，我尝试了 Angular4 和 Django 的组合。接着上个系列，这是一篇使用 Vuejs 和 Golang 来帮助你构建极佳应用的文章。
 
 我知道这两者一起用不是很常见，但是，让我们试一试。
 
@@ -74,7 +74,7 @@ Golang 很快是因为它的编译器，它不允许你定义多余的变量。�
 
 回到代码上。
 
-因此，我们将会使用 `encoding/json` and `net/http` 包。然后，我们定义 JSON 类型的数据结构。
+因此，我们将会使用 `encoding/json` and `net/http` 包。然后，我们  定义 JSON 类型的数据结构。
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/vuejs-golang/1*bBx8qYZkWpg8R92e8gT_5g.png)
 
@@ -86,11 +86,11 @@ Golang 很快是因为它的编译器，它不允许你定义多余的变量。�
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/vuejs-golang/1*JaFzDlfYH0LwTwLTOIs2Iw.png)
 
-在代码第 33 行，我们定义了一个 `JSON`的译码器来转译从请求的实体中的传过来的 JSON 数据。
+在代码第 33 行，我们定义了一个 `JSON` 的译码器来转译从请求的实体中的传过来的 JSON 数据。
 
 `numsData` 和 `numsResData` 是定义好的数据结构。
 
-接收的数据存储在 `numsData`中 并且在 38 行被转译。
+接收的数据存储在 `numsData` 中 并且在 38 行被转译。
 
 然后我们设置 `ResponseWriter` 的 header 头部，并且在 47 行返回 JSON 格式的响应数据以及检查错误。
 
@@ -105,16 +105,16 @@ Golang 很快是因为它的编译器，它不允许你定义多余的变量。�
 首先使用 `cd` 进入前端目录并且使用以下命令安装依赖：
 
 ```shell
-npm install --save bootstrap-vue bootstrap axios vee-validate
+npm install --save bootstrap-vue Bootstrap axios vee-validate
 ```
 
-我们将使用 `axios` 来处理 POST 请求，使用`vee-validate` 校验表单的输入数据，使用 `bootstrap-vue` 构建优美的界面。
+我们将使用 `axios` 来处理 POST 请求，使用 `vee-validate` 校验表单的输入数据，使用 `bootstrap-vue` 构建优美的界面。
 
 在 `src/Calculator.vue` 文件里编写前端部分代码：
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/vuejs-golang/1*13qy_tphvGcHiOM1wR3KIg.png)
 
-从 17 行到 25 行，我们定义 input 输入框和 label 标签来获取数据。在Vue 中使用 `v-model`指令获取数据。
+从 17 行到 25 行，我们定义 input 输入框和 label 标签来获取数据。在 Vue 中使用 `v-model` 指令获取数据。
 
 30-35 行完成计算器 UI 层的展示，并且 43 行定义了一个按钮，将会被触发 `postreq` 方法，这个方法会在接下来完成。
 
@@ -122,10 +122,10 @@ npm install --save bootstrap-vue bootstrap axios vee-validate
 
 ![](https://miro.medium.com/max/1400/1*2oy5ZoqYZVh0bF_iml9onw.png)
 
-54-59 行是必须的，用于引入`axios` 和 `vee-validate`。
+54-59 行是必须的，用于引入 `axios` 和 `vee-validate`。
 然后在 64-69 行我们定义一些变量，这些 `data` 变量用来存储计算器组件的变量的值。
 
-所有的函数都会定义在 `methods` 对象里。我们创建 `postreq()` 方法用来向 `http://localhost:8090/calc` 发送 JSON 格式的 POST 请求。还记得之前在 `server.go` 文件创建的 `calc` 方法吗？我们发送 JSON 数据后，后端返回结果后数据会被储存在 `add`, `mul`, `sub` 和 `div`等变量中，这些绑定在 HTML 的变量例如 {{ add }} 的占位符将会显示结果。
+所有的函数都会定义在 `methods` 对象里。我们创建 `postreq()` 方法用来向 `http://localhost:8090/calc` 发送 JSON 格式的 POST 请求。还记得之前在 `server.go` 文件创建的 `calc` 方法吗？我们发送 JSON 数据后，后端返回结果后数据会被储存在 `add`, `mul`, `sub` 和 `div` 等变量中，这些绑定在 HTML 的变量例如 {{ add }} 的占位符将会显示结果。
 
 很简单是吧？ 是的。
 

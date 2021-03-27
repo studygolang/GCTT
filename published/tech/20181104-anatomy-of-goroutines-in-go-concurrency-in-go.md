@@ -37,7 +37,7 @@ main execution stopped
 
 go 协程总是在后台运行，当一个 Go 协程执行的时候（在这个例子中是 `go printHello()`）, Go 并不会像在之前的那个例子中在执行 `printHello` 中的功能时阻塞 main 函数中剩下语句的执行，而是直接忽略了 Go 协程的返回并继续执行 main 函数剩下的语句。**即便如此，我们为什么没法看到函数的输出呢？**
 
-在默认情况下，每个独立的 Go 应用运行时就创建了一个 Go 协程，其 `main` 函数就在这个 Go 协程中运行，这个 Go 协程就被称为 `go 主协程（main Goroutine，下面简称主协程）`。在上面的例子中，`主协程` 中又产生了一个 `printHello` 这个函数的 Go 协程，我们暂且叫它 `printHello 协程` 吧，因而我们在执行上面的程序的时候，就会存在两个 Go 协程（`main` 和 `printHello`）同时运行。正如同以前的程序那样，go 协程们会进行协同调度。因此，当 `主协程` 运行的时候，Go 调度器在 `主协程` 执行完之前并不会将控制权移交给 `printHello 协程`。不幸的是，一旦 `主协程` 执行完毕，整个程序会立即终止，调度器再也没有时间留给 `printHello 协程` 去运行了。
+在默认情况下，每个独立的 Go 应用运行时就创建了一个 Go 协程，其 `main` 函数就在这个 Go 协程中运行，这个 Go 协程就被称为 `go 主协程（main Goroutine，下面简称主协程）`。在上面的例子中，` 主协程 ` 中又产生了一个 `printHello` 这个函数的 Go 协程，我们暂且叫它 `printHello 协程 ` 吧，因而我们在执行上面的程序的时候，就会存在两个 Go 协程（`main` 和 `printHello`）同时运行。正如同以前的程序那样，go 协程们会进行协同调度。因此，当 ` 主协程 ` 运行的时候，Go 调度器在 ` 主协程 ` 执行完之前并不会将控制权移交给 `printHello 协程 `。不幸的是，一旦 ` 主协程 ` 执行完毕，整个程序会立即终止，调度器再也没有时间留给 `printHello 协程 ` 去运行了。
 
 但正如我们从其他课程所知，通过阻塞条件，我们可以手动将控制权转移给其他的 Go 协程 , 也可以说是告诉调度器让它去调度其他可用空闲的 Go 协程。让我们调用 `time.Sleep()` 函数去实现它吧。
 
@@ -45,9 +45,9 @@ go 协程总是在后台运行，当一个 Go 协程执行的时候（在这个�
 
 <center><a href="https://play.golang.org/p/ujQKjpALlRJ">https://play.golang.org/p/ujQKjpALlRJ</a></center>
 
-如上图所示，我们修改了程序，程序在 main 函数的最后一条语句之前调用了 `time.Sleep(10 * time.Millisecond)`，使得 `主协程` 在执行最后一条指令之前调度器就将控制权转移给了 `printhello 协程`。在这个例子中，我们通过调用 `time.Sleep(10 * time.Millisecond)` 强行让 `主协程` 休眠 10ms 并且在在这个 10ms 内不会再被调度器重新调度运行。
+如上图所示，我们修改了程序，程序在 main 函数的最后一条语句之前调用了 `time.Sleep(10 * time.Millisecond)`，使得 ` 主协程 ` 在执行最后一条指令之前调度器就将控制权转移给了 `printhello 协程 `。在这个例子中，我们通过调用 `time.Sleep(10 * time.Millisecond)` 强行让 ` 主协程 ` 休眠 10ms 并且在在这个 10ms 内不会再被调度器重新调度运行。
 
-一旦 `printHello 协程` 执行，它就会向控制台打印‘ Hello World ！’，然后该 Go 协程（`printHello 协程`）就会随之终止，接下来 `主协程` 就会被重新调度（因为 main Go 协程已经睡够 10ms 了），并执行最后一条语句。因此，运行上面的程序就会得到以下的输出 :
+一旦 `printHello 协程 ` 执行，它就会向控制台打印‘ Hello World ！’，然后该 Go 协程（`printHello 协程 `）就会随之终止，接下来 ` 主协程 ` 就会被重新调度（因为 main Go 协程已经睡够 10ms 了），并执行最后一条语句。因此，运行上面的程序就会得到以下的输出 :
 
 ```shell
 main execution started
@@ -55,7 +55,7 @@ Hello World!
 main execution stopped
 ```
 
-下面我稍微修改一下例子，我在 `printHello` 函数的输出语句之前添加了一条 `time.Sleep(time.Millisecond)`。我们已经知道了如果我们在函数中调用了休眠（sleep）函数，这个函数就会告诉 Go 调度器去调度其他可被调度的 Go 协程。在上一课中提到，只有非休眠（`non-sleeping`）的 Go 协程才会被认为是可被调度的，所以主协程在这休眠的 10ms 内是不会被再次调度的。因此 `主协程` 先打印出“ main execution started ” 接着就创建了一个 **printHello** 协程，*需要注意此时的 `主协程` 还是非休眠状态的*，在这之后主协程就要调用休眠函数去睡 10ms，并且把这个控制权让出来给**printHello** 协程。**printHello** 协程会先休眠 1ms 告诉调度器看看有没有其他可调度的 Go 协程，在这个例子里显然没有其他可调度的 Go 协程了，所以在**printHello**协程结束了这 1ms 的休眠户就会被调度器调度，接着就输出了“ Hello World ”字符串，之后这个 Go 协程运行结束。之后，主协程会在之后的几毫秒被唤醒，紧接着就会输出“ main execution stopped ”并且结束整个程序。
+下面我稍微修改一下例子，我在 `printHello` 函数的输出语句之前添加了一条 `time.Sleep(time.Millisecond)`。我们已经知道了如果我们在函数中调用了休眠（sleep）函数，这个函数就会告诉 Go 调度器去调度其他可被调度的 Go 协程。在上一课中提到，只有非休眠（`non-sleeping`）的 Go 协程才会被认为是可被调度的，所以主协程在这休眠的 10ms 内是不会被再次调度的。因此 ` 主协程 ` 先打印出“ main execution started ” 接着就创建了一个 **printHello** 协程，*需要注意此时的 ` 主协程 ` 还是非休眠状态的*，在这之后主协程就要调用休眠函数去睡 10ms，并且把这个控制权让出来给**printHello** 协程。**printHello** 协程会先休眠 1ms 告诉调度器看看有没有其他可调度的 Go 协程，在这个例子里显然没有其他可调度的 Go 协程了，所以在**printHello**协程结束了这 1ms 的休眠户就会被调度器调度，接着就输出了“ Hello World ”字符串，之后这个 Go 协程运行结束。之后，主协程会在之后的几毫秒被唤醒，紧接着就会输出“ main execution stopped ”并且结束整个程序。
 
 ![example-4](https://raw.githubusercontent.com/studygolang/gctt-images/master/anatomy-of-goroutine/1_3lQnGP4JRuzDH2DEvFE2sw.png)
 
@@ -128,13 +128,13 @@ main execution stopped at time 200.3137ms    | exiting after 200ms
 
 ## 匿名 Go 协程
 
-如果一个匿名函数可以退出，那么匿名 Go 协程也同样可以退出。请参照[`functions`](https://medium.com/rungo/the-anatomy-of-functions-in-go-de56c050fe11) 课程中的 `即时调用函数（Immedietly invoked function）` 来理解本节。让我们修改一下之前 `printHello` 协程的例子：
+如果一个匿名函数可以退出，那么匿名 Go 协程也同样可以退出。请参照[`functions`](https://medium.com/rungo/the-anatomy-of-functions-in-go-de56c050fe11) 课程中的 ` 即时调用函数（Immedietly invoked function）` 来理解本节。让我们修改一下之前 `printHello` 协程的例子：
 
 ![example-3-1](https://raw.githubusercontent.com/studygolang/gctt-images/master/anatomy-of-goroutine/1_BB4uDfV7ooZ0SwQpTJPTsQ.png)
 
 结果非常明显，因为我们定义了匿名函数，并在同一语句中作为 Go 协程执行。
 
-*需要注意的是，所有的 Go 协程都是匿名的，因为我们从[`并发（concurrency`](https://medium.com/rungo/achieving-concurrency-in-go-3f84cbf870ca) 一课中学到，go 协程是不存在标识符的，在这里所谓的匿名 Go 协程只是通过匿名函数来创建的 Go 协程罢了*
+*需要注意的是，所有的 Go 协程都是匿名的，因为我们从[` 并发（concurrency`](https://medium.com/rungo/achieving-concurrency-in-go-3f84cbf870ca) 一课中学到，go 协程是不存在标识符的，在这里所谓的匿名 Go 协程只是通过匿名函数来创建的 Go 协程罢了*
 
 ---
 

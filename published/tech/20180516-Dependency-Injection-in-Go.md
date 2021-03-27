@@ -30,7 +30,7 @@ func New() *Server {
 
 然而，这存在一些缺点。首先，如果我们想要改变我们 `Config` 的构建方式，我们不得不改变所有调用构建代码的地方。例如，假设我们的 `buildMyConfigSomehow` 函数现在需要一个参数。每个调用处都需要访问该参数并需要将其传递给构造函数。
 
-此外，这使得实现 `Config` 函数变得十分麻烦，我们得以某种方法进入 `new` 函数的内部，并创建`Config`。
+此外，这使得实现 `Config` 函数变得十分麻烦，我们得以某种方法进入 `new` 函数的内部，并创建 `Config`。
 
 这是 DI 方式：
 
@@ -46,7 +46,7 @@ func New(config *Config) *Server {
 }
 ```
 
-现在我们将 `Server` 与`Config` 分离。我们可以根据自己的逻辑创造 `Config` 然后将结果传递给 `New` 函数。
+现在我们将 `Server` 与 `Config` 分离。我们可以根据自己的逻辑创造 `Config` 然后将结果传递给 `New` 函数。
 
 此外，如果 `Config` 是一个接口，这为我们提供了一个简单的模拟途径 。只要 `New` 实现了我们的接口，就可以传递任何我们想要的东西。这使得测试实现了 `Config` 接口的 `Server` 很简单。
 
@@ -61,7 +61,7 @@ DI 框架通常基于您告诉它的 “providers” 构建依赖图并确定如
 
 ## 示例程序
 
-我们来看http服务器端的代码：客户端以 `GET` 方式请求 `/people` 路径时并返回 JSON 。我们将一步一步呈现代码，为简单起见，它们都存在于同一个包中（`main`）。请勿在真正的 Go 程序中执行此操作。可以在[此处](https://gitlab.com/drewolson/go_di_example)找到此示例的完整代码。
+我们来看 http 服务器端的代码：客户端以 `GET` 方式请求 `/people` 路径时并返回 JSON 。我们将一步一步呈现代码，为简单起见，它们都存在于同一个包中（`main`）。请勿在真正的 Go 程序中执行此操作。可以在[此处](https://gitlab.com/drewolson/go_di_example)找到此示例的完整代码。
 
 首先，让我们看看我们的 `Person` 。仅有一些被 JSON 标签标记的属性。
 
@@ -93,7 +93,7 @@ func NewConfig() *Config {
 }
 ```
 
- `Enabled` 表示程序是否返回真实数据。`DatabasePath` 表示数据库的地址（使用 sqlite ）。`Port` 表示服务器运行的端口。
+ `Enabled` 表示程序是否返回真实数据。`DatabasePath` 表示数据库的地址（使用 SQLite ）。`Port` 表示服务器运行的端口。
 
 下方函数用来打开数据库连接。它依赖于 `Config` 并返回 `*sql.DB` 。
 

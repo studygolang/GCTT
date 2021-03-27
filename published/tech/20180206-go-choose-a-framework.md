@@ -10,7 +10,7 @@
 
 ## 标准库或 stdlib
 
-Go 语言标准库的质量很高。你应该尽可能的使用它。如果你正在编写 API 服务，你需要熟悉 `net/http` 包，而且你最终无论使用哪个框架都是基于这个包的。将第三方包导入标准库是需要认真考虑的，当他们解决的是一个非常专注的问题时，这是不适合进入标准库的。举个例子，生成 UUID 的包，或 JWT 包。一些包（包括 web 框架）都是基于标准库构建的。一个很好的具体例子，[jmoiron/sqlx](https://jmoiron.github.io/sqlx/) 包就是基于 `sql/database` 包构建的。
+Go 语言标准库的质量很高。你应该尽可能的使用它。如果你正在编写 API 服务，你需要熟悉 `net/http` 包，而且你最终无论使用哪个框架都是基于这个包的。将第三方包导入标准库是需要认真考虑的，当他们解决的是一个非常专注的问题时，这是不适合进入标准库的。举个例子，生成 UUID 的包，或 JWT 包。一些包（包括 Web 框架）都是基于标准库构建的。一个很好的具体例子，[jmoiron/sqlx](https://jmoiron.github.io/sqlx/) 包就是基于 `sql/database` 包构建的。
 
 ## 包管理器
 
@@ -30,11 +30,11 @@ Go 代码放在 GitHub，Bitbucket 和其他存储库，甚至可以自行托管
 
 Go 有一个较小的生态系统，但是有很多基于 Go 的项目都被广泛的采用，最近 GitHub 上的 [go-chi/chi](https://github.com/go-chi/chi) 有 2500 星星和非常好的评论（和 sqlx 类似，chi 项目是基于底层的 `net/http` 包构建的）。我们在 [ErrorHub](https://errorhub.io/) 上使用它，我建议你使用它。
 
-有许多 web 框架可用，但是如上所述，你应该首先使用 stdlib，这样你可以在继续前进时明白你真正需要的。使用 web 框架本身是完全没有必要的，但是当你有新的需求时，你可以做出更明智地选择从哪里迁移。
+有许多 Web 框架可用，但是如上所述，你应该首先使用 stdlib，这样你可以在继续前进时明白你真正需要的。使用 Web 框架本身是完全没有必要的，但是当你有新的需求时，你可以做出更明智地选择从哪里迁移。
 
 ## 从其他语言迁移到 Go
 
-Go 和其他语言之间的不同之处在于语言细节。从 Python 迁移到 Ruby 或从 PHP 迁移到 Javascript 时，你会发现同样的差异。Go 也不例外。你可能会发现[（例如切片是如何工作的）](https://scene-si.org/2017/08/06/the-thing-about-slices/)起初有点混乱，但从任何语言迁移到任何其他语言时都会遇到这些问题。让我们再看看 ruby 的一个例子 [predicate methods](http://ruby-for-beginners.rubymonstas.org/objects/predicates.html)。
+Go 和其他语言之间的不同之处在于语言细节。从 Python 迁移到 Ruby 或从 PHP 迁移到 Javascript 时，你会发现同样的差异。Go 也不例外。你可能会发现[（例如切片是如何工作的）](https://scene-si.org/2017/08/06/the-thing-about-slices/)起初有点混乱，但从任何语言迁移到任何其他语言时都会遇到这些问题。让我们再看看 Ruby 的一个例子 [predicate methods](http://ruby-for-beginners.rubymonstas.org/objects/predicates.html)。
 
 Go 的入门门槛真的很低。我在 15 年前使用 PHP，迁移到 Go 是相对比较简单的。让你理解 Node 的异步操作是很困难的，包括 Promise 和 yield。如果我能推荐两篇阅读材料，那么你应该阅读一下 [the interview with Ryan Dahl, the creator of Node](https://www.mappingthejourney.com/single-post/2017/08/31/episode-8-interview-with-ryan-dahl-creator-of-nodejs/)，[Bob Nystroms critique of asynchronous functions](http://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/) 也是必读的。
 
@@ -50,11 +50,11 @@ Go 是一门出色的语言，可以提供后端逻辑，例如和数据库交�
 
 你被 React 所困恼吗？将其替换为 VueJS 而不用丢弃任何 Go 代码。在其他语言中，你必须严格遵守这个原则来分割应用程序，因为通常情况下，你不是在编写服务器，而只是生成将在浏览器中运行产生输出的脚本。当然，使用 Go 可以以相同的方式使用 `html/template`，但是选择使用前端框架实现前端，将会给你带来好处：专注于该框架的开发人员。不是每个人都喜欢 Go。
 
-你不会用 bash 写一个 web 服务器，对不对？
+你不会用 bash 写一个 Web 服务器，对不对？
 
 ## 你为什么要用 Go？
 
-对我来说主要的卖点就是标准库，语言和文档的质量非常高。Ruby，Node，PHP 和其他以 web 开发为中心的语言通常都是单线程的，如果可能的话，超出这个范围的通常都是使用一个附加组件，而不是一等公民。他们的内存管理很差（尽管，至少 PHP 在过去的 15 年里有了很大的改进），也许最重要的是它们都属于脚本语言范畴。编译的代码总是会比通过解释器运行的任何代码都快。
+对我来说主要的卖点就是标准库，语言和文档的质量非常高。Ruby，Node，PHP 和其他以 Web 开发为中心的语言通常都是单线程的，如果可能的话，超出这个范围的通常都是使用一个附加组件，而不是一等公民。他们的内存管理很差（尽管，至少 PHP 在过去的 15 年里有了很大的改进），也许最重要的是它们都属于脚本语言范畴。编译的代码总是会比通过解释器运行的任何代码都快。
 
 人们总是重新发明轮子，不仅仅是因为他们可以，而且还因为他们可以以某种方式改善它。这可以以很小的增量完成，例如优化一个生成特定输出的特定函数，或者可以以更大的增量完成，例如创建一门将并发性作为一等公民的编程语言。
 
@@ -62,7 +62,7 @@ Go 是一门出色的语言，可以提供后端逻辑，例如和数据库交�
 
 ## 笔记
 
-这篇文章反映了 Go 确实有包管理器，但是到目前为止还没有官方的工具，也没有和 Go 的工具链一起捆绑发布。前面的文章误导了这一点，它暗示了 Go 根本没有包管理器。从技术上讲，所有其他包管理器（至少 npm 和 composer）都是是附加组件。
+这篇文章反映了 Go 确实有包管理器，但是到目前为止还没有官方的工具，也没有和 Go 的工具链一起捆绑发布。前面的文章误导了这一点，它暗示了 Go 根本没有包管理器。从技术上讲，所有其他包管理器（至少 NPM 和 composer）都是是附加组件。
 
 ## 我很荣幸你能够阅读本文...
 

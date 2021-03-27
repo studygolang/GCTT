@@ -2,7 +2,7 @@
 
 # 使用 Goland 调试 - 起步
 
-*由 [Florin Pățan](https://blog.jetbrains.com/go/author/florin-patanjetbrains-com/) 发布于 2019 年 2 月 6 日*
+*由 [Florin P ăț an](https://blog.jetbrains.com/go/author/florin-patanjetbrains-com/) 发布于 2019 年 2 月 6 日*
 
 调试是任何一个现代应用的生命周期中的必要部分。
 
@@ -240,7 +240,7 @@ CMD ["/dlv", "--listen=:40000", "--headless=true", "--api-version=2", "exec", "/
 
 via: https://blog.jetbrains.com/go/2019/02/06/debugging-with-goland-getting-started/
 
-作者：[Florin Pățan](https://blog.jetbrains.com/go/author/florin-patanjetbrains-com/)
+作者：[Florin P ăț an](https://blog.jetbrains.com/go/author/florin-patanjetbrains-com/)
 译者：[130-133](https://github.com/130-133)
 校对：[magichan](https://github.com/magichan)
 

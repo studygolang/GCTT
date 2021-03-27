@@ -19,7 +19,7 @@
 
 在 Go 中我们可以利用包和类型的作用域和封装规则来实现 Singleton，对于这篇文章，我们将探索我的 straps 包，因为它将给我们一个现实世界的例子。
 
-straps 包提供了一种机制来将配置选项（straps）存储在XML文档中，并将其读入内存以供应用程序使用。straps 的名称来自配置网络设备的早期阶段。 这些设置被称为 straps，并且这个名字一直伴随着我。 在 MacOS 中，我们有 .plist 文件，在 .Net 中我们有 app.config 文件，在 Go 中有 straps.xml 文件。
+straps 包提供了一种机制来将配置选项（straps）存储在 XML 文档中，并将其读入内存以供应用程序使用。straps 的名称来自配置网络设备的早期阶段。 这些设置被称为 straps，并且这个名字一直伴随着我。 在 MacOS 中，我们有 .plist 文件，在 .Net 中我们有 app.config 文件，在 Go 中有 straps.xml 文件。
 
 以下是我的一个应用程序的示例 straps 文件：
 

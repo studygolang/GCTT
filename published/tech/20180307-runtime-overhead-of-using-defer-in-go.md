@@ -46,7 +46,7 @@ func BenchmarkDeferNo(b *testing.B) {
 在一个 8 核的谷歌云主机上运行基准测试：
 
 ```
-⇒ go test -v -bench BenchmarkDefer -benchmem
+⇒ Go test -v -bench BenchmarkDefer -benchmem
 goos: linux
 goarch: amd64
 pkg: cmd

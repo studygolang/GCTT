@@ -219,14 +219,14 @@ func BenchmarkMemoryHeap(b *testing.B) {
 
 ```
 name          time/op
-MemoryHeap-4  301µs ± 4%
+MemoryHeap-4  301 µ s ± 4%
 name          alloc/op
 MemoryHeap-4  0.00B
 name          allocs/op
 MemoryHeap-4   0.00
 ------------------
 name           time/op
-MemoryStack-4  595µs ± 2%
+MemoryStack-4  595 µ s ± 2%
 name           alloc/op
 MemoryStack-4  0.00B
 name           allocs/op

@@ -179,7 +179,7 @@ main.B{name:""} false
 > 当断言不成立时，第一个值将会作为测试类型的[零值](https://golang.org/ref/spec#The_zero_value)
 
 ## 资源：
-* [go 编程语言规范- go 编程语言](https://golang.org/ref/spec#TypeAssertion)
+* [go 编程语言规范- Go 编程语言](https://golang.org/ref/spec#TypeAssertion)
 * [Go 是一个通用语言，设计时考虑了系统编程。它是强类型的并且具有垃圾回收机制...](https://golang.org/ref/spec#TypeAssertion)
 * [golang.org](https://golang.org/ref/spec#TypeAssertion)
 
@@ -187,8 +187,8 @@ main.B{name:""} false
 
 via：https://medium.com/golangspec/type-assertions-in-go-e609759c42e1
 
- 作者：[Michał Łowicki](https://medium.com/@mlowicki)
+ 作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
  译者：[fredvence](https://github.com/fredvence)
  校对：[rxcai](https://github.com/rxcai)
 
- 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
+ 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

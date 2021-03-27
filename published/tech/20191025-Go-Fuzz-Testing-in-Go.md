@@ -24,7 +24,7 @@
 
 先从一个借助模糊测试解决 `encoding/xml` 包中[一个 bug](https://github.com/golang/go/issues/11112) 的例子开始。这里是该问题的复现步骤：
 
-- 定义用于接收生成数据的 `模糊（Fuzz）` 方法：
+- 定义用于接收生成数据的 ` 模糊（Fuzz）` 方法：
 
 ```go
 // +build gofuzz

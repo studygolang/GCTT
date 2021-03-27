@@ -135,7 +135,7 @@ func main() {
 现在，如果我们尝试运行它，看看会发生什么？
 
 ```bash
-$ go run ./...
+$ Go run ./...
 {"data":{"hello":"world"}}
 ```
 
@@ -350,7 +350,7 @@ query := `
 当我们运行这个查询后，我们将会看到如下输出：
 
 ```bash
-$ go run ./...
+$ Go run ./...
 {"data":{"list":[{"author":{"Name":"Elliot Forbes","Tutorials":[1]},"comments":[{"body":"First Comment"}],"id":1,"title":"Go GraphQL Tutorial"}]}}
 ```
 
@@ -375,7 +375,7 @@ query := `
 当我们再一次运行它，我们会看到它成功地检索到了内存中唯一一个 `ID=1` 的教程。
 
 ```bash
-$ go run ./...
+$ Go run ./...
 {"data":{"tutorial":{"author":{"Name":"Elliot Forbes","Tutorials":[1]},"title":"Go GraphQL Tutorial"}}}
 ```
 

@@ -28,7 +28,7 @@ RUN xz -d -c /usr/local/upx-3.94-amd64_linux.tar.xz | \
     tar -xOf - upx-3.94-amd64_linux/upx > /bin/upx && \
     chmod a+x /bin/upx
 # install glide
-RUN go get github.com/Masterminds/glide
+RUN Go get github.com/Masterminds/glide
 # setup the working directory
 WORKDIR /go/src/app
 ADD glide.yaml glide.yaml
@@ -38,8 +38,8 @@ RUN glide install
 # add source code
 ADD src src
 # build the source
-RUN go build src/main.go
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main src/main.go
+RUN Go build src/main.go
+RUN CGO_ENABLED=0 GOOS=linux Go build -a -installsuffix cgo -o main src/main.go
 # strip and compress the binary
 RUN strip --strip-unneeded main
 RUN upx main
@@ -77,7 +77,7 @@ ADD src src
 CMD ["go", "run", "src/main.go"]
 ```
 
-我们使用 `debian jessie` 版本的 golang 镜像，因为像 `go get` 这样的命令需要安装有 `git` 等工具。对于生产版本，我们会用更加轻量的版本，如 `alpine`。
+我们使用 `debian jessie` 版本的 Golang 镜像，因为像 `go get` 这样的命令需要安装有 `git` 等工具。对于生产版本，我们会用更加轻量的版本，如 `alpine`。
 
 构建并运行该镜像：
 
@@ -89,7 +89,7 @@ $ docker run --rm -it -p 8080:8080 go-docker-dev
 
 成功后可以通过 `http://localhost:8080` 来访问。按下 `Ctrl+C` 可以中断服务。
 
-但这并没有多大意义，因为每次修改代码时，我们都必须构建和运行docker 镜像。
+但这并没有多大意义，因为每次修改代码时，我们都必须构建和运行 docker 镜像。
 
 一个更好的版本是将源代码挂载到 docker 容器中，并使用容器内的 shell 来停止和启动 `go run`。
 
@@ -98,7 +98,7 @@ $ cd go-docker
 $ docker build -t go-docker-dev .
 $ docker run --rm -it -p 8080:8080 -v $(pwd):/go/src/app \
              go-docker-dev bash
-root@id:/go/src/app# go run src/main.go
+root@id:/go/src/app# Go run src/main.go
 ```
 
 这个命令会提供一个 shell，我们可以在里面执行 `go run src/main.go` 以启动服务。我们可以在宿主机上编辑 `main.go` 并重新运行该命令来查看变化，因为现在源代码已经直接挂载到了容器中。
@@ -121,7 +121,7 @@ $ touch glide.lock
 ```bash
 FROM golang:1.8.5-jessie
 # install glide
-RUN go get github.com/Masterminds/glide
+RUN Go get github.com/Masterminds/glide
 # create a working directory
 WORKDIR /go/src/app
 # add glide.yaml and glide.lock
@@ -168,14 +168,14 @@ root@id:/go/src/app# glide install
 ```
 
 ## 实时重载
-[codegangsta/gin](https://github.com/codegangsta/gin) 是我最喜欢的实时重载工具。它简直就是为 Go web 服务而生的。我们使用 `go get` 来安装 gin：
+[codegangsta/gin](https://github.com/codegangsta/gin) 是我最喜欢的实时重载工具。它简直就是为 Go Web 服务而生的。我们使用 `go get` 来安装 gin：
 
 ```bash
 FROM golang:1.8.5-jessie
 # install glide
-RUN go get github.com/Masterminds/glide
+RUN Go get github.com/Masterminds/glide
 # install gin
-RUN go get github.com/codegangsta/gin
+RUN Go get github.com/codegangsta/gin
 # create a working directory
 WORKDIR /go/src/app
 # add glide.yaml and glide.lock
@@ -189,28 +189,28 @@ ADD src src
 CMD ["go", "run", "src/main.go"]
 ```
 
-构建镜像并运行 gin 以便当我们修改了 `src` 中的源代码时可以自动重新编译：
+构建镜像并运行 Gin 以便当我们修改了 `src` 中的源代码时可以自动重新编译：
 
 ```bash
 $ cd go-docker
 $ docker build -t go-docker-dev .
 $ docker run --rm -it -p 8080:8080 -v $(pwd):/go/src/app \
              go-docker-dev bash
-root@id:/go/src/app# gin --path src --port 8080 run main.go
+root@id:/go/src/app# Gin --path src --port 8080 run main.go
 ```
 
-注意到 web-server 需要一个 `PORT` 的环境变量来监听，因为 gin 会随机设置 `PORT` 变量并代理到该端口的连接。
+注意到 web-server 需要一个 `PORT` 的环境变量来监听，因为 Gin 会随机设置 `PORT` 变量并代理到该端口的连接。
 
 现在，修改 `src` 目录下的内容会触发重新编译，所有更新的内容可以实时在 `http://localhost:8080` 访问到。
 
-一旦开发完毕，我们可以构建二进制文件并运行它，而不需要使用 `go run` 命令。可以使用相同的镜像来构建，或者也可以使用 Docker 的多阶段构建，即使用 `golang` 镜像来构建并使用迷你 linux 容器如 `alpine` 来运行服务。
+一旦开发完毕，我们可以构建二进制文件并运行它，而不需要使用 `go run` 命令。可以使用相同的镜像来构建，或者也可以使用 Docker 的多阶段构建，即使用 `golang` 镜像来构建并使用迷你 Linux 容器如 `alpine` 来运行服务。
 
 ## 单阶段生产构建
 
 ```bash
 FROM golang:1.8.5-jessie
 # install glide
-RUN go get github.com/Masterminds/glide
+RUN Go get github.com/Masterminds/glide
 # create a working directory
 WORKDIR /go/src/app
 # add glide.yaml and glide.lock
@@ -221,7 +221,7 @@ RUN glide install
 # add source code
 ADD src src
 # build main.go
-RUN go build src/main.go
+RUN Go build src/main.go
 # run the binary
 CMD ["./main"]
 ```
@@ -242,7 +242,7 @@ $ docker run --rm -it -p 8080:8080 go-docker-prod
 ```bash
 FROM golang:1.8.5-jessie as builder
 # install glide
-RUN go get github.com/Masterminds/glide
+RUN Go get github.com/Masterminds/glide
 # setup the working directory
 WORKDIR /go/src/app
 ADD glide.yaml glide.yaml
@@ -252,8 +252,8 @@ RUN glide install
 # add source code
 ADD src src
 # build the source
-RUN go build src/main.go
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main src/main.go
+RUN Go build src/main.go
+RUN CGO_ENABLED=0 GOOS=linux Go build -a -installsuffix cgo -o main src/main.go
 
 # use a minimal alpine image
 FROM alpine:3.7
@@ -273,7 +273,7 @@ CMD ["./main"]
 
 ## 福利：使用 UPX 来压缩二进制文件
 
-在 [Hasura](https://hasura.io/)，我们已经在到处使用 [UPX](https://upx.github.io/) 了，压缩后我们的 CLI 二进制文件从 50 MB 左右降到 8 MB左右，大大加快了下载速度。UPX 可以极快地进行原地解压，不需要额外的工具，因为它将解压器嵌入到了二进制文件内部。
+在 [Hasura](https://hasura.io/)，我们已经在到处使用 [UPX](https://upx.github.io/) 了，压缩后我们的 CLI 二进制文件从 50 MB 左右降到 8 MB 左右，大大加快了下载速度。UPX 可以极快地进行原地解压，不需要额外的工具，因为它将解压器嵌入到了二进制文件内部。
 
 ```bash
 FROM golang:1.8.5-jessie as builder
@@ -287,7 +287,7 @@ RUN xz -d -c /usr/local/upx-3.94-amd64_linux.tar.xz | \
     tar -xOf - upx-3.94-amd64_linux/upx > /bin/upx && \
     chmod a+x /bin/upx
 # install glide
-RUN go get github.com/Masterminds/glide
+RUN Go get github.com/Masterminds/glide
 # setup the working directory
 WORKDIR /go/src/app
 ADD glide.yaml glide.yaml
@@ -297,8 +297,8 @@ RUN glide install
 # add source code
 ADD src src
 # build the source
-RUN go build src/main.go
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main src/main.go
+RUN Go build src/main.go
+RUN CGO_ENABLED=0 GOOS=linux Go build -a -installsuffix cgo -o main src/main.go
 # strip and compress the binary
 RUN strip --strip-unneeded main
 RUN upx main
@@ -333,4 +333,4 @@ via：https://blog.hasura.io/the-ultimate-guide-to-writing-dockerfiles-for-go-we
 译者：[ParadeTo](https://github.com/ParadeTo)
 校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

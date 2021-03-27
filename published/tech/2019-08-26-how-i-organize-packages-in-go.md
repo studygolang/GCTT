@@ -69,7 +69,7 @@ type httpGetter interface {
 
 via: https://developer20.com/how-i-organize-packages-in-go/
 
-作者：[Bartłomiej Klimczak](https://developer20.com/about-me/index.html)
+作者：[Bart ł omiej Klimczak](https://developer20.com/about-me/index.html)
 译者：[shadowstorm97](https://github.com/shadowstorm97)
 校对：[DingdingZhou](https://github.com/DingdingZhou)
 

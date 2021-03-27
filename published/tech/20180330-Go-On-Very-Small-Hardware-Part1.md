@@ -249,7 +249,7 @@ func main() {
 }
 ```
 
-代码改动很小：第二个 LED 被添加，前面的 *main* 函数被重命名为 *blinky*，函数需要两个参数。*Main* 在一个新的 goroutine 中启动第一个 *blinky* 函数，这样两个 LED 同时 *并行* 运行。有必要提一下，*gpio.Pin* 类型支持并发访问在同一 GPIO 口的不同引脚。
+代码改动很小：第二个 LED 被添加，前面的 *main* 函数被重命名为 *blinky*，函数需要两个参数。*Main* 在一个新的 Goroutine 中启动第一个 *blinky* 函数，这样两个 LED 同时 *并行* 运行。有必要提一下，*gpio.Pin* 类型支持并发访问在同一 GPIO 口的不同引脚。
 
 Emgo 仍然还有许多缺点。其中一个就是你必须提前对 goroutines（tasks）指定一个最大数值。是时候编辑一下 *script.Id* 了：
 
@@ -273,7 +273,7 @@ $ arm-none-eabi-size cortexm0.elf
   10020     172     172   10364    287c cortexm0.elf
 ```
 
-另外一个 LED 和 goroutine 花费了 248 字节的 Flash 空间。
+另外一个 LED 和 Goroutine 花费了 248 字节的 Flash 空间。
 
 ![STM32F030F4P6](https://ziutek.github.io/images/mcu/f030-demo-board/goroutines.png)
 
@@ -435,7 +435,7 @@ $ arm-none-eabi-size cortexm0.elf
 
 这个新的例子占用了 11324 字节的 Flash 空间，比之前的多了 1132 字节。
 
-使用当前的时序，两个 *blinky* goroutines 从 channel 消费的速度比 *timerISR* 发送给它的速度快得多。因此，它们同时等待新数据到来，你可以观察到 [Go规范](https://golang.org/ref/spec#Select_statements) 所要求的 *select* 的随机性。
+使用当前的时序，两个 *blinky* goroutines 从 channel 消费的速度比 *timerISR* 发送给它的速度快得多。因此，它们同时等待新数据到来，你可以观察到 [Go 规范](https://golang.org/ref/spec#Select_statements) 所要求的 *select* 的随机性。
 
 ![STM32F030F4P6](https://ziutek.github.io/images/mcu/f030-demo-board/channels1.png)
 
@@ -457,7 +457,7 @@ Goroutines 和 channels 是很棒很便捷的语法。你可以用你自己的�
 
 via: https://ziutek.github.io/2018/03/30/go_on_very_small_hardware.html
 
-作者：[Michał Derkacz ](https://ziutek.github.io)
+作者：[Micha ł Derkacz ](https://ziutek.github.io)
 译者：[PotoYang](https://github.com/PotoYang)
 校对：[DingdingZhou](https://blog.zhoudingding.com)
 

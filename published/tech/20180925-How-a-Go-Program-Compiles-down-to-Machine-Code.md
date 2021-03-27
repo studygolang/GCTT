@@ -296,7 +296,7 @@ func main() {
 为了展示生成的 SSA，我们需要对要查看 SSA 的方法设置环境变量 GOSSAFUNC，此处就是 main。我们还需要给编译器传递 -S 标志，这样它才能打印代码并创建一个 HTML 文件。我们也会针对 Linux 64-bit 环境进行编译，从而保证生成的机器码和你这边看到的一样。所以，我们运行：
 
 ```bash
-$ GOSSAFUNC=main GOOS=linux GOARCH=amd64 go build -gcflags “-S” simple.go
+$ GOSSAFUNC=main GOOS=linux GOARCH=amd64 Go build -gcflags “-S” simple.go
 ```
 
 这会打印整个 SSA，并生成一个相关联的 ssa.html 文件。

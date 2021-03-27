@@ -22,7 +22,7 @@
 
 ![typed_constants.image](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-const-guide/1*4zXKp5xjt-a9ivu9b0vNMw.png)
 
-类型→Boolean,rune,numerics,或者 string
+类型→ Boolean,rune,numerics,或者 string
 
 值→编译期时在声明中分配值
 

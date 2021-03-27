@@ -65,16 +65,16 @@ func NewChannel(conn net.Conn) *Channel {
         send: make(chan Packet, N),
     }
 
-    go c.reader()
-    go c.writer()
+    Go c.reader()
+    Go c.writer()
 
     return c
 }
 ```
 
-我想让你注意的是 `reader` 和 `writer` goroutines。每个 goroutine 都需要内存栈，初始大小可能为 2 到 8 KB，具体[取决于操作系统](https://github.com/golang/go/blob/release-branch.go1.8/src/runtime/stack.go#L64-L82)和 Go 版本。
+我想让你注意的是 `reader` 和 `writer` goroutines。每个 Goroutine 都需要内存栈，初始大小可能为 2 到 8 KB，具体[取决于操作系统](https://github.com/golang/go/blob/release-branch.go1.8/src/runtime/stack.go#L64-L82)和 Go 版本。
 
-关于上面提到的 300 万个线上连接，为此我们需要消耗 24 GB 的内存（假设单个 goroutine 消耗 4 KB 栈内存）用于所有的连接。并且这还没包括为 `Channel` 结构体分配的内存，`ch.send`传出的数据包占用的内存以及其他内部字段的内存。
+关于上面提到的 300 万个线上连接，为此我们需要消耗 24 GB 的内存（假设单个 Goroutine 消耗 4 KB 栈内存）用于所有的连接。并且这还没包括为 `Channel` 结构体分配的内存，`ch.send` 传出的数据包占用的内存以及其他内部字段的内存。
 
 ### 2.2 I/O goroutines
 
@@ -154,7 +154,7 @@ http.HandleFunc("/v1/ws", func(w http.ResponseWriter, r *http.Request) {
 
 ### 3.1 Netpoll
 
-`Channel.reader()` 通过给 `bufio.Reader.Read()` 内的 `conn.Read()` 加锁来**等待新数据的到来**（译者注：上文中的伏笔），一旦连接中有数据，Go runtime（译者注：runtime 包含 Go 运行时的系统交互的操作，这里保留原文）“唤醒” goroutine 并允许它读取下一个数据包。在此之后，goroutine 再次被锁定，同时等待新的数据。让我们看看 Go runtime 来理解 goroutine 为什么必须“被唤醒”。
+`Channel.reader()` 通过给 `bufio.Reader.Read()` 内的 `conn.Read()` 加锁来**等待新数据的到来**（译者注：上文中的伏笔），一旦连接中有数据，Go runtime（译者注：runtime 包含 Go 运行时的系统交互的操作，这里保留原文）“唤醒” Goroutine 并允许它读取下一个数据包。在此之后，goroutine 再次被锁定，同时等待新的数据。让我们看看 Go runtime 来理解 Goroutine 为什么必须“被唤醒”。
 
 如果我们查看 [`conn.Read()` 的实现](https://github.com/golang/go/blob/release-branch.go1.8/src/net/net.go#L176-L186)，将会在其中看到 [`net.netFD.Read()` 调用](https://github.com/golang/go/blob/release-branch.go1.8/src/net/fd_unix.go#L245-L257)：
 
@@ -213,8 +213,8 @@ ch := NewChannel(conn)
 
 // 通过 netpoll 实例观察 conn
 poller.Start(conn, netpoll.EventRead, func() {
-    // 我们在这里产生 goroutine 以防止在轮询从 ch 接收数据包时被锁。
-    go Receive(ch)
+    // 我们在这里产生 Goroutine 以防止在轮询从 ch 接收数据包时被锁。
+    Go Receive(ch)
 })
 
 // Receive 从 conn 读取数据包并以某种方式处理它。
@@ -225,13 +225,13 @@ func (ch *Channel) Receive() {
 }
 ```
 
-`Channel.writer()` 更简单，因为我们只能在发送数据包时运行 goroutine 并分配缓冲区：
+`Channel.writer()` 更简单，因为我们只能在发送数据包时运行 Goroutine 并分配缓冲区：
 
 ```go
 // 当我们需要时启动 writer goroutine
 func (ch *Channel) Send(p Packet) {
     if c.noWriterYet() {
-        go ch.writer()
+        Go ch.writer()
     }
     ch.send <- p
 }
@@ -239,9 +239,9 @@ func (ch *Channel) Send(p Packet) {
 
 > 需要注意的是，当操作系统在 `write()` 调用上返回 `EAGAIN` 时，我们不处理这种情况。我们依靠 Go runtime 来处理这种情况，因为这种情况在服务器上很少见。然而，如果有必要，它可以以与 `reader()` 相同的方式处理。
 
-当从 `ch.send`（一个或几个）读取传出数据包后，writer 将完成其操作并释放 goroutine 的内存和发送缓冲区的内存。
+当从 `ch.send`（一个或几个）读取传出数据包后，writer 将完成其操作并释放 Goroutine 的内存和发送缓冲区的内存。
 
-完美！我们通过去除两个运行的 goroutine 中的内存消耗和 I/O 缓冲区的内存消耗节省了 48 GB。
+完美！我们通过去除两个运行的 Goroutine 中的内存消耗和 I/O 缓冲区的内存消耗节省了 48 GB。
 
 ### 3.3 资源控制
 
@@ -251,14 +251,14 @@ func (ch *Channel) Send(p Packet) {
 
 被锁或超载的服务器停止服务，如果它之前的负载均衡器（例如，nginx）将请求传递给下一个服务器实例，这将是不错的。
 
-此外，无论服务器负载如何，如果所有客户端突然（可能是由于错误原因）向我们发送数据包，之前的 48 GB 内存的消耗将不可避免，因为需要为每个连接分配 goroutine 和缓冲区。
+此外，无论服务器负载如何，如果所有客户端突然（可能是由于错误原因）向我们发送数据包，之前的 48 GB 内存的消耗将不可避免，因为需要为每个连接分配 Goroutine 和缓冲区。
 
 #### Goroutine 池
 
-上面的情况，我们可以使用 goroutine 池限制同时处理的数据包数量。下面是这种池的简单实现：
+上面的情况，我们可以使用 Goroutine 池限制同时处理的数据包数量。下面是这种池的简单实现：
 
 ```go
-// goroutine 池的简单实现
+// Goroutine 池的简单实现
 package gopool
 
 func New(size int) *Pool {
@@ -272,7 +272,7 @@ func (p *Pool) Schedule(task func()) error {
     select {
     case p.work <- task:
     case p.sem <- struct{}{}:
-        go p.worker(task)
+        Go p.worker(task)
     }
 }
 
@@ -288,7 +288,7 @@ func (p *Pool) worker(task func()) {
 现在我们的 netpoll 代码如下：
 
 ```go
-// 处理 goroutine 池中的轮询事件。
+// 处理 Goroutine 池中的轮询事件。
 pool := gopool.New(128)
 
 poller.Start(conn, netpoll.EventRead, func() {
@@ -315,7 +315,7 @@ func (ch *Channel) Send(p Packet) {
 }
 ```
 
-取代 `go ch.writer()` ，我们想写一个复用的 goroutines。因此，对于拥有 `N` 个 goroutines 的池，我们可以保证同时处理 `N` 个请求并且在 `N + 1`的时候， 我们不会分配 `N + 1` 个缓冲区。 goroutine 池还允许我们限制新连接的 `Accept()` 和 `Upgrade()` ，并避免大多数的 DDoS 攻击。
+取代 `go ch.writer()` ，我们想写一个复用的 goroutines。因此，对于拥有 `N` 个 goroutines 的池，我们可以保证同时处理 `N` 个请求并且在 `N + 1` 的时候， 我们不会分配 `N + 1` 个缓冲区。 Goroutine 池还允许我们限制新连接的 `Accept()` 和 `Upgrade()` ，并避免大多数的 DDoS 攻击。
 
 ### 3.4 upgrade 零拷贝
 
@@ -353,7 +353,7 @@ func WriteFrame(io.Writer, Frame) error
 如果有一个这种 API 的库，我们可以按下面的方式从连接中读取数据包（数据包的写入也一样）：
 
 ```go
-// 预期的 WebSocket 实现API
+// 预期的 WebSocket 实现 API
 // getReadBuf, putReadBuf 用来复用 *bufio.Reader (with sync.Pool for example).
 func getReadBuf(io.Reader) *bufio.Reader
 func putReadBuf(*bufio.Reader)
@@ -391,8 +391,8 @@ BenchmarkUpgradeTCP     973 ns/op     0 B/op       0 allocs/op
 
 我们总结一下这些优化。
 
-- 内部有缓冲区的 read goroutine 是代价比较大的。解决方案：netpoll（epoll，kqueue）; 重用缓冲区。
-- 内部有缓冲区的 write goroutine 是代价比较大的。解决方案：需要的时候才启动 goroutine; 重用缓冲区。
+- 内部有缓冲区的 read Goroutine 是代价比较大的。解决方案：netpoll（epoll，kqueue）; 重用缓冲区。
+- 内部有缓冲区的 write Goroutine 是代价比较大的。解决方案：需要的时候才启动 goroutine; 重用缓冲区。
 - 如果有大量的连接，netpoll 将无法正常工作。解决方案：使用 goroutines 池并限制池的 worker 数。
 - `net/http` 不是处理升级到 WebSocket 的最快方法。解决方案：在裸 TCP 连接上使用内存零拷贝升级。
 

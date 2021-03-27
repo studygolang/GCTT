@@ -49,7 +49,7 @@ makefile 文件在不同的文件夹中基于不同版本的 Go 创建 Docker �
 * 比较 Go 各版本与 1.12 版本中标准库 `encoding/json` 的性能差异
 * 比较 Go 各版本与其下一个版本中标准库 `encoding/json` 的性能差异
 
-第一个维度的对比可以得到在特定版本的 Go 与 1.12 版本的 Go 中 json 序列化和反序列化的性能差异；第二个维度的对比可以得到在哪次 Go 版本升级中 json 序列化和反序列化发生了最大的性能提升。
+第一个维度的对比可以得到在特定版本的 Go 与 1.12 版本的 Go 中 JSON 序列化和反序列化的性能差异；第二个维度的对比可以得到在哪次 Go 版本升级中 JSON 序列化和反序列化发生了最大的性能提升。
 
 测试结果如下：
 
@@ -99,7 +99,7 @@ JsonMarshall       188B ± 0%       48B ± 0%  -74.47%
 JsonUnmarshal      519B ± 0%      368B ± 0%  -29.09%
 ```
 
-该基准测试使用了较为简单的 json 结构。使用更加复杂的结构（例如：Map or Array）进行测试会导致各版本之间性能增幅与本文不同。
+该基准测试使用了较为简单的 JSON 结构。使用更加复杂的结构（例如：Map or Array）进行测试会导致各版本之间性能增幅与本文不同。
 
 ## 速读源码
 
@@ -131,11 +131,11 @@ go test encoding/json -bench=BenchmarkCodeMarshal -benchmem -count=10 -run=^$
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/blob/master/go-is-the-encoding-json-package-really-slow/json-unmarshal.png)
 
 `json.Unmarshal` 函数同样使用 `sync.Pool` 缓存了 decoder。
-对于 json 序列化和反序列化而言，其性能瓶颈是迭代、反射 json 结构中每个字段。
+对于 JSON 序列化和反序列化而言，其性能瓶颈是迭代、反射 JSON 结构中每个字段。
 
 ## 与第三方库的性能对比
 
-GitHub 上也有很多用于 json 序列化的第三方库，比如[ffjson](https://github.com/pquerna/ffjson)就是其中之一，ffjson 的命令行工具可以为指定的结构生成静态的 MarshalJSON 和 UnmarshalJSON 函数，MarshalJSON 和 UnmarshalJSON 函数在序列化和反序列化操作时会分别被 `ffjson.Marshal` 和 `ffjson.Unmarshal` 函数调用。以下为 ffjson 生成的解析器示例：
+GitHub 上也有很多用于 JSON 序列化的第三方库，比如[ffjson](https://github.com/pquerna/ffjson)就是其中之一，ffjson 的命令行工具可以为指定的结构生成静态的 MarshalJSON 和 UnmarshalJSON 函数，MarshalJSON 和 UnmarshalJSON 函数在序列化和反序列化操作时会分别被 `ffjson.Marshal` 和 `ffjson.Unmarshal` 函数调用。以下为 ffjson 生成的解析器示例：
 
 ```go
 func (j *JSONFF) MarshalJSON() ([]byte, error) {
@@ -194,7 +194,7 @@ JsonMarshallFF-4    176B ± 0%
 JsonUnmarshalFF-4   448B ± 0%
 ```
 
-对于 json 序列化/反序列化，标准库与 ffjson 相比反而更加高效一些。
+对于 JSON 序列化/反序列化，标准库与 ffjson 相比反而更加高效一些。
 
 对于内存使用情况（堆分配），可以通过 `go run -gcflags="-m"` 命令进行测试：
 
@@ -227,7 +227,7 @@ JsonMarshallEJ-4    240B ± 0%
 JsonUnmarshalEJ-4   256B ± 0%
 ```
 
-这次，easyjson 比标准库更高效些，对于 json 序列化有 30%的性能提升，对于 json 反序列化性能提升接近 2 倍。通过阅读 `easyjson.Marshal` 的源码，可以发现它高效的原因：
+这次，easyjson 比标准库更高效些，对于 JSON 序列化有 30%的性能提升，对于 JSON 反序列化性能提升接近 2 倍。通过阅读 `easyjson.Marshal` 的源码，可以发现它高效的原因：
 
 ```go
 func Marshal(v Marshaler) ([]byte, error) {
@@ -237,7 +237,7 @@ func Marshal(v Marshaler) ([]byte, error) {
 }
 ```
 
-通过 easyjson 的命令行工具生成的编码器 `MarshalEasyJSON` 方法可用于 json 序列化：
+通过 easyjson 的命令行工具生成的编码器 `MarshalEasyJSON` 方法可用于 JSON 序列化：
 
 ```go
 func easyjson42239ddeEncode(out *jwriter.Writer, in JSON) {
@@ -292,13 +292,13 @@ func (v JSON) MarshalJSON() ([]byte, error) {
 }
 ```
 
-然而，使用这种兼容标准库的方式进行序列化会比直接使用标准库性能更差，因为在进行 json 序列化的过程中，标准库依然会通过反射构造 encoder，且 `MarshalJSON` 中这一段代码也会被执行。
+然而，使用这种兼容标准库的方式进行序列化会比直接使用标准库性能更差，因为在进行 JSON 序列化的过程中，标准库依然会通过反射构造 encoder，且 `MarshalJSON` 中这一段代码也会被执行。
 
 ## 结论
 
-无论在标准库上做多少努力，它都不会比通过**对明确的 json 结构生成 encoder/decoder**的方式性能好。而通过结构生成解析器代码的方式需要生成和维护此代码，并且依赖于外部的库。
+无论在标准库上做多少努力，它都不会比通过**对明确的 JSON 结构生成 encoder/decoder**的方式性能好。而通过结构生成解析器代码的方式需要生成和维护此代码，并且依赖于外部的库。
 
-在做出使用第三方序列化库替换标准库的决定前，最好先测试下 json 序列化和反序列化是否是应用的性能瓶颈点，提高 json 序列化的效率是否能改善应用的性能。如果 json 序列化和反序列化并不是应用的性能瓶颈点，为了极少的性能提升，付出第三方库的维护成本是不值得的。毕竟，在大多数业务场景下，Go 的标准库 `encoding/json` 已经足够高效了。
+在做出使用第三方序列化库替换标准库的决定前，最好先测试下 JSON 序列化和反序列化是否是应用的性能瓶颈点，提高 JSON 序列化的效率是否能改善应用的性能。如果 JSON 序列化和反序列化并不是应用的性能瓶颈点，为了极少的性能提升，付出第三方库的维护成本是不值得的。毕竟，在大多数业务场景下，Go 的标准库 `encoding/json` 已经足够高效了。
 
 ---
 

@@ -80,7 +80,7 @@ func (c *cancelCtx) cancel(removeFromParent bool, err error) {
 这种取消传播允许我们定义更高级的例子，这些例子可以帮助我们根据主 context 处理多个/繁重的工作。
 
 ## 取消传播
-让我们通过 goroutine A 和 B 来展示一个取消的例子，它们将并行运行，因为拥有共同的 context ，当一个发生错误取消时，另外一个也会被取消：
+让我们通过 Goroutine A 和 B 来展示一个取消的例子，它们将并行运行，因为拥有共同的 context ，当一个发生错误取消时，另外一个也会被取消：
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/context-and-cancellation-by-propagation/image_4.png)
 
@@ -114,7 +114,7 @@ B - 200ms
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/context-and-cancellation-by-propagation/image_5.png)
 
-我们可以在这里看到 context 对于**多个 goroutine 是线程安全的**。实际上，有可能是因为我们之前在结构中看到的 mutex，它保证了对 context 的并发安全。
+我们可以在这里看到 context 对于**多个 Goroutine 是线程安全的**。实际上，有可能是因为我们之前在结构中看到的 mutex，它保证了对 context 的并发安全。
 
 ## context 泄漏
 正如我们在内部结构中看到的那样，当前 context 在 `Context` 属性中保持其父级的链接，而父级将当前 context 保留在 `children` 属性中。对 cancel 函数的调用将把当前 context 中的子项清除并删除与父项的链接：

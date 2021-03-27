@@ -138,7 +138,7 @@ compile:
 ```makefile
 start-server:
 	@echo "  >  $(PROJECTNAME) is available at $(ADDR)"
-	@-$(GOBIN)/$(PROJECTNAME) 2>&1 & echo $$! > $(PID)
+	@-$(GOBIN)/$(PROJECTNAME) 2>&1 & Echo $$! > $(PID)
 	@cat $(PID) | sed "/^/s/^/  \>  PID: /"
 
 stop-server:
@@ -154,7 +154,7 @@ restart-server: stop-server start-server
 我们需要一个文件观察器来观察变化。我尝试了很多并且感到不满意，所以最终创建了我自己的文件观察工具 [yolo](https://github.com/azer/yolo) 。通过下面命令安装在您的系统中
 
 ```shell
-$  go get github.com/azer/yolo
+$  Go get github.com/azer/yolo
 ```
 
 一旦安装完毕，我们基本上可以开始观察项目目录中的更改，排除像 `vendor` 或者 `bin` 这样的目录，如下：
@@ -204,7 +204,7 @@ make install get="github.com/foo/bar"
 在内部，这个命令会转换成：
 
 ```shell
-$ GOPATH=~/my-web-server GOBIN=~/my-web-server/bin go get github.com/foo/bar
+$ GOPATH=~/my-web-server GOBIN=~/my-web-server/bin Go get github.com/foo/bar
 ```
 
 它是如何工作的？请参阅下一节，我们实际添加了用于实现更高级别命令的 Go 命令。
@@ -218,22 +218,22 @@ go-compile: go-clean go-get go-build
 
 go-build:
 	@echo "  >  Building binary..."
-	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go build -o $(GOBIN)/$(PROJECTNAME) $(GOFILES)
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) Go build -o $(GOBIN)/$(PROJECTNAME) $(GOFILES)
 
 go-generate:
 	@echo "  >  Generating dependency files..."
-	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go generate $(generate)
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) Go generate $(generate)
 
 go-get:
 	@echo "  >  Checking if there is any missing dependencies..."
-	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go get $(get)
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) Go get $(get)
 
 go-install:
-	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go install $(GOFILES)
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) Go install $(GOFILES)
 
 go-clean:
 	@echo "  >  Cleaning build cache"
-	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go clean
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) Go clean
 ```
 
 ### 帮助
@@ -309,7 +309,7 @@ stop: stop-server
 
 start-server: stop-server
 	@echo "  >  $(PROJECTNAME) is available at $(ADDR)"
-	@-$(GOBIN)/$(PROJECTNAME) 2>&1 & echo $$! > $(PID)
+	@-$(GOBIN)/$(PROJECTNAME) 2>&1 & Echo $$! > $(PID)
 	@cat $(PID) | sed "/^/s/^/  \>  PID: /"
 
 stop-server:
@@ -342,22 +342,22 @@ go-compile: go-clean go-get go-build
 
 go-build:
 	@echo "  >  Building binary..."
-	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go build -o $(GOBIN)/$(PROJECTNAME) $(GOFILES)
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) Go build -o $(GOBIN)/$(PROJECTNAME) $(GOFILES)
 
 go-generate:
 	@echo "  >  Generating dependency files..."
-	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go generate $(generate)
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) Go generate $(generate)
 
 go-get:
 	@echo "  >  Checking if there is any missing dependencies..."
-	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go get $(get)
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) Go get $(get)
 
 go-install:
-	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go install $(GOFILES)
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) Go install $(GOFILES)
 
 go-clean:
 	@echo "  >  Cleaning build cache"
-	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go clean
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) Go clean
 
 .PHONY: help
 all: help
@@ -377,7 +377,7 @@ help: Makefile
 
 via: https://kodfabrik.com/journal/a-good-makefile-for-go/
 
-作者：[Azer Koçulu](http://kodfabrik.com)
+作者：[Azer Ko ç ulu](http://kodfabrik.com)
 译者：[lightfish-zhang](https://github.com/lightfish-zhang)
 校对：[polaris1119](https://github.com/polaris1119)
 

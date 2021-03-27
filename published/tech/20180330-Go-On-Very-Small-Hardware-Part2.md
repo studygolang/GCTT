@@ -332,7 +332,7 @@ parity is      : none
 databits are   : 8
 stopbits are   : 1
 escape is      : C-a
-local echo is  : no
+local Echo is  : no
 noinit is      : no
 noreset is     : no
 hangup is      : no
@@ -522,7 +522,7 @@ echo "Hello, World!" > file.txt
 
 `>` 运算符将前一个命令的输出流写入文件。还有 `|` 运算符连接相邻命令的输出和输入流。
 
-通过流，我们可以轻松转换或过滤任何命令的输出。例如，要将所有字母转换为大写，我们可以通过 *tr* 命令过滤 echo 的输出：
+通过流，我们可以轻松转换或过滤任何命令的输出。例如，要将所有字母转换为大写，我们可以通过 *tr* 命令过滤 Echo 的输出：
 
 ```bash
 echo "Hello, World!" | tr a-z A-Z > file.txt
@@ -832,7 +832,7 @@ $ arm-none-eabi-size cortexm0.elf
 Flash 只剩下 140 个空闲字节。让我们使用启用了 semihosting 的 OpenOCD 加载它：
 
 ```bash
-$ openocd -d0 -f interface/stlink.cfg -f target/stm32f0x.cfg -c 'init; program cortexm0.elf; arm semihosting enable; reset run'
+$ openocd -d0 -f interface/stlink.cfg -f target/stm32f0x.cfg -c 'init; program cortexm0.elf; ARM semihosting enable; reset run'
 Open On-Chip Debugger 0.10.0+dev-00319-g8f1f912a (2018-03-07-19:20)
 Licensed under GNU GPL v2
 For bug reports, read
@@ -893,7 +893,7 @@ type(*p) = S
 
 via: https://ziutek.github.io/2018/04/14/go_on_very_small_hardware2.html
 
-作者：[Michał Derkacz ](https://ziutek.github.io)
+作者：[Micha ł Derkacz ](https://ziutek.github.io)
 译者：[PotoYang](https://github.com/PotoYang)
 校对：[zhoudingding](https://github.com/dingdinzhou)
 

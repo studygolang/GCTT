@@ -6,7 +6,7 @@
 
 ## 什么是 defer ？
 
-通过使用 `defer` 修饰一个函数，使其在外部函数 ["返回后"](https://medium.com/@inanc/yeah-semantically-after-is-the-right-word-fad1d5181891) 才被执行，即便外部的函数返回的是 [panic 异常](https://golang.org/ref/spec#Handling_panics)，这类函数被称作 `延迟调用函数`。
+通过使用 `defer` 修饰一个函数，使其在外部函数 ["返回后"](https://medium.com/@inanc/yeah-semantically-after-is-the-right-word-fad1d5181891) 才被执行，即便外部的函数返回的是 [panic 异常](https://golang.org/ref/spec#Handling_panics)，这类函数被称作 ` 延迟调用函数 `。
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/golang-defer-simplified/what_is_defer.png)
 
@@ -36,7 +36,7 @@ _打印: “first” 然后 “later”_
 
 [在线运行代码](https://play.golang.org/p/Q4P6v_kIAx)
 
-这个延迟函数关闭了已经打开的文件句柄，不论 `NewFromFile` 函数是否返回了错误。
+这个延迟函数关闭了已经打开的文件句柄， 不论 `NewFromFile` 函数是否返回了错误。
 
 ### 从 panic 中恢复
 
@@ -108,7 +108,7 @@ _分析可视化数字（在左边）: 1, 2, 3 ._
 
 ### 延迟调用多个函数
 
-如果有多个延迟函数，它们会被存储在一个`栈`中，因此，最后被 `defer` 修饰的函数会在函数体返回之后先执行。
+如果有多个延迟函数，它们会被存储在一个 ` 栈 ` 中，因此，最后被 `defer` 修饰的函数会在函数体返回之后先执行。
 
 *注意：同时使用多个 `defer` 表达式可能会降低代码的可读性*
 

@@ -50,8 +50,8 @@ Protocol buffers 是基础的数据格式，和 JSON、XML 非常的相似，都
 ## 一个简单的例子
 
 ```bash
-$ go get github.com/golang/protobuf
-$ go get github.com/golang/protobuf/proto
+$ Go get github.com/golang/protobuf
+$ Go get github.com/golang/protobuf/proto
 ```
 
 上面下载一些必须的包，用于运行简单的例子。
@@ -131,7 +131,7 @@ func main() {
 在运行之前，我们需要将 `test.pb.go` 编译通过以保证正常工作：
 
 ```
-➜ src go run main.go test.pb.go
+➜ src Go run main.go test.pb.go
 [10 6 69 108 108 105 111 116 16 24]
 name:"Elliot" age:24
 ```
@@ -216,7 +216,7 @@ func main() {
 我们来最后一次运行它，我们看到了所有我们希望输出的内容：
 
 ```
-➜ src go run main.go test.pb.go
+➜ src Go run main.go test.pb.go
 Elliot
 24
 1400

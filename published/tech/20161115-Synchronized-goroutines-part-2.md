@@ -1,13 +1,13 @@
 首发于：https://studygolang.com/articles/14478
 
-# goroutine 的同步（第二部分）
+# Goroutine 的同步（第二部分）
 > Channel 通信
 
 第一部分介绍了发送与接收操作之间最直观的顺序关系：
 
 > *向一个 Channel 中发送数据先于接收数据。*
 
-于是，我们能够控制分布于两个 goroutine 中的操作的顺序。
+于是，我们能够控制分布于两个 Goroutine 中的操作的顺序。
 
 ```go
 var v int
@@ -82,7 +82,7 @@ go func() {
 }()
 ```
 
-现在第二个 goroutine 会往 channel 中发送数据，它需要等待第一个 goroutine 中的赋值操作 `v = 1` 完成。发送操作在对应的接收操作后才能完成。
+现在第二个 Goroutine 会往 channel 中发送数据，它需要等待第一个 Goroutine 中的赋值操作 `v = 1` 完成。发送操作在对应的接收操作后才能完成。
 
 `v = 1` → `<-ch` → `ch <- 1` 结束 → `fmt.Println(v)`
 
@@ -133,7 +133,7 @@ fmt.Println(<-ch)
 
 对于有缓存的 channel，目前为止提到的所有规则都是成立的，除了说接收发生在发送结束之前这一条。原因很简单，（在缓存未满时），无需准备好的接受者，发送操作就可以结束。
 
->*对于容量为 c 的 channel，第 k 个接收发生在第 (k＋c) 个发送完成之前。*
+>*对于容量为 c 的 channel，第 k 个接收发生在第 (k ＋ c) 个发送完成之前。*
 
 假定缓存容量被设置为 3。前 3 个向 channel 发送数据的操作即使没有相应的接收语句也可以返回。但是为了第 4 个发送操作完成，必须有至少一个接收操作完成。
 
@@ -169,11 +169,11 @@ wg.Wait()
 > Suppose that Go program starts two goroutines:
 > medium.com
 
-- [go 的内存模型 —— go 编程语言](https://golang.org/ref/mem)
->The Go memory model specifies the conditions under which reads of a variable in one goroutine can be guaranteed to…
+- [go 的内存模型 —— Go 编程语言](https://golang.org/ref/mem)
+>The Go memory model specifies the conditions under which reads of a variable in one Goroutine can be guaranteed to…
 > golang.org
 
-- [go 语言规范 —— go 编程语言](https://golang.org/ref/spec)
+- [go 语言规范 —— Go 编程语言](https://golang.org/ref/spec)
 >Go is a general-purpose language designed with systems programming in mind. It is strongly typed and garbage-collected…
 > golang.org
 
@@ -185,7 +185,7 @@ wg.Wait()
 *[Channels](https://medium.com/tag/channel?source=post)*
 *[Synchronization](https://medium.com/tag/synchronization?source=post)*
 
-**喜欢读吗？给 Michał Łowicki 一些掌声吧。**
+**喜欢读吗？给 Micha ł Ł owicki 一些掌声吧。**
 
 简单鼓励下还是大喝采，根据你对这篇文章的喜欢程度鼓掌吧。
 
@@ -193,7 +193,7 @@ wg.Wait()
 
 via: https://medium.com/golangspec/synchronized-goroutines-part-ii-b1130c815c9d
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[krystollia](https://github.com/krystollia)
 校对：[polaris1119](https://github.com/polaris1119)
 

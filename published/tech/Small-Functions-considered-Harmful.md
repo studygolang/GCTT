@@ -151,7 +151,7 @@ Rubyist Sandi Metz 有一场名为 All The Little Things 的著名演讲，她�
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/small-functions-considered-harmful/Small-Functions-considered-Harmful-9.jpg)
 
-通常情况下，程序员只会在代码确定被删除，或者不再使用时，将代码视为 “已死亡”。如果我们开始（以代码将 “死亡”）思考我们的编写的代码，那么每增加一个新的 git commit，我认为我们可能会更加积极地编写易于修改的代码。在思考如何抽象时，认识到我们正在构建的代码可能距离死亡（正在被修改）只有几个小时的事实对于我们很有帮助。因此，为了便于修改代码而进行的优化往往比试图构建 《Clean Code》中提到的自顶向下的设计更好。
+通常情况下，程序员只会在代码确定被删除，或者不再使用时，将代码视为 “已死亡”。如果我们开始（以代码将 “死亡”）思考我们的编写的代码，那么每增加一个新的 Git commit，我认为我们可能会更加积极地编写易于修改的代码。在思考如何抽象时，认识到我们正在构建的代码可能距离死亡（正在被修改）只有几个小时的事实对于我们很有帮助。因此，为了便于修改代码而进行的优化往往比试图构建 《Clean Code》中提到的自顶向下的设计更好。
 
 ## 类污染
 

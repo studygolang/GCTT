@@ -53,7 +53,7 @@ func read(i interface{}) {
 ```go
 type emptyInterface struct {
    typ  *rtype            // 类型描述
-   word unsafe.Pointer    // 值
+   Word unsafe.Pointer    // 值
 }
 ```
 
@@ -143,7 +143,7 @@ exit status 2
 
 有以下几个步骤：
 <!-- TODO 很别扭，自己也没有完全理解 -->
-* 步骤 1：比较 `int16` 类型与`空接口`的内部类型：比较（指令`CMPQ`）`int16`类型（加载有效地址`LEAQ`(Load Effective Address）到空接口的内部类型（从空接口`MOVQ`的内存段读取 48 字节偏移量的内存的指令）
+* 步骤 1：比较 `int16` 类型与 ` 空接口 ` 的内部类型：比较（指令 `CMPQ`）`int16` 类型（加载有效地址 `LEAQ`(Load Effective Address）到空接口的内部类型（从空接口 `MOVQ` 的内存段读取 48 字节偏移量的内存的指令）
 
 * step 2：`JNE` 指令，即不相等则跳转指令（Jump if Not Equal），会跳转到已生成的处理错误的指令，这些指令将在步骤中处理错误 3
 

@@ -102,7 +102,7 @@ func (r *Redis) Set(key, value string, expiration time.Duration) error {
 }
 ```
 
-最后，一个函数返回了 redis 客户端。
+最后，一个函数返回了 Redis 客户端。
 
 ```go
 func Connect(addr, password string, db int) *redis.Client {
@@ -208,13 +208,13 @@ func (jc *UserController) Register(w http.ResponseWriter, r *http.Request) {
 	oneMonth := time.Duration(60*60*24*30) * time.Second
 	err = jc.Cache.Set(fmt.Sprintf("token_%s", token), strconv.Itoa(id), oneMonth)
 	if err != nil {
-		log.Fatalf("Add token to redis Error: %s", err)
+		log.Fatalf("Add token to Redis Error: %s", err)
 		http.Error(w, "", http.StatusInternalServerError)
 		return
 	}
 ```
 
-最后一步，将令牌返回给用户，并设置内容类型为 json 格式。
+最后一步，将令牌返回给用户，并设置内容类型为 JSON 格式。
 
 ```go
 	p := map[string]string{
@@ -266,7 +266,7 @@ func CreateUser(db *sql.DB, email, name, password string) (int, error) {
 
 ## 结论
 
-这个控制器只是我创建的 API 的一小段代码，用来展示仅用 Go 语言标准库来创建 API 是多么简单的一件事情。Go 语言是一门伟大的语言，可以用来创建 API 和微服务，并且执行效率胜过了如 javascript 和 PHP 之类的其他语言。所以，使用 Go 语言是一件非常简单的事情。虽然只使用标准库来实现了这些，但是我相信使用一些外部的库，如 [Gorilla Mux](https://github.com/gorilla/mux) 和 [go-validator](https://github.com/go-validator/validator) ，会使得开发更加简便，而且使得代码更加清晰和可维护。
+这个控制器只是我创建的 API 的一小段代码，用来展示仅用 Go 语言标准库来创建 API 是多么简单的一件事情。Go 语言是一门伟大的语言，可以用来创建 API 和微服务，并且执行效率胜过了如 JavaScript 和 PHP 之类的其他语言。所以，使用 Go 语言是一件非常简单的事情。虽然只使用标准库来实现了这些，但是我相信使用一些外部的库，如 [Gorilla Mux](https://github.com/gorilla/mux) 和 [go-validator](https://github.com/go-validator/validator) ，会使得开发更加简便，而且使得代码更加清晰和可维护。
 
 ---
 

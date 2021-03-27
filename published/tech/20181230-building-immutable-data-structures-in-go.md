@@ -1,6 +1,6 @@
 首发于：https://studygolang.com/articles/23435
 
-# 用Go构建不可变的数据结构
+# 用 Go 构建不可变的数据结构
 
 ![Photo by Frantzou Fleurine on Unsplash](https://raw.githubusercontent.com/studygolang/gctt-images/master/building-immutable-data-structures-in-go/cover.jpeg)
 
@@ -17,13 +17,13 @@ type Person struct {
 }
 ```
 
-显然，我们可以实例化一个`Person`然后随心所欲地更改它的属性。事实上，这样做并没有任何错。但是，当你处理更加复杂的、传递引用和切片的嵌套式数据结构，或者利用通道传递副本时，以某些姿势更改这些共享的数据副本可能会导致不易察觉的 bugs。
+显然，我们可以实例化一个 `Person` 然后随心所欲地更改它的属性。事实上，这样做并没有任何错。但是，当你处理更加复杂的、传递引用和切片的嵌套式数据结构，或者利用通道传递副本时，以某些姿势更改这些共享的数据副本可能会导致不易察觉的 bugs。
 
 ## 为啥我之前就没有遇到过这种问题呢？
 
 如果没有重度使用 channel 或代码基本是串行执行的，由于从定义上讲每次只有一个操作能够作用在数据上，你不大可能会遇见这些不明显的 bugs。
 
-再者，除了避免 bugs外，不可变数据结构还有其他优势：
+再者，除了避免 bugs 外，不可变数据结构还有其他优势：
 
 1. 由于状态绝不会原地更新，这对一般的调试和记录每个变换步骤以用于后续监控是非常有用的
 2. 撤销或“时光倒流”的能力不仅是可能的，而且是小菜一碟，只需一个赋值操作即可
@@ -138,7 +138,7 @@ func (p Person) WithFavoriteColorAt(i int, favoriteColor string) Person {
 }
 ```
 
-> 译者注：上述代码是错误的，如果`p.favoriteColors`的容量大于`i`则会就地改变副本的`favoriteColors`，参见[反例](https://gist.github.com/sammyne/e845c24ad89ef04fd2207cdc6196e29f)，稍作调整即可得到[正确实现](https://gist.github.com/sammyne/d77be41112df33f53ccc40a20e5a605a#file-20181230-building-immutable-data-structures-in-go-ok-example-go-L11)
+> 译者注：上述代码是错误的，如果 `p.favoriteColors` 的容量大于 `i` 则会就地改变副本的 `favoriteColors`，参见[反例](https://gist.github.com/sammyne/e845c24ad89ef04fd2207cdc6196e29f)，稍作调整即可得到[正确实现](https://gist.github.com/sammyne/d77be41112df33f53ccc40a20e5a605a#file-20181230-building-immutable-data-structures-in-go-ok-example-go-L11)
 
 现在我们就可以放心使用：
 
@@ -148,7 +148,7 @@ func updateFavoriteColors(p Person) Person {
 }
 ```
 
-想要了解更多切片的妙用参见这篇牛逼的wiki：https://github.com/golang/go/wiki/SliceTricks
+想要了解更多切片的妙用参见这篇牛逼的 wiki：https://github.com/golang/go/wiki/SliceTricks
 
 ## 构造函数
 

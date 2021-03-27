@@ -16,15 +16,15 @@ Hadoop 和 Spark 也需要了解一些基础设施知识。一些服务像 [EMR]
 
 ![](https://static.studygolang.com/gctt/introducing-corral/architecture.svg)
 
-这是 [corral](https://github.com/bcongdon/corral) 的结果，一个用于编写可在 AWS Lambda 中执行的任意 MapReduce 应用程序框架。
+这是 [corral](https://github.com/bcongdon/corral) 的结果，一个用于编写可在 AWS Lambda 中执行  的任意 MapReduce 应用程序框架。
 
 ## MapReduce 的 Golang 接口
 
-众所周知，Go 没有泛型，所以我不得不为 mappers 和 reducers 构建一个令人信服的接口而动些脑筋。Hadoop MapReduce 在指定输入/输出格式，分割记录的方式等方面有很大的灵活性。
+众所周知，Go 没有泛型，所以我不得不  为 mappers 和 reducers 构建一个令人信服的接口而动些脑筋。Hadoop MapReduce 在  指定输入/输出格式，分割记录  的方式等方面有很  大的灵活性。
 
-我之前考虑用 interface{} 类型做为健和值，但用 [Rob Pike 的话](https://www.youtube.com/watch?v=PAAkCSZUG1c&t=7m36s)说，“interface{} 什么也没说”。所以我决定使用极简主义接口：keys 和 values 都用字符串，输入文件按换行符分割。这些简化假设使整个系统的实现更简单和清晰。Hadoop MapReduce 赢得可定制性，因此我决定采用易用性。
+我之前考虑用 interface{} 类型做为健和值，但用 [Rob Pike 的话](https://www.youtube.com/watch?v=PAAkCSZUG1c&t=7m36s)说，“interface{} 什么也没说”。所以我决定使用  极简主义接口：keys 和 values 都用字符串，输入文件按换行符分割。这些简化假设使整个系统的实现更简单和清晰。Hadoop MapReduce 赢得可定制性，因此我决定采用易用性。
 
-我很满意 Map 和 Reduce 的最终接口（其中一些是受 Damian Gryski 的 [dmrgo](https://github.com/dgryski/dmrgo) 启发）：
+我很满意 Map 和 Reduce 的最  终接口（其中一些是受 Damian Gryski 的 [dmrgo](https://github.com/dgryski/dmrgo) 启发）：
 
 ```go
 type Mapper interface {
@@ -40,25 +40,25 @@ type Emitter interface {
 }
 ```
 
-`ValueIterator` 只有一个方法：`Iter()`，迭代一系列字符串。
+`ValueIterator`  只有一个方法：`Iter()`，迭代一系列字符串。
 
-`Emitter` 和 `ValueIterator` 隐藏了需要内部框架实现（改组，分区，文件系统交互等）。我也很高兴决定对值用迭代器来代替普通的切片（这可能更惯用），因为迭代器允许框架方面更加的灵活（例如：延迟流值而不是全部放入内存）。
+`Emitter` 和 `ValueIterator` 隐藏了需要内部框架实现（改组，分区，文件系统交互等）。我也很高兴决定对值用迭代器来代替  普通的切片（这可能更惯用），因为迭代器允许框架方面更加的灵活（例如：延迟流值而不是全部放入内存）。
 
 ## 无服务 MapReduce
 
-从框架方面，我花了些时间来决定用一个高效的方式将 MapReduce 实现为一个完全无状态的系统。
+从框架方面，我花了  些时间来决定  用一个高效的方式将 MapReduce 实现为一个  完全无状态的系统。
 
 Hadoop MapReduce 架构为其带来以下好处……
 
 - 持久，长时间运行的工作节点
 - 数据局部性在工作节点
-- 通过 YARN/Mesos 等作为抽象的，容错的主节点和工作节点容器。
+-  通过 YARN/Mesos 等作为抽象的，容错的主节点和工作  节点容器。
 
 使用 AWS 堆栈可以很容易地复制最后两方面。S3 和 Lambda 之间的带宽相对不错（至少对我而言），而 Lambda 的构建使得开发人员“不必考虑服务器”。
 
-在 Lambda 上复制最棘手的事情是持久工作节点。Lambda 有最大5分钟的超时时限。因此，Hadoop 使用 MapReduce 的很多方式都不再适用。例如，在 mapper worker 和 reducer worker 之间直接传输数据是不可行的，因为 mapper 需要“尽快”完成。否则，在 reducer 仍在工作时，您可能会冒 mapper 超时的风险。
+在 Lambda 上复制最棘手的事情是持久工作节点。Lambda 有最大 5 分钟的超时时限。因此，Hadoop 使用 MapReduce 的很多方式都不再适用。例如，在 mapper worker 和 reducer worker 之间直接传输数据是不可行的，因为 mapper 需要“尽快”完成。否则，在 reducer 仍在工作时，您可能会冒 mapper 超时的风险。
 
-这种限制在 shuffle/partition 阶段最明显。理想情况下，mappers 将“生存”足够长的时间以按需将数据传输到 reducers（即使在 map 阶段），并且 reducers 将“活”足够长时间去做一个完整的二级排序，使用它们的磁盘当对一个较大的合并排序溢出时。5分钟的上限使得这些方法难以实现。
+这种限制在 shuffle/partition 阶段最明显。理想情况下，mappers 将“生存”足够长的时间以按需将数据传输到 reducers（即使在 map 阶段），并且 reducers 将“活”足够长时间去做一个完整的二级排序，使用它们的磁盘当对一个较大的合并排序溢出时。5 分钟的上限使得这些方法难以实现。
 
 最后，我决定使用 S3 作为无状态 partition/shuffle 的后端。
 
@@ -72,11 +72,11 @@ Hadoop MapReduce 架构为其带来以下好处……
 
 ## 自发布应用
 
-Corroal 让我最兴奋的一点是，它能够自我部署到 AWS Lambda。我希望能够快速将 corral 作业部署到 Lambda 上——不得不通过 web 界面手动将发布包重新上传到 Lambda 上是一种拖累，而像 Serverless 这样的框架依赖于非 Go 工具，这些工具包含起来很繁琐。
+Corroal 让我最兴奋的一点是，它能够自我部署到 AWS Lambda。我希望能够快速将 corral 作业部署到 Lambda 上——不得不通过 Web 界面手动将发布包重新上传到 Lambda 上是一种拖累，而像 Serverless 这样的框架依赖于非 Go 工具，这些工具包含起来很繁琐。
 
 我最初的想法是，构建 corral 二进制文件作为发布包上传到 Lambda 上。这个想法确实有效……直到您处理跨平台构建目标时。Lambda 期望使用 `GOOS=linux` 编译二进制文件，因此任何二进制文件在 macOS 或 Windows 上不能运行。
 
-我几乎放弃了这个想法，但后来我偶尔发现了 Kelsey Hightower 在2017年的GopherCon上发布的 [Self Deploying Kubernetes Applications](https://www.youtube.com/watch?v=XPC-hFL-4lU)。Kelsey 描述了一个类似的方法，尽管他的代码是在 Kubernetes 而不是 Lambda 上运行的。但是，他描述了我需要的“缺失链接”：让特定平台的二进制文件重新编译为目标 GOOO=linux。
+我几乎放弃了这个想法，但后来我偶尔发现了 Kelsey Hightower 在 2017 年的 GopherCon 上发布的 [Self Deploying Kubernetes Applications](https://www.youtube.com/watch?v=XPC-hFL-4lU)。Kelsey 描述了一个类似的方法，尽管他的代码是在 Kubernetes 而不是 Lambda 上运行的。但是，他描述了我需要的“缺失链接”：让特定平台的二进制文件重新编译为目标 GOOO=linux。
 
 因此，总而言之，corral 用于部署到 Lambda 的过程如下：
 
@@ -97,7 +97,7 @@ Corroal 让我最兴奋的一点是，它能够自我部署到 AWS Lambda。我�
 
 系统中的每个组件都运行相同的源，但有很多并行副本运行在 Lambda 上（由驱动协调）。这导致 MapReduce 快速的并行。
 
-## 像文件系统一样对待S3
+## 像文件系统一样对待 S3
 
 像 mrjob 一样，Corral 试图与它运行到文件系统无关。这允许它在本地和 Lambda 执行之间透明地切换（并允许扩展空间，例如，如果 GCP 在云函数上开始支持 Go）。
 

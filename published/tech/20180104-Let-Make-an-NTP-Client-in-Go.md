@@ -58,7 +58,7 @@ if err := conn.SetDeadline(time.Now().Add(15 * time.Second)); err != nil {
 
 ## 从服务端获取时间
 
-在发送请求包给服务端前，第一个字节是用来设置通信的配置，我们这里用 0x1B（或者二进制 00011011），代表客户端模式为 3，NTP版本为 3，润年为 0，如下所示：
+在发送请求包给服务端前，第一个字节是用来设置通信的配置，我们这里用 0x1B（或者二进制 00011011），代表客户端模式为 3，NTP 版本为 3，润年为 0，如下所示：
 
 ```go
 // configure request settings by specifying the first byte as

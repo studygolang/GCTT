@@ -54,7 +54,7 @@ main.go:14:9: &smallStruct literal escapes to heap
 
 ![用 mcache 分配内存](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191103-Go-Memory-Management-and-Allocation/allocation-with-mcache.png)
 
-每个线程 `M` 被分配一个处理器 `P`，并且一次最多处理一个 goroutine。在分配内存时，当前的 goroutine 会使用它当前的 P 的本地缓存，在 span 链表中寻找第一个可用的空闲对象。使用这种本地缓存不需要锁操作，从而分配效率更高。
+每个线程 `M` 被分配一个处理器 `P`，并且一次最多处理一个 goroutine。在分配内存时，当前的 Goroutine 会使用它当前的 P 的本地缓存，在 span 链表中寻找第一个可用的空闲对象。使用这种本地缓存不需要锁操作，从而分配效率更高。
 
 span 链表被划分为 8 字节大小到 32k 字节大小的，约 70 个的大小等级，每个等级可以存储不同大小的对象。
 

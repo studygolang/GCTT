@@ -105,7 +105,7 @@ go test -bench=.
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200912-Optimizing-String-Comparisons-in-Go/01.png)
 
-从上图可以看出，使用标准的比较操作符比使用 Strings 包的方法要快。2.92 纳秒比7.39 纳秒。
+从上图可以看出，使用标准的比较操作符比使用 Strings 包的方法要快。2.92 纳秒比 7.39 纳秒。
 
 重复跑了几次测试，结果都差不多：
 

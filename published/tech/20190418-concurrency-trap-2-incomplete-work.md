@@ -19,7 +19,7 @@ Jacob Walker 2019 年 4 月 18 日
 ```go
 5 func main() {
 6     fmt.Println("Hello")
-7     go fmt.Println("Goodbye")
+7     Go fmt.Println("Goodbye")
 8 }
 ```
 
@@ -74,7 +74,7 @@ Jacob Walker 2019 年 4 月 18 日
 30
 31     // Fire and Hope.
 32     // BUG: We are not managing this Goroutine.
-33     go a.track.Event("this event")
+33     Go a.track.Event("this event")
 34 }
 ```
 
@@ -126,7 +126,7 @@ https://play.golang.org/p/BMah6_C57-l
 21     t.wg.Add(1)
 22
 23     // Track event in a Goroutine so caller is not blocked.
-24     go func() {
+24     Go func() {
 25
 26         // Decrement counter to tell Shutdown this Goroutine finished.
 27         defer t.wg.Done()
@@ -184,7 +184,7 @@ https://play.golang.org/p/BMah6_C57-l
 42
 43     // Create a Goroutine to wait for all other Goroutines to
 44     // be done then close the channel to unblock the select.
-45     go func() {
+45     Go func() {
 46         t.wg.Wait()
 47         close(ch)
 48     }()

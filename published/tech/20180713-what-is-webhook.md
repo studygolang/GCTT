@@ -51,7 +51,7 @@ func main() {
         dispatcher.add(wr.Name, wr.Destination)
     })
     // start dispatching webhooks
-    go dispatcher.Start()
+    Go dispatcher.Start()
     fmt.Printf("Create webhooks on http://localhost%s/webhooks \n", port)
     // starting server
     err := srv.ListenAndServe()
@@ -83,7 +83,7 @@ func (d *Dispatcher) dispatch() {
     d.mu.Lock()
     defer d.mu.Unlock()
     for user, destination := range d.destinations {
-        go func(user, destination string) {
+        Go func(user, destination string) {
             req, err := http.NewRequest("POST", destination, bytes.NewBufferString(fmt.Sprintf("Hello %s, current time is %s", user, time.Now().String())))
             if err != nil {
                 // probably don't allow creating invalid destinations
@@ -100,14 +100,14 @@ func (d *Dispatcher) dispatch() {
 }
 ```
 
-## 运行这个webhook 应用
+## 运行这个 webhook 应用
 
 要使用这个 webhook 应用，我们需要一个可以接收 webhook 消息并且调试的一个终端。为了完成这个任务，我们选择了 [https://bin.webhookrelay.com/](https://bin.webhookrelay.com/) 这个免费的服务。打开这个链接后，会被重定向到一个唯一的地址，那个就是我们要使用的终端地址，后面我们很快就会用到这个地址。
 
 接下来让我们启动这个应用：
 
 ```
-$ go run main.go
+$ Go run main.go
 Create webhooks on http://localhost:8090/webhooks
 ```
 

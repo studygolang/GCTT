@@ -76,7 +76,7 @@ func TestCountMallocs(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping malloc count in short mode")
 	}
-	// rest of test...
+	// REST of test...
 }
 ```
 
@@ -117,7 +117,7 @@ func TestParallel(t *testing.T) {
 
 为了保持可控性，`-p` 标志可以用来指定编译和测试的并发数。当仓库中有多个测试包，并且每个包在不同的子目录中，一个可以执行所有包的命令是 `go test ./...`，这包含当前目录和所有子目录。没有带 `-p` 标志执行时，总的运行时间应该接近于运行时间最长的包的时间（加上编译时间）。运行 `go test -p 1 ./...`，使编译和测试工具只能在一个包中执行时，总的时间应该接近于所有独立的包测试的时间加上编译的时间的总和。你可以自己试试，执行 `go test -p 3 ./...`，看一下对运行时间的影响。
 
-还有，另外一个可以并行化的地方（你应该测试一下）是在包的代码里面。多亏了 Go 非常棒的并行原语，实际上，除非 GOMAXPROCS 通过环境变量或者在代码中显式设置为 GOMAXPROCS=1，否则，包中一个goroutines 都没有用是不太常见的。想要使用 2 个 CPU，可以执行 `GOMAXPROCS=2 go test`，想要使用 4 个 CPU，可以执行 `GOMAXPROCS=4 go test`，但还有更好的方法：`go test -cpu=1,2,4` 将会执行 3 次，其中 GOMAXPROCS 值分别为 1，2，和 4。
+还有，另外一个可以并行化的地方（你应该测试一下）是在包的代码里面。多亏了 Go 非常棒的并行原语，实际上，除非 GOMAXPROCS 通过环境变量或者在代码中显式设置为 GOMAXPROCS=1，否则，包中一个 goroutines 都没有用是不太常见的。想要使用 2 个 CPU，可以执行 `GOMAXPROCS=2 Go test`，想要使用 4 个 CPU，可以执行 `GOMAXPROCS=4 Go test`，但还有更好的方法：`go test -cpu=1,2,4` 将会执行 3 次，其中 GOMAXPROCS 值分别为 1，2，和 4。
 
 `-cpu` 标志，搭配数据竞争的探测标志 `-race`，简直进入天堂（或者下地狱，取决于它具体怎么运行）。竞争探测是一个很神奇的工具，在以高并发为主的开发中不得不使用这个工具（来防止死锁问题），但对它的讨论已经超过了本文的范围。如果你对此感兴趣，可以阅读 Go 官方博客的 [这篇文章](http://blog.golang.org/race-detector)。
 

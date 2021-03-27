@@ -634,7 +634,7 @@ case T2:
 
 via: https://medium.com/golangspec/interfaces-in-go-part-ii-d5057ffdb0a6
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[csshawn](https://github.com/csshawn)
 校对：[polaris1119](https://github.com/polaris1119)
 

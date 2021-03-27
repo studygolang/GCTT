@@ -15,9 +15,9 @@ import "fmt"
 ```
 要想运行这段代码，就要在 `hello-world.go` 所在目录中输入以下命令，并且使用 `go run` 运行。
 ```shell
-$ go run hello-world.go
+$ Go run hello-world.go
 hello world
-$ go build hello-world.go
+$ Go build hello-world.go
 $ ls
 hello-world hello-world.go
 $ ./hello-world
@@ -58,14 +58,14 @@ Go 还被一些大公司使用，例如 BBC、Uber、Novartis、Basecamp and Sou
 ### SendGrid 投入 Go
 SendGrid 是一个客户沟通的平台，并于 2014 年将 Go 作为主要开发语言。SendGrid 开发团队需要从根本上转变它们的开发语言，归结为 Scala、Java 和 Go 之间的竞争。当时，SendGrid 在开发中面临最大的挑战是并发编程。寻找具有并发的异步编程的特性，然后将其作为编程语言中的一部分，这是 SendGrid 选择 Go 最令人信服的原因之一。
 
-可以在他们的博客上阅读全文：[如何说服您的公司选择Golang？](https://sendgrid.com/blog/convince-company-go-golang/)
+可以在他们的博客上阅读全文：[如何说服您的公司选择 Golang？](https://sendgrid.com/blog/convince-company-go-golang/)
 
 ### Hexac 已经从 Python 转换到 Go
 Hexac 的联合创始人兼 CTO Tigran Bayburtsyan 写了一篇独家文章，分享了他的公司[从 Python 转到 Go 的原因](https://hackernoon.com/5-reasons-why-we-switched-from-python-to-go-4414d5f42690)。根据他们的代码库统计信息，在使用 Go 重构了所有项目之后，他们的代码量比以前减少了 64% 。
 
 由于 Go 内置的语言特性，他们节省了大量资源（内存和 CPU ）。
 
-Go 为他们的开发团队提供了极大的灵活性，可以在所有用例中使用单一的语言，并且效率很高。在 Hexact 股份有限公司中，他们的后端和API服务的性能提高了约 30％。
+Go 为他们的开发团队提供了极大的灵活性，可以在所有用例中使用单一的语言，并且效率很高。在 Hexact 股份有限公司中，他们的后端和 API 服务的性能提高了约 30％。
 现在，他们可以实时地处理日志，然后将其传输到数据库；在单个或多个服务中，使用 Websocket 进行流式传输。这就是 Go 语言带来的出色表现。
 
 ### Salesforce 抛弃 Python 而选择了 Go
@@ -74,7 +74,7 @@ Go 为他们的开发团队提供了极大的灵活性，可以在所有用例�
 ### Containerum 优先选择 Go
 Containerum 是一个使用 Go 作为主要开发语言的容器管理平台，已经有大约四年的历史，尽管面临着某些挑战，工程团队仍然认为这是一个不错的选择。选择在 Containerum Platform 上使用 Go 的主要原因是，它由一组比较小的服务组成，这些服务与其他组件进行通信。为了确保这一点，我们非常需要确保接口的兼容性并且要编写简洁、易于阅读和维护的代码。
 
-Go 支持添加补丁并允许在代码库中使用准备就绪的组件。例如，图像名称解析认证，关键对象模型等，这是 Containerum 选择Go的原因之一。
+Go 支持添加补丁并允许在代码库中使用准备就绪的组件。例如，图像名称解析认证，关键对象模型等，这是 Containerum 选择 Go 的原因之一。
 
 Containerum 之所以考虑使用 Go 语言，是因为它具有许多专业的功能，例如静态类型，语法简洁，标准库，出色的性能，快速的编译等。请阅读原文：[我们为什么使用 Go 来为 Kubernetes 开发 Containerum 平台](https://medium.com/containerum/why-we-use-go-to-develop-containerum-platform-for-kubernetes-3a33d5bdc5ec)。
 
@@ -90,9 +90,9 @@ Containerum 之所以考虑使用 Go 语言，是因为它具有许多专业的�
 
 因为 Kubernetes 也是用 Go 编写的，所以 Istio 使用 Go 进行开发也是一种完美的方法。这不仅是 Go 适应分散的和分布式网络项目的原因之一，也是在 Istio 选择 Go 的主要原因之一。
 
-更多详细内容请访问：[证明 Google Go 功能强大的10个开源项目](https://www.infoworld.com/article/3442978/10-open-source-projects-proving-the-power-of-google-go.html)。
+更多详细内容请访问：[证明 Google Go 功能强大的 10 个开源项目](https://www.infoworld.com/article/3442978/10-open-source-projects-proving-the-power-of-google-go.html)。
 
-如果您正在使用 Golang 编写应用程序，那么实践CI / CD有多困难？这很难，不是吗？
+如果您正在使用 Golang 编写应用程序，那么实践 CI / CD 有多困难？这很难，不是吗？
 
 好吧，不是现在。但是借助 [Go Center GOPROXY](https://search.gocenter.io/) 等最新技术，增长 CI / CD 质量的途径将会变得更加清晰。GoCenter 是不可变的 Go 模块的公共的中央仓库，它允许您搜索模块和版本，也可以轻松地将模块添加到中央仓库，然后公开分享它们。
 

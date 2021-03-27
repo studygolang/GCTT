@@ -2,7 +2,7 @@
 
 # Go：关于 Cobra 的想法
 
-!["Golang之旅"插图，来自 Go Gopher 的 Renee French 创作](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-thoughts-about-cobra/A%20Journey%20With%20Go.png)
+!["Golang 之旅"插图，来自 Go Gopher 的 Renee French 创作](https://raw.githubusercontent.com/studygolang/gctt-images2/master/go-thoughts-about-cobra/A%20Journey%20With%20Go.png)
 
 Cobra 是 Golang 生态系统中最着名的项目之一。它简单，高效，并得到 Go 社区的大力支持。让我们来深入探索一下。
 
@@ -19,7 +19,7 @@ cmd := &cobra.Command{
 }
 ```
 
-设计非常类似于原生的 go 标准库命令，如 `go env`，`go fmt`等
+设计非常类似于原生的 Go 标准库命令，如 `go env`，`go fmt` 等
 
 比如，`go fmt` 命令结构：
 
@@ -36,7 +36,7 @@ For more about specifying packages, see 'go help packages'.
 The -n flag prints commands that would be executed.
 The -x flag prints commands as they are executed.
 To run gofmt with specific options, run gofmt itself.
-See also: go fix, go vet.
+See also: Go fix, Go vet.
     `,
 }
 ```
@@ -101,7 +101,7 @@ main.go:4:2: use of internal package cmd/go/internal/base not allowed
 
 然而，正如 Cobra 创建者 [Steve Francia](https://www.linkedin.com/in/stevefrancia/) 所解释的那样：这个内部界面设计 [催生了了 Cobra](https://blog.gopheracademy.com/advent-2014/introducing-cobra/)（Steve Franci 在 Google 工作并曾直接参与了 Go 项目。）。
 
-该项目也建立在来自同一作者的 [pflag 项目](https://github.com/spf13/pflag) 之上，提供符合 POSIX 标准。因此，程序包支持短标记和长标记，如`-e`替代`--example` ,或者多个选项，如`-abc` 和`-a`，`-b` 和`-c` 都是是有效选项。这旨在改进 Go 库中的 `flag` 包，该库仅支持标志`-xxx`。
+该项目也建立在来自同一作者的 [pflag 项目](https://github.com/spf13/pflag) 之上，提供符合 POSIX 标准。因此，程序包支持短标记和长标记，如 `-e` 替代 `--example` ,或者多个选项，如 `-abc` 和 `-a`，`-b` 和 `-c` 都是是有效选项。这旨在改进 Go 库中的 `flag` 包，该库仅支持标志 `-xxx`。
 
 ## 特性
 
@@ -109,7 +109,7 @@ Cobra 有一些值得了解的简便方法：
 
 * Cobra 提供了两种方法来运行我们的逻辑： `Run func(cmd *Command, args []string)` 和 `RunE func(cmd *Command, args []string) error` ，后者可以返回一个错误，我们将能够从 `Execute()` 方法的返回中捕获。
 
-* `Command` 结构 提供了一个 `Aliases（别名）` 属性，允许我们将命令迁移到一个新名称，而不需要在`alias`属性中通过映射旧名称来破坏现有的行为。这种兼容性策略甚至可以通过使用 `Deprecated` 属性来增强，该属性允许您将一个命令标记为`Deprecated(即将弃用，不推荐使用)`，并在删除它之前提供一个简短的说明。
+* `Command` 结构 提供了一个 `Aliases（别名）` 属性，允许我们将命令迁移到一个新名称，而不需要在 `alias` 属性中通过映射旧名称来破坏现有的行为。这种兼容性策略甚至可以通过使用 `Deprecated` 属性来增强，该属性允许您将一个命令标记为 `Deprecated(即将弃用，不推荐使用)`，并在删除它之前提供一个简短的说明。
 
 * 由于每个命令都可以嵌入其他命令，因此 Cobra 本身支持嵌套命令，并允许我们像下边这样编写：
 
@@ -212,11 +212,11 @@ func BenchmarkCmd(b *testing.B) {
 }
 ```
 
-Cobra 运行 50 条命令只有 49.0μs 负载：
+Cobra 运行 50 条命令只有 49.0 μ s 负载：
 
 ```sh
 name   time/op
-Cmd-8  49.0µs ± 1%
+Cmd-8  49.0 µ s ± 1%
 
 name   alloc/op
 Cmd-8  78.3kB ± 0%
@@ -233,7 +233,7 @@ Cmd-8  646 ± 0%
 
 让我们回顾两个可以替代 Cobra 的项目：
 
-* [cli](https://github.com/urfave/cli)，一个用于构建命令行应用程序的包。这个包和 Cobra 一样流行，与嵌套命令，bash 补全，hook（钩子），alias(别名)等非常相似。但是，与 Cobra 不同，这个包使用 Go 库中的原生`flag`包。
+* [cli](https://github.com/urfave/cli)，一个用于构建命令行应用程序的包。这个包和 Cobra 一样流行，与嵌套命令，bash 补全，hook（钩子），alias(别名)等非常相似。但是，与 Cobra 不同，这个包使用 Go 库中的原生 `flag` 包。
 
 urfave/cli 例子：
 

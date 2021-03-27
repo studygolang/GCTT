@@ -15,7 +15,7 @@
 
 ## 介绍（Introduction）
 
-在四部分系列的第一部分，我用一个将值共享给 goroutine 栈的例子介绍了指针结构的基础。而我没有说的是值存在栈之上的情况。为了理解这个，你需要学习值存储的另外一个位置：堆。有这个基础，就可以开始学习逃逸分析。
+在四部分系列的第一部分，我用一个将值共享给 Goroutine 栈的例子介绍了指针结构的基础。而我没有说的是值存在栈之上的情况。为了理解这个，你需要学习值存储的另外一个位置：堆。有这个基础，就可以开始学习逃逸分析。
 
 逃逸分析是编译器用来决定你的程序中值的位置的过程。特别地，编译器执行静态代码分析，以确定一个构造体的实例化值是否会逃逸到堆。在 Go 语言中，你没有可用的关键字或者函数，能够直接让编译器做这个决定。只能够通过你写代码的方式来作出这个决定。
 
@@ -27,7 +27,7 @@
 
 ## 共享栈（Sharing Stacks）
 
-在 Go 语言中，不允许 goroutine 中的指针指向另外一个 goroutine 的栈。这是因为当栈增长或者收缩时，goroutine 中的栈内存会被一块新的内存替换。如果运行时需要追踪指针指向其他的 goroutine 的栈，就会造成非常多需要管理的内存，以至于更新指向那些栈的指针将使 “stop the world” 问题更严重。
+在 Go 语言中，不允许 Goroutine 中的指针指向另外一个 Goroutine 的栈。这是因为当栈增长或者收缩时，goroutine 中的栈内存会被一块新的内存替换。如果运行时需要追踪指针指向其他的 Goroutine 的栈，就会造成非常多需要管理的内存，以至于更新指向那些栈的指针将使 “stop the world” 问题更严重。
 
 这里有一个栈被替换好几次的例子。看输出的第 2 和第 6 行。你会看到 main 函数中的栈的字符串地址值改变了两次。[https://play.golang.org/p/pxn5u4EBSI](https://play.golang.org/p/pxn5u4EBSI)
 
@@ -209,7 +209,7 @@ func createUserV2() *user {
 02：跟函数 `json.Unmarshal` 函数共享指针。
 03：返回 `u` 的副本给调用者。
 
-这里并不是很好理解，`user`值被 `json.Unmarshal` 函数创建，并被共享给调用者。
+这里并不是很好理解，`user` 值被 `json.Unmarshal` 函数创建，并被共享给调用者。
 
 如何在构造过程中使用语法语义来改变可读性？
 
@@ -240,7 +240,7 @@ func createUserV2() *user {
 ### 清单 10
 
 ```shell
-$ go build -gcflags "-m -m"
+$ Go build -gcflags "-m -m"
 ./main.go:16: cannot inline createUserV1: marked go:noinline
 ./main.go:27: cannot inline createUserV2: marked go:noinline
 ./main.go:8: cannot inline main: non-leaf function

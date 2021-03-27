@@ -114,7 +114,7 @@ ___完整源代码___: 本小节所有的源代码都可以在[simple-mutation.g
 当我们尝试运行这些代码，我们会看到 _变更_ 已经被成功地调用，并且，返回的教程列表中已经包含了我们最新定义的教程信息。
 
 ```bash
-$ go run ./...
+$ Go run ./...
 {"data":{"create":{"title":"Hello World"}}}
 {"data":{"list":[{"id":1,"title":"Go GraphQL Tutorial"},{"id":2,"title":"Go GraphQL Tutorial - Part 2"},{"id":0,"title":"Hello World"}]}}
 ```
@@ -230,7 +230,7 @@ fmt.Printf("%s \n", rJSON)
 运行该代码，我们可以看到从 SQLite3 数据库返回的三行数据，同时我们也可以看到从 GraphQL 查询中返回的 JSON 响应体。同样地，如果我们只想返回教程的 `id`，我们可以修改 `query` 删除 `title` 字段，一切也会如预期一样地工作。
 
 ```bash
-$ go run ./...
+$ Go run ./...
 2018/12/30 14:44:08 {1 First Tutorial { [] } []}
 2018/12/30 14:44:08 {2 Second Tutorial { [] } []}
 2018/12/30 14:44:08 {3 third Tutorial { [] } []}
@@ -287,7 +287,7 @@ query := `
 运行代码，我们可以观察到该解析器函数已成功连接至 SQLite 数据库，并可以查询到相关的教程信息：
 
 ```bash
-$ go run ./...
+$ Go run ./...
 {"data":{"tutorial":{"id":1,"title":"First Tutorial"}}}
 ```
 

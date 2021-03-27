@@ -6,7 +6,7 @@
 
 > 本文基于 Go 1.14
 
-`select` 允许在一个 goroutine 中管理多个 channel。但是，当所有 channel 同时就绪的时候，go 需要在其中选择一个执行。此外，go 还需要处理没有 channel 就绪的情况，我们先从就绪的 channel 开始。
+`select` 允许在一个 Goroutine 中管理多个 channel。但是，当所有 channel 同时就绪的时候，go 需要在其中选择一个执行。此外，go 还需要处理没有 channel 就绪的情况，我们先从就绪的 channel 开始。
 
 ## 顺序
 
@@ -52,7 +52,7 @@ func main() {
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-ordering-in-select-statements/20200429223415.png)
 
-由于 go 不会删除重复的 channel，所以可以使用多次添加 case 来影响结果，代码如下：
+由于 Go 不会删除重复的 channel，所以可以使用多次添加 case 来影响结果，代码如下：
 
 ```go
 func main() {

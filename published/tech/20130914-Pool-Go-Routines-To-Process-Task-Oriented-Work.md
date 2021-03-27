@@ -12,17 +12,17 @@
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/pool-go/1.png)
 
-如上图所示，主业务例程提交了100个任务到工作池中。工作池将它们都排入队列，当一个 Goroutine 空闲，工作池从任务队列中取出一个任务分配到此 Goroutine 上，此任务将会得到执行。执行完毕后此 Goroutine 将会再次空闲并等待处理其他任务。Goroutines 的数量和队列的容量是可配置的，这意味着工作池可以用于程序的性能调节。
+如上图所示，主业务例程提交了 100 个任务到工作池中。工作池将它们都排入队列，当一个 Goroutine 空闲，工作池从任务队列中取出一个任务分配到此 Goroutine 上，此任务将会得到执行。执行完毕后此 Goroutine 将会再次空闲并等待处理其他任务。Goroutines 的数量和队列的容量是可配置的，这意味着工作池可以用于程序的性能调节。
 
 Go 语言使用 Goroutine 替代了线程。Go 运行环境管理了一个内部的线程池并且在这个池内调度 Goroutines。线程池是最小化 Go 运行环境的负载和最大化程序性能的关键手段。当我们创建了一个新的 Goroutine 时，Go 运行环境将在内部线程池中管理和调度这个 Goroutine。这个原理就和操作系统在空闲的 CPU 核心上调度线程一样。通过 Goroutine 我们可以获得同调度线程池一样的效果，甚至可能更好。
 
 对于处理基于任务的操作我有一个简单的原则：少即是多。我总是想要知道对于特定操作，最好的结果需要的 Goroutines 的最小值是多少。最好的结果不仅仅是全部的任务需要花费多长时间来完成，同样还包括处理这些任务对程序、系统和平台所产生的影响。你必须同时考虑到短期影响和长期影响。
 
-在系统或程序负载较轻的情况下，我们很容易就能获取到非常快的处理速度。但是某天系统负荷的轻微增加就会导致之前的配置不起作用，而我们并没有意识到正是我们在严重伤害和我们交互的系统。我们可能把数据库或者网络服务器用的太狠了，最终造成了系统的宕机。突发的100个并发任务可以运行正常，但是持续一个小时的并发可能就是致命的。
+在系统或程序负载较轻的情况下，我们很容易就能获取到非常快的处理速度。但是某天系统负荷的轻微增加就会导致之前的配置不起作用，而我们并没有意识到正是我们在严重伤害和我们交互的系统。我们可能把数据库或者网络服务器用的太狠了，最终造成了系统的宕机。突发的 100 个并发任务可以运行正常，但是持续一个小时的并发可能就是致命的。
 
 工作池并不是可以解决全世界运算问题的魔力仙女，它却可以用在你的程序中处理基于任务的操作。它可以根据你的系统表现提供配置选项和控制功能。随着系统变化，你也有足够的灵活度来改变。
 
-现在让我们举个例子来证明在处理基于任务的操作方面工作池要比盲目的产生 Goroutines 更有效率。我们的测试程序运行某一个任务，它会获取一个 MongoDB 的连接，在数据库上执行查询命令并返回数据。一般的业务中都会有类似的功能。这个测试程序将会提交100个任务到工作池中，运行5次后统计平均运行时间。
+现在让我们举个例子来证明在处理基于任务的操作方面工作池要比盲目的产生 Goroutines 更有效率。我们的测试程序运行某一个任务，它会获取一个 MongoDB 的连接，在数据库上执行查询命令并返回数据。一般的业务中都会有类似的功能。这个测试程序将会提交 100 个任务到工作池中，运行 5 次后统计平均运行时间。
 
 打开终端，运行如下的命令来下载代码：
 
@@ -38,7 +38,7 @@ cd $HOME/example/bin
 ./workpooltest 100 off
 ```
 
-第一个参数告诉程序创建100个 Goroutines 的工作池，第二个参数告诉程序关闭详细的日志输出。
+第一个参数告诉程序创建 100 个 Goroutines 的工作池，第二个参数告诉程序关闭详细的日志输出。
 
 在我的 Macbook 上，运行上面这个命令的结果是：
 
@@ -210,10 +210,10 @@ func New(numberOfRoutines int, queueCapacity int32) *WorkPool {
 
     for workRoutine := 0; workRoutine < numberOfRoutines; workRoutine++ {
         workPool.shutdownWaitGroup.Add(1)
-        go workPool.workRoutine(workRoutine)
+        Go workPool.workRoutine(workRoutine)
     }
 
-    go workPool.queueRoutine()
+    Go workPool.queueRoutine()
     return &workPool
 }
 ```
@@ -224,9 +224,9 @@ func New(numberOfRoutines int, queueCapacity int32) *WorkPool {
 
 http://golang.org/doc/effective_go.html#channels
 
-当 channel 初始化完毕后，我们就可以去创建 Goroutines 了。首先我们对每个 Goroutine 的 WaitGroup 加1来关闭它们。接着创建 Goroutines。最后开启 QueueRoutine 来接收工作。
+当 channel 初始化完毕后，我们就可以去创建 Goroutines 了。首先我们对每个 Goroutine 的 WaitGroup 加 1 来关闭它们。接着创建 Goroutines。最后开启 QueueRoutine 来接收工作。
 
-要学习关闭Goroutines的代码和WaitGroup是如何工作的，请阅读此链接：
+要学习关闭 Goroutines 的代码和 WaitGroup 是如何工作的，请阅读此链接：
 
 http://dave.cheney.net/2013/04/30/curious-channels
 
@@ -247,7 +247,7 @@ func (wp *WorkPool) Shutdown(goRoutine string) {
 }
 ```
 
-Shutdown函数首先关闭 QueueRoutine，这样就不会接收更多的请求。接着关闭 ShutdownWorkChannel，并等待每个 Goroutine 去对 WaitGroup 计数器做减操作。一旦最后一个 Goroutine 调用了 Done 函数，等待函数 Wait 将会返回，工作池将会被关闭。
+Shutdown 函数首先关闭 QueueRoutine，这样就不会接收更多的请求。接着关闭 ShutdownWorkChannel，并等待每个 Goroutine 去对 WaitGroup 计数器做减操作。一旦最后一个 Goroutine 调用了 Done 函数，等待函数 Wait 将会返回，工作池将会被关闭。
 
 现在让我们看看 PostWork 和 QueueRoutine 函数：
 

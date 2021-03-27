@@ -77,8 +77,8 @@ func handleTunneling(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         http.Error(w, err.Error(), http.StatusServiceUnavailable)
     }
-    go transfer(dest_conn, client_conn)
-    go transfer(client_conn, dest_conn)
+    Go transfer(dest_conn, client_conn)
+    Go transfer(client_conn, dest_conn)
 }
 func transfer(destination io.WriteCloser, source io.ReadCloser) {
     defer destination.Close()
@@ -182,7 +182,7 @@ go transfer(dest_conn, client_conn)
 go transfer(client_conn, dest_conn)
 ```
 
-两个 goroutine 中数据朝两个方向复制：从客户端到目的服务器及其反方向。
+两个 Goroutine 中数据朝两个方向复制：从客户端到目的服务器及其反方向。
 
 ## 测试
 
@@ -208,7 +208,7 @@ go transfer(client_conn, dest_conn)
 
 via: https://medium.com/@mlowicki/http-s-proxy-in-golang-in-less-than-100-lines-of-code-6a51c2f2c38c
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[dongkui0712](https://github.com/dongkui0712)
 校对：[rxcai](https://github.com/rxcai)
 

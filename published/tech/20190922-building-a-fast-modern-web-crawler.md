@@ -85,7 +85,7 @@ Happy hacking!
 
 via: https://creekorful.me/building-fast-modern-web-crawler/
 
-作者：[Aloïs Micard](https://creekorful.me/author/creekorful/)
+作者：[Alo ï s Micard](https://creekorful.me/author/creekorful/)
 译者：[Anxk](https://github.com/Anxk)
 校对：[lxbwolf](https://github.com/lxbwolf)
 

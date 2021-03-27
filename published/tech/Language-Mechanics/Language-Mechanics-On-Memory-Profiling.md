@@ -17,7 +17,7 @@
 
 ## 介绍（Introduction）
 
-在前面的博文中，通过一个共享在 goroutine 的栈上的值的例子讲解了逃逸分析的基础。还有其他没有介绍的造成值逃逸的场景。为了帮助大家理解，我将调试一个分配内存的程序，并使用非常有趣的方法。
+在前面的博文中，通过一个共享在 Goroutine 的栈上的值的例子讲解了逃逸分析的基础。还有其他没有介绍的造成值逃逸的场景。为了帮助大家理解，我将调试一个分配内存的程序，并使用非常有趣的方法。
 
 ## 程序（The Program）
 
@@ -125,7 +125,7 @@ func BenchmarkAlgorithmOne(b *testing.B) {
 ### 清单 4
 
 ```
-$ go test -run none -bench AlgorithmOne -benchtime 3s -benchmem
+$ Go test -run none -bench AlgorithmOne -benchtime 3s -benchmem
 BenchmarkAlgorithmOne-8    	2000000 	     2522 ns/op       117 B/op  	      2 allocs/op
 ```
 
@@ -138,7 +138,7 @@ BenchmarkAlgorithmOne-8    	2000000 	     2522 ns/op       117 B/op  	      2 al
 ### 清单 5
 
 ```
-$ go test -run none -bench AlgorithmOne -benchtime 3s -benchmem -memprofile mem.out
+$ Go test -run none -bench AlgorithmOne -benchtime 3s -benchmem -memprofile mem.out
 BenchmarkAlgorithmOne-8    	2000000      2570 ns/op       117 B/op        2 allocs/op
 ```
 
@@ -163,7 +163,7 @@ total 9248
 ### 清单 7
 
 ```
-$ go tool pprof -alloc_space memcpu.test mem.out
+$ Go tool pprof -alloc_space memcpu.test mem.out
 Entering interactive mode (type "help" for commands)
 (pprof) _
 ```
@@ -402,7 +402,7 @@ func algOne(data []byte, find []byte, repl []byte, output *bytes.Buffer) {
 ### 清单 19
 
 ```
-$ go test -run none -bench AlgorithmOne -benchtime 3s -benchmem -memprofile mem.out
+$ Go test -run none -bench AlgorithmOne -benchtime 3s -benchmem -memprofile mem.out
 BenchmarkAlgorithmOne-8    	2000000      1814 ns/op         5 B/op        1 allocs/op
 ```
 
@@ -411,7 +411,7 @@ BenchmarkAlgorithmOne-8    	2000000      1814 ns/op         5 B/op        1 allo
 ### 清单 20
 
 ```
-$ go tool pprof -alloc_space memcpu.test mem.out
+$ Go tool pprof -alloc_space memcpu.test mem.out
 Entering interactive mode (type "help" for commands)
 (pprof) list algOne
 Total: 7.50MB
@@ -439,7 +439,7 @@ ROUTINE ======================== .../memcpu.BenchmarkAlgorithmOne in code/go/src
 ### 清单 21
 
 ```
-$ go build -gcflags "-m -m"
+$ Go build -gcflags "-m -m"
 ./stream.go:89: make([]byte, size) escapes to heap
 ./stream.go:89: from make([]byte, size) (too large for stack) at ./stream.go:89
 ```
@@ -461,7 +461,7 @@ $ go build -gcflags "-m -m"
 ### 清单 23
 
 ```
-$ go test -run none -bench AlgorithmOne -benchtime 3s -benchmem
+$ Go test -run none -bench AlgorithmOne -benchtime 3s -benchmem
 BenchmarkAlgorithmOne-8    3000000      1720 ns/op        0 B/op        0 allocs/op
 ```
 
@@ -470,7 +470,7 @@ BenchmarkAlgorithmOne-8    3000000      1720 ns/op        0 B/op        0 allocs
 ### 清单 24
 
 ```
-$ go build -gcflags "-m -m"
+$ Go build -gcflags "-m -m"
 ./stream.go:83: algOne &bytes.Buffer literal does not escape
 ./stream.go:89: algOne make([]byte, 5) does not escape
 ```

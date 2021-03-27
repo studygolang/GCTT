@@ -62,7 +62,7 @@ func main() {
 编译运行代码后输出:
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 value: []string{"one", "two", "three"}
 type: []string
 length: 3
@@ -101,7 +101,7 @@ func main() {
 ```
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 # github.com/mlowicki/lab
 src/github.com/mlowicki/lab/lab.go:11: cannot use numbers (type []int) as type int in argument to f
 ```
@@ -128,7 +128,7 @@ func main() {
 
 via: https://medium.com/golangspec/variadic-functions-in-go-13c33182b851
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[nicedevcn](https://github.com/nicedevcn)
 校对：[polaris1119](https://github.com/polaris1119)
 

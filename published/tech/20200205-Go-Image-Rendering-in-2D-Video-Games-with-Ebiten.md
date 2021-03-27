@@ -3,11 +3,11 @@
 # Go：使用 Ebiten 在 2D 视频游戏中进行图像渲染
 
 ![Ebiten](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200205-Go-Image-Rendering-in-2D-Video-Games-with-Ebiten/illustration.png)
-插图由创作原始 Go Gopher 作品的 Renee French 为“ Go的旅程”创作。
+插图由创作原始 Go Gopher 作品的 Renee French 为“ Go 的旅程”创作。
 
 *本文基于 Ebiten 1.10。*
 
-[Ebiten](https://ebiten.org/) 是由 [Hajime Hosh](https://github.com/hajimehoshi) 用 Go 语言编写的成熟的 2D 游戏库。它是 Apple Store 上一些手机游戏如 [Bear's Restaurant](https://daigostudio.com/bearsrestaurant/en/) 或桌面游戏如 [OpenDiablo2](https://github.com/OpenDiablo2) 的引擎，OpenDiablo2 是 Go 版本暗黑2 的开源实现。现在，让我们深入了解电子游戏中的一些基本概念以及它们在 Ebiten 中的实现。
+[Ebiten](https://ebiten.org/) 是由 [Hajime Hosh](https://github.com/hajimehoshi) 用 Go 语言编写的成熟的 2D 游戏库。它是 Apple Store 上一些手机游戏如 [Bear's Restaurant](https://daigostudio.com/bearsrestaurant/en/) 或桌面游戏如 [OpenDiablo2](https://github.com/OpenDiablo2) 的引擎，OpenDiablo2 是 Go 版本暗黑 2 的开源实现。现在，让我们深入了解电子游戏中的一些基本概念以及它们在 Ebiten 中的实现。
 
 ## 动画制作
 在电子游戏世界中，Ebiten 通过分离的静态图像来渲染动画。这些图像集合被组合成一个更大的图像，通常称为“[纹理图集](https://en.wikipedia.org/wiki/Texture_atlas)”，也称为“精灵图”。这是 [网站](https://ebiten.org/examples/animation.html) 上提供的示例：

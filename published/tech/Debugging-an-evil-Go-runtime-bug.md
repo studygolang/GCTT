@@ -124,9 +124,9 @@ github.com/prometheus/node_exporter/vendor/github.com/prometheus/client_golang/p
 但是，我还可以做另外一件事。既然这个问题会因为温度变高而更严重。那如果我加热内存的话会发生什么呢？
 
 ![Memtest86+](https://raw.githubusercontent.com/studygolang/gctt-images/master/debug-runtime-bug/badram.jpg)
-![A cozy 100℃](https://raw.githubusercontent.com/studygolang/gctt-images/master/debug-runtime-bug/badram_t.jpg)
+![A cozy 100 ℃](https://raw.githubusercontent.com/studygolang/gctt-images/master/debug-runtime-bug/badram_t.jpg)
 
-我用一个温度为 130℃ 的加热枪同时加热了两个内存模块（我的笔记本一共有四个 `SODIMM` 插槽，另外两个在背壳后面）。我按照模块顺序来检查，陆续发现了另外三个只能在高温环境下才能检测到的坏比特，它们分布在三个笔记本的三个内存条上。
+我用一个温度为 130 ℃ 的加热枪同时加热了两个内存模块（我的笔记本一共有四个 `SODIMM` 插槽，另外两个在背壳后面）。我按照模块顺序来检查，陆续发现了另外三个只能在高温环境下才能检测到的坏比特，它们分布在三个笔记本的三个内存条上。
 
 我还发现这些错误的地址很一致，即使在我交换这些模块之后。地址的高位比特都是相同的。这是因为内存是交错的，数据会分布在四个内存条上。这很方便，因为我可以把所有可能出错的内存比特地址都划到一个范围内，不用担心我可能在将来交换内存条搞错了掩码。我发现划掉一个相邻的 128KiB 区域就可以覆盖所有已知的损坏比特，为了保险，我最后划掉了相邻的 1MiB。所以我把三个 1MiB 对齐的内存块标记为坏内存块（其中一个包含了两个坏比特，加起来共有四个）：
 
@@ -273,20 +273,20 @@ done
 extra=
 if [ ! -z "$doit" ]; then
         sha="$(echo -n "$objfile" | sha1sum - | cut -d" " -f1)"
-        echo "${sha:0:8} $objfile" >> objs.txt
+        Echo "${sha:0:8} $objfile" >> objs.txt
         if [ $((0x${sha:0:8} & (0x80000000 >> $BIT))) = 0 ]; then
-                echo "[n]" "$objfile" 1>&2
+                Echo "[n]" "$objfile" 1>&2
         else
                 extra=-DCONFIG_OPTIMIZE_INLINING
-                echo "[y]" "$objfile" 1>&2
+                Echo "[y]" "$objfile" 1>&2
         fi
 fi
 
 exec gcc $extra "${args[@]}"
 ```
-这个脚本使用 `SHA-1` 算法计算每个 object 文件的哈希值，然后在前 32 位比特中任取一位，如果这个比特是 0， 就关闭 `CONFIG_OPTIMIZE_INLINING` 来编译。如果这个比特是 1，就打开`CONFIG_OPTIMIZE_INLINING` 来编译。我观察到现在的内核大概有 685 个 object 文件（我之前的最小化内核工作取得了成效），这写文件可能需要十个比特位来编号。这个方法还有一个好处是：我只需要关注会崩溃的内核，这可比证明一个内核不会崩溃简单多了。
+这个脚本使用 `SHA-1` 算法计算每个 object 文件的哈希值，然后在前 32 位比特中任取一位，如果这个比特是 0， 就关闭 `CONFIG_OPTIMIZE_INLINING` 来编译。如果这个比特是 1，就打开 `CONFIG_OPTIMIZE_INLINING` 来编译。我观察到现在的内核大概有 685 个 object 文件（我之前的最小化内核工作取得了成效），这写文件可能需要十个比特位来编号。这个方法还有一个好处是：我只需要关注会崩溃的内核，这可比证明一个内核不会崩溃简单多了。
 
-我以 `SHA-1` 哈希串前缀中的每一个比特位为标志位，花29分钟编译了 32 个内核。然后我开始测试他们是否会崩溃，每次我测试出一个会崩溃的内核，我就用一个正则表达式来表达可能的 `SHA-1` 值（在指定位数是 0 的值）。经过八次崩溃之后，我已经能锁定到 4 个 object 文件了。当我测试到第十次崩溃时，就只有一个匹配的 object 文件了。
+我以 `SHA-1` 哈希串前缀中的每一个比特位为标志位，花 29 分钟编译了 32 个内核。然后我开始测试他们是否会崩溃，每次我测试出一个会崩溃的内核，我就用一个正则表达式来表达可能的 `SHA-1` 值（在指定位数是 0 的值）。经过八次崩溃之后，我已经能锁定到 4 个 object 文件了。当我测试到第十次崩溃时，就只有一个匹配的 object 文件了。
 ```
 $ grep '^[0246][012389ab][0189][014589cd][028a][012389ab][014589cd]' objs_0.txt
 6b9cab4f arch/x86/entry/vdso/vclock_gettime.o

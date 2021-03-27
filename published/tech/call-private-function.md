@@ -1,19 +1,19 @@
 已发布：https://studygolang.com/articles/12134
 
-# 在 golang 中如何调用私有函数（绑定隐藏的标识符）
+# 在 Golang 中如何调用私有函数（绑定隐藏的标识符）
 
 2016 年 4 月 28 日
 
-名字在 golang 中的重要性和在其他任何一种语言是一样的。他们甚至含有语义的作用：在一个包的外部某个名字的可见性是由这个名字首字母是否是大写来决定的。
+名字在 Golang 中的重要性和在其他任何一种语言是一样的。他们甚至含有语义的作用：在一个包的外部某个名字的可见性是由这个名字首字母是否是大写来决定的。
 
 有时为了更好的组织代码或者在其他包使用某些隐藏的函数时需要克服这种限制。
 
 在过去美好的日子，有 2 种实现方式，它们能绕过编译器的检查：不能引用未导出的名称 pkg.symbol ：
 
 - 旧的方式，现在已经不再使用 - 汇编级隐式连接到所需符号，称为 assembly stubs ，详见 [go runtime, os/signal: use //go:linkname instead of assembly stubs to get access to runtime functions](https://groups.google.com/forum/#!topic/golang-codereviews/J0HK9GLc76M) 。
-- 现行的方式 - go 编译器通过 go:linkname 支持名称重定向，引用于 11.11.14 [ dev.cc code review 169360043: cmd/gc: changes for removing runtime C code (issue 169360043 by r…@golang.org)](https://groups.google.com/forum/#!topic/golang-codereviews/5Ps_El_RpNE) ，在 github.com 的 issue 上有可以找到 [ cmd/compile: “missing function body” error when using the //go:linkname compiler directive #15006](https://github.com/golang/go/issues/15006) 。
+- 现行的方式 - Go 编译器通过 go:linkname 支持名称重定向，引用于 11.11.14 [ dev.cc code review 169360043: cmd/gc: changes for removing runtime C code (issue 169360043 by r…@golang.org)](https://groups.google.com/forum/#!topic/golang-codereviews/5Ps_El_RpNE) ，在 github.com 的 issue 上有可以找到 [ cmd/compile: “missing function body” error when using the //go:linkname compiler directive #15006](https://github.com/golang/go/issues/15006) 。
 
-用这些技巧我曾设法绑定 golang 运行时调度器相关的函数用以减少过度使用 go 的协程和内部锁机制导致的 gc 停顿。
+用这些技巧我曾设法绑定 Golang 运行时调度器相关的函数用以减少过度使用 Go 的协程和内部锁机制导致的 gc 停顿。
 
 ## 使用 assembly stubs
 
@@ -23,7 +23,7 @@
 
 ```go
 // Assembly to get into package runtime without using exported symbols.
-// +build amd64 amd64p32 arm arm64 386 ppc64 ppc64le
+// +build amd64 amd64p32 ARM arm64 386 ppc64 ppc64le
 
 #include "textflag.h"
 
@@ -53,7 +53,7 @@ JMP runtime·signal_recv(SB)
 而 signal_unix.go 的绑定如下:
 
 ```go
-// +build darwin dragonfly freebsd linux nacl netbsd openbsd solaris windows
+// +build darwin dragonfly freebsd Linux nacl netbsd openbsd solaris windows
 
 package signal
 
@@ -71,14 +71,14 @@ func signal_recv() uint32
 
 ## 使用 go:linkname
 
-为了使用这种方法，代码中必须 `import _ "unsafe"` 包。为了解决 go 编译器 `-complete` 参数的限制，一种可能的方法是在 main 包目录加一个空的汇编 stub 文件以禁用编译器的检查。
+为了使用这种方法，代码中必须 `import _ "unsafe"` 包。为了解决 Go 编译器 `-complete` 参数的限制，一种可能的方法是在 main 包目录加一个空的汇编 stub 文件以禁用编译器的检查。
 
 详见 os/signal/sig.s：
 
 ```go
 // The runtime package uses //go:linkname to push a few functions into this
 // package but we still need a .s file so the Go tool does not pass -complete
-// to the go tool compile so the latter does not complain about Go functions
+// to the Go tool compile so the latter does not complain about Go functions
 // with no bodies.
 ```
 
@@ -154,7 +154,7 @@ import (
 
 // Event types in the trace, args are given in square brackets.
 const (
-	traceEvGoBlock        = 20 // goroutine blocks [timestamp, stack]
+	traceEvGoBlock        = 20 // Goroutine blocks [timestamp, stack]
 )
 
 type mutex struct {

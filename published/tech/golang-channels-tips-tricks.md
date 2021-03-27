@@ -2,9 +2,9 @@
 
 # Go 语言的缓冲通道：提示和技巧
 
-​Mahadevan Ramachandran • January 15
+​ Mahadevan Ramachandran • January 15
 
-通道和 goroutine 是 Go 语言基于 CSP（ communicating sequential processes ，通信顺序进程）并发机制的核心部分。阅读本文可以学到一些关于channel的提示和技巧，尤其是“缓冲” channel ，在 “生产者-消费者” 情境中广泛使用了缓冲通道作为队列。
+通道和 Goroutine 是 Go 语言基于 CSP（ communicating sequential processes ，通信顺序进程）并发机制的核心部分。阅读本文可以学到一些关于 channel 的提示和技巧，尤其是“缓冲” channel ，在 “生产者-消费者” 情境中广泛使用了缓冲通道作为队列。
 
 ## 缓冲通道 = 队列
 
@@ -39,7 +39,7 @@ select {
 }
 // 在这里, "ok" is:
 //   true  => 不阻塞的将元素入队
-//   false => 元素没有入队, 会因为queue已满而阻塞
+//   false => 元素没有入队, 会因为 queue 已满而阻塞
 ```
 
 消费者通常从队列中取出元素并处理它们。如果队列为空并且消费者无事可做，就会发生阻塞，直到生产者放入一个元素。
@@ -60,8 +60,8 @@ select {
         ok = false
 }
 // 在这里, "ok" is:
-//   true  => 从queue中取出元素item (或者queue已经关闭，见下)
-//   false => 没有取出元素, queue为空而发生阻塞
+//   true  => 从 queue 中取出元素 item (或者 queue 已经关闭，见下)
+//   false => 没有取出元素, queue 为空而发生阻塞
 ```
 
 ## 关闭缓冲通道
@@ -172,7 +172,7 @@ select {
 
 ## 咨询和训练
 
-需要帮助获得一个使用 Golang 的项目？我们在创建和运行生产级 Go 平台软件解决方案领域拥有丰富经验。我们可以帮助你架构和设计 Go 平台项目，或者为使用 Go 工作的团队提供建议和监督。我们也会为希望开展Go项目的团队提供培训或者提升 Golang 知识。[这里发现更多](https://www.rapidloop.com/training) 或者 [马上联系我们](https://www.rapidloop.com/contact) 来讨论你的需求！
+需要帮助获得一个使用 Golang 的项目？我们在创建和运行生产级 Go 平台软件解决方案领域拥有丰富经验。我们可以帮助你架构和设计 Go 平台项目，或者为使用 Go 工作的团队提供建议和监督。我们也会为希望开展 Go 项目的团队提供培训或者提升 Golang 知识。[这里发现更多](https://www.rapidloop.com/training) 或者 [马上联系我们](https://www.rapidloop.com/contact) 来讨论你的需求！
 
 **Mahadevan Ramachandran**
 

@@ -100,7 +100,7 @@ func main() {
 运行这个应用程序并向 `http://localhost:3000` 发出请求。你应该会得到这样的日志输出：
 
 ```
-$ go run main.go
+$ Go run main.go
 2014/10/13 20:27:36 Executing middlewareOne
 2014/10/13 20:27:36 Executing middlewareTwo
 2014/10/13 20:27:36 Executing finalHandler
@@ -205,7 +205,7 @@ OK
 goji/httpauth 包提供了 HTTP 基本的认证功能。它有一个 [SimpleBasicAuth](https://godoc.org/github.com/goji/httpauth#SimpleBasicAuth) helper，它返回一个带有签名的 `func (http.Handler) http.Handler` 函数。这意味着我们可以像我们定制的中间层一样（的方式）使用它。
 
 ```
-$ go get github.com/goji/httpauth
+$ Go get github.com/goji/httpauth
 ```
 
 ```
@@ -333,7 +333,7 @@ $ cat server.log
 
 ## 附加工具（Additional Tools）
 
-[由 Justinas Stankevičius 编写的 Alice](https://github.com/justinas/alice) 是一个非常聪明并且轻量级的包，它为连接中间层处理程序提供了一些语法糖。在最基础的方面，Alice 允许你重写这个：
+[由 Justinas Stankevi č ius 编写的 Alice](https://github.com/justinas/alice) 是一个非常聪明并且轻量级的包，它为连接中间层处理程序提供了一些语法糖。在最基础的方面，Alice 允许你重写这个：
 
 `http.Handle("/", myLoggingHandler(authHandler(enforceXMLHandler(finalHandler))))`
 

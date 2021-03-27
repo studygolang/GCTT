@@ -4,7 +4,7 @@
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go_devops/golang-pros-cons-4-time-package-method-overloading.png)
 
-万众期待的 Golang 之于 DevOps 开发的利与弊 系列终于回归了！在这篇文章，我们讨论下 Golang 中的 time 包，以及 go 语言中为什么不使用方法重载。
+万众期待的 Golang 之于 DevOps 开发的利与弊 系列终于回归了！在这篇文章，我们讨论下 Golang 中的 time 包，以及 Go 语言中为什么不使用方法重载。
 
 如果你没有读 [最近一篇](https://studygolang.com/articles/12614) 关于 “接口实现和公有/私有命名方式”（原文描述写错了，这一链接对应的应该是 “速度 vs. 缺少泛型”），请一定仔细阅读下，你也可以 [订阅我们的博客更新](http://eepurl.com/cOHJ3f)，以后有系列文章发布的时候你就能收到通知。
 
@@ -21,7 +21,7 @@
 
 ### 1. Time 包基本内容
 
-你可能认为每一种语言都有一个标准的，易用的处理 time 操作的内置库，其实不是这样的。NPM 有超过 [8000 多个 time 相关的包](https://www.npmjs.com/search?q=time&page=1&ranking=quality)，因为 javascript 的 Date 包没法用。Java8 最终使用 java.time.Instant 和 java.time.chrono 包缓解了这个问题，但仍在编写 [教程](https://www.tutorialspoint.com/java8/java8_datetime_api.htm)，研究各种用 Java 操作 time 的类和方法。相反，Golang 的 [time 包](https://golang.org/pkg/time/) 用一句话就能总结：只需引用一个包，你想要的都能实现。
+你可能认为每一种语言都有一个标准的，易用的处理 time 操作的内置库，其实不是这样的。NPM 有超过 [8000 多个 time 相关的包](https://www.npmjs.com/search?q=time&page=1&ranking=quality)，因为 JavaScript 的 Date 包没法用。Java8 最终使用 java.time.Instant 和 java.time.chrono 包缓解了这个问题，但仍在编写 [教程](https://www.tutorialspoint.com/java8/java8_datetime_api.htm)，研究各种用 Java 操作 time 的类和方法。相反，Golang 的 [time 包](https://golang.org/pkg/time/) 用一句话就能总结：只需引用一个包，你想要的都能实现。
 
 获取当前时间： `time.Now()`
 
@@ -111,4 +111,4 @@ via: https://blog.bluematador.com/golang-pros-cons-part-4-time-package-method-ov
 译者：[ArisAries](https://github.com/ArisAries)
 校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

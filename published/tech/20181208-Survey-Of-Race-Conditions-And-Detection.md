@@ -112,7 +112,7 @@ reqCount.Set(value + 1)
 即使以上述例子的方式访问 `reqCount Counter` 是线程安全的，但仍然存在逻辑上的竞态条件问题。我们使用完全同步的线程安全计数器（稍后介绍）执行下面的测试用例（[源码](https://github.com/dm03514/grokking-go/pull/3/files#diff-a507be0a589eb624edffd8260bba4bfdR14))，结果仍然不正确：
 
 ```bash
-$ go test -run TestLogicalRace ./races/ -v -total-requests=200 -concurrent-requests=200
+$ Go test -run TestLogicalRace ./races/ -v -total-requests=200 -concurrent-requests=200
 ...
 handling request: 25
 handling request: 25
@@ -210,11 +210,11 @@ Goroutine 426 (running) created at:
 
 ```bash
 WARNING: DATA RACE
-Write at 0x00c4200164e8 by goroutine 326:
+Write at 0x00c4200164e8 by Goroutine 326:
   GitHub.com/dm03514/grokking-go/candidates-and-contexts/races.TestExplicitRace.func1.1()
       /vagrant_data/go/src/github.com/dm03514/grokking-go/candidates-and-contexts/races/counters.go:18 +0x115
 ...
-previous read at 0x00c4200164e8 by goroutine 426:
+previous read at 0x00c4200164e8 by Goroutine 426:
   GitHub.com/dm03514/grokking-go/candidates-and-contexts/races.TestExplicitRace.func1.1()
       /vagrant_data/go/src/github.com/dm03514/grokking-go/candidates-and-contexts/races/counters.go:14 +0x5b
 ```
@@ -328,7 +328,7 @@ go func() {
 这非常棒，因为这是一种混合方法： 它运行调度并发的操作，但是并发操作是唯一需要访问 `reqCount` 的东西。这就意味着 `reqCount` 不再需要同步。（除了在 `countChan` 关闭后主测试线程因为断言需要访问它之外。正如我们看到的那样，程序的行为与预期的一致，并没有产生任何的竞态条件 （[源码](https://github.com/dm03514/grokking-go/pull/3/files#diff-8222898e088ed9fee100b22308c43685R14)））。
 
 ```bash
-$ go test -run TestDesignNoRace ./races/ -v -total-requests=200 -concurrent-requests=200 -race
+$ Go test -run TestDesignNoRace ./races/ -v -total-requests=200 -concurrent-requests=200 -race
 handling request: 1
 ...
 handling request: 190
