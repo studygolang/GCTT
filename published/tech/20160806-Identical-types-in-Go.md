@@ -106,7 +106,7 @@ T1 和 T1 是等效的。由于使用了两个独立的类型声明，T1 和 T2 
 
 via: https://medium.com/golangspec/identical-types-in-go-9cb89b91fe25
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[leemeans](https://github.com/leemeans)
 校对：[polaris1119](https://github.com/polaris1119)
 

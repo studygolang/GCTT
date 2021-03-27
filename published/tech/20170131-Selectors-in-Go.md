@@ -2,7 +2,7 @@
 
 # Go 语言中的选择器
 
-在 Go 语言中，表达式 `foo.bar` 可能表示两件事。如果 *foo* 是一个包名，那么表达式就是一个所谓的`限定标识符`，用来引用包 *foo* 中的导出的标识符。由于它只用来处理导出的标识符，*bar* 必须以大写字母开头(译注：如果首字母大写，则可以被其他的包访问；如果首字母小写，则只能在本包中使用）：
+在 Go 语言中，表达式 `foo.bar` 可能表示两件事。如果 *foo* 是一个包名，那么表达式就是一个所谓的 ` 限定标识符 `，用来引用包 *foo* 中的导出的标识符。由于它只用来处理导出的标识符，*bar* 必须以大写字母开头(译注：如果首字母大写，则可以被其他的包访问；如果首字母小写，则只能在本包中使用）：
 
 ```go
 package foo
@@ -57,11 +57,11 @@ func (t T) IsStillYoung() bool {
     return t.age <= 18
 }
 func main() {
-    t := T{30, E{"Michał"}}
+    t := T{30, E{"Micha ł"}}
     fmt.Println(t.IsStillYoung()) // false
     fmt.Println(t.age) // 30
-    t.SayHi() // Hi Michał!
-    fmt.Println(t.name) // Michał
+    t.SayHi() // Hi Micha ł!
+    fmt.Println(t.name) // Micha ł
 }
 ```
 
@@ -99,14 +99,14 @@ func main() {
 ```
 
 * *c* 的深度是 `v.c`，其值为 0。这是因为字段是在 *C* 中声明的
-* `v.b` 中 *b* 的深度是 1。这是因为它的字段定义在类型 *B* 中，其（类型B）又嵌入在 *C* 中
+* `v.b` 中 *b* 的深度是 1。这是因为它的字段定义在类型 *B* 中，其（类型 B）又嵌入在 *C* 中
 * `v.a` 中 *a* 的深度是 2。这是因为需要遍历两个匿名字段（*B* 和 *A*）才能访问它
 
 ## 有效选择器
 
 go 语言中有关哪些选择器有效，哪些无效有着明确规则。让我们来深入了解他们。
 
-### 唯一性+最浅深度
+### 唯一性 + 最浅深度
 
 当 *T* 不是指针或者接口类型，第一条规则适用于类型 `T` 与 `*T`。选择器 *foo.bar* 表示字段和方法在定义了 *bar* 的类型 *T* 中的最浅深度。在这样的深度，恰好可以定义一个（唯一的）这样的字段或者方法（[源代码](https://play.golang.org/p/mGtRxnrAQR)）：
 
@@ -243,8 +243,8 @@ func main() {
 
 via：https://medium.com/golangspec/selectors-in-go-c53a016702cf
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[cureking](https://github.com/cureking)
 校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

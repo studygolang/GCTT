@@ -32,7 +32,7 @@ Golang 提供的工具集非常出色但也有其局限性。首先来看看这�
 
 Golang 为我们提供了一个神奇的工具叫 `pprof`。掌握此工具后，可以帮助调查并发现最有可能的内存问题。它的另一个用途是查找 CPU 问题，但我不会在这篇文章中介绍任何与 CPU 有关的内容。
 
-## go tool pprof
+## Go tool pprof
 
 把这个工具的方方面面讲清楚需要不止一篇博客文章。我将花一点时间找出怎么使用这个工具去获取有用的东西。在这篇文章里，将集中在它的内存相关功能上。
 
@@ -117,7 +117,7 @@ curl -sK -v http://localhost:8080/debug/pprof/heap > heap.out
 
 一旦收集好画像文件后，就可以将其加载到 pprof 的交互式命令行中了，通过运行：
 
-> go tool pprof heap.out
+> Go tool pprof heap.out
 
 我们可以观察到显示的信息
 

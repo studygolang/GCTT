@@ -71,7 +71,7 @@ print(sys.version)
 
 你可以看到我们放了一个 `#cgo` 在前面；这些符号将会被传递给工具链，从而改编 build 的工作流。在这个例子，我们让 Cgo 去调用 “pkg-config” 来获取 build 需要的标志，并且链接到一个叫 “python-2.7” 的库，以及传递这些标志给 C 编译器。如果你的系统上安装了  CPython 开发库并用 pkg-config 连接，这将使得你可以继续使用普通的 `go build`  编译上面的例子。
 
-重新再看代码，我们使用 `Py_Initialize()` 和`Py_Finalize()` 来开启和关闭解释器，以及 C 函数 `Py_GetVersion`  来获取包含内嵌解释器版本信息的字符串。
+重新再看代码，我们使用 `Py_Initialize()` 和 `Py_Finalize()` 来开启和关闭解释器，以及 C 函数 `Py_GetVersion`  来获取包含内嵌解释器版本信息的字符串。
 
 如果你有疑问，所有我们需要整合来调用 C Python API 的 Cgo 部分都是样板代码。这也是  Datadog Agent 依赖 [go-python](https://github.com/sbinet/go-python) 来执行所有内嵌操作的原因所在； go-python 库提供了 Go 风格的对 C API 的简单封装，并且隐藏了 Cgo 的细节。这是另一个简单的嵌入示例，这次使用 go-python：
 
@@ -126,14 +126,14 @@ func main() {
 `foo.py` 模块。在 shell 中，命令类似下面：
 
 ```shell
-$ go build main.go && PYTHONPATH=. ./main hello, world!
+$ Go build main.go && PYTHONPATH=. ./main hello, world!
 ```
 
 ![The dreadful Global Interpreter Lock](https://raw.githubusercontent.com/studygolang/gctt-images/master/cgo-python/cgo_python_divider_3.png)
 
 ## 糟糕的全局解释器锁（ GIL ）
 
-为了内嵌 Python 引入 Cgo 是一个妥协：build 过程会变慢，垃圾回收器不会帮我们管理外部系统使用的内存，并且交叉编译也会有难度。是否为一个特定项目引入可能会引发争论，但有一点我认为是无需讨论的： Go 并发模型。如果我们不能在一个 goroutine 里面运行 Python，这一切就毫无意义。
+为了内嵌 Python 引入 Cgo 是一个妥协：build 过程会变慢，垃圾回收器不会帮我们管理外部系统使用的内存，并且交叉编译也会有难度。是否为一个特定项目引入可能会引发争论，但有一点我认为是无需讨论的： Go 并发模型。如果我们不能在一个 Goroutine 里面运行 Python，这一切就毫无意义。
 
 在用 Python 和 cgo 实现并发之前 ，有一点我们需要了解：就是全局解释器锁，简称 GIL 。GIL 是一个被语言解释器（ CPython 只是一种）广泛采用的机制，目的是防止同一时刻有超过一个以上的线程运行。这意味着被 CPython 执行的 Python 程序不可能在同一个进程中并行。并发倒是仍然有可能，锁是在速度，安全性和实现难度上的一个较好权衡。那么它为什么会在内嵌的时候引出问题？
 
@@ -141,7 +141,7 @@ $ go build main.go && PYTHONPATH=. ./main hello, world!
 
 我们在 Go 程序中运行 Python 的时候，以上这些都不会自动发生。没有 GIL，我们的 Go 程序可能会创建多个 Python 线程。这将有可能引起竞争条件而导致致命的运行时错误，而且一个模块的错误极有可能摧毁整个 Go 应用。
 
-解决方案就是在任何时候运行 Go 中的多线程代码都要显式调用 GIL；代码不会太复杂，因为 C API 提供了我们需要的所有工具。为了更好的暴漏问题，我们需要在Python中做一些CPU绑定的事情。让我们把这些函数添加到前面示例中的 foo.py 中：
+解决方案就是在任何时候运行 Go 中的多线程代码都要显式调用 GIL；代码不会太复杂，因为 C API 提供了我们需要的所有工具。为了更好的暴漏问题，我们需要在 Python 中做一些 CPU 绑定的事情。让我们把这些函数添加到前面示例中的 foo.py 中：
 
 ```python
 import sys
@@ -157,7 +157,7 @@ def print_even(limit=10):
 			sys.stderr.write("{}\n".format(i))
 ```
 
-我们会在 Go 中尝试并发的打印奇数和事件编号，使用两个不同的 goroutine （由此引入线程）：
+我们会在 Go 中尝试并发的打印奇数和事件编号，使用两个不同的 Goroutine （由此引入线程）：
 
 ```go
 package main
@@ -165,7 +165,7 @@ import ( "sync"
 				"github.com/sbinet/go-python"
 			 )
 func main() {
-	//  下面代码会通过调用PyEval_InitThreads()显式调用 GIL ，
+	//  下面代码会通过调用 PyEval_InitThreads()显式调用 GIL ，
 	//  无需等待解释器去执行 python.Initialize()
 	var wg sync.WaitGroup
 	wg.Add(2)
@@ -173,7 +173,7 @@ func main() {
 	odds := fooModule.GetAttrString("print_odds")
 	even := fooModule.GetAttrString("print_even")
 	// Initialize() 已经锁定 GIL ，但这时我们并不需要它。
-	// 我们保存当前状态和释放锁，从而让 goroutine 能获取它
+	// 我们保存当前状态和释放锁，从而让 Goroutine 能获取它
 	state := python.PyEval_SaveThread()
 	go func() {
 		_gstate := python.PyGILState_Ensure()
@@ -201,13 +201,13 @@ func main() {
 2. 执行 Python 。
 3. 恢复状态，解锁 GIL。
 
-代码可以说得上简洁明了，但仍有一处细节需要指出：注意，即使是遵循 GIL 模式，在一个例子里面我们运行 GIL 时是通过调用`PyEval_SaveThread()`  和  `PyEval_RestoreThread()` ,在另一个例子里（请看 goroutines 里面的代码）我们是通过调用  `PyGILState_Ensure()` 和 `PyGILState_Release()` 。
+代码可以说得上简洁明了，但仍有一处细节需要指出：注意，即使是遵循 GIL 模式，在一个例子里面我们运行 GIL 时是通过调用 `PyEval_SaveThread()`  和  `PyEval_RestoreThread()` ,在另一个例子里（请看 goroutines 里面的代码）我们是通过调用  `PyGILState_Ensure()` 和 `PyGILState_Release()` 。
 
 我们说过，当 Python 里面运行多线程时，解释器会负责创建储存当前状态的数据结构，但如果是在 C API 里面的话，需要我们亲自动手实现。
 
-当我们通过 go-python 初始化解释器的时候，我们是运行在 Python 上下文环境。所以当调用 `PyEval_InitThreads()`  时解释器会初始化数据结构并锁住 GIL 。我们可以使用`PyEval_SaveThread()` 和`PyEval_RestoreThread()`  对已经存在的状态进行操作。
+当我们通过 go-python 初始化解释器的时候，我们是运行在 Python 上下文环境。所以当调用 `PyEval_InitThreads()`  时解释器会初始化数据结构并锁住 GIL 。我们可以使用 `PyEval_SaveThread()` 和 `PyEval_RestoreThread()`  对已经存在的状态进行操作。
 
-在 goroutine 中，我们则是在一个 Go 上下文环境中运行，并且我们不需要显式的创建和删除状态， `PyGILState_Ensure()` 和 `PyGILState_Release()` 负责完成这些工作。
+在 Goroutine 中，我们则是在一个 Go 上下文环境中运行，并且我们不需要显式的创建和删除状态， `PyGILState_Ensure()` 和 `PyGILState_Release()` 负责完成这些工作。
 
 ![Unleash the Gopher](https://raw.githubusercontent.com/studygolang/gctt-images/master/cgo-python/cgo_python_divider_4.png)
 
@@ -215,19 +215,19 @@ func main() {
 
 现在我们已经知道怎么处理多线程 Go 代码在一个内嵌解释器中执行 Python 的过程了，但是在 GIL 之后，我们又面临着一个新的挑战：Go 调度器。
 
-当一个 goroutine 启动时，它会被调度运行在 `GOMAXPROCS` 个可用线程中的其中一个线程——[点击这里](https://morsmachine.dk/go-scheduler)  可以了解更多细节。当一个 goroutine 执行系统调用或者调用 C 代码时，当前线程会把等待运行线程队列中的其它 goroutine 移交给另一个线程，从而让这些 goroutine 有更多机会执行；当前 goroutine 被挂起，直到系统调用或是 C 函数返回。如果有返回发生，线程就会试图唤醒被终止的 goroutine ，但如果没有返回的可能性，那该线程就会请求 Go 运行时去查找另一个线程来完成该 goroutine ，并且进入睡眠状态。 goroutine 最终被调度给另一个线程，然后结束。
+当一个 Goroutine 启动时，它会被调度运行在 `GOMAXPROCS` 个可用线程中的其中一个线程——[点击这里](https://morsmachine.dk/go-scheduler)  可以了解更多细节。当一个 Goroutine 执行系统调用或者调用 C 代码时，当前线程会把等待运行线程队列中的其它 Goroutine 移交给另一个线程，从而让这些 Goroutine 有更多机会执行；当前 Goroutine 被挂起，直到系统调用或是 C 函数返回。如果有返回发生，线程就会试图唤醒被终止的 Goroutine ，但如果没有返回的可能性，那该线程就会请求 Go 运行时去查找另一个线程来完成该 Goroutine ，并且进入睡眠状态。 Goroutine 最终被调度给另一个线程，然后结束。
 
-考虑到这些，让我们来看看当一个正在运行 Python 代码的 goroutine 被移动到一个新的线程时， goroutine 都会发生什么：
+考虑到这些，让我们来看看当一个正在运行 Python 代码的 Goroutine 被移动到一个新的线程时， Goroutine 都会发生什么：
 
-1. 我们的 goroutine 启动后，执行一个 C 函数调用，然后挂起。GIL 被锁住。
+1. 我们的 Goroutine 启动后，执行一个 C 函数调用，然后挂起。GIL 被锁住。
 2. 当 C 函数调用返回，当前线程试图唤醒该 goroutine，但它失败了。
 3. 当前线程告诉 Go 运行时去查找另一个线程来唤醒我们的 goroutine。
-4. Go 调度器找到一个可用的线程，并且 goroutine 也被唤醒。
-5. goroutine 基本完成，并且尝试在返回前解锁 GIL。
-6. 当前状态存储的线程 ID 是初始线程的ID，和当前线程的 ID 不一致。
+4. Go 调度器找到一个可用的线程，并且 Goroutine 也被唤醒。
+5. Goroutine 基本完成，并且尝试在返回前解锁 GIL。
+6. 当前状态存储的线程 ID 是初始线程的 ID，和当前线程的 ID 不一致。
 7. Panic ！
 
-幸运的是，我们可用强制要求 Go 运行时保证我们的 goroutine 一直运行在同一个线程上，只要通过 goroutine 调用 runtime 包里的 LockOSThread 函数就行。
+幸运的是，我们可用强制要求 Go 运行时保证我们的 Goroutine 一直运行在同一个线程上，只要通过 Goroutine 调用 runtime 包里的 LockOSThread 函数就行。
 
 ```go
 go func() {
@@ -247,7 +247,7 @@ go func() {
 
 - cgo 引入的间接损耗。
 - 手动操作 GIL。
-- 运行期间绑定 goroutine 到同一个线程的限制。
+- 运行期间绑定 Goroutine 到同一个线程的限制。
 
 考虑到在 Go 中运行 Python 检查的便利，我们很乐意接受这一切。但既然意识到了这些取舍，我们就能够最小化它们带来的影响。对于为支持 Python 而带来的其它限制，我们很难有对策处理可能的问题：
 

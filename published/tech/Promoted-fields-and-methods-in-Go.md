@@ -12,8 +12,8 @@ type Person struct {
 	age int32
 }
 func main() {
-	person := Person{name: "Michał", age: 29}
-	fmt.Println(person)  // {Michał 29}
+	person := Person{name: "Micha ł", age: 29}
+	fmt.Println(person)  // {Micha ł 29}
 }
 ```
 
@@ -35,7 +35,7 @@ type T struct {
 如果编译，编译器将抛出错误：
 
 ```
-> go install github.com/mlowicki/sandbox
+> Go install github.com/mlowicki/sandbox
 # github.com/mlowicki/sandbox
 src/github.com/mlowicki/sandbox/sandbox.go:34: duplicate field Request
 ```
@@ -62,11 +62,11 @@ type Record struct {
 }
 ...
 record := Record{}
-record.name = "Michał"
+record.name = "Micha ł"
 record.age = 29
 record.position = "software engineer"
-fmt.Println(record) // {{Michał 29} {software engineer}}
-fmt.Println(record.name) // Michał
+fmt.Println(record) // {{Micha ł 29} {software engineer}}
+fmt.Println(record.name) // Micha ł
 fmt.Println(record.age) // 29
 fmt.Println(record.position) // software engineer
 fmt.Println(record.IsAdult()) // true
@@ -79,7 +79,7 @@ fmt.Println(record.IsManager()) // false
 
 ```go
 //record := Record{}
-record := Record{name: "Michał", age: 29}
+record := Record{name: "Micha ł", age: 29}
 ```
 
 它将导致编译器抛出错误：
@@ -92,7 +92,7 @@ record := Record{name: "Michał", age: 29}
 可以通过创建一个明确的，完整的，嵌入的结构体来达到我们的目的：
 
 ```go
-Record{Person{name: "Michał", age: 29}, Employee{position: "Software Engineer"}}
+Record{Person{name: "Micha ł", age: 29}, Employee{position: "Software Engineer"}}
 ```
 
 [来源：](https://golang.org/ref/spec#Struct_types)
@@ -102,7 +102,7 @@ Record{Person{name: "Michał", age: 29}, Employee{position: "Software Engineer"}
 
 via: https://medium.com/golangspec/promoted-fields-and-methods-in-go-4e8d7aefb3e3
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[gogeof](https://github.com/gogeof)
 校对：[polaris1119](https://github.com/polaris1119)
 

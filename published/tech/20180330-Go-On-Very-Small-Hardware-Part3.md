@@ -393,7 +393,7 @@ $ arm-none-eabi-size cortexm0.elf
 
 via: https://ziutek.github.io/2018/05/03/go_on_very_small_hardware3.html
 
-作者：[Michał Derkacz](https://ziutek.github.io)
+作者：[Micha ł Derkacz](https://ziutek.github.io)
 译者：[PotoYang](https://github.com/PotoYang)
 校对：[polaris1119](https://github.com/polaris1119)
 

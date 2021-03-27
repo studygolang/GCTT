@@ -16,7 +16,7 @@ func main() {
 ```
 
 ```
-> go build
+> Go build
 # github.com/mlowicki/lab
 ./lab.go:6: cannot convert "2" to type int
 ./lab.go:6: invalid operation: 1 + "2" (mismatched types int and string)
@@ -319,7 +319,7 @@ A
 Strings 基本上是字节的切片:
 
 ```go
-text := "abł"
+text := "ab ł"
 for i := 0; i < len(text); i++ {
     fmt.Println(text[i])
 }
@@ -340,7 +340,7 @@ for i := 0; i < len(text); i++ {
 *range* 循环有助于迭代 Unicode 定义的码位( 码位在 Golang 中被称为 *rune* )
 
 ```go
-text := "abł"
+text := "ab ł"
 for _, s := range text {
     fmt.Printf("%q %#v\n", s, s)
 }
@@ -356,15 +356,15 @@ for _, s := range text {
 
 > 想了解更多类似 *%q* 和 *%v* 这样的占位符，可以看 [fmt](https://golang.org/pkg/fmt/) 包的文档
 
-更多的讨论可在 [《Golang的字符串，字节，rune 和字符》](https://blog.golang.org/strings)。在这个快速解释之后，在字符串和字节切片之间的转换应该不会再难以理解。
+更多的讨论可在 [《Golang 的字符串，字节，rune 和字符》](https://blog.golang.org/strings)。在这个快速解释之后，在字符串和字节切片之间的转换应该不会再难以理解。
 
 ### string ↔ slice of bytes
 
 ```go
-bytes := []byte("abł")
+bytes := []byte("ab ł")
 text := string(bytes)
 fmt.Printf("%#v\n", bytes) // []byte{0x61, 0x62, 0xc5, 0x82}
-fmt.Printf("%#v\n", text)  // "abł"
+fmt.Printf("%#v\n", text)  // "ab ł"
 ```
 
 切片由被转换 string 的 utf8 编码字节组成。
@@ -372,10 +372,10 @@ fmt.Printf("%#v\n", text)  // "abł"
 ### string ↔ slice of runes
 
 ```go
-runes := []rune("abł")
+runes := []rune("ab ł")
 fmt.Printf("%#v\n", runes)         // []int32{97, 98, 322}
 fmt.Printf("%+q\n", runes)         // ['a' 'b' '\u0142']
-fmt.Printf("%#v\n", string(runes)) // "abł"
+fmt.Printf("%#v\n", string(runes)) // "ab ł"
 ```
 
 从被转换 string 中创建的切片是由 Unicode 编码的码位( rune )组成。
@@ -395,7 +395,7 @@ fmt.Printf("%#v\n", string(runes)) // "abł"
 
 via: https://medium.com/golangspec/conversions-in-go-4301e8d84067
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[magichan](https://github.com/magichan)
 校对：[polaris1119](https://github.com/polaris1119)
 

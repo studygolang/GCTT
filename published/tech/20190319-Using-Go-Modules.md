@@ -50,7 +50,7 @@ func TestHello(t *testing.T) {
 到目前为止，目录里面包含了一个代码包，但是它还不是一个模块，因为这里面没有 `go.mod` 文件。如果我们现在的工作目录是 `/home/gopher/hello` 并且我们运行 `go test`，我们会看到如下的输出：
 
 ```bash
-$ go test
+$ Go test
 PASS
 ok      _/home/gopher/hello    0.020s
 $
@@ -61,9 +61,9 @@ $
 让我们把当前的目录设置成模块的根目录吧，为此我们要用到 `go mod init` 命令然后再尝试运行 `go test`：
 
 ```bash
-$ go mod init example.com/hello
+$ Go mod init example.com/hello
 go: creating new go.mod: module example.com/hello
-$ go test
+$ Go test
 PASS
 ok      example.com/hello    0.020s
 $
@@ -102,7 +102,7 @@ func Hello() string {
 现在让我们再运行一遍测试：
 
 ```bash
-$ go test
+$ Go test
 go: finding rsc.io/quote v1.5.2
 go: downloading rsc.io/quote v1.5.2
 go: extracting rsc.io/quote v1.5.2
@@ -132,7 +132,7 @@ $
 第二次运行 `go test` 命令的时候 Go 命令工具就不再重复上述的工作了，因为 `go.mod` 已经是更新过了，并且刚才下载下来的模块已经缓存在本地（在 `$GOPATH/pkg/mod`）目录中：
 
 ```bash
-$ go test
+$ Go test
 PASS
 ok      example.com/hello    0.020s
 $
@@ -143,7 +143,7 @@ $
 正如我们上面所见，添加一个直接依赖往往会带来其它间接的依赖。`go list -m all` 命令会把当前的模块和它所有的依赖项都列出来：
 
 ```bash
-$ go list -m all
+$ Go list -m all
 example.com/hello
 golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c
 rsc.io/quote v1.5.2
@@ -177,11 +177,11 @@ go 命令行工具使用 `go.sum` 文件来确保你的项目依赖的模块不�
 从 `go list -m all` 的输出中，我们可以看到我们在使用的 `golang.org/x/text` 模块还是以前没有被打过版本号标签的版本。让我们来把它更新到最新的有打过版本号标签的的版本，并测试是否能正常使用。
 
 ```bash
-$ go get golang.org/x/text
+$ Go get golang.org/x/text
 go: finding golang.org/x/text v0.3.0
 go: downloading golang.org/x/text v0.3.0
 go: extracting golang.org/x/text v0.3.0
-$ go test
+$ Go test
 PASS
 ok      example.com/hello    0.013s
 $
@@ -190,7 +190,7 @@ $
 哇嗷，一切正常！我们再来看看现在 `go list -m all` 的输出和 `go.mod` 文件长什么样子：
 
 ```bash
-$ go list -m all
+$ Go list -m all
 example.com/hello
 golang.org/x/text v0.3.0
 rsc.io/quote v1.5.2
@@ -212,11 +212,11 @@ $
 现在让我们来尝试更新 `rsc.io/sampler` 模块的次版本号。同样操作，先运行 `go get` 命令，然后跑一遍测试：
 
 ```bash
-$ go get rsc.io/sampler
+$ Go get rsc.io/sampler
 go: finding rsc.io/sampler v1.99.99
 go: downloading rsc.io/sampler v1.99.99
 go: extracting rsc.io/sampler v1.99.99
-$ go test
+$ Go test
 --- FAIL: TestHello (0.00s)
     hello_test.go:8: Hello() = "99 bottles of beer on the wall, 99 bottles of beer, ...", want "Hello, world."
 FAIL
@@ -228,7 +228,7 @@ $
 噢，糟糕，测试报错了，这个测试表明 `rsc.io/sampler` 模块的最新版本跟我们之前的用法不兼容。我们来列举一下这个模块能用的 tag 过的版本：
 
 ```bash
-$ go list -m -versions rsc.io/sampler
+$ Go list -m -versions rsc.io/sampler
 rsc.io/sampler v1.0.0 v1.2.0 v1.2.1 v1.3.0 v1.3.1 v1.99.99
 $
 ```
@@ -236,11 +236,11 @@ $
 我们之前用过 `v1.3.0`，而 `v1.99.99` 明显不能用了。也许我们能试一下 `v1.3.1` 版本
 
 ```bash
-$ go get rsc.io/sampler@v1.3.1
+$ Go get rsc.io/sampler@v1.3.1
 go: finding rsc.io/sampler v1.3.1
 go: downloading rsc.io/sampler v1.3.1
 go: extracting rsc.io/sampler v1.3.1
-$ go test
+$ Go test
 PASS
 ok      example.com/hello    0.022s
 $
@@ -283,7 +283,7 @@ func TestProverb(t *testing.T) {
 然后我们可以来测试我们的代码了：
 
 ```bash
-$ go test
+$ Go test
 go: finding rsc.io/quote/v3 v3.1.0
 go: downloading rsc.io/quote/v3 v3.1.0
 go: extracting rsc.io/quote/v3 v3.1.0
@@ -295,7 +295,7 @@ $
 请注意我们的模块现在既依赖 `rsc.io/quote` 也依赖 `rsc.io/quote/v3`：
 
 ```bash
-$ go list -m rsc.io/q...
+$ Go list -m rsc.io/q...
 rsc.io/quote v1.5.2
 rsc.io/quote/v3 v3.1.0
 $
@@ -310,7 +310,7 @@ $
 现在让我们把整个项目的 `rsc.io/quote`  都升级到 `rsc.io/quote/v3` 吧。因为主版本号改变了，所以我们应该做好心理准备，可能会有些 API 已经被移除、重命名或者被修改成了不兼容的方式。通过阅读文档，我们得知 `Hello` 已经变成了 `HelloV3`：
 
 ```go
-$ go doc rsc.io/quote/v3
+$ Go doc rsc.io/quote/v3
 package quote // import "rsc.io/quote"
 
 Package quote collects pithy sayings.
@@ -344,7 +344,7 @@ func Proverb() string {
 然后我们再重新运行一下测试确保一切正常：
 
 ```bash
-$ go test
+$ Go test
 PASS
 ok      example.com/hello       0.014s
 ```
@@ -354,7 +354,7 @@ ok      example.com/hello       0.014s
 我们代码中已经没有用到 `rsc.io/quote` 的地方了，但是它还是会存在 `go list -m all` 的输出和 `go.mod` 文件中：
 
 ```bash
-$ go list -m all
+$ Go list -m all
 example.com/hello
 golang.org/x/text v0.3.0
 rsc.io/quote v1.5.2
@@ -379,8 +379,8 @@ $
 可以用 `go mod tidy` 命令来清除这些没用到的依赖项：
 
 ```bash
-$ go mod tidy
-$ go list -m all
+$ Go mod tidy
+$ Go list -m all
 example.com/hello
 golang.org/x/text v0.3.0
 rsc.io/quote/v3 v3.1.0
@@ -396,7 +396,7 @@ require (
     rsc.io/sampler v1.3.1 // indirect
 )
 
-$ go test
+$ Go test
 PASS
 ok      example.com/hello    0.020s
 $
@@ -409,7 +409,7 @@ Go 的模块功能将会成为未来 Go 的依赖管理系统。在所有支持�
 本文介绍了使用 Go 模块过程中的几个工作流程：
 
 - `go mod init` 创建了一个新的模块，初始化 `go.mod` 文件并且生成相应的描述
-- `go build, go test` 和其它构建代码包的命令，会在需要的时候在 `go.mod` 文件中添加新的依赖项
+- `go build, Go test` 和其它构建代码包的命令，会在需要的时候在 `go.mod` 文件中添加新的依赖项
 - `go list -m all` 列出了当前模块所有的依赖项
 - `go get` 修改指定依赖项的版本（或者添加一个新的依赖项）
 - `go mod tidy` 移除模块中没有用到的依赖项。

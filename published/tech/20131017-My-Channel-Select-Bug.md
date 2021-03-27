@@ -30,7 +30,7 @@ func main() {
 
         case <-func() chan struct{} {
             complete := make(chan struct{})
-            go LaunchProcessor(complete)
+            Go LaunchProcessor(complete)
             return complete
         }():
             return
@@ -70,7 +70,7 @@ func LaunchProcessor(complete chan struct{}) {
 ```go
 case <-func() chan struct{} {
     complete := make(chan struct{})
-    go LaunchProcessor(complete)
+    Go LaunchProcessor(complete)
     return complete
 }():
 ```
@@ -114,7 +114,7 @@ func main() {
     signal.Notify(sigChan, os.Interrupt)
 
     complete := make(chan struct{})
-    go LaunchProcessor(complete)
+    Go LaunchProcessor(complete)
 
     for {
 
@@ -235,7 +235,7 @@ func main() {
     signal.Notify(sigChan, os.Interrupt)
 
     complete := make(chan struct{})
-    go LaunchProcessor(complete)
+    Go LaunchProcessor(complete)
 
     for {
 

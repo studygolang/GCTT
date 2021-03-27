@@ -171,7 +171,7 @@ func main() {
 ```
 [在线运行程序](https://play.golang.org/p/7pkp74h_9L)
 
-这里我们声明了 **string 类型的 name、int 类型的 age 和 height**（我们将会在下一教程中讨论 golang 所支持的变量类型）。运行上面的程序会产生输出 `my name is naveen , age is 29 and height is 0`。
+这里我们声明了 **string 类型的 name、int 类型的 age 和 height**（我们将会在下一教程中讨论 Golang 所支持的变量类型）。运行上面的程序会产生输出 `my name is naveen , age is 29 and height is 0`。
 
 ## 简短声明
 
@@ -216,11 +216,11 @@ package main
 import "fmt"
 
 func main() {
-    a, b := 20, 30 // 声明变量a和b
+    a, b := 20, 30 // 声明变量 a 和 b
     fmt.Println("a is", a, "b is", b)
-    b, c := 40, 50 // b已经声明，但c尚未声明
+    b, c := 40, 50 // b 已经声明，但 c 尚未声明
     fmt.Println("b is", b, "c is", c)
-    b, c = 80, 90 // 给已经声明的变量b和c赋新值
+    b, c = 80, 90 // 给已经声明的变量 b 和 c 赋新值
     fmt.Println("changed b is", b, "c is", c)
 }
 ```
@@ -240,7 +240,7 @@ package main
 import "fmt"
 
 func main() {
-    a, b := 20, 30 // 声明a和b
+    a, b := 20, 30 // 声明 a 和 b
     fmt.Println("a is", a, "b is", b)
     a, b := 40, 50 // 错误，没有尚未声明的变量
 }
@@ -278,8 +278,8 @@ minimum value is  145.8
 package main
 
 func main() {
-    age := 29      // age是int类型
-    age = "naveen" // 错误，尝试赋值一个字符串给int类型变量
+    age := 29      // age 是 int 类型
+    age = "naveen" // 错误，尝试赋值一个字符串给 int 类型变量
 }
 ```
 [在线运行程序](https://play.golang.org/p/K5rz4gxjPj)

@@ -77,7 +77,7 @@ Pill(3)
 ```
 添加这个自检不会有任何影响，因为它在编译时被删除了。可以通过查看程序生成的 asm 代码来确认 :
 ```
-➜  go tool compile -S main.go pill_string.go | grep "\"\".Pill\.[^\s]* STEXT"
+➜  Go tool compile -S main.go pill_string.go | grep "\"\".Pill\.[^\s]* STEXT"
 "".Pill.String STEXT size=275 args=0x18 locals=0x50
 ```
 只有 `String()` 函数被编译到二进制文件中 , 自检对性能或二进制大小没有影响。
@@ -87,6 +87,6 @@ via: https://medium.com/a-journey-with-go/go-stringer-command-efficiency-through
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[kagxin](https://github.com/kagxin)
-校对：[校对者 ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

@@ -8,11 +8,11 @@
 
 可变参数函数即其参数数量是可变的 —— 0 个或多个。声明可变参数函数的方式是在其参数类型前带上省略符（三个点）前缀。
 
->译者注：“可变参数函数”在一些翻译中也称“变长函数”，本篇译文中采用“可变参数函数“
+> 译者注：“可变参数函数”在一些翻译中也称“变长函数”，本篇译文中采用“可变参数函数“
 
 ![what is variadic func](https://raw.githubusercontent.com/studygolang/gctt-images/master/variadic-func/what_is_variadic_func.png)
 
-<p align="center">该语句声明了一个可变参数函数及其以 “names” 命名的字符串类型可变参数</p>
+<p align="center"> 该语句声明了一个可变参数函数及其以 “names” 命名的字符串类型可变参数 </p>
 
 ---
 

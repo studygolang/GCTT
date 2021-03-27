@@ -20,7 +20,7 @@ func main() {
 
 > example1.go 由 GitHub 托管   [查看源文件](https://gist.github.com/bouk/17262666fae75dd24a25/raw/712ae5ef5b1becf4f782d96ca0be0d67ccdcf061/example1.go)
 
-上述代码应该用 go build -gcflags=-l 来编译，以避免内联。在本文中我假设你的电脑架构是 64 位，并且你使用的是一个基于unix 的操作系统比如 Mac OSX 或者某个 Linux 系统。
+上述代码应该用 Go build -gcflags=-l 来编译，以避免内联。在本文中我假设你的电脑架构是 64 位，并且你使用的是一个基于 unix 的操作系统比如 Mac OSX 或者某个 Linux 系统。
 
 当代码编译后，我们用 [Hopper](http://hopperapp.com/) 来查看，可以看到如上代码会产生如下汇编代码：
 
@@ -30,7 +30,7 @@ func main() {
 
 我们的代码从 main.main 过程开始，从 0x2010 到 0x2026 的指令构建堆栈。你可以在[这儿](http://dave.cheney.net/2013/06/02/why-is-a-goroutines-stack-infinite)获得更多的相关知识，本文后续的篇幅里，我将忽略这部分代码。
 
-0x202a 行是调用 0x2000 行的 main.a 函数，这个函数只是简单的将 0x1 压入堆栈然后就返回了。0x202f 到 0x2037这几行 将这个值传递给 runtime.printint.
+0x202a 行是调用 0x2000 行的 main.a 函数，这个函数只是简单的将 0x1 压入堆栈然后就返回了。0x202f 到 0x2037 这几行 将这个值传递给 runtime.printint.
 
 足够简单！现在让我们看看在 Go 语言中 函数的值是怎么实现的。
 
@@ -54,7 +54,7 @@ func main() {
 ```
 > funcval.go 由 GitHub 托管 [查看源文件](https://gist.github.com/bouk/c921c3627ddbaae05356/raw/4c18dbaa7cfeb06b74007b65649d85f65384841a/funcval.go)
 
-我在第11行 将 a 赋值给 f，这意味者，执行 f() 就会调用 a。然后我使用 Go 中的 [unsafe](http://golang.org/pkg/unsafe/) 包来直接读出 f 中存储的值。如果你是有 C 语言的开发背景 ，你可以会觉得 f 就是一个简单的函数指针，并且这段代码会输出 0x2000 （我们在上面看到的 main.a 的地址）。当我在我的机器上运行时，我得到的是 0x102c38, 这个地址甚至与我们的代码都不挨着！当反编译时，这就是上面第11行所对应的：
+我在第 11 行 将 a 赋值给 f，这意味者，执行 f() 就会调用 a。然后我使用 Go 中的 [unsafe](http://golang.org/pkg/unsafe/) 包来直接读出 f 中存储的值。如果你是有 C 语言的开发背景 ，你可以会觉得 f 就是一个简单的函数指针，并且这段代码会输出 0x2000 （我们在上面看到的 main.a 的地址）。当我在我的机器上运行时，我得到的是 0x102c38, 这个地址甚至与我们的代码都不挨着！当反编译时，这就是上面第 11 行所对应的：
 
 ![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/monkey-patch/hopper-2.png)
 
@@ -78,7 +78,7 @@ func main() {
   fmt.Printf("0x%x\n", **(**uintptr)(unsafe.Pointer(&f)))
 }
 ```
-> funcval2.go 由GitHub托管 [查看源文件](https://gist.github.com/bouk/c470c4d80ae80d7b30af/raw/d8bd9cd2b80cad288993d5e8f67b115440c6c2a3/funcval2.go)
+> funcval2.go 由 GitHub 托管 [查看源文件](https://gist.github.com/bouk/c470c4d80ae80d7b30af/raw/d8bd9cd2b80cad288993d5e8f67b115440c6c2a3/funcval2.go)
 
 现在输出的正是预期中的 0x2000。我们可以在[这里](https://github.com/golang/go/blob/e9d9d0befc634f6e9f906b5ef7476fbd7ebd25e3/src/runtime/runtime2.go#L75-L78)找到一点为什么代码要这样写的线索。在 Go 语言中函数值可以包含额外的信息，闭包和绑定实例方法借此实现的。
 
@@ -118,7 +118,7 @@ func main() {
 	print(a())
 }
 ```
-> replace.go 由GitHub托管 [查看源文件](https://gist.github.com/bouk/713f3df2115e1b5e554d/raw/65335f4e7d9d0e11a5f72e78d617ec51249c577b/replace.go)
+> replace.go 由 GitHub 托管 [查看源文件](https://gist.github.com/bouk/713f3df2115e1b5e554d/raw/65335f4e7d9d0e11a5f72e78d617ec51249c577b/replace.go)
 
 现在我们该怎么实现这种替换？我们需要修改函数 a 跳到 b 的代码，而不是执行它自己的函数体。本质上，我们需要这么替换，把 b 的函数值加载到 rdx 然后跳转到 rdx 所指向的地址。
 
@@ -145,7 +145,7 @@ func assembleJump(f func() int) []byte {
 ```
 > assemble_jump.go  由 GitHub 托管 [查看源文件](https://gist.github.com/bouk/4ed563abdcd06fc45fa0/raw/fa9c65c2d5828592e846e28136871ee0bd13e5a9/assemble_jump.go)
 
-现在万事俱备，我们已经准备好将 a 的函数体替换为从 a 跳转到 b了！下述代码尝试直接将机器码拷贝到函数体中。
+现在万事俱备，我们已经准备好将 a 的函数体替换为从 a 跳转到 b 了！下述代码尝试直接将机器码拷贝到函数体中。
 
 ```go
 package main

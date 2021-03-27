@@ -29,13 +29,13 @@
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go_devops/golang-language-runtimes-2.png)
 
-图中显而易见的是，C++ 是最快的语言 - 完全不出意料。实际上，即使 Java 都把 Golang 击败了，但这出于两个很好的理由:（1）Java 虚拟机（JVM）从1995年就开始开发了，比 Golang 多了 17 年。以及（2） 比起Golang ，JVM 在测试中花了 2 到 30 倍的内存使用量 - 这意味着总体上 Golang 的垃圾回收员比JVM的工作得更勤劳。
+图中显而易见的是，C++ 是最快的语言 - 完全不出意料。实际上，即使 Java 都把 Golang 击败了，但这出于两个很好的理由:（1）Java 虚拟机（JVM）从 1995 年就开始开发了，比 Golang 多了 17 年。以及（2） 比起 Golang ，JVM 在测试中花了 2 到 30 倍的内存使用量 - 这意味着总体上 Golang 的垃圾回收员比 JVM 的工作得更勤劳。
 
 ### 编译速度
 
 我们之前的 agent 是用 Python 写的（并不是一个编译语言），但这并不意味着我们不熟悉 Go 的编译时优势。
 
-从 Golang 的一开始，较短的编译时间一直是一个严苛的要求。 Go 是 Google 的 Ken Thompson 和 Rob Pike 创造的。Google，有超过20亿行代码，毫无疑问对于编译所会浪费的时间极其严肃。
+从 Golang 的一开始，较短的编译时间一直是一个严苛的要求。 Go 是 Google 的 Ken Thompson 和 Rob Pike 创造的。Google，有超过 20 亿行代码，毫无疑问对于编译所会浪费的时间极其严肃。
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go_devops/compiling.png)
 
@@ -62,12 +62,12 @@ Blue Matador Agent 有 29 个包，116824 行代码。它还有 3 个目标操�
 尽管如此，以下是我认为 Go 的代码维护效率更好的原因：
 
 - 没有内存管理。在 C/C++ 有很多代码是只为了内存管理而存在。你为了管理内存不得不做了一堆古怪的事。这在 Go 里面，得益于垃圾回收机制，完全不是问题。
-- 稳定可靠的核心库。除了[错误返回系统](https://blog.bluematador.com/blog/posts/golang-pros-cons-for-devops-part-1-goroutines-panics-errors/)之外，我们的代码十分精简。这是因为Go的核心库有我们需要的所有东西; 从 HTTP 请求和 JSON 编码/解码到进程 fork 和 IPC 管道。
+- 稳定可靠的核心库。除了[错误返回系统](https://blog.bluematador.com/blog/posts/golang-pros-cons-for-devops-part-1-goroutines-panics-errors/)之外，我们的代码十分精简。这是因为 Go 的核心库有我们需要的所有东西; 从 HTTP 请求和 JSON 编码/解码到进程 fork 和 IPC 管道。
 - 没有泛型。对，我即将要说缺少泛型是这个语言的一个严重缺点。但是如果没有泛型的话，变量类型全都会是明确且已知的。当你读一个类文件的时候，你会明确知道预期结果。这让更改代码更容易并且更快。
 
 ### 关于速度的额外阅读资料
 
-备注：我在我写完这个帖子之后才发现这个。我推荐你阅读这篇文章，如果你对于 Go 的速度想知道更多：[5 件使得Go很快的事](https://dave.cheney.net/2014/06/07/five-things-that-make-go-fast)
+备注：我在我写完这个帖子之后才发现这个。我推荐你阅读这篇文章，如果你对于 Go 的速度想知道更多：[5 件使得 Go 很快的事](https://dave.cheney.net/2014/06/07/five-things-that-make-go-fast)
 
 ## Golang 之弊：缺乏泛型
 

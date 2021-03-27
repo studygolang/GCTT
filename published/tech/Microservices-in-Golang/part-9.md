@@ -8,7 +8,7 @@
 
 [CircleCI](http://circleci.com/) 是一款不可思议的工具，它有一个非常实用的免费平台。这个平台就是 SaaS, 因此与 Jenkins 不同的是，它是被完全管理的。同时它的配置和建立非常直截了当。此外，[CircleCI](http://circleci.com/) 也使用 Docker 镜像（images)，所以你可以在如何管理你的构建上有很多创意。
 
-确保你已经注册并且创造了账户。首先让我们在 [CircleCI](http://circleci.com/) 中新建一个工程。在左侧菜单中，点击 “add project”。如果你已经将你的 github 账户连接到你的 [CircleCI](http://circleci.com/) 账户，你应该可以看到你的微服务 git 仓库出现在列表中。点击 “follow project”。你将看到一个请求页面，你可以选择你乐于使用的操作系统和语言。确保 Linux 和 Go 被选中。然后点击开始构建。
+确保你已经注册并且创造了账户。首先让我们在 [CircleCI](http://circleci.com/) 中新建一个工程。在左侧菜单中，点击 “add project”。如果你已经将你的 GitHub 账户连接到你的 [CircleCI](http://circleci.com/) 账户，你应该可以看到你的微服务 Git 仓库出现在列表中。点击 “follow project”。你将看到一个请求页面，你可以选择你乐于使用的操作系统和语言。确保 Linux 和 Go 被选中。然后点击开始构建。
 
 这将创造一些默认的配置，但是我们需要在构建能开始正常工作之前，增加我们自己的配置到此代码仓库中。
 
@@ -57,7 +57,7 @@ jobs:
           # Then sets the gcloud project name from the environment variables we set above.
           # Then we set the cluster name, the compute region/zone, then fetch the credentials.
           command: |
-            echo $GCLOUD_SERVICE_KEY | base64 --decode -i > ${HOME}/gcloud-service-key.json && \
+            Echo $GCLOUD_SERVICE_KEY | base64 --decode -i > ${HOME}/gcloud-service-key.json && \
               gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json && \
               gcloud config set project $GCLOUD_PROJECT_NAME && \
               gcloud --quiet config set container/cluster $GCLOUD_CLUSTER_NAME && \
@@ -73,13 +73,13 @@ jobs:
 
 我们需要谷歌云服务钥匙，正如我们在[第 7 章](https://studygolang.com/articles/12799)创建的那个，然后我们需要将此钥匙加密成 base64 并作为我们构建工程设置中的一个环境变量来存储。
 
-因此找到你的谷歌云服务钥匙，然后运行 `$ cat <keyname>.json | base64`，并复制得到的字符串。回到 [CircleCI](http://circleci.com/) 你的项目来，点击右上方的齿轮，然后选择左边栏目中的环境变量。新建一个环境变量，命名为`GCLOUD_SERVICE_KEY`，然后粘贴前面得到的 base64 字符串作为其值，并保存。
+因此找到你的谷歌云服务钥匙，然后运行 `$ cat <keyname>.json | base64`，并复制得到的字符串。回到 [CircleCI](http://circleci.com/) 你的项目来，点击右上方的齿轮，然后选择左边栏目中的环境变量。新建一个环境变量，命名为 `GCLOUD_SERVICE_KEY`，然后粘贴前面得到的 base64 字符串作为其值，并保存。
 
 上述操作可以在 circleci 内保存任何安全信息，且使代码仓库不熟任何敏感数据影响。它将这些访问密钥保存在操作团队的控制之下，而不仅限于任何可以访问代码仓库的人员。
 
 现在我们的构建配置中，用来对我们组进行身份验证的变量，其内容被解码为一个文件。
 
-大功告成，相当简单。我们拥有 CI 作为我们的一个服务。作为一个产品服务，在你执行部署步骤之前，你可能会首先运行你的测试用例。查看[这篇文档](https://circleci.com/docs/2.0/)然后看看你能用 circle 做哪些有趣的东西。由于 circle 使用Docker 容器，你甚至可以加一个数据库容器，以便于你运行集成测试。发挥你的创造力，最大限度使用这些特性。
+大功告成，相当简单。我们拥有 CI 作为我们的一个服务。作为一个产品服务，在你执行部署步骤之前，你可能会首先运行你的测试用例。查看[这篇文档](https://circleci.com/docs/2.0/)然后看看你能用 circle 做哪些有趣的东西。由于 circle 使用 Docker 容器，你甚至可以加一个数据库容器，以便于你运行集成测试。发挥你的创造力，最大限度使用这些特性。
 
 如果你觉得这一系列的文章对你有用，且你装了广告拦截器(没有人会责怪你)，考虑打赏一下我撰写这些文章所付出的时间和努力吧！谢谢！
 https://monzo.me/ewanvalentine

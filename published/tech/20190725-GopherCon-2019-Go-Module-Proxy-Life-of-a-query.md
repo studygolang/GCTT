@@ -305,7 +305,7 @@ go 命令有一个非常酷的地方，就是可以使用这些校验和：用�
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/module-life-of-query/go-module-proxy-life-of-a-query-66.png)
 
-我们需要一种不会让校验和数据库行为不当，并且会使审计员和 go 命令容易检测到有针对性的攻击的解决方案.
+我们需要一种不会让校验和数据库行为不当，并且会使审计员和 Go 命令容易检测到有针对性的攻击的解决方案.
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/module-life-of-query/go-module-proxy-life-of-a-query-67.png)
 
@@ -337,7 +337,7 @@ go 命令有一个非常酷的地方，就是可以使用这些校验和：用�
 
 请记住，我们的目标是确保每个人每次都从代理服务器或源服务器获取“正确”的模块版本。
 
-从我们和 go 命令的角度来看，“正确”意味着......
+从我们和 Go 命令的角度来看，“正确”意味着......
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/module-life-of-query/go-module-proxy-life-of-a-query-74.png)
 
@@ -345,7 +345,7 @@ go 命令有一个非常酷的地方，就是可以使用这些校验和：用�
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/module-life-of-query/go-module-proxy-life-of-a-query-75.png)
 
-此日志提供了一种非常可靠的方法来向审计员和 go 命令证明两个关键事项：
+此日志提供了一种非常可靠的方法来向审计员和 Go 命令证明两个关键事项：
 
 1. 通过称为“包含证明”的东西在日志中存在特定记录。
 2. 那棵树没有被篡改过。具体来说，后面的树包含我们已经知道的旧树，称为“一致性证明”。
@@ -399,7 +399,7 @@ go 命令有一个非常酷的地方，就是可以使用这些校验和：用�
 
 那么，还记得她谈过的那些证据吗？它们基本上归结为比较这个顶级树头或哈希，看看它是否与你计算的那些以及你之前看过的那些匹配。
 
-让我们来看一个包含证明的例子，它只需要几个哈希就能工作。证明树中包含一组 go.sum 行是 go 命令如何验证我们刚刚从代理返回的源代码。
+让我们来看一个包含证明的例子，它只需要几个哈希就能工作。证明树中包含一组 go.sum 行是 Go 命令如何验证我们刚刚从代理返回的源代码。
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/module-life-of-query/go-module-proxy-life-of-a-query-85.png)
 
@@ -517,7 +517,7 @@ go 命令可以通过散列它给出的 go.sum 行来创建 0 级节点 9 ，但
 
 您可以将 GO111MODULE 设置为“on”以启用模块模式，或将其保留为“auto”。**（译者注： `export GO111MODULE=on` ）**
 
-您可以将 GOPROXY 设置为您选择的代理，以便在模块模式下通过 Go 命令获取。尽管从 1.11 始就存在这种情况，但提供逗号分隔列表的能力对于 1.13 来说是新的。这告诉 go 命令在放弃之前尝试多个源。如果您想使用 Go 团队的模块镜像，可以将其设置为 https://proxy.golang.org 。**（译者注： `export GOPROXY=proxy.golang.org` ）**
+您可以将 GOPROXY 设置为您选择的代理，以便在模块模式下通过 Go 命令获取。尽管从 1.11 始就存在这种情况，但提供逗号分隔列表的能力对于 1.13 来说是新的。这告诉 Go 命令在放弃之前尝试多个源。如果您想使用 Go 团队的模块镜像，可以将其设置为 https://proxy.golang.org 。**（译者注： `export GOPROXY=proxy.golang.org` ）**
 
 代理和校验和数据库的本质是源代码必须在公共互联网上可用，因此每个人都可以对其进行审核和使用。但是，如果您正在使用私有模块，则可以通过将它们列在 GOPRIVATE 环境变量中来禁用要跳过的域的代理和校验和数据库。
 

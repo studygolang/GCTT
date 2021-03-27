@@ -1,6 +1,6 @@
 首发于：https://studygolang.com/articles/16572
 
-# 用 gopher 的方式使用 panic
+# 用 Gopher 的方式使用 panic
 
 Go 运行时（即成功编译后，操作系统启动该该进程）发生的错误会以 panics 的形式反馈。*panic* 可以通过这两种形式触发 :
 
@@ -15,7 +15,7 @@ func main(){
 ```
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 panic: foo
 
 goroutine 1 [running]:
@@ -44,7 +44,7 @@ func main() {
 ```
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 panic: runtime error: integer divide by zero
 [signal 0x8 code=0x7 addr=0x2062 pc=0x2062]
 
@@ -65,7 +65,7 @@ main.main()
 
 用 Go 语言实现的程序在执行时或多或少都会有一些 *goroutine*。在关于 *go statement* 的规范详述中 *goroutine* 定义如下：
 
-> 一个 "Go" 语句在同一个地址空间内作为一个独立的并发线程控制或者 goroutine ，开始执行函数调用。
+> 一个 "Go" 语句在同一个地址空间内作为一个独立的并发线程控制或者 Goroutine ，开始执行函数调用。
 
 Go 是一门并发语言，这是因为它（原生）提供了并发编程的特性，比如并发运行的语句 ([Go 语句](https://golang.org/ref/spec#Go_statements)）或能够在一些并发事物中轻松交流的机制（[channels](https://golang.org/ref/spec#Channel_types)）。 不过并发是什么意思呢？和无处不在的并行又有什么关系呢？
 
@@ -109,7 +109,7 @@ func main() {
 ```
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 1
 2
 ```
@@ -141,7 +141,7 @@ func main() {
 
 ```
 
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 1
 2
 Inside deferred function
@@ -164,7 +164,7 @@ func main() {
 ```
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 1
 2
 Inside deferred function
@@ -193,7 +193,7 @@ func main() {
 ```
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 1
 2
 Inside deferred function
@@ -229,7 +229,7 @@ func main() {
 ```
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 Inside f, n=1
 ```
 
@@ -254,7 +254,7 @@ func main() {
 ```
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 3
 2
 1
@@ -298,7 +298,7 @@ func main() {
 ```
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 Before defer statement
 After defer statement
 panic: runtime error: invalid memory address or nil pointer dereference
@@ -338,7 +338,7 @@ func main() {
 ```
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 f() == 0
 g() == 1
 ```
@@ -347,7 +347,7 @@ g() == 1
 
 ## Panicking
 
-当任意函数 f 发生 panic 时，我们在上面例子中已经看到，在 f 中调用延迟函数的函数将以后进先出的顺序调用。之后将有什么发生呢？之后对于 f 的调用者，这种过程将被重复——它的延迟的函数将被触发。如此反复直到 f 的 goroutine 中的最上面的那个函数。最后，最上面的那个函数的延迟的函数被调用，并且程序终止。就像是一个冒泡直到顶端的调用链：
+当任意函数 f 发生 panic 时，我们在上面例子中已经看到，在 f 中调用延迟函数的函数将以后进先出的顺序调用。之后将有什么发生呢？之后对于 f 的调用者，这种过程将被重复——它的延迟的函数将被触发。如此反复直到 f 的 Goroutine 中的最上面的那个函数。最后，最上面的那个函数的延迟的函数被调用，并且程序终止。就像是一个冒泡直到顶端的调用链：
 
 ```go
 package main
@@ -378,13 +378,13 @@ func h() {
 
 func main() {
     ch := make(chan int)
-    go f(ch)
+    Go f(ch)
     <-ch
 }
 ```
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 Deferred by h
 Deferred by g
 Deferred by f
@@ -439,13 +439,13 @@ func h() {
 
 func main() {
     ch := make(chan int)
-    go f(ch)
+    Go f(ch)
     <-ch
 }
 ```
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 Deferred by h
 Deferred by g
 Deferred by f
@@ -472,7 +472,7 @@ created by main.main
 不论如何，事实证明结果会是，在调用直到调用链的顶部的推迟的函数，这个过程将会执行。虽然会有，第二个 panic 这样的新结果，像之前输出的那样，也会显示出来。
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 Deferred by h
 Deferred by g
 Deferred by f
@@ -546,7 +546,7 @@ func main() {
 ```
 
 ```
-> go install github.com/mlowicki/lab && ./bin/lab
+> Go install github.com/mlowicki/lab && ./bin/lab
 Start f
 Start g
 Start h
@@ -577,7 +577,7 @@ Deferred in f
 
 via: https://medium.com/golangspec/panicking-like-a-gopher-367a9ce04bb8
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[yixiaoer](https://github.com/yixiaoer)
 校对：[polaris1119](https://github.com/polaris1119)
 

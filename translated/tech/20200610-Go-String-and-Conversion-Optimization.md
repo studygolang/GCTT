@@ -1,6 +1,6 @@
 # Go：字符串以及转换优化
 
-![由Renee French创作的原始Go Gopher作品，为“ Go的旅程”创作的插图。](https://github.com/studygolang/gctt-images2/blob/master/20200610-Go-String-and-Conversion-Optimization/Illustration.png?raw=true)
+![由 Renee French 创作的原始 Go Gopher 作品，为“ Go 的旅程”创作的插图。](https://github.com/studygolang/gctt-images2/blob/master/20200610-Go-String-and-Conversion-Optimization/Illustration.png?raw=true)
 
 ℹ️  这篇文章基于 Go 1.14。
 
@@ -75,6 +75,6 @@ via: https://medium.com/a-journey-with-go/go-string-conversion-optimization-767b
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[dust347](https://github.com/dust347)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

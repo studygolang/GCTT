@@ -41,7 +41,7 @@ Goroutine 内存泄漏是产生 Go 程序内存泄漏的常见原因。在我之
 56     output := make(chan string, total)
 57     workers := runtime.NumCPU()
 58     for i := 0; i < workers; i++ {
-59         go worker(i, input, output)
+59         Go worker(i, input, output)
 60     }
 61
 62     // Receive from output the expected number of times. If 10
@@ -57,7 +57,7 @@ Goroutine 内存泄漏是产生 Go 程序内存泄漏的常见原因。在我之
 72 // This is a blog post so all the workers do is capitalize a
 73 // string but imagine they are doing something important.
 74 //
-75 // Each goroutine can't know how many records it will get so
+75 // Each Goroutine can't know how many records it will get so
 76 // it must use the range keyword to receive in a loop.
 77 func worker(id int, input <-chan string, output chan<- string) {
 78     for v := range input {
@@ -101,7 +101,7 @@ Goroutine 内存泄漏是产生 Go 程序内存泄漏的常见原因。在我之
 
 ## 结论
 
-正如前一篇文章中所提到的，Go 使得启动 Goroutines 变得简单，但是你有责任仔细使用它们。在这篇文章中，我展示了另一个很容易出现的 Goroutine 错误。还有很多方法可以创建 Goroutine 内存泄漏以及使用并发时可能遇到的其他陷阱。未来的帖子将继续讨论这些问题。与往常一样，我将继续重复这一建议：“如果不知道它会如何停止，就不要开始使用 goroutine ”。
+正如前一篇文章中所提到的，Go 使得启动 Goroutines 变得简单，但是你有责任仔细使用它们。在这篇文章中，我展示了另一个很容易出现的 Goroutine 错误。还有很多方法可以创建 Goroutine 内存泄漏以及使用并发时可能遇到的其他陷阱。未来的帖子将继续讨论这些问题。与往常一样，我将继续重复这一建议：“如果不知道它会如何停止，就不要开始使用 Goroutine ”。
 
 **_并发是一种有用的工具，但必须谨慎使用。_**
 

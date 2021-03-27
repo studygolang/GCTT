@@ -16,7 +16,7 @@ init 函数在包级别被定义，主要用于：
 
 ## 包的初始化
 
-要想使用导入的包首先需要初始化它，这是由golang的运行系统完成的，主要包括(顺序很重要)：
+要想使用导入的包首先需要初始化它，这是由 golang 的运行系统完成的，主要包括(顺序很重要)：
 
 1. 初始化导入的包（递归的定义）
 2. 在包级别为声明的变量计算并分配初始值
@@ -214,7 +214,7 @@ import _ "image/png"
 
 via: https://medium.com/golangspec/init-functions-in-go-eac191b3860a
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[flexiwind](https://github.com/flexiwind)
 校对：[polaris1119](https://github.com/polaris1119)
 

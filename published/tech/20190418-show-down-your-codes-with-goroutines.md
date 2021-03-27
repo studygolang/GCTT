@@ -1,8 +1,8 @@
 首发于：https://studygolang.com/articles/21811
 
-# goroutine 可能使程序变慢
+# Goroutine 可能使程序变慢
 
-## 如何使用 goroutine 才能使你的 CPU 满负载运行呢
+## 如何使用 Goroutine 才能使你的 CPU 满负载运行呢
 
 下面，我们将会展示一个关于 for 循环的代码，将输入分成几个序列添加到 Goroutines 里面！我敢打赌你之前可能有过几次这种情况，但是每次引入 gorountine 都让你的代码变得更快吗？
 
@@ -93,7 +93,7 @@ func BenchmarkConcurrentSum(b *testing.B) {
 我的 CPU 是一个小型笔记本电脑 CPU (两个超线程内核，Go runtime 看作是 4 个逻辑内核)，预计，并发版本应该显示出明显的速度增益，然而，真实运行速度如何呢？
 
 ```
-$ go test -bench。
+$ Go test -bench。
 goos: darwin
 goarch: amd64
 pkg: github.com/appliedgo/concurrencyslower
@@ -180,7 +180,7 @@ func ChannelSum() int {
 ## 测试文件中增加 BenchmarkChannelSum 测试结果如下
 
 ```
-$ go test -bench .
+$ Go test -bench .
 goos: darwin
 goarch: amd64
 pkg: github.com/appliedgo/concurrencyslower
@@ -197,7 +197,7 @@ ok      github.com/appliedgo/concurrencyslower  23.807s
 
 ## 如何获取代码
 
-使用 go get，注意 -d 参数阻止自动安装二进制到 $GOPATH/bin。
+使用 Go get，注意 -d 参数阻止自动安装二进制到 $GOPATH/bin。
 
 ```
 go get -d github.com/appliedgo/concurrencyslower
@@ -219,7 +219,7 @@ go test -bench .
 
 ```$GOPATH/pkg/mod/github.com/appliedgo/concurrencyslower@```
 
-如果 $GOPATH 丢失，默认使用 go get ~/go 或者 %USERPROFILE%\go
+如果 $GOPATH 丢失，默认使用 Go get ~/go 或者 %USERPROFILE%\go
 
 ## 结论
 

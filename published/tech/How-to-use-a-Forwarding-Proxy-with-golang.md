@@ -16,11 +16,11 @@
 
 2015 年 12 月 1 日，有一位用户在 [CircleCI 论坛](https://discuss.circleci.com/t/circleci-source-ip/1202)上提了这个问题，并且问题还未关闭。当然，CircleCI 很棒。我只是举个例子，并非要埋怨他们。
 
-解决这个问题的一种可行方法是使用正向代理。你可以让一组节点以同一静态IP运转，然后把清单提供给客户即可。
+解决这个问题的一种可行方法是使用正向代理。你可以让一组节点以同一静态 IP 运转，然后把清单提供给客户即可。
 
 几乎所有云服务提供商都是这样做的，比如 DigitalOcean 的浮动 IP（floating IP）、AWS 的弹性 IP（elastic IP）等。
 
-你可以通过配置自己的应用来把请求转发到这个（代理）池中。这样，终点的服务所取得的IP就是正向代理节点的IP，而不是内部IP。
+你可以通过配置自己的应用来把请求转发到这个（代理）池中。这样，终点的服务所取得的 IP 就是正向代理节点的 IP，而不是内部 IP。
 
 正向代理可以成为你的网络设施的又一安全层，因为你可以在一个中心化的地方极其方便地扫描和控制内部网络发出来的数据包。
 
@@ -54,7 +54,7 @@ func main() {
 }
 ```
 
-如果用 `GET` 方法访问路径 `/whoyare`，你会得到一个类似下面的 JSON 格式的响应：`{"addr": "34.35.23.54"}`，其中 `34.35.23.54` 就是你的公网地址。如果你使用的是笔记本电脑，那么在终端上发出请求后，你应该会得到 `localhost`的结果。可以用 `curl` 来试一下：
+如果用 `GET` 方法访问路径 `/whoyare`，你会得到一个类似下面的 JSON 格式的响应：`{"addr": "34.35.23.54"}`，其中 `34.35.23.54` 就是你的公网地址。如果你使用的是笔记本电脑，那么在终端上发出请求后，你应该会得到 `localhost` 的结果。可以用 `curl` 来试一下：
 
 	18:36 $ curl -v http://localhost:8080/whoyare
 	* TCP_NODELAY set
@@ -112,7 +112,7 @@ func main() {
 * whoyare: public ip 188.166.17.88
 * privoxy: public ip 167.99.41.79
 
-Privoxy 是一个易用的正向代理。相比而言，Nginx 和 Haproxy 都不太适合在这种场景下使用，因为它们不支持`CONNECT`方法。
+Privoxy 是一个易用的正向代理。相比而言，Nginx 和 Haproxy 都不太适合在这种场景下使用，因为它们不支持 `CONNECT` 方法。
 
 我在 Docker Hub 上创建了一个 docker 镜像，你可以直接运行它，默认使用端口 8118。
 
@@ -133,9 +133,9 @@ Privoxy 是一个易用的正向代理。相比而言，Nginx 和 Haproxy 都不
 	2018-03-18 17:28:05.611 7fbbf41dab88 Info: Listening on port 8118 on IP address
 	0.0.0.0
 
-第二步，编译`whoyare`并且把可执行文件用scp传送到服务器，可使用以下命令：
+第二步，编译 `whoyare` 并且把可执行文件用 scp 传送到服务器，可使用以下命令：
 
-	$ CGO_ENABLED=0 GOOS=linux go build -o bin/server_linux -a ./whoyare
+	$ CGO_ENABLED=0 GOOS=linux Go build -o bin/server_linux -a ./whoyare
 
 应用运行起来之后，我们就可以用 cURL 来直接或者通过 privoxy 发送请求了。
 
@@ -143,7 +143,7 @@ Privoxy 是一个易用的正向代理。相比而言，Nginx 和 Haproxy 都不
 
 	$ curl -v http://your-ip:8080/whoyare
 
-cURL 使用环境变量`http_proxy`来配置代理进行请求转发：
+cURL 使用环境变量 `http_proxy` 来配置代理进行请求转发：
 
 	$ http_proxy=http://167.99.41.79:8118 curl -v http://188.166.17.88:8080/whoyare
 	*   Trying 167.99.41.79...
@@ -177,7 +177,7 @@ privoxy 处应该会留下如下的请求日志：
 	2018/03/18 18:37:59 Target http://188.166.17.88:8080.
 	You are {"addr":"95.248.202.252:38620"}
 
-Go语言的 `HTTP.Client` 包支持一组和代理相关的环境变量，设置这些环境变量可以对运行期间的服务立刻生效，十分灵活。
+Go 语言的 `HTTP.Client` 包支持一组和代理相关的环境变量，设置这些环境变量可以对运行期间的服务立刻生效，十分灵活。
 
 	export HTTP_PROXY=http://http_proxy:port/
 	export HTTPS_PROXY=http://https_proxy:port/

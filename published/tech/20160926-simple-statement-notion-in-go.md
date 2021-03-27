@@ -25,7 +25,7 @@ SimpleStmt = EmptyStmt | ExpressionStmt | SendStmt | IncDecStmt | Assignment | S
 ## 2. 自增或自减语句
 
 ```go
-x++  // 语义上等价于赋值x + = 1
+x++  // 语义上等价于赋值 x + = 1
 x--  // x -= 1
 ```
 
@@ -47,11 +47,11 @@ foo = bar++ + 10
 
 某些表达式可以放入语句中。
 
-> **块是由大括号括起来的一系列语句，例如，表达式语句在如下情况下完全有效。**
+> **块是由大括号括起来的一系列语句，例如，表达式语句在如下  情况下完全有效。**
 
 允许的选项如下：
 
-- 函数调用（除了一些内置函数，例如 append，cap，complex，imag，len，make，new，real，[unsafe](https://golang.org/pkg/unsafe/).Alignof，unsafe.Offsetof 和unsafe.SizeOf）
+- 函数调用（除了一些内置函数，例如 append，cap，complex，imag，len，make，new，real，[unsafe](https://golang.org/pkg/unsafe/).Alignof，unsafe.Offsetof 和 unsafe.SizeOf）
 - 方法调用
 - 接收操作符
 
@@ -66,10 +66,10 @@ func f(n int) {
 
 func main() {
     f(1)
-    s := S{"Michał"}
+    s := S{"Micha ł"}
     s.m()
     c := make(chan int)
-    go func() {
+    Go func() {
         c <- 1
     }()
     <-c
@@ -80,7 +80,7 @@ func main() {
 
 ## 5. 赋值语句
 
-大家应该都熟悉一些最基本的赋值形式。首先必须声明变量，右边的表达式必须可以[赋值](https://studygolang.com/articles/12381)给一个变量:
+大家应该都熟悉一些最基本的赋值形式。首先必须  声明变量，右边的表达式必须可以[赋值](https://studygolang.com/articles/12381)给一个变量:
 
 ```go
 var population int64
@@ -90,7 +90,7 @@ var city, country string
 city, country = "New York", "USA"
 ```
 
-当把一个以上的值分配给变量列表时，有两种形式。第一种形式，一个表达式返回多个值，例如函数调用：
+当把一个以上的值分配给变量列表时，有两种形式。 第一种形式，一个表达式返回多个值，例如函数调用：
 
 ```go
 f := func() (int64, string) {
@@ -145,7 +145,7 @@ a := [...]int{1,2,3}
 one, two := f(), g()
 ```
 
-现在我们应该很清楚是什么构成了一组有效的简单语句。但是它们用在什么地方呢？
+现在我们应该很清楚是  什么构成了一组有效的简单语句。但是  它们用在什么地方呢？
 
 ## if 语句
 
@@ -170,7 +170,7 @@ for i := 0; i < 10; i += 1 {
 }
 ```
 
-当然了，也没有东西阻止程序员在这个地方使用其他的简单语句。
+当然了，也没有  东西阻止程序员在这个地方使用其他的简单语句。
 
 ## switch 语句
 
@@ -225,8 +225,8 @@ T1 main.T1 10
 
 via: https://medium.com/golangspec/simple-statement-notion-in-go-b8afddfc7916
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[yousanflics](https://github.com/yousanflics)
 校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

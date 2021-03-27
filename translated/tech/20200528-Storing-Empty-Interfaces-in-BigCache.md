@@ -126,6 +126,6 @@ via: https://dev.to/calebschoepp/storing-empty-interfaces-in-bigcache-1b33
 
 作者：[calebschoepp](https://dev.to/calebschoepp)
 译者：[alandtsang](https://github.com/alandtsang)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

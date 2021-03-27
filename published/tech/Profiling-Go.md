@@ -21,8 +21,8 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
     <thead>
         <tr>
         <th></th>
-        <th>优点</th>
-        <th>缺点</th>
+        <th> 优点 </th>
+        <th> 缺点 </th>
         </tr>
     </thead>
     <tbody>
@@ -34,11 +34,11 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
         </tr>
         <tr>
         <td>pprof</td>
-        <td>- 详述CPU和内存使用情况。<br/>
+        <td>- 详述 CPU 和内存使用情况。<br/>
         - 可以远程分析。<br/>
         - 可以生成图像。</td>
         <td>- 需要改代码。<br/>
-        - 需调用API。</td>
+        - 需调用 API。</td>
         </tr>
         <tr>
         <td>trace</td>
@@ -46,7 +46,7 @@ Go 实现的是 _并行的_ [标记-清除垃圾回收器](http://wiki.c2.com/?M
         - 强大的调试界面。<br/>
         - 易实现问题区域的可视化。</td>
         <td>- 需要改代码。<br/>
-        - UI界面复杂。<br/>
+        - UI 界面复杂。<br/>
         - 理解需要一点时间。</td>
         </tr>
     </tbody>
@@ -171,7 +171,7 @@ memory comparison...
 使用这个工具，有下面几种方式:
 
 1. 开发时在程序中加入指令代码，生成分析用的 `.profile` 文件。
-2. 通过 web server 远程分析程序（不明确生产 `.profile` 文件）。
+2. 通过 Web server 远程分析程序（不明确生产 `.profile` 文件）。
 
 > 注意: 性能概要文件不一定带有 `.profile` 后缀名 (文件类型可以自己定义)
 
@@ -216,7 +216,7 @@ func main() {
 
 `go build -o app && time ./app > cpu.profile`
 
-最后，使用 go tool 命令，以交互的方式检查数据：
+最后，使用 Go tool 命令，以交互的方式检查数据：
 
 `go tool pprof cpu.profile`
 
@@ -238,7 +238,7 @@ Showing nodes accounting for 180ms, 100% of 180ms total
         0     0%   100%      180ms   100%  runtime.systemstack /.../src/runtime/asm_amd64.s
 ```
 
-这表示 `runtime.memclrNoHeapPointers` 占用了最多的CPU时间。
+这表示 `runtime.memclrNoHeapPointers` 占用了最多的 CPU 时间。
 
 我们一行一行的分解程序，可以更准确地观察 CPU 的使用情况。
 
@@ -331,7 +331,7 @@ Showing nodes accounting for 95.38MB, 100% of 95.38MB total
 ```
 因为是个简单的示例程序，可以很清晰地看出主要的内存分配发生在 `main.bigBytes` 函数中。
 
-如果想看一些更详细的数据，可以执行`list main.`：
+如果想看一些更详细的数据，可以执行 `list main.`：
 
 ```
 (pprof) list main.
@@ -369,7 +369,7 @@ ROUTINE ======================== main.main in /.../code/go/profiling/main.go
 
 在下面的例子中修改了代码，我们建立了一个 Web 服务，并导入 `"net/http/pprof"` 包 (https://golang.org/pkg/net/http/pprof/)，以实现自动分析。
 
-> 注意：如果你的程序已经使用了 Web 服务器，你不必再新建一个。pprof 包会挂载到 web 服务的多路复用器（multiplexer）。
+> 注意：如果你的程序已经使用了 Web 服务器，你不必再新建一个。pprof 包会挂载到 Web 服务的多路复用器（multiplexer）。
 
 ```go
 package main
@@ -391,7 +391,7 @@ func bigBytes() *[]byte {
 func main() {
     var wg sync.WaitGroup
 
-    go func() {
+    Go func() {
         log.Println(http.ListenAndServe("localhost:6060", nil))
     }()
 
@@ -420,7 +420,7 @@ profiles:
 0	mutex
 7	threadcreate
 
-full goroutine stack dump
+full Goroutine stack dump
 
 /debug/pprof/
 ```
@@ -430,16 +430,16 @@ full goroutine stack dump
 首先，先认识一下这五个分析文件的含义：
 
 * **block**: 同步原语引起阻塞的跟踪信息；
-* **goroutine**: 所有当前 go 协程的跟踪信息；
+* **goroutine**: 所有当前 Go 协程的跟踪信息；
 * **heap**: 堆内存分配情况；
 * **mutex**: 竞争互斥的跟踪信息；
 * **threadcreate**: 创建操作系统线程的跟踪信息；
 
-web 服务器也可以产生 30s 的 CPU 性能分析文件，访问地址http://localhost:6060/debug/pprof/profile（这个文件不能在浏览器中展示，但可以下载到你的本地系统中）
+web 服务器也可以产生 30s 的 CPU 性能分析文件，访问地址 http://localhost:6060/debug/pprof/profile（这个文件不能在浏览器中展示，但可以下载到你的本地系统中）
 
 在访问 `/debug/pprof/` 时，看不到 CPU 性能分析的链接。因为做 CPU 性能分析需要调用特殊的 API（也就是，`StartCPUProfile` 和 `StopCPUProfile` 函数），只有调用后才产生输出流，最终下载到你的文件系统。
 
-web 服务器可以产生“追踪”文件，访问地址http://localhost:6060/debug/pprof/trace?seconds=5（与 CPU 性能分析一样的原因，都没有列出来，调用后才产生输出数据，然后下载到你的文件系统）。这个“追踪”文件需要用 go tool trace 进行解析（后面的章节会讲解 go tool trace ）。
+web 服务器可以产生“追踪”文件，访问地址 http://localhost:6060/debug/pprof/trace?seconds=5（与 CPU 性能分析一样的原因，都没有列出来，调用后才产生输出数据，然后下载到你的文件系统）。这个“追踪”文件需要用 Go tool trace 进行解析（后面的章节会讲解 Go tool trace ）。
 
 > 注意：pprof 的选项信息可以参考：[golang.org/pkg/net/http/pprof/](https://golang.org/pkg/net/http/pprof/)
 
@@ -582,7 +582,7 @@ ROUTINE ======================== main.bigBytes in /.../go/profiling/main.go
 
 ### Web UI 界面
 
-不久后，pprof 分析会新增一个交互式的 web 界面（大概在 2017 年 11 月份）。
+不久后，pprof 分析会新增一个交互式的 Web 界面（大概在 2017 年 11 月份）。
 
 更多信息请参考[这篇文章](https://rakyll.org/pprof-ui/)
 
@@ -612,7 +612,7 @@ func main() {
     wg.Add(1)
 
     var result []byte
-    go func() {
+    Go func() {
         result = make([]byte, 500000000)
         log.Println("done here")
         wg.Done()
@@ -624,14 +624,14 @@ func main() {
 ```
 要用 trace 追踪功能，你只要导入 `"runtime/trace"`，然后调用 `trace.Start` 和 `trace.Stop` 函数。（为了追踪程序的所有内容，在 `trace.Stop` 函数前加入 `defer`）
 
-此外，我们创建了一个 go 协程，在其中创建了一个 500MB 的切片。等待 go 协程执行完成，然后记录 result 的类型。这样做可以看到更多的直观数据。
+此外，我们创建了一个 Go 协程，在其中创建了一个 500MB 的切片。等待 Go 协程执行完成，然后记录 result 的类型。这样做可以看到更多的直观数据。
 
 现在重新编译程序，用 trace 打开产生的追踪数据：
 
 ```
-$ go build -o app
+$ Go build -o app
 $ time ./app > app.trace
-$ go tool trace app.trace
+$ Go tool trace app.trace
 ```
 
 > 注意：使用 `-pprof` 标签，可以生成 pprof 兼容的文件（比如要动态地检查数据时）。更多信息请参考[go documentation](https://golang.org/cmd/trace/)。
@@ -664,17 +664,17 @@ $ go tool trace app.trace
 
 ### Go 协程
 
-如果图形放大到足够大，你可以看到 “goroutines”（go 协程）这一部分，它由两种颜色构成：浅绿色（可运行 go 协程）和深绿色（正在运行的 go 协程）。如果你点击图形，在屏幕下方的预览中，可以看到样例的明细。有趣的是，在任何特定的时刻，会有多个 go 协程存在，但它们不一定同时运行。
+如果图形放大到足够大，你可以看到 “goroutines”（go 协程）这一部分，它由两种颜色构成：浅绿色（可运行 Go 协程）和深绿色（正在运行的 Go 协程）。如果你点击图形，在屏幕下方的预览中，可以看到样例的明细。有趣的是，在任何特定的时刻，会有多个 Go 协程存在，但它们不一定同时运行。
 
-在我们的例子中，可以看到程序的变化：从一个准备运行的 go 协程，其并没有真正运行（也就是 “runnable” 可运行状态），继续向前看到有两个 go 协程在运行。（也就是，两个都处在 “running” 运行状态，没有 go 协程处于 “runnable” 状态）
+在我们的例子中，可以看到程序的变化：从一个准备运行的 Go 协程，其并没有真正运行（也就是 “runnable” 可运行状态），继续向前看到有两个 Go 协程在运行。（也就是，两个都处在 “running” 运行状态，没有 Go 协程处于 “runnable” 状态）
 
-有趣的是，在图中还可以看到，运行中的 go 协程数量与底层操作系统所创建的线程数量之间的关系。
+有趣的是，在图中还可以看到，运行中的 Go 协程数量与底层操作系统所创建的线程数量之间的关系。
 
 ### 线程
 
-同样的，放大图片你也可以看到 “threads”（线程）这一部分，它由两种颜色构成：浅紫色（syscalls 系统调用）和深紫色（running threads运行中的线程）。
+同样的，放大图片你也可以看到 “threads”（线程）这一部分，它由两种颜色构成：浅紫色（syscalls 系统调用）和深紫色（running threads 运行中的线程）。
 
-在界面中 “heap” 部分有意思的内容是，因为 go 垃圾回收是并发执行，所以我们看到应用程序在堆上从未分配超过 100mb 的内存（go 垃圾回收在不同的进程/线程上运行）。程序运行中，无用的内存就被清理掉了。
+在界面中 “heap” 部分有意思的内容是，因为 Go 垃圾回收是并发执行，所以我们看到应用程序在堆上从未分配超过 100mb 的内存（go 垃圾回收在不同的进程/线程上运行）。程序运行中，无用的内存就被清理掉了。
 
 这是可以理解的，因为在我们的程序中分配了 100mb 的内存给变量 `s`，这个变量仅在 loop 循环中有效。 一旦 loop 完成一次迭代，`s` 变量就不引用任何地址，所以 GC（垃圾回收）就可以清理掉这块内存。
 
@@ -686,13 +686,13 @@ $ go tool trace app.trace
 
 ### 进程
 
-在界面中 “procs” 部分，可以看到，在分配 500mb 内存时，Proc 3（进程 3）上有一个新的 go 协程在运行 `main.main.func1` 函数（在我们的程序中，这个函数负责内存分配工作）
+在界面中 “procs” 部分，可以看到，在分配 500mb 内存时，Proc 3（进程 3）上有一个新的 Go 协程在运行 `main.main.func1` 函数（在我们的程序中，这个函数负责内存分配工作）
 
 如果在 “View Options”（查看选项）中选择 “Flow events”（流事件），你可以看到一个箭头从 `main.main` 函数指向 `main.main.func1` 函数，`main.main.func1` 是运行在一个独立的进程/线程上。（箭头不容易看到，但确实有）
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/profiling-go/profiling_go_3.png)
 
-通过图形界面，不但可直观的见到 `main.main.func1` 协程运行与内存分配的对应关系，而且能够看到程序的因果关系（也就是，_什么_ 触发了新的 go 协程的运行）
+通过图形界面，不但可直观的见到 `main.main.func1` 协程运行与内存分配的对应关系，而且能够看到程序的因果关系（也就是，_什么_ 触发了新的 Go 协程的运行）
 
 ## 结尾
 

@@ -30,18 +30,18 @@ func main() {
 ## Go 的依赖管理
 
 如果打算写大量的 JavaScript 代码，首要问题就是依赖管理问题，Go 是怎么处理的呢？有两个办法：
-- go get
+- Go get
 - dep
 
-用 npm 的术语来说，你可以把他们看作是：在你需要使用 npm install -g 的时候，使用 go get，然后使用 dep 来管理不同项目的依赖。
+用 NPM 的术语来说，你可以把他们看作是：在你需要使用 NPM install -g 的时候，使用 Go get，然后使用 dep 来管理不同项目的依赖。
 
-要安装 dep，可以通过 go get 来安装，使用如下命令：
+要安装 dep，可以通过 Go get 来安装，使用如下命令：
 
 ```
 go get -u github.com/golang/dep/cmd/dep
 ```
 
-然而，使用 go get 有一个缺点 —— go get 并不处理版本，它仅仅是获取 Github 仓库的最新版本。这就是为什么推荐大家安装并使用 dep。如果是 Mac 系统，安装 dep 也可以通过如下命令：
+然而，使用 Go get 有一个缺点 —— Go get 并不处理版本，它仅仅是获取 Github 仓库的最新版本。这就是为什么推荐大家安装并使用 dep。如果是 Mac 系统，安装 dep 也可以通过如下命令：
 
 ```go
 brew install dep
@@ -49,11 +49,11 @@ brew upgrade dep
 ```
 （如果是其他操作系统，安装请参见： https://golang.org/doc/install）
 
-一旦安装了 dep，你就可以使用 **dep init** 来初始化项目，就好像使用 **npm init** 初始化 nodejs 项目一样。
+一旦安装了 dep，你就可以使用 **dep init** 来初始化项目，就好像使用 **npm init** 初始化 Node.js 项目一样。
 
-> 开发Go项目之前，你需要花点时间设置好GOPATH环境变量。—— [官方指导链接](https://golang.org/doc/install)
+> 开发 Go 项目之前，你需要花点时间设置好 GOPATH 环境变量。—— [官方指导链接](https://golang.org/doc/install)
 
-dep 会像 npm 一样，创建一个 Node.js 项目中类似 package.json 的文件来描述工程 —— Gopkg.toml。类似 package-lock.json，也会有一个 Gopkg.lock 文件。不同于 nodejs 项目将依赖放入 node modules 文件夹中，dep 将依赖放入一个叫作 vendor 的文件夹中。
+dep 会像 NPM 一样，创建一个 Node.js 项目中类似 package.json 的文件来描述工程 —— Gopkg.toml。类似 package-lock.json，也会有一个 Gopkg.lock 文件。不同于 Node.js 项目将依赖放入 node modules 文件夹中，dep 将依赖放入一个叫作 vendor 的文件夹中。
 
 要添加依赖，你只需要运行 dep ensure -add github.com/pkg/errors 命令。运行结束后，这个依赖就会出现在 lock 和 toml 文件中：
 
@@ -63,7 +63,7 @@ dep 会像 npm 一样，创建一个 Node.js 项目中类似 package.json 的文
   version = "0.8.0"
 ```
 
-## Go处理异步操作
+## Go 处理异步操作
 
 当用 JavaScript 写异步代码时，我们会用到一些库或者语言特性，比如：
 - async 库
@@ -122,7 +122,7 @@ func main() {
 
 上面的例子是可以正常运行的，但是读取文件是一个接一个读取。—— 让我们来稍加改进，将它异步化吧！
 
-Go有一个叫作 *goroutines* 的概念来处理多线程。一个 *goroutine* 是一个轻量级的线程，它由 Go runtime 来管理。*goroutine* 使得你可以并发地跑Go的函数。
+Go 有一个叫作 *goroutines* 的概念来处理多线程。一个 *goroutine* 是一个轻量级的线程，它由 Go runtime 来管理。*goroutine* 使得你可以并发地跑 Go 的函数。
 
 我最终使用 *errgroup* 包来管理或者说同步 *goroutines*。这个包提供同步机制，错误传播，以及对同一个由一组 *goroutines* 子任务组成的公共任务提供上下文取消机制。
 
@@ -183,9 +183,9 @@ import "github.com/gin-gonic/gin"
 func main() {
 	// 创建默认不带任何中间件的路由
 	r := gin.New()
-	// 默认gin的输出为标准输出
+	// 默认 gin 的输出为标准输出
 	r.Use(gin.Logger())
-	// Recovery中间件从异常中恢复，并回复500
+	// Recovery 中间件从异常中恢复，并回复 500
 	r.Use(gin.Recovery())
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{

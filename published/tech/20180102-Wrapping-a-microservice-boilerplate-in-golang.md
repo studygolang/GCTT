@@ -16,7 +16,7 @@
 go get github.com/spf13/viper
 ```
 
-Viper 包是一个 Go 语言下的全方位配置解决方案包含了`十二要素应用程序`（译者注：一种应用开发理论）。它被设计成和应用程序一起运行，几乎能处理所有的配置需求及格式。它支持如下类型：
+Viper 包是一个 Go 语言下的全方位配置解决方案包含了 ` 十二要素应用程序 `（译者注：一种应用开发理论）。它被设计成和应用程序一起运行，几乎能处理所有的配置需求及格式。它支持如下类型：
 
 - 默认设置
 - 读取 JSON, TOML, YAML, HCL, 和 Java 的 properties 配置文件
@@ -76,7 +76,7 @@ go get github.com/garyburd/redigo/redis
 
 - 一个类似 Print 一样的接口支持所有的 Redis 命令。
 - 管道，包含了管道事务。
-- 支持发布/订阅（Publish和Subscribe）。
+- 支持发布/订阅（Publish 和 Subscribe）。
 - 支持连接池。
 - Script 辅助类型能对 EVALSHA 方便的进行使用。
 - 辅助函数专门来处理命令的应答。

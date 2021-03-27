@@ -1,4 +1,4 @@
-# 接口分离原则在Go语言中的实践
+# 接口分离原则在 Go 语言中的实践
 
 2020 年 8 月 20 日 - 标签：golang
 
@@ -20,7 +20,7 @@
 对于那些可以被数据库持久化的资源，我们可以更好的规范它们的行为，使得对它们的操作更标准化。接下来我会具体阐述这个例子。
 
 我在下面的例子中使用了 `interface{}`，但你在实际工作中，应该尽量避免使用，因为它实在太宽泛了。但是在例如 `Kubernetes` 的实现中使用了
-[runtime.Object](https://godoc.org/k8s.io/apimachinery/pkg/runtime)，实际上是一种更好的选择。即将在Go 2.0 版本中引入
+[runtime.Object](https://godoc.org/k8s.io/apimachinery/pkg/runtime)，实际上是一种更好的选择。即将在 Go 2.0 版本中引入
 的泛型支持会使得类似场景中的实现更简单。或者你也可以用代码生成来实现。但总而言之，`Kubernetes` 中使用可序列化的对象这一思想是非常优秀的。
 
 ```golang
@@ -64,7 +64,7 @@ type Persistable interface {
 当函数需要两种或两种或两种以上动作的时候，上述的方式是很有用的。假设你需要定义一个接口包含 `Get` 或 `View` 操作，你可以考虑
 重新定义一个 `ReadOnly` 的接口，包含 `Get`，`View` 操作，并定义一个 `Modifiable` 的接口，包含 `Update`, `Create`, `Delete` 操作。
 
-试想一下你正在编写一组 http handlers 来实现对资源进行增删改查（CRUD）的API接口：
+试想一下你正在编写一组 http handlers 来实现对资源进行增删改查（CRUD）的 API 接口：
 
 ```golang
 Create

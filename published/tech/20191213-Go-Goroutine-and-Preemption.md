@@ -50,7 +50,7 @@ func readNumber() int {
 ![STW_goroutines_preemption](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-goroutine-and-preemption/scheduler_preemption_tracing_mutex.png)
 <br>
 
-当然，Go 也需要一种方式来停止一个 goroutine，尤其是这个 goroutine 本身没有实现停止。我们称之为抢占（preemption）。 抢占允许调度器可以在 goroutines 直接切换。任何运行时间超过 10 毫秒的 Goroutine 都会被标记为“可抢占”状态。之后，抢占操作会在 Goroutine 的函数序言（function prologue）阶段执行。
+当然，Go 也需要一种方式来停止一个 goroutine，尤其是这个 Goroutine 本身没有实现停止。我们称之为抢占（preemption）。 抢占允许调度器可以在 goroutines 直接切换。任何运行时间超过 10 毫秒的 Goroutine 都会被标记为“可抢占”状态。之后，抢占操作会在 Goroutine 的函数序言（function prologue）阶段执行。
 
 下面，我们来改写一下之前的数字生成器程序代码，虽然改写后不能正常运行，但我们可以通过 tracing 来印证抢占操作执行过程：
 

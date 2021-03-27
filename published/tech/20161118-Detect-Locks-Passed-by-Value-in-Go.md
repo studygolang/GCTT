@@ -18,7 +18,7 @@ func f() {
 ```
 
 ```
-> go tool vet vet.go
+> Go tool vet vet.go
 vet.go:8: unreachable code
 vet.go:6: missing argument for Printf("%d"): format reads arg 1, have only 0 args
 ```
@@ -69,7 +69,7 @@ main.(*T).Lock(0x4201162a8)
 运行上述程序得到了糟糕的结果，根本原因是把 receiver 按值传递给 Unlock 方法，所以 `t.lock.Unlock()` 实际上是由 lock 的副本调用的。我们很容易忽视这点，特别在更大型的程序中。Go 编译器不会检测这方面，因为这可能是程序员有意为之。该 vet 工具登场啦...
 
 ```
-> go tool vet vet.go
+> Go tool vet vet.go
 vet.go:13: Unlock passes lock by value: main.T
 ```
 
@@ -91,7 +91,7 @@ func main() {
 ```
 
 ```
-> go tool vet lab.go
+> Go tool vet lab.go
 lab.go:9: fun passes lock by value: main.T contains sync.WaitGroup contains sync.noCopy
 lab.go:13: function call copies lock value: main.T contains sync.WaitGroup contains sync.noCopy
 ```
@@ -108,7 +108,7 @@ vet 工具的源文件放在 `/src/cmd/vet` 路径下。vet 的每个选项都�
 
 via: https://medium.com/golangspec/detect-locks-passed-by-value-in-go-efb4ac9a3f2b
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[mbyd916](https://github.com/mbyd916)
 校对：[polaris1119](https://github.com/polaris1119)
 

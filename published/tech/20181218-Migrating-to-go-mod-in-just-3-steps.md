@@ -77,7 +77,7 @@ go mod init mollydb
 go mod tidy
 ```
 
-go.mod 文件就会生成，因为 go mod 检查了我们的 Go 文件
+go.mod 文件就会生成，因为 Go mod 检查了我们的 Go 文件
 
 ```
 module mollydb
@@ -98,7 +98,7 @@ require (
 
 我们只需要运行下面的命令来验证项目是否像以前那样工作。
 
-> go run main.go
+> Go run main.go
 
 ## 所有的都成功了
 
@@ -110,7 +110,7 @@ require (
 
 via: https://medium.com/@ivan.corrales.solera/migrating-to-go-mod-in-just-3-steps-6b6a07a04640
 
-作者：[Iván Corrales Solera](https://medium.com/@ivan.corrales.solera)
+作者：[Iv á n Corrales Solera](https://medium.com/@ivan.corrales.solera)
 译者：[wumansgy](https://github.com/wumansgy)
 校对：[polaris1119](https://github.com/polaris1119)
 

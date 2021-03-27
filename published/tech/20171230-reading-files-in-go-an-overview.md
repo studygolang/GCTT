@@ -12,7 +12,7 @@
 * 大多数情况下，我会经常会交替使用“数组 `array`”和“切片 `slice`”来指代切片，但它们是不一样的。这些[博客](https://blog.golang.org/go-slices-usage-and-internals)[文章](https://blog.golang.org/slices)是了解差异的两个很好的资源。
 * 我把所有的实例上传到[kgrz/reading-files-in-go](https://github.com/kgrz/reading-files-in-go)。
 
-在 go 中像大多数低级语言和一些动态语言（例如Node）中一样，读取文件时返回一个字节流。不自动将读取内容转换为字符串有一个好处，可以避免因为昂贵的字符串分配给 GC 带来的压力。
+在 Go 中像大多数低级语言和一些动态语言（例如 Node）中一样，读取文件时返回一个字节流。不自动将读取内容转换为字符串有一个好处，可以避免因为昂贵的字符串分配给 GC 带来的压力。
 
 为了让这篇文章有一个简单的概念模型，我会使用 `string(arrayOfBytes)` 将字节数组转换成字符串。不过一般来说不建议在生产环境使用这种方式。
 
@@ -60,7 +60,7 @@ fmt.Println("bytestream to string: ", string(buffer))
 
 在大多数情况下，一次性读取整个一个文件是没有问题的。有时我们希望使用更节省内存的方法。比如说，按照一定大小来读取一个文件块，并处理这个文件块，然后重复直到读取完整个文件。
 
-下面的示例使用100字节大小的缓冲区。
+下面的示例使用 100 字节大小的缓冲区。
 
 ```go
 const BufferSize = 100
@@ -133,7 +133,7 @@ filesize := int(fileinfo.Size())
 // Number of goroutines we need to spawn.
 concurrency := filesize / BufferSize
 
-// check for any left over bytes. Add one more goroutine if required.
+// check for any left over bytes. Add one more Goroutine if required.
 if remainder := filesize % BufferSize; remainder != 0 {
     concurrency++
 }
@@ -142,7 +142,7 @@ var wg sync.WaitGroup
 wg.Add(concurrency)
 
 for i := 0; i < concurrency; i++ {
-    go func(chunksizes []chunk, i int) {
+    Go func(chunksizes []chunk, i int) {
         defer wg.Done()
 
         chunk := chunksizes[i]
@@ -171,7 +171,7 @@ wg.Wait()
 
 这比以前任何方法都要复杂：
 
-1. 我尝试创建一个特定的 `goroutine`，这取决于文件大小和缓冲区大小（在我们的例子中是100）。
+1. 我尝试创建一个特定的 `goroutine`，这取决于文件大小和缓冲区大小（在我们的例子中是 100）。
 2. 我们需要一种方法来确保我们“等待”所有的 `goroutine` 运行完成。在这个例子中，我是使用 `WaitGroup`。
 3. 我们在 `goroutine` 运行完成时发送一个结束信号，而不是使用无限循环等待运行结束。我们使用 `defer` 调用 `wg.Done()`，当 `goroutine` 运行到 `return` 时，`wg.Done` 会被调用。
 
@@ -262,7 +262,7 @@ for scanner.Scan() {
 }
 
 fmt.Println("word list:")
-for _, word := range words {
+for _, Word := range words {
     fmt.Println(word)
 }
 ```
@@ -310,7 +310,7 @@ fmt.Println("word list:")
 // a constant value. Or the scanner loop might've terminated due to an
 // error prematurely. In this case the "pos" contains the index of the last
 // successful update.
-for _, word := range words[:pos] {
+for _, Word := range words[:pos] {
 fmt.Println(word)
 }
 ```
@@ -337,7 +337,7 @@ for scanner.Scan() {
 }
 
 fmt.Println("word list:")
-for _, word := range words {
+for _, Word := range words {
     fmt.Println(word)
 }
 ```
@@ -395,7 +395,7 @@ for scanner.Scan() {
 }
 ```
 
-## Ruby风格
+## Ruby 风格
 
 我们已经按照方便性和效率的顺序看到了多种方法来读取文件。但是，如果你只想把文件读入缓冲区呢？ `ioutil` 是标准库中的一个包，其中的函数能够使用一行代码完成一些功能。
 
@@ -464,7 +464,7 @@ handle := handleFn(file)
 handle(err)
 ```
 
-这样做，我错过了一个关键的细节：当没有发生错误并且程序运行完成时，我没有关闭文件句柄。如果程序运行多次而没有发生任何错误，则会导致文件描述符泄漏。这是由[u/shovelpost](https://www.reddit.com/r/golang/comments/7n2bee/various_ways_to_read_a_file_in_go/drzg32k/)在reddit上指出的。
+这样做，我错过了一个关键的细节：当没有发生错误并且程序运行完成时，我没有关闭文件句柄。如果程序运行多次而没有发生任何错误，则会导致文件描述符泄漏。这是由[u/shovelpost](https://www.reddit.com/r/golang/comments/7n2bee/various_ways_to_read_a_file_in_go/drzg32k/)在 reddit 上指出的。
 
 我本意是避免使用 `defer`，因为 `log.Fatal` 在内部调用了不运行延迟函数的 `os.Exit`，所以我选择显式关闭文件，但忽略了成功运行的情况。
 

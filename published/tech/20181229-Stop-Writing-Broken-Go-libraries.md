@@ -10,7 +10,7 @@
 
 很对库都包含了对 `http.DefaultClient` 的硬编码。虽然对库本身来说这并不是问题，但是库的作者并未理解应该怎样使用 `http.DefaultClient` 。正如 `default client` 建议它只在用户没有提供其他 `http.Client` 时才被使用。相反的是，许多库作者乐意在他们代码中涉及 `http.DefaultClient` 的部分采用硬编码，而不是将它作为一个备选。这会导致在某些情况下这个库不可用。
 
-首先，我们很多人都读过这篇讲述 `http.DefaultClient` 不能自定义超时时间的文章《[Don’t use Go’s default HTTP client (in production)](https://medium.com/@nate510/don-t-use-go-s-default-http-client-4804cb19f779)》，当你没法保证你的`HTTP` 请求一定会完成（或者至少要等一个完全无法预估时间的响应）时，你的程序可能会遇到奇怪的 goroutine 泄漏和一些无法预知的行为。在我看来，这会使每一个对 `http.DefaultClient` 采用硬编码的库不可用。
+首先，我们很多人都读过这篇讲述 `http.DefaultClient` 不能自定义超时时间的文章《[Don’t use Go’s default HTTP client (in production)](https://medium.com/@nate510/don-t-use-go-s-default-http-client-4804cb19f779)》，当你没法保证你的 `HTTP` 请求一定会完成（或者至少要等一个完全无法预估时间的响应）时，你的程序可能会遇到奇怪的 Goroutine 泄漏和一些无法预知的行为。在我看来，这会使每一个对 `http.DefaultClient` 采用硬编码的库不可用。
 
 其次，网络需要一些额外的配置。有时候需要用到代理，有时候需要对 `URL` 进行一丢丢的改写，甚至可能 `http.Transport` 需要被一个定制的接口替换。当一个程序员在你的库里用他们自己的 `http.Client` 实例时，以上这些都很容易被实现。
 
@@ -78,9 +78,9 @@ func New() *LibraryStruct {
 
 详情请参见 Go  [http.Client](https://golang.org/pkg/net/http/#Client)。
 
-## 使用配置结构体来避免修改你的APIs
+## 使用配置结构体来避免修改你的 APIs
 
-另一种配置方法是在你的工厂函数中接收一个配置结构体，而不是直接传配置参数。你可以很随意的添加新的参数而不用破坏现有的 API。你只需要做一件事情，在Config结构体中添加一个新的字段，并且确保不会影响它原本的特性。
+另一种配置方法是在你的工厂函数中接收一个配置结构体，而不是直接传配置参数。你可以很随意的添加新的参数而不用破坏现有的 API。你只需要做一件事情，在 Config 结构体中添加一个新的字段，并且确保不会影响它原本的特性。
 
 ```go
 func New(config Config) *LibraryStruct {

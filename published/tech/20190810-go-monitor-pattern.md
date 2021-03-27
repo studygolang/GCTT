@@ -4,7 +4,7 @@
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-monitor-pattern/1.png)
 
-Go 能实现[监控模式](<https://en.wikipedia.org/wiki/Monitor_(synchronization)>)，归功于 `sync` 包和 `sync.Cond` 结构体。监控模式允许 goroutine 在进入睡眠模式前等待一个定特定条件，而不会阻塞执行或消耗资源。
+Go 能实现[监控模式](<https://en.wikipedia.org/wiki/Monitor_(synchronization)>)，归功于 `sync` 包和 `sync.Cond` 结构体。监控模式允许 Goroutine 在进入睡眠模式前等待一个定特定条件，而不会阻塞执行或消耗资源。
 
 ## 条件变量
 
@@ -66,8 +66,8 @@ func main() {
 
 `Queue` 是一个非常简单的结体构，由一个切片和 `sync.Cond` 结构组成。然后，我们做两件事：
 
-- 启动 10 个 goroutines，并将尝试一次消费 X 个元素。如果这些元素不够数目，那么 goroutine 将进去睡眠状态并等待被唤醒
-- 主 goroutine 将用 100 个元素填入队列。每添加一个元素，它将唤醒一个等待消费的 goroutine。
+- 启动 10 个 goroutines，并将尝试一次消费 X 个元素。如果这些元素不够数目，那么 Goroutine 将进去睡眠状态并等待被唤醒
+- 主 Goroutine 将用 100 个元素填入队列。每添加一个元素，它将唤醒一个等待消费的 goroutine。
 
 程序的输出，
 
@@ -84,7 +84,7 @@ func main() {
  7: [ 0  1  2  3  4  5  6]
 ```
 
-如果多次运行此程序，将获得不同的输出。我们可以看到，由于是按批次检索值的，每个 goroutine 获取的值是一个连续的序列。这一点对于理解 `sync.Cond` 与 `channels` 的差异很重要。
+如果多次运行此程序，将获得不同的输出。我们可以看到，由于是按批次检索值的，每个 Goroutine 获取的值是一个连续的序列。这一点对于理解 `sync.Cond` 与 `channels` 的差异很重要。
 
 ## sync.Cond vs Channels
 
@@ -169,15 +169,15 @@ func (q *Queue) GetMany(n int) []Item {
 我们运行包含 100 个元素的基准测试，如示例所示：
 
 ```text
-WithCond-8  15.7µs ± 2%
-WithChan-8  19.4µs ± 1%
+WithCond-8  15.7 µ s ± 2%
+WithChan-8  19.4 µ s ± 1%
 ```
 
 在这里使用条件变量要快一些。让我们试试 10k 个元素的基准测试：
 
 ```text
 WithCond-8  2.84ms ± 1%
-WithChan-8   917µs ± 1%
+WithChan-8   917 µ s ± 1%
 ```
 
 可以看到 `channel` 的速度要快得多。 [Bryan Mills 在“饥饿”部分（第 45 页）](https://drive.google.com/file/d/1nPdvhB0PutEJzdCq5ms6UI58dp50fcAN/view)中解释了这个问题：
@@ -192,9 +192,9 @@ WithChan-8   917µs ± 1%
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-monitor-pattern/2.png)
 
-进入等待模式的每个 goroutine 将从变量 `wait` 开始分号，该变量从 0 开始。这表示等待队列。
+进入等待模式的每个 Goroutine 将从变量 `wait` 开始分号，该变量从 0 开始。这表示等待队列。
 
-然后，每次调用 `Signal()` 都会增加另一个名为 `notify` 的计数器，该计数器代表需要通知或唤醒的 goroutine 队列。
+然后，每次调用 `Signal()` 都会增加另一个名为 `notify` 的计数器，该计数器代表需要通知或唤醒的 Goroutine 队列。
 
 我们的 `sync.Cond` 结构包含一个负责发号的结构：
 
@@ -208,9 +208,9 @@ type notifyList struct {
 }
 ```
 
-这是就是上面提到的 `wait` 和 `notify` 变量。该结构还通过 `head` 和 `tail` 保存等待的 goroutine 的链表，其中每个 goroutine 在其内部结构中保持对所获取的票号的引用。
+这是就是上面提到的 `wait` 和 `notify` 变量。该结构还通过 `head` 和 `tail` 保存等待的 Goroutine 的链表，其中每个 Goroutine 在其内部结构中保持对所获取的票号的引用。
 
-当收到信号时，Go 会在链表上进行迭代，直到分配给被检查的 goroutine 的票号与 `notify` 变量的编号匹配，如匹配则唤醒当前票号的 goroutine。一旦找到 goroutine，其状态将从等待模式变为可运行模式，然后在 Go 调度程序中处理。
+当收到信号时，Go 会在链表上进行迭代，直到分配给被检查的 Goroutine 的票号与 `notify` 变量的编号匹配，如匹配则唤醒当前票号的 goroutine。一旦找到 goroutine，其状态将从等待模式变为可运行模式，然后在 Go 调度程序中处理。
 
 如果你想深入了解 Go 调度程序，我强烈建议你阅读 [William Kennedy 关于 Go 调度程序的教程](https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part1.html)。
 

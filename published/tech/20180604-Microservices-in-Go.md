@@ -1,6 +1,6 @@
 首发于：https://studygolang.com/articles/22111
 
-# Go语言中的微服务
+# Go 语言中的微服务
 
 ## 摘要
 
@@ -32,7 +32,7 @@
 
  Go Micro 架构可以描述为三层堆栈。
 
-![图1.Go Micro架构](https://raw.githubusercontent.com/studygolang/gctt-images/master/microservices-in-go/goMicro.png)
+![图 1.Go Micro 架构](https://raw.githubusercontent.com/studygolang/gctt-images/master/microservices-in-go/goMicro.png)
 
 顶层包括 **Server-Client** 模型和服务抽象。该服务器是用于编写服务的基础。而客户端提供了一个接口，用于向服务端发起请求。
 
@@ -45,12 +45,12 @@
 它允许使用诸如 random,roundrobin,leastconn 等算法“选择”服务。
 * Transport - 服务之间同步请求/响应通信的接口。
 
- Go Micro 还提供 Sidecar 等功能。这允许您使用Go以外的语言编写的服务。
- Sidecar 提供服务注册，gRPC 编码/解码和HTTP处理程序。它有多种语言版本。
+ Go Micro 还提供 Sidecar 等功能。这允许您使用 Go 以外的语言编写的服务。
+ Sidecar 提供服务注册，gRPC 编码/解码和 HTTP 处理程序。它有多种语言版本。
 
 ### Go Kit
 
-Go Kit 是一个用于在Go中构建微服务的编程工具包。与 Go Micro 不同，它是一个旨在导入二进制包的库。
+Go Kit 是一个用于在 Go 中构建微服务的编程工具包。与 Go Micro 不同，它是一个旨在导入二进制包的库。
 
 Go Kit 遵循简单的规则，例如：
 
@@ -62,15 +62,15 @@ Go Kit 遵循简单的规则，例如：
 
 在 Go Kit 中，您可以找到以下包：
 
-* 身份验证 - basic和JWT。
+* 身份验证 - basic 和 JWT。
 * 传输 - HTTP，Nats，gRPC 等。
 * 日志记录 - 服务中结构化日志记录的通用接口。
-* 软件度量 - CloudWatch,Statsd,Graphite等。
+* 软件度量 - CloudWatch,Statsd,Graphite 等。
 * 追踪 - Zipkin 和 Opentracing。
-* 服务发现 - Consul,Etcd,Eureka等。
+* 服务发现 - Consul,Etcd,Eureka 等。
 * 熔断器 - Hystrix 的 Go 语言实现。
 
-您可以在Peter Bourgon的文章和演示幻灯片中找到 Go Kit 的最佳描述之一：
+您可以在 Peter Bourgon 的文章和演示幻灯片中找到 Go Kit 的最佳描述之一：
 
 * [Go kit: Go in the modern enterprise](https://peter.bourgon.org/go-kit/?source=post_page)
 * [Go + microservices](https://github.com/peterbourgon/go-microservices?source=post_page)
@@ -78,7 +78,7 @@ Go Kit 遵循简单的规则，例如：
 此外，在“Go + microservices”幻灯片中，您将找到使用 Go Kit 构建的服务架构的示例。
 有关快速参考，请参阅服务架构图。
 
-![图2.使用Go Kit构建的服务架构示例 Go Micro 架构](https://raw.githubusercontent.com/studygolang/gctt-images/master/microservices-in-go/Go%2Bmicroservices.png)
+![图 2.使用 Go Kit 构建的服务架构示例 Go Micro 架构](https://raw.githubusercontent.com/studygolang/gctt-images/master/microservices-in-go/Go%2Bmicroservices.png)
 
 ### Gizmo
 
@@ -91,14 +91,14 @@ Gizmo 是纽约时报的微服务工具包。它提供了将服务器和 pubsub 
 * [pubsub/pubsubtest](https://godoc.org/github.com/NYTimes/gizmo/pubsub/pubsubtest) - 包含发布者和订阅者接口的测试实现。
 * [web](https://godoc.org/github.com/NYTimes/gizmo/web) - 公开用于从请求查询和有效负载中解析类型的函数。
 
-Pubsub包提供了使用以下队列的接口：
+Pubsub 包提供了使用以下队列的接口：
 
 * [pubsub/aws](https://godoc.org/github.com/NYTimes/gizmo/pubsub/aws) - 适用于 Amazon SNS/SQS。
 * [pubsub/gcp](https://godoc.org/github.com/NYTimes/gizmo/pubsub/gcp) - 适用于 Google Pubsub。
-* [pubsub/kafka](https://godoc.org/github.com/NYTimes/gizmo/pubsub/kafka) - 适用于 Kafka主题。
+* [pubsub/kafka](https://godoc.org/github.com/NYTimes/gizmo/pubsub/kafka) - 适用于 Kafka 主题。
 * [pubsub/http](https://godoc.org/github.com/NYTimes/gizmo/pubsub/http) - 用于通过 HTTP 发布。
 
-因此，在我看来，Gizmo 介于 Go Micro 和 Go Kit 之间。它不像 Go Micro 那样完全的“黑盒”。与此同时，它并不像 Go Kit 那么粗糙。它提供更高级别的构建组件，例如config和pubsub包。
+因此，在我看来，Gizmo 介于 Go Micro 和 Go Kit 之间。它不像 Go Micro 那样完全的“黑盒”。与此同时，它并不像 Go Kit 那么粗糙。它提供更高级别的构建组件，例如 config 和 pubsub 包。
 
 ### Kite
 
@@ -116,9 +116,9 @@ Kite 是一个在 Go 中开发微服务的框架。它公开了 RPC 客户端和
 * 用户和社区
 * 代码质量。
 
-### GitHub统计
+### GitHub 统计
 
-![表1. Go 微服务框架统计（2018年4月收集）](https://raw.githubusercontent.com/studygolang/gctt-images/master/microservices-in-go/MicroStatics.png)
+![表 1. Go 微服务框架统计（2018 年 4 月收集）](https://raw.githubusercontent.com/studygolang/gctt-images/master/microservices-in-go/MicroStatics.png)
 
 ### 文档和示例
 
@@ -135,7 +135,7 @@ Kite 是一个在 Go 中开发微服务的框架。它公开了 RPC 客户端和
 
 ### 用户和社区
 
-Go Kit 是最受欢迎的微服务框架，基于 GitHub 统计数据 - 在本出版物发布时超过10k星。它拥有大量的贡献者（122）和超过1000个分叉。
+Go Kit 是最受欢迎的微服务框架，基于 GitHub 统计数据 - 在本出版物发布时超过 10k 星。它拥有大量的贡献者（122）和超过 1000 个分叉。
 最后，Go Kit 由 [DigitalOcean](https://www.digitalocean.com/) 提供支持。
 
 Go Micro 第二，拥有超过 3600 颗 stars ，27 个贡献者和 385 个 forks 。Six Micro 的最大赞助商之一是 [Sixt](https://www.sixt.com/)。
@@ -151,7 +151,7 @@ Gizmo 第三，超过 2200 颗 star, 31 个贡献者和 137 个 forks 。由纽�
 
 好吧，已有足够的理论。下边，为了更好地理解框架，我创建了三个简单的微服务。
 
-![图3.实际示例架构](https://raw.githubusercontent.com/studygolang/gctt-images/master/microservices-in-go/micro_practice.png)
+![图 3.实际示例架构](https://raw.githubusercontent.com/studygolang/gctt-images/master/microservices-in-go/micro_practice.png)
 
 这些是实现一个业务功能的服务——"Greeting"。
 当用户将 "name" 参数传递给服务器时，该服务会发送 Greeting 响应。此外，所有服务均符合以下要求：
@@ -189,7 +189,7 @@ message GreetingResponse {
 接口包含一种方法—— "Greeting"。
 请求中有一个参数—— 'name'，响应中有一个参数 - 'greeting'。
 
-然后我使用修改后的 [protoc工具](https://github.com/micro/protoc-gen-micro) 通过 protobuf 文件生成服务接口。
+然后我使用修改后的 [protoc 工具](https://github.com/micro/protoc-gen-micro) 通过 protobuf 文件生成服务接口。
 该生成器由 Go Micro fork 并进行了修改，以支持该框架的一些功能。
 我在 “greeting” 服务中将这些连接在一起。此时，该服务正在启动并注册服务发现系统。
 它只支持 gRPC 传输协议：
@@ -230,7 +230,7 @@ func main() {
 }
 ```
 
-为了支持HTTP传输，我不得不添加其他模块。它将HTTP请求映射到 protobuf 定义的请求。并称为 gRPC 服务。
+为了支持 HTTP 传输，我不得不添加其他模块。它将 HTTP 请求映射到 protobuf 定义的请求。并称为 gRPC 服务。
 然后，它将服务响应映射到 HTTP 响应并将其回复给用户。
 
 ```go
@@ -244,7 +244,7 @@ import (
 
     proto "github.com/antklim/go-microservices/go-micro-greeter/pb"
     "github.com/micro/go-micro/client"
-    web "github.com/micro/go-web"
+    Web "github.com/micro/go-web"
 )
 
 func main() {
@@ -506,7 +506,7 @@ type errorWrapper struct {
 }
 
 // EncodeHTTPGenericResponse is a transport/http.
-// EncodeResponseFunc 返回 json 响应。
+// EncodeResponseFunc 返回 JSON 响应。
 func EncodeHTTPGenericResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
     if f, ok := response.(greeterendpoint.Failer); ok && f.Failed() != nil {
         encodeError(ctx, f.Failed(), w)
@@ -580,7 +580,7 @@ func decodeGRPCGreetingRequest(_ context.Context, grpcReq interface{}) (interfac
 }
 
 // encodeGRPCGreetingResponse is a transport/grpc.
-// DecodeRequestFunc 将 用户域的 greeting 转换为请求gRPC 请求。
+// DecodeRequestFunc 将 用户域的 greeting 转换为请求 gRPC 请求。
 func encodeGRPCGreetingResponse(_ context.Context, response interface{}) (interface{}, error) {
     res := response.(greeterendpoint.GreetingResponse)
     return &pb.GreetingResponse{Greeting: res.Greeting}, nil
@@ -719,7 +719,7 @@ func main() {
 
     var g group.Group
     {
-        // 调试功能带 http.DefaultServeMux, 并提供Go调试和分析路由等功能
+        // 调试功能带 http.DefaultServeMux, 并提供 Go 调试和分析路由等功能
         debugListener, err := net.Listen("tcp", *debugAddr)
         if err != nil {
             logger.Log("transport", "debug/HTTP", "during", "Listen", "err", err)
@@ -809,7 +809,7 @@ import (
 // ServiceMiddleware 定义了 service 中间件.
 type ServiceMiddleware func(Service) Service
 
-// LoggingMiddleware 使用 logger 作为依赖，返回一个 Service中间件
+// LoggingMiddleware 使用 logger 作为依赖，返回一个 Service 中间件
 func LoggingMiddleware(logger log.Logger) ServiceMiddleware {
     return func(next Service) Service {
         return loggingMiddleware{next, logger}
@@ -876,9 +876,9 @@ func LoggingMiddleware(logger log.Logger) endpoint.Middleware {
 
 ### Gizmo greeter
 
-我以与 Go Kit 类似的方式创建了Gizmo服务。我为服务，端点，传输和服务发现注册商定义了四个包。
+我以与 Go Kit 类似的方式创建了 Gizmo 服务。我为服务，端点，传输和服务发现注册商定义了四个包。
 
-服务实现和服务发现系统注册器与 Go Kit 服务共享相同的代码。但是端点定义和传输实现必须根据Gizmo功能完成。
+服务实现和服务发现系统注册器与 Go Kit 服务共享相同的代码。但是端点定义和传输实现必须根据 Gizmo 功能完成。
 
 Gizmo Greeting 端点
 
@@ -957,7 +957,7 @@ type errorResponse struct {
 
 如您所见，代码段与 Go Kit 类似。主要区别在于应该返回的接口类型：
 
-GizmoGreeting HTTP终端
+GizmoGreeting HTTP 终端
 
 ```go
 package greetertransport
@@ -978,12 +978,12 @@ import (
 )
 
 type (
-    // TService 会实现 server.RPCService （服务的RPC），以及处理服务端请求
+    // TService 会实现 server.RPCService （服务的 RPC），以及处理服务端请求
     TService struct {
         Endpoints greeterendpoint.Endpoints
     }
 
-    // Config 包含 server 相关 json 配置
+    // Config 包含 server 相关 JSON 配置
     Config struct {
         Server *server.Config
     }
@@ -1040,7 +1040,7 @@ func (s *TService) ContextEndpoints() map[string]map[string]server.ContextHandle
     return map[string]map[string]server.ContextHandlerFunc{}
 }
 
-// JSONEndpoints 是TService中可用的所有端点的列表。
+// JSONEndpoints 是 TService 中可用的所有端点的列表。
 func (s *TService) JSONEndpoints() map[string]map[string]server.JSONContextEndpoint {
     return map[string]map[string]server.JSONContextEndpoint{
         "/health": map[string]server.JSONContextEndpoint{
@@ -1070,7 +1070,7 @@ func (s *TService) Greeting(ctx ocontext.Context, r *pb.GreetingRequest) (*pb.Gr
 ```
 
 Go Kit 和 Gizmo 之间的显着差异在于传输实现。 Gizmo 提供了几种可以使用的服务类型。
-我所要做的就是将HTTP路径映射到端点定义。低级HTTP请求/响应处理由 Gizmo 处理。
+我所要做的就是将 HTTP 路径映射到端点定义。低级 HTTP 请求/响应处理由 Gizmo 处理。
 
 ## 结论
 
@@ -1082,7 +1082,7 @@ Go Kit 和 Gizmo 之间的显着差异在于传输实现。 Gizmo 提供了几�
  Gizmo 位于 Go Micro 和 Go Kit 之间。它提供了一些更高级别的抽象，例如 Service 包。
 但缺乏文档和示例意味着我必须阅读源代码以了解不同的服务类型是如何工作的。使用 Gizmo 比使用 Go Kit 更容易。但它并不像 Go Micro 那么顺利。
 
-这就是今天的一切。谢谢阅读。请查看微服务代码库以获取更多信息。如果您对Go和微服务框架有任何经验，请在下面的评论中分享。
+这就是今天的一切。谢谢阅读。请查看微服务代码库以获取更多信息。如果您对 Go 和微服务框架有任何经验，请在下面的评论中分享。
 
 --
 

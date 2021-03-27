@@ -65,7 +65,7 @@ func BenchmarkAssignmentIndirect(b *testing.B) {
 **基准测试输出**
 
 ```console
-$ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
+$ Go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
 
 BenchmarkAssignmentIndirect-8       100000000	       14.2 ns/op         8 B/op	      1 allocs/op
 ```
@@ -82,7 +82,7 @@ BenchmarkAssignmentIndirect-8       100000000	       14.2 ns/op         8 B/op	 
 **Pprof 输出**
 
 ```
-$ go tool pprof -alloc_space mem.out
+$ Go tool pprof -alloc_space mem.out
 
 ROUTINE ========================
 	759.51MB   759.51MB (flat, cum)   100% of Total
@@ -147,13 +147,13 @@ func foo(p *int, x int) {
 
 在第 07 行，声明了一个类型为 `int`，名字为 `y1` 的变量，这个变量在第 08 行对 `foo` 的函数调用过程中发生了共享。从第 10 行到第 13 行，存在类似的情况。声明了一个类型为 `int` 的变量 `y2`，然后这个变量作为第一个参数共享给一个在第 13 行声明和执行的字面函数。这个字面函数与 `foo` 函数相同。
 
-最后，在第 15 行到第 17 行之间，`foo`函数被赋给一个名为 `p` 的变量。通过变量 `p`，`foo` 函数被执行，其中，变量 `y3` 被共享。第 17 行的这个函数调用是通过 `p` 变量间接完成的。这与第 13 行的字面函数没有显式函数变量所执行的函数调用方式情况相同。
+最后，在第 15 行到第 17 行之间，`foo` 函数被赋给一个名为 `p` 的变量。通过变量 `p`，`foo` 函数被执行，其中，变量 `y3` 被共享。第 17 行的这个函数调用是通过 `p` 变量间接完成的。这与第 13 行的字面函数没有显式函数变量所执行的函数调用方式情况相同。
 
 以下是运行基准测试的结果，以及一份逃逸分析报告。还包括了 pprof list 命令的输出。
 
 **基准测试输出**
 ```
-$ go test -gcflags "-m -m" -run none -bench BenchmarkLiteralFunctions -benchmem -memprofile mem.out
+$ Go test -gcflags "-m -m" -run none -bench BenchmarkLiteralFunctions -benchmem -memprofile mem.out
 
 BenchmarkLiteralFunctions-8     50000000 	       30.7 ns/op        16 B/op	      2 allocs/op
 ```
@@ -172,7 +172,7 @@ BenchmarkLiteralFunctions-8     50000000 	       30.7 ns/op        16 B/op	     
 **Pprof 输出**
 
 ```
-$ go tool pprof -alloc_space mem.out
+$ Go tool pprof -alloc_space mem.out
 
 ROUTINE ========================
  768.01MB   768.01MB (flat, cum)   100% of Total
@@ -196,9 +196,9 @@ ROUTINE ========================
 
 在逃逸分析报告中，为变量 `y2` 和 `y3` 变量的分配给出的原因是 `(parameter to indirect call)`。pprof 输出很清楚的显示出，`y2` 和 `y3` 被分配在堆上，而 `y1` 不是。
 
-虽然，我会认为在第 13 行调用的函数字面量的使用是代码异味，但是，第 16 行变量 `p` 的使用并不是。在 Go 中，人们总是会传递函数作为参数。特别是在构建 web 服务的时候。修复这个间接调用缺陷会帮助减少 Go web 服务应用中的许多分配。
+虽然，我会认为在第 13 行调用的函数字面量的使用是代码异味，但是，第 16 行变量 `p` 的使用并不是。在 Go 中，人们总是会传递函数作为参数。特别是在构建 Web 服务的时候。修复这个间接调用缺陷会帮助减少 Go Web 服务应用中的许多分配。
 
-这里是一个你会在许多 web 服务应用中找到的例子。
+这里是一个你会在许多 Web 服务应用中找到的例子。
 
 **代码清单 2.2**
 
@@ -248,7 +248,7 @@ func wrapHandler(h Handler) Handler {
 **基准测试输出**
 
 ```
-$ go test -gcflags "-m -m" -run none -bench BenchmarkHandler -benchmem -memprofile mem.out
+$ Go test -gcflags "-m -m" -run none -bench BenchmarkHandler -benchmem -memprofile mem.out
 
 BenchmarkHandler-8      20000000 	       72.4 ns/op       256 B/op	      1 allocs/op
 ```
@@ -264,7 +264,7 @@ BenchmarkHandler-8      20000000 	       72.4 ns/op       256 B/op	      1 alloc
 **Pprof 输出**
 
 ```
-$ go tool pprof -alloc_space mem.out
+$ Go tool pprof -alloc_space mem.out
 
 ROUTINE ========================
    5.07GB     5.07GB (flat, cum)   100% of Total
@@ -279,7 +279,7 @@ ROUTINE ========================
 		.          .     22:}
 ```
 
-在逃逸分析报告中，你可以看到这种分配的原因是 `(parameter to indirect call)`。pprof 报告显示，`r` 变量正在分配。如前所述，这是人们在用 Go 构建 web 服务时编写的常见代码。修复这个缺陷会减少程序中大量的分配。
+在逃逸分析报告中，你可以看到这种分配的原因是 `(parameter to indirect call)`。pprof 报告显示，`r` 变量正在分配。如前所述，这是人们在用 Go 构建 Web 服务时编写的常见代码。修复这个缺陷会减少程序中大量的分配。
 
 ## 切片和 Map 赋值
 
@@ -314,7 +314,7 @@ func BenchmarkSliceMapAssignment(b *testing.B) {
 **基准测试输出**
 
 ```
-$ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
+$ Go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
 
 BenchmarkSliceMapAssignment-8       10000000 	      104 ns/op 	     16 B/op	      2 allocs/op
 ```
@@ -335,7 +335,7 @@ BenchmarkSliceMapAssignment-8       10000000 	      104 ns/op 	     16 B/op	    
 **Pprof 输出**
 
 ```
-$ go tool pprof -alloc_space mem.out
+$ Go tool pprof -alloc_space mem.out
 
 ROUTINE ========================
  162.50MB   162.50MB (flat, cum)   100% of Total
@@ -420,7 +420,7 @@ func foo(i Iface) {
 **基准测试输出**
 
 ```
-$ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
+$ Go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
 
 BenchmarkInterfaces-8     10000000         126 ns/op        64 B/op        4 allocs/op
 ```
@@ -452,7 +452,7 @@ BenchmarkInterfaces-8     10000000         126 ns/op        64 B/op        4 all
 **Pprof 输出**
 
 ```
-$ go tool pprof -alloc_space mem.out
+$ Go tool pprof -alloc_space mem.out
 
 ROUTINE ========================
  658.01MB   658.01MB (flat, cum)   100% of Total
@@ -476,7 +476,7 @@ ROUTINE ========================
 
 ```
 
-注意，在基准报告中有四个分配。这是因为代码会复制 `x1` 和 `x2` 变量，这也会产生分配。在第 18 行中使用`x1` 变量进行赋值时，以及在第 25 行中对 `foo` 进行函数调用使用 `x2` 的值时，创建了这些副本。
+注意，在基准报告中有四个分配。这是因为代码会复制 `x1` 和 `x2` 变量，这也会产生分配。在第 18 行中使用 `x1` 变量进行赋值时，以及在第 25 行中对 `foo` 进行函数调用使用 `x2` 的值时，创建了这些副本。
 
 在逃逸分析报告中，为 `x1` 以及 `x1` 的副本逃逸提供的原因是 `(receiver in indirect call)`。这很有趣，因为第 21 和 22 行对 `Method` 的调用才是这个缺陷真正的罪魁祸首。请记住，针对接口的方法调用需要通过 iTable 进行间接调用。正如你之前看到的，间接调用是逃逸分析中的一个缺陷。
 
@@ -519,7 +519,7 @@ func BenchmarkUnknown(b *testing.B) {
 **基准测试输出**
 
 ```
-$ go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
+$ Go test -gcflags "-m -m" -run none -bench . -benchmem -memprofile mem.out
 
 Benchmark-8     20000000 	       50.8 ns/op       112 B/op	      1 allocs/op
 ```
@@ -534,7 +534,7 @@ Benchmark-8     20000000 	       50.8 ns/op       112 B/op	      1 allocs/op
 **Pprof 输出**
 
 ```
-$ go tool pprof -alloc_space mem.out
+$ Go tool pprof -alloc_space mem.out
 
 ROUTINE ========================
    2.19GB     2.19GB (flat, cum)   100% of Total
@@ -554,7 +554,7 @@ _这可能与 `Buffer` 类型的引导数组有关。它意味着一种优化，
 
 **有这个问题，它与导致这种分配的引导数组有关：**
 
-[cmd/compile, bytes: bootstrap array causes bytes.Buffer to always be heap-allocated](https://github.com/golang/go/issues/7921)
+[cmd/compile, bytes: Bootstrap array causes bytes.Buffer to always be heap-allocated](https://github.com/golang/go/issues/7921)
 
 **CKS 在 reddit 上发布了此回复：**
 
@@ -564,7 +564,7 @@ _这可能与 `Buffer` 类型的引导数组有关。它意味着一种优化，
 ./buffer.go:170:46: leaking param content: p
 ./buffer.go:170:46:     from *p (indirection) at ./buffer.go:170:46
 ./buffer.go:170:46:     from copy(b.buf[m:], p) (copied slice) at ./buffer.go:176:13
-(The line numbers are for the current git tip; they may be slightly off in other copies.)
+(The line numbers are for the current Git tip; they may be slightly off in other copies.)
 ```
 
 考虑到 copy() 是语言内置函数，似乎编译器应该知道这里，源参数不逃逸。或者有可能编译器在对 copy() 的实际实现做一些十分有趣的事情，以至于源在某些情况下会逃逸。

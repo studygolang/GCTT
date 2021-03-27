@@ -4,7 +4,7 @@
 
 ## 介绍
 
-在过去的几个月里，我在几个项目上使用过 Go，尽管我还算不上专家，但是还是有几件事我要感谢 Go：首先，它有一个清晰而简单的语法，我不止一次注意到 Github 开发人员的风格非常接近于旧 C 程序中使用的风格，从理论上讲，Go 似乎吸收了世界上所有语言最好的特性：它有着高级语言的力量，明确的规则使得更简单，即使这些特性有时有一点点的约束力－－就是可以给代码强加一个坚实的逻辑。这是命令式的简单，由大小以位为单位的原始类型组成。但是没有像把字符串当成字符数组那样操作的乏味。然而，我认为这两个非常有用和有趣的功能是 goroutine 和 channels。
+在过去的几个月里，我在几个项目上使用过 Go，尽管我还算不上专家，但是还是有几件事我要感谢 Go：首先，它有一个清晰而简单的语法，我不止一次注意到 Github 开发人员的风格非常接近于旧 C 程序中使用的风格，从理论上讲，Go 似乎吸收了世界上所有语言最好的特性：它有着高级语言的力量，明确的规则使得更简单，即使这些特性有时有一点点的约束力－－就是可以给代码强加一个坚实的逻辑。这是命令式的简单，由大小以位为单位的原始类型组成。但是没有像把字符串当成字符数组那样操作的乏味。然而，我认为这两个非常有用和有趣的功能是 Goroutine 和 channels。
 ![GoPIC](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-python/1.jpg)
 
 ## 前言
@@ -13,7 +13,7 @@
 
 ### Goroutine
 
-假设我们调用一个函数 f(s)：这样的写法就是通常的调用方式，同步运行。如果要在 goroutine 中调用这个函数，使用 go f(s) 即可。这个新 goroutine 将和调用它的 goroutine 并发执行。但是... 什么是 goroutine 呢？这是一个独立执行的函数，由 go 语句启动。它有自己的调用堆栈，这个堆栈可以根据需要增长和缩减，而且非常节省空间。拥有数千甚至数十万个 goroutine 是实际存在的，但它不是线程。事实上，在一个有数千个 goroutine 的程序中可能只有一个线程。相反，goroutines 会根据需要动态复用到线程上，以保持所有的 goroutine 运行。如果你把它当成一种便宜的线程，也不会差太多。
+假设我们调用一个函数 f(s)：这样的写法就是通常的调用方式，同步运行。如果要在 Goroutine 中调用这个函数，使用 Go f(s) 即可。这个新 Goroutine 将和调用它的 Goroutine 并发执行。但是... 什么是 Goroutine 呢？这是一个独立执行的函数，由 Go 语句启动。它有自己的调用堆栈，这个堆栈可以根据需要增长和缩减，而且非常节省空间。拥有数千甚至数十万个 Goroutine 是实际存在的，但它不是线程。事实上，在一个有数千个 Goroutine 的程序中可能只有一个线程。相反，goroutines 会根据需要动态复用到线程上，以保持所有的 Goroutine 运行。如果你把它当成一种便宜的线程，也不会差太多。
 
 ```go
 package main
@@ -34,11 +34,11 @@ func main() {
 	f("direct")
 
 	// To invoke this function in a goroutine, use
-	// `go f(s)`. This new goroutine will execute
+	// `go f(s)`. This new Goroutine will execute
 	// concurrently with the calling one.
 	go f("goroutine")
 
-	// You can also start a goroutine for an anonymous
+	// You can also start a Goroutine for an anonymous
 	// function call.
 	go func(msg string) {
 		fmt.Println(msg)
@@ -56,9 +56,9 @@ func main() {
 
 更多细节 <sup>[3](#3)</sup>
 
-正如我所说的，coroutine 背后的想法是复用独立执行的函数－－coroutines－－在一组线程上。当一个 coroutine 阻塞的时候，比如通过调用一个阻塞的系统调用， run-time 会自动地将同一个操作系统线程上的其他 coroutines 移动到一个不同的，可运行的线程上，这样它们就不会被阻塞。这些 coroutines 被称为 goroutines，非常便宜。它们的堆栈内存很少，只有几千字节。此外，为了使堆栈变小，Go 的 run-time 使用可调整大小的有界堆栈。新建的 goroutine 有几千字节，这个大小几乎总是足够的。当空间不够时，run-time 会自动增长（缩小）用于存储堆栈的内存，从而允许许多 goroutines 生存在适量的内存中。每个函数调用的 CPU 开销平均需要大约三个廉价的指令，所以在相同的地址空间中创建数十万个 goroutine 是很实际的。如果 goroutines 只是线程，那么系统资源将会用得更少。
+正如我所说的，coroutine 背后的想法是复用独立执行的函数－－coroutines－－在一组线程上。当一个 coroutine 阻塞的时候，比如通过调用一个阻塞的系统调用， run-time 会自动地将同一个操作系统线程上的其他 coroutines 移动到一个不同的，可运行的线程上，这样它们就不会被阻塞。这些 coroutines 被称为 goroutines，非常便宜。它们的堆栈内存很少，只有几千字节。此外，为了使堆栈变小，Go 的 run-time 使用可调整大小的有界堆栈。新建的 Goroutine 有几千字节，这个大小几乎总是足够的。当空间不够时，run-time 会自动增长（缩小）用于存储堆栈的内存，从而允许许多 goroutines 生存在适量的内存中。每个函数调用的 CPU 开销平均需要大约三个廉价的指令，所以在相同的地址空间中创建数十万个 Goroutine 是很实际的。如果 goroutines 只是线程，那么系统资源将会用得更少。
 
-好吧，真的很酷，但... 为什么？为什么我们要编写并发程序？要更快地完成我们的工作（即使编写正确的并发程序可能花费的时间比在并行环境中运行任务的时间长 XD）典型的线程情况包括分配一些共享内存并将其位置存储在 p 中的主线程。主线程启动 n 个工作线程，将指针 p 传递给他们，工作线程可以使用 p 来处理 p 指向的数据。但是如果线程开始更新相同的内存地址呢？我是说，这是计算机科学中最难的一个。好吧，让我们从简考虑：从操作系统的角度来看，一些原子系统调用让你锁定对共享内存区域的访问（我是指信号量，消息队列，锁等）。从语言角度来看，通常有一组原语，调用所需的系统调用，并让你将访问权限同步到共享内存区域（我是指像多处理，多线程，池等的包）。下面，我们来谈谈 Go 的一个工具，它可以帮助您处理 goroutine 之间的并发通信：channels。
+好吧，真的很酷，但... 为什么？为什么我们要编写并发程序？要更快地完成我们的工作（即使编写正确的并发程序可能花费的时间比在并行环境中运行任务的时间长 XD）典型的线程情况包括分配一些共享内存并将其位置存储在 p 中的主线程。主线程启动 n 个工作线程，将指针 p 传递给他们，工作线程可以使用 p 来处理 p 指向的数据。但是如果线程开始更新相同的内存地址呢？我是说，这是计算机科学中最难的一个。好吧，让我们从简考虑：从操作系统的角度来看，一些原子系统调用让你锁定对共享内存区域的访问（我是指信号量，消息队列，锁等）。从语言角度来看，通常有一组原语，调用所需的系统调用，并让你将访问权限同步到共享内存区域（我是指像多处理，多线程，池等的包）。下面，我们来谈谈 Go 的一个工具，它可以帮助您处理 Goroutine 之间的并发通信：channels。
 
 ### Channels
 
@@ -109,7 +109,7 @@ chan<- float64  // can only be used to send float64s
 
 ### 总结
 
-总而言之，你可以在 goroutine 中调用一个函数，甚至是匿名函数, 然后把结果放在一个 channel 中，默认情况下，发送和接收阻塞，直到另一端准备好。所有这些特性都允许 goroutine 在没有显式锁定或条件变量的情况下进行同步。好吧，但是... 他们表现地怎么样呢？
+总而言之，你可以在 Goroutine 中调用一个函数，甚至是匿名函数, 然后把结果放在一个 channel 中，默认情况下，发送和接收阻塞，直到另一端准备好。所有这些特性都允许 Goroutine 在没有显式锁定或条件变量的情况下进行同步。好吧，但是... 他们表现地怎么样呢？
 
 ## Go vs Python
 
@@ -173,7 +173,7 @@ func msort_merge(l []int, r []int) []int {
 
 ### 并发的 Go 版本
 
-我们来谈谈并发版本。我们可以拆分数组，并从主例程调用子例程，但是我们如何控制并发执行 go-routine 或工作数的最大数量？那么，限制 Go 中的并发的一种方法 <sup>[5](#5)</sup> 是使用缓冲通道（信号量）。正如我所说的，当你创建一个具有固定维度的通道或缓冲，如果缓冲区未满（发送）或不为空（接收），通信成功而不会阻塞，所以你根据你想拥有的并发单元的数量，实现一个信号量来轻松地阻止执行。真的很酷，但是... 有一个问题：一个 channel 是一个 channel，即使有缓冲，频道上的基本发送和接收也被阻止。幸运的是，Go 非常棒，让你创建明确的非阻塞通道, 使用 select 语句 <sup>[6](#6)</sup> ：因此，您可以使用 select with default 子句来实现无阻塞的发送，接收，甚至是非阻塞的多路选择。还有一些其他的声明来解释，在我的前缀最大数量的并发 goroutine 版本的合并排序：
+我们来谈谈并发版本。我们可以拆分数组，并从主例程调用子例程，但是我们如何控制并发执行 go-routine 或工作数的最大数量？那么，限制 Go 中的并发的一种方法 <sup>[5](#5)</sup> 是使用缓冲通道（信号量）。正如我所说的，当你创建一个具有固定维度的通道或缓冲，如果缓冲区未满（发送）或不为空（接收），通信成功而不会阻塞，所以你根据你想拥有的并发单元的数量，实现一个信号量来轻松地阻止执行。真的很酷，但是... 有一个问题：一个 channel 是一个 channel，即使有缓冲，频道上的基本发送和接收也被阻止。幸运的是，Go 非常棒，让你创建明确的非阻塞通道, 使用 select 语句 <sup>[6](#6)</sup> ：因此，您可以使用 select with default 子句来实现无阻塞的发送，接收，甚至是非阻塞的多路选择。还有一些其他的声明来解释，在我的前缀最大数量的并发 Goroutine 版本的合并排序：
 
 ```go
 // Returns the result of a merge sort - the sort part - over the passed list
@@ -187,7 +187,7 @@ func merge_sort_multi(s []int, sem chan struct{}) []int {
 	// split length
 	n := len(s) / 2
 
-	// create a wait group to wait for both goroutine call before final merge step
+	// create a wait group to wait for both Goroutine call before final merge step
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 
@@ -201,7 +201,7 @@ func merge_sort_multi(s []int, sem chan struct{}) []int {
 	// check if you can acquire a slot
 	case sem <- struct{}{}:
 
-		// call another goroutine worker over the first half
+		// call another Goroutine worker over the first half
 		go func() {
 			l = merge_sort_multi(s[:n], sem)
 
@@ -229,7 +229,7 @@ func merge_sort_multi(s []int, sem chan struct{}) []int {
 			wg.Done()
 	}
 
-	// wait for go subroutine
+	// wait for Go subroutine
 	wg.Wait()
 
 	// return
@@ -238,7 +238,7 @@ func merge_sort_multi(s []int, sem chan struct{}) []int {
 }
 ```
 
-正如你所看到的，在我的默认选择操作中，我编写了一个调用单 routined 版本的合并排序。但是，代码中还有一个有趣的工具：它是由 sync 包提供的 WaitGroup 对象。从官方文档 <sup>[7](#7)</sup> 来看 ，WaitGroup 等待一系列 goroutines 完成。main goroutine 调用 Add 来设置要等待的 goroutines 的数量。然后，每个 goroutine 程序运行并完成后调用 Done。同时，Wait 可以用来阻塞，直到所有的 goroutines 都完成了。
+正如你所看到的，在我的默认选择操作中，我编写了一个调用单 routined 版本的合并排序。但是，代码中还有一个有趣的工具：它是由 sync 包提供的 WaitGroup 对象。从官方文档 <sup>[7](#7)</sup> 来看 ，WaitGroup 等待一系列 goroutines 完成。main Goroutine 调用 Add 来设置要等待的 goroutines 的数量。然后，每个 Goroutine 程序运行并完成后调用 Done。同时，Wait 可以用来阻塞，直到所有的 goroutines 都完成了。
 
 ### Python 合并排序
 
@@ -358,7 +358,7 @@ def merge_sort_parallel_fastest(array, concurrentRoutine, threaded):
 	# mapping each partition to one worker, using the standard merge sort
 	data = pool.map(msort_sort, data)
 
-	# go ahead until the number of partition are reduced to one (workers end respective ordering job)
+	# Go ahead until the number of partition are reduced to one (workers end respective ordering job)
 	while len(data) > 1:
 
 		# extra partition if there's a odd number of worker

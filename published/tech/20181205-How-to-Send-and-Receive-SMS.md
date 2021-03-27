@@ -453,8 +453,8 @@ func (c *Client) Send(sender, receiver, message string) ([]string, error) {
 首先，通过 `go get` 获取 CLI 和 SMSC 模拟器，并且确保 [redis](https://redis.io/) 运行在地址 `localhost:6379` 上
 
 ```
-$ go get GitHub.com/go-gsm/ucp-cli
-$ go get GitHub.com/jcaberio/ucp-smsc-sim
+$ Go get GitHub.com/go-gsm/ucp-cli
+$ Go get GitHub.com/jcaberio/ucp-smsc-sim
 ```
 
 导出以下环境变量
@@ -479,7 +479,7 @@ $ ucp-smsc-sim
 $ ucp-cli
 ```
 
-我们用 `Gopher` 向 `09191234567` 发送一条消息 `Hello, 世界`。模拟器会返回包含 `[09191234567:021218201629]` 的响应。我们还可以从模拟器中看到传递通知信息。
+我们用 `Gopher` 向 `09191234567` 发送一条消息 `Hello, 世界 `。模拟器会返回包含 `[09191234567:021218201629]` 的响应。我们还可以从模拟器中看到传递通知信息。
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-sms/send-via-cli.png)
 

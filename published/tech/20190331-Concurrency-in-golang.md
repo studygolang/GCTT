@@ -42,7 +42,7 @@ go processdataFunction()
 myChannel := make(chan int64)
 
 ```
-在 goroutine 等待之前，创建一个缓冲通道来允许更多的值在通道中排队，如：
+在 Goroutine 等待之前，创建一个缓冲通道来允许更多的值在通道中排队，如：
 
 ```go
 myBufferedChannel := make(chan int64,4)

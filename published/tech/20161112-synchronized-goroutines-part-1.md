@@ -1,6 +1,6 @@
 首发于：https://studygolang.com/articles/14118
 
-# goroutine 的同步（第一部分）
+# Goroutine 的同步（第一部分）
 
 ![image](https://raw.githubusercontent.com/studygolang/gctt-images/master/sync-goroutine/part1.jpeg)
 
@@ -18,11 +18,11 @@ func main() {
     var v int
     var wg sync.WaitGroup
     wg.Add(2)
-    go func() {
+    Go func() {
         v = 1
         wg.Done()
     }()
-    go func() {
+    Go func() {
         fmt.Println(v)
         wg.Done()
     }()
@@ -30,22 +30,22 @@ func main() {
 }
 ```
 
-两个 goroutine 都对共享变量 *v* 进行操作。其中一个赋新值（写操作）而另一个打印变量的值（读操作）。
+两个 Goroutine 都对共享变量 *v* 进行操作。其中一个赋新值（写操作）而另一个打印变量的值（读操作）。
 
-> *sync 包中的 [WaitGroup](https://golang.org/pkg/sync/#WaitGroup) 被用来等待两个非 main 的 goroutine 结束。否则，我们甚至都不能确保其中任意一个 goroutine 有被启动。*
+> *sync 包中的 [WaitGroup](https://golang.org/pkg/sync/#WaitGroup) 被用来等待两个非 main 的 Goroutine 结束。否则，我们甚至都不能确保其中任意一个 Goroutine 有被启动。*
 
-由于不同的 goroutine 是相互独立的任务，它们进行的操作之间没有任何隐含的顺序。在上面的例子中，我们不清楚会打印出 `0` 还是 `1`。如果在 `fmt.Println` 被触发时，另一个 goroutine 已经执行了赋值语句 `v = 1`，那么输出会是 `1`。然而，在程序真正被执行之前一切都是未知的。换句话说，赋值语句和调用 `fmt.Println` 是无序的 —— 它们是并发的。
+由于不同的 Goroutine 是相互独立的任务，它们进行的操作之间没有任何隐含的顺序。在上面的例子中，我们不清楚会打印出 `0` 还是 `1`。如果在 `fmt.Println` 被触发时，另一个 Goroutine 已经执行了赋值语句 `v = 1`，那么输出会是 `1`。然而，在程序真正被执行之前一切都是未知的。换句话说，赋值语句和调用 `fmt.Println` 是无序的 —— 它们是并发的。
 
 如果我们无法通过查看源码断定程序的行为，这是不好的。Go 的规范引入了内存操作（读和写）的偏序（partial order）关系（*先行发生原则* *happen before*）。这个顺序使我们能够推断程序的行为。另外，这门语言中的一些机制允许程序员强制实行操作的顺序。
 
-在单个 goroutine 中，所有操作的顺序都与它们在源码中的位置一致。
+在单个 Goroutine 中，所有操作的顺序都与它们在源码中的位置一致。
 
 ```go
 wg.Add(2)
 wg.Wait()
 ```
 
-上面例子中的函数调用是有序的，因为它们在同一个 goroutine 中 —— `wg.Add(2)` 先于 `wg.Wait()` 被执行。
+上面例子中的函数调用是有序的，因为它们在同一个 Goroutine 中 —— `wg.Add(2)` 先于 `wg.Wait()` 被执行。
 
 ## 1. 信道（Channel）
 
@@ -73,7 +73,7 @@ wg.Wait()
 
 给 *v* 赋值 → 发送到 *ch* → 从 *ch* 接收 → 打印 *v*
 
-第一个箭头和第三个箭头都是由同一个 goroutine 中的顺序确定的。使用 channel 进行通信带来了第二个箭头。最终，分散在两个 goroutine 中的操作是有序的。
+第一个箭头和第三个箭头都是由同一个 Goroutine 中的顺序确定的。使用 channel 进行通信带来了第二个箭头。最终，分散在两个 Goroutine 中的操作是有序的。
 
 ## 2. sync 包
 
@@ -107,7 +107,7 @@ wg.Wait()
 ## 资源
 
 - [Go 的内存模型 —— Go 编程语言](https://golang.org/ref/mem)
->The Go memory model specifies the conditions under which reads of a variable in one goroutine can be guaranteed to…
+>The Go memory model specifies the conditions under which reads of a variable in one Goroutine can be guaranteed to…
 <br>*golang.org*
 
 - [像个 Gopher 一样使用 *panic*](https://medium.com/golangspec/panicking-like-a-gopher-367a9ce04bb8)
@@ -122,7 +122,7 @@ wg.Wait()
 *[Synchronization](https://medium.com/tag/synchronization?source=post)*
 *[Goroutines](https://medium.com/tag/goroutines?source=post)*
 
-**喜欢读吗？给 Michał Łowicki 一些掌声吧。**
+**喜欢读吗？给 Micha ł Ł owicki 一些掌声吧。**
 
 简单鼓励下还是大喝采，根据你对这篇文章的喜欢程度鼓掌吧。
 
@@ -130,7 +130,7 @@ wg.Wait()
 
 via: https://medium.com/golangspec/synchronized-goroutines-part-i-4fbcdd64a4ec
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[krystollia](https://github.com/krystollia)
 校对：[polaris1119](https://github.com/polaris1119)
 

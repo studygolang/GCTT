@@ -109,7 +109,7 @@ func NewLexer(input string) *Lexer {
       tokench: make(chan Token, 2),
    }
 
-   go l.run(input)
+   Go l.run(input)
    return l
 }
 // emit passes an token back to the client.

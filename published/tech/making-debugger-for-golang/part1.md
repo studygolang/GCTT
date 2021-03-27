@@ -54,13 +54,13 @@ RUN apt-get update && apt-get install -y tree
 [这里](https://docs.docker.com/engine/security/seccomp/) 有安全运算模式（seccomp）的相关描述。现在剩下的是在容器里编译这这两个程序。第一个可以这样做：
 
 ```
-> go install --gcflags="-N -l" github.com/mlowicki/hello
+> Go install --gcflags="-N -l" github.com/mlowicki/hello
 ```
 
 标识 --gcflag 用于禁止 [内联函数](https://en.wikipedia.org/wiki/Inline_expansion) （-l），编译优化（-N）可以让调试更容易。调试器如下做编译：
 
 ```
-> go install github.com/mlowicki/debugger
+> Go install github.com/mlowicki/debugger
 
 ```
 
@@ -196,8 +196,8 @@ func main() {
 	log.Printf("Exited: %v\n", ws.Exited())
 	log.Printf("Exit status: %v\n", ws.ExitStatus())
 }
-> go install -gcflags="-N -l" github.com/mlowicki/hello
-> go install github.com/mlowicki/debugger
+> Go install -gcflags="-N -l" github.com/mlowicki/hello
+> Go install github.com/mlowicki/debugger
 > debugger /go/bin/hello
 2017/05/05 20:09:38 State: stop signal: trace/breakpoint trap
 2017/05/05 20:09:38 Restarting...
@@ -218,7 +218,7 @@ hello world
 
 via: https://medium.com/golangspec/making-debugger-for-golang-part-i-53124284b7c8
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[ArisAries](https://github.com/ArisAries)
 校对：[polaris1119](https://github.com/polaris1119)
 

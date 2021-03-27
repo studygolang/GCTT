@@ -4,14 +4,14 @@
 
 ## 简介
 
-本文是 go modules 系统的第三部分
+本文是 Go modules 系统的第三部分
 
 - Part 1: [使用 Go Modules](https://blog.golang.org/using-go-modules)  [译文](https://studygolang.com/articles/19334)
 - Part 2: [迁移到 Go Modules](https://blog.golang.org/migrating-to-go-modules)  [译文](https://studygolang.com/articles/23133)
 - Part 3: 发布 `go modules` (本文)
 - Part 4: [Go Modules: v2 及以后的版本](https://blog.golang.org/v2-go-modules)
 
-本文讨论如何编码和发布 go 模块，发布后就可以被其他模块依赖使用了。
+本文讨论如何编码和发布 Go 模块，发布后就可以被其他模块依赖使用了。
 
 注意： 本文只涉及到 v1 及以前的版本， 如果你想了解 v2 版本， 请参照 [Go Modules: v2 及以后的版本](https://blog.golang.org/v2-go-modules) 。
 
@@ -83,9 +83,9 @@ $
 创建一个 `git` 仓库， 添加一条初始化的信息。 如果你是要发布你自己的工程，请确保你的工程里包含 `LICENSE` (许可)文件。进入到包含 `go.mod` 的目录， 创建仓库。
 
 ```bash
-$ git init
-$ git add LICENSE go.mod go.sum hello.go hello_test.go
-$ git commit -m "hello: initial commit"
+$ Git init
+$ Git add LICENSE go.mod go.sum hello.go hello_test.go
+$ Git commit -m "hello: initial commit"
 $
 ```
 
@@ -119,13 +119,13 @@ v0 主版本和预发布版本不需要考虑向后兼容，仅作为提交给�
 4. 把新标签 push 到仓库
 
 ```bash
-$ go mod tidy
-$ go test ./...
+$ Go mod tidy
+$ Go test ./...
 ok      example.com/hello       0.015s
-$ git add go.mod go.sum hello.go hello_test.go
-$ git commit -m "hello: changes for v0.1.0"
-$ git tag v0.1.0
-$ git push origin v0.1.0
+$ Git add go.mod go.sum hello.go hello_test.go
+$ Git commit -m "hello: changes for v0.1.0"
+$ Git tag v0.1.0
+$ Git push origin v0.1.0
 $
 ```
 
@@ -155,13 +155,13 @@ $
 用给 `v0` 版本打标签相同的处理打上 `v1` 标签：执行 `go mod tidy`  `go test ./...`  ，给版本打上标签，push 到 origin 仓库
 
 ```bash
-$ go mod tidy
-$ go test ./...
+$ Go mod tidy
+$ Go test ./...
 ok      example.com/hello       0.015s
-$ git add go.mod go.sum hello.go hello_test.go
-$ git commit -m "hello: changes for v1.0.0"
-$ git tag v1.0.0
-$ git push origin v1.0.0
+$ Git add go.mod go.sum hello.go hello_test.go
+$ Git commit -m "hello: changes for v1.0.0"
+$ Git tag v1.0.0
+$ Git push origin v1.0.0
 $
 ```
 

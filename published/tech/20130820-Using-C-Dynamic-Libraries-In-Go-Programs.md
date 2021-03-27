@@ -8,7 +8,7 @@
 
 我钟爱这台电脑，回想起曾经使用 BASIC 在上面日日夜夜开发游戏，它非常便携，把键盘折叠起来就可以提着走，哈哈。
 
-额，我好像偏题了，还是回到Go上面来。我发现一种使用 VT100 控制符来显示简单屏幕的方法，并且在上面开始写一些业务逻辑。
+额，我好像偏题了，还是回到 Go 上面来。我发现一种使用 VT100 控制符来显示简单屏幕的方法，并且在上面开始写一些业务逻辑。
 
 但随后就遇到了一些艰难的问题，我要用倒叙的方式来描述一下，比如当不按回车键时，我就没办法从标准输入中获取数据，啊啊啊啊啊，为了寻找解决方案，我整个周末都在阅读资料，甚至找到两个相关的 Go 语言库，但是并没有起到什么作用。后来我意识到，如果要实现这个效果，那么要使用 C 语言来编写功能函数，链接成动态库后再由 Go 调用。
 
@@ -102,7 +102,7 @@ build:
 gcc -c test.c
 ```
 
-接下来，gcc 会把 test.o 和 libncurses.dylib 进行链接处理，链接后会生成 test 可执行文件。命令中的 l（小写的 L）参数是让 gcc 去链接 libncurses.dylib 文件，-r（小写 R）参数指定了 gcc 去哪个路径下获取这个库文件，-o（小写的 O）参数是指定 gcc 导出可执行文件的名字，最后让gcc在链接操作中包含 test.o。
+接下来，gcc 会把 test.o 和 libncurses.dylib 进行链接处理，链接后会生成 test 可执行文件。命令中的 l（小写的 L）参数是让 gcc 去链接 libncurses.dylib 文件，-r（小写 R）参数指定了 gcc 去哪个路径下获取这个库文件，-o（小写的 O）参数是指定 gcc 导出可执行文件的名字，最后让 gcc 在链接操作中包含 test.o。
 
 ```makefile
 gcc -lncurses -r/usr/lib -o test test.o
@@ -122,13 +122,13 @@ http://www.adp-gmbh.ch/cpp/gcc/create_lib.html
 
 http://stackoverflow.com/questions/3532589/how-to-build-a-dylib-from-several-o-in-mac-os-x-using-gcc
 
-让我们在Go中实现这一切吧，先来建立一个新的工程：
+让我们在 Go 中实现这一切吧，先来建立一个新的工程：
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/Using-C-Dynamic-Libraries-In-Go-Programs/Screen%2BShot%2B2013-08-20%2Bat%2B6.48.52%2BPM.png)
 
 我建立了一个名叫 Keyboard 的文件夹，里面有两个子文件夹，分别叫 DyLib 和 TestApp。
 
-在 DyLib 文件夹中我们放入C的动态库源码和 makefile 文件，在 TestApp 中只有一个 main.go 文件，到时就使用这个文件来测试 Go 和 C 语言的动态库交互。
+在 DyLib 文件夹中我们放入 C 的动态库源码和 makefile 文件，在 TestApp 中只有一个 main.go 文件，到时就使用这个文件来测试 Go 和 C 语言的动态库交互。
 
 这是为动态库准备的 C 头文件，和之前 test 头文件中的内容一样：
 
@@ -165,7 +165,7 @@ void CloseKeyboard() {
 }
 ```
 
-接下来是为创建动态库准备的makefile文件：
+接下来是为创建动态库准备的 makefile 文件：
 
 makefile
 

@@ -6,7 +6,7 @@
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-reflect/cover1.png)
 
-在前一篇博客中，我解释了 go reflect 包 `type` 和 `kind` 的概念。这篇博客，我将深入探讨这些术语。因为相比原始类型，`type` 和 `kind` 对于复合类型来说含义更多。
+在前一篇博客中，我解释了 Go reflect 包 `type` 和 `kind` 的概念。这篇博客，我将深入探讨这些术语。因为相比原始类型，`type` 和 `kind` 对于复合类型来说含义更多。
 
 ## 类型和种类
 
@@ -465,4 +465,4 @@ via：https://medium.com/kokster/go-reflection-creating-objects-from-types-part-
 译者：[ParadeTo](https://github.com/ParadeTo)
 校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

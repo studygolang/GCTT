@@ -66,7 +66,7 @@ echo 0 | sudo tee -a /proc/sys/kernel/kptr_restrict
 
 via: https://blog.gopheracademy.com/advent-2018/mozilla-rr-with-goland/
 
-作者：[FlorinPăţan](https://twitter.com/dlsniper)
+作者：[FlorinP ăţ an](https://twitter.com/dlsniper)
 译者：[wumansgy](https://github.com/wumansgy)
 校对：[polaris1119](https://github.com/polaris1119)
 

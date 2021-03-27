@@ -26,11 +26,11 @@ https://play.golang.org/p/dsu3PARM24K
 // leak 是一个有 bug 程序。它启动了一个 goroutine
 // 阻塞接收 channel。一切都将不复存在
 // 向那个 channel 发送数据，并且那个 channel 永远不会关闭
-// 那个 goroutine 会被永远锁死
+// 那个 Goroutine 会被永远锁死
 func leak() {
      ch := make(chan int)
 
-     go func() {
+     Go func() {
         val := <-ch
         fmt.Println("We received a value:", val)
     }()

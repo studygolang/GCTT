@@ -21,7 +21,7 @@ func main() {
    var wg sync.WaitGroup
    for i := 0; i < 500; i++ {
       wg.Add(1)
-      go func() {
+      Go func() {
          a = atomic.AddInt32(&a, 1) // 改为 atomic.AddInt32(&a, 1) 即可
          wg.Done()
       }()
@@ -68,14 +68,14 @@ func main() {
 
 ### loopclosure
 
-当您启动一个新的 goroutine 时，主 goroutine 将继续执行。在执行时，将进行评估 goroutine 及其变量的代码将，当一个变量仍然被主 goroutine 更新时使用，这可能会导致一些常见的错误：
+当您启动一个新的 Goroutine 时，主 Goroutine 将继续执行。在执行时，将进行评估 Goroutine 及其变量的代码将，当一个变量仍然被主 Goroutine 更新时使用，这可能会导致一些常见的错误：
 
 ```go
 func main() {
    var wg sync.WaitGroup
    for _, v := range []int{0,1,2,3} { // 需引入临时变量解决,或 通过传值参数解决
       wg.Add(1)
-      go func() {
+      Go func() {
          print(v)
          wg.Done()
       }()

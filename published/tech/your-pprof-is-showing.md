@@ -6,9 +6,9 @@ IPv4 扫描暴露出的 `net/http/pprof` 端点（endpoint）
 
 原文发表日期: 2017/9/27
 
-Go语言的 [net/http/pprof](https://golang.org/pkg/net/http/pprof/) 包是令人难以置信的强大的，调试正在运行的生产服务器的这个功能微不足道，而在这个调试过程，就很容易不经意间将调试信息暴露给世界。在这篇文章中，我们用 [zmap project](https://github.com/zmap) 作为例子，展示一个现实中真正的问题，并且说明你可以采取的预防措施。
+Go 语言的 [net/http/pprof](https://golang.org/pkg/net/http/pprof/) 包是令人难以置信的强大的，调试正在运行的生产服务器的这个功能微不足道，而在这个调试过程，就很容易不经意间将调试信息暴露给世界。在这篇文章中，我们用 [zmap project](https://github.com/zmap) 作为例子，展示一个现实中真正的问题，并且说明你可以采取的预防措施。
 
-> 早期版本提出，暴露的端点可能泄露源代码。[Aram Hăvărneanu 指出了这个错误](https://github.com/golang/go/issues/22085#issuecomment-333166626)，本文已修正。
+> 早期版本提出，暴露的端点可能泄露源代码。[Aram H ă v ă rneanu 指出了这个错误](https://github.com/golang/go/issues/22085#issuecomment-333166626)，本文已修正。
 
 ## 引言
 
@@ -32,9 +32,9 @@ func main() {
 }
 ```
 
-这个服务不仅会对你说 `Hello World!`，它还会通过uri路径 `/debug/pprof` 返回诊断报告。
+这个服务不仅会对你说 `Hello World!`，它还会通过 uri 路径 `/debug/pprof` 返回诊断报告。
 
-- `/debug/pprof/profile`: 30秒的CPU状态信息
+- `/debug/pprof/profile`: 30 秒的 CPU 状态信息
 - `/debug/pprof/heap`: 内存的堆信息
 - `/debug/pprof/goroutine?debug=1`: 所有协程的堆栈踪迹
 - `/debug/pprof/trace`: 执行的追踪信息
@@ -43,7 +43,7 @@ func main() {
 
 ```shell
 $ wget -O trace.out http://localhost:8080/debug/pprof/trace
-$ go tool trace trace.out
+$ Go tool trace trace.out
 ```
 
 在几秒钟内，我们以较细的颗粒度地检查服务器
@@ -73,7 +73,7 @@ $ go tool trace trace.out
 $ zmap -p 6060 | zgrab --port 6060 --http="/debug/pprof/"
 ```
 
-[zmap](https://github.com/zmap/zmap) 扫描 IPv4 范围中开启6060端口的服务并调用它，然后 `banner grabber` 的 [zgrab](https://github.com/zmap/zgrab) 采集 HTTP 请求的 `GET /debug pprof` 的响应结果与问题。我们可以认为任意响应为 `200 OK` 的服务器与包含 `goroutine` 的响应体即为命中。下面是我们发现的内容:
+[zmap](https://github.com/zmap/zmap) 扫描 IPv4 范围中开启 6060 端口的服务并调用它，然后 `banner grabber` 的 [zgrab](https://github.com/zmap/zgrab) 采集 HTTP 请求的 `GET /debug pprof` 的响应结果与问题。我们可以认为任意响应为 `200 OK` 的服务器与包含 `goroutine` 的响应体即为命中。下面是我们发现的内容:
 
 - 至少有 69 个 IP 使用 `pprof` 开启了 6060 端口
 - 同上，至少有 70 个 IP 开启了 8080 端口
@@ -90,19 +90,19 @@ $ zmap -p 6060 | zgrab --port 6060 --http="/debug/pprof/"
 安全问题：
 
 - 显示函数名与文件路径
-- 分析数据可能揭示商业敏感信息(例如，web服务的流量)
+- 分析数据可能揭示商业敏感信息(例如，web 服务的流量)
 - 分析会降低性能，为 DoS 攻击增加助攻
 
 ## 预防
 
 Farsight Security [警告过这个问题，并且提供了建议](https://www.farsightsecurity.com/2016/10/28/cmikk-go-remote-profiling/)
 
-> 一个简单而有效的方式是将pprof http服务器放在本地主机上的一个单独的端口上，与应用程序http服务器分开。
+> 一个简单而有效的方式是将 pprof http 服务器放在本地主机上的一个单独的端口上，与应用程序 http 服务器分开。
 
-总之，你需要安排两台HTTP服务器。常见的设置是
+总之，你需要安排两台 HTTP 服务器。常见的设置是
 
-- 应用程序服务将80端口暴露在公网上
-- `pprof`服务监听本地6060端口并且限于本地访问
+- 应用程序服务将 80 端口暴露在公网上
+- `pprof` 服务监听本地 6060 端口并且限于本地访问
 
 原生的写法是不使用全局的 HTTP 方法的情况下构建主应用程序(使用隐藏配置 `http.DefaultServeMux` )，而是用标准的方法启动你的 pprof 服务。
 

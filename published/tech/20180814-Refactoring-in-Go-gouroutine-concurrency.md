@@ -26,7 +26,7 @@ func AverageLatency(host string) (latency int64, err error) {
     errorsResults := make(chan string, REQUESTS_LIMIT)
 
     for w := 1; w <= CONCURRENCY; w++ {
-        go dnsTest(dnsRequests, results, errorsResults, host)
+        Go dnsTest(dnsRequests, results, errorsResults, host)
     }
 
     for j := 1; j <= REQUESTS_LIMIT; j++ {
@@ -84,7 +84,7 @@ func AverageLatency(host string) (latency int64, err error) {
     errorsResults := make(chan string, REQUESTS_LIMIT)
 
     for w := 1; w <= REQUESTS_LIMIT; w++ {
-        go func() {
+        Go func() {
             start := time.Now()
             if _, err := net.LookupHost(host); err != nil {
                 errorResults <- err.Error()
@@ -126,7 +126,7 @@ func AverageLatency(host string) (latency int64, err error) {
     wg.Add(REQUESTS_LIMIT)
 
     for j := 0; j < REQUESTS_LIMIT; j++ {
-        go func() {
+        Go func() {
             defer wg.Done()
             start := time.Now()
             if _, err := net.LookupHost(host); err != nil {
@@ -163,7 +163,7 @@ func AverageLatency(host string) Metrics {
     wg.Add(REQUESTS_LIMIT)
 
     for j := 0; j < REQUESTS_LIMIT; j++ {
-        go func() {
+        Go func() {
             defer wg.Done()
             start := time.Now()
             if _, err := net.LookupHost(host); err != nil {
@@ -221,7 +221,7 @@ func CalculateStats(results *[]int64, errors *int64) Metrics {
 ```go
 func waitWithTimeout(wg *sync.WaitGroup, timeout time.Duration) bool {
     c := make(chan struct{})
-    go func() {
+    Go func() {
         defer close(c)
         wg.Wait()
     }()
@@ -249,7 +249,7 @@ func AverageLatency(host string) Metrics {
     wg.Add(REQUESTS_LIMIT)
 
     for j := 0; j < REQUESTS_LIMIT; j++ {
-        go func() {
+        Go func() {
             defer wg.Done()
             start := time.Now()
             if _, err := net.LookupHost(host); err != nil {
@@ -301,7 +301,7 @@ func AverageLatency(host string) Metrics {
     wg.Add(DEFAULT_REQUESTS_LIMIT)
 
     for j := 0; j < REQUESTS_LIMIT; j++ {
-        go func() {
+        Go func() {
             start := time.Now()
 
             if _, err := net.LookupHost(host); err != nil {
@@ -314,7 +314,7 @@ func AverageLatency(host string) Metrics {
         }()
     }
 
-    go func() {
+    Go func() {
         for t := range successfulRequestsQueue {
             results = append(results, t)
             wg.Done()

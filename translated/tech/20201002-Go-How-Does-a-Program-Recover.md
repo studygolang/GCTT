@@ -1,5 +1,5 @@
 # Go：程序如何恢复（recover）？
-![由Renee French创作的原始Go Gopher作品，为“ Go的旅程”创建插图。](https://github.com/studygolang/gctt-images2/blob/master/20201002-Go-How-Does-a-Program-Recover/1_4zRau44piN5HjUnTnJsMOw.png?raw=true)
+![由 Renee French 创作的原始 Go Gopher 作品，为“ Go 的旅程”创建插图。](https://github.com/studygolang/gctt-images2/blob/master/20201002-Go-How-Does-a-Program-Recover/1_4zRau44piN5HjUnTnJsMOw.png?raw=true)
 
 当程序无法适当处理错误时，比如无效的内存访问，Go 中的 panic 就会被触发。如果错误是意料之外，且没有其他方式处理该错误时，同样可以由开发者触发 panic。了解 recover 或者终止的过程，可以更好地理解一个会发生 panic 的程序的后果。
 
@@ -18,7 +18,7 @@
 
 *提醒一下，defer 函数 按照 LIFO（后进先出）的顺序执行。想要了解更多关于 defer 函数内部管理的方式，建议阅读我的文章“[Go: How Does defer Statement Work?](https://medium.com/a-journey-with-go/go-how-does-defer-statement-work-1a9492689b6e)”*
 
-由于一个函数 recover 了 panic，Go 需要一种跟踪，并恢复这个程序的方法。为了达到这个目的，每一个 goroutine 嵌入了一个特殊的属性，指向一个代表该 panic 的对象：
+由于一个函数 recover 了 panic，Go 需要一种跟踪，并恢复这个程序的方法。为了达到这个目的，每一个 Goroutine 嵌入了一个特殊的属性，指向一个代表该 panic 的对象：
 
 ![](https://github.com/studygolang/gctt-images2/blob/master/20201002-Go-How-Does-a-Program-Recover/special-attribute.png?raw=true)
 
@@ -37,7 +37,7 @@
 该指令指向函数调用 `runtime.deferreturn`，这个指令被编译器插入到每个函数的末尾，而它运行 defer 函数。在前面的例子中，这些 defer 函数中的大多数已经运行了——直到恢复，因此，只有剩下的那些会在调用者返回前运行。
 
 ## WaitGroup
-理解这个工作流程会让我们了解 defer 函数的重要性以及它如何起作用，比如，在处理若干个 goroutine 的时候，在一个 defer 函数中延迟调用 `WaitGroup` 可以避免死锁。这是一个例子：
+理解这个工作流程会让我们了解 defer 函数的重要性以及它如何起作用，比如，在处理若干个 Goroutine 的时候，在一个 defer 函数中延迟调用 `WaitGroup` 可以避免死锁。这是一个例子：
 
 ![](https://github.com/studygolang/gctt-images2/blob/master/20201002-Go-How-Does-a-Program-Recover/WaitGroup.png?raw=true)
 
@@ -51,6 +51,6 @@ via: https://medium.com/a-journey-with-go/go-how-does-a-program-recover-fbbbf27c
 
 作者：[Vincent Blanchon](https://medium.com/@blanchon.vincent)
 译者：[dust347](https://github.com/dust347)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

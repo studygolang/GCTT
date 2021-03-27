@@ -4,21 +4,21 @@
 
 这是一篇关于 webassembly 的即时记录，它的目的是给我做个备忘而不仅仅是如果使用它的教程。
 
-即将发布的 Go 1.11 版本将支持 Wasm。@neelance 做了大部分的实施工作。对 wasm 的支持已经可以通过他在 github 上的工作分支进行测试。
+即将发布的 Go 1.11 版本将支持 Wasm。@neelance 做了大部分的实施工作。对 wasm 的支持已经可以通过他在 GitHub 上的工作分支进行测试。
 
 看[这篇文章](https://blog.gopheracademy.com/advent-2017/go-wasm/)了解更多信息
 
 ## 工具链设置
 
-要从 go 源码生产一个 wasm 文件，您需要从源码获取并为 go 工具集打补丁：
+要从 Go 源码生产一个 wasm 文件，您需要从源码获取并为 Go 工具集打补丁：
 
 ```
 ~ mkdir ~/gowasm
-~ git clone https://go.googlesource.com/go ~/gowasm
+~ Git clone https://go.googlesource.com/go ~/gowasm
 ~ cd ~/gowasm
-~ git remote add neelance https://github.com/neelance/go
-~ git fetch --all
-~ git checkout wasm-wip
+~ Git remote add neelance https://github.com/neelance/go
+~ Git fetch --all
+~ Git checkout wasm-wip
 ~ cd src
 ~ ./make.bash
 ```
@@ -77,7 +77,7 @@ WebAssembly.instantiateStreaming(fetch("example.wasm"), go.importObject).then((r
 // ...
 ```
 
-理论上，任何 web 服务都可以运行它，但是当我们试着用 caddy 运行它时遇到一个问题。这个 javascript 加载器需要服务发送这个 wasm 文件的正确 mime 类型给它。
+理论上，任何 Web 服务都可以运行它，但是当我们试着用 caddy 运行它时遇到一个问题。这个 JavaScript 加载器需要服务发送这个 wasm 文件的正确 mime 类型给它。
 
 这有一个快速的破解方法来运行我们的测试：为我们的 wasm 文件写个带有特殊处理的 Go 服务。
 
@@ -103,7 +103,7 @@ func main() {
 
 *注意* 设置一个特殊的路由器来处理所有的 wasm 文件没什么大不了，如我所说，这是一个 POC，这篇文章只是关于它的附注。
 
-然后使用`go run server.go`来启动服务，并打开浏览器访问 http://localhost:3000。
+然后使用 `go run server.go` 来启动服务，并打开浏览器访问 http://localhost:3000。
 
 打开控制台看看！
 
@@ -113,7 +113,7 @@ func main() {
 
 ### 解决 DOM 问题
 
-*syscall/js* 包中包含允许通过 javascript API 与 DOM 交互的函数。要获取此包的文档，只需运行：
+*syscall/js* 包中包含允许通过 JavaScript API 与 DOM 交互的函数。要获取此包的文档，只需运行：
 `GOROOT=~/gowasm godoc -http=:6060`
 然后用浏览器访问 http://localhost:6060/pkg/syscall/js/ 。
 

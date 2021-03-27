@@ -10,13 +10,13 @@
 
 大约两年前，我曾经在开发一个 RESTful 风格的企业应用的后台时，第一次知道 [SwaggerUI](https://swagger.io/swagger-ui/) 。 SwaggerUI 的创造者 SmartBear 将其产品描述为：
 
-> "Swagger UI 允许任何人（无论是你的开发团队还是最终用户）在没有任何实现逻辑的情况下对 API 资源进行可视化和交互。它（API文档）通过 Swagger 定义自动生成，可视化文档使得后端实现和客户端消费变得更加容易。"
+> "Swagger UI 允许任何人（无论是你的开发团队还是最终用户）在没有任何实现逻辑的情况下对 API 资源进行可视化和交互。它（API 文档）通过 Swagger 定义自动生成，可视化文档使得后端实现和客户端消费变得更加容易。"
 
 简而言之，通过提供 Swagger（OpenAPI）定义，您可以获得与 API 进行交互的界面，而不必关心编程语言本身。你可以将 Swagger（OpenAPI） 视为 REST 的 WSDL 。
 
 作为参考，Swagger Codegen 可以从这个定义中，用几十种编程语言来生成客户端和服务器代码。
 
-回到那个时候，我使用的是 Java 和 SpringBoot ，觉得 Swagger 简单易用。你仅需创建一次 bean ，并添加一两个注解到端点上，再添加一个标题和一个项目描述。此外，我习惯将所有请求从 “/” 重定向到 “/swagger-ui” 以便在我打开 `host:port` 时自动跳转到 SwaggerUI 。在运行应用程序的时候， SwaggerUI 在同一个端口依然可用。（例如，您的应用程序运行在`[host]:[port]`， SwaggerUI 将在`[host]:[port]/swagger-ui`上访问到）。
+回到那个时候，我使用的是 Java 和 SpringBoot ，觉得 Swagger 简单易用。你仅需创建一次 bean ，并添加一两个注解到端点上，再添加一个标题和一个项目描述。此外，我习惯将所有请求从 “/” 重定向到 “/swagger-ui” 以便在我打开 `host:port` 时自动跳转到 SwaggerUI 。在运行应用程序的时候， SwaggerUI 在同一个端口依然可用。（例如，您的应用程序运行在 `[host]:[port]`， SwaggerUI 将在 `[host]:[port]/swagger-ui` 上访问到）。
 
 快一年半之后，我想在我们的 Go 项目中实现 SwaggerUI 。问题是 —— 感觉太复杂了。当我在网络上搜索时，我看到不仅仅是我，其他许多用户也遇到了同样的麻烦。
 
@@ -28,7 +28,7 @@
 
 ## 安装 Go-Swagger
 
-在开始之前，您需要在本地机器上安装 go swagger 。这不是一个强制性的步骤，但会使得更容易的使用 swagger 工作。安装它可以让你在本地测试你的注释，否则，你只能依靠你的 CI 工具。
+在开始之前，您需要在本地机器上安装 Go swagger 。这不是一个强制性的步骤，但会使得更容易的使用 swagger 工作。安装它可以让你在本地测试你的注释，否则，你只能依靠你的 CI 工具。
 
 最简单的安装方式是通过运行 Homebrew / Linuxbrew ：
 
@@ -47,7 +47,7 @@ brew install go-swagger
 
 如果你的 API 仅提供在 HTTP 或 HTTPS 上，且只生成 JSON ，您应在此处添加它 - 允许你从每个路由中删除该注释。
 
-安全也被添加在 swagger:meta 中，在 SwaggerUI 上添加一个授权按钮。为了实现JWT，我使用安全类型承载进行命名并将其定义为：
+安全也被添加在 swagger:meta 中，在 SwaggerUI 上添加一个授权按钮。为了实现 JWT，我使用安全类型承载进行命名并将其定义为：
 
 ```go
 //     Security:
@@ -63,7 +63,7 @@ brew install go-swagger
 
 ## Swagger:route [[docs]](https://goswagger.io/generate/spec/route.html)
 
-有两种方式两个注释你的路由，swagger:operation 和swagger:route 。两者看起来都很相似，那么主要区别是什么？
+有两种方式两个注释你的路由，swagger:operation 和 swagger:route 。两者看起来都很相似，那么主要区别是什么？
 
 把 swagger:route 看作简单 API 的短注释,它适用于没有输入参数（路径/查询参数）的 API 。那些（带有参数）的例子是 /repos/{owner} ， /user/{id} 或者 /users/search?name=ribice
 
@@ -83,14 +83,14 @@ brew install go-swagger
 ```
 
 1. **swagger:route** - 注解
-2. **POST** - HTTP方法
+2. **POST** - HTTP 方法
 3. /**repo** - 匹配路径，端点
 4. **repos** - 路由所在的空间分割标签，例如，“repos users”
 5. **createRepoReq** - 用于此端点的请求（详细的稍后会解释）
-6. **Creates a new repository …** - 摘要（标题）。对于swager:route注释，在第一个句号（.）前面的是标题。如果没有句号，就会没有标题并且这些文字会被用于描述。
-7. **If repository name exists …** - 描述。对于swager:route类型注释，在第一个句号（.）后面的是描述。
+6. **Creates a new repository …** - 摘要（标题）。对于 swager:route 注释，在第一个句号（.）前面的是标题。如果没有句号，就会没有标题并且这些文字会被用于描述。
+7. **If repository name exists …** - 描述。对于 swager:route 类型注释，在第一个句号（.）后面的是描述。
 8. **responses**: - 这个端点的响应
-9. **200: repoResp** -  一个（成功的）响应HTTP状态 200，包含 repoResp（用 swagger:response 注释的模型）
+9. **200: repoResp** -  一个（成功的）响应 HTTP 状态 200，包含 repoResp（用 swagger:response 注释的模型）
 10. **400: badReq, 409: conflict, 500: internal** - 此端点的错误响应（错误请求，冲突和内部错误， 定义在 cmd/api/swagger/model.go 下）
 
 如此注释您的端点将产生以下内容：
@@ -137,7 +137,7 @@ brew install go-swagger
 
 ## Swagger:operation [docs](https://goswagger.io/generate/spec/operation.html)
 
-使用 Swagger:operation 可以让你使用所有[OpenAPI规范](https://swagger.io/specification/)，你可以描述你的复杂的端点。如果你对细节感兴趣，你可以阅读规范文档。
+使用 Swagger:operation 可以让你使用所有[OpenAPI 规范](https://swagger.io/specification/)，你可以描述你的复杂的端点。如果你对细节感兴趣，你可以阅读规范文档。
 
 简单来说 - swagger:operation 包含如下内容：
 
@@ -163,11 +163,11 @@ brew install go-swagger
 2. **GET** - HTTP 方法
 3. /**repo/{author}** - 匹配路径，端点
 4. **repos** - 路由所在的空间分割标签，例如，“repos users”
-5. **repoList** - 用于此端点的请求。这个不存在（没有定义），但参数是强制性的，所以你可以用任何东西来替换repoList（noReq，emptyReq等）
-6. --- - 这个部分下面是YAML格式的swagger规范。确保您的缩进是一致的和正确的，否则将无法正确解析。注意，如果你在YAML中定义了标签，摘要，描述或操作标签，将覆盖上述常规swagger语法中的摘要，描述，标记或操作标签。
+5. **repoList** - 用于此端点的请求。这个不存在（没有定义），但参数是强制性的，所以你可以用任何东西来替换 repoList（noReq，emptyReq 等）
+6. --- - 这个部分下面是 YAML 格式的 swagger 规范。确保您的缩进是一致的和正确的，否则将无法正确解析。注意，如果你在 YAML 中定义了标签，摘要，描述或操作标签，将覆盖上述常规 swagger 语法中的摘要，描述，标记或操作标签。
 7. **summary**: - 标题
 8. **description**: - 描述
-9. **parameters**: - URL参数（在这个例子中是{author}）。字符串格式，强制性的（Swagger不会让你调用端点而不输入），位于路径（/{author}）中。另一种选择是参数内嵌的请求 (?name="")
+9. **parameters**: - URL 参数（在这个例子中是{author}）。字符串格式，强制性的（Swagger 不会让你调用端点而不输入），位于路径（/{author}）中。另一种选择是参数内嵌的请求 (?name="")
 
 定义你的路由后，你需要定义你的请求和响应。从示例中，你可以看到，我创建了一个新的包，命名为 swagger 。这不是强制性的，它把所有样板代码放在一个名为 swagger 的包中。但缺点是你必须导出你的所有 HTTP 请求和响应。
 
@@ -179,9 +179,9 @@ _ "github.com/ribice/golang-swaggerui-example/cmd/swagger"
 
 ## Swagger:parameters [[docs]](https://goswagger.io/generate/spec/params.html)
 
-根据您的应用程序模型，您的 HTTP 请求可能会有所不同（简单，复杂，封装等）。要生成 Swagger 规范，您需要为每个不同的请求创建一个结构，甚至包含仅包含数字（例如id）或字符串（名称）的简单请求。
+根据您的应用程序模型，您的 HTTP 请求可能会有所不同（简单，复杂，封装等）。要生成 Swagger 规范，您需要为每个不同的请求创建一个结构，甚至包含仅包含数字（例如 id）或字符串（名称）的简单请求。
 
-一旦你有这样的结构（例如一个包含一个字符串和一个布尔值的结构），在你的Swagger包中定义如下：
+一旦你有这样的结构（例如一个包含一个字符串和一个布尔值的结构），在你的 Swagger 包中定义如下：
 
 ```go
 // Request containing string
@@ -195,7 +195,7 @@ type swaggerCreateRepoReq struct {
 - 第 1 行包含一个在 SwaggerUI 上可见的注释
 - 第 2 行包含 swagger:parameters 注释，以及请求的名称（operationID）。此名称用作路由注释的最后一个参数，以定义请求。
 - 第 4 行包含这个参数的位置（in:body，in:query 等）
-- 第 5 行是实际的内嵌结构。正如前面所提到的，你不需要一个独立的 swagger 批注包（你可以把swagger:parameters注释放在 api.CreateRepoReq 上），但是一旦你开始创建响应注释和验证，那么在 swagger 相关批注一个单独的包会更清晰。
+- 第 5 行是实际的内嵌结构。正如前面所提到的，你不需要一个独立的 swagger 批注包（你可以把 swagger:parameters 注释放在 api.CreateRepoReq 上），但是一旦你开始创建响应注释和验证，那么在 swagger 相关批注一个单独的包会更清晰。
 
 ![swagger-parameters](https://raw.githubusercontent.com/studygolang/gctt-images/master/swagger-golang/swagger-golang4.jpg)
 
@@ -214,7 +214,7 @@ type swaggerCreateRepoReq struct {
 
 ![swagger-patameters-ui](https://raw.githubusercontent.com/studygolang/gctt-images/master/swagger-golang/swagger-golang5.jpg)
 
- Swagger 有很多验证注释提供给 swagger:parameters和 swagger:response ，在注释标题旁边的文档中有详细的描述和使用方法。
+ Swagger 有很多验证注释提供给 swagger:parameters 和 swagger:response ，在注释标题旁边的文档中有详细的描述和使用方法。
 
 ## Swagger:response [[docs]](https://goswagger.io/generate/spec/response.html)
 
@@ -238,7 +238,7 @@ type swaggerCreateRepoReq struct {
 }
 ```
 
-要使用常规响应，像上面错误响应那样的，我通常在 swagger 包内部创建 model.go（或swagger.go）并在里面定义它们。在示例中，下面的响应用于 OK 响应（不返回任何数据）：
+要使用常规响应，像上面错误响应那样的，我通常在 swagger 包内部创建 model.go（或 swagger.go）并在里面定义它们。在示例中，下面的响应用于 OK 响应（不返回任何数据）：
 
 ```go
 // Success response
@@ -302,7 +302,7 @@ type swaggReposResp struct {
 
 总之，这将足以生成您的 API 文档。您也应该向文档添加验证，但遵循本指南将帮助您开始。由于这主要是由我自己的经验组成，并且在某种程度上参考了 Gitea 的[源代码](https://github.com/go-gitea/gitea)，我将会听取关于如何改进这部分并相应更新的反馈。
 
-如果您有一些问题或疑问，我建议您查看[如何生成FAQ](https://goswagger.io/faq/faq_spec.html)。
+如果您有一些问题或疑问，我建议您查看[如何生成 FAQ](https://goswagger.io/faq/faq_spec.html)。
 
 ## 本地运行 SwaggerUI
 
@@ -334,7 +334,7 @@ swagger generate spec -o ./swagger.json --scan-models && swagger serve -F=swagge
 
 例如，我们的应用程序正在 Google App Engine 上运行。Swagger Spec 由我们的 CI 工具生成，并在 /docs 路径上提供。
 
-我们将 SwaggerUI 作为 Docker 服务部署在 GKE（Google Container/Kubernates Engine）上，它从 /docs 路径中获取swagger.json。
+我们将 SwaggerUI 作为 Docker 服务部署在 GKE（Google Container/Kubernates Engine）上，它从 /docs 路径中获取 swagger.json。
 
 我们的 CI（Wercker）脚本的一部分：
 
@@ -352,7 +352,7 @@ build:
 			code: |
 				go get -u github.com/go-swagger/go-swagger/cmd/swagger
 				swagger generate spec -o ./swagger.json --scan-models
-				CGO_ENABLED=0 go build -a -ldflags '-s' -installsuffix cgo -o app .
+				CGO_ENABLED=0 Go build -a -ldflags '-s' -installsuffix cgo -o app .
 				cp app *.template Dockerfile swagger.json "$WERCKER_OUTPUT_DIR"
 ```
 
@@ -375,7 +375,7 @@ ENV API_URL "https://api.orga.com/swagger"
 
 ## 总结
 
-SwaggerUI 是一个功能强大的 API 文档工具，可以让您轻松而漂亮地记录您的 API。在 go-swagger 项目的帮助下，您可以轻松地生成 SwaggerUI 所需的swagger规范文件（swagger.json）。
+SwaggerUI 是一个功能强大的 API 文档工具，可以让您轻松而漂亮地记录您的 API。在 go-swagger 项目的帮助下，您可以轻松地生成 SwaggerUI 所需的 swagger 规范文件（swagger.json）。
 
 总之，我描述了为实现这一目标所采取的步骤。可能有更好的方法，我会确保根据收到的反馈更新这篇文章。
 

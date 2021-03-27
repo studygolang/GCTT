@@ -39,7 +39,7 @@ mov     rdi, 1
 
 INT 3 指令会生成大小为一个字节的特殊操作码（CC），通过它可以调用异常处理函数，（这个操作码非常有用，因为它可以用来替换任何一条指令的第一个字节，使之成为一个断点，然后再加入额外的一个字节，而不影响其它的代码），具体信息参见以下文档
 
-[Intel® 64 and IA-32 系统软件使用手册](https://software.intel.com/en-us/articles/intel-sdm)
+[Intel ® 64 and IA-32 系统软件使用手册](https://software.intel.com/en-us/articles/intel-sdm)
 
 我们用 0xCC 来替换特定指令的头一个字节，使之成为一个断点，一旦这个断点被出发，我们就可以做以下的事情
 
@@ -177,7 +177,7 @@ func main() {
 源文件以一些辅助函数开始，setPC 和 getPC 用来维护 [程序计数器](https://en.wikipedia.org/wiki/Program_counter)，寄存器 PC 存放的是下一条要执行的指令。如果程序在没有执行任何指令的时候被暂停，PC 中的值就是程序第一条指令的内存地址。维护断点的函数（setBreakpoint 和 clearBreakpoint）负责在指令中插入或者移除操作码 0xCC，下面是程序的输出：
 
 ```shell
-> go install github.com/mlowicki/breakpoint
+> Go install github.com/mlowicki/breakpoint
 > breakpoint /go/bin/hello
 2017/07/16 21:06:33 State: stop signal: trace/breakpoint trap
 2017/07/16 21:06:33 RAX=1, RDI=0
@@ -267,7 +267,7 @@ func main() {
 
 via: https://medium.com/golangspec/making-debugger-in-golang-part-iii-5aac8e49f291
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[jettyhan](https://github.com/jettyhan)
 校对：[polaris1119](https://github.com/polaris1119)
 

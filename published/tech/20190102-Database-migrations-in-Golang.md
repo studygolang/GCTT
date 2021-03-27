@@ -74,7 +74,7 @@ func main() {
 以上是在 Go 中进行数据库迁移的最简单方法。你可以继续从[这个 repo](https://github.com/adelowo/migration-demo) 下载以下文件，并将它们放在 migrations 目录中或你认为合适的任何位置。之后，你需要使用以下命令运行它 :
 
 ```
-$ go run main.go -mysql.dsn "root:@tcp(localhost)/xyz"
+$ Go run main.go -mysql.dsn "root:@tcp(localhost)/xyz"
 ```
 如果一切顺利，你应该看到在标准输出上打印了 "Database migrated" ( 数据库迁移完成 )。
 
@@ -92,9 +92,9 @@ ADD . /go/src/github.com/adelowo/project
 
 ENV GO111MODULE=on
 
-RUN go mod download
-RUN go mod verify
-RUN go install ./cmd
+RUN Go mod download
+RUN Go mod verify
+RUN Go install ./cmd
 
 ## A better scratch
 FROM gcr.io/distroless/base

@@ -70,8 +70,8 @@ func main() {
 构建并运行这个段代码，输出应该像下面这样（每次调用显示的步数可能不一样）
 
 ```
-> go install -gcflags="-N -l" github.com/mlowicki/hello
-> go install github.com/mlowicki/debugger
+> Go install -gcflags="-N -l" github.com/mlowicki/hello
+> Go install github.com/mlowicki/debugger
 > debugger /go/bin/hello
 2017/06/09 19:54:42 State: stop signal: trace/breakpoint trap
 hello world
@@ -200,8 +200,8 @@ func main() {
 那么输出应该是这样的
 
 ```shell
-> go install github.com/mlowicki/linetable
-> go install — gcflags=”-N -l” github.com/mlowicki/hello
+> Go install github.com/mlowicki/linetable
+> Go install — gcflags=”-N -l” github.com/mlowicki/hello
 > linetable /go/bin/hello
 2017/06/30 18:47:38 filename: /go/src/github.com/mlowicki/hello/hello.go
 2017/06/30 18:47:38 lineno: 5
@@ -223,7 +223,7 @@ ELF 中包含许多段，我们用到了其中三个：.text、.gopclntab 和 .g
 
 via: https://medium.com/golangspec/making-debugger-in-golang-part-ii-d2b8eb2f19e0
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[jettyhan](https://github.com/jettyhan)
 校对：[polaris1119](https://github.com/polaris1119)
 

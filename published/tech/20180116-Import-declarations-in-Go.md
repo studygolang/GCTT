@@ -35,7 +35,7 @@ import (
 
 这四个导入格式都有各自不同的行为，在这篇文章中我们将分析这些差异。
 
-> 导入包只能引用导入包中的导出标识符。 导出标识符是以Unicode大写字母开头的
+> 导入包只能引用导入包中的导出标识符。 导出标识符是以 Unicode 大写字母开头的
 > - [https://golang.org/ref/spec#Exported_identifiers](https://golang.org/ref/spec#Exported_identifiers)。
 
 ## 基础
@@ -137,7 +137,7 @@ func hi() {
 上述代码无法被成功编译：
 
 ```
-> go build
+> Go build
 // github.com/mlowicki/a
 ./foo.go:6:2: undefined: fmt
 ```
@@ -267,7 +267,7 @@ func main() {
 ```
 
 ```
-> go run main.go
+> Go run main.go
 // command-line-arguments
 ./main.go:6:2: V redeclared during import "github.com/mlowicki/c"
     previous declaration during import "github.com/mlowicki/b"
@@ -276,7 +276,7 @@ func main() {
 
 ### 使用空标识符
 
-如果导入了包但是不使用，Golang的编译器将无法编译通过。
+如果导入了包但是不使用，Golang 的编译器将无法编译通过。
 
 ```go
 package main
@@ -286,7 +286,7 @@ import "fmt"
 func main() {}
 ```
 
-使用点导入，其中所有导出的标识符都直接添加到导入文件块中，在编译时也会出现失败。唯一的绕过方式是使用空白标识符。需要知道init函数是什么，以便理解为什么我们需要导入空白标识符。参考之前init的介绍文章 [https://medium.com/golangspec/init-functions-in-go-eac191b3860a](https://medium.com/golangspec/init-functions-in-go-eac191b3860a) 我鼓励从上到下阅读这篇文章，但本质上，像如下的导入方式：
+使用点导入，其中所有导出的标识符都直接添加到导入文件块中，在编译时也会出现失败。唯一的绕过方式是使用空白标识符。需要知道 init 函数是什么，以便理解为什么我们需要导入空白标识符。参考之前 init 的介绍文章 [https://medium.com/golangspec/init-functions-in-go-eac191b3860a](https://medium.com/golangspec/init-functions-in-go-eac191b3860a) 我鼓励从上到下阅读这篇文章，但本质上，像如下的导入方式：
 
 ```go
 import _ "math"
@@ -319,7 +319,7 @@ var B = a.A
 尝试构建这两个包中的任何一个都会导致错误：
 
 ```
-> go build
+> Go build
 can't load package: import cycle not allowed
 package github.com/mlowicki/a
     imports github.com/mlowicki/b
@@ -353,8 +353,8 @@ func main() {
 
 via：https://medium.com/golangspec/import-declarations-in-go-8de0fd3ae8ff
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[iloghyr](https://github.com/iloghyr)
 校对：[无闻](https://github.com/Unknwon)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

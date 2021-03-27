@@ -1,10 +1,10 @@
 首发于：https://studygolang.com/articles/13866
 
-# 理解 golang 中的 context（上下文） 包
+# 理解 Golang 中的 context（上下文） 包
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/understanding-the-context-package-in-golang/0_exTPQ4ppfrdjuXcR.jpg)
 
-Go 中的 context 包在与 API 和慢处理交互时可以派上用场，特别是在生产级的 Web 服务中。在这些场景中，您可能想要通知所有的 goroutine 停止运行并返回。这是一个基本教程，介绍如何在项目中使用它以及一些最佳实践和陷阱。
+Go 中的 context 包在与 API 和慢处理交互时可以派上用场，特别是在生产级的 Web 服务中。在这些场景中，您可能想要通知所有的 Goroutine 停止运行并返回。这是一个基本教程，介绍如何在项目中使用它以及一些最佳实践和陷阱。
 
 要理解 context 包，您应该熟悉两个概念。
 
@@ -12,7 +12,7 @@ Go 中的 context 包在与 API 和慢处理交互时可以派上用场，特别
 
 ## Goroutine
 
-来自 Go 语言官方文档："goroutine 是一个轻量级的执行线程"。多个 goroutine 比一个线程轻量所以管理它们消耗的资源相对更少。
+来自 Go 语言官方文档："goroutine 是一个轻量级的执行线程"。多个 Goroutine 比一个线程轻量所以管理它们消耗的资源相对更少。
 
 Playground: https://play.golang.org/p/-TDMgnkJRY6
 
@@ -33,15 +33,15 @@ func main() {
 }
 ```
 
-如果您运行上面的程序，您只能看到 main 中打印的 Hello, 因为它启动了两个 goroutine 并在它们完成前退出了。为了让 main 等待这些 goroutine 执行完，您需要一些方法让这些 goroutine 告诉 main 它们执行完了，那就需要用到通道。
+如果您运行上面的程序，您只能看到 main 中打印的 Hello, 因为它启动了两个 Goroutine 并在它们完成前退出了。为了让 main 等待这些 Goroutine 执行完，您需要一些方法让这些 Goroutine 告诉 main 它们执行完了，那就需要用到通道。
 
 ## 通道（channel）
 
-这是 goroutine 之间的沟通渠道。当您想要将结果或错误，或任何其他类型的信息从一个 goroutine 传递到另一个 goroutine 时就可以使用通道。通道是有类型的，可以是 int 类型的通道接收整数或错误类型的接收错误等。
+这是 Goroutine 之间的沟通渠道。当您想要将结果或错误，或任何其他类型的信息从一个 Goroutine 传递到另一个 Goroutine 时就可以使用通道。通道是有类型的，可以是 int 类型的通道接收整数或错误类型的接收错误等。
 
 假设有个 int 类型的通道 ch，如果你想发一些信息到这个通道，语法是 ch <- 1，如果你想从这个通道接收一些信息，语法就是 var := <-ch。这将从这个通道接收并存储值到 var 变量。
 
-以下程序说明了通道的使用确保了 goroutine 执行完成并将值返回给 main 。
+以下程序说明了通道的使用确保了 Goroutine 执行完成并将值返回给 main 。
 
 注意：WaitGroup（ https://golang.org/pkg/sync/#WaitGroup ）也可用于同步，但稍后在 context 部分我们谈及通道，所以在这篇博客中的示例代码，我选择了它们。
 
@@ -84,7 +84,7 @@ func main() {
 }
 ```
 
-在 Go 语言中 context 包允许您传递一个 "context" 到您的程序。 Context 如超时或截止日期（deadline）或通道，来指示停止运行和返回。例如，如果您正在执行一个 web 请求或运行一个系统命令，定义一个超时对生产级系统通常是个好主意。因为，如果您依赖的API运行缓慢，你不希望在系统上备份（back up）请求，因为它可能最终会增加负载并降低所有请求的执行效率。导致级联效应。这是超时或截止日期 context 派上用场的地方。
+在 Go 语言中 context 包允许您传递一个 "context" 到您的程序。 Context 如超时或截止日期（deadline）或通道，来指示停止运行和返回。例如，如果您正在执行一个 Web 请求或运行一个系统命令，定义一个超时对生产级系统通常是个好主意。因为，如果您依赖的 API 运行缓慢，你不希望在系统上备份（back up）请求，因为它可能最终会增加负载并降低所有请求的执行效率。导致级联效应。这是超时或截止日期 context 派上用场的地方。
 
 ## 创建 context
 
@@ -155,7 +155,7 @@ ctx, cancel := context.WithTimeout(context.Background(), 2 * time.Second)
 
 现在我们知道了如何创建 context（Background 和 TODO）以及如何派生 context（WithValue，WithCancel，Deadline 和 Timeout），让我们讨论如何使用它们。
 
-在下面的示例中，您可以看到接受 context 的函数启动一个 goroutine 并等待 该 goroutine 返回或该 context 取消。select 语句帮助我们选择先发生的任何情况并返回。
+在下面的示例中，您可以看到接受 context 的函数启动一个 Goroutine 并等待 该 Goroutine 返回或该 context 取消。select 语句帮助我们选择先发生的任何情况并返回。
 
 `<-ctx.Done()` 一旦 Done 通道被关闭，这个 `<-ctx.Done():` 被选择。一旦发生这种情况，此函数应该放弃运行并准备返回。这意味着您应该关闭所有打开的管道，释放资源并从函数返回。有些情况下，释放资源可以阻止返回，比如做一些挂起的清理等等。在处理 context 返回时，您应该注意任何这样的可能性。
 
@@ -210,14 +210,14 @@ func sleepRandomContext(ctx context.Context, ch chan bool) {
   * main 调用取消函数或
   * 超时到或
   * doWorkContext 调用它的取消函数
-* 启动 goroutine 传入派生上下文执行一些慢处理
-* 等待 goroutine 完成或上下文被 main goroutine 取消，以优先发生者为准
+* 启动 Goroutine 传入派生上下文执行一些慢处理
+* 等待 Goroutine 完成或上下文被 main Goroutine 取消，以优先发生者为准
 
 ***sleepRandomContext*** 函数
 
-* 开启一个 goroutine 去做些缓慢的处理
-* 等待该 goroutine 完成或，
-* 等待 context 被 main goroutine 取消，操时或它自己的取消函数被调用
+* 开启一个 Goroutine 去做些缓慢的处理
+* 等待该 Goroutine 完成或，
+* 等待 context 被 main Goroutine 取消，操时或它自己的取消函数被调用
 
 ***sleepRandom*** 函数
 

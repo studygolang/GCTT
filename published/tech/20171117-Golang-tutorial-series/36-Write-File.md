@@ -212,8 +212,8 @@ File handling is easy.
 我们将写一个程序，该程序创建 100 个 goroutinues。每个 goroutinue 将并发产生一个随机数，届时将有 100 个随机数产生。这些随机数将被写入到文件里面。我们将用下面的方法解决这个问题 .
 
 1. 创建一个 channel 用来读和写这个随机数。
-2. 创建 100 个生产者 goroutine。每个 goroutine 将产生随机数并将随机数写入到 channel 里。
-3. 创建一个消费者 goroutine 用来从 channel 读取随机数并将它写入文件。这样的话我们就只有一个 goroutinue 向文件中写数据，从而避免竞争条件。
+2. 创建 100 个生产者 goroutine。每个 Goroutine 将产生随机数并将随机数写入到 channel 里。
+3. 创建一个消费者 Goroutine 用来从 channel 读取随机数并将它写入文件。这样的话我们就只有一个 goroutinue 向文件中写数据，从而避免竞争条件。
 4. 一旦完成则关闭文件。
 
 我们开始写产生随机数的 `produce` 函数：
@@ -322,9 +322,9 @@ func main() {
 }
 ```
 
-`main` 函数在第 41 行创建写入和读取数据的 channel，在第 42 行创建 `done` 这个 channel，此 channel 用于消费者 goroutinue 完成任务之后通知 `main` 函数。第 43 行创建 Waitgroup 的实例 `wg`，用于等待所有生产随机数的 goroutine 完成任务。
+`main` 函数在第 41 行创建写入和读取数据的 channel，在第 42 行创建 `done` 这个 channel，此 channel 用于消费者 goroutinue 完成任务之后通知 `main` 函数。第 43 行创建 Waitgroup 的实例 `wg`，用于等待所有生产随机数的 Goroutine 完成任务。
 
-在第 44 行使用 `for` 循环创建 100 个 goroutines。在第 49 行调用 waitgroup 的 `wait()` 方法等待所有的 goroutines 完成随机数的生成。然后关闭 channel。当 channel 关闭时，消费者 `consume` goroutine 已经将所有的随机数写入文件，在第 37 行 将 `true` 写入 `done` 这个 channel 中，这个时候 `main` 函数解除阻塞并且打印 `File written successfully`。
+在第 44 行使用 `for` 循环创建 100 个 goroutines。在第 49 行调用 waitgroup 的 `wait()` 方法等待所有的 goroutines 完成随机数的生成。然后关闭 channel。当 channel 关闭时，消费者 `consume` Goroutine 已经将所有的随机数写入文件，在第 37 行 将 `true` 写入 `done` 这个 channel 中，这个时候 `main` 函数解除阻塞并且打印 `File written successfully`。
 
 现在你可以用任何的文本编辑器打开文件 `concurrent`，可以看到 100 个随机数已经写入 :)
 

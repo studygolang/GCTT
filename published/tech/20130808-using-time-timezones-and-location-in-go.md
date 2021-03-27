@@ -38,13 +38,13 @@ https://maps.googleapis.com/maps/api/timezone/json?location=38.85682,-92.991714&
 }
 ```
 
-它限制一天只能访问2500次。对于我的潮汐站初始加载，我知道我将达到这个限制，而且我不想等几天再加载所有数据。所有我的商业伙伴从 GeoNames 发现了这个 timezone API。
+它限制一天只能访问 2500 次。对于我的潮汐站初始加载，我知道我将达到这个限制，而且我不想等几天再加载所有数据。所有我的商业伙伴从 GeoNames 发现了这个 timezone API。
 
 如果您打开这个网页您就能读到这个 GeoNames's API 文档：
 
 http://www.geonames.org/export/web-services.html#timezone
 
-这个 API 需要一个免费帐号，它相当快就可以设置好。一旦您激活您的帐号，为了使用这个 API您需要找到帐号页去激活您的用户名。
+这个 API 需要一个免费帐号，它相当快就可以设置好。一旦您激活您的帐号，为了使用这个 API 您需要找到帐号页去激活您的用户名。
 
 这是一个简单的 GeoNames API 调用和响应：
 
@@ -68,7 +68,7 @@ http://api.geonames.org/timezoneJSON?lat=47.01&lng=10.2&username=demo
 
 这个 API 返回的信息多一些。而且没有访问限制但是响应时间不能保证。目前我访问了几千次没有遇到问题。
 
-至此我们有两个不同的 web 请求能帮我们获得 timezone 信息。让我们看看怎么使用 Go 去使用 Google web 请求并获得一个返回对象用在我们的程序中。
+至此我们有两个不同的 Web 请求能帮我们获得 timezone 信息。让我们看看怎么使用 Go 去使用 Google Web 请求并获得一个返回对象用在我们的程序中。
 
 首先，我们需要定义一个新的类型来包含从 API 返回的信息。
 
@@ -151,7 +151,7 @@ func RetrieveGoogleTimezone(latitude float64, longitude float64) (googleTimezone
 }
 ```
 
-这个 web 请求和错误处理是相当的模式化，所以让我们只简单的谈论下 Unmarshal 调用。
+这个 Web 请求和错误处理是相当的模式化，所以让我们只简单的谈论下 Unmarshal 调用。
 
 ```go
 rawDocument, err = ioutil.ReadAll(resp.Body)
@@ -159,7 +159,7 @@ rawDocument, err = ioutil.ReadAll(resp.Body)
 err = json.Unmarshal(rawDocument, googleTimezone)
 ```
 
-当这个 web 调用返回时，我们获取到响应数据并把它存储在一个字节数组中。然后我们调用这个 json Unmarshal 函数，传递字节数组和一个引用到我们返回的指针类型变量。这个 Unmarshal 调用能创建一个 GoogleTimezone类型对象，从返回的 JSON 文档提取并拷贝数据，然后设置这个值到我们的指针变量。它相当聪明，如果任务字段不能映射就被忽略。如果有异常发 Unmarshal 调用会返回一个错误。
+当这个 Web 调用返回时，我们获取到响应数据并把它存储在一个字节数组中。然后我们调用这个 JSON Unmarshal 函数，传递字节数组和一个引用到我们返回的指针类型变量。这个 Unmarshal 调用能创建一个 GoogleTimezone 类型对象，从返回的 JSON 文档提取并拷贝数据，然后设置这个值到我们的指针变量。它相当聪明，如果任务字段不能映射就被忽略。如果有异常发 Unmarshal 调用会返回一个错误。
 
 所以这很好，我们能得到 timezone 数据并把它解封为一个只有三行代码的对象。现在唯一的问题是我们如何使用 timezoneid 来设置我们的位置？
 
@@ -245,15 +245,15 @@ Otherwise, the name is taken to be a location name corresponding to a file in th
 The time zone database needed by LoadLocation may not be present on all systems, especially non-Unix systems. LoadLocation looks in the directory or uncompressed zip file named by the ZONEINFO environment variable, if any, then looks in known installation locations on Unix systems, and finally looks in $GOROOT/lib/time/zoneinfo.zip.
 ```
 
-如果您读最后一段，您将看到 LoadLocation 函数正读取数据库文件获取信息。我没有下载任何数据库，也没设置名为 ZONEINFO 的环境变量。唯一的答案是在 GOROOT 下的 zoneinfo.zip文件。让我们看下：
+如果您读最后一段，您将看到 LoadLocation 函数正读取数据库文件获取信息。我没有下载任何数据库，也没设置名为 ZONEINFO 的环境变量。唯一的答案是在 GOROOT 下的 zoneinfo.zip 文件。让我们看下：
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/using-time-timezones-and-location-in-go/Screen+Shot+2013-08-08+at+8.06.04+PM.png)
 
 果然有个 zoneinfo.zip 文件在 Go 的安装位置下的 lib/time 目录下。非常酷！！！
 
-您有它了。现在您知道如何使用 time.LoadLocation函数来帮助确保您的时间值始终在正确的时区。如果您有经纬度，则可以使用任一 API 获取该时区 ID。
+您有它了。现在您知道如何使用 time.LoadLocation 函数来帮助确保您的时间值始终在正确的时区。如果您有经纬度，则可以使用任一 API 获取该时区 ID。
 
-如果您想要这两个API 都被调的代码可重用副本的话，我已经在 Github 的 GoingGo 库中添加了一个名为 timezone 的新包。以下是整个工作示例程序：
+如果您想要这两个 API 都被调的代码可重用副本的话，我已经在 Github 的 GoingGo 库中添加了一个名为 timezone 的新包。以下是整个工作示例程序：
 
 ```go
 package main

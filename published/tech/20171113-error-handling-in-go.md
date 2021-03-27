@@ -59,7 +59,7 @@ fmt.Printf("%d\n", s)
 > `func (sf *Sonyflake) NextID() (uint64, error)`
 > NextID 能够连续生成 ID 从开始时间到 174 年左右。当超过这个限制的时候，NextID 会返回一个错误。
 
-我非常确信在看这篇文章的人不会活过174年。在这种情况下，你真的需要处理那个特定的错误么？这里真的需要返回一个错误么？
+我非常确信在看这篇文章的人不会活过 174 年。在这种情况下，你真的需要处理那个特定的错误么？这里真的需要返回一个错误么？
 
 我认为这是一个设计缺陷，我们可以使用 Go 的另一个灵活性来更好地处理：`panic`。参见一篇很棒的文章 [go by example](https://gobyexample.com/panic):
 
@@ -217,7 +217,7 @@ var urls = []string{
 	"http://www.somestupidname.com/",
 }
 for _, url := range urls {
-	// Launch a goroutine to fetch the URL.
+	// Launch a Goroutine to fetch the URL.
 	url := url // https://golang.org/doc/faq#closures_and_goroutines
 	g.Go(func() error {
 		// Fetch the URL.

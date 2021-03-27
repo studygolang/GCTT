@@ -26,7 +26,7 @@ func main() {
     for routine := 1; routine <= 2; routine++ {
 
         Wait.Add(1)
-        go Routine(routine)
+        Go Routine(routine)
     }
 
     Wait.Wait()
@@ -59,13 +59,13 @@ go build -race
 ```
 ==================
 WARNING: DATA RACE
-Read by goroutine 5:
+Read by Goroutine 5:
   main.Routine()
       /Users/bill/Spaces/Test/src/test/main.go:29 +0x44
   gosched0()
       /usr/local/go/src/pkg/runtime/proc.c:1218 +0x9f
 
-Previous write by goroutine 4:
+Previous write by Goroutine 4:
   main.Routine()
       /Users/bill/Spaces/Test/src/test/main.go:33 +0x65
   gosched0()
@@ -93,7 +93,7 @@ Found 1 data race(s)
 警告报告告诉我们问题发生的准确位置:
 
 ```
-Read by goroutine 5:
+Read by Goroutine 5:
   main.Routine()
       /Users/bill/Spaces/Test/src/test/main.go:29 +0x44
   gosched0()
@@ -101,7 +101,7 @@ Read by goroutine 5:
 
         value := Counter
 
-Previous write by goroutine 4:
+Previous write by Goroutine 4:
   main.Routine()
       /Users/bill/Spaces/Test/src/test/main.go:33 +0x65
   gosched0()
@@ -115,7 +115,7 @@ Goroutine 5 (running) created at:
   runtime.main()
       /usr/local/go/src/pkg/runtime/proc.c:182 +0x91
 
-        go Routine(routine)
+        Go Routine(routine)
 ```
 
 你能发现竞争检测器指出两行读和写全局变量 Counter 的代码。同时也指出生成协程的代码。
@@ -139,7 +139,7 @@ func main() {
     for routine := 1; routine <= 2; routine++ {
 
         Wait.Add(1)
-        go Routine(routine)
+        Go Routine(routine)
     }
 
     Wait.Wait()
@@ -192,7 +192,7 @@ Counter = value
 
 在每一次循环的迭代过程中，全局变量 Counter 的值都被暂存到本地变量 value，本地的副本自增后，最终写回全局变量 Counter。如果这三行代码在没有中断的情况下，没有立即运行，那么程序就会出现问题。上面的图片展示了全局变量 Counter 的读取和上下文切换是如何导致问题的。
 
-在这幅图中，在被协程 1 增加的变量被写回全局变量 Counter 之前，协程 2 被唤醒并读取全局变量 Counter。实质上，这两个协程对全局Counter变量执行完全相同的读写操作，因此最终的结果才是 2。
+在这幅图中，在被协程 1 增加的变量被写回全局变量 Counter 之前，协程 2 被唤醒并读取全局变量 Counter。实质上，这两个协程对全局 Counter 变量执行完全相同的读写操作，因此最终的结果才是 2。
 
 为了解决这个问题，你也许认为我们只需要将增加全局变量 Counter 的三行代码改写减少到一行即可。
 
@@ -213,7 +213,7 @@ func main() {
     for routine := 1; routine <= 2; routine++ {
 
         Wait.Add(1)
-        go Routine(routine)
+        Go Routine(routine)
     }
 
     Wait.Wait()
@@ -250,13 +250,13 @@ go build -race
 ```
 ==================
 WARNING: DATA RACE
-Write by goroutine 5:
+Write by Goroutine 5:
   main.Routine()
       /Users/bill/Spaces/Test/src/test/main.go:30 +0x44
   gosched0()
       /usr/local/go/src/pkg/runtime/proc.c:1218 +0x9f
 
-Previous write by goroutine 4:
+Previous write by Goroutine 4:
   main.Routine()
       /Users/bill/Spaces/Test/src/test/main.go:30 +0x44
   gosched0()
@@ -283,7 +283,7 @@ Found 1 data race(s)
 然而，在这三十行代码的程序中，我们仍然检测到一个竞争条件。
 
 ```
-Write by goroutine 5:
+Write by Goroutine 5:
   main.Routine()
       /Users/bill/Spaces/Test/src/test/main.go:30 +0x44
   gosched0()
@@ -291,7 +291,7 @@ Write by goroutine 5:
 
         Counter = Counter + 1
 
-Previous write by goroutine 4:
+Previous write by Goroutine 4:
   main.Routine()
       /Users/bill/Spaces/Test/src/test/main.go:30 +0x44
   gosched0()
@@ -305,10 +305,10 @@ Goroutine 5 (running) created at:
   runtime.main()
       /usr/local/go/src/pkg/runtime/proc.c:182 +0x91
 
-        go Routine(routine)
+        Go Routine(routine)
 ```
 
-使用一行代码进行增加操作的程序正确地运行了。但为什么代码仍然有一个竞态条件？ 不要被我们用于递增 Counter 变量的一行Go代码所欺骗。让我们看看这一行代码生成的汇编代码:
+使用一行代码进行增加操作的程序正确地运行了。但为什么代码仍然有一个竞态条件？ 不要被我们用于递增 Counter 变量的一行 Go 代码所欺骗。让我们看看这一行代码生成的汇编代码:
 
 ```
 0064 (./main.go:30) MOVQ Counter+0(SB),BX ; Copy the value of Counter to BX
@@ -340,7 +340,7 @@ func main() {
     for routine := 1; routine <= 2; routine++ {
 
         Wait.Add(1)
-        go Routine(routine)
+        Go Routine(routine)
     }
 
     Wait.Wait()

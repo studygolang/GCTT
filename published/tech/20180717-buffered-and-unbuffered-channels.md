@@ -24,12 +24,12 @@ func main() {
     var wg sync.WaitGroup
     wg.Add(2)
 
-    go func() {
+    Go func() {
         defer wg.Done()
         c <- `foo`
     }()
 
-    go func() {
+    Go func() {
         defer wg.Done()
 
         time.Sleep(time.Second * 1)
@@ -40,7 +40,7 @@ func main() {
 }
 ```
 
-由于没有准备就绪的接收者，第一个`goroutine`在发送消息`foo`时将被阻塞。这个[说明文档](https://golang.org/ref/spec#Channel_types)很好地解释了这种行为:
+由于没有准备就绪的接收者，第一个 `goroutine` 在发送消息 `foo` 时将被阻塞。这个[说明文档](https://golang.org/ref/spec#Channel_types)很好地解释了这种行为:
 
 > 如果容量为零或未设置，则通道将被无缓冲，只有在发送方和接收方都准备就绪时通信才能成功。
 
@@ -56,19 +56,19 @@ func main() {
 
 ![hchan 结构](https://raw.githubusercontent.com/studygolang/gctt-images2/master/buffered-and-unbufferd-channel/hchan-struct.png)
 
-通道维护了指向接收方（ `recvq` ）和发送方（ `sendq` ）列表的指针，由链表 `waitq.sudog`表示 ，包含指向下一个元素的指针（next）和指向上一个元素的指针（previous），以及与处理 *接收方/发送方* 的 goroutine 相关的信息。有了这些信息，Go 程序就很容易知道，如果没有了发送方，通道就应该阻塞接收方，反之，没有了接收方，通道就应该阻塞发送方。
+通道维护了指向接收方（ `recvq` ）和发送方（ `sendq` ）列表的指针，由链表 `waitq.sudog` 表示 ，包含指向下一个元素的指针（next）和指向上一个元素的指针（previous），以及与处理 *接收方/发送方* 的 Goroutine 相关的信息。有了这些信息，Go 程序就很容易知道，如果没有了发送方，通道就应该阻塞接收方，反之，没有了接收方，通道就应该阻塞发送方。
 
 下面是我们前面示例的工作流:
 
 1. 通道是用一个空的接收方和发送方列表创建的。
-2. 第 16 行，我们的第一个 goroutine 将值 `foo` 发送到通道。
-3. 通道从（缓冲）池中获取一个结构体 `sudog`，用以表示发送者。这个结构将维护对 goroutine 和值 `foo` 的引用。
+2. 第 16 行，我们的第一个 Goroutine 将值 `foo` 发送到通道。
+3. 通道从（缓冲）池中获取一个结构体 `sudog`，用以表示发送者。这个结构将维护对 Goroutine 和值 `foo` 的引用。
 4. 这个发送者现在进入队列（enqueued ） `sendq` 。
 5. 由于“*chan send*”阻塞，goroutine 进入等待状态。
-6. 第 23 行，我们的第二个 goroutine 将读取来自通道的消息。
+6. 第 23 行，我们的第二个 Goroutine 将读取来自通道的消息。
 7. 通道将弹出 `sendq` 队列，以获取步骤 3 中的等待发送的结构体。
 8. 通道将使用 `memmove` 函数将发送方发送的值(封装装在 `sudog` 结构中)复制到读取的通道的变量。
-9. 现在，我们的第一个 goroutine 可以恢复在第 5 步，并将释放在第 3 步获得的 `sudog`。
+9. 现在，我们的第一个 Goroutine 可以恢复在第 5 步，并将释放在第 3 步获得的 `sudog`。
 
 正如我们在工作流中再次看到的，goroutine 必须切换到等待，直到接收器可用为止。但是，如果需要，这种阻塞行为可以通过缓冲通道避免。
 
@@ -90,14 +90,14 @@ func main() {
     var wg sync.WaitGroup
     wg.Add(2)
 
-    go func() {
+    Go func() {
         defer wg.Done()
 
         c <- `foo`
         c <- `bar`
     }()
 
-    go func() {
+    Go func() {
         defer wg.Done()
 
         time.Sleep(time.Second * 1)
@@ -109,7 +109,7 @@ func main() {
 }
 ```
 
-现在让我们根据这个例子分析结构`hchan`和与缓冲区相关的字段:
+现在让我们根据这个例子分析结构 `hchan` 和与缓冲区相关的字段:
 
 ![缓冲通道的 hchan 结构](https://raw.githubusercontent.com/studygolang/gctt-images2/master/buffered-and-unbufferd-channel/hchan%20structure%20with%20buffer%20attributes.png)
 
@@ -121,14 +121,14 @@ buffer（缓冲）由以下五个属性组成：
 * `sendx` 存储缓冲区中的位置，以便通道接收下一个元素
 * `recvx` 在缓冲区中存储通道返回的下一个元素的位置
 
-通过`sendx`和`recvx`，这个缓冲区就像一个循环队列:
+通过 `sendx` 和 `recvx`，这个缓冲区就像一个循环队列:
 
 ![通道结构中的循环队列](https://raw.githubusercontent.com/studygolang/gctt-images2/master/buffered-and-unbufferd-channel/circular%20queue%20in%20the%20channel%20struct.png)
 
 这个循环队列允许我们在缓冲区中维护一个顺序，而不需要在其中一个元素从缓冲区弹出时不断移动元素。
 
-正如我们在前一节中看到的那样，一旦达到缓冲区的上限，尝试在缓冲区中发送元素的 goroutine 将被移动到发送者列表中，并切换到等待状态。
-然后，一旦程序读取缓冲区，从缓冲区中返回位于 `recvx` 位置的元素，将释放等待的 goroutine ，它的值将被推入缓冲中。
+正如我们在前一节中看到的那样，一旦达到缓冲区的上限，尝试在缓冲区中发送元素的 Goroutine 将被移动到发送者列表中，并切换到等待状态。
+然后，一旦程序读取缓冲区，从缓冲区中返回位于 `recvx` 位置的元素，将释放等待的 Goroutine ，它的值将被推入缓冲中。
 这种属性使 通道有[FIFO(先进先出)](http://lsm6ds3%20fifo%20pattern/)的行为。
 
 ## 由于缓冲区大小不足造成的延迟
@@ -167,7 +167,7 @@ func benchmarkWithBuffer(b *testing.B, size int) {
         var wg sync.WaitGroup
         wg.Add(1)
 
-        go func() {
+        Go func() {
             defer wg.Done()
 
             for i := uint32(0); i < 1000; i++ {
@@ -179,7 +179,7 @@ func benchmarkWithBuffer(b *testing.B, size int) {
         var total uint32
         for w := 0; w < 5; w++ {
             wg.Add(1)
-            go func() {
+            Go func() {
                 defer wg.Done()
 
                 for {
@@ -203,10 +203,10 @@ func benchmarkWithBuffer(b *testing.B, size int) {
 
 ```sh
 name                                    time/op
-WithNoBuffer-8                          306µs ± 3%
-WithBufferSizeOf1-8                     248µs ± 1%
-WithBufferSizeEqualsToNumberOfWorker-8  183µs ± 4%
-WithBufferSizeExceedsNumberOfWorker-8   134µs ± 2%
+WithNoBuffer-8                          306 µ s ± 3%
+WithBufferSizeOf1-8                     248 µ s ± 1%
+WithBufferSizeEqualsToNumberOfWorker-8  183 µ s ± 4%
+WithBufferSizeExceedsNumberOfWorker-8   134 µ s ± 2%
 ```
 
 一个适当大小的缓冲区确实可以使您的应用程序更快！让我们跟踪分析基准测试，以确定延迟在哪里。

@@ -44,9 +44,9 @@ ETL 中有两个最重要的部分是提取（extracting）和加载（Load）�
 Variables:
 data chan
 Start:
-// a goroutine will parse the CSV and will send it to the channel
+// a Goroutine will parse the CSV and will send it to the channel
 ParseCSV(data<-)
-// a goroutine is started for each workers, defined as command line arguments
+// a Goroutine is started for each workers, defined as command line arguments
 For each worker in workers
     Start goroutine
         For each value in <-data

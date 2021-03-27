@@ -61,7 +61,7 @@
 
 ![Bar char of average number of GopherCoins spent per respondent](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/editor_improvements_means.svg)
 
-大多数受访者(63%)花费10-30% 的时间进行重构，这表明这是一项常见的任务，我们希望研究改进它的方法。这也解释了为什么重构支持是最受资助的编辑器改进之一。
+大多数受访者(63%)花费 10-30% 的时间进行重构，这表明这是一项常见的任务，我们希望研究改进它的方法。这也解释了为什么重构支持是最受资助的编辑器改进之一。
 
 ![Bar chart of time spent refactoring](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/refactor_time.svg)
 
@@ -75,23 +75,23 @@
 
 ![Bar chart of overall satisfaction on a 5 points scale from very dissatisfied to very satisfied](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/csat.svg)
 
-这是我们第三年提出“你推荐... ...”[网络推广分数](https://en.wikipedia.org/wiki/Net_Promoter)(NPS)的问题。今年我们的 NPS 结果是61(68% 的“推动者”减去6% 的“诋毁者”) ，与2019年和2018年统计数据相同。(GCTT 注：也就是说 68% 的人会推荐 Go 语言，而 6% 的人说 Go 不好之类的)
+这是我们第三年提出“你推荐... ...”[网络推广分数](https://en.wikipedia.org/wiki/Net_Promoter)(NPS)的问题。今年我们的 NPS 结果是 61(68% 的“推动者”减去 6% 的“诋毁者”) ，与 2019 年和 2018 年统计数据相同。(GCTT 注：也就是说 68% 的人会推荐 Go 语言，而 6% 的人说 Go 不好之类的)
 
 ![Stacked bar chart of promoters, passives, and detractors](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/nps.svg)
 
-与前几年一样，91% 的受访者表示他们更愿意在下一个新项目中使用 Go。89% 的人认为 Go 在他们的团队中表现良好。今年，我们看到越来越多的受访者认为 Go 对他们公司的成功至关重要，从2019年的59% 上升到2020年的66% 。在5000人以上的组织工作的受访者不太可能同意(63%) ，而在较小的组织工作的受访者更可能同意(73%)。（GCTT 注：看来小公司更认为 Go 对他们的成功很关键，比如国内的七牛？！）
+与前几年一样，91% 的受访者表示他们更愿意在下一个新项目中使用 Go。89% 的人认为 Go 在他们的团队中表现良好。今年，我们看到越来越多的受访者认为 Go 对他们公司的成功至关重要，从 2019 年的 59% 上升到 2020 年的 66% 。在 5000 人以上的组织工作的受访者不太可能同意(63%) ，而在较小的组织工作的受访者更可能同意(73%)。（GCTT 注：看来小公司更认为 Go 对他们的成功很关键，比如国内的七牛？！）
 
 ![Bar chart of agreement with statements I would prefer to use Go for my next project, Go is working well for me team, 89%, and Go is critical to my company's success](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/attitudes_yoy.svg)
 
-与去年一样，我们要求受访者根据满意度和重要性对 Go 开发的具体方向进行评级。使用云服务、调试和使用模块(去年被强调为改进的领域)的满意度有所提高，而大多数重要性得分保持不变。我们还介绍了一些新的主题: API 和 Web 框架。我们发现 web 框架的满意度低于其他领域(64%)。对于大多数当前用户来说，它并不是那么重要(只有28% 的受访者认为它非常重要) ，但是对于潜在的 Go 开发者来说，它可能是一个缺失的关键特性。
+与去年一样，我们要求受访者根据满意度和重要性对 Go 开发的具体方向进行评级。使用云服务、调试和使用模块(去年被强调为改进的领域)的满意度有所提高，而大多数重要性得分保持不变。我们还介绍了一些新的主题: API 和 Web 框架。我们发现 Web 框架的满意度低于其他领域(64%)。对于大多数当前用户来说，它并不是那么重要(只有 28% 的受访者认为它非常重要) ，但是对于潜在的 Go 开发者来说，它可能是一个缺失的关键特性。
 
-![Bar chart of satisfaction with aspects of Go from 2019 to 2020, showing highest satisfaction with build speed, reliability and using concurrency and lowest with web frameworks](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/feature_sat_yoy.svg)
+![Bar chart of satisfaction with aspects of Go from 2019 to 2020, showing highest satisfaction with build speed, reliability and using concurrency and lowest with Web frameworks](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/feature_sat_yoy.svg)
 
 81% 的受访者说他们觉得使用 Go 非常有效率。大型组织的受访者比小型组织的受访者更有可能感到极其富有成效。（GCTT 注：看来确实是一门面向大型工程的语言）
 
 ![Stacked bar chart of perceived productivity on 5 point scale from not all to extremely productive ](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/prod.svg)
 
-我们听说 Go 很容易变得高效。我们询问了那些觉得自己至少有一点生产力的受访者，他们花了多长时间才变得有生产力。93% 的人说他们花了不到一年的时间，大多数人在3个月内就感觉到有效率。（GCTT 注：这一定程度上还是说明 Go 简单，容易快速进行开发，提高效率）
+我们听说 Go 很容易变得高效。我们询问了那些觉得自己至少有一点生产力的受访者，他们花了多长时间才变得有生产力。93% 的人说他们花了不到一年的时间，大多数人在 3 个月内就感觉到有效率。（GCTT 注：这一定程度上还是说明 Go 简单，容易快速进行开发，提高效率）
 
 ![Bar chart of length of time before feeling productive](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/prod_time.svg)
 
@@ -107,11 +107,11 @@
 
 ## 05 用 Go 干什么
 
-构建 API/RPC 服务(74%)和 cli (65%)仍然是 Go 最常见的用途。与去年相比，我们没有看到任何重大变化，当时我们在选项排序中引入了随机化。(在2019年之前，名单开头的选项被不成比例地选中。)我们还根据组织规模对这一问题进行了分析，发现受访者在大型企业或者小型组织中使用 Go 的情况类似，尽管大型组织使用返回 HTML 的 Go for web 服务的可能性有所降低。（GCTT 注：竟然有 8% 的人用 Go 写桌面 GUI 应用？厉害了）
+构建 API/RPC 服务(74%)和 cli (65%)仍然是 Go 最常见的用途。与去年相比，我们没有看到任何重大变化，当时我们在选项排序中引入了随机化。(在 2019 年之前，名单开头的选项被不成比例地选中。)我们还根据组织规模对这一问题进行了分析，发现受访者在大型企业或者小型组织中使用 Go 的情况类似，尽管大型组织使用返回 HTML 的 Go for Web 服务的可能性有所降低。（GCTT 注：竟然有 8% 的人用 Go 写桌面 GUI 应用？厉害了）
 
-![Bar chart of Go use cases from 2019 to 2020 including API or RPC services, CLIs, frameworks, web services, automation, agents and daemons, data processing, GUIs, games and mobile apps](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/app_yoy.svg)
+![Bar chart of Go use cases from 2019 to 2020 including API or RPC services, CLIs, frameworks, Web services, automation, agents and daemons, data processing, GUIs, games and mobile apps](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/app_yoy.svg)
 
-今年，我们更好地区分了调查者在业余时间使用 Go 和在工作中使用 Go 开发的不同软件。虽然返回 HTML 的 web 服务是第四个最常见的用例，但这是由于与工作无关的使用。与返回 HTML 的 web 服务相比，更多的受访者使用 Go 进行自动化/脚本、代理和守护进程以及工作数据处理。很大一部分最不常用的应用(桌面/GUI 应用、游戏和移动应用)是在工作之外编写的。（GCTT 注：看来 GUI 之类的，还是个人爱好的尝试）
+今年，我们更好地区分了调查者在业余时间使用 Go 和在工作中使用 Go 开发的不同软件。虽然返回 HTML 的 Web 服务是第四个最常见的用例，但这是由于与工作无关的使用。与返回 HTML 的 Web 服务相比，更多的受访者使用 Go 进行自动化/脚本、代理和守护进程以及工作数据处理。很大一部分最不常用的应用(桌面/GUI 应用、游戏和移动应用)是在工作之外编写的。（GCTT 注：看来 GUI 之类的，还是个人爱好的尝试）
 
 ![Stacked bar charts of proportion of use case is at work, outside of work, or both ](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/app_context.svg)
 
@@ -137,7 +137,7 @@
 
 ## 06 Module（模块）
 
-今年我们发现几乎所有人都采用了 Go 模块，并且只使用模块进行包管理的受访者的比例显著增加。96% 的受访者表示他们正在使用模块管理包，高于去年的 89% 。87% 的受访者表示，他们只使用模块管理包，而去年这一比例为71% 。同时，其他软件包管理工具的使用也在减少。（GCTT 注：这调查感觉意义不大，这是必然的，官方大力推广，可不用嘛）
+今年我们发现几乎所有人都采用了 Go 模块，并且只使用模块进行包管理的受访者的比例显著增加。96% 的受访者表示他们正在使用模块管理包，高于去年的 89% 。87% 的受访者表示，他们只使用模块管理包，而去年这一比例为 71% 。同时，其他软件包管理工具的使用也在减少。（GCTT 注：这调查感觉意义不大，这是必然的，官方大力推广，可不用嘛）
 
 ![Bar chart of methods used for Go package management](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/modules_adoption_yoy.svg)
 
@@ -153,7 +153,7 @@
 
 官方文档中问题最多的领域是使用模块和 CLI 开发，20% 的受访者认为模块文档稍微有点帮助或者根本没有帮助，16% 的受访者认为有关 CLI 开发的文档有帮助。（GCTT 注：所以现在官网上增加了一个模块相关的教程）
 
-![Stacked bar charts on helpfulness of specific areas of documentation including using modules, CLI tool development, error handling, web service development, data access, concurrency and file input/output, rated on a 5 point scale from not at all to very helpful](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/doc_helpfulness.svg)
+![Stacked bar charts on helpfulness of specific areas of documentation including using modules, CLI tool development, error handling, Web service development, data access, concurrency and file input/output, rated on a 5 point scale from not at all to very helpful](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/doc_helpfulness.svg)
 
 ## 08 云上 Go
 
@@ -164,7 +164,7 @@
 
 ![Bar chart of cloud providers used to deploy Go programs where AWS is the most common at 44%](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/cloud_yoy.svg)
 
-部署到 AWS 和 Azure 的受访者发现，部署到管理的 Kubernetes 平台的受访者增加了，目前分别为 40% 和 54% 。发现将 Go 程序部署到 VMs 的用户比例显著下降，容器使用率从 18% 增长到 25% 。与此同时，GCP (已经有很高比例的受访者报告使用管理的 Kubernetes)部署到 serverless 云的比例从 10% 增长到17% 。
+部署到 AWS 和 Azure 的受访者发现，部署到管理的 Kubernetes 平台的受访者增加了，目前分别为 40% 和 54% 。发现将 Go 程序部署到 VMs 的用户比例显著下降，容器使用率从 18% 增长到 25% 。与此同时，GCP (已经有很高比例的受访者报告使用管理的 Kubernetes)部署到 serverless 云的比例从 10% 增长到 17% 。
 
 ![Bar charts of proportion of services being used with each provider](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/cloud_services_yoy.svg)
 
@@ -188,7 +188,7 @@
 
 ![Bar chart of missing critical features](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/missing_features.svg)
 
-受访者在使用 Go 时报告的最大挑战仍然是 Go 缺乏泛型(18%) ，而「模块/包管理」和「学习曲线/最佳实践/文档」方面的问题各占13% 。
+受访者在使用 Go 时报告的最大挑战仍然是 Go 缺乏泛型(18%) ，而「模块/包管理」和「学习曲线/最佳实践/文档」方面的问题各占 13% 。
 
 ![Bar chart of biggest challenges respondents face when using Go](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/biggest_challenge.svg)
 
@@ -202,7 +202,7 @@
 
 ![Bar chart of respondents participation in online channels and events](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/events.svg)
 
-我们发现 12% 的受访者认同传统上代表性不足的群体(例如，种族，性别认同，等等) ，与2019年相同，2% 的受访者认同女性，少于2019年(3%)。认同代表性不足群体的受访者比不认同代表性不足群体的受访者对“我在 Go 社区感到受欢迎”这句话的不同意率更高(10% 对4%)。这些问题使我们能够衡量社区的多样性，并突出外联和增长的机会。
+我们发现 12% 的受访者认同传统上代表性不足的群体(例如，种族，性别认同，等等) ，与 2019 年相同，2% 的受访者认同女性，少于 2019 年(3%)。认同代表性不足群体的受访者比不认同代表性不足群体的受访者对“我在 Go 社区感到受欢迎”这句话的不同意率更高(10% 对 4%)。这些问题使我们能够衡量社区的多样性，并突出外联和增长的机会。
 
 ![Bar chart of underrepresented groups](https://raw.githubusercontent.com/studygolang/gctt-images/master/2020-go-survey/underrep.svg)
 

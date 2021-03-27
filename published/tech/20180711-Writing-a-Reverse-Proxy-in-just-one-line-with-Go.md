@@ -140,7 +140,7 @@ type requestPayloadStruct struct {
 	ProxyCondition string `json:"proxy_condition"`
 }
 
-// Get a json decoder for a given requests body
+// Get a JSON decoder for a given requests body
 func requestBodyDecoder(request *http.Request) *json.Decoder {
 	// Read body to buffer
 	body, err := ioutil.ReadAll(request.Body)
@@ -149,7 +149,7 @@ func requestBodyDecoder(request *http.Request) *json.Decoder {
 		panic(err)
 	}
 
-	// Because go lang is a pain in the ass if you read the body then any susequent calls
+	// Because Go lang is a pain in the ass if you read the body then any susequent calls
 	// are unable to read the body again....
 	request.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 
@@ -246,7 +246,7 @@ func serveReverseProxy(target string, res http.ResponseWriter, req *http.Request
 	req.Header.Set("X-Forwarded-Host", req.Header.Get("Host"))
 	req.Host = url.Host
 
-	// Note that ServeHttp is non blocking and uses a go routine under the hood
+	// Note that ServeHttp is non blocking and uses a Go routine under the hood
 	proxy.ServeHTTP(res, req)
 }
 
@@ -265,7 +265,7 @@ func handleRequestAndRedirect(res http.ResponseWriter, req *http.Request) {
 
 好了，现在启动我们的反向代理程序让其监听 `1330` 端口。让其他的 3 个简单的服务分别监听 `1331–1333` 端口（在各自的终端中）。
 
-1. `source .env && go install && $GOPATH/bin/reverse-proxy-demo`
+1. `source .env && Go install && $GOPATH/bin/reverse-proxy-demo`
 2. `http-server -p 1331`
 3. `http-server -p 1332`
 4. `http-server -p 1333`

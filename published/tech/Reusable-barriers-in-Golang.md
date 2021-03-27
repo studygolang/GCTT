@@ -6,7 +6,7 @@
 
 ## 问题
 
-现在假设我们我们有一堆 workers。为了充分发挥 CPU 多核的能力，我们让每个 worker 运行在单独的 goroutine 中：
+现在假设我们我们有一堆 workers。为了充分发挥 CPU 多核的能力，我们让每个 worker 运行在单独的 Goroutine 中：
 
 ```go
 for i := 0; i < workers; i++ {
@@ -24,7 +24,7 @@ func worker() {
 }
 ```
 
-每次 job 前都需要在所有的 worker 上同步地先进行一次准备 bootstrap 的过程。也就是说，每个 worker 在执行 job 前，需要等待所有其他 worker 都完成 bootstrap 的准备。
+每次 job 前都需要在所有的 worker 上同步地先进行一次准备 Bootstrap 的过程。也就是说，每个 worker 在执行 job 前，需要等待所有其他 worker 都完成 Bootstrap 的准备。
 
 ```go
 func worker() {
@@ -36,7 +36,7 @@ func worker() {
 }
 ```
 
-还有件事。如果至少有一个 worker 仍在执行 job，则所有 worker 的下一次的 bootstrap 都不能开始。换句话说，每次的 bootstrap 都是为紧接着的 job 部分做准备的，所以不能在上一次的 job 尚未结束之前就开始下一次的 bootstrap：
+还有件事。如果至少有一个 worker 仍在执行 job，则所有 worker 的下一次的 Bootstrap 都不能开始。换句话说，每次的 Bootstrap 都是为紧接着的 job 部分做准备的，所以不能在上一次的 job 尚未结束之前就开始下一次的 bootstrap：
 
 ```go
 func worker() {
@@ -49,7 +49,7 @@ func worker() {
 }
 ```
 
-我们的 bootstrap 部分内容为增长一个共享的计数器。job 部分为等待一段时间并打印计数器的内容：
+我们的 Bootstrap 部分内容为增长一个共享的计数器。job 部分为等待一段时间并打印计数器的内容：
 
 ```go
 type counter struct {
@@ -396,7 +396,7 @@ func (b *Barrier) After() {
 
 via: https://medium.com/golangspec/reusable-barriers-in-golang-156db1f75d0b
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[alfred-zhong](https://github.com/alfred-zhong)
 校对：[rxcai](https://github.com/rxcai)
 

@@ -43,10 +43,10 @@ $ sed -i '' 's/^Libs: .*/& -lblas -llapack/' /usr/local/lib/pkgconfig/dlib-1.pc
 
 ## 开始
 
-我们首先需要下载 `kagami/go-face 包`，可以使用如下 `go get` 命令：
+我们首先需要下载 `kagami/go-face 包 `，可以使用如下 `go get` 命令：
 
 ```
-$ go get -u github.com/Kagami/go-face
+$ Go get -u github.com/Kagami/go-face
 ```
 
 在你的 GOPATH 目录中创建一个名为 `go-face-recognition` 的新目录。在此目录中创建一个名为 `main.go` 的文件，这是我们所有源码所在位置。
@@ -54,7 +54,7 @@ $ go get -u github.com/Kagami/go-face
 完成操作后，你需要从 TutorialEdge/ go-face-recognition-tutorial repo 的 `image/` 目录中获取文件。最简单的方法是 clone repo 到另一个目录，只需复制图片目录到当前的工作目录
 
 ```
-$ git clone https://github.com/TutorialEdge/go-face-recognition-tutorial.git
+$ Git clone https://github.com/TutorialEdge/go-face-recognition-tutorial.git
 ```
 
 一旦成功 clone 后，我们就有了启动人脸识别的所需的 `.dat` 文件。你应该还看到一些其他包含复仇者联盟面孔的 `.jpg` 文件列表。
@@ -139,7 +139,7 @@ func main() {
 当我们运行它时，应该会看到以下输出：
 
 ```
-$ go run main.go
+$ Go run main.go
 Facial Recognition System v0.01
 Recognizer Initialized
 Number of Faces in Image:  1
@@ -259,7 +259,7 @@ fmt.Println(labels[avengerID])
 当你一起运行时，你应该会看到以下输出：
 
 ```
-$ go run main.go
+$ Go run main.go
 Facial Recognition System v0.01
 Recognizer Initialized
 Number of Faces in Image:  4

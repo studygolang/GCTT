@@ -48,7 +48,7 @@
 - `200`：HTTP 状态码。200 代表请求被成功处理。
 - `198`：响应体的大小。
 - `"http://www.referrer.com/bannerad/ba_intro.htm"` ：引荐来源（referer）。
-- `"Mozilla/4.01 (Macintosh; I; PPC)"` ：应该认为用户代理标志 HTTP 客户端（极大程度上是一个 web 浏览器）
+- `"Mozilla/4.01 (Macintosh; I; PPC)"` ：应该认为用户代理标志 HTTP 客户端（极大程度上是一个 Web 浏览器）
 
 我们可以记录更多的信息，或者选择不去记录上面的某些信息。
 

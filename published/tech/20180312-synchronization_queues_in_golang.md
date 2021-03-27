@@ -13,10 +13,10 @@
 ```go
 func main() {
     for i := 0; i < 10; i++ {
-        go programmer()
+        Go programmer()
     }
     for i := 0; i < 5; i++ {
-        go tester()
+        Go tester()
     }
     select {} // 漫长的工作日...
 }
@@ -60,7 +60,7 @@ func pingPong() {
 这个程序的输出类似这样：
 
 ```bash
-> go run pingpong.go
+> Go run pingpong.go
 Tester starts
 Programmer starts
 Programmer starts
@@ -127,10 +127,10 @@ func programmer(q *queue.Queue) {
 func main() {
     q := queue.New()
     for i := 0; i < 10; i++ {
-        go programmer(q)
+        Go programmer(q)
     }
     for i := 0; i < 5; i++ {
-        go tester(q)
+        Go tester(q)
     }
     select {}
 }
@@ -199,7 +199,7 @@ func (q *Queue) EndP() {
 
 程序员和测试员通过非缓冲的 channel `<-q.queueP` 或者 `<-q.queueT` 来等待对手。
 
-从这些 channel 接收数据时，如果此时没有可配对的对手，那么当前的 goroutine 会被阻塞。
+从这些 channel 接收数据时，如果此时没有可配对的对手，那么当前的 Goroutine 会被阻塞。
 
 我们来分析一下给测试员调用的 `StartT` 函数：
 
@@ -219,7 +219,7 @@ func (q* Queue) StartT() {
 
 如果 `numP` 大于 0（表示当前至少有一个程序员在等待加入游戏），那么正在等待中的程序员的数量就会减一，并且有一个正在等待中的程序员批准加入游戏（`q.queueP <- 1`）。有趣的是在这个过程中 mutex 不会被释放掉，这时它的职能就是作为一个允许进入乒乓球桌的令牌。
 
-如果当前没有正在等待的程序员，那么 `numT`（等待中的测试员的数量）将会加一，并且当前的 goroutine 会被阻塞在 `q.queueT`。
+如果当前没有正在等待的程序员，那么 `numT`（等待中的测试员的数量）将会加一，并且当前的 Goroutine 会被阻塞在 `q.queueT`。
 
 `StartP` 函数基本上是一样的，只是它是给程序员调用的。
 
@@ -264,7 +264,7 @@ func New() *Queue {
         queueP: make(chan int),
         queueT: make(chan int),
     }
-    go func() {
+    Go func() {
         for {
             select {
             case n := <-q.msg:
@@ -307,7 +307,7 @@ func (q *Queue) EndP() {
 }
 ```
 
-我们会有个专门的中央协调器在一个独立的 goroutine 里面运行，它负责协调整个过程。协调器通过 `msg` channel 获取所有想要玩乒乓球的和刚玩完乒乓球的员工的信息。收到消息时，调度器的状态将会更新：
+我们会有个专门的中央协调器在一个独立的 Goroutine 里面运行，它负责协调整个过程。协调器通过 `msg` channel 获取所有想要玩乒乓球的和刚玩完乒乓球的员工的信息。收到消息时，调度器的状态将会更新：
 
 - 等待中的程序员或者测试员的数量会增加。
 - 正在游戏的员工的信息会被更新。
@@ -318,7 +318,7 @@ func (q *Queue) EndP() {
 if q.waitP > 0 && q.waitT > 0 && !q.playP && !q.playT {
 ```
 
-如果相应的状态都已经更新了的话，那么一个代表程序员的 goroutine 和一个代表测试员的 goroutine 将会被唤醒。
+如果相应的状态都已经更新了的话，那么一个代表程序员的 Goroutine 和一个代表测试员的 Goroutine 将会被唤醒。
 
 我们在这个方案中没有使用 mutex，而是使用了一个独立的 goroutine，它通过 channel 与外部世界通讯，这让我们的程序成为一个更”地道“（符合 Go 语言风格）的 Go 语言程序。
 
@@ -328,7 +328,7 @@ if q.waitP > 0 && q.waitT > 0 && !q.playP && !q.playT {
 
 ## 参考资料
 
-- “The Little Book of Semaphores” by Allen B. Downey（译注：[PDF版地址](http://greenteapress.com/semaphores/LittleBookOfSemaphores.pdf)）
+- “The Little Book of Semaphores” by Allen B. Downey（译注：[PDF 版地址](http://greenteapress.com/semaphores/LittleBookOfSemaphores.pdf)）
 - https://medium.com/golangspec/reusable-barriers-in-golang-156db1f75d0b (译文： https://studygolang.com/articles/12718)
 - https://blog.golang.org/share-memory-by-communicating
 
@@ -336,7 +336,7 @@ if q.waitP > 0 && q.waitT > 0 && !q.playP && !q.playT {
 
 via: https://medium.com/golangspec/synchronization-queues-in-golang-554f8e3a31a4
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[Alex-liutao](https://github.com/Alex-liutao)
 校对：[Unknwon](https://github.com/Unknwon)
 

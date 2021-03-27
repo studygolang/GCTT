@@ -155,7 +155,7 @@ func (f doerFunc) Do() (int, error) {
 }
 ```
 
-也可以和一个便捷的 [vim 插件](https://github.com/romanyx/vim-go-adapt) 配合使用，可以再 vim 中直接调用该工具。
+也可以和一个便捷的 [vim 插件](https://github.com/romanyx/vim-go-adapt) 配合使用，可以再 VIM 中直接调用该工具。
 
 ![use in vim](https://raw.githubusercontent.com/studygolang/gctt-images/master/mock-interface/1_PCMcTGnUNvjP0hooLXYBOw.gif)
 

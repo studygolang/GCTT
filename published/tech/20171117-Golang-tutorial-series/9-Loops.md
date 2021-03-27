@@ -191,7 +191,7 @@ for {
 }
 ```
 
-下一个程序就会一直打印`Hello World`不会停止。
+下一个程序就会一直打印 `Hello World` 不会停止。
 
 ```go
 package main

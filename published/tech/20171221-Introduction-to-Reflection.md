@@ -4,7 +4,7 @@
 
 反射是指一门编程语言可以在运行时( runtime )检查其数据结构的能力。利用 Go 语言的反射机制，可以获取结构体的公有字段以及私有字段的标签名，甚至一些其他比较敏感的信息。
 
-众所周知Go标准库中有一些包利用反射机制来实现它们的功能。我们经常会以  [encoding/json](https://golang.org/pkg/encoding/json/) 包为例，该包常用来把 JSON 文档解析为结构体，同时也可以把结构体编码为JSON格式的字符串。
+众所周知 Go 标准库中有一些包利用反射机制来实现它们的功能。我们经常会以  [encoding/json](https://golang.org/pkg/encoding/json/) 包为例，该包常用来把 JSON 文档解析为结构体，同时也可以把结构体编码为 JSON 格式的字符串。
 
 本文中我想给大家介绍一个略微有点不一样的例子，该例子是我最近在做的一个聊天项目的消息体，该消息体使用结构体来表示：
 
@@ -130,4 +130,4 @@ via：https://scene-si.org/2017/12/21/introduction-to-reflection/
 译者：[yzhfd](https://github.com/yzhfd)
 校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

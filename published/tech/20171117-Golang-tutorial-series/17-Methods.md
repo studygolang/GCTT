@@ -1,6 +1,6 @@
 已发布：https://studygolang.com/articles/12264
 
-# 第17部分：方法
+# 第 17 部分：方法
 
 欢迎来到 [Golang 系列教程](https://studygolang.com/subject/2) 的第 17 个教程。
 
@@ -99,7 +99,7 @@ func main() {
 
 既然我们可以使用函数写出相同的程序，那么为什么我们需要方法？这有着几个原因，让我们一个个的看看。
 
-- [ Go 不是纯粹的面向对象编程语言](https://golang.org/doc/faq#Is_Go_an_object-oriented_language)，而且Go不支持类。因此，基于类型的方法是一种实现和类相似行为的途径。
+- [ Go 不是纯粹的面向对象编程语言](https://golang.org/doc/faq#Is_Go_an_object-oriented_language)，而且 Go 不支持类。因此，基于类型的方法是一种实现和类相似行为的途径。
 
 - 相同的名字的方法可以定义在不同的类型上，而相同名字的函数是不被允许的。假设我们有一个 `Square` 和 `Circle` 结构体。可以在 `Square` 和 `Circle` 上分别定义一个 `Area` 方法。见下面的程序。
 
@@ -209,7 +209,7 @@ Employee age before change: 50
 Employee age after change: 51
 ```
 
-在上面程序的第 36 行，我们使用 `(&e).changeAge(51)` 来调用 `changeAge` 方法。由于 `changeAge` 方法有一个指针接收器，所以我们使用 `(&e)` 来调用这个方法。其实没有这个必要，Go语言让我们可以直接使用 `e.changeAge(51)`。`e.changeAge(51)` 会自动被Go语言解释为 `(&e).changeAge(51)`。
+在上面程序的第 36 行，我们使用 `(&e).changeAge(51)` 来调用 `changeAge` 方法。由于 `changeAge` 方法有一个指针接收器，所以我们使用 `(&e)` 来调用这个方法。其实没有这个必要，Go 语言让我们可以直接使用 `e.changeAge(51)`。`e.changeAge(51)` 会自动被 Go 语言解释为 `(&e).changeAge(51)`。
 
 下面的[程序](https://play.golang.org/p/nnXBsR3Uc8)重写了，使用 `e.changeAge(51)` 来代替 `(&e).changeAge(51)`，它输出相同的结果。
 
@@ -314,7 +314,7 @@ Full address: Los Angeles, California
 
 ## 在方法中使用值接收器 与 在函数中使用值参数
 
-这个话题很多Go语言新手都弄不明白。我会尽量讲清楚。
+这个话题很多 Go 语言新手都弄不明白。我会尽量讲清楚。
 
 当一个函数有一个值参数，它只能接受一个值参数。
 
@@ -369,7 +369,7 @@ func main() {
 
 在第 28 行，我们创建了一个指向 `r` 的指针 `p`。如果我们试图把这个指针传递到只能接受一个值参数的函数 area，编译器将会报错。所以我把代码的第 33 行注释了。如果你把这行的代码注释去掉，编译器将会抛出错误 `compilation error, cannot use p (type *rectangle) as type rectangle in argument to area.`。这将会按预期抛出错误。
 
-现在到了棘手的部分了，在第35行的代码 `p.area()` 使用指针接收器 `p` 调用了只接受一个值接收器的方法 `area`。这是完全有效的。原因是当 `area` 有一个值接收器时，为了方便Go语言把 `p.area()` 解释为 `(*p).area()`。
+现在到了棘手的部分了，在第 35 行的代码 `p.area()` 使用指针接收器 `p` 调用了只接受一个值接收器的方法 `area`。这是完全有效的。原因是当 `area` 有一个值接收器时，为了方便 Go 语言把 `p.area()` 解释为 `(*p).area()`。
 
 该程序将会输出：
 
@@ -430,7 +430,7 @@ func main() {
 
 在被注释掉的第 33 行，我们尝试通过传入值参数 `r` 调用函数 `perimeter`。这是不被允许的，因为函数的指针参数不接受值参数。如果你把这行的代码注释去掉并把程序运行起来，编译器将会抛出错误 `main.go:33: cannot use r (type rectangle) as type *rectangle in argument to perimeter.`。
 
-在第 35 行，我们通过值接收器 `r` 来调用有指针接收器的方法 `perimeter`。这是被允许的，为了方便Go语言把代码 `r.perimeter()` 解释为 `(&r).perimeter()`。该程序输出：
+在第 35 行，我们通过值接收器 `r` 来调用有指针接收器的方法 `perimeter`。这是被允许的，为了方便 Go 语言把代码 `r.perimeter()` 解释为 `(&r).perimeter()`。该程序输出：
 
 ```
 perimeter function output: 30
@@ -480,13 +480,13 @@ func main() {
 
 [在线运行程序](https://play.golang.org/p/sTe7i1qAng)
 
-在上面程序的第5行，我们为 `int` 创建了一个类型别名 `myInt`。在第7行，我们定义了一个以 `myInt` 为接收器的的方法 `add`。
+在上面程序的第 5 行，我们为 `int` 创建了一个类型别名 `myInt`。在第 7 行，我们定义了一个以 `myInt` 为接收器的的方法 `add`。
 
 该程序将会打印出 `Sum is 15`。
 
 我已经创建了一个程序，包含了我们迄今为止所讨论的所有概念，详见[github](https://github.com/golangbot/methods)。
 
-这就是Go中的方法。祝你有美好的一天。
+这就是 Go 中的方法。祝你有美好的一天。
 
 **上一教程 - [结构体](https://studygolang.com/articles/12263)**
 

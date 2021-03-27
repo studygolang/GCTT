@@ -149,7 +149,7 @@ func getCapitalCity(country string) string {
 *[Synchronization](https://medium.com/tag/synchronization?source=post)*
 *[Software Development](https://medium.com/tag/software-development?source=post)*
 
-**喜欢读吗？给 Michał Łowicki 一些掌声吧。**
+**喜欢读吗？给 Micha ł Ł owicki 一些掌声吧。**
 
 简单鼓励下还是大喝采，根据你对这篇文章的喜欢程度鼓掌吧。
 
@@ -157,7 +157,7 @@ func getCapitalCity(country string) string {
 
 via: https://medium.com/golangspec/synchronized-goroutines-part-iii-c60bcfeefd2a
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[krystollia](https://github.com/krystollia)
 校对：[polaris1119](https://github.com/polaris1119)
 

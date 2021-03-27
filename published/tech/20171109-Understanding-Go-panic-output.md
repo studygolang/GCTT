@@ -47,7 +47,7 @@ panic 错误输出的第二行给出有关触发这个 panic 的 UNIX 信号的�
 
 `addr` 映射到 `siginfo.si_addr`，其值是 `0x30`，这并不是一个有效的内存地址。
 
-`pc` 是程序计数器，我们可以使用它来找出程序崩溃的地方，但是我们通常没必要这么做，因为一个 goroutine 跟踪有如下信息。
+`pc` 是程序计数器，我们可以使用它来找出程序崩溃的地方，但是我们通常没必要这么做，因为一个 Goroutine 跟踪有如下信息。
 
 ```
 goroutine 58 [running]:
@@ -61,7 +61,7 @@ created by main.runServer
 
 在这个深层次的栈帧中，第一个导致 panic 发生的（文件）会先列出。在这个例子中，是 `resp.go` 文件的 108 行。
 
-在这个 goroutine 回溯信息里，吸引我眼球的东西是函数 `UpdateResponse` 和 `PrefetchLoop` 的参数, 因为该数字与函数签名不匹配。
+在这个 Goroutine 回溯信息里，吸引我眼球的东西是函数 `UpdateResponse` 和 `PrefetchLoop` 的参数, 因为该数字与函数签名不匹配。
 
 ```go
 func UpdateResponse(c Client, id string, version int, resp *Response, data []byte) error
@@ -124,7 +124,7 @@ if resp.StatusCode != http.StatusOK {
 }
 ```
 
-如果 `Wrapf()` 的第一个参数传入为 `nil`, 则它的返回值为 `nil`。当这个 HTTP 状态码不是 `http.StatusOK`，这个函数将错误的返回 `nil，nil，nil`，因为一个非 200 的状态码不是一个错误，因此 `err` 的值为 `nil`。将 `errors.Wrapf()` 调用换成`errors.Errorf()` 可以修复这个 bug。
+如果 `Wrapf()` 的第一个参数传入为 `nil`, 则它的返回值为 `nil`。当这个 HTTP 状态码不是 `http.StatusOK`，这个函数将错误的返回 `nil，nil，nil`，因为一个非 200 的状态码不是一个错误，因此 `err` 的值为 `nil`。将 `errors.Wrapf()` 调用换成 `errors.Errorf()` 可以修复这个 bug。
 
 理解并且结合上下文语境中看 panic 输出可以更容易的追踪到错误！希望这些信息日后对你有用。
 

@@ -46,14 +46,14 @@ func main() {
 
 ## 使用 `Alice` 来管理我们的中间件
 
-如果您使用网络服务器软件包，[中间件模式](https://en.wikipedia.org/wiki/Middleware)非常常见。 如果您还没有看到它，您应该在 201 5年 Golang UK Conference 上观看Mat Ryer 的视频，了解中间件的强大功能。([完整的博客文章在这里](https://medium.com/@matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun-4375c1246e81))
+如果您使用网络服务器软件包，[中间件模式](https://en.wikipedia.org/wiki/Middleware)非常常见。 如果您还没有看到它，您应该在 201 5 年 Golang UK Conference 上观看 Mat Ryer 的视频，了解中间件的强大功能。([完整的博客文章在这里](https://medium.com/@matryer/writing-middleware-in-golang-and-how-go-makes-it-so-much-fun-4375c1246e81))
 
 视频链接：https://youtu.be/tIm8UkSf6RA
 
 另一篇关于中间件模式的文章[http://www.alexedwards.net/blog/making-and-using-middleware](http://www.alexedwards.net/blog/making-and-using-middleware)
 正如作者的描述([Github](https://github.com/justinas/alice)):
 
-> `Alice` 提供了一种便捷的方式来链接您的HTTP中间件功能和应用程序处理程序。
+> `Alice` 提供了一种便捷的方式来链接您的 HTTP 中间件功能和应用程序处理程序。
 
 简单说，它把
 
@@ -119,7 +119,7 @@ Alice 使中间件无处不在！
 
 ## HTTP 服务器不错，但 HTTPS 服务器更好！
 
-使用 `Let's Encrypt` 服务,简单快捷的创建一个安全的HTTP服务器 。 `Let's Encrypt` 使用 [ACME协议](https://en.wikipedia.org/wiki/Automated_Certificate_Management_Environment) 来验证您是否控制指定的域名并向您颁发证书。 这就是所谓的认证，是的，有一个自动认证软件包：[acme / autocert](https://godoc.org/golang.org/x/crypto/acme/autocert)
+使用 `Let's Encrypt` 服务,简单快捷的创建一个安全的 HTTP 服务器 。 `Let's Encrypt` 使用 [ACME 协议](https://en.wikipedia.org/wiki/Automated_Certificate_Management_Environment) 来验证您是否控制指定的域名并向您颁发证书。 这就是所谓的认证，是的，有一个自动认证软件包：[acme / autocert](https://godoc.org/golang.org/x/crypto/acme/autocert)
 
 ```go
 m := autocert.Manager{

@@ -2,7 +2,7 @@
 
 # 使用 defer 时可能遇到的若干陷阱
 
-go 的 defer 语句对改善代码可读性起了很大作用。但是，某些情况下 defer 的行为很容易引起混淆，并且难以快速理清。尽管作者已经使用 go 两年多了，依然会被 defer 弄得挠头不已。我的计划是把过去曾困惑过我的一系列行为汇总起来，作为对自己的警示。
+go 的 defer 语句对改善代码可读性起了很大作用。但是，某些情况下 defer 的行为很容易引起混淆，并且难以快速理清。尽管作者已经使用 Go 两年多了，依然会被 defer 弄得挠头不已。我的计划是把过去曾困惑过我的一系列行为汇总起来，作为对自己的警示。
 
 ## defer 的作用域是一个函数，不是一个语句块
 
@@ -136,7 +136,7 @@ Success: false, Latency: 0s
 
 ## 结论
 
-如果你使用 go 的时间足够久，那么这些可能都算不上 “陷阱” 。但对新手来说， defer 语句的很多地方都不符合 [最少吃惊原则](https://en.wikipedia.org/wiki/Principle_of_least_astonishment) 。还有 [更](http://devs.cloudimmunity.com/gotchas-and-common-mistakes-in-go-golang/) [多](https://studygolang.com/articles/12061) [地](https://studygolang.com/articles/12136) [方](https://studygolang.com/articles/12319) 深入研究了使用 go 时可能遇到的常见失误。欢迎阅读。
+如果你使用 Go 的时间足够久，那么这些可能都算不上 “陷阱” 。但对新手来说， defer 语句的很多地方都不符合 [最少吃惊原则](https://en.wikipedia.org/wiki/Principle_of_least_astonishment) 。还有 [更](http://devs.cloudimmunity.com/gotchas-and-common-mistakes-in-go-golang/) [多](https://studygolang.com/articles/12061) [地](https://studygolang.com/articles/12136) [方](https://studygolang.com/articles/12319) 深入研究了使用 Go 时可能遇到的常见失误。欢迎阅读。
 
 ---
 

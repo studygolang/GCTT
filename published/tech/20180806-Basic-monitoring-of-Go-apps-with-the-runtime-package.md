@@ -8,7 +8,7 @@
 
 ## Goroutines
 
-goroutine 是 Go 的调度管理器为我们准备的非常轻量级的线程。在任何代码中可能会出现的一个典型问题被称为“ goroutines 泄露”。这个问题的原因有很多种，如忘记设置默认的 http 请求超时，SQL 超时，缺乏对上下文包取消的支持，向已关闭的通道发数据等。当这个问题发生时，一个 goroutine 可能无限期的存活，并且永远不释放它所使用的资源。
+goroutine 是 Go 的调度管理器为我们准备的非常轻量级的线程。在任何代码中可能会出现的一个典型问题被称为“ goroutines 泄露”。这个问题的原因有很多种，如忘记设置默认的 http 请求超时，SQL 超时，缺乏对上下文包取消的支持，向已关闭的通道发数据等。当这个问题发生时，一个 Goroutine 可能无限期的存活，并且永远不释放它所使用的资源。
 
 我们可能会对 [runtime.NumGoroutine() int](https://golang.org/pkg/runtime/#NumGoroutine) 这个很基本当函数感兴趣，它会返回当前存在的 goroutines 数量。我们只要打印这个数字并在一段时间内检查它，就可以合理的确认我们可能 goroutines 泄漏，然后调查这些问题。
 
@@ -134,12 +134,12 @@ BenchmarkStringReverseBetter-4            775 ns/op             480 B/op        
 + TotalAlloc -在堆中累计分配最大字节数（不会减少），
 + Sys -从系统获得的总内存，
 + Mallocs 和 Frees - 分配，释放和存活对象数（mallocs - frees），
-+ PauseTotalNs -从应用开始总GC暂停，
++ PauseTotalNs -从应用开始总 GC 暂停，
 + NumGC - GC 循环完成数
 
 ## 方法
 
-因此，我们开始的前提是，我们不希望使用外部服务来提供简单的应用程序监控。我的目标是每隔一段时间将收集到的度量指标打印到控制台上。我们应该启动一个 goroutine，每隔X秒就可以得到这个数据，然后把它打印到控制台。
+因此，我们开始的前提是，我们不希望使用外部服务来提供简单的应用程序监控。我的目标是每隔一段时间将收集到的度量指标打印到控制台上。我们应该启动一个 goroutine，每隔 X 秒就可以得到这个数据，然后把它打印到控制台。
 
 ```go
 package main
@@ -191,14 +191,14 @@ func NewMonitor(duration int) {
 		m.PauseTotalNs = rtm.PauseTotalNs
 		m.NumGC = rtm.NumGC
 
-		// Just encode to json and print
+		// Just encode to JSON and print
 		b, _ := json.Marshal(m)
 		fmt.Println(string(b))
 	}
 }
 ```
 
-要使用它，你可以用 go NewMonitor(300) 来调用它，它每5分钟打印一次你的应用程序度量。然后，您可以从控制台或历史日志中检查这些，以查看应用程序的行为。将其添加到应用程序中的任何性能影响都很小。
+要使用它，你可以用 Go NewMonitor(300) 来调用它，它每 5 分钟打印一次你的应用程序度量。然后，您可以从控制台或历史日志中检查这些，以查看应用程序的行为。将其添加到应用程序中的任何性能影响都很小。
 
 ```
 {"Alloc":1143448,"TotalAlloc":1143448,"Sys":5605624,"Mallocs":8718,"Frees":301,"LiveObjects":8417,"PauseTotalNs":0,"NumGC":0,"NumGoroutine":6}
@@ -214,14 +214,14 @@ Go 实际上有两个内置插件，帮助我们监控生产中的应用程序�
 
 几分钟后，我注册了 expvar 的 HTTP 处理程序，我意识到完整的 MemStats 结构已经在上面了。那太好了！
 
-除了添加HTTP处理程序外，此包还记录以下变量：
+除了添加 HTTP 处理程序外，此包还记录以下变量：
 
 + cmdline os.Args
 + memstats runtime.Memstats
 
-该包有时仅用于注册其HTTP处理程序和上述变量的副作用。要这样使用，把这个包链接到你的程序中：`import _ "expvar"`
+该包有时仅用于注册其 HTTP 处理程序和上述变量的副作用。要这样使用，把这个包链接到你的程序中：`import _ "expvar"`
 
-由于度量现在已经导出，您只需要在应用程序上指向监视系统，并在那里导入 memstats 输出。我知道，我们仍然没有 goroutine 计数，但这很容易添加。导入 expvar 包并添加以下几行：
+由于度量现在已经导出，您只需要在应用程序上指向监视系统，并在那里导入 memstats 输出。我知道，我们仍然没有 Goroutine 计数，但这很容易添加。导入 expvar 包并添加以下几行：
 
 ```go
 // The next line goes at the start of NewMonitor()

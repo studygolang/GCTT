@@ -2,9 +2,9 @@
 
 # Golang 下的微服务 - 第 6 部分 - Web Clients
 
-在之前的文章中，我们看了一些使用 go-micro 和 go 语言的生成的各种事件驱动的方法。 在本篇文章，我们将深入到客户端，探究一下如何创建一个能够与我们之前创建的平台交互的 Web 客户端。
+在之前的文章中，我们看了一些使用 go-micro 和 Go 语言的生成的各种事件驱动的方法。 在本篇文章，我们将深入到客户端，探究一下如何创建一个能够与我们之前创建的平台交互的 Web 客户端。
 
-这篇文章会介绍如何使用 [micro](https://github.com/micro/micro) 工具包生成 web 客户端从外部代理内部 rpc 方法。
+这篇文章会介绍如何使用 [micro](https://github.com/micro/micro) 工具包生成 Web 客户端从外部代理内部 rpc 方法。
 
 我们会创建一个 user 接口用于生成平台的登录界面、还会创建一个接口用于使用我们的 consignments。该界面包含了创建用户、登录、和创建 consignments 等功能。 本系列的前几篇文章已经介绍过其中的部分代码了，在这篇文章我会带大家深入了解一下。
 
@@ -14,7 +14,7 @@
 
 REST 已经在网络上服务了很多年了，并且迅速成为管理客户端和服务器之间资源的途径。REST 正在逐渐取代已经过时的 RPC 和 SOAP。曾经必须写一个 wsdl 文件的时代已经过去了。
 
-REST 向我们承诺了一种实用，简单和标准化的资源管理方法。 REST 使用 http 协议明确了正在执行的具体 web 动作类型。REST 鼓励我们使用 http 错误响应码来更精确地描述服务器的响应状态。而且大多数情况下，这种方法运行良好，并没有问题。但是像所有好东西一样，REST有许多不足和缺点，我不打算在这里详细介绍。大家有兴趣可以参考[这篇文章](https://medium.freecodecamp.org/rest-is-the-new-soap-97ff6c09896d)。
+REST 向我们承诺了一种实用，简单和标准化的资源管理方法。 REST 使用 http 协议明确了正在执行的具体 Web 动作类型。REST 鼓励我们使用 http 错误响应码来更精确地描述服务器的响应状态。而且大多数情况下，这种方法运行良好，并没有问题。但是像所有好东西一样，REST 有许多不足和缺点，我不打算在这里详细介绍。大家有兴趣可以参考[这篇文章](https://medium.freecodecamp.org/rest-is-the-new-soap-97ff6c09896d)。
 
 但是！随着**微服务**的出现，RPC 正在卷土重来。
 
@@ -31,10 +31,10 @@ API 网关将允许我们将 rpc 调用代理为 Web 友好的 javascriptON rpc 
 首先要确保安装了 micro 工具包：
 
 ```
-$ go get -u github.com/micro/micro
+$ Go get -u github.com/micro/micro
 ```
 
-Docker环境下使用 Micro 更好的方法还是建议大家使用Docker镜像：
+Docker 环境下使用 Micro 更好的方法还是建议大家使用 Docker 镜像：
 
 ```
 $ docker pull microhq/micro
@@ -74,7 +74,7 @@ func main() {
 	// 创建一个新的服务
 	srv := micro.NewService(
 
-		// 这个名字必须于你在protobuf definition定义的包名匹配
+		// 这个名字必须于你在 protobuf definition 定义的包名匹配
 		micro.Name("shippy.auth"),
 	)
 
@@ -242,12 +242,12 @@ func (srv *service) ValidateToken(ctx context.Context, req *pb.Token, res *pb.To
 
 ```
 
-现在运行 `$ make build && make run`。 然后转到 shippy-email-service 运行`$ make build && make run`。 一旦这两个服务都运行，运行：
+现在运行 `$ make build && make run`。 然后转到 shippy-email-service 运行 `$ make build && make run`。 一旦这两个服务都运行，运行：
 
 ```shell
 $ docker run -p 8080:8080 \
 		-e MICRO_REGISTRY=mdns \
-		microhq/micro api \
+		microhq/micro API \
 		--handler=rpc \
 		--address=:8080 \
 		--namespace=shippy
@@ -300,7 +300,7 @@ $ curl -XPOST -H 'Content-Type: application/javascripton' \
 
 现在可以使用我们的刚刚创建的新 rpc 节点创建一个用户界面。本文使用了 React，当然如果你喜欢的话可以使用其余的架构。请求都是一样的。本文使用来自 Facebook 的 react-create-app 库:
 
-`$ npm install -g react-create-app`
+`$ NPM install -g react-create-app`
 
 安装完成后，执行 `$ react-create-app shippy-ui`。 这将为您创建一个 React 应用程序的框架。
 
@@ -631,11 +631,11 @@ export default CreateConsignment;
 
 ```
 
-**注意**：我还将 Twitter Bootstrap 添加到 /public/index.html 并更改了一些CSS。
+**注意**：我还将 Twitter Bootstrap 添加到 /public/index.html 并更改了一些 CSS。
 
-现在运行用户界面 `$ npm start`。 之后应该浏览器会自动打开一个界面。您现在应该可以注册并登录并查看 consignment 表单，您可以在其中创建新 consignments。看看你的开发工具中的 network 选项，然后看看 rpc 方法从我们的不同微服务中触发和获取我们的数据。
+现在运行用户界面 `$ NPM start`。 之后应该浏览器会自动打开一个界面。您现在应该可以注册并登录并查看 consignment 表单，您可以在其中创建新 consignments。看看你的开发工具中的 network 选项，然后看看 rpc 方法从我们的不同微服务中触发和获取我们的数据。
 
-第6部分到这里就结束了，如果您有任何反馈，请给我发一封[电子邮件](ewan.valentine89@gmail.com)，我会尽快答复（有可能不会很及时，敬请见谅）。
+第 6 部分到这里就结束了，如果您有任何反馈，请给我发一封[电子邮件](ewan.valentine89@gmail.com)，我会尽快答复（有可能不会很及时，敬请见谅）。
 
 如果你发现这个系列有用，并且你使用了一个广告拦截器。 请考虑为我的时间和努力赞助几块钱。十分感谢！！ [https://monzo.me/ewanvalentine](https://monzo.me/ewanvalentine)
 
@@ -643,7 +643,7 @@ export default CreateConsignment;
 
 via: https://ewanvalentine.io/microservices-in-golang-part-6/
 
-作者：[André Carvalho](https://ewanvalentine.io/microservices-in-golang-part-6/)
+作者：[Andr é Carvalho](https://ewanvalentine.io/microservices-in-golang-part-6/)
 译者：[zhangyang9](https://github.com/zhangyang9)
 校对：[polaris1119](https://github.com/polaris1119)
 

@@ -24,7 +24,7 @@ func main() {
 go build 是一个对用户来说囊括了一大堆东西的命令。但是，如果你需要的话，它也提供了关于它是做什么的更详细的信息。`-x` 是一个能让 Go build 输出调用了什么的标记。如果你想看看工具链的组件是什么，它们在一个什么样的序列里以及使用了什么标记的话，使用 `-x`。
 
 ```
-$ go build -x
+$ Go build -x
 WORK=/var/folders/00/1b8h8000h01000cxqpysvccm005d21/T/go-build190726544
 mkdir -p $WORK/hello/_obj/
 mkdir -p $WORK/hello/_obj/exe/
@@ -44,7 +44,7 @@ mv $WORK/hello/_obj/exe/a.out hello
 在这里你将看到 main.main 的输出。
 
 ```
-$ go build -gcflags="-S"
+$ Go build -gcflags="-S"
 # hello
 "".main t=1 size=179 args=0x0 locals=0x60
     0x0000 00000 (/Users/jbd/src/hello/hello.go:5)  TEXT    "".main(SB), $96-0
@@ -95,7 +95,7 @@ $ go build -gcflags="-S"
 正如我提到的，`-S` 仅仅作用于中间汇编。真实机器上的表示在最终的工件中可用。你可以使用反汇编器去检查里面有什么。对二进制或库使用 `go tool objdump` 。你可能还想使用 `-s` 来关注符号名。在这个例子里，我将对 main.main 进行转存。这里是为 `darwin/amd64` 生成的真实汇编。
 
 ```
-$ go tool objdump -s main.main hello
+$ Go tool objdump -s main.main hello
 TEXT main.main(SB) /Users/jbd/src/hello/hello.go
     hello.go:5  0x2040  65488b0c25a0080000  GS MOVQ GS:0x8a0, CX
     hello.go:5  0x2049  483b6110            CMPQ 0x10(CX), SP
@@ -115,7 +115,7 @@ TEXT main.main(SB) /Users/jbd/src/hello/hello.go
 有时，你需要的全部只是检查符号表而不是理解代码段或数据段。类似通用的 nm 工具，Go 分发了一个让你能列出一个工件中带注记和大小的符号表的 nm 工具。如果你想看看 Go 的一个二进制或库内部是什么，导出了什么，这是个很便利的工具。
 
 ```
-$ go tool nm hello
+$ Go tool nm hello
 ...
 f4760 B __cgo_init
 f4768 B __cgo_notify_runtime_init_done
@@ -135,7 +135,7 @@ ad2e0 R _shifts
 
 ## 优化
 
-和新的 SSA 后端的贡献一起，团队贡献了一个可视化所有 SSA pass 的工具。将环境变量 GOSSAFUNC 的值设置为一个函数名称然后运行 go build 命令。将会产生一个 ssa.html 文件，显示了编译器为了优化你的代码所经过的每一步。
+和新的 SSA 后端的贡献一起，团队贡献了一个可视化所有 SSA pass 的工具。将环境变量 GOSSAFUNC 的值设置为一个函数名称然后运行 Go build 命令。将会产生一个 ssa.html 文件，显示了编译器为了优化你的代码所经过的每一步。
 
 ```
 $ GOSSAFUNC=main Go build && open ssa.html
@@ -148,7 +148,7 @@ $ GOSSAFUNC=main Go build && open ssa.html
 Go 编译器还可以标注内联和逃逸分析。如果你将 `-m=2` 标志传给编译器，它将输出关于这两个方面的优化和标注。这里我们看到 `net/context` 包相关的内联操作和逃逸分析。
 
 ```
-$ go build -gcflags="-m" golang.org/x/net/context
+$ Go build -gcflags="-m" golang.org/x/net/context
 # golang.org/x/net/context
 ../golang.org/x/net/context/context.go:140: can inline Background as: func() Context { return background }
 ../golang.org/x/net/context/context.go:149: can inline TODO as: func() Context { return todo }
@@ -205,7 +205,7 @@ $ go build -gcflags="-m" golang.org/x/net/context
 值得一提的是你经常需要禁用优化来得到一个关于发生了什么的更简单的视图，因为优化可能会修改操作序列，增加代码，删除代码或是对代码进行变换。开启了优化，将一行 Go 代码与优化后的输出对应起来将更难，进行性能测试也会更难，因为优化可能带来不止一处变化。可以通过 `-N` 来禁用优化，通过 `-l` 来禁用内联。
 
 ```
-$ go build -gcflags="-l -N"
+$ Go build -gcflags="-l -N"
 ```
 
 一旦优化被禁用，你调试就不会被代码变化影响，进行性能测试也不会受不止一处变化的影响。
@@ -215,7 +215,7 @@ $ go build -gcflags="-l -N"
 如果你在 lexer 上工作，编译器提供了一个标志在检查源码时调试 lexer。
 
 ```
-$ go build -gcflags="-x"
+$ Go build -gcflags="-x"
 # hello
 lex: PACKAGE
 lex: ident main

@@ -26,7 +26,7 @@
 
 [mybinder.org](https://mybinder.org/v2/gh/yunabe/lgo-binder/master?filepath=basics.ipynb)
 
-感谢 binder [(mybinder.org)](https://mybinder.org/), 你可以在你的浏览器上使用 binder 上的临时 docker 容器尝试 Go 语言的 Jupyter环境(lgo)。从上面的按钮打开临时的 Jupyter Notebook，享受交互式 Go 编程！
+感谢 binder [(mybinder.org)](https://mybinder.org/), 你可以在你的浏览器上使用 binder 上的临时 docker 容器尝试 Go 语言的 Jupyter 环境(lgo)。从上面的按钮打开临时的 Jupyter Notebook，享受交互式 Go 编程！
 
 ## 主要特点
 
@@ -36,7 +36,7 @@
 * 拥有 Jupyter Notebook 一样的代码补全，检查和代码格式化。
 * 显示图像，HTML，JavaScript，SVG 等。
 * 控制台上的交互式解释器
-* 完全支持 goroutine 以及 channel
+* 完全支持 Goroutine 以及 channel
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/jupyte/go_jupyter_3.jpeg)
 
@@ -53,7 +53,7 @@
 * [使用预先构建的 Docker 镜像](https://github.com/yunabe/lgo#quick-start-with-docker)
 * [源码安装（目前仅支持 Linux）](https://github.com/yunabe/lgo#install)
 
-如果您想在计算机上快速尝试 Go 语言的 Jupyter环境，请先尝试 Docker 版本。 如果你使用 Linux 并且想要将 Jupyter 环境与 Go 环境集成到你的计算机中，那么你可以选择源码安装。 由于使用了 [`-buildmode = shared` 进行回归](https://github.com/golang/go/issues/24034)，lgo 的代码在 go1.10 中运行起来很慢。 在 go1.10 修正 bug 之前，请使用 go1.9 来尝试 lgo 。 目前 lgo 在 go1.9 以及 go1.8 完美运行。
+如果您想在计算机上快速尝试 Go 语言的 Jupyter 环境，请先尝试 Docker 版本。 如果你使用 Linux 并且想要将 Jupyter 环境与 Go 环境集成到你的计算机中，那么你可以选择源码安装。 由于使用了 [`-buildmode = shared` 进行回归](https://github.com/golang/go/issues/24034)，lgo 的代码在 go1.10 中运行起来很慢。 在 go1.10 修正 bug 之前，请使用 go1.9 来尝试 lgo 。 目前 lgo 在 go1.9 以及 go1.8 完美运行。
 
 Windows 和 Mac 用户，请使用 Docker 版本，因为 lgo 不支持 Windows 和 Mac。你可以在 Windows 或 Mac 上的 Docker 来运行 lgo。
 
@@ -85,13 +85,13 @@ sum(3, 4) = 7
 
 ## 与现有框架的比较
 
-对于那些了解其他现有的 golang Jupyter 内核的人，这里是与竞争对手的比较表。你可以阅读 [`READNE.MD` 中的这部分](https://github.com/yunabe/lgo#comparisons-with-similar-projects)获取更多细节。
+对于那些了解其他现有的 Golang Jupyter 内核的人，这里是与竞争对手的比较表。你可以阅读 [`READNE.MD` 中的这部分](https://github.com/yunabe/lgo#comparisons-with-similar-projects)获取更多细节。
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/jupyte/go_jupyter_8.jpeg)
 
 ## 了解更多
 
-如果你想了解更多，请浏览[本项目的主页](https://github.com/yunabe/lgo)并阅读 `README.md` 中的介绍。此外，你还可以通过这些[示例笔记](https://nbviewer.jupyter.org/github/yunabe/lgo/blob/master/examples/basics.ipynb)中了解更多 Go 语言的Jupyter环境的真正用途。尽情享受 Go 语言的交互式编程吧!
+如果你想了解更多，请浏览[本项目的主页](https://github.com/yunabe/lgo)并阅读 `README.md` 中的介绍。此外，你还可以通过这些[示例笔记](https://nbviewer.jupyter.org/github/yunabe/lgo/blob/master/examples/basics.ipynb)中了解更多 Go 语言的 Jupyter 环境的真正用途。尽情享受 Go 语言的交互式编程吧!
 
 ---
 

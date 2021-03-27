@@ -2,11 +2,11 @@
 
 # Go 中的匿名函数和反射
 
-我最近在浏览 Hacker News 时看到一篇吸引我眼球的文章《[Python中的Lambdas和函数](http://www.thepythoncorner.com/2018/05/lambdas-and-functions-in-python.html?m=1)》，这篇文章 —— 我推荐你自己阅读一下 —— 详细讲解了如何运用 Python 的 lambda 函数，并举了一个例子展示如何使用 Lambda 函数实现干净，[DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) 风格的代码。
+我最近在浏览 Hacker News 时看到一篇吸引我眼球的文章《[Python 中的 Lambdas 和函数](http://www.thepythoncorner.com/2018/05/lambdas-and-functions-in-python.html?m=1)》，这篇文章 —— 我推荐你自己阅读一下 —— 详细讲解了如何运用 Python 的 lambda 函数，并举了一个例子展示如何使用 Lambda 函数实现干净，[DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) 风格的代码。
 
-读这篇文章，我大脑中喜欢设计模式的部分对文章里精巧的设计模式兴奋不已，然而同时，我大脑中讨厌动态语言的部分说，“呃~”。一点简短的题外话来表达一下我对动态语言的厌恶（如果你没有同感，请略过）：
+读这篇文章，我大脑中喜欢设计模式的部分对文章里精巧的设计模式兴奋不已，然而同时，我大脑中讨厌动态语言的部分说，“呃 ~”。一点简短的题外话来表达一下我对动态语言的厌恶（如果你没有同感，请略过）：
 
-我曾经是一个动态语言的狂热粉丝（对某些任务我仍然喜欢动态语言并且几乎每天都会使用到它）。Python 是我大学一直选择的语言，我用它做科学计算并且做小的，概念验证的项目（我的个人网站曾经使用Flask）。但是当我在现实世界（[Qadium](https://www.qadium.com/)）中开始为我的第一个大型 Python 项目做贡献时，一切都变了。这些项目包含了收集，处理并且增强各种定义好的数据类型的系统职责。
+我曾经是一个动态语言的狂热粉丝（对某些任务我仍然喜欢动态语言并且几乎每天都会使用到它）。Python 是我大学一直选择的语言，我用它做科学计算并且做小的，概念验证的项目（我的个人网站曾经使用 Flask）。但是当我在现实世界（[Qadium](https://www.qadium.com/)）中开始为我的第一个大型 Python 项目做贡献时，一切都变了。这些项目包含了收集，处理并且增强各种定义好的数据类型的系统职责。
 
 最开始我们选择 Python 基于两个原因：1）早期的员工都习惯使用 2）它是一门快速开发语言。
 
@@ -153,7 +153,7 @@ func (s stack) Pop() (stack, int) {
 
 以上的方案是可以工作的，但是有大堆的代码重复 —— 特别是获取提供给运算符的参数/操作的代码。
 
-Python-lambda 文章对这个方案做了一个改进，将运算函数写为 lambda 表达式并且放入一个字典中，这样它们可以通过名称来引用，在运行期查找一个运算所需要操作的数值，并用普通的代码将这些操作数提供给运算函数。最终的python代码如下：
+Python-lambda 文章对这个方案做了一个改进，将运算函数写为 lambda 表达式并且放入一个字典中，这样它们可以通过名称来引用，在运行期查找一个运算所需要操作的数值，并用普通的代码将这些操作数提供给运算函数。最终的 python 代码如下：
 
 ```python
 """
@@ -238,7 +238,7 @@ class rpn_engine:
             print(error)
 
 ```
-> engine_peter_rel5.py 由GitHub托管 [查看源文件](https://gist.github.com/mastro35/66044197fa886bf842213ace58457687/raw/a84776f1a93919fe83ec6719954384a4965f3788/engine_peter_rel5.py)
+> engine_peter_rel5.py 由 GitHub 托管 [查看源文件](https://gist.github.com/mastro35/66044197fa886bf842213ace58457687/raw/a84776f1a93919fe83ec6719954384a4965f3788/engine_peter_rel5.py)
 
 这个方案比原来的方案只增加了一点点复杂度，但是现在增加一个新的运算符简直就像增加一条线一样简单！我看到这个的第一个想法就是：我怎么在 Go 中实现？
 
@@ -263,7 +263,7 @@ func main() {
 }
 view rawrpn_operations_map.go hosted with ❤ by GitHub
 ```
-> rpn_operations_map.go 由gitHub托管 [查看源文件](https://gist.github.com/jholliman/9108b105be6ab136c2f163834b9e5e32/raw/bcd7634a1336b464a9957ea5f32a4868071bef6e/rpn_operations_map.go)
+> rpn_operations_map.go 由 gitHub 托管 [查看源文件](https://gist.github.com/jholliman/9108b105be6ab136c2f163834b9e5e32/raw/bcd7634a1336b464a9957ea5f32a4868071bef6e/rpn_operations_map.go)
 
 注意：在 Go 语言中，为了将我们所有的匿名函数保存在同一个 map 中，我们需要使用空接口类型，`interfa{}`。在 Go 中所有类型都实现了空接口（它是一个没有任何方法的接口；所有类型都至少有 0 个函数）。在底层，Go 用两个指针来表示一个接口：一个指向值，另一个指向类型。
 
@@ -301,7 +301,7 @@ func main() {
 	}
 }
 ```
-> rpn_operations_map2.go 由GitHub托管    [查看源文件](https://gist.github.com/jholliman/497733a937fa5949148a7160473b7742/raw/7ec842fe18026bfc1c4d801eca566b4c0541008b/rpn_operations_map2.go)
+> rpn_operations_map2.go 由 GitHub 托管    [查看源文件](https://gist.github.com/jholliman/497733a937fa5949148a7160473b7742/raw/7ec842fe18026bfc1c4d801eca566b4c0541008b/rpn_operations_map2.go)
 
 这段代码会产生如下输出（请原谅语法上的瑕疵）：
 
@@ -352,7 +352,7 @@ func main() {
 	}
 }
 ```
-> rpn_operations_map3.go 由GitHub托管 [查看源文件](https://gist.github.com/jholliman/e3d7abd71b9bf6cb71eb55d49c40b145/raw/ed64e1d3f718e4219c68d189a8149d8179cdc90c/rpn_operations_map3.go)
+> rpn_operations_map3.go 由 GitHub 托管 [查看源文件](https://gist.github.com/jholliman/e3d7abd71b9bf6cb71eb55d49c40b145/raw/ed64e1d3f718e4219c68d189a8149d8179cdc90c/rpn_operations_map3.go)
 
 类似与用 `.(type)` 来切换的方法，代码输出如下：
 
@@ -404,7 +404,7 @@ func main() {
 	fmt.Println("The result is ", int(results[0].Int()))
 }
 ```
-> rpn_operations_map4.go 由GitHub托管 [查看源文件](https://gist.github.com/jholliman/96bccb0c73c75a165211892da87cd676/raw/e4b420f77350e3f7e081dddb20c0d2a7232cc071/rpn_operations_map4.go)
+> rpn_operations_map4.go 由 GitHub 托管 [查看源文件](https://gist.github.com/jholliman/96bccb0c73c75a165211892da87cd676/raw/e4b420f77350e3f7e081dddb20c0d2a7232cc071/rpn_operations_map4.go)
 
 就像我们期待的那样，这段代码会输出：
 
@@ -500,7 +500,7 @@ func (e *RPMEngine) Compute(operation string) error {
 	return nil
 }
 ```
-> rpn_calc_solution2.go 由 GitHub托管 [查看源文件](https://gist.github.com/jholliman/c636340cac9253da98efdbfcfde56282/raw/b5f80bb79164b5250b088c6df094ca4ec9840009/rpn_calc_solution2.go)
+> rpn_calc_solution2.go 由 GitHub 托管 [查看源文件](https://gist.github.com/jholliman/c636340cac9253da98efdbfcfde56282/raw/b5f80bb79164b5250b088c6df094ca4ec9840009/rpn_calc_solution2.go)
 
 我们确定操作数的个数（第 64 行），从堆栈中获得操作数（第 69-72 行），然后调用需要的运算函数，而且对不同参数个数的运算函数的调用都是一样的（第 74 行）。而且与 Python 的解决方案一样，增加新的运算函数，只需要往 map 中增加一个匿名函数的条目就可以了（第 30 行）。
 
