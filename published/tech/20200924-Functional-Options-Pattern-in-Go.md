@@ -1,4 +1,7 @@
+首发于：https://studygolang.com/articles/34446
+
 # Go 函数选项模式
+
 作为 Golang 开发者，遇到的许多问题之一就是尝试将函数的参数设置成可选项。这是一个十分常见的场景，您可以使用一些已经设置默认配置和开箱即用的对象，同时您也可以使用一些更为详细的配置。
 
 对于许多编程语言来说，这很容易。在 C 语言家族中，您可以提供具有同一个函数但是不同参数的多个版本；在 PHP 之类的语言中，您可以为参数提供默认值，并在调用该方法时将其忽略。但是在 Golang 中，上述的做法都不可以使用。那么您如何创建具有一些其他配置的函数，用户可以根据他的需求（但是仅在需要时）指定一些额外的配置。
@@ -9,10 +12,11 @@
 
 让我们来看一个例子。比方说，这里有一个叫做 `StuffClient` 的服务，它能够胜任一些工作，同时还具有两个配置选项（超时和重试）。
 
-```Golang
+```go
 type StuffClient interface {
     DoStuff() error
 }
+
 type stuffClient struct {
     conn    Connection
     timeout int
@@ -22,7 +26,7 @@ type stuffClient struct {
 
 这是个私有的结构体，因此我们应该为它提供某种构造函数：
 
-```Golang
+```go
 func NewStuffClient(conn Connection, timeout, retries int) StuffClient {
     return &stuffClient{
         conn:    conn,
@@ -36,7 +40,7 @@ func NewStuffClient(conn Connection, timeout, retries int) StuffClient {
 
 一个可选方案是创建另一个具有不同名称的构造函数，例如：
 
-```Golang
+```go
 func NewStuffClient(conn Connection) StuffClient {
     return &stuffClient{
         conn:    conn,
@@ -55,7 +59,7 @@ func NewStuffClientWithOptions(conn Connection, timeout, retries int) StuffClien
 
 但是这么做的话有点蹩脚。我们可以做得更好，如果我们传入了一个配置对象呢:
 
-```Golang
+```go
 type StuffClientOptions struct {
     Retries int //number of times to retry the request before giving up
     Timeout int //connection timeout in seconds
@@ -73,7 +77,7 @@ func NewStuffClient(conn Connection, options StuffClientOptions) StuffClient {
 
 所以，更好的解决方法是什么呢？解决这个难题最好的解决方法是使用函数选项模式，它利用了 Go 对闭包更加方便的支持。让我们保留上述定义的 `StuffClientOptions` ，不过我们仍需要为其添加一些内容。
 
-```Golang
+```go
 type StuffClientOption func(*StuffClientOptions)
 type StuffClientOptions struct {
     Retries int //number of times to retry the request before giving up
@@ -93,7 +97,7 @@ func WithTimeout(t int) StuffClientOption {
 
 泥土般芬芳, 不是吗？这到底是怎么回事？基本上，我们有一个结构来定义 `StuffClient` 的可用选项。 另外，现状我们还定义了一个叫做 `StuffClientOption` 的东西（次数是单数），它只是接受我们选项的结构体作为参数的函数。我们还定义了另外两个函数 `WithRetries` 和 `WithTimeout` ，它们返回一个闭包，现在就是见证奇迹的时刻了！
 
-```Golang
+```go
 var defaultStuffClientOptions = StuffClientOptions{
     Retries: 3,
     Timeout: 2,
@@ -115,7 +119,7 @@ func NewStuffClient(conn Connection, opts ...StuffClientOption) StuffClient {
 
 现在我们要做的事情就是使用它！
 
-```Golang
+```go
 x := NewStuffClient(Connection{})
 fmt.Println(x) // prints &{{} 2 3}
 x = NewStuffClient(
@@ -135,7 +139,7 @@ fmt.Println(x) // prints &{{} 1 1}
 
 把这些修改放在一起，就是这样：
 
-```Golang
+```go
 var defaultStuffClientOptions = StuffClientOptions{
     Retries: 3,
     Timeout: 2,
@@ -184,7 +188,7 @@ func (c stuffClient) DoStuff() error {
 
 但这也可以通过删除 `StuffClientOptions` 结构体进一步简化，并将选项直接应用在我们的 `StuffClient` 上。
 
-```Golang
+```go
 var defaultStuffClient = stuffClient{
     retries: 3,
     timeout: 2,
