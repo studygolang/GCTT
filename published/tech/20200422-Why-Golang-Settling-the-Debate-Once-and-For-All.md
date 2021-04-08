@@ -1,4 +1,6 @@
-# 为什么选择 Golang ?彻底解决争论
+首发于：https://studygolang.com/articles/34445
+
+# 为什么选择 Golang？彻底解决争论
 
 我们都经历过绿地(greenfield)项目初期的幸福感。对于每一个决定，你都有无限的选择余地，当你启动项目编码的时候，你首先要处理的问题是我应该选择哪种编程语言来开发我的项目？
 
@@ -10,7 +12,7 @@
 
 ## 回到最初的问题：为什么选择 Golang ?
 
-假设您是一名 Golang 程序员，并且在一个完全不同的城市参加活动。您决定与周围的人分享一些有关 [Golang 中微服务架构](https://www.bacancytechnology.com/blog/microservice-architecture-in-golang) 的知识； 它是一个二进制文件，所以 Golang 相对稳定，成熟且快速。你的知识吸引了其他人的注意，其中一个人立刻使您认为[ Golang 比 Rust 更好](https://www.bacancytechnology.com/blog/golang-vs-rust)，另一个人也好奇地问 [Golang 是否会超越 Python](https://www.bacancytechnology.com/blog/9-reasons-to-choose-golang) ？
+假设您是一名 Golang 程序员，并且在一个完全不同的城市参加活动。您决定与周围的人分享一些有关 [Golang 中微服务架构](https://www.bacancytechnology.com/blog/microservice-architecture-in-golang) 的知识； 它是一个二进制文件，所以 Golang 相对稳定，成熟且快速。你的知识吸引了其他人的注意，其中一个人立刻使您认为 [Golang 比 Rust 更好](https://www.bacancytechnology.com/blog/golang-vs-rust)，另一个人也好奇地问 [Golang 是否会超越 Python](https://www.bacancytechnology.com/blog/9-reasons-to-choose-golang) ？
 
 不幸的是，您感觉不太好，因为您只能回答 Go 语言的问题，使 Golang 成为 Web 应用程序开发的最佳编程语言，但这并不是一个令人满意的答案。 突然之间，您选择使用 Go 语言而不是其他编程语言开始感到难过，因为您被告知 Go 相当快并且在语法上类似于 C，但是具有 CSP 样式的并发，垃圾回收和内存安全性。
 
@@ -70,10 +72,11 @@ Golang 从根本上更好，因为它具有在所有任务中都能平稳运行�
 如果你的业务需要实施流行(modern )功能，例如新的电子商务功能和按需服务，那么毫无疑问，迁移到 Golang 是一个可行的选择。 当应用程序扩展并添加新功能时，由其前辈编写代码变得有些困难。 因为这会导致维护和故障排除中的响应时间增加。 因此，如果需求激增并且您现有的应用程序无法处理容量，那么 Golang 是确保服务器快速响应和可预测的业务增长的肯定选择。
 
 ---
+
 via: https://www.bacancytechnology.com/blog/why-choose-golang-over-python-rust-and-nodejs
 
 作者：[Riken Solanki](https://www.bacancytechnology.com/blog/author/riken-solanki/)
 译者：[lts8989](https://github.com/lts8989)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
