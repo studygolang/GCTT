@@ -5,7 +5,7 @@
 在 [非阻塞 I/O 超简明介绍](https://dev.to/frosnerd/explain-non-blocking-i-o-like-i-m-five-2a5f) 中，
 我们已经讨论过现代 Web 服务器可以处理大量并发请求，这得益于现代操作系统内核内置的事件通知机制。
 受 Linux epoll [ [文档](https://man7.org/linux/man-pages/man7/epoll.7.html) ] 启发，
-FreeBSD 发明了 kqueue [ [论文](https://people.freebsd.org/~jlemon/papers/kqueue.pdf) , 
+FreeBSD 发明了 kqueue [ [论文](https://people.freebsd.org/~jlemon/papers/kqueue.pdf) ,
 [文档](https://www.freebsd.org/cgi/man.cgi?query=kqueue&sektion=2) ]
 
 这篇文章我们将仔细研究下 kqueue，我们会用 Go 实现一个基于 kqueue event loop 的 TCP server，
