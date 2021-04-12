@@ -500,9 +500,9 @@ func (c Post) RedirectToPosts() revel.Result {
 
 `{{template "header.html" .}}` 通过模板文件 `header.html`，创建 HTML 文件。通过像这样调用其它的 HTML 模板，我们可以在一个模板文件中，共享多个模板文件的公共部分。在这里 `header.html` 有公共的 HTML 头部。
 
-` ＜ form action="/posts" method="post"＞ ` 用于创建一个待办事项的表单。
+`＜form action="/posts" method="post"＞` 用于创建一个待办事项的表单。
 
-` ＜ input type="text" name="body" class="col-xs-8"＞ ` 显示一个文本输入表单，用于输入待办事项。表单名设置成了 `body`，于是在所提交请求的参数 `body` 中，含有输入的待办事项。
+`＜input type="text" name="body" class="col-xs-8"＞` 显示一个文本输入表单，用于输入待办事项。表单名设置成了 `body`，于是在所提交请求的参数 `body` 中，含有输入的待办事项。
 
 `posts` 数组会读取 `{{ range .posts }}` 和 `{{ end }}` 之间的部分，并通过 HTML 模板，为每个 `post` 重复地创建 HTML。
 

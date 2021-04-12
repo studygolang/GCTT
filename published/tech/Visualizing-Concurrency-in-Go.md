@@ -36,7 +36,7 @@ func main() {
 
 ![hello](https://raw.githubusercontent.com/studygolang/gctt-images/master/visualizing-concurrency/hello.gif)
 
-在这张图中，蓝色的线代表 Goroutine 的时间轴。连接 `main` 和 `go#19` 的蓝线是用来标记 Goroutine 的起始和终止并且表示父子关系的。红色的箭头代表的是 send/recv 操作。尽管 send/recv 操作是两个独立的操作，但是我试着将它们表示成一个操作 ` 从 A 发送到 B`。右边蓝线上的 `#19` 是该 Goroutine 的内部 ID，可以通过 Scott Mansfield 在 [Goroutine IDs](http://blog.sgmansfield.com/2015/12/goroutine-ids/) 一文中提到的技巧获取。
+在这张图中，蓝色的线代表 Goroutine 的时间轴。连接 `main` 和 `go#19` 的蓝线是用来标记 Goroutine 的起始和终止并且表示父子关系的。红色的箭头代表的是 send/recv 操作。尽管 send/recv 操作是两个独立的操作，但是我试着将它们表示成一个操作 `从 A 发送到 B`。右边蓝线上的 `#19` 是该 Goroutine 的内部 ID，可以通过 Scott Mansfield 在 [Goroutine IDs](http://blog.sgmansfield.com/2015/12/goroutine-ids/) 一文中提到的技巧获取。
 
 ## 计时器（Timers）
 

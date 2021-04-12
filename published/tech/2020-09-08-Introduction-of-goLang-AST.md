@@ -366,7 +366,7 @@ func greet() {
 
 大家知道，GoLang 有一个 `scope` 的概念，就是源文本的 `scope`，其中标识符表示指定的常量、类型、变量、函数、标签或包。
 
-`Decl 字 ` 段表示标识符被声明的位置，这样就确定了标识符的 `scope`。指向相同对象的标识符共享相同的 `*ast.Object.Label`。
+`Decl 字` 段表示标识符被声明的位置，这样就确定了标识符的 `scope`。指向相同对象的标识符共享相同的 `*ast.Object.Label`。
 
 **ast.FuncType**
 

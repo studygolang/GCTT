@@ -6,7 +6,7 @@
 
 一般而言，`SOLID` 及其背后的理念允许编写可测试的代码，这对于更改非常灵活。`Robert "Uncle Bob" Martin` 推动了这些原则。`SOLID` 原理理论在 2000 年的论文 [`Design Principles and Design Patterns.`](https://fi.ort.edu.uy/innovaportal/file/2032/1/design_principles.pdf) 中有所介绍。`Dave Cheney` 有一篇很棒的关于这个原理的文章[`SOLID Go Design`](https://dave.cheney.net/2016/08/20/solid-go-design)。
 
-`Robert Martin` 在他的书 `Clean Architecture: A Craftsman's Guide to Software Structure and Design` 中还提出了一个包含四个级别职责的架构：实体，用例，接口适配器，框架和驱动程序。这个体系结构引入了 ` 用例 `，其原因与 `Ruby on Rails` 中的服务对象相同 - 用于封装业务逻辑。
+`Robert Martin` 在他的书 `Clean Architecture: A Craftsman's Guide to Software Structure and Design` 中还提出了一个包含四个级别职责的架构：实体，用例，接口适配器，框架和驱动程序。这个体系结构引入了 `用例`，其原因与 `Ruby on Rails` 中的服务对象相同 - 用于封装业务逻辑。
 
 广泛使用接口和依赖注入可以使代码独立于 UI，框架和驱动程序。此方法还提供了使用提供的 UI 和存储的模拟实现来测试业务逻辑的能力。
 

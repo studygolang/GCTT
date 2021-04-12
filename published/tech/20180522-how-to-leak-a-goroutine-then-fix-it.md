@@ -139,7 +139,7 @@ func NewMap(expiration time.Duration) *Map {
 }
 ```
 
-现在工作协程包含了一个 `select` 语句，它会检查 `done 通道 ` 也会检查 `ticker 的通道 `，主要的，我们还删除了 [time.Tick](https://godoc.org/time#Tick)，因为它并不能让协程顺利关闭还是会造成泄漏。
+现在工作协程包含了一个 `select` 语句，它会检查 `done 通道` 也会检查 `ticker 的通道`，主要的，我们还删除了 [time.Tick](https://godoc.org/time#Tick)，因为它并不能让协程顺利关闭还是会造成泄漏。
 
 经过以上的修改，我们简化的统计数据看起像这样：
 ```
