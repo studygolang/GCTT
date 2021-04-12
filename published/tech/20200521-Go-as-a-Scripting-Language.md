@@ -1,4 +1,7 @@
-# Go 作为一种脚本语言
+首发于：https://studygolang.com/articles/34517
+
+# 将 Go 作为脚本语言用
+
 Go 作为一种可用于创建高性能网络和并发系统的编程语言，它的生态应用变得[越来越广泛](https://blog.golang.org/survey2019-results)，同时，这也激发了开发人员使用 Go 作为脚本语言的兴趣。虽然目前 Go 还未准备好作为脚本语言 “开箱即用” 的特性，用来替代 Python 和 Bash ，但是我们只需要一点点准备工作就可以达到想要的目标。
 
 [正如来自 Codelang 的 Elton Minetto 所说的那样](https://dev.to/codenation/using-golang-as-a-scripting-language-jl2)，Go 作为一门脚本语言的同时，也具有相当大的吸引力，这不仅包括 Go 本身强大的功能和简洁的语法，还包括对 goroutines 的良好支持等。Google 公司的软件工程师 [Eyal Posener](https://posener.github.io/about/) 为 Go 用作脚本语言提供了[更多的理由](https://gist.github.com/posener/73ffd326d88483df6b1cb66e8ed1e0bd)，例如，丰富的标准库和语言的简洁性使得维护工作变得更加容易。与之相对的是，Go 的贡献者和前 Google 公司员工 David Crawshaw 则[强调了使用 Go 编写脚本任务的便利程度](https://news.ycombinator.com/item?id=15623106)，因为几乎所有的程序员都在花费大量的时间编写复杂的程序。
@@ -39,7 +42,7 @@ $ Echo ':golang:E::go::/usr/local/bin/gorun:OC' | sudo tee /proc/sys/fs/binfmt_m
 
 这样就可以设置完全标准的 Go 语言的可执行位，例如：
 
-```Go
+```go
 package main
 import (
     "fmt"
@@ -82,6 +85,6 @@ via: https://www.infoq.com/news/2020/04/go-scripting-language/
 
 作者：[Sergio De Simone](https://www.infoq.com/profile/Sergio-De-Simone/)
 译者：[sunlingbot](https://github.com/sunlingbot)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
