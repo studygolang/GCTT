@@ -239,7 +239,7 @@ func main() {
 ```
 [在线运行程序](https://play.golang.org/p/Vr9pf8X8xO)
 
-上面的程序中 `byteSlice` 包含字符串 `Caf é ` 用 UTF-8 编码后的 16 进制字节。程序输出结果是 `Caf é `。
+上面的程序中 `byteSlice` 包含字符串 `Caf é` 用 UTF-8 编码后的 16 进制字节。程序输出结果是 `Caf é`。
 
 如果我们把 16 进制换成对应的 10 进制值会怎么样呢？上面的程序还能工作吗？让我们来试一试：
 
@@ -258,7 +258,7 @@ func main() {
 ```
 [在线运行程序](https://play.golang.org/p/jgsRowW6XN)
 
-上面程序的输出结果也是 `Caf é `
+上面程序的输出结果也是 `Caf é`
 
 ## 用 rune 切片构造字符串
 

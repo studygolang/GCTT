@@ -128,7 +128,7 @@ type Second struct {
 fmt.Println("Big brain time: ", unsafe.Sizeof(First{}) == unsafe.Sizeof(Second{}))
 ```
 
-上面两个结构体大小不同，是因为 `First` 结构体由三个大小为 8 字节的内存块组成：`Sizeof(First.a) + 7 个空闲的字节 + Sizeof(First.b) + Sizeof(First.c) + 7 个空闲的字节 = 24 字节 `。而 `Second` 结构体只包含  2 个 大小为 8 字节的内存块：`Sizeof(Second.a) + Sizeof(Second.b) + 6 个空闲的字节 + Sizeof(Second.b) = 16 字节 `。下次你定义结构体的时候可以用上这个小知识🙂。
+上面两个结构体大小不同，是因为 `First` 结构体由三个大小为 8 字节的内存块组成：`Sizeof(First.a) + 7 个空闲的字节 + Sizeof(First.b) + Sizeof(First.c) + 7 个空闲的字节 = 24 字节`。而 `Second` 结构体只包含  2 个 大小为 8 字节的内存块：`Sizeof(Second.a) + Sizeof(Second.b) + 6 个空闲的字节 + Sizeof(Second.b) = 16 字节`。下次你定义结构体的时候可以用上这个小知识🙂。
 
 下面的代码片段总结了上述三个函数的用法：
 

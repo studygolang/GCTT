@@ -43,7 +43,7 @@ func performAsyncTasks(task []Task) {
 
 `Channel` 也是一个语言原语，它被用于 `goroutine` 间通信。通过 `channel`，你可以向另一个 `goroutine` 传递任何数据（原生类型、结构类型甚至其他 `channel`）。本质上，`channel` 是一个阻塞的双向队列（也可以是单向的）。如果你想要 `goroutine` 等待，直到特定的条件满足才继续运行，你可以使用 `channel` 来实现 `goroutine` 间的合作阻塞。
 
-在编写异步或并发的代码时，这两个原语提供了极大的灵活性和简洁性。使用如上原语可以非常容易地创建出类似 `goroutine 池 ` 等有用的库。一个基本的例子如下：
+在编写异步或并发的代码时，这两个原语提供了极大的灵活性和简洁性。使用如上原语可以非常容易地创建出类似 `goroutine 池` 等有用的库。一个基本的例子如下：
 
 ```go
 package executor

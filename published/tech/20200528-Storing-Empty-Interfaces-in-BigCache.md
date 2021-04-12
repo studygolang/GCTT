@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/34518
+
 # 在 BigCache 中存储任意类型（interface{}）
 
 这篇文章也发在我的个人 [博客](https://calebschoepp.com/blog)
@@ -126,6 +128,6 @@ via: https://dev.to/calebschoepp/storing-empty-interfaces-in-bigcache-1b33
 
 作者：[calebschoepp](https://dev.to/calebschoepp)
 译者：[alandtsang](https://github.com/alandtsang)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

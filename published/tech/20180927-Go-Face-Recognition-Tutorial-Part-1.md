@@ -43,7 +43,7 @@ $ sed -i '' 's/^Libs: .*/& -lblas -llapack/' /usr/local/lib/pkgconfig/dlib-1.pc
 
 ## 开始
 
-我们首先需要下载 `kagami/go-face 包 `，可以使用如下 `go get` 命令：
+我们首先需要下载 `kagami/go-face 包`，可以使用如下 `go get` 命令：
 
 ```
 $ Go get -u github.com/Kagami/go-face
@@ -54,7 +54,7 @@ $ Go get -u github.com/Kagami/go-face
 完成操作后，你需要从 TutorialEdge/ go-face-recognition-tutorial repo 的 `image/` 目录中获取文件。最简单的方法是 clone repo 到另一个目录，只需复制图片目录到当前的工作目录
 
 ```
-$ Git clone https://github.com/TutorialEdge/go-face-recognition-tutorial.git
+$ git clone https://github.com/TutorialEdge/go-face-recognition-tutorial.git
 ```
 
 一旦成功 clone 后，我们就有了启动人脸识别的所需的 `.dat` 文件。你应该还看到一些其他包含复仇者联盟面孔的 `.jpg` 文件列表。

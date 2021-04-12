@@ -1,10 +1,10 @@
-![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200907-Go-Introduction-to-the-Escape-Analysis/图 0.png)
-
 # GoLang 逃逸分析简介
+
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200907-Go-Introduction-to-the-Escape-Analysis/图 0.png)
 
 > 本篇文章基于 GoLang 1.13.
 
-` 逃逸分析 ` 是 GoLang 编译器中的一个阶段，它通过分析用户源码，决定哪些变量应该在堆栈上分配，哪些变量应该逃逸到堆中。
+`逃逸分析` 是 GoLang 编译器中的一个阶段，它通过分析用户源码，决定哪些变量应该在堆栈上分配，哪些变量应该逃逸到堆中。
 
 ## 静态分析
 
@@ -106,7 +106,7 @@ func main() {
 ./main.go:10:3: new(int) escapes to heap
 ```
 
-` 逃逸分析 ` 的第二部分包括确定它是如何操作指针的，帮助了解哪些东西可能会留在堆栈上。
+`逃逸分析` 的第二部分包括确定它是如何操作指针的，帮助了解哪些东西可能会留在堆栈上。
 
 ## 寻址和解引用
 
