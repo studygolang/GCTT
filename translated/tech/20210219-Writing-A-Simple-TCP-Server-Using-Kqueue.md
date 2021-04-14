@@ -77,7 +77,7 @@ type Socket struct {
 在 Go 中，要支持这些操作，需要实现通用的 interface，比如 `io.Reader`，`io.Writer`，还有 `io.Closer`
 
 首先，实现 `io.Reader` 这个接口，他会调用 [read()](https://www.freebsd.org/cgi/man.cgi?query=read&sektion=2) 系统函数。
-这个函数会返回读到字节的数量，以及进行读操作时发生的错误。
+这个函数会返回读到字节的数量，以及进行读操作时可能发生的错误。
 
 ```golang
 
