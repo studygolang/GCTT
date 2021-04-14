@@ -51,7 +51,7 @@ FreeBSD 发明了 kqueue [ [论文](https://people.freebsd.org/~jlemon/papers/kq
 
 ## 实现
 
-为了防止大量系统调用在一个文件，我们拆分成几个不同模块：
+为了避免单个文件有大量系统调用，我们拆分成几个不同模块：
 
 * 一个 `socket` 模块来处理所有管理 socket 的相关功能，
 * 一个 `kqueue` 模块来处理事件循环，
