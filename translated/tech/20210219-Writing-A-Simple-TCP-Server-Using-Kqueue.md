@@ -256,7 +256,7 @@ func NewEventLoop(s *socket.Socket) (*EventLoop, error) {
 新的客户端连接会被转换成客户端 socket，所以我们可以从客户端读取或写入数据。
 现在让我们看下代码如何循环不同的事件类型。
 
-```goalng
+```golang
 func (eventLoop *EventLoop) Handle(handler Handler) {
     for {
         newEvents := make([]syscall.Kevent_t, 10)
