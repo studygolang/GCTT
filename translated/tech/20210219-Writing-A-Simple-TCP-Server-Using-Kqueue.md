@@ -1,4 +1,4 @@
-# 用 kqueue 实现一个简单的 TCP 服务
+# 用 kqueue 实现一个简单的 TCP Server
 
 ## 介绍
 
@@ -11,18 +11,18 @@ FreeBSD 发明了 kqueue [ [论文](https://people.freebsd.org/~jlemon/papers/kq
 这篇文章我们将仔细研究下 kqueue，我们会用 Go 实现一个基于 kqueue event loop 的 TCP server，
 你可以在 Github 上找到 [源代码](https://github.com/FRosner/FrSrv) 。
 要运行代码必须使用和 FreeBSD 兼容的操作系统，比如 macOS。
-                   åå
+
 注意 kqueue 不仅能处理 socket event，而且还能处理文件描述符 event、信号、异步 I/O event、子进程状态改变 event、
 定时器以及用户自定义 event。它确实通用和强大。
 
 我们这篇文章主要分为一下几部分讲解。
-首先，我们会在先从理论出发设计我们的服务端。
+首先，我们会在先从理论出发设计我们的 TCP Server。
 然后，我们会去实现它的必要的模块。
 最后我们会对整个过程进行总结以及思考。
 
 ## 设计
 
-我们 TCP 服务端大概有以下几部分：
+我们 TCP Server 大概有以下几部分：
 一个监听 TCP 的 socket、
 接收客户端连接的 socket、
 一个内核事件队列（kqueue），
@@ -371,7 +371,7 @@ func main() {
 
 ## 思考
 
-我们成功用 `kqueue` 实现了一个简单的 TCP 服务端，当然，这个代码想用于生产环境还需要做很多工作。
+我们成功用 `kqueue` 实现了一个简单的 TCP Server，当然，这个代码想用于生产环境还需要做很多工作。
 我们使用单进程和阻塞 socket 运行，另外，也没有去处理错误。
 其实大多数情况下，使用已经存在的库而不是自己调用操作系统内核函数会更好。
 
