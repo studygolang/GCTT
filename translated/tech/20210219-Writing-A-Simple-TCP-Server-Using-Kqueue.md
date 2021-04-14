@@ -38,7 +38,7 @@ FreeBSD 发明了 kqueue [ [论文](https://people.freebsd.org/~jlemon/papers/kq
 
 ![](https://raw.githubusercontent.com/h1z3y3/gctt-images2/master/20210219-Writing-A-Simple-TCP-Server-Using-Kqueue/read-data-from-the-client.png)
 
-客户端写数据到新创建的 socket，内核会讲一个新 event 放到 kqueue 中，表示在这个 socket 中有等待读取的数据。
+客户端写数据到新创建的 socket，内核会将一个新 event 放到 kqueue 中，表示在这个 socket 中有等待读取的数据。
 事件循环将轮询到这个事件，并从 socket 读取数据。
 注意只有一个 socket 监听连接，而我们将为每一个客户端连接创建新的 socket。
 
