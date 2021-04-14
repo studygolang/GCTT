@@ -129,7 +129,7 @@ func (socket *Socket) String() string {
 ### 监听一个 Socket
 
 定义好 Socket 之后，我们需要初始化它，并让它一个监听特定 IP 和 端口的。
-监听一个 socket 可以通过也可以通过一些系统函数来实现。
+监听一个 socket 也可以通过一些系统函数来实现。
 现在先整体看一下我们实现的 `Listen()` 方法，然后再一步步进行分析。
 
 ```golang
