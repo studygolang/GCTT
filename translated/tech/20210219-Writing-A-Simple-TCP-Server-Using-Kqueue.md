@@ -376,7 +376,7 @@ func main() {
 其实大多数情况下，使用已经存在的库而不是自己调用操作系统内核函数会更好。
 
 没想到用内核操作事件这么难，API 非常复杂，而且必须要读好多文档去找需要怎么做。
-不过，确实是非常鹅妹子嘤的学习体验。
+然而，这是一个惊人的学习体验。
 
 ---
 via: [https://dev.to/frosnerd/writing-a-simple-tcp-server-using-kqueue-cah](https://dev.to/frosnerd/writing-a-simple-tcp-server-using-kqueue-cah)
