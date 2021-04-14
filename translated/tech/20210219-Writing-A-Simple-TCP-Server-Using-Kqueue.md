@@ -1,4 +1,4 @@
-# 用 kqueue 实现一个简单的 TCP 服务端
+# 用 kqueue 实现一个简单的 TCP 服务
 
 ## 介绍
 
@@ -386,4 +386,3 @@ via: [https://dev.to/frosnerd/writing-a-simple-tcp-server-using-kqueue-cah](http
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
-
