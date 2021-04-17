@@ -1,6 +1,6 @@
 # 深入剖析 Golang Pprof 标签
 
-Polar Signal 提供的持续分析工具可以和任何格式的 pprof 分析适配，Go 深度集成了 [pprof](https://github.com/google/pprof) 甚至支持了它的`标签`特性。
+Polar Signals 提供的持续分析工具可以和任何格式的 pprof 分析适配，Go 深度集成了 [pprof](https://github.com/google/pprof) 甚至支持了它的`标签`特性。
 然而，自从我们发布了我们的 [持续分析产品](https://www.polarsignals.com/blog/posts/2021/02/09/announcing-polar-signals-continuous-profiler/) 之后，
 收到了很多工程师的反馈，发现许多工程师不知道如何去分析， 或者不知道分析能给他们带来什么好处。这篇文章主要剖析 pprof 标签，并会结合一些 Go 的示例代码去分析。
 
