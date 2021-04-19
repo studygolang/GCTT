@@ -34,7 +34,7 @@ HashiCorpMultiErrors-4  6.01µs ± 1%     6.78kB ± 0%     77.0 ± 0%
 UberMultiErrors-4       9.26µs ± 1%     10.3kB ± 0%      126 ± 0%
 ```
 
-Uber 的实现略慢，同事消耗更多内存。但是，这个包被设计为一次将错误聚合在一起，而不是每次都追加它们。在聚合 error 的时候，结果是接近的。但是由于需要额外步骤，代码有点不太优雅。这是新的结果：
+Uber 的实现略慢，同时消耗更多内存。但是，这个包被设计为一次将错误聚合在一起，而不是每次都追加它们。在聚合 error 的时候，结果是接近的。但是由于需要额外步骤，代码有点不太优雅。这是新的结果：
 
 ```
 name                    time/op         alloc/op        allocs/op
@@ -47,7 +47,7 @@ UberMultiErrors-4       6.02µs ± 1%     7.06kB ± 0%     77.0 ± 0%
 ## 一个 error，多个 goroutine
 在操作多个 goroutine 来处理一个任务的时候，为了保证程序的正确性，正确地管理结果和错误汇总是有必要的。
 
-来以一个程序开始，该程序使用多个 goroutine 执行一系列行为（action）；每个行为持续一秒：
+以一个程序开始，该程序使用多个 goroutine 执行一系列行为（action）；每个行为持续一秒：
 
 ![](https://github.com/studygolang/gctt-images2/blob/master/20200901-Go-Multiple-Errors-Management/use-multiple-goroutines-to-perform-a-series-of-actions.png?raw=true)
 
@@ -61,7 +61,7 @@ UberMultiErrors-4       6.02µs ± 1%     7.06kB ± 0%     77.0 ± 0%
 go run .  0.30s user 0.19s system 14% cpu 3.274 total
 ```
 
-然而，我们可能希望使 goroutine 之间相互依赖，并且如果其中一个失败就取消他们。避免无谓工作的解决方案可以是加一个 context，并且，一旦一个 goroutine 失败，它就会取消它：
+然而，我们可能希望使 goroutine 之间相互依赖，并且如果其中一个失败就取消他们。避免无谓工作的解决方案可以是加一个 context，并且，一旦一个 goroutine 失败，就会取消它：
 
 ![](https://github.com/studygolang/gctt-images2/blob/master/20200901-Go-Multiple-Errors-Management/avoid-unnecessary-work.png?raw=true)
 
