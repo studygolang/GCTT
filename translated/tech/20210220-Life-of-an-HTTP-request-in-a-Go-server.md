@@ -2,7 +2,7 @@
 
 Go 语言对于编写 HTTP 服务来说是一个常见且非常合适的工具。这篇博文通过一个 Go 服务来探讨一个典型 HTTP 请求的路由，涉及路由，中间件以及比如并发之类的相关问题。
 
-为了有具体的代码可以参考，让我们先从这段简单的服务开始（来自于 [https://gobyexample.com/http-servers](https://gobyexample.com/http-servers)）
+为了有具体的代码可以参考，让我们先从这段简单的服务代码开始（来自于 [https://gobyexample.com/http-servers](https://gobyexample.com/http-servers)）
 
 ```go
 package main
@@ -221,9 +221,9 @@ func main() {
 }
 ```
 
-相对于创建一个带有方法的结构体，`loggingMiddleware` 利用 `http.HandlerFunc` 和闭包使代码更加简洁，同时保留了相同的功能。更重要的是这个例子展示了中间件事实上的标准*签名*：一个函数传入一个 `http.Handler`，有事还有其他状态，之后返回一个不同的 `http.Handler`。返回的 handler 现在应该替换掉传入中间件的那个 handler，之后会“神奇地”执行它原有的功能，并且与中间件的功能包装在一起。
+相对于创建一个带有方法的结构体，`loggingMiddleware` 利用 `http.HandlerFunc` 和闭包使代码更加简洁，同时保留了相同的功能。更重要的是这个例子展示了中间件事实上的标准*签名*：一个函数传入一个 `http.Handler`，有时还有其他状态，之后返回一个不同的 `http.Handler`。返回的 handler 现在应该替换掉传入中间件的那个 handler，之后会“神奇地”执行它原有的功能，并且与中间件的功能包装在一起。
 
-比如。标准国库包含了以下的中间件：
+比如。标准库包含了以下的中间件：
 
 ```go
 func TimeoutHandler(h Handler, dt time.Duration, msg string) Handler
@@ -257,7 +257,7 @@ handler = loggingMiddleware(handler)
 
 这是 Go 的 `net/http` 的一个强大的功能，它利用了 Go 出色的并发性能，使用轻量的 goroutine 使 HTTP handler 保持了一个非常简单的并发模型。一个 handler 阻塞的时候（比如，读取数据库）不需要担心拖慢其他 handler。但是，编写存在共享数据的 handler 的时候需要格外小心。具体细节参考[之前的文章](https://eli.thegreenplace.net/2019/on-concurrency-in-go-http-servers)。
 
-最后，*panic 处理*。一个 HTTP 服务通常是一个长期运行的后台进程。加入在用户提供的请求 handler 中发生了什么糟糕的事情，比如，一些导致运行时 panic 的bug。会导致整个服务崩溃，这可不是什么好事情。为了避免这样的惨剧，你也许会考虑在你服务的 `main` 函数中加上 `recover`，但是并没什么用，原因如下：
+最后，*panic 处理*。一个 HTTP 服务通常是一个长期运行的后台进程。假如在用户提供的请求 handler 中发生了什么糟糕的事情，比如，一些导致运行时 panic 的bug。会导致整个服务崩溃，这可不是什么好事情。为了避免这样的惨剧，你也许会考虑在你服务的 `main` 函数中加上 `recover`，但是并没什么用，原因如下：
 
 1. 当控制返还给 `main` 函数的时候，`ListenAndServe` 已经执行完毕而不会再提供任何服务。
 2. 由于每个连接在分开的 goroutine 中处理，当 handler 中发送 panic 的时候，甚至不会影响到 `main` 函数，但是会导致对应进程的崩溃。
