@@ -80,7 +80,7 @@ const (
 ```
 
 ## 在 Go 中枚举的 String
-Go 对于枚举并没有内置的 `string` 函数，但是可以很容易地通过实现 `String() ` 。通过使用 `String()` 方法而非将常量设置为字符串类型，可以使枚举带有“可打印性”从而获得和使用字符串相同的好处。
+Go 对于枚举并没有内置的 `string` 函数，但是可以很容易地通过实现 `String()` 。通过使用 `String()` 方法而非将常量设置为字符串类型，可以使枚举带有“可打印性”从而获得和使用字符串相同的好处。
 
 ```go
 type BodyPart int
@@ -104,7 +104,7 @@ func (bp BodyPart) String() string {
 via: https://qvault.io/golang/golang-enum/
 
 作者：[Lane Wagner](https://qvault.io/author/lane-c-wagner/)
-译者：[dust347](https://github.com/dust347)	
+译者：[dust347](https://github.com/dust347)
 校对：[校对者ID](https://github.com/校对者ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
