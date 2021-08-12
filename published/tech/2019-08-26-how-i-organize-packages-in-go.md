@@ -1,6 +1,6 @@
 首发于：https://studygolang.com/articles/25301
 
-# 我是如何在 Go 中组织包的
+# 在 Go 中我是如何组织包的
 
 构建项目跟写代码一样具有挑战性。而且有很多种方法。使用错误的方法可能会让人很痛苦，但若要重构则又会非常耗时。另外，要想在一开始就设计出完美的程序几乎是不可能的。更重要的是，有些解决方法只适用于某特定大小的程序，但是程序的大小又是随着时间变化和增长的。所以我们的软件应该跟着出现过解决过的问题一起成长。
 
@@ -69,7 +69,7 @@ type httpGetter interface {
 
 via: https://developer20.com/how-i-organize-packages-in-go/
 
-作者：[Bart ł omiej Klimczak](https://developer20.com/about-me/index.html)
+作者：[Bartłomiej Klimczak](https://developer20.com/about-me/index.html)
 译者：[shadowstorm97](https://github.com/shadowstorm97)
 校对：[DingdingZhou](https://github.com/DingdingZhou)
 
