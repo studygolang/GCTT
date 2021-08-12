@@ -1,4 +1,7 @@
+首发于：https://studygolang.com/articles/35193
+
 # 为什么说 Golang 是 DevOps 专业人士的第一首选？
+
 Golang 是当今最受欢迎的编程语言之一，现在就让我们来看看它在 DevOps 空间中能够做什么？
 
 Golang，也称为 “Go”，是一种具备快速和高性能的编译型语言，这是被设计成为易于阅读和理解的原因。Go 是由 Rob Pike，Robert Griesemer 和 Ken Thompson 等人在 Google 时编写的，于 2009 年 11 月首次发布。
@@ -6,18 +9,21 @@ Golang，也称为 “Go”，是一种具备快速和高性能的编译型语�
 Golang 被设计成高度简洁和易于理解的语法。
 
 这是 Golang 中经典的 “hello world” 示例代码。
-```Golang
+
+```go
 package main
 import "fmt"
     func main() {
     fmt.Println("hello world")
 }
 ```
+
 要想运行这段代码，就要在 `hello-world.go` 所在目录中输入以下命令，并且使用 `go run` 运行。
+
 ```shell
-$ Go run hello-world.go
+$ go run hello-world.go
 hello world
-$ Go build hello-world.go
+$ go build hello-world.go
 $ ls
 hello-world hello-world.go
 $ ./hello-world
@@ -25,6 +31,7 @@ hello world
 ```
 
 ## Go 的介绍
+
 Go 诞生于 2007 年，当时多核 CPU 的架构随处可见，而且没有编程语言能够简化多线程应用程序的开发工作。安全和高效地管理不同线程是开发人员的重大责任。这和其他编程语言不同，Go 虽然很年轻，但是也很强大。Goroutines 在另一个层面上彻底革新了竞争性编程。
 
 经过测试和证明，用 Go 编写的应用程序具有高性能和可伸缩性。Golang 是一种非常高效的语言，就像 C/C++ 一样，还具备像 Java 一样处理并行任务的特性，同时兼具 Python 和 Perl 代码的易于阅读性。相比其他的编程语言，Golang 具有无可争议的架构优势。
@@ -34,16 +41,19 @@ Go 还被一些大公司使用，例如 BBC、Uber、Novartis、Basecamp and Sou
 以下是关于 Go 编程语言的 Google 趋势概览，它正在持续且稳定的增长。
 
 ## 为什么选择 Go ？
+
 对于具备 C/C++ 学习经验的程序员来讲，学习 Go 是一件毫不费力的事情，并且将祖传代码转换成 Go 程序也是非常简单的。作为一种编译型的静态语言，它比解释型语言要快得多，同时具备了大部分的性能优势。
 
 - Go 作为一种与 C 很相似的编程语言，但是除了具有 C 语言的特性之外，Go 还提供了内存安全性、[垃圾回收](https://dzone.com/articles/garbage-collection-a-brief-introduction)、[结构化类型](https://dzone.com/articles/dynamic-static-optional-structural-typing-and-engi)和 CSP 风格的并发性。
 - 在最近的 [Stack Overflow 2020 的调查结果](https://insights.stackoverflow.com/survey/2020#technology-most-loved-dreaded-and-wanted-languages-loved)中，Go 是开发人员中最喜欢和最想要使用的编程语言之一。
 
 ### 最喜欢和最想要使用的编程语言
+
 - Go 很适合用于一般绩效导向的云计算软件。流行的 DevOps 工具是用 Go 编写的，例如 Docker ，甚至是开源的容器编排系统 Kubernetes 都是用 Go 编写的。自 2011 年以来，YouTube 一直在使用 [Vitess](https://opensource.google/projects/vitess) ，它是一个由 Google 构建的分布式数据库系统，而且这个分布式数据库的 MySQL 后端是由 Golang 构建。
 - 在 [2018 年的 Stack Overflow 调查结果](https://insights.stackoverflow.com/survey/2018/#technology)中，Golang 排名第五。根据 [GitHub 关于 2018 年的第二季度报告](https://madnight.github.io/githut/#/pull_requests/2019/4)，Golang 的整体增长率接近于 7% ，与上一季度相比增长 1.5 点。到 2019 年第四季度，Golang 的整体增长率已经达到 8% 。
 
 ## Go 如此受欢迎的原因
+
 - Go 是一种静态类型的编译语言，因此你可以更早地发现问题。
 - Go 可以被立即编译为机器代码，因此它的编辑/刷新周期相对较快，并且仍然会编译出更高效的机器代码。
 - Go 的语法设计使得编写高度并发的网络程序变得容易。
@@ -56,11 +66,13 @@ Go 还被一些大公司使用，例如 BBC、Uber、Novartis、Basecamp and Sou
 ## 让我们看一些是谁在使用 Go 的实际案例
 
 ### SendGrid 投入 Go
+
 SendGrid 是一个客户沟通的平台，并于 2014 年将 Go 作为主要开发语言。SendGrid 开发团队需要从根本上转变它们的开发语言，归结为 Scala、Java 和 Go 之间的竞争。当时，SendGrid 在开发中面临最大的挑战是并发编程。寻找具有并发的异步编程的特性，然后将其作为编程语言中的一部分，这是 SendGrid 选择 Go 最令人信服的原因之一。
 
 可以在他们的博客上阅读全文：[如何说服您的公司选择 Golang？](https://sendgrid.com/blog/convince-company-go-golang/)
 
 ### Hexac 已经从 Python 转换到 Go
+
 Hexac 的联合创始人兼 CTO Tigran Bayburtsyan 写了一篇独家文章，分享了他的公司[从 Python 转到 Go 的原因](https://hackernoon.com/5-reasons-why-we-switched-from-python-to-go-4414d5f42690)。根据他们的代码库统计信息，在使用 Go 重构了所有项目之后，他们的代码量比以前减少了 64% 。
 
 由于 Go 内置的语言特性，他们节省了大量资源（内存和 CPU ）。
@@ -69,9 +81,11 @@ Go 为他们的开发团队提供了极大的灵活性，可以在所有用例�
 现在，他们可以实时地处理日志，然后将其传输到数据库；在单个或多个服务中，使用 Websocket 进行流式传输。这就是 Go 语言带来的出色表现。
 
 ### Salesforce 抛弃 Python 而选择了 Go
+
 在 2017 年推出 Einstein Analytics 之前，Salesforce 使用 Google 流行的 Go 语言完全重构了他们的后端。Salesforce 首席架构师 Guillaume Le Stum 表示：“ Python 并不能很好地完成多线程工作，而 Go 是专为 Google 生产系统中的重型应用程序而构建的，这门编程语言已经通过了 Google 的测试和许可。因此 Salesforce 选择将 Einstein Analytics（Salesforce 的重要组成部分）从混合 C-Python 应用程序转变为完全 Go 应用程序。请阅读原文：[我们为什么在 Einstein Analytics 放弃 Python 而选择了 Google 的 Go](https://www.zdnet.com/article/salesforce-why-we-ditched-python-for-googles-go-language-in-einstein-analytics/)。
 
 ### Containerum 优先选择 Go
+
 Containerum 是一个使用 Go 作为主要开发语言的容器管理平台，已经有大约四年的历史，尽管面临着某些挑战，工程团队仍然认为这是一个不错的选择。选择在 Containerum Platform 上使用 Go 的主要原因是，它由一组比较小的服务组成，这些服务与其他组件进行通信。为了确保这一点，我们非常需要确保接口的兼容性并且要编写简洁、易于阅读和维护的代码。
 
 Go 支持添加补丁并允许在代码库中使用准备就绪的组件。例如，图像名称解析认证，关键对象模型等，这是 Containerum 选择 Go 的原因之一。
