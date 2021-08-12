@@ -1,4 +1,6 @@
-# Go 语言的 HTML 安全编码
+首发于：https://studygolang.com/articles/35195
+
+# Go 语言 HTML 安全编码
 
 > 免责声明：这不是一个官方的谷歌帖子或公告，本文只是我理解的一些可以用的理论方法。
 
@@ -136,11 +138,12 @@ var myHtml template.HTML := `<h1> This is a title </h1>`
 
 如果您想确保 Go 代码中没有服务器端 XSS，这可能是最好的方法。如果您有任何问题或需要更多的重构示例，请让我知道，您可以[通过 twitter](https://twitter.com/empijei)（直接消息是开放的）或通过[电子邮件](mailto:empijei@gmail.com)与我联系。
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---
+
 via: https://blogtitle.github.io/go-safe-html/
 
 作者：[Rob](https://blogtitle.github.io/authors/rob/)
 译者：[lts8989](https://github.com/lts8989)
-校对：[校对者 ID](https://github.com/校对者 ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
