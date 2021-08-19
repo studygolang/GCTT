@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/35202
+
 # Go Module 教程第 2 部分：项目、依赖和 gopls
 
 ## 引言
@@ -158,7 +160,7 @@ $ code .
 
 我将从这个应用程序的初始代码开始。
 
-清单 10：<https://play.golang.org/p/AU1xFIVOLu9>
+清单 10：<https://play.studygolang.com/p/AU1xFIVOLu9>
 
 ```go
 01 package main
