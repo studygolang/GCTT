@@ -163,9 +163,9 @@ Allocation: 0.099220 Mb, Number of allocation: 166
 
 下文阐述了为何 finalizers 逐个运行：
 
-> 一个单独 goroutine 为了一个程序运行了所有的 finalizers,然而，如果一个 finalizer 必须长时间运行，则需要开启一个新的 gorountine。
+> 一个单独 Goroutine 为了一个程序运行了所有的 finalizers,然而，如果一个 finalizer 必须长时间运行，则需要开启一个新的 gorountine。
 
-仅一个 goroutine 将会运行 finalizers，并且任何超重任务都需要开启一个新的 gorountine。当 finalizers 运行时，垃圾回收器并没有停止且并发运行中。因此 finalizer 并不该影响你的应用的性能表现。
+仅一个 Goroutine 将会运行 finalizers，并且任何超重任务都需要开启一个新的 gorountine。当 finalizers 运行时，垃圾回收器并没有停止且并发运行中。因此 finalizer 并不该影响你的应用的性能表现。
 
 同时，一旦 finalizer 不再被需要，Go 提供了一个方法来移除它。
 

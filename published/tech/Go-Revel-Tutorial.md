@@ -1,6 +1,6 @@
 已发布：https://studygolang.com/articles/12898
 
-# Go/Revel教程：在浏览器（使用 PaizaCloud IDE）上，构建 Go web 框架 Revel 的应用程序
+# Go/Revel 教程：在浏览器（使用 PaizaCloud IDE）上，构建 Go Web 框架 Revel 的应用程序
 
 ![gopher](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180323134353.png)
 
@@ -10,7 +10,7 @@ Go 语言（golang）的特性有：
 - 易于编写并发程序。
 - 易于管理可执行文件（因为只有一个文件）
 
-由于这些特点，Go 语言在 web 开发中也越发受到欢迎。
+由于这些特点，Go 语言在 Web 开发中也越发受到欢迎。
 
 如下图所示，我们可以在 Google Trends 看到 Go 受关注的程度。
 
@@ -18,17 +18,17 @@ Go 语言（golang）的特性有：
 
 来自 [google trends](https://trends.google.com/trends/explore?date=2010-02-23%202018-03-23&q=golang)
 
-虽说 Go 本身自带着丰富的标准库，帮助我们构建 web 应用，但是使用 web 应用框架，我们能够更轻松地开发出功能齐全的 web 应用。
+虽说 Go 本身自带着丰富的标准库，帮助我们构建 Web 应用，但是使用 Web 应用框架，我们能够更轻松地开发出功能齐全的 Web 应用。
 
-Go 的 web 框架有很多：Revel、Echo、Gin、Iris 等，**其中 Revel 是最受欢迎的全栈 web 应用框架之一**。
+Go 的 Web 框架有很多：Revel、Echo、Gin、Iris 等，**其中 Revel 是最受欢迎的全栈 Web 应用框架之一**。
 
-Go 框架 Revel 的 web 开发功能有：路由、MVC、生成器。按照 Revel 的规则来构建应用，你可以轻而易举地创建可读性强、易扩展的 Web 应用程序。在 Revel 中，你还可以使用 OR 映射库（如 Gorm）。
+Go 框架 Revel 的 Web 开发功能有：路由、MVC、生成器。按照 Revel 的规则来构建应用，你可以轻而易举地创建可读性强、易扩展的 Web 应用程序。在 Revel 中，你还可以使用 OR 映射库（如 Gorm）。
 
 然而，要在实际中开发 Revel 应用，你需要安装和配置 Go、Revel、Gorm 和 数据库。这些安装和设置都很麻烦。仅仅根据安装说明进行，常常会出错，或者因为 OS、版本和软件依赖等原因引起各种错误。
 
 同样，如果你发布这项服务，朋友和其他人的反馈的确会让你动力十足。但是，这项服务还需要“部署”。“部署”同样也很难搞。
 
-所以，[PaizaCloud](https://paiza.cloud/) 这个 Cloud IDE 应运而生。这是一个基于浏览器的在线 web 和应用开发环境。
+所以，[PaizaCloud](https://paiza.cloud/) 这个 Cloud IDE 应运而生。这是一个基于浏览器的在线 Web 和应用开发环境。
 
 **由于 PaizaCloud 拥有 Go/Revel 应用的开发环境，因此你可以直接在你的浏览器中，开始编写你的 Go/Revel 应用程序**。
 
@@ -79,10 +79,10 @@ Go 框架 Revel 的 web 开发功能有：路由、MVC、生成器。按照 Reve
 我们输入：
 
 ```bash
-$ go get github.com/revel/revel
-$ go get github.com/revel/cmd/revel
-$ go get github.com/jinzhu/gorm
-$ go get github.com/go-sql-driver/mysql
+$ Go get github.com/revel/revel
+$ Go get github.com/revel/cmd/revel
+$ Go get github.com/jinzhu/gorm
+$ Go get github.com/go-sql-driver/mysql
 ```
 
 ![bash](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180323105536.png)
@@ -142,7 +142,7 @@ Revel 服务器会在 9000 端口上运行。[PaizaCloud Cloud IDE](https://paiz
 
 点击该按钮，会出现浏览器程序（PaizaClound 中的浏览器应用程序）。现在，你可以看到 Revel 的网页了，这就是你的应用！
 
-![your web page](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180323111629.png)
+![your Web page](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-revel/20180323111629.png)
 
 （尽管 Revel 是作为 HTTP 服务器运行的，但是 PaizaCloud 会把 HTTP 转换为 HTTPS。）
 
@@ -192,7 +192,7 @@ $ sudo systemctl start mysql
 接下来，创建这个应用的数据库。在这里，我们使用 `mysql` 命令，创建一个数据库 `mydb`。输入下面命令，可以创建数据库 `mydb`。
 
 ```bash
-$ mysql -u root
+$ MySQL -u root
 create database mydb;
 ```
 
@@ -530,7 +530,7 @@ func (c Post) RedirectToPosts() revel.Result {
 
 通过 PaizaCloud Cloud IDE，我们在浏览器上创建了一个 Go/Revel 应用，无需安装和设置任何开发环境。我们甚至可以直接在 PaizaCloud 上发布应用。现在，开始构建你自己的 Go/Revel 应用吧！
 
-通过 [PaizaCloud Cloud IDE](https://paiza.cloud/)，只需在浏览器上，你就能灵活、轻松地开发和发布 web 应用或服务器应用。
+通过 [PaizaCloud Cloud IDE](https://paiza.cloud/)，只需在浏览器上，你就能灵活、轻松地开发和发布 Web 应用或服务器应用。
 
 ---
 

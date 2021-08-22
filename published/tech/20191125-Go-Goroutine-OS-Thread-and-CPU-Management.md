@@ -31,12 +31,12 @@ func main() {
    var wg sync.WaitGroup
    wg.Add(2)
 
-   go func() {
+   Go func() {
       println(`hello`)
       wg.Done()
    }()
 
-   go func() {
+   Go func() {
       println(`world`)
       wg.Done()
    }()
@@ -124,7 +124,7 @@ func main() {
    for i := 0;i < 100 ;i++  {
       wg.Add(1)
 
-      go func() {
+      Go func() {
          http.Get(`https://httpstat.us/200?sleep=10000`)
 
          wg.Done()

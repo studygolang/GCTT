@@ -86,7 +86,7 @@
 
 via: https://medium.com/@alperkose/things-to-avoid-while-using-golang-plugins-f34c0a636e8
 
-作者：[Alper Köse](https://medium.com/@alperkose)
+作者：[Alper K ö se](https://medium.com/@alperkose)
 译者：[herowk](https://github.com/herowk)
 校对：[polaris1119](https://github.com/polaris1119)
 

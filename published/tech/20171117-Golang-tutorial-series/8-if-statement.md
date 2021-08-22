@@ -88,7 +88,7 @@ import (
 func main() {
     num := 99
     if num <= 50 {
-        fmt.Println("number is less than or equal to 50")
+        fmt.Println("number is Less than or equal to 50")
     } else if num >= 51 && num <= 100 {
         fmt.Println("number is between 51 and 100")
     } else {
@@ -136,7 +136,7 @@ main.go:12:5: syntax error: unexpected else, expecting }
 
 出错的原因是 Go 语言的分号是自动插入。你可以在这里阅读分号插入规则 [https://golang.org/ref/spec#Semicolons](https://golang.org/ref/spec#Semicolons)。
 
-在 Go 语言规则中，它指定在 `}` 之后插入一个分号，如果这是该行的最终标记。因此，在if语句后面的 `}` 会自动插入一个分号。
+在 Go 语言规则中，它指定在 `}` 之后插入一个分号，如果这是该行的最终标记。因此，在 if 语句后面的 `}` 会自动插入一个分号。
 
 实际上我们的程序变成了
 
@@ -188,4 +188,5 @@ via: https://golangbot.com/if-statement/
 作者：[Nick Coghlan](https://golangbot.com/about/)
 译者：[Dingo1991](https://github.com/Dingo1991)
 校对：[rxcai](https://github.com/rxcai)
+
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

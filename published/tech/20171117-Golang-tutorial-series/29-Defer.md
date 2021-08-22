@@ -124,7 +124,7 @@ value of a before deferred function call 10
 value of a in deferred function 5
 ```
 
-从上面的输出，我们可以看出，在调用了 `defer` 语句后，虽然我们将 `a` 修改为 10，但调用延迟函数 `printA(a)`后，仍然打印的是 5。
+从上面的输出，我们可以看出，在调用了 `defer` 语句后，虽然我们将 `a` 修改为 10，但调用延迟函数 `printA(a)` 后，仍然打印的是 5。
 
 ## defer 栈
 
@@ -204,7 +204,7 @@ func main() {
 		go v.area(&wg)
 	}
 	wg.Wait()
-	fmt.Println("All go routines finished executing")
+	fmt.Println("All Go routines finished executing")
 }
 ```
 
@@ -256,7 +256,7 @@ func main() {
 		go v.area(&wg)
 	}
 	wg.Wait()
-	fmt.Println("All go routines finished executing")
+	fmt.Println("All Go routines finished executing")
 }
 ```
 
@@ -268,7 +268,7 @@ func main() {
 rect {8 9}'s area 72
 rect {-67 89}'s length should be greater than zero
 rect {5 -67}'s width should be greater than zero
-All go routines finished executing
+All Go routines finished executing
 ```
 
 在上面的程序中，使用 `defer` 还有一个好处。假设我们使用 `if` 条件语句，又给 `area` 方法添加了一条返回路径（Return Path）。如果没有使用 `defer` 来调用 `wg.Done()`，我们就得很小心了，确保在这条新添的返回路径里调用了 `wg.Done()`。由于现在我们延迟调用了 `wg.Done()`，因此无需再为这条新的返回路径添加 `wg.Done()` 了。

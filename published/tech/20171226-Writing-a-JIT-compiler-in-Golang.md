@@ -98,7 +98,7 @@ printFunction := []uint16{
 
 因此，我使用填充指令 cc 指令（无操作）将数据部分的开始推送到 slice 中的下一个条目。我还更新了 lea 指向 4 个字节的位置以反映这一变化。
 
-注意：您可以在此`[链接](https://filippo.io/linux-syscall-table/)找到各种系统调用的系统调用号码。
+注意：您可以在此 `[链接](https://filippo.io/linux-syscall-table/)找到各种系统调用的系统调用号码。
 
 ## 转换切片函数
 
@@ -147,7 +147,7 @@ for i := range printFunction {
 
 标志 syscall.PROT_EXEC 确保新分配的内存地址是可执行的。将此数据结构转换为函数将使其运行平稳。
 
-以下是完整的代码，尝试在x64机器上运行。
+以下是完整的代码，尝试在 x64 机器上运行。
 
 ```go
 package main

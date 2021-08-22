@@ -2,13 +2,13 @@
 
 # 在 Go 中用 Context 取消操作
 
-许多使用 Go 的人都会遇到 context 包。大多数时候 context 用在下游操作， 比如发送 Http 请求、查询数据库、或者开 go-routines 执行异步操作。最普通用法是通过它向下游操作传递数据。很少人知道，但是非常有用的context功能是在执行中取消或者停止操作。
+许多使用 Go 的人都会遇到 context 包。大多数时候 context 用在下游操作， 比如发送 Http 请求、查询数据库、或者开 go-routines 执行异步操作。最普通用法是通过它向下游操作传递数据。很少人知道，但是非常有用的 context 功能是在执行中取消或者停止操作。
 
 这篇文章会解释我们如何使用 Context 的取消功能，还有通过一些 Context 使用方法和最佳实践让你的应用更加快速和健壮。
 
 ## 我们为什么需要取消操作?
 
-简单来说，我们需要取消来避免系统做无用的操作。想像一下，一般的http应用，用户请求 Http Server， 然后 Http Server查询数据库并返回数据给客户端：
+简单来说，我们需要取消来避免系统做无用的操作。想像一下，一般的 http 应用，用户请求 Http Server， 然后 Http Server 查询数据库并返回数据给客户端：
 
 ![http 应用](https://raw.githubusercontent.com/studygolang/gctt-images/master/using-context-cancellation-in-go/1.png)
 
@@ -24,7 +24,7 @@
 
 ![理想耗时图](https://raw.githubusercontent.com/studygolang/gctt-images/master/using-context-cancellation-in-go/4.png)
 
-## go context包的取消操作
+## Go context 包的取消操作
 
 现在我们知道为什么需要取消操作了，让我们看看在 Golang 里如何实现。因为"取消操作"高度依赖上下文，或者已执行的操作，所以它非常容易通过 context 包来实现。
 
@@ -35,7 +35,7 @@
 ## 监听取消事件
 
 _context_ 包提供了 _Done()_ 方法, 它返回一个当 Context 收取到 _取消_ 事件时会接收到一个 _struct{}_ 类型的 _channel_。
-监听取消事件只需要简单的等待 _<- ctx.Done()_ 就好了例如： 一个 Http Server 会花2秒去处理事务，如果请求提前取消，我们想立马返回结果：
+监听取消事件只需要简单的等待 _<- ctx.Done()_ 就好了例如： 一个 Http Server 会花 2 秒去处理事务，如果请求提前取消，我们想立马返回结果：
 
 ```go
 func main() {
@@ -63,11 +63,11 @@ func main() {
 
 > 源代码地址： https://github.com/sohamkamani/blog-example-go-context-cancellation
 
-你可以通过执行这段代码, 用浏览器打开 [localhost:8000](http://localhost:8000)。如果你在2秒内关闭浏览器，你会看到在控制台打印了 "request canceled"。
+你可以通过执行这段代码, 用浏览器打开 [localhost:8000](http://localhost:8000)。如果你在 2 秒内关闭浏览器，你会看到在控制台打印了 "request canceled"。
 
 ## 触发取消事件
 
-如果你有一个可以取消的操作，你可以通过context触发一个 _取消事件_ 。 这个你可以用 context 包 提供的 _WithCancel_ 方法， 它返回一个 context 对象，和一个没有参数的方法。这个方法不会返回任何东西，仅在你想取消这个context的时候去调用。
+如果你有一个可以取消的操作，你可以通过 context 触发一个 _取消事件_ 。 这个你可以用 context 包 提供的 _WithCancel_ 方法， 它返回一个 context 对象，和一个没有参数的方法。这个方法不会返回任何东西，仅在你想取消这个 context 的时候去调用。
 
 第二种情况是依赖。 依赖的意思是，当一个操作失败，会导致其他操作失败。 例如：我们提前知道了一个操作失败，我们会取消所有依赖操作。
 
@@ -97,7 +97,7 @@ func main() {
 	// from the original context
 	ctx, cancel := context.WithCancel(ctx)
 
-	// Run two operations: one in a different go routine
+	// Run two operations: one in a different Go routine
 	go func() {
 		err := operation1(ctx)
 		// If this operation returns an error
@@ -165,7 +165,7 @@ Response received, status code: 200
 Request failed: Get http://google.com: context deadline exceeded
 ```
 
-你可以通过设置超时来获得以上2种结果。
+你可以通过设置超时来获得以上 2 种结果。
 
 ## 陷阱和注意事项
 

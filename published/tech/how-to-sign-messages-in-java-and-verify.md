@@ -4,9 +4,9 @@
 
 在我的公司中，我们使用 Java 和 Go 作为开发平台，当然有时候这些项目彼此之间会进行交互。在这篇文章中，我想要介绍我们的关于在 Java 端进行消息签名并在 Go 服务程序中进行验证的解决方案。
 
-首先，我们聊一聊下面这个架构，我们的 Java 应用程序运行在云上新建虚拟机实例中，并且这个基础镜像实例包含了一个小的 Go 服务程序。这个服务程序是我们的配置管理系统的主入口，我们不希望有来自不可信的客户端可以修改节点。在请求中包含签名的双向 SSL 看起来足以信任客户端。但由于这两个组件都是开源的，所以我们在二进制文件中没有任何“秘密”，因此我们选择了RSA非对称秘钥对来生成和验证签名。Java 端拥有私钥，Go 端拥有公钥。
+首先，我们聊一聊下面这个架构，我们的 Java 应用程序运行在云上新建虚拟机实例中，并且这个基础镜像实例包含了一个小的 Go 服务程序。这个服务程序是我们的配置管理系统的主入口，我们不希望有来自不可信的客户端可以修改节点。在请求中包含签名的双向 SSL 看起来足以信任客户端。但由于这两个组件都是开源的，所以我们在二进制文件中没有任何“秘密”，因此我们选择了 RSA 非对称秘钥对来生成和验证签名。Java 端拥有私钥，Go 端拥有公钥。
 
-Java 是一个古老的平台（个人有多年的Java经验）因此，Java 有很多的库，但是我开始使用Go。我没有第六感，但我认为 Go 应该是支持协议的列表中最弱的。好消息是， Go 有一个内置的 crypto/rsa 软件包，坏消息是，它只支持 PKCS#1。在研究期间，我发现了一个支持 PKCS#8 的第三方库，我们不得不在这个计划点上停下来并重点考察：
+Java 是一个古老的平台（个人有多年的 Java 经验）因此，Java 有很多的库，但是我开始使用 Go。我没有第六感，但我认为 Go 应该是支持协议的列表中最弱的。好消息是， Go 有一个内置的 crypto/rsa 软件包，坏消息是，它只支持 PKCS#1。在研究期间，我发现了一个支持 PKCS#8 的第三方库，我们不得不在这个计划点上停下来并重点考察：
 
 1. 使用在较老的标准上建立的，经过良好测试的库
 2. 使用在新的标准上的未知的库
@@ -153,7 +153,7 @@ public static String generateSignature(String privateKeyPem, byte[] data) {
 }
 
 private static String clarifyPemKey(String rawPem) {
-	return "-----BEGIN RSA PRIVATE KEY-----\n" + rawPem.replaceAll("-----(.*)-----|\n", "") + "\n-----END RSA PRIVATE KEY-----"; // PEMParser nem kedveli a sortöréseket
+	return "-----BEGIN RSA PRIVATE KEY-----\n" + rawPem.replaceAll("-----(.*)-----|\n", "") + "\n-----END RSA PRIVATE KEY-----"; // PEMParser nem kedveli a sort ö r é seket
 }
 ```
 
@@ -165,10 +165,10 @@ ps： 我不为你介绍如何使用 Java 生成秘钥对，因为你可以在�
 
 via：https://mhmxs.blogspot.hk/2018/03/how-to-sign-messages-in-java-and-verify.html
 
-作者：[Richárd Kovács](https://mhmxs.blogspot.hk/)
+作者：[Rich á rd Kov á cs](https://mhmxs.blogspot.hk/)
 译者：[fredvence](https://github.com/fredvence)
 校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
 
 

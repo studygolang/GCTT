@@ -107,7 +107,7 @@ func main() {
 
 在上面的代码中，我们首先创建一个变量 `defaultName` 并分配一个常量 `Sam` 。**常量 `Sam` 的默认类型是 `string` ，所以在赋值后 `defaultName` 是 `string` 类型的。**
 
-下一行，我们将创建一个新类型 `myString`，它是 `string` 的别名。
+下一行，我们将创建一个新类型 `myString`，它的底层类型是 `string`（译注：原文说是别名，是不对的）。
 
 然后我们创建一个 `myString` 的变量 `customName` 并且给他赋值一个常量 `Sam` 。因为常量 `Sam` 是无类型的，它可以分配给任何字符串变量。因此这个赋值是允许的，`customName` 的类型是 `myString`。
 

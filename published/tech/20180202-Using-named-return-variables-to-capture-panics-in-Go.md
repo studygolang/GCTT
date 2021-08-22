@@ -4,8 +4,8 @@
 
 这将是一个简短的帖子，灵感来源于 Sean Kelly 十一月份的推特。
 
-> 我发现了一个在 golang 中使用指定的返回值的原因并且现在我感到潸然泪下。
->                    — Sean Kelly (@StabbyCutyou) 2017年11月15日
+> 我发现了一个在 Golang 中使用指定的返回值的原因并且现在我感到潸然泪下。
+>                    — Sean Kelly (@StabbyCutyou) 2017 年 11 月 15 日
 
 其目标是为了记录并说明一种有必要使用到命名返回变量的情况，所以说让我们进入正题。
 
@@ -38,7 +38,7 @@ func doStuff() error {
 
 在 Go Playground 上执行它 - https://play.golang.org/p/wzkjKGqFPL
 
-之后你 go run 了你的代码然而...这是什么？你的 error 是 `nil` 值,甚至是在代码发生异常的时候。这并不是我们想要的！
+之后你 Go run 了你的代码然而...这是什么？你的 error 是 `nil` 值,甚至是在代码发生异常的时候。这并不是我们想要的！
 
 ## 为什么会发生这种情况？
 

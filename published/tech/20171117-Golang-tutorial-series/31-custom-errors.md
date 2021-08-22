@@ -54,7 +54,7 @@ import (
 
 func circleArea(radius float64) (float64, error) {
 	if radius < 0 {
-		return 0, errors.New("Area calculation failed, radius is less than zero")
+		return 0, errors.New("Area calculation failed, radius is Less than zero")
 	}
 	return math.Pi * radius * radius, nil
 }
@@ -79,7 +79,7 @@ func main() {
 在我们的程序中，半径小于零，因此打印出：
 
 ```
-Area calculation failed, radius is less than zero
+Area calculation failed, radius is Less than zero
 ```
 
 ## 使用 Errorf 给错误添加更多信息
@@ -98,7 +98,7 @@ import (
 
 func circleArea(radius float64) (float64, error) {
 	if radius < 0 {
-		return 0, fmt.Errorf("Area calculation failed, radius %0.2f is less than zero", radius)
+		return 0, fmt.Errorf("Area calculation failed, radius %0.2f is Less than zero", radius)
 	}
 	return math.Pi * radius * radius, nil
 }
@@ -119,12 +119,12 @@ func main() {
 在上面的程序中，我们使用 `Errorf`（第 10 行）打印了发生错误的半径。程序运行后会输出：
 
 ```
-Area calculation failed, radius -20.00 is less than zero
+Area calculation failed, radius -20.00 is Less than zero
 ```
 
 ## 使用结构体类型和字段提供错误的更多信息
 
-错误还可以用实现了 `error` [接口](https://studygolang.com/articles/12266)的结构体来表示。这种方式可以更加灵活地处理错误。在上面例子中，如果我们希望访问引发错误的半径，现在唯一的方法就是解析错误的描述信息 `Area calculation failed, radius -20.00 is less than zero`。这样做不太好，因为一旦描述信息发生变化，程序就会出错。
+错误还可以用实现了 `error` [接口](https://studygolang.com/articles/12266)的结构体来表示。这种方式可以更加灵活地处理错误。在上面例子中，如果我们希望访问引发错误的半径，现在唯一的方法就是解析错误的描述信息 `Area calculation failed, radius -20.00 is Less than zero`。这样做不太好，因为一旦描述信息发生变化，程序就会出错。
 
 我们会使用标准库里采用的方法，在上一教程中“断言底层结构体类型，使用结构体字段获取更多信息”这一节，我们讲解了这一方法，可以使用结构体字段来访问引发错误的半径。我们会创建一个实现 `error` 接口的结构体类型，并使用它的字段来提供关于错误的更多信息。
 
@@ -180,7 +180,7 @@ func main() {
 	area, err := circleArea(radius)
 	if err != nil {
 		if err, ok := err.(*areaError); ok {
-			fmt.Printf("Radius %0.2f is less than zero", err.radius)
+			fmt.Printf("Radius %0.2f is Less than zero", err.radius)
 			return
 		}
 		fmt.Println(err)
@@ -205,7 +205,7 @@ func main() {
 该程序会输出：
 
 ```
-Radius -20.00 is less than zero
+Radius -20.00 is Less than zero
 ```
 
 下面我们来使用上一教程提到的[第二种方法](https://studygolang.com/articles/12724)，使用自定义错误类型的方法来提供错误的更多信息。
@@ -250,13 +250,13 @@ func (e *areaError) widthNegative() bool {
 func rectArea(length, width float64) (float64, error) {
 	err := ""
 	if length < 0 {
-		err += "length is less than zero"
+		err += "length is Less than zero"
 	}
 	if width < 0 {
 		if err == "" {
-			err = "width is less than zero"
+			err = "width is Less than zero"
 		} else {
-			err += ", width is less than zero"
+			err += ", width is Less than zero"
 		}
 	}
 	if err != "" {
@@ -277,11 +277,11 @@ func main() {
 	if err != nil {
 		if err, ok := err.(*areaError); ok {
 			if err.lengthNegative() {
-				fmt.Printf("error: length %0.2f is less than zero\n", err.length)
+				fmt.Printf("error: length %0.2f is Less than zero\n", err.length)
 
 			}
 			if err.widthNegative() {
-				fmt.Printf("error: width %0.2f is less than zero\n", err.width)
+				fmt.Printf("error: width %0.2f is Less than zero\n", err.width)
 
 			}
 			return
@@ -325,13 +325,13 @@ func (e *areaError) widthNegative() bool {
 func rectArea(length, width float64) (float64, error) {
 	err := ""
 	if length < 0 {
-		err += "length is less than zero"
+		err += "length is Less than zero"
 	}
 	if width < 0 {
 		if err == "" {
-			err = "width is less than zero"
+			err = "width is Less than zero"
 		} else {
-			err += ", width is less than zero"
+			err += ", width is Less than zero"
 		}
 	}
 	if err != "" {
@@ -346,11 +346,11 @@ func main() {
 	if err != nil {
 		if err, ok := err.(*areaError); ok {
 			if err.lengthNegative() {
-				fmt.Printf("error: length %0.2f is less than zero\n", err.length)
+				fmt.Printf("error: length %0.2f is Less than zero\n", err.length)
 
 			}
 			if err.widthNegative() {
-				fmt.Printf("error: width %0.2f is less than zero\n", err.width)
+				fmt.Printf("error: width %0.2f is Less than zero\n", err.width)
 
 			}
 			return
@@ -367,8 +367,8 @@ func main() {
 该程序会打印输出：
 
 ```
-error: length -5.00 is less than zero
-error: width -9.00 is less than zero
+error: length -5.00 is Less than zero
+error: width -9.00 is Less than zero
 ```
 
 在上一教程[错误处理](https://studygolang.com/articles/12724)中，我们介绍了三种提供更多错误信息的方法，现在我们已经看了其中两个示例。
@@ -388,7 +388,7 @@ error: width -9.00 is less than zero
 
 **上一教程 - [错误处理](https://studygolang.com/articles/12724)**
 
-**下一教程 - panic 和 recover（暂未发布，敬请期待）**
+**下一教程 - [panic 和 recover](https://studygolang.com/articles/12785)**
 
 ---
 

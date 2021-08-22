@@ -16,7 +16,7 @@ Module 针对自 Go 语言初版发布以来即成为开发者痛点的三个关
 
 使用 GOPATH 在磁盘上为 Go 工作区提供物理位置已经为 Go 语言开发者提供了很好的服务。不幸的是，对于部分非 Go 语言开发者来说，由于他们只是时不时的进行 Go 项目并且可能没有设置 Go 工作区，这可能是个瓶颈。Go 语言团队想要解决的问题之一便是允许将 Go 代码仓库克隆到磁盘上的任何位置（GOPATH 之外），同时 Go 工具能够对其进行定位、构建和测试。
 
-图1
+图 1
 
 ![108_figure1.png](https://www.ardanlabs.com/images/goinggo/108_figure1.png)
 
@@ -108,7 +108,7 @@ $GOPATH/src/github.com/ardanlabs/conf
 
 ![108_figure3.png](https://www.ardanlabs.com/images/goinggo/108_figure3.png)
 
-图 3 展示了仓库和 module 之间的关系。它表明了 import 指令是怎样引用存储在给定版本 module 内的包。在图 3 中，版本号为 1.1.0 的 module `conf` 中的代码可以从版本号为 0.3.1 的module `go-cmp` 中导入包 `cmp`。由于依赖项信息已经在 `conf` module 中列出（通过 module 文件），因此 Go 工具可以获取其中任何 module 的特定版本，于是便可以成功构建。
+图 3 展示了仓库和 module 之间的关系。它表明了 import 指令是怎样引用存储在给定版本 module 内的包。在图 3 中，版本号为 1.1.0 的 module `conf` 中的代码可以从版本号为 0.3.1 的 module `go-cmp` 中导入包 `cmp`。由于依赖项信息已经在 `conf` module 中列出（通过 module 文件），因此 Go 工具可以获取其中任何 module 的特定版本，于是便可以成功构建。
 
 一旦有了 module，很多工程机会就会浮现出来：
 

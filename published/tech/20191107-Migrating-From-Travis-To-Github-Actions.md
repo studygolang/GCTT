@@ -48,7 +48,7 @@ env:
 
 接下来我做的是让管道的单元测试部分运作起来。因为 [Flipt](https://github.com/markphelps/flipt) 是一个服务端应用程序，所以我目前只针对 Linux 环境，因此我不需要测试 Windows 或 MacOS 环境。虽然我知道 Actions 很酷并且也支持 😉。
 
-然而，我确实希望能够使用多个版本的 Go 进行测试(撰写本文时为 1.12 和 1.13 )。Actions 的 [matrix strategy]矩阵策略特性让这一切变得超级简单。
+然而，我确实希望能够使用多个版本的 Go 进行测试(撰写本文时为 1.12 和 1.13)。Actions 的 [matrix strategy]矩阵策略特性让这一切变得超级简单。
 
 对于我的 workflow 工作流，它看起来像这样:
 
@@ -77,7 +77,7 @@ steps:
 
 它使用 [actions/setup-go](https://github.com/actions/setup-go) action 来安装我们指定的 Go 版本。这很酷。
 
-实际上，我几乎立刻就看到了使用多个 Go 版本运行  测试的好处，因为 Go 1.13 增 加了一些新功能，我的一些测试代码已经无法通过。
+实际上，我几乎立刻就看到了使用多个 Go 版本运行测试的好处，因为 Go 1.13 增 加了一些新功能，我的一些测试代码已经无法通过。
 
 查看发布说明:
 
@@ -119,7 +119,7 @@ services:
 
 幸运的是使用诸如 [bats](https://github.com/sstephenson/bats/) 之类的工具，CLI 的测试变得相当容易。我有一些现有的正在使用的 bats 测试 [脚本代码](https://github.com/markphelps/flipt/blob/4157e9b154a01b09a4eb60a8e43484cd3928fc89/script/test/cli.bats) 运行在 Travis 构建中，所以我只需要找到一种方法让他们运行在 Actions 上即可。
 
-同样，看起来 Actions 的虚拟机并没有安装 bats，但是 GitHub Actions 的 fork 版本似乎已经意识到到了这一点，可以构建了一个你可以在工作流程中引用的 [bats action](https://github.com/actions/bin/tree/master/bats)。我就是这么做的:
+同样，看起来 Actions 的虚拟机并没有安装 bats，但是 GitHub Actions 的 fork 版本似乎已经意识到到了这一点，可以构建了一个你可以在工作流程中引用的 [bats action](https://github.com/actions/bin/tree/master/bats)。我就是这么做的:
 
 ```bash
 - name: Test CLI
@@ -140,10 +140,10 @@ services:
 
 最后，管道的最后一部分是建立发版:
 
-. 为 *nix 创建 tarball 文件
-. 创建一个 Docker 镜像
-. 推送 tarball 文件到 GitHub 并且发布新的版本
-. 创建 Tag 版本推送 Docker 镜像到 Docker Hub
+- 为 *nix 创建 tarball 文件
+- 创建一个 Docker 镜像
+- 推送 tarball 文件到 GitHub 并且发布新的版本
+- 创建 Tag 版本推送 Docker 镜像到 Docker Hub
 
 幸运的是 [goreleaser](https://goreleaser.com/) 已经为此做了 100% 工作! 我所需要做的就是在管道中的最后一步为它提供所需的环境变量，并使用正确的参数调用它。
 
@@ -164,7 +164,7 @@ services:
 
 ## 小结
 
-如果你决定迁移你的 pipelines 管道，这里有一些 ProTips ™，可以帮助你:
+如果你决定迁移你的 pipelines 管道，这里有一些 ProTips，可以帮助你：
 
 1. **从简单的开始**。不要试图一下就替换掉整个 CI/CD 方案。看看是否有一些可以先迁移的非关键任务。
 2. **保证现有 CI 系统正常运行**。这个不用说，不要删除你的 `travis.yml` 文件，直到你确信新的 Actions 设置一切运行正常。

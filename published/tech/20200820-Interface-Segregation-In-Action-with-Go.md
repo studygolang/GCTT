@@ -1,6 +1,6 @@
-# 接口分离原则在Go语言中的实践
+首发于：https://studygolang.com/articles/35200
 
-2020 年 8 月 20 日 - 标签：golang
+# 接口分离原则在 Go 语言中的实践
 
 每个人都应该写一篇关于 Golang 接口的文章！不知道我为什么等了这么久才写了这篇！
 
@@ -20,14 +20,14 @@
 对于那些可以被数据库持久化的资源，我们可以更好的规范它们的行为，使得对它们的操作更标准化。接下来我会具体阐述这个例子。
 
 我在下面的例子中使用了 `interface{}`，但你在实际工作中，应该尽量避免使用，因为它实在太宽泛了。但是在例如 `Kubernetes` 的实现中使用了
-[runtime.Object](https://godoc.org/k8s.io/apimachinery/pkg/runtime)，实际上是一种更好的选择。即将在Go 2.0 版本中引入
+[runtime.Object](https://godoc.org/k8s.io/apimachinery/pkg/runtime)，实际上是一种更好的选择。即将在 Go 2.0 版本中引入
 的泛型支持会使得类似场景中的实现更简单。或者你也可以用代码生成来实现。但总而言之，`Kubernetes` 中使用可序列化的对象这一思想是非常优秀的。
 
-```golang
+```go
 type Resource interface {
-    Create(ctx context.Context) error
-    Update(ctx context.Context, updated interface{}) error
-    Delete(ctx context.Context) error
+	Create(ctx context.Context) error
+	Update(ctx context.Context, updated interface{}) error
+	Delete(ctx context.Context) error
 }
 ```
 
@@ -37,36 +37,36 @@ type Resource interface {
 
 我们根据动作将接口进行拆分：
 
-```golang
+```go
 type Creatable interface {
-    Create(ctx context.Context) error
+	Create(ctx context.Context) error
 }
 
 type Updatable interface {
-    Update(ctx context.Context, updated interface{}) error
+	Update(ctx context.Context, updated interface{}) error
 }
 
 type Deletable interface {
-    Delete(ctx context.Context) error
+	Delete(ctx context.Context) error
 }
 ```
 
 如果需要的话，你可以借助 Go 语言的特性，利用组合的方式将上述三个接口组合成一个新的接口：
 
-```golang
+```go
 type Persistable interface {
-    Deletable
-    Updatable
-    Creatable
+	Deletable
+	Updatable
+	Creatable
 }
 ```
 
 当函数需要两种或两种或两种以上动作的时候，上述的方式是很有用的。假设你需要定义一个接口包含 `Get` 或 `View` 操作，你可以考虑
 重新定义一个 `ReadOnly` 的接口，包含 `Get`，`View` 操作，并定义一个 `Modifiable` 的接口，包含 `Update`, `Create`, `Delete` 操作。
 
-试想一下你正在编写一组 http handlers 来实现对资源进行增删改查（CRUD）的API接口：
+试想一下你正在编写一组 http handlers 来实现对资源进行增删改查（CRUD）的 API 接口：
 
-```golang
+```bash
 Create
 Update
 Delete
@@ -77,15 +77,15 @@ GetByID
 通常来说，会像下面代码中这样，你可以对每个函数都定义一个接口，你所有的资源都需要实现这个接口里的方法，这样对于所有的实现，你都可以
 统一调用 "Create" 方法来进行资源的创建：
 
-```golang
+```go
 func CreateHandle(c Creatable) func(w http.ResponseWriter, r *http.Request) {
-    return http.HandleFunc("/resource", func(w http.ResponseWriter, r *http.Request) {
-        if err := c.Create(r.Context); if err != nil {
-            w.WriteHeader(http.StatusInternalServerError)
-            return
-        }
-        w.WriteHeader(http.StatusCreated)
-    })
+	return http.HandleFunc("/resource", func(w http.ResponseWriter, r *http.Request) {
+		if err := c.Create(r.Context); if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusCreated)
+	})
 }
 ```
 
@@ -93,22 +93,24 @@ func CreateHandle(c Creatable) func(w http.ResponseWriter, r *http.Request) {
 对象只需要实现一个方法（因为 `Creatable` 接口只包含一个方法）。 文中描述的仅仅是一个简单的例子，假设你希望增加验证的逻辑，那么你仅需要在
 `Creatable` 接口中添加方法 `func Valid() error`。
 
-```golang
+```go
 func CreateHandle(c Creatable) func(w http.ResponseWriter, r *http.Request) {
-    return http.HandleFunc("/resource", func(w http.ResponseWriter, r *http.Request) {
-        if err := c.Valid(); err != nil {
-            w.WriteHeader(http.StatusBadRequest)
-            return
-        }
-        if err := c.Create(r.Context); if err != nil {
-            w.WriteHeader(http.StatusInternalServerError)
-            return
-        }
-        w.WriteHeader(http.StatusCreated)
-    })
+	return http.HandleFunc("/resource", func(w http.ResponseWriter, r *http.Request) {
+		if err := c.Valid(); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		if err := c.Create(r.Context); if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusCreated)
+	})
 }
 ```
+
 ---
+
 via: https://gianarb.it/blog/interface-segreation-in-action-with-go
 
 作者：[gianarb](https://twitter.com/gianarb)

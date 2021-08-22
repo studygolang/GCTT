@@ -92,7 +92,7 @@ GC 主要由两个主要阶段组成：
 
 当这些 Goroutine 生成后， GC 就开始标记阶段，该阶段会检查哪些变量应收集并清除。被标记为 `GC dedicated` 的 goroutines 会运行标记，并不会被抢占，然而那些标记为 `GC idle` 的 goroutines 就会去工作，因为他们没有任何其他事情。可以被抢占。
 
-GC 现在已经能够去标记那些不再使用的变量。对于每一个被扫描到的变量，它会增加一个计数器，以便继续跟踪当前的工作并且也能够获得剩余工作的快照。当一个 Goroutine 在 GC 期间被安排了任务，Go 将会比较所需要的分配和已经扫描到的，以便对比扫描的速度和分配的需求。如果比较的结果是扫描内容较多，那么当前的 Goroutine 并不需要去提供帮助。换句话说，如果扫描与分配相比有所欠缺，那么 Go 就会使用 goroutine 来协助。这有一个图表来反应这个逻辑：
+GC 现在已经能够去标记那些不再使用的变量。对于每一个被扫描到的变量，它会增加一个计数器，以便继续跟踪当前的工作并且也能够获得剩余工作的快照。当一个 Goroutine 在 GC 期间被安排了任务，Go 将会比较所需要的分配和已经扫描到的，以便对比扫描的速度和分配的需求。如果比较的结果是扫描内容较多，那么当前的 Goroutine 并不需要去提供帮助。换句话说，如果扫描与分配相比有所欠缺，那么 Go 就会使用 Goroutine 来协助。这有一个图表来反应这个逻辑：
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20191002-Go-How-Does-the-Garbage-Collector-Watch-Your-Application/5.png)
 <p align="center">Mark assist based on scanning debt</p>

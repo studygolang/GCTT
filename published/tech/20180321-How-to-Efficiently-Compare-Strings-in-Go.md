@@ -8,8 +8,8 @@
 strings.ToLower(name) == strings.ToLower(othername)
 ```
 
-这是一种很直接的写法。把字符串转换成小写，然后在比较。要理解为什么这是一个差的解决方案，你需要知道字符串是如何表示的，以及 `ToLower` 是如何工作的。但是首先，让我们讨论一下字符串比较中主要的使用场景，当使用 `==` 操作符时，我们得到最快和最优化的解决方案。通常 APIs 或类似的软件通常都会考虑这些使用场景。我们使用 `ToLower` 称之为 eature-complete。[^注1]。
-[^注1] This is when we drop in ToLower and call it feature-complete.
+这是一种很直接的写法。把字符串转换成小写，然后在比较。要理解为什么这是一个差的解决方案，你需要知道字符串是如何表示的，以及 `ToLower` 是如何工作的。但是首先，让我们讨论一下字符串比较中主要的使用场景，当使用 `==` 操作符时，我们得到最快和最优化的解决方案。通常 APIs 或类似的软件通常都会考虑这些使用场景。我们使用 `ToLower` 称之为 eature-complete。[^ 注 1]。
+[^ 注 1] This is when we drop in ToLower and call it feature-complete.
 
 在 Go 中，字符串是一系列*不可变*的 runes。Rune 是 Go 的一个术语，代表一个码点（Code Point）。你可以在 [Go blog](https://blog.golang.org/strings) 获取更多关于 Strings, bytes, runes 和 characters 的信息。 `ToLower` 是一个标准库函数循环处理字符串中的每个 rune 转换成小写，然后返回新的字符串。所以上面的代码在比较之前遍历了整个字符串。这就和字符串的长度十分相关了。下面的伪代码大概的展示了上面代码片段的复杂度。
 

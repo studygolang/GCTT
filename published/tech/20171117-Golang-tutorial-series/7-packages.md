@@ -202,15 +202,15 @@ import (
 var rectLen, rectWidth float64 = 6, 7
 
 /*
-*2. init 函数会检查长和宽是否大于0
+*2. init 函数会检查长和宽是否大于 0
 */
 func init() {
     println("main package initialized")
     if rectLen < 0 {
-        log.Fatal("length is less than zero")
+        log.Fatal("length is Less than zero")
     }
     if rectWidth < 0 {
-        log.Fatal("width is less than zero")
+        log.Fatal("width is Less than zero")
     }
 }
 
@@ -253,10 +253,10 @@ diagonal of the rectangle 9.22
 ```
 rectangle package initialized
 main package initialized
-2017/04/04 00:28:20 length is less than zero
+2017/04/04 00:28:20 length is Less than zero
 ```
 
-像往常一样， 会首先初始化 rectangle 包，然后是 main 包中的包级别的变量 rectLen 和 rectWidth。rectLen 为负数，因此当运行 init 函数时，程序在打印 `length is less than zero` 后终止。
+像往常一样， 会首先初始化 rectangle 包，然后是 main 包中的包级别的变量 rectLen 和 rectWidth。rectLen 为负数，因此当运行 init 函数时，程序在打印 `length is Less than zero` 后终止。
 
 本代码可以在 [github](https://github.com/golangbot/geometry) 下载。
 

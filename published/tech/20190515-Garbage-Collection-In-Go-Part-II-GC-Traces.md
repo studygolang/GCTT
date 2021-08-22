@@ -38,7 +38,7 @@ https://github.com/ardanlabs/gotraining/tree/master/topics/go/profiling/project)
 **清单 1**
 
 ```bash
-$ go build
+$ Go build
 $ GOGC=off ./project > /dev/null
 ```
 
@@ -256,7 +256,7 @@ if strings.Contains(item.Description, term) {
 **清单 14**
 
 ```bash
-$ go build
+$ Go build
 $ GODEBUG=gctrace=1 ./project > /dev/null
 gc 3 @6.156s 0%: 0.011+0.72+0.068 ms clock, 0.13+0.21/1.5/3.2+0.82 ms CPU, 4->4->2 MB, 5 MB Goal, 12 P
 .

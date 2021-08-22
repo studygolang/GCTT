@@ -23,7 +23,7 @@
 panic 有两个合理的用例。
 
 1. **发生了一个不能恢复的错误，此时程序不能继续运行**。
-    一个例子就是 web 服务器无法绑定所要求的端口。在这种情况下，就应该使用 panic，因为如果不能绑定端口，啥也做不了。
+    一个例子就是 Web 服务器无法绑定所要求的端口。在这种情况下，就应该使用 panic，因为如果不能绑定端口，啥也做不了。
 
 2. **发生了一个编程上的错误**。
     假如我们有一个接收指针参数的方法，而其他人使用 `nil` 作为参数调用了它。在这种情况下，我们可以使用 panic，因为这是一个编程错误：用 `nil` 参数调用了一个只能接收合法指针的方法。
@@ -268,7 +268,7 @@ func recovery() {
 func a() {
     defer recovery()
     fmt.Println("Inside A")
-    go b()
+    Go b()
     time.Sleep(1 * time.Second)
 }
 
@@ -483,7 +483,7 @@ normally returned from main
 
 **上一教程 - [自定义错误](https://studygolang.com/articles/12784)**
 
-**下一教程 - 函数是一等公民（暂未发布，敬请期待）**
+**下一教程 - [函数是一等公民](https://studygolang.com/articles/12789)**
 
 ---
 

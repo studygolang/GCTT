@@ -6,7 +6,7 @@
 
 **[在上篇文章中](https://studygolang.com/articles/12060)**，我们大致介绍了如何编写一个基于 `gRPC` 的微服务。在这个部分，我们将涵盖 `Docker` 服务的基础知识，我们也将使用 [go-micro](https://github.com/micro/go-micro) 更新我们的服务，并在文本末尾引入第二个服务。
 
-## Docker简介
+## Docker 简介
 
 随着云计算的到来和微服务的诞生，服务在部署的时候有更多的压力，但是一次一小段代码就产生了一些有趣的新思想和新技术，其中之一就是[容器](https://en.wikipedia.org/wiki/Operating-system-level_virtualization)的概念。
 
@@ -58,11 +58,11 @@ CMD ["./consignment-service"]
 ```
 build:
     ...
-    GOOS=linux GOARCH=amd64 go build
+    GOOS=linux GOARCH=amd64 Go build
     docker build -t consignment-service .
 ```
 
-我们在这里增加了两个步骤，我想详细解释一下。首先，我们正在构建我们的二进制文件。你会注意到在运行命令 `$ go build` 之前，设置了两个环境变量。GOOS 和 GOARCH 允许您为另一个操作系统交叉编译您的二进制文件，由于我在 Macbook上开发，所以无法编译出二进制文件，让它在 Docker 容器中运行它，而该容器使用的是 Linux。这个二进制在你的 Docker 容器中将是完全没有意义的，它会抛出一个错误。第二步是添加 Docker 构建过程。这将读取你的 Dockerfile 文件，并通过一个名称 `consignment-service` 构建镜像。句号表示一个目录路径，在这里我们只是希望构建过程在当前目录中查找。
+我们在这里增加了两个步骤，我想详细解释一下。首先，我们正在构建我们的二进制文件。你会注意到在运行命令 `$ Go build` 之前，设置了两个环境变量。GOOS 和 GOARCH 允许您为另一个操作系统交叉编译您的二进制文件，由于我在 Macbook 上开发，所以无法编译出二进制文件，让它在 Docker 容器中运行它，而该容器使用的是 Linux。这个二进制在你的 Docker 容器中将是完全没有意义的，它会抛出一个错误。第二步是添加 Docker 构建过程。这将读取你的 Dockerfile 文件，并通过一个名称 `consignment-service` 构建镜像。句号表示一个目录路径，在这里我们只是希望构建过程在当前目录中查找。
 
 我将在我们的 Makefile 中添加一个新条目：
 
@@ -75,7 +75,7 @@ run:
 
 [您可以阅读更多关于 Docker 网络如何工作的信息。](https://docs.docker.com/engine/userguide/networking/)
 
-当您运行 `$ docker build` 时，您正在将代码和运行时环境构建到镜像中。Docker 镜像是您的环境及其依赖关系的可移植快照。你可以将它分享到 Docker Hub 来共享你的 Docker 镜像。Docker 镜像就像一个 npm 或 yum repo。当你在你的 Dockerfile 里面定义了 `FROM`，你就告诉了 docker 从 docker hub 下载哪个镜像来作为运行环境。然后，您可以扩展并覆盖该基本文件的某些部分，方法是自行重新定义它们。我们不会公开我们的 Docker 镜像，但是可以随时仔细阅读 Docker hub，并且注意到有多少功能被容器化。一些非常[显著的事情](https://www.youtube.com/watch?v=GsLZz8cZCzc)已经被 Docker 化了。
+当您运行 `$ docker build` 时，您正在将代码和运行时环境构建到镜像中。Docker 镜像是您的环境及其依赖关系的可移植快照。你可以将它分享到 Docker Hub 来共享你的 Docker 镜像。Docker 镜像就像一个 NPM 或 yum repo。当你在你的 Dockerfile 里面定义了 `FROM`，你就告诉了 docker 从 docker hub 下载哪个镜像来作为运行环境。然后，您可以扩展并覆盖该基本文件的某些部分，方法是自行重新定义它们。我们不会公开我们的 Docker 镜像，但是可以随时仔细阅读 Docker hub，并且注意到有多少功能被容器化。一些非常[显著的事情](https://www.youtube.com/watch?v=GsLZz8cZCzc)已经被 Docker 化了。
 
 Dockerfile 中的每个声明在第一次构建时都被缓存。这样可以节省每次更改时重新构建整个运行时的时间。 Docker 非常聪明，可以确定哪些部分发生了变化，哪些部分需要重新构建。这使得构建过程非常快速。
 
@@ -206,7 +206,7 @@ func main() {
 
 这里的主要变化是我们实例化我们的 gRPC 服务器的方式，它处理注册我们的服务，已经被整齐地抽象到一个 `mico.NewService()` 方法中。最后，处理连接本身的 `service.Run()` 函数。和以前一样，我们注册了我们的实现，但这次使用了一个稍微不同的方法。第二个最大的变化是服务方法本身，参数和响应类型略有变化，把请求和响应结构作为参数，现在只返回一个错误。在我们的方法中，设置了由 `go-micro` 处理响应。
 
-最后，我们不再对端口进行硬编码。go-micro 应该使用环境变量或命令行参数进行配置。设置地址, 使用 `MICRO_SERVER_ADDRESS=:50051`。我们还需要告诉我们的服务使用 [mdns](https://en.wikipedia.org/wiki/Multicast_DNS)（多播DNS）作为我们本地使用的服务代理。
+最后，我们不再对端口进行硬编码。go-micro 应该使用环境变量或命令行参数进行配置。设置地址, 使用 `MICRO_SERVER_ADDRESS=:50051`。我们还需要告诉我们的服务使用 [mdns](https://en.wikipedia.org/wiki/Multicast_DNS)（多播 DNS）作为我们本地使用的服务代理。
 您通常不会在生产环境中使用 [mdns](https://en.wikipedia.org/wiki/Multicast_DNS) 进行服务发现，但我们希望避免在本地运行诸如 Consul 或 etcd 这样的测试。更多我们将在后面介绍。
 
 让我们更新我们的 Makefile 来实现这一点。
@@ -248,7 +248,7 @@ func main() {
 
 ```
 build:
-    GOOS=linux GOARCH=amd64 go build
+    GOOS=linux GOARCH=amd64 Go build
     docker build -t consignment-cli .
 
 run:
@@ -271,7 +271,7 @@ ADD consignment-cli /app/consignment-cli
 CMD ["./consignment-cli"]
 ```
 
-它除了引入了我们的 json 数据文件，其余与之前服务的 Dockerfile 非常相似。如果你在你的 `consignment-cli` 目录，运行 `$ make run` 命令，你应该和以前一样，看见 `Created: true`。
+它除了引入了我们的 JSON 数据文件，其余与之前服务的 Dockerfile 非常相似。如果你在你的 `consignment-cli` 目录，运行 `$ make run` 命令，你应该和以前一样，看见 `Created: true`。
 
 之前，我提到那些使用 Linux 的人应该切换到使用 Debian 作为基础映像。现在看起来是一个很好的时机来看看 Docker 的一个新功能：多阶段构建。这使我们可以在一个 Dockerfile 中使用多个 Docker 镜像。
 
@@ -280,7 +280,7 @@ CMD ["./consignment-cli"]
 ```
 # consignment-service/Dockerfile
 
-# We use the official golang image, which contains all the
+# We use the official Golang image, which contains all the
 # correct build tools and libraries. Notice `as builder`,
 # this gives this container a name that we can reference later on.
 FROM golang:1.9.0 as builder
@@ -292,9 +292,9 @@ WORKDIR /go/src/github.com/EwanValentine/shippy/consignment-service
 COPY . .
 
 # Here we're pulling in godep, which is a dependency manager tool,
-# we're going to use dep instead of go get, to get around a few
-# quirks in how go get works with sub-packages.
-RUN go get -u github.com/golang/dep/cmd/dep
+# we're going to use dep instead of Go get, to get around a few
+# quirks in how Go get works with sub-packages.
+RUN Go get -u github.com/golang/dep/cmd/dep
 
 # Create a dep project, and run `ensure`, which will pull in all
 # of the dependencies within this directory.
@@ -302,7 +302,7 @@ RUN dep init && dep ensure
 
 # Build the binary, with a few flags which will allow
 # us to run this binary in Alpine.
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .
+RUN CGO_ENABLED=0 GOOS=linux Go build -a -installsuffix cgo .
 
 # Here we're using a second FROM statement, which is strange,
 # but this tells Docker to start a new build process with this
@@ -330,11 +330,11 @@ CMD ["./consignment-service"]
 
 这种方法的唯一问题，我想回来并在某些时候改善这一点，是 Docker 不能从父目录中读取文件。它只能读取 Dockerfile 所在目录或子目录中的文件。
 
-这意味着为了运行 `$ dep ensure` 或 `$ go get`，你需要确保你的代码被推到 Git 上，这样它就可以提取 vessel-service。就像其他 Go 包一样。这种方法不理想，但足够满足我们现在的需求。
+这意味着为了运行 `$ dep ensure` 或 `$ Go get`，你需要确保你的代码被推到 Git 上，这样它就可以提取 vessel-service。就像其他 Go 包一样。这种方法不理想，但足够满足我们现在的需求。
 
 现在我将会在其他 Docker 文件中应用这种新方法。
 
-噢，记住要记得从 Makefiles 中删除 `$ go build`。
+噢，记住要记得从 Makefiles 中删除 `$ Go build`。
 
 [更多的多阶段编译在这里](https://docs.docker.com/engine/userguide/eng-image/multistage-build/#name-your-build-stages)
 
@@ -403,9 +403,9 @@ WORKDIR /go/src/github.com/EwanValentine/shippy/vessel-service
 
 COPY . .
 
-RUN go get -u github.com/golang/dep/cmd/dep
+RUN Go get -u github.com/golang/dep/cmd/dep
 RUN dep init && dep ensure
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .
+RUN CGO_ENABLED=0 GOOS=linux Go build -a -installsuffix cgo .
 
 
 FROM alpine:latest

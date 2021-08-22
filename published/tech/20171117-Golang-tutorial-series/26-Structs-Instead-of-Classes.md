@@ -80,7 +80,7 @@ func main() {
 
 我们在第 3 行引用了 `employee` 包。在 `main()`（第 12 行），我们调用了 `Employee` 的 `LeavesRemaining()` 方法。
 
-由于有自定义包，这个程序不能在 go playground 上运行。你可以在你的本地运行，在 `workspacepath/bin/oop` 下输入命令 `go install opp`，程序会打印输出：
+由于有自定义包，这个程序不能在 Go playground 上运行。你可以在你的本地运行，在 `workspacepath/bin/oop` 下输入命令 `go install opp`，程序会打印输出：
 
 ```bash
 Sam Adolf has 10 leaves remaining

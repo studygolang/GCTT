@@ -31,7 +31,7 @@ Go 1.11 中引入的 Go Modules（模块）系统提供了一个内置在 Go 命
 若要转换已使用依赖关系管理工具的项目，请运行以下命令:
 
 ```bash
-$ git clone https://github.com/my/project
+$ Git clone https://github.com/my/project
 [...]
 $ cd project
 $ cat Godeps/Godeps.json
@@ -52,7 +52,7 @@ $ cat Godeps/Godeps.json
         }
     ]
 }
-$ go mod init github.com/my/project
+$ Go mod init github.com/my/project
 go: creating new go.mod: module github.com/my/project
 go: copying requirements from Godeps/Godeps.json
 $ cat go.mod
@@ -69,7 +69,7 @@ $
 在继续执行之前，是时候停下来，运行 `go build ./...` 和 `go test ./...`。接下来的步骤就是修改你的 `go.mod` 文件，因此，如果您喜欢采用迭代方法，这是您的 `go.mod` 文件最接近模块前依赖项规范的地方。
 
 ```bash
-$ go mod tidy
+$ Go mod tidy
 go: downloading rsc.io/binaryregexp v0.2.1-0.20190524193500-545cabda89ca
 go: extracting rsc.io/binaryregexp v0.2.1-0.20190524193500-545cabda89ca
 $ cat go.sum
@@ -83,8 +83,8 @@ $
 让我们确保代码能够成功编译和测试通过：
 
 ```bash
-$ go build ./...
-$ go test ./...
+$ Go build ./...
+$ Go test ./...
 [...]
 $
 ```
@@ -92,7 +92,7 @@ $
 注意，其他依赖项管理工具可能在单个包或整个整个仓库(而不是模块)级别指定依赖项，并且通常不识别依赖项文件 `go.mod` 中指定的需求。因此，您可能无法获得与之前完全相同的每个包的版本，这会提高风险。因此，按照上面的命令对最后依赖项进行检查非常重要。所以我们需要这样做，输入下面的命令：
 
 ```bash
-$ go list -m all
+$ Go list -m all
 go: finding rsc.io/binaryregexp v0.2.1-0.20190524193500-545cabda89ca
 github.com/my/project
 rsc.io/binaryregexp v0.2.1-0.20190524193500-545cabda89ca
@@ -102,11 +102,11 @@ $
 并将结果版本与旧的依赖关系管理文件进行比较，以确保所选版本是适合自己当前项目的。如果你发现一个版本不是你想要的，你可以通过使用 `go mod why -m` 和/或 `go mod graph` 找到原因，并使用 `go get` 升级或降级到正确的版本。(如果您请求的版本比之前选择的版本更旧，`go get` 将根据需要降低其他依赖关系，以保持兼容性。) 例如：
 
 ```bash
-$ go mod why -m rsc.io/binaryregexp
+$ Go mod why -m rsc.io/binaryregexp
 [...]
-$ go mod graph | grep rsc.io/binaryregexp
+$ Go mod graph | grep rsc.io/binaryregexp
 [...]
-$ go get rsc.io/binaryregexp@v0.2.0
+$ Go get rsc.io/binaryregexp@v0.2.0
 $
 ```
 
@@ -115,10 +115,10 @@ $
 对于没有依赖关系管理系统的 Go 项目，首先创建一个 `go.mod` 文件:
 
 ```bash
-$ git clone https://go.googlesource.com/blog
+$ Git clone https://go.googlesource.com/blog
 [...]
 $ cd blog
-$ go mod init golang.org/x/blog
+$ Go mod init golang.org/x/blog
 go: creating new go.mod: module golang.org/x/blog
 $ cat go.mod
 module golang.org/x/blog
@@ -127,14 +127,14 @@ go 1.12
 $
 ```
 
-如果没有以前依赖项管理中的配置文件，`go mod init` 将创建一个 `go.mod` 文件只有模块和 go 指令。在当前案例中，我们将模块路径设置为 `golang.org/x/blog`，因为这是它的[自定义导入路径](https://golang.org/cmd/go/#hdr-Remote_import_paths)。用户可以使用此路径导入包，我们必须注意不要更改它。
+如果没有以前依赖项管理中的配置文件，`go mod init` 将创建一个 `go.mod` 文件只有模块和 Go 指令。在当前案例中，我们将模块路径设置为 `golang.org/x/blog`，因为这是它的[自定义导入路径](https://golang.org/cmd/go/#hdr-Remote_import_paths)。用户可以使用此路径导入包，我们必须注意不要更改它。
 
-模块指令声明模块路径，go 指令声明用于编译模块内代码的 go 语言的预期版本。
+模块指令声明模块路径，go 指令声明用于编译模块内代码的 Go 语言的预期版本。
 
 接下来，运行 `go mod tidy` 添加模块的依赖项:
 
 ```bash
-$ go mod tidy
+$ Go mod tidy
 go: finding golang.org/x/website latest
 go: finding gopkg.in/tomb.v2 latest
 go: finding golang.org/x/net latest
@@ -175,8 +175,8 @@ $
 `go mod tidy` 为模块中的包以及导入的包传递添加到模块中，并为特定版本的每个库构建了一个带有校验和的 `go.sum` 文件。让我们通过代码构建和测试试一试:
 
 ```bash
-$ go build ./...
-$ go test ./...
+$ Go build ./...
+$ Go test ./...
 ok      golang.org/x/blog    0.335s
 ?       golang.org/x/blog/content/appengine    [no test files]
 ok      golang.org/x/blog/content/cover    0.040s
@@ -193,19 +193,19 @@ $
 
 在迁移到 Go 模块之后，有些测试可能需要调整。
 
-如果测试需要在包目录中写入文件，那么当包目录位于模块缓存(只读)中时，测试可能会失败。特别是，这可能导致 go test all 失败。测试应该将需要写入的文件复制到临时目录。
+如果测试需要在包目录中写入文件，那么当包目录位于模块缓存(只读)中时，测试可能会失败。特别是，这可能导致 Go test all 失败。测试应该将需要写入的文件复制到临时目录。
 
 如果测试依赖于相对路径(../package-in-another-module)来定位和读取另一个包中的文件，那么如果该包位于另一个模块中，则测试将失败，该模块将位于模块缓存的版本控制子目录中，或者位于 replace 指令中指定的路径中。如果是这种情况，您可能需要将测试输入复制到模块中，或者将测试输入从原始文件转换为嵌入.go 源文件中的数据。
 
-如果测试期望测试中的 go 命令以 GOPATH 模式运行，那么它可能会失败。如果是这种情况，您可能需要添加一个 go.mod 到要测试的源树，或显式地设置 GO111MODULE=off。
+如果测试期望测试中的 Go 命令以 GOPATH 模式运行，那么它可能会失败。如果是这种情况，您可能需要添加一个 go.mod 到要测试的源树，或显式地设置 GO111MODULE=off。
 
 ## 发布一个版本
 
 最后，您应该标记并发布新模块的发布版本。如果还没有发布任何版本，这是可选的，但是没有正式的版本，下游用户将依赖使用伪版本([pseudo-versions](https://golang.org/cmd/go/#hdr-Pseudo_versions))的特定提交，而伪版本可能更难支持。
 
 ```bash
-$ git tag v1.2.0
-$ git push origin v1.2.0
+$ Git tag v1.2.0
+$ Git push origin v1.2.0
 ```
 
 新的 `go.mod` 文件为模块定义了一个规范导入路径，并添加了新的最低版本需求。如果您的用户已经使用了正确的导入路径，并且您的依赖项没有进行破坏（兼容性）的更改，则添加 go.mod 文件是向下（后）兼容（向旧版本兼容）的，但这是一个重要的改变，可能会暴露现有的问题。如果已有版本标记，则应增加次要版本([minor version](https://semver.org/#spec-item-7))。

@@ -138,7 +138,7 @@ Ok，我们完成了后端基于 Go 的 WebSocket 服务器，现在该做一个
 然后跑 Go 的 Websocket 服务器
 
 ```bash
-$ go run main.go
+$ Go run main.go
 2018/06/10 07:54:06 Serving at localhost:5000...
 2018/06/10 07:54:15 on connection
 2018/06/10 07:54:16 on connection

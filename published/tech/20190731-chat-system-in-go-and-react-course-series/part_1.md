@@ -33,10 +33,10 @@
 ```shell
 $ cd backend
 $ export GO111MODULE=on
-$ go mod init github.com/TutorialEdge/realtime-chat-go-react
+$ Go mod init github.com/TutorialEdge/realtime-chat-go-react
 ```
 
-应该在 `backend` 目录中使用 go modules 初始化我们的项目，初始化之后我们就可以开始写项目并使其成为一个完整的 Go 应用程序。
+应该在 `backend` 目录中使用 Go modules 初始化我们的项目，初始化之后我们就可以开始写项目并使其成为一个完整的 Go 应用程序。
 
 - **go.mod** - 这个文件有点像 NodeJS 项目中的 package.json。它详细描述了我们项目所需的包和版本，以便项目的构建和运行。
 - **go.sum** - 这个文件用于校验，它记录了每个依赖库的版本和哈希值。
@@ -62,7 +62,7 @@ func main() {
 将该内容保存到 `main.go` 后，运行后会得到如下内容：
 
 ```shell
-$ go run main.go
+$ Go run main.go
 Chat App v0.01
 ```
 
@@ -81,7 +81,7 @@ $ cd frontend
 然后，你需要使用 `create-react-app` 包创建一个新的 ReactJS 应用程序。这可以用 `npm` 安装：
 
 ```shell
-$ npm install -g create-react-app
+$ NPM install -g create-react-app
 ```
 
 安装完成后，你应该能够使用以下命令创建新的 ReactJS 应用程序：
@@ -109,7 +109,7 @@ yarn.lock
 现在已经成功创建了基本的 ReactJS 应用程序，我们可以测试一下是否正常。输入以下命令来运行应用程序：
 
 ```shell
-$ npm start
+$ NPM start
 ```
 
 如果一切正常的话，将会看到 ReactJS 应用程序编译并在本地开发服务器上运行：[http://localhost:3000](http://localhost:3000)

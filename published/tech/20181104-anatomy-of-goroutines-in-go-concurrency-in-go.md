@@ -45,7 +45,7 @@ go 协程总是在后台运行，当一个 Go 协程执行的时候（在这个�
 
 <center><a href="https://play.golang.org/p/ujQKjpALlRJ">https://play.golang.org/p/ujQKjpALlRJ</a></center>
 
-如上图所示，我们修改了程序，程序在 main 函数的最后一条语句之前调用了 `time.Sleep(10 * time.Millisecond)`，使得 `主协程` 在执行最后一条指令之前调度器就将控制权转移给了 `printhello 协程`。在这个例子中，我们通过调用 `time.Sleep(10 * time.Millisecond)` 强行让 `主协程` 休眠 10ms 并且在在这个 10ms 内不会再被调度器重新调度运行。
+如上图所示，我们修改了程序，程序在 main 函数的最后一条语句之前调用了 `time.Sleep(10 * time.Millisecond)`，使得 `主协程` 在执行最后一条指令之前调度器就将控制权转移给了 `printhello 协程`。在这个例子中，我们通过调用 `time.Sleep(10 * time.Millisecond)` 强行让 ` 主协程 ` 休眠 10ms 并且在在这个 10ms 内不会再被调度器重新调度运行。
 
 一旦 `printHello 协程` 执行，它就会向控制台打印‘ Hello World ！’，然后该 Go 协程（`printHello 协程`）就会随之终止，接下来 `主协程` 就会被重新调度（因为 main Go 协程已经睡够 10ms 了），并执行最后一条语句。因此，运行上面的程序就会得到以下的输出 :
 

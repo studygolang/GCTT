@@ -89,7 +89,7 @@ func home(w http.ResponseWriter, _ *http.Request) {
 }
 ```
 
-然后`main.go`中做点小改动：
+然后 `main.go` 中做点小改动：
 
 ```go
 package main
@@ -101,7 +101,7 @@ import (
 	"github.com/rumyantseva/advent-2017/handlers"
 )
 
-// How to try it: go run main.go
+// How to try it: Go run main.go
 func main() {
 	log.Print("Starting the service...")
 	router := handlers.Router()
@@ -156,7 +156,7 @@ func TestRouter(t *testing.T) {
 }
 ```
 
-检查了 `GET` 请求 `/home` 路径是否返回 `200`，而 `POST` 请求该路径应该要返回 `405`。请求不存在的路由期望返回`404`。实际上，这样子测有点太冗余了，`gorilla/mux` 中已经包含类似的测试，所以测试代码可以简化下。
+检查了 `GET` 请求 `/home` 路径是否返回 `200`，而 `POST` 请求该路径应该要返回 `405`。请求不存在的路由期望返回 `404`。实际上，这样子测有点太冗余了，`gorilla/mux` 中已经包含类似的测试，所以测试代码可以简化下。
 
 对于 `home` 来说，检查其返回得 code 和 body 值即可。
 
@@ -192,10 +192,10 @@ func TestHome(t *testing.T) {
 }
 ```
 
-运行`go test`开始测试。
+运行 `go test` 开始测试。
 
 ```
-$ go test -v ./...
+$ Go test -v ./...
 ?       github.com/rumyantseva/advent-2017      [no test files]
 === RUN   TestRouter
 --- PASS: TestRouter (0.00s)
@@ -222,7 +222,7 @@ import (
 	"github.com/rumyantseva/advent-2017/handlers"
 )
 
-// How to try it: PORT=8000 go run main.go
+// How to try it: PORT=8000 Go run main.go
 func main() {
 	log.Print("Starting the service...")
 
@@ -346,7 +346,7 @@ func home(w http.ResponseWriter, _ *http.Request) {
 
 ```
 RELEASE?=0.0.1
-COMMIT?=$(shell git rev-parse --short HEAD)
+COMMIT?=$(shell Git rev-parse --short HEAD)
 BUILD_TIME?=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
 ```
 
@@ -456,7 +456,7 @@ func Router(buildTime, commit, release string) *mux.Router {
 
 ## 第十步 添加平滑关闭功能
 
-关闭服务时，最好是不要立即中断连接、请求或者其他一些操作，而应该平滑关闭。Go 从 1.8 版本支持平滑关闭`http.Server`。下面看看怎么用：
+关闭服务时，最好是不要立即中断连接、请求或者其他一些操作，而应该平滑关闭。Go 从 1.8 版本支持平滑关闭 `http.Server`。下面看看怎么用：
 
 `main.go`
 
@@ -492,7 +492,7 @@ func main() {
 ```
 收到 `SIGINT` 或 `SIGTERM` 任意一个系统信号，服务平滑关闭。
 
-注意：当我在写这段代码的时候，我（作者）尝试去捕获 `SIGKILL` 信号。之前在不同的库中有看到过这种用法，我确认这样是行的通的。但是后来 Sandor Szücs [指出](https://twitter.com/sszuecs/status/941582509565005824) ，不可能获取到 `SIGKILL` 信号。发出 `SIGKILL` 信号后，程序会直接结束。
+注意：当我在写这段代码的时候，我（作者）尝试去捕获 `SIGKILL` 信号。之前在不同的库中有看到过这种用法，我确认这样是行的通的。但是后来 Sandor Sz ü cs [指出](https://twitter.com/sszuecs/status/941582509565005824) ，不可能获取到 `SIGKILL` 信号。发出 `SIGKILL` 信号后，程序会直接结束。
 
 ## 第十一步 添加 Dockerfile
 
@@ -527,7 +527,7 @@ GOARCH?=amd64
 ...
 
 build: clean
-	CGO_ENABLED=0 GOOS=${GOOS} GOARCH=${GOARCH} go build \
+	CGO_ENABLED=0 GOOS=${GOOS} GOARCH=${GOARCH} Go build \
 		-ldflags "-s -w -X ${PROJECT}/version.Release=${RELEASE} \
 		-X ${PROJECT}/version.Commit=${COMMIT} -X ${PROJECT}/version.BuildTime=${BUILD_TIME}" \
 		-o ${APP}
@@ -546,7 +546,7 @@ run: container
 
 添加了 `container` 和 `run` goal，前者构建镜像，后者从容器启动程序。所有改动 [这里](https://github.com/rumyantseva/advent-2017/commit/909fef6d585c85c5e16b5b0e4fdbdf080893b679) 可以找到。
 
-请尝试运行 `make run`命令，检查所有过程是否正确。
+请尝试运行 `make run` 命令，检查所有过程是否正确。
 
 ## 第十二步 添加 vendor
 
@@ -599,7 +599,7 @@ ee1f0f98199f: Pushed
 0.0.1: digest: sha256:fb3a25b19946787e291f32f45931ffd95a933100c7e55ab975e523a02810b04c size: 528
 ```
 
-成功了~！然后可以在[这里找到镜像](https://hub.docker.com/r/webdeva/advent/tags/)。
+成功了 ~！然后可以在[这里找到镜像](https://hub.docker.com/r/webdeva/advent/tags/)。
 
 接下来，定义必要的 Kubernetes 配置（manifest）。通常，一个服务至少需要设置 deployment、service 和 ingress 配置。默认情况，manifest 都是静态的，即其中不能使用任何变量。不过可以通过 [helm 工具](https://github.com/kubernetes/helm) 创建更灵活的配置。
 
@@ -723,7 +723,7 @@ minikube: push
         cat $$t | \
         	gsed -E "s/\{\{(\s*)\.Release(\s*)\}\}/$(RELEASE)/g" | \
         	gsed -E "s/\{\{(\s*)\.ServiceName(\s*)\}\}/$(APP)/g"; \
-        echo ---; \
+        Echo ---; \
     done > tmp.yaml
 	kubectl apply -f tmp.yaml
 ```
@@ -762,7 +762,7 @@ Vary: Accept-Encoding
 
 {"buildTime":"2017-12-10_11:29:59","commit":"020a181","release":"0.0.5"}%
 ```
-成功~！
+成功 ~！
 
 所有步骤的代码在 [这里](https://github.com/rumyantseva/advent-2017) ，两个版本：[按 commit 划分](https://github.com/rumyantseva/advent-2017/commits/master) 以及 [按步骤划分](https://github.com/rumyantseva/advent-2017/tree/all-steps)。如有任何疑问，请 [提 issue](https://github.com/rumyantseva/advent-2017/issues/new)，或者 tweet[@webdeva](https://twitter.com/webdeva)，或者在评论区留评论。
 

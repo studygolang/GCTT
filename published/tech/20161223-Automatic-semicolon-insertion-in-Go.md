@@ -68,7 +68,7 @@ f()
 f()(g())
 ```
 
-第一个片段没有打印任何东西，但是第二个给出内部函数调用。这是因为前面提到的第4条规则：因为最后的记号都是圆括号，所以两行后面都加了分号。
+第一个片段没有打印任何东西，但是第二个给出内部函数调用。这是因为前面提到的第 4 条规则：因为最后的记号都是圆括号，所以两行后面都加了分号。
 
 ```go
 f();
@@ -143,7 +143,7 @@ golangspec 已有 300 多关注者。这并不是它的目标，但有越来越�
 
 via: https://medium.com/golangspec/automatic-semicolon-insertion-in-go-1990338f2649
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[themoonbear](https://github.com/themoonbear)
 校对：[polaris1119](https://github.com/polaris1119)
 

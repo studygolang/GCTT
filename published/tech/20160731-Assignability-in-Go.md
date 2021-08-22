@@ -125,7 +125,7 @@ d = untyped
 
 via: https://medium.com/golangspec/assignability-in-go-27805bcd5874
 
-作者：[Michał Łowicki](https://twitter.com/mlowicki)
+作者：[Micha ł Ł owicki](https://twitter.com/mlowicki)
 译者：[Miancai Li](https://github.com/gogeof)
 校对：[polaris1119](https://github.com/polaris1119)
 

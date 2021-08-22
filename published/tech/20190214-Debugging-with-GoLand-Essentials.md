@@ -2,7 +2,7 @@
 
 # 使用 GoLand 进行调试的要点
 
-*由 [Florin Păţan](https://blog.jetbrains.com/go/author/florin-patanjetbrains-com/) 于 [2019 年 2 月 14 日 ](https://blog.jetbrains.com/go/2019/02/14/debugging-with-goland-essentials/) 发表*
+*由 [Florin P ăţ an](https://blog.jetbrains.com/go/author/florin-patanjetbrains-com/) 于 [2019 年 2 月 14 日 ](https://blog.jetbrains.com/go/2019/02/14/debugging-with-goland-essentials/) 发表*
 
 在今天的帖子中，我们将继续探索 GoLand 中的调试器功能。如果你想知道如何配置调试器。请查看我们之前的帖子，其中包含关于如何配置 IDE 在各种方案中工作的所有信息。
 
@@ -70,7 +70,7 @@
 
 via: https://blog.jetbrains.com/go/2019/02/14/debugging-with-goland-essentials/
 
-作者：[Florin Pățan](https://blog.jetbrains.com/go/author/florin-patanjetbrains-com/)
+作者：[Florin P ăț an](https://blog.jetbrains.com/go/author/florin-patanjetbrains-com/)
 译者：[piglig](https://github.com/piglig)
 校对：[magichan](https://github.com/magichan)
 

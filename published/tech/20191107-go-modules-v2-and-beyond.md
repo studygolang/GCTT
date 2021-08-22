@@ -91,7 +91,7 @@ $
 
 ```bash
 $ cp go.mod v2/go.mod
-$ go mod edit -module github.com/googleapis/gax-go/v2 v2/go.mod
+$ Go mod edit -module github.com/googleapis/gax-go/v2 v2/go.mod
 $
 ```
 
@@ -107,16 +107,16 @@ $
 现在我们有了一个 `v2` 模块，但是我们要在版本发布之前进行实验并进行修改。在我们发布 `v2.0.0` （或者其他没有预发布后缀的版本）之前，我们可以进行开发并且可以做出重大变更，就如同我们决定实现新 API 一样。  如果我们希望用户能够在正式发布新 API 之前对其进行试验，可以选择发布 `v2` 预发布版本：
 
 ```bash
-$ git tag v2.0.0-alpha.1
-$ git push origin v2.0.0-alpha.1
+$ Git tag v2.0.0-alpha.1
+$ Git push origin v2.0.0-alpha.1
 $
 ```
 
 一旦我们对 `v2` API 感到满意并且确定不会再有别的重大变更，我们可以打上 Git 标记 `v2.0.0` 。
 
 ```bash
-$ git tag v2.0.0
-$ git push origin v2.0.0
+$ Git tag v2.0.0
+$ Git push origin v2.0.0
 $
 ```
 

@@ -2,32 +2,32 @@
 
 # 如何泄漏一个协程然后修复它
 
-很多 go 语言开发者都知道这句格言，[永远不要启动一个你不知道如何停止的协程](https://dave.cheney.net/2016/12/22/never-start-a-goroutine-without-knowing-how-it-will-stop)，但是泄漏一个协程还是超级的简单。让我们看一种常碰到的泄漏协程的方式，然后修复它。
+很多 Go 语言开发者都知道这句格言，[永远不要启动一个你不知道如何停止的协程](https://dave.cheney.net/2016/12/22/never-start-a-goroutine-without-knowing-how-it-will-stop)，但是泄漏一个协程还是超级的简单。让我们看一种常碰到的泄漏协程的方式，然后修复它。
 
 为了实现这个，我们先建立一个包含一个自定义 `map` 类型的库，这个 `map` 类型的 key 在经过了一段可配置的时间后过期。我们把这个库叫做 [ttl](https://en.wikipedia.org/wiki/Time_to_live) ，这个库有一个 `API` 类似如下：
 
 ```go
-// 创建一个生存周期为5分钟的map
+// 创建一个生存周期为 5 分钟的 map
 m := ttl.NewMap(5*time.Minute)
-//设置一个key
+//设置一个 key
 m.Set("my-key", []byte("my-value"))
 
-// 读取一个key
+// 读取一个 key
 v, ok := m.Get("my-key")
 //得到 "my-value"
 fmt.Println(string(v))
-// true, key存在
+// true, key 存在
 fmt.Println(ok)
 
-// ... 过了5分钟之后
+// ... 过了 5 分钟之后
 v, ok := m.Get("my-key")
 // 没有值
 fmt.Println(string(v) == "")
-// false, key已经过期了
+// false, key 已经过期了
 fmt.Println(ok)
 ```
 
-为了确保key会过期，我们在NewMap函数中启动一个协程。
+为了确保 key 会过期，我们在 NewMap 函数中启动一个协程。
 
 ```go
 func NewMap(expiration time.Duration) *Map {
@@ -86,7 +86,7 @@ func work() {
 	if _, ok := m.Get("my-key"); !ok {
 		panic("no value present")
 	}
-	// m超出变量范围
+	// m 超出变量范围
 }
 ```
 不用很长时间，我们就可以看到分配的堆内存和运行的协程数增长得非常，非常的快。
@@ -139,7 +139,7 @@ func NewMap(expiration time.Duration) *Map {
 }
 ```
 
-现在工作协程包含了一个 `select` 语句，它会检查 `done通道` 也会检查 `ticker 的通道`，主要的，我们还删除了 [time.Tick](https://godoc.org/time#Tick)，因为它并不能让协程顺利关闭还是会造成泄漏。
+现在工作协程包含了一个 `select` 语句，它会检查 `done 通道` 也会检查 `ticker 的通道`，主要的，我们还删除了 [time.Tick](https://godoc.org/time#Tick)，因为它并不能让协程顺利关闭还是会造成泄漏。
 
 经过以上的修改，我们简化的统计数据看起像这样：
 ```

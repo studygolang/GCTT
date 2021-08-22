@@ -79,7 +79,7 @@ func main() {
 ```
 [在线运行程序](https://play.golang.org/p/bKe5GdgMK9)
 
-在上面的程序中，第 16 行在 Go 主协程中创建了容量为 2 的缓冲信道 `ch`，而第 17 行把 `ch` 传递给了 `write` 协程。接下来 Go 主协程休眠了两秒。在这期间，`write` 协程在并发地运行。`write` 协程有一个 for 循环，依次向信道 `ch` 写入 0～4。而缓冲信道的容量为 2，因此 `write` 协程里立即会向 `ch` 写入 0 和 1，接下来发生阻塞，直到 `ch` 内的值被读取。因此，该程序立即打印出下面两行：
+在上面的程序中，第 16 行在 Go 主协程中创建了容量为 2 的缓冲信道 `ch`，而第 17 行把 `ch` 传递给了 `write` 协程。接下来 Go 主协程休眠了两秒。在这期间，`write` 协程在并发地运行。`write` 协程有一个 for 循环，依次向信道 `ch` 写入 0 ～ 4。而缓冲信道的容量为 2，因此 `write` 协程里立即会向 `ch` 写入 0 和 1，接下来发生阻塞，直到 `ch` 内的值被读取。因此，该程序立即打印出下面两行：
 
 ```
 successfully wrote 0 to ch
@@ -206,7 +206,7 @@ func main() {
 		go process(i, &wg)
 	}
 	wg.Wait()
-	fmt.Println("All go routines finished executing")
+	fmt.Println("All Go routines finished executing")
 }
 ```
 [在线运行程序](https://play.golang.org/p/CZNtu8ktQh)
@@ -226,7 +226,7 @@ started Goroutine  1
 Goroutine 0 ended
 Goroutine 2 ended
 Goroutine 1 ended
-All go routines finished executing
+All Go routines finished executing
 ```
 
 由于 Go 协程的执行顺序不一定，因此你的输出可能和我不一样。:)

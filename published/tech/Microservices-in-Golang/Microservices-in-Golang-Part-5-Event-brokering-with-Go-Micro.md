@@ -183,11 +183,11 @@ pubsub := srv.Server().Options().Broker
 
 就是这样！这是一个简单的例子，因为我们的电子邮件服务隐式地收听单个 `user.created` 事件，但希望你能看到这种方法如何让你编写解耦的服务。
 
-值得一提的是，使用 JSON over NATS 会比 gRPC 带来更高的性能开销，因为我们已经回到串行化json字符串的领域。但是，对于某些使用情况，这是完全可以接受的。 NATS 非常高效，非常适合消息最多交付一次的事件（fire and forget 有消息最多交付一次的意思，这个[链接](http://www.enterpriseintegrationpatterns.com/patterns/conversation/FireAndForget.html)可以帮助做更深入的理解）。
+值得一提的是，使用 JSON over NATS 会比 gRPC 带来更高的性能开销，因为我们已经回到串行化 json 字符串的领域。但是，对于某些使用情况，这是完全可以接受的。 NATS 非常高效，非常适合消息最多交付一次的事件（fire and forget 有消息最多交付一次的意思，这个[链接](http://www.enterpriseintegrationpatterns.com/patterns/conversation/FireAndForget.html)可以帮助做更深入的理解）。
 
 Go-micro 还支持一些最广泛使用的队列 / pubsub 技术供你使用。[你可以在这里看到它们的列表](https://github.com/micro/go-plugins/tree/master/broker)。你不需要改变你的实现因为 go-micro 为你提供了抽象。你只需要将环境变量从 `MICRO_BROKER=nats` 更改为 `MICRO_BROKER=googlepubsub`，然后将 main.go 的导入从 `_ "github.com/micro/go-plugins/broker/nats"` 更改为 `_ "github.com/micro/go-plugins/broker/googlepubsub"`。
 
-如果你不使用 go-micro，那么有一个 [NATS go 库](https://github.com/nats-io/go-nats)（NATS 是用 go 写的，所以对 Go 的支持非常稳固）。
+如果你不使用 go-micro，那么有一个 [NATS Go 库](https://github.com/nats-io/go-nats)（NATS 是用 Go 写的，所以对 Go 的支持非常稳固）。
 
 发布一个事件：
 
@@ -278,7 +278,7 @@ func main() {
 
 via：[Microservices in Golang - Part 5 - Event brokering with Go Micro](https://ewanvalentine.io/microservices-in-golang-part-5/)
 
-作者：[André Carvalho](https://ewanvalentine.io/)
+作者：[Andr é Carvalho](https://ewanvalentine.io/)
 译者：[shniu](https://github.com/shniu)
 校对：[polaris1119](https://github.com/polaris1119)
 

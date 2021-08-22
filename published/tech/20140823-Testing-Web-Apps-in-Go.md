@@ -159,7 +159,7 @@ function TestHome(t *testing.T) {
 
 更多相关的详细用法，可以[点击](https://github.com/markberger/carton/blob/master/api/auth_test.go)查看我的小项目。
 
-如果你有更好的方法来利用标准库进行 web 应用测试，你可以随时进行留言或给我发 email。
+如果你有更好的方法来利用标准库进行 Web 应用测试，你可以随时进行留言或给我发 email。
 
 ---
 

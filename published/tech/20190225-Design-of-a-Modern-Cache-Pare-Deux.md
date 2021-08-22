@@ -38,7 +38,7 @@
 
 ## 结论
 
-Caffeine 是一个开源的 Java 缓存库。本文和上一篇文章讨论的技术可以应用于任何语言，并且实现起来非常简单。除了我们上一篇文章中所感谢的人员，我还要特别感谢以下人员做出的贡献，Ohad Eytan，Julian Vassev，ViktorSzathmáry，Charles Allen，William Burns，Christian Sailer，Rick Parker，Branimir Lambov，Benedict Smith，Martin Grajcar，Kurt Kluever，Johno Crawford，Ken Dombeck 和 James Baker
+Caffeine 是一个开源的 Java 缓存库。本文和上一篇文章讨论的技术可以应用于任何语言，并且实现起来非常简单。除了我们上一篇文章中所感谢的人员，我还要特别感谢以下人员做出的贡献，Ohad Eytan，Julian Vassev，ViktorSzathm á ry，Charles Allen，William Burns，Christian Sailer，Rick Parker，Branimir Lambov，Benedict Smith，Martin Grajcar，Kurt Kluever，Johno Crawford，Ken Dombeck 和 James Baker
 
 ---
 

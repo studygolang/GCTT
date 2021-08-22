@@ -420,7 +420,7 @@ panic: bufio.Scan: 100 empty tokens without progressing
 
 via: https://medium.com/golangspec/in-depth-introduction-to-bufio-scanner-in-golang-55483bb689b4
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[yujiahaol68](https://github.com/yujiahaol68)
 校对：[rxcai](https://github.com/rxcai)，[polaris1119](https://github.com/polaris1119)
 

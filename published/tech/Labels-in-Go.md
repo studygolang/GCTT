@@ -220,7 +220,7 @@ Block:
 
 via: https://medium.com/golangspec/labels-in-go-4ffd81932339
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[saberuster](https://github.com/saberuster)
 校对：[polaris1119](https://github.com/polaris1119)
 

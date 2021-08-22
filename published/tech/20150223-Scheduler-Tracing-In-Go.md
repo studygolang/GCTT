@@ -58,9 +58,9 @@ func work(wg *sync.WaitGroup) {
 
 清单 1 中的例子是为了演示运行时调试器给我们的调试信息。在第 12 秒 for 循环进行 10 次 goroutines。然后主函数在第 16 行的时候等待所有 goroutines 执行完成。在第 22 行 work 函数里面先 sleep 一秒然后 counter 变量 ++ 执行一百亿次。当 for 循环执行完成后调用 Done 方法最后 return。
 
-在设置 GODEBUG 之前，先用 go build 编译代码。这个变量由运行时获取，因此运行 Go 命令也将产生跟踪输出。如果 GODEBUG 结合 go run 使用，那么你将看到运行之前的跟踪调试信息。
+在设置 GODEBUG 之前，先用 Go build 编译代码。这个变量由运行时获取，因此运行 Go 命令也将产生跟踪输出。如果 GODEBUG 结合 Go run 使用，那么你将看到运行之前的跟踪调试信息。
 
-现在我们使用 go build 编译上面的例子，这样我们就可以携带 GODEBUG 选项运行例子了：
+现在我们使用 Go build 编译上面的例子，这样我们就可以携带 GODEBUG 选项运行例子了：
 
 ```
 go build example.go
@@ -104,16 +104,16 @@ idleprocs=0   : 空闲的处理器个数。这里空闲个数为 0，有一个�
 
 runqueue=0    : 在全局运行队列中等待的 goroutinue 数量。所有可运行的 goroutinue 都被移到了本地的运行队列中。
 
-[9]           : 本地运行队列中等待的 goroutine 数量。当前有 9 个 goroutine 在本地运行队列等待。
+[9]           : 本地运行队列中等待的 Goroutine 数量。当前有 9 个 Goroutine 在本地运行队列等待。
 ```
 
-在运行时的摘要信息里面给了我们很多非常有用的信息。我们从运行的一秒的标记里面可以看到跟踪的信息。我们可以看到一个 gorountine 如何运行，其它 9 个 goroutine 都在 local run queue 中等待。
+在运行时的摘要信息里面给了我们很多非常有用的信息。我们从运行的一秒的标记里面可以看到跟踪的信息。我们可以看到一个 gorountine 如何运行，其它 9 个 Goroutine 都在 local run queue 中等待。
 
 ### 图 1
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/20150223-Scheduler-Tracing-In-Go/diagram1.png)
 
-从图一中可以看到处理器用字母 "P" 代表，线程使用字母 "M" 代码，goroutines 使用字母 "G" 代表。我们可以看到当 runqueue 的值为 0 时，全局的 run queue 是空的。处理器将会把 gorountine 运行在 idleprocs 为 0 的上面运行。我们运行的其他九个 goroutine 仍然在等待。
+从图一中可以看到处理器用字母 "P" 代表，线程使用字母 "M" 代码，goroutines 使用字母 "G" 代表。我们可以看到当 runqueue 的值为 0 时，全局的 run queue 是空的。处理器将会把 gorountine 运行在 idleprocs 为 0 的上面运行。我们运行的其他九个 Goroutine 仍然在等待。
 
 那如果有多个处理器的时候，那我们该如何跟踪呢？那我们再运行一次程序并添加 GOMAXPROCS 选项，看看会输出什么跟踪信息：
 
@@ -174,7 +174,7 @@ runqueue=0    : All runnable goroutines have been moved to a local run queue.
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/20150223-Scheduler-Tracing-In-Go/diagram2.png)
 
-我们看一下第二秒跟踪信息在图 2 中的信息，我们可以看到一个 goroutine 在每个处理器中是如何运行的。并且我们可以看到 8 个 goroutine 在 local run queues 中等待，每个 local run queues 各四个。在跟踪信息的第六秒发生了改变：
+我们看一下第二秒跟踪信息在图 2 中的信息，我们可以看到一个 Goroutine 在每个处理器中是如何运行的。并且我们可以看到 8 个 Goroutine 在 local run queues 中等待，每个 local run queues 各四个。在跟踪信息的第六秒发生了改变：
 
 ```
 SCHED 6024ms: gomaxprocs=2 idleprocs=0 threads=4 spinningthreads=0
@@ -189,13 +189,13 @@ runqueue=2  : 2 goroutines returned and are waiting to be terminated.
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/20150223-Scheduler-Tracing-In-Go/diagram3.png)
 
-当到第六秒的时候发生了变化。从图 3 中有两个 goroutine 完成工作之后被移到了 global run queue 里面，并且我们仍然有两个 goroutine 在运行。每个 processor 各运行一个，在每个 local run queue 里面各有三个在等待。
+当到第六秒的时候发生了变化。从图 3 中有两个 Goroutine 完成工作之后被移到了 global run queue 里面，并且我们仍然有两个 Goroutine 在运行。每个 processor 各运行一个，在每个 local run queue 里面各有三个在等待。
 
 注释：
 
-在很多情况下，goroutine 运行完成之后并不会被移到全局的 run queue 中。这个例子创建的条件比较特殊。因为这个例子的 for 循环运行了 10 秒多的时间但是没有任何的函数调用。10 秒是调度的次数在调度器里面。在执行 10 秒后，调度器尝试先去取 goroutine。但是这些 goroutine 不能被占用，因为它们没有调用任何的函数。在这种情况下，一旦 goroutine 调用 wg.Done，这个 goroutine 将立即被占用，然后移到全局的 run queue 中。
+在很多情况下，goroutine 运行完成之后并不会被移到全局的 run queue 中。这个例子创建的条件比较特殊。因为这个例子的 for 循环运行了 10 秒多的时间但是没有任何的函数调用。10 秒是调度的次数在调度器里面。在执行 10 秒后，调度器尝试先去取 goroutine。但是这些 Goroutine 不能被占用，因为它们没有调用任何的函数。在这种情况下，一旦 Goroutine 调用 wg.Done，这个 Goroutine 将立即被占用，然后移到全局的 run queue 中。
 
-当到第 17 秒的时候，我们可以看到最后两个 goroutine 都在运行了：
+当到第 17 秒的时候，我们可以看到最后两个 Goroutine 都在运行了：
 
 ```
 SCHED 17084ms: Gomaxprocs=2 idleprocs=0 threads=4 spinningthreads=0
@@ -225,11 +225,11 @@ runqueue=0  : All the goroutines that were in the queue have been terminated.
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/20150223-Scheduler-Tracing-In-Go/diagram5.png)
 
-至此，所有的 goroutine 都执行完了并且已经结束。
+至此，所有的 Goroutine 都执行完了并且已经结束。
 
 ## 详细的跟踪信息
 
-概要的跟踪信息是非常有用的，但是有的时候你需要更详细的信息。如果需要更详细的每个处理器，线程的或者 goroutine 的跟踪信息我们可以添加 scheddetail 这个选项。我们再一次运行程序，设置 GODEBUG 选项获取更详细的跟踪信息：
+概要的跟踪信息是非常有用的，但是有的时候你需要更详细的信息。如果需要更详细的每个处理器，线程的或者 Goroutine 的跟踪信息我们可以添加 scheddetail 这个选项。我们再一次运行程序，设置 GODEBUG 选项获取更详细的跟踪信息：
 
 ```
 GOMAXPROCS=2 GODEBUG=schedtrace=1000,scheddetail=1 ./example
@@ -263,10 +263,10 @@ G10: status=2(sleep) m=2 lockedm=-1
 G11: status=1(sleep) m=-1 lockedm=-1
 G12: status=1(sleep) m=-1 lockedm=-1
 G13: status=1(sleep) m=-1 lockedm=-1
-G17: status=4(timer goroutine (idle)) m=-1 lockedm=-1
+G17: status=4(timer Goroutine (idle)) m=-1 lockedm=-1
 ```
 
-概要部分基本相同，但是有了关于处理器，线程以及 goroutine 更详细的信息。我们看看关于处理器的信息：
+概要部分基本相同，但是有了关于处理器，线程以及 Goroutine 更详细的信息。我们看看关于处理器的信息：
 
 ```
 P0: status=1 schedtick=10 syscalltick=0 m=3 runqsize=3 gfreecnt=0
@@ -301,10 +301,10 @@ spinning=0 blocked=0 lockedg=-1
 
 这里展示了线程 M3 是如何绑定在处理器 P0 上的。这个信息在 P 和 M 的跟踪信息里面都有。
 
-G 代码一个 goroutine。在第四秒的时候我们可以看到有 14 个 goroutine 存在，有 17 个 goroutine 被创建。我们之所以知道总共的 goroutine 的个数是因为最后在 G 列表里面绑定的数字：
+G 代码一个 goroutine。在第四秒的时候我们可以看到有 14 个 Goroutine 存在，有 17 个 Goroutine 被创建。我们之所以知道总共的 Goroutine 的个数是因为最后在 G 列表里面绑定的数字：
 
 ```
-G17: status=4(timer goroutine (idle)) m=-1 lockedm=-1
+G17: status=4(timer Goroutine (idle)) m=-1 lockedm=-1
 ```
 
 如果成行继续创建 goroutine，我们就可以看到这个数字将呈线性的增长。如果这个程序是拦截 Web 请求的例子，那么我们可以用这个数字来确认请求的拦截次数。只有当拦截请求期间不再创建任何的 goroutine，这个才会被关闭。
@@ -317,7 +317,7 @@ G1: status=4(semacquire) m=-1 lockedm=-1
 30     wg.Done()
 ```
 
-我们可以看到在 main 方法中 goroutine 的状态为 4，状态被锁定在 semacquire 状态，这个状态表示等待调用。
+我们可以看到在 main 方法中 Goroutine 的状态为 4，状态被锁定在 semacquire 状态，这个状态表示等待调用。
 
 为了更好的理解剩下的跟踪信息，先来了解一下状态代码的意思。下面是状态值列表，这些声明在 runtime 包的头文件里面的：
 
@@ -329,12 +329,12 @@ Grunning,         // 2 running
 Gsyscall,         // 3 performing a syscall
 Gwaiting,         // 4 waiting for the runtime
 Gmoribund_unused, // 5 currently unused, but hardcoded in gdb scripts
-Gdead,            // 6 goroutine is dead
+Gdead,            // 6 Goroutine is dead
 Genqueue,         // 7 only the Gscanenqueue is used
 Gcopystack,       // 8 in this state when newstack is moving the stack
 ```
 
-对照他们的状态我们能更好的理解我们创建的 10 个 goroutine 都在做什么。
+对照他们的状态我们能更好的理解我们创建的 10 个 Goroutine 都在做什么。
 
 ```
 // goroutines running in a processor. (idleprocs=0)
@@ -356,7 +356,7 @@ G6: status=1(stack growth) m=-1 lockedm=-1
 G9: status=1(stack growth) m=-1 lockedm=-1
 ```
 
-基于对 scheduler 的简单了解以及对我们例子程序的了解，我们对程序如何被 scheduled，每个处理器的状态是什么，线程以及 goroutine 等信息都有了全面的了解。
+基于对 scheduler 的简单了解以及对我们例子程序的了解，我们对程序如何被 scheduled，每个处理器的状态是什么，线程以及 Goroutine 等信息都有了全面的了解。
 
 ## 总结：
 

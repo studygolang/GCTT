@@ -31,7 +31,7 @@ func follow(file io.Reader) error {
 
 当内容写入文件时，可悲的是没有及时做出反应。Linux 提供了一个 API 来监视文件系统事件：inotify AP。手册页给了你一个很好的介绍。它提供了两个我们感兴趣的函数：`inotify_init` 和 `inotify_add_watch`。`inotify_init` 函数创建一个对象，我们将使用该对象进一步与 API 进行交互。`inotify_add_watch` 函数允许你指定感兴趣的文件事件。API 提供了几个事件，但我们关心的是修改文件时发出的 `IN_MODIFY` 事件。
 
-由于我们使用Go，不得不列出 `syscall` 包。它为前面提到的功能提供了包装器：`syscall.InotifyInit` 和 `syscall.InotifyAddWatch`。使用 syscall 让我们看看如何实现 follow 函数。为了简洁起见，我省略了错误处理，当你看到一个 `_` 变量被使用时，它是处理返回错误的好地方。
+由于我们使用 Go，不得不列出 `syscall` 包。它为前面提到的功能提供了包装器：`syscall.InotifyInit` 和 `syscall.InotifyAddWatch`。使用 syscall 让我们看看如何实现 follow 函数。为了简洁起见，我省略了错误处理，当你看到一个 `_` 变量被使用时，它是处理返回错误的好地方。
 
 ```go
 func follow(filename string) error {

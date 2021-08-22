@@ -62,7 +62,7 @@ func main() {
 
 你可以对比一下你最喜欢的语言的数据库，以 Java 为例，JDBC 在 java.sql 包中有 ResultSet、Connection、Driver、Statement 以及另外十八个接口，所有这些接口都必须实现。
 
-我们再来看看 MySQL、SQLServer、Oracle 和 Postgres库。我没有编写或检查它们是否使用 java.sql 中定义的任何具体类或枚举。不过，这些供应商库不需要 JDBC 包来使用上面提到的接口。
+我们再来看看 MySQL、SQLServer、Oracle 和 Postgres 库。我没有编写或检查它们是否使用 java.sql 中定义的任何具体类或枚举。不过，这些供应商库不需要 JDBC 包来使用上面提到的接口。
 
 我们在 Blue Matador 建立的监控代理有很多包和模块。每个模块可以主动或被动启用。现在，它被分为 Lumberjack，我们的集中式日志管理产品，以及 Watchdog，我们的系统的监控工具。
 
@@ -102,4 +102,4 @@ via: https://blog.bluematador.com/posts/golang-pros-cons-for-devops-part-2/
 译者：[Mr.NoFat](https://github.com/UnFat)
 校对：[polaris1119](https://github.com/polaris1119)
 
-本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go中文网](https://studygolang.com/) 荣誉推出
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

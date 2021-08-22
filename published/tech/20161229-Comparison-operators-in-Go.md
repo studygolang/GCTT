@@ -222,13 +222,13 @@ t = b
 fmt.Println(t)
 ```
 
-产生一个错误，不能使用 b （bool类型）分配给 T 类型。关于常量（有类型和无类型）更详尽的介绍在官方[博客](https://blog.golang.org/constants)上。
+产生一个错误，不能使用 b （bool 类型）分配给 T 类型。关于常量（有类型和无类型）更详尽的介绍在官方[博客](https://blog.golang.org/constants)上。
 
 ---
 
 via: https://medium.com/golangspec/comparison-operators-in-go-910d9d788ec0
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[themoonbear](https://github.com/themoonbear)
 校对：[polaris1119](https://github.com/polaris1119)
 

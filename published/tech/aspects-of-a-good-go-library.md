@@ -10,7 +10,7 @@
 
 ### 加标签的库版本
 
-使用 git 标签来管理你的库版本。语义版本化是一个合理的系统。如果你对语义版本化的[反对在意](https://news.ycombinator.com/item?id=13378637)，那么，你就不是本文的目标读者 :)
+使用 Git 标签来管理你的库版本。语义版本化是一个合理的系统。如果你对语义版本化的[反对在意](https://news.ycombinator.com/item?id=13378637)，那么，你就不是本文的目标读者 :)
 
 ### 没有非标准库依赖
 
@@ -124,7 +124,7 @@ func (p *PreferThis) WriteTo(w Writer) (n int64, err error) { ... }
 
 ### 通过行为暴露错误，而不是类型
 
-这是以库为中心的 Dave的 _Assert errors for behaviour, not type。_的等价说明。更多信息，看[这里](https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully)。
+这是以库为中心的 Dave 的 _Assert errors for behaviour, not type。_的等价说明。更多信息，看[这里](https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully)。
 
 ### 不要 panic
 
@@ -134,9 +134,9 @@ func (p *PreferThis) WriteTo(w Writer) (n int64, err error) { ... }
 
 ### 避免创建 goroutine
 
-这是由 [CodeReviewComments 中的同步函数](https://github.com/golang/go/wiki/CodeReviewComments#synchronous-functions)部分推导出的更明确的规则。同步函数为库用户提供更多的控制权。goroutine 有时在并行化逻辑时是有用的，但是，作为一名库作者，你应该从不使用 goroutine 并且找出使用它们的原因**开始**，而不是先使用 goroutine，然后争论着摆脱它们。
+这是由 [CodeReviewComments 中的同步函数](https://github.com/golang/go/wiki/CodeReviewComments#synchronous-functions)部分推导出的更明确的规则。同步函数为库用户提供更多的控制权。goroutine 有时在并行化逻辑时是有用的，但是，作为一名库作者，你应该从不使用 Goroutine 并且找出使用它们的原因**开始**，而不是先使用 goroutine，然后争论着摆脱它们。
 
-### 允许后台 goroutine 干净地停止
+### 允许后台 Goroutine 干净地停止
 
 这是 [goroutine 生命周期](https://github.com/golang/go/wiki/CodeReviewComments#goroutine-lifetimes) 反馈的首选限制。应该有一种方式，以一种不会发出虚假错误的方式，结束你的库创建的任意 goroutine。
 
@@ -181,12 +181,12 @@ Go 简单的语法和优秀的标准库函数允许广泛的静态代码检查�
 100% 测试覆盖率是极端的，而 0% 测试覆盖率几乎不是什么好事。这是一项难以量化的规则，所以我已经决定“没有任何函数应该具备 0% 的测试覆盖率”是最低限度了。你可以使用 Go 的 cover 工具获取每个函数测试覆盖率。
 
 ```console
-# go test -coverprofile=cover.out context
+# Go test -coverprofile=cover.out context
 ok   context 2.651s coverage: 97.0% of statements
 ```
 
 ```console
-# go tool cover -func=cover.out
+# Go tool cover -func=cover.out
 context/context.go:162: Error  100.0%
 context/context.go:163: Timeout  100.0%
 context/context.go:164: Temporary 100.0%

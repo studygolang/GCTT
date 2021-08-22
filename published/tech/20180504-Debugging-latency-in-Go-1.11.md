@@ -36,7 +36,7 @@
 
 在 Go 1.11 下，我们将对执行追踪器有额外的支持，以便能指出 RPC 调用时的运行时事件。有了这个新特性，对于一个调用生命周期所发生的事，用户可以收集到更多的信息。
 
-在这个案例中，我们将聚焦于 auth.AccessToken 范围内的部分。在网络上一共花费了 30 + 18 µs，阻塞的系统调用 5µs，垃圾回收 21µs，真正执行 handler 花费了 123µs，其中大部分都花在序列化和反序列化上。
+在这个案例中，我们将聚焦于 auth.AccessToken 范围内的部分。在网络上一共花费了 30 + 18 µ s，阻塞的系统调用 5 µ s，垃圾回收 21 µ s，真正执行 handler 花费了 123 µ s，其中大部分都花在序列化和反序列化上。
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/debugging-latency/3.png)
 
@@ -52,7 +52,7 @@
 
 执行追踪器引入两个上层的概念：*region* 及 *task*，以便用户来对他们的代码进行插桩。
 
-Region 是你希望收集追踪数据的代码区域。一个 region 开始和结束在同一个 goroutine 内。另一方面，task 是一个逻辑上的群组，将相关的 region 归在一起。一个 task 的开始和结束可以在不同的 goroutine 中。
+Region 是你希望收集追踪数据的代码区域。一个 region 开始和结束在同一个 Goroutine 内。另一方面，task 是一个逻辑上的群组，将相关的 region 归在一起。一个 task 的开始和结束可以在不同的 Goroutine 中。
 
 我们预期用户为每个分布式追踪的 span 都启动一个执行追踪器，通过创建 region, 当问题发生时即刻启用执行追踪器，记录一些数据，分析输出，来对他们的 RPC 框架进行全面的插桩。
 
@@ -90,7 +90,7 @@ go func() {
 
 ```
 $ curl http://server:6060/debug/pprof/trace?seconds=5 -o trace.out
-$ go tool trace trace.out
+$ Go tool trace trace.out
 2018/05/04 10:39:59 Parsing trace...
 2018/05/04 10:39:59 Splitting trace...
 2018/05/04 10:39:59 Opening browser. Trace viewer is listening on http://127.0.0.1:51803
@@ -102,7 +102,7 @@ $ go tool trace trace.out
 
 *RPC task 的时间分布。*
 
-你可以点击 3981µs 的那个异常的 bucket，进一步分析在那个特定 RPC 的生命周期里发生了什么。
+你可以点击 3981 µ s 的那个异常的 bucket，进一步分析在那个特定 RPC 的生命周期里发生了什么。
 
 同时，/userregions 让你列出收集到的 region。你可以看到 connection.init 这个 region 以及所对应的多条记录。（注意到 connection.init 是为了演示而手动集成到 gRPC 框架的源码中的，更多的插桩工作还在进行中。）
 
@@ -110,19 +110,19 @@ $ go tool trace trace.out
 
 *region 的时间分布。*
 
-如果你点击了任意一个链接，它会给你更多关于处于那个延迟 bucket 中的 region 的详细信息。在下面的例子中，我们看到有一个 region 位于 1000µs 的 bucket。
+如果你点击了任意一个链接，它会给你更多关于处于那个延迟 bucket 中的 region 的详细信息。在下面的例子中，我们看到有一个 region 位于 1000 µ s 的 bucket。
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/debugging-latency/6.png)
-*1000µs 的 region 在等待 GC 和调度器上花费了额外的时间。*
+*1000 µ s 的 region 在等待 GC 和调度器上花费了额外的时间。*
 
-这样你就看到了细粒度的延迟明细。你可以看到 1309µs 的 region 交叠了垃圾回收。这以垃圾回收和调度的形式在关键路径上增加了不少开销。除此之外，执行 handler 与处理阻塞的系统调用花费了差不多的时间。
+这样你就看到了细粒度的延迟明细。你可以看到 1309 µ s 的 region 交叠了垃圾回收。这以垃圾回收和调度的形式在关键路径上增加了不少开销。除此之外，执行 handler 与处理阻塞的系统调用花费了差不多的时间。
 
 ## 局限
 
 尽管新的执行追踪器的特性很强大，但还是有一些局限。
 
-- Region 只能在同一个 goroutine 中开始和结束。执行追踪器目前还不能自动记录跨越多个 goroutine 的数据。这就需要我们手动地插桩 region。下一个大的步伐将是在 RPC 框架及 net/http 这样的标准包里增加细粒度的插桩。
-- 执行追踪器输出的格式比较难解析，`go tool trace`是唯一的能理解这种格式的标准工具。并没有简单的方式能够自动将执行追踪器的数据与分布式追踪数据关联起来 - 所以我们分别搜集它们，之后再做关联。
+- Region 只能在同一个 Goroutine 中开始和结束。执行追踪器目前还不能自动记录跨越多个 Goroutine 的数据。这就需要我们手动地插桩 region。下一个大的步伐将是在 RPC 框架及 net/http 这样的标准包里增加细粒度的插桩。
+- 执行追踪器输出的格式比较难解析，`go tool trace` 是唯一的能理解这种格式的标准工具。并没有简单的方式能够自动将执行追踪器的数据与分布式追踪数据关联起来 - 所以我们分别搜集它们，之后再做关联。
 
 ## 结论
 

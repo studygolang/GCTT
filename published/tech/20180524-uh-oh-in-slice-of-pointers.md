@@ -50,7 +50,7 @@ func main() {
 运行上面的代码片段，你得到的输出是
 
 ```
-➜ sample go run main.go
+➜ sample Go run main.go
 #9
 #9
 #9
@@ -102,7 +102,7 @@ func main() {
 调式代码的输出为
 
 ```
-➜ sample go run main.go
+➜ sample Go run main.go
 Adding number #0 to the slice
 Adding number #1 to the slice
 Adding number #2 to the slice
@@ -192,7 +192,7 @@ for _, n := range listOfNumberStrings {
 从最后一个迭代，我们知道最后被存储的值是 `"#9"`, 因此输出才像下面那样。
 
 ```
-➜  sample go run main.go
+➜  sample Go run main.go
 #9
 #9
 #9
@@ -245,7 +245,7 @@ func main() {
 上面的代码的输出将会是
 
 ```
-➜  sample go run main.go
+➜  sample Go run main.go
 #0
 #1
 #2

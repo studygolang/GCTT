@@ -1,42 +1,44 @@
-# GoLang AST简介
+首发于：https://studygolang.com/articles/34004
+
+# GoLang AST 简介
 
 ## 写在前面
 
-当你对GoLang AST感兴趣时，你会参考什么？文档还是源代码？
+当你对 GoLang AST 感兴趣时，你会参考什么？文档还是源代码？
 
-虽然阅读文档可以帮助你抽象地理解它，但你无法看到API之间的关系等等。
+虽然阅读文档可以帮助你抽象地理解它，但你无法看到 API 之间的关系等等。
 
 如果是阅读整个源代码，你会完全看懂，但你想看完整个代码我觉得您应该会很累。
 
 因此，本着高效学习的原则，我写了此文，希望对您能有所帮助。
 
-让我们轻松一点，通过AST来了解我们平时写的Go代码在内部是如何表示的。
+让我们轻松一点，通过 AST 来了解我们平时写的 Go 代码在内部是如何表示的。
 
-本文不深入探讨如何解析源代码，先从AST建立后的描述开始。
+本文不深入探讨如何解析源代码，先从 AST 建立后的描述开始。
 
-> 如果您对代码如何转换为AST很好奇，请浏览[深入挖掘分析Go代码](https://nakabonne.dev/posts/digging-deeper-into-the-analysis-of-go-code/)。
+> 如果您对代码如何转换为 AST 很好奇，请浏览[深入挖掘分析 Go 代码](https://nakabonne.dev/posts/digging-deeper-into-the-analysis-of-go-code/)。
 
 让我们开始吧!
 
 ## 接口(Interfaces)
 
-首先，让我简单介绍一下代表AST每个节点的接口。
+首先，让我简单介绍一下代表 AST 每个节点的接口。
 
-所有的AST节点都实现了`ast.Node`接口，它只是返回AST中的一个位置。
+所有的 AST 节点都实现了 `ast.Node` 接口，它只是返回 AST 中的一个位置。
 
-另外，还有3个主要接口实现了`ast.Node`。
+另外，还有 3 个主要接口实现了 `ast.Node`。
 
 - ast.Expr - 代表表达式和类型的节点
 - ast.Stmt - 代表报表节点
 - ast.Decl - 代表声明节点
 
-![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200908-Introduction-of-goLang-AST/图1.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200908-Introduction-of-goLang-AST/图 1.png)
 
-从定义中你可以看到，每个Node都满足了`ast.Node`的接口。
+从定义中你可以看到，每个 Node 都满足了 `ast.Node` 的接口。
 
 [ast/ast.go](https://github.com/golang/go/blob/0b7c202e98949b530f7f4011efd454164356ba69/src/go/ast/ast.go#L32-L54)
 
-```golang
+```go
 // All node types implement the Node interface.
 type Node interface {
 	Pos() token.Pos // position of first character belonging to the node
@@ -66,7 +68,7 @@ type Decl interface {
 
 下面我们将使用到如下代码：
 
-```golang
+```go
 package hello
 
 import "fmt"
@@ -76,9 +78,9 @@ func greet() {
 }
 ```
 
-首先，我们尝试[生成上述这段简单的代码AST](https://golang.org/src/go/ast/example_test.go)：
+首先，我们尝试[生成上述这段简单的代码 AST](https://golang.org/src/go/ast/example_test.go)：
 
-```golang
+```go
 package main
 
 import (
@@ -114,7 +116,7 @@ func greet() {
 ```bash
 F:\hello>go run main.go
 ```
-上述命令的输出ast.File内容如下：
+上述命令的输出 ast.File 内容如下：
 
 ```bash
      0  *ast.File {
@@ -205,15 +207,15 @@ F:\hello>go run main.go
 
 ### 如何分析
 
-我们要做的就是按照深度优先的顺序遍历这个AST节点，通过递归调用`ast.Inspect()`来逐一打印每个节点。
+我们要做的就是按照深度优先的顺序遍历这个 AST 节点，通过递归调用 `ast.Inspect()` 来逐一打印每个节点。
 
-如果直接打印AST，那么我们通常会看到一些无法被人类阅读的东西。
+如果直接打印 AST，那么我们通常会看到一些无法被人类阅读的东西。
 
-为了防止这种情况的发生，我们将使用`ast.Print`(一个强大的API)来实现对AST的人工读取。
+为了防止这种情况的发生，我们将使用 `ast.Print`(一个强大的 API)来实现对 AST 的人工读取。
 
 代码如下：
 
-```golang
+```go
 package main
 
 import (
@@ -246,17 +248,17 @@ func greet() {
 
 **ast.File**
 
-第一个要访问的节点是`*ast.File`，它是所有AST节点的根。它只实现了`ast.Node`接口。
+第一个要访问的节点是 `*ast.File`，它是所有 AST 节点的根。它只实现了 `ast.Node` 接口。
 
-![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200908-Introduction-of-goLang-AST/图2.png)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200908-Introduction-of-goLang-AST/图 2.png)
 
-`ast.File`有引用`包名`、`导入声明`和`函数声明`作为子节点。
+`ast.File` 有引用 ` 包名 `、` 导入声明 ` 和 ` 函数声明 ` 作为子节点。
 
-> 准确地说，它还有`Comments`等，但为了简单起见，我省略了它们。
+> 准确地说，它还有 `Comments` 等，但为了简单起见，我省略了它们。
 
 让我们从包名开始。
 
-> 注意，带nil值的字段会被省略。每个节点类型的完整字段列表请参见文档。
+> 注意，带 nil 值的字段会被省略。每个节点类型的完整字段列表请参见文档。
 
 ### 包名
 
@@ -269,13 +271,13 @@ func greet() {
 }
 ```
 
-一个包名可以用AST节点类型`*ast.Ident`来表示，它实现了`ast.Expr`接口。
+一个包名可以用 AST 节点类型 `*ast.Ident` 来表示，它实现了 `ast.Expr` 接口。
 
 所有的标识符都由这个结构来表示，它主要包含了它的名称和在文件集中的源位置。
 
-从上述所示的代码中，我们可以看到包名是`hello`，并且是在`dummy.go`的第一行声明的。
+从上述所示的代码中，我们可以看到包名是 `hello`，并且是在 `dummy.go` 的第一行声明的。
 
-> 对于这个节点我们不会再深入研究了，让我们再回到`*ast.File.Go`中。
+> 对于这个节点我们不会再深入研究了，让我们再回到 `*ast.File.Go` 中。
 
 ### 导入声明
 
@@ -293,13 +295,13 @@ func greet() {
 }
 ```
 
-`ast.GenDecl`代表除函数以外的所有声明，即`import`、`const`、`var`和`type`。
+`ast.GenDecl` 代表除函数以外的所有声明，即 `import`、`const`、`var` 和 `type`。
 
-`Tok`代表一个词性标记--它指定了声明的内容（import或const或type或var）。
+`Tok` 代表一个词性标记--它指定了声明的内容（import 或 const 或 type 或 var）。
 
-这个AST节点告诉我们，`import`声明在dummy.go的第3行。
+这个 AST 节点告诉我们，`import` 声明在 dummy.go 的第 3 行。
 
-让我们从上到下深入地看一下`ast.GenDecl`的下一个节点`*ast.ImportSpec`。
+让我们从上到下深入地看一下 `ast.GenDecl` 的下一个节点 `*ast.ImportSpec`。
 
 **ast.ImportSpec**
 
@@ -310,7 +312,7 @@ func greet() {
 }
 ```
 
-一个`ast.ImportSpec`节点对应一个导入声明。它实现了`ast.Spec`接口，访问路径可以让导入路径更有意义。
+一个 `ast.ImportSpec` 节点对应一个导入声明。它实现了 `ast.Spec` 接口，访问路径可以让导入路径更有意义。
 
 **ast.BasicLit**
 
@@ -322,11 +324,11 @@ func greet() {
 }
 ```
 
-一个`ast.BasicLit`节点表示一个基本类型的文字，它实现了`ast.Expr`接口。
+一个 `ast.BasicLit` 节点表示一个基本类型的文字，它实现了 `ast.Expr` 接口。
 
-它包含一个token类型，可以使用token.INT、token.FLOAT、token.IMAG、token.CHAR或token.STRING。
+它包含一个 token 类型，可以使用 token.INT、token.FLOAT、token.IMAG、token.CHAR 或 token.STRING。
 
-从`ast.ImportSpec`和`ast.BasicLit`中，我们可以看到它导入了名为`"fmt "`的包。
+从 `ast.ImportSpec` 和 `ast.BasicLit` 中，我们可以看到它导入了名为 `"fmt "` 的包。
 
 我们不再深究了，让我们再回到顶层。
 
@@ -342,11 +344,11 @@ func greet() {
 }
 ```
 
-一个`ast.FuncDecl`节点代表一个函数声明，但它只实现了`ast.Node`接口。我们从代表函数名的`Name`开始，依次看一下。
+一个 `ast.FuncDecl` 节点代表一个函数声明，但它只实现了 `ast.Node` 接口。我们从代表函数名的 `Name` 开始，依次看一下。
 
 **ast.Ident**
 
-```golang
+```go
 *ast.Ident {
 .  NamePos: dummy.go:5:6
 .  Name: "greet"
@@ -360,11 +362,11 @@ func greet() {
 
 第二次出现这种情况，我就不做基本解释了。
 
-值得注意的是`*ast.Object`，它代表了标识符所指的对象，但为什么需要这个呢？
+值得注意的是 `*ast.Object`，它代表了标识符所指的对象，但为什么需要这个呢？
 
-大家知道，GoLang有一个`scope`的概念，就是源文本的`scope`，其中标识符表示指定的常量、类型、变量、函数、标签或包。
+大家知道，GoLang 有一个 `scope` 的概念，就是源文本的 `scope`，其中标识符表示指定的常量、类型、变量、函数、标签或包。
 
-`Decl字`段表示标识符被声明的位置，这样就确定了标识符的`scope`。指向相同对象的标识符共享相同的`*ast.Object.Label`。
+`Decl 字` 段表示标识符被声明的位置，这样就确定了标识符的 `scope`。指向相同对象的标识符共享相同的 `*ast.Object.Label`。
 
 **ast.FuncType**
 
@@ -387,9 +389,9 @@ func greet() {
 }
 ```
 
-`ast.FieldList`节点表示一个Field的列表，用括号或大括号括起来。如果定义了函数参数，这里会显示，但这次没有，所以没有信息。
+`ast.FieldList` 节点表示一个 Field 的列表，用括号或大括号括起来。如果定义了函数参数，这里会显示，但这次没有，所以没有信息。
 
-列表字段是`*ast.Field`的一个切片，包含一对标识符和类型。它的用途很广，用于各种Nodes，包括`*ast.StructType`、`*ast.InterfaceType`和本文中使用示例。
+列表字段是 `*ast.Field` 的一个切片，包含一对标识符和类型。它的用途很广，用于各种 Nodes，包括 `*ast.StructType`、`*ast.InterfaceType` 和本文中使用示例。
 
 也就是说，当把一个类型映射到一个标识符时，需要用到它（如以下的代码）：
 
@@ -398,7 +400,7 @@ foot int
 bar string
 ```
 
-让我们再次回到`*ast.FuncDecl`，再深入了解一下最后一个字段`Body`。
+让我们再次回到 `*ast.FuncDecl`，再深入了解一下最后一个字段 `Body`。
 
 **ast.BlockStmt**
 
@@ -412,7 +414,7 @@ bar string
 }
 ```
 
-一个`ast.BlockStmt`节点表示一个括号内的语句列表，它实现了`ast.Stmt`接口。
+一个 `ast.BlockStmt` 节点表示一个括号内的语句列表，它实现了 `ast.Stmt` 接口。
 
 **ast.ExprStmt**
 
@@ -422,7 +424,7 @@ bar string
 }
 ```
 
-`ast.ExprStmt`在语句列表中表示一个表达式，它实现了`ast.Stmt`接口，并包含一个`ast.Expr`。
+`ast.ExprStmt` 在语句列表中表示一个表达式，它实现了 `ast.Stmt` 接口，并包含一个 `ast.Expr`。
 
 **ast.CallExpr**
 
@@ -438,10 +440,10 @@ bar string
 }
 ```
 
-`ast.CallExpr`表示一个调用函数的表达式，要查看的字段是:
+`ast.CallExpr` 表示一个调用函数的表达式，要查看的字段是:
 
 - Fun
-- 要调用的函数和Args
+- 要调用的函数和 Args
 - 要传递给它的参数列表
 
 **ast.SelectorExpr**
@@ -459,7 +461,7 @@ bar string
 }
 ```
 
-`ast.SelectorExpr`表示一个带有选择器的表达式。简单地说，它的意思是`fmt.Println`。
+`ast.SelectorExpr` 表示一个带有选择器的表达式。简单地说，它的意思是 `fmt.Println`。
 
 **ast.BasicLit**
 
@@ -486,6 +488,6 @@ via: https://nakabonne.dev/posts/take-a-walk-the-go-ast/
 
 作者：[nakabonne](https://github.com/nakabonne)
 译者：[double12gzh](https://github.com/double12gzh)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

@@ -34,7 +34,7 @@ IfStmt = "if" [ SimpleStmt ";" ] Expression Block [ "else" ( IfStmt | Block ) ] 
 
 这些规则组成的集合就是语法，你可以在 Go 语言规范中找到它们的详细定义。
 
-这些规则不是简单的由程序的单个字符定义的，而是有一系列 token 组成。 这些token除了像 **if** 和 **else** 这样的原子 token 外， 还有像整数 42，浮点数 4.2 和字符串 “hello” 这样的复合 token， 以及像 **main** 这样的标识符。
+这些规则不是简单的由程序的单个字符定义的，而是有一系列 token 组成。 这些 token 除了像 **if** 和 **else** 这样的原子 token 外， 还有像整数 42，浮点数 4.2 和字符串 “hello” 这样的复合 token， 以及像 **main** 这样的标识符。
 
 但是，我们是怎么知道 main 是一个标识符，而不是一个数字呢？ 原来它也是有专门的规则来定义的。如果你读过 Go 语言规范中的标识符部分，你就会发现如下的规则：
 ```
@@ -43,7 +43,7 @@ identifier = letter { letter | unicode_digit } .
 
 在这条规则中，letter 和 unicode_digit 不是　token　而是字符。 所以有了这些规则，就可以写一个程序来逐个字符地分析，一旦检测到一组字符匹配到某一条规则，就 “发射”(emits) 出一个 token。
 
-所以，如果我们以 **fmt.Println** 为例， 它可以产生这些 token：标识符 **fmt**, **“.”**, 以及标识符 **Println**。 这是一个函数调用吗？ 在这里我们还无法确定，而且我们也不关心。它的结构就是一个序列，表明 token 出现的顺序。
+所以，如果我们以 **fmt.Println** 为例， 它可以产生这些 token：标识符 **fmt**, **“.”**, 以及标识符 **Println**。 这是一个函数调用吗？ 在这里我们还无法确定，而且我们也不关心。它的结构就是一个序列，表明  token 出现的顺序。
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images/master/most-common-identifier/1.png)
 
@@ -157,7 +157,7 @@ for i := 0; i < len(pairs) && i < 5; i++ {
 我们来用这个程序分析一下 github.com/golang/go 上的代码：
 
 ```bash
-$ go install github.com/campoy/justforfunc/24-ast/scanner
+$ Go install github.com/campoy/justforfunc/24-ast/scanner
 $ scanner ~/go/src/**/*.go
  82163 v
  46584 err
@@ -179,7 +179,7 @@ for s, n := range counts {
 再来一次：
 
 ```bash
-$ go install github.com/campoy/justforfunc/24-ast/scanner
+$ Go install github.com/campoy/justforfunc/24-ast/scanner
 $ scanner ~/go/src/**/*.go
  46584 err
  44681 Args

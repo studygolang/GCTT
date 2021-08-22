@@ -1,17 +1,19 @@
+首发于：https://studygolang.com/articles/34522
+
 # 鸭子类型 vs 结构化类型 vs 标称类型
 
-GO 语言是哪一种？
+Go 语言是哪一种？
 
 编程语言具有类型概念 - 布尔类型，字符串，整型或者被称为类或者结构体的更加复杂的结构。根据如何将类型解析并赋值给各种构造（例如变量，表达式，函数，函数参数等），编程语言可以归类为鸭子类型，结构化类型或标称类型。
 
 本质上，分类决定了对象如何被解析并推断为具体的类型。
 
-![img](https://github.com/studygolang/gctt-images2/blob/master/20200608-duck-typing-vs-structural-typing-vs-nominal-typing/1_zPb6iQvY7faJQ12GqCpqrQ.png?raw=true)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200608-duck-typing-vs-structural-typing-vs-nominal-typing/1_zPb6iQvY7faJQ12GqCpqrQ.png)
 
 **鸭子类型语言**使用鸭子测试来评估对象是否可以被解析为特定的类型。鸭子测试表示：
 > 如果它看起来像鸭子，像鸭子一样游泳，像鸭子一样嘎嘎叫，那它很可能就是鸭子。
 
-**我将使用 GO 语言语法来解释这些想法 - 将这些示例作为伪代码阅读 - 它与 GO 语言规则无关*
+**我将使用 Go 语言语法来解释这些想法 - 将这些示例作为伪代码阅读 - 它与 Go 语言规则无关*
 
 以下代码片段是鸭子类型语言的示例。因为 Mallard 可以嘎嘎叫，所以它是一只鸭子。
 
@@ -98,7 +100,7 @@ func main() {
 
 在上面的示例中，程序员无需指定 Mallard 是 Duck 类型。语言编译器将 Mallard 解释为 Duck - 因为它具有 quack 函数。但是 Dog 不是一个 Duck，因为 Dog 不具有 quack 函数。
 
-GO 是结构化类型语言。
+Go 是结构化类型语言。
 
 ## 结论
 
@@ -108,13 +110,13 @@ GO 是结构化类型语言。
 
 *结构化类型语言*提供了一种平衡，它需要编译期检查，但不需要显示声明依赖。
 
-在使用 GO（结构化类型）编程之前，我主要使用 Java（标称类型）。我喜欢结构化类型语言提供的灵活性，而又不会影响编译期类型安全。
+在使用 Go（结构化类型）编程之前，我主要使用 Java（标称类型）。我喜欢结构化类型语言提供的灵活性，而又不会影响编译期类型安全。
 
 ---
 via: https://medium.com/higher-order-functions/duck-typing-vs-structural-typing-vs-nominal-typing-e0881860bf10
 
 作者：[Saurabh Nayar](https://medium.com/@nayar.saurabh)
 译者：[DoubleLuck](https://github.com/DoubleLuck)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

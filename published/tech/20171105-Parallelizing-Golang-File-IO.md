@@ -110,11 +110,11 @@ if f.IsDir() {
 }
 ```
 
-哎呀，不好了！现在，它只是列出一些顶级文件。这个程序生成了很多 goroutine，但是随着 main 函数的结束，程序并不会等待 goroutine 完成。我们需要让程序等待所有的 goroutine 结束。
+哎呀，不好了！现在，它只是列出一些顶级文件。这个程序生成了很多 goroutine，但是随着 main 函数的结束，程序并不会等待 Goroutine 完成。我们需要让程序等待所有的 Goroutine 结束。
 
 ## WaitGroup
 
-为此，我们将使用一个 `sync.WaitGroup`。基本上，它会跟踪组中的 goroutine 数目，保持阻塞状态直到没有更多的 goroutine。
+为此，我们将使用一个 `sync.WaitGroup`。基本上，它会跟踪组中的 Goroutine 数目，保持阻塞状态直到没有更多的 goroutine。
 
 首先，创建我们的 `WaitGroup`：
 
@@ -122,7 +122,7 @@ if f.IsDir() {
 var wg sync.WaitGroup
 ```
 
-然后，我们会通过给这个 WaitGroup 加一，利用 goroutine 来启动递归函数.当 `lsFiles()` 结束，我们的 `main` 函数将会在 `wg` 为空之前都保持阻塞状态。
+然后，我们会通过给这个 WaitGroup 加一，利用 Goroutine 来启动递归函数.当 `lsFiles()` 结束，我们的 `main` 函数将会在 `wg` 为空之前都保持阻塞状态。
 
 ```go
 wg.Add(1)
@@ -130,7 +130,7 @@ lsFiles(dir)
 wg.Wait()
 ```
 
-现在，为我们产生的每一个 goroutine 往 WaitGroup 加一：
+现在，为我们产生的每一个 Goroutine 往 WaitGroup 加一：
 
 ```go
 if f.IsDir() {
@@ -151,7 +151,7 @@ defer wg.Done()
 
 现在是棘手的部分。根据你的 CPU 以及 CPU 的内核数，你可能会也可能不会遇到这个问题。如果 Go 调度器有足够的内核可用，那么它可以充分加载 goroutine（[参考这里](https://stackoverflow.com/questions/8509152/max-number-of-goroutines)）。但是，多数的操作系统都会限制每个进程打开文件的数目。对于 unix 系统，这个限制是内核 `ulimits`。而在我的 Mac 上，该限制是 10,240 个文件，但是因为我只有 2 个内核，所以我不会受此影响。
 
-在一台最近生产的有更多内核的计算机上，Go 调度器可能会同时创建超过 10,240 个 goroutine。每个 goroutine 都会打开文件，因此你会获得这样的错误：
+在一台最近生产的有更多内核的计算机上，Go 调度器可能会同时创建超过 10,240 个 goroutine。每个 Goroutine 都会打开文件，因此你会获得这样的错误：
 
 `too many open files`
 

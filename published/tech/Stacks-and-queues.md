@@ -95,7 +95,7 @@ func (history *ActionHistory) Undo() *Action {
 
 这是堆栈的基本行为。堆栈是一种数据结构，您只能在堆栈顶部插入或删除元素。把它想象成一堆文件，或者你厨房抽屉里的一堆盘子。如果你想从那一堆盘子取出最下面的盘子，那是挺难的。但是拿最上面的那个是简单的。堆栈也被认为是 `LIFO` 结构 —— 意思是后进先出，我们前面解释过那是为什么。
 
-这基本上就是我们的 `Undo` 函数所处理的。如果堆栈（或者说`ActionHistory`）有多个 `Action` ，它将为第二项设置顶部链接。否则，它将清空 `ActionHistory`，将 `top` 元素设置为 `nil`。
+这基本上就是我们的 `Undo` 函数所处理的。如果堆栈（或者说 `ActionHistory`）有多个 `Action` ，它将为第二项设置顶部链接。否则，它将清空 `ActionHistory`，将 `top` 元素设置为 `nil`。
 
 从 `Big-O` 表示法来看，在堆栈中搜索的复杂度是 `O(n)`，但是在堆栈中插入和删除是非常快的复杂度是 `O(1)`。
 这是因为遍历整个堆栈，在最坏的情况下，仍然会在其中执行所有的 `n` 项，而插入和删除元素的时间复杂度是常量时间，因为我们总是从堆栈的顶部插入和删除。
@@ -122,7 +122,7 @@ type Luggage struct {
 与此同时，我们为 `Luggage` 类型添加简单的构造函数：
 
 ```go
-func NewLuggage(weight int, passenger string) *Luggage {
+func NewLuggage(weight int, Passenger string) *Luggage {
 	l := Luggage{
 		weight:    weight,
 		passenger: passenger, // just as an identifier
@@ -148,7 +148,7 @@ func (belt *Belt) Add(newLuggage *Luggage) {
 ```
 
 既然 `Belt` 实际上是一个切片，那么我们就可以用 Go 语言内建函数 `append` 将 `newLuggage` 添加到 `Belt` 上。这个实现很奇妙的部分是时间复杂度 -- 因为我们使用了 `append` 这个内建函数，所以插入操作的时间复杂度是 O(1)。
-当然，这有一定的控间浪费，这是一位 go 语言切片的工作原理造成的。
+当然，这有一定的控间浪费，这是一位 Go 语言切片的工作原理造成的。
 
 当 `Belt` 开始运动并且将 `Luggage` 带到 X 光机上，我们需要将行李拿下来并且装进机器进行检查。
 鉴于 `Belt` 的自然属性，第一个放到传送带上面的行李是第一个被扫描监测的。
@@ -158,7 +158,7 @@ func (belt *Belt) Add(newLuggage *Luggage) {
 
 ```go
 func (belt *Belt) Take() *Luggage {
-	first, rest := (*belt)[0], (*belt)[1:]
+	first, REST := (*belt)[0], (*belt)[1:]
 	*belt = rest
 	return first
 }
@@ -193,7 +193,7 @@ First luggage: &{3 Elmer Fudd}
 Belt: &[0x1040a0d0 0x1040a0e0 0x1040a100 0x1040a110] Length: 4
 ```
 
-基本上，我们在 `Belt` 上加了5个不同的 `Luggage`，然后我们取出第一个元素，它在屏幕的第二行输出显示了。
+基本上，我们在 `Belt` 上加了 5 个不同的 `Luggage`，然后我们取出第一个元素，它在屏幕的第二行输出显示了。
 
 你可以在[*这里*](https://play.golang.org/p/DTFUkWeZ4H8)使用实例代码。
 
@@ -214,7 +214,7 @@ type Luggage struct {
 当然，我们使用 `newLuggage` 函数创建 `luggage` 的时候会加入 `priority` 作为参数。
 
 ```go
-func NewLuggage(weight int, priority int, passenger string) *Luggage {
+func NewLuggage(weight int, priority int, Passenger string) *Luggage {
 	l := Luggage{
 		weight:    weight,
 		priority:  priority,
@@ -224,7 +224,7 @@ func NewLuggage(weight int, priority int, passenger string) *Luggage {
 }
 ```
 
-让我们再想想。基本上，当一个新的 `Luggage` 被放在 `Belt` 上时，我们需要检测它的 `priority`，并根据 `priority` 把它放在 `Belt`的最前面。
+让我们再想想。基本上，当一个新的 `Luggage` 被放在 `Belt` 上时，我们需要检测它的 `priority`，并根据 `priority` 把它放在 `Belt` 的最前面。
 
 我们在修改一下 `Add` 函数：
 

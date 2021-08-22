@@ -8,13 +8,13 @@
 
 ## 模糊测试项目
 
-在 Go 社区中两个项目适用于模糊测试：Google 开发的 [gofuzz](https://raw.githubusercontent.com/google/gofuzz) 和 [Dmitry Vyukov](https://raw.githubusercontent.com/dvyukov) 开发的 [go-fuzz](https://raw.githubusercontent.com/dvyukov/go-fuzz)，Dmitry Vyukov 同样为 Google 工作。两个项目都是有用的，同时适用于不同的用法。来逐一了解它们：
+在 Go 社区中两个项目适用于模糊测试：Google 开发的 [gofuzz](https://github.com/google/gofuzz) 和 [Dmitry Vyukov](https://github.co,/dvyukov) 开发的 [go-fuzz](https://github.com/dvyukov/go-fuzz)，Dmitry Vyukov 同样为 Google 工作。两个项目都是有用的，同时适用于不同的用法。来逐一了解它们：
 
-- [gofuzz](https://raw.githubusercontent.com/google/gofuzz) 提供了一个可以用随机值填充你的 Go 结构体的包。而你需要做的是编写测试代码，并且调用这个包来获取随机数据。当你想要模糊测试结构化数据的时候，这个包是完美的。这里是使用随机数据对一个结构体进行 50000 次模糊测试的例子，其中指针/切片/map 有 50%的几率被设置为空：
+- [gofuzz](https://github.com/google/gofuzz) 提供了一个可以用随机值填充你的 Go 结构体的包。而你需要做的是编写测试代码，并且调用这个包来获取随机数据。当你想要模糊测试结构化数据的时候，这个包是完美的。这里是使用随机数据对一个结构体进行 50000 次模糊测试的例子，其中指针/切片/map 有 50%的几率被设置为空：
 
 ![模糊测试结构化数据](https://raw.githubusercontent.com/studygolang/gctt-images2/blob/master/20191025-Go-Fuzz-Testing-in-Go/fuzzing-structured-data.png)
 
-- [go-fuzz](https://raw.githubusercontent.com/dvyukov/go-fuzz) 基于已经在大多数知名的软件或库中发现了上百个 bug 的 [American Fuzzy Lop](http://lcamtuf.coredump.cx/afl/)。Go-Fuzz 会连续运行，并且根据提供的样本生成随机的字符串。之后必须解析这些字符串，并且明确地将其标记为是否可用于测试。任何有趣的生成的数据都会被该工具所报告，这些数据增加了代码的覆盖率或者导致崩溃。该工具十分适合那些管理诸如 XML，JSON，图像等字符串信息的程序。这里是该工具运行以及发行问题的预览，被称为 crasher。
+- [go-fuzz](https://github.com/dvyukov/go-fuzz) 基于已经在大多数知名的软件或库中发现了上百个 bug 的 [American Fuzzy Lop](http://lcamtuf.coredump.cx/afl/)。Go-Fuzz 会连续运行，并且根据提供的样本生成随机的字符串。之后必须解析这些字符串，并且明确地将其标记为是否可用于测试。任何有趣的生成的数据都会被该工具所报告，这些数据增加了代码的覆盖率或者导致崩溃。该工具十分适合那些管理诸如 XML，JSON，图像等字符串信息的程序。这里是该工具运行以及发行问题的预览，被称为 crasher。
 
 ![使用 go-fuzz 进行模糊测试](https://raw.githubusercontent.com/studygolang/gctt-images2/blob/master/20191025-Go-Fuzz-Testing-in-Go/fuzzing-with-go-fuzz.png)
 
@@ -22,9 +22,9 @@
 
 ## 通过例子了解 Go-Fuzz
 
-先从一个借助模糊测试解决 `encoding/xml` 包中[一个 bug](https://raw.githubusercontent.com/golang/go/issues/11112) 的例子开始。这里是该问题的复现步骤：
+先从一个借助模糊测试解决 `encoding/xml` 包中[一个 bug](https://github.com/golang/go/issues/11112) 的例子开始。这里是该问题的复现步骤：
 
-- 定义用于接收生成数据的 `模糊（Fuzz）` 方法：
+- 定义用于接收生成数据的 ` 模糊（Fuzz）` 方法：
 
 ```go
 // +build gofuzz
@@ -59,7 +59,7 @@ func FuzzXMLComment(data []byte) int {
 </a>
 ```
 
-然后，由于该 bug 已在 Go 1.6 中被合入，确保在你的标准库中还原了提交 [97c859f8da0c85c33d0f29ba5e11094d8e691e87](https://raw.githubusercontent.com/golang/go/commit/97c859f8da0c85c33d0f29ba5e11094d8e691e87)——同样含有这个 bug 的 Go 1.5 与最新版本的 go-fuzz 不兼容。你的迷你项目应该遵循这样的结构：
+然后，由于该 bug 已在 Go 1.6 中被合入，确保在你的标准库中还原了提交 [97c859f8da0c85c33d0f29ba5e11094d8e691e87](https://github.com/golang/go/commit/97c859f8da0c85c33d0f29ba5e11094d8e691e87)——同样含有这个 bug 的 Go 1.5 与最新版本的 go-fuzz 不兼容。你的迷你项目应该遵循这样的结构：
 
 ![模糊测试 encoding/xml](https://raw.githubusercontent.com/studygolang/gctt-images2/blob/master/20191025-Go-Fuzz-Testing-in-Go/fuzzing-encoding:xml-structure.png)
 
@@ -91,7 +91,7 @@ panic: xml: comments must not contain "--"
 
 ## Go-Fuzz 工作流程
 
-如之前所见，[go-fuzz](https://raw.githubusercontent.com/dvyukov/go-fuzz) 的工作流程包含两个步骤：
+如之前所见，[go-fuzz](https://github.com/dvyukov/go-fuzz) 的工作流程包含两个步骤：
 
 - 通过命令 `go-fuzz-build` 从你代码中定义的指令来构建工具：
 
@@ -103,7 +103,7 @@ panic: xml: comments must not contain "--"
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/blob/master/20191025-Go-Fuzz-Testing-in-Go/go-fuzz.png)
 
-语料生成是 go-fuzz 的核心重点。[Dmitry Vyukov](https://raw.githubusercontent.com/dvyukov) 在 [GopherCon 2015](https://www.youtube.com/watch?v=a9xrxRsIbSU&t=459s) 上给出了这个核心功能的流程图：
+语料生成是 go-fuzz 的核心重点。[Dmitry Vyukov](https://github.com/dvyukov) 在 [GopherCon 2015](https://www.youtube.com/watch?v=a9xrxRsIbSU&t=459s) 上给出了这个核心功能的流程图：
 
 ![语料生成的流程图](https://raw.githubusercontent.com/studygolang/gctt-images2/blob/master/20191025-Go-Fuzz-Testing-in-Go/workflow-of-the-corpus-generation.png)
 
@@ -156,7 +156,7 @@ Go-Fuzz 运行期间主要使用 mutation 方法（占 90%的迭代），但是�
 
 ## 模糊测试集成
 
-[自 Go 1.5 开始](https://golang.org/doc/go1.5#hardening)，模糊测试被应用于 Go 标准库中，并且已经发现了[超过 200 个 bug](https://raw.githubusercontent.com/dvyukov/go-fuzz#trophies)。然而，尽管一些包已经存在一些 `Fuzz` 函数，比如 `encoding/csv` 或 `image/png`，Go 并没有原生集成模糊测试。是否[让模糊测试成为 Go 的一等公民](https://raw.githubusercontent.com/golang/go/issues/19109)的讨论已在 GitHub 上展开。
+[自 Go 1.5 开始](https://golang.org/doc/go1.5#hardening)，模糊测试被应用于 Go 标准库中，并且已经发现了[超过 200 个 bug](https://github.com/dvyukov/go-fuzz#trophies)。然而，尽管一些包已经存在一些 `Fuzz` 函数，比如 `encoding/csv` 或 `image/png`，Go 并没有原生集成模糊测试。是否[让模糊测试成为 Go 的一等公民](https://github.com/golang/go/issues/19109)的讨论已在 GitHub 上展开。
 
 就与模糊测试持续集成的有效在线工具而言，两个工具使用 Go 和 Go-fuzz：
 

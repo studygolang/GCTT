@@ -26,7 +26,7 @@
 
 让我们深入研究下 `math/rand` 包。我们通过一个 `rand.Source` 来实例化 `rand.Rand` 类型。但是像绝大多数 Go 惯用法一样，这个 `Source` 是一个接口。我的第六感来了，或许这就是个机会？
 
-`rand.Source` 最主要的工作由 `Int63() int64` 函数完成，它返回一个非负 `int64` 整数（也就是说，最高位是0）。进一步改进的 `rand.Source64` 仅仅返回一个 `uint64` 类型，并没有对最高位有任何限制。
+`rand.Source` 最主要的工作由 `Int63() int64` 函数完成，它返回一个非负 `int64` 整数（也就是说，最高位是 0）。进一步改进的 `rand.Source64` 仅仅返回一个 `uint64` 类型，并没有对最高位有任何限制。
 
 你们说，我们使用源自 `crypto/rand` 包的功能来尝试创建一个 `rand.Source64` 对象如何？（你可以参考在 [Go Playground](https://play.golang.org/p/_3w6vWTwwE) 上的代码。）
 
@@ -42,7 +42,7 @@ type mySrc struct{}
 func (s *mySrc) Seed(seed int64) { /*no-op*/ }
 ```
 
-因为 `Uint64()` 函数返回值取值范围**最广(widest)**，需要 64 位的随机数，因此我们首先实现它。我们使用 `encoding/binary` 包从`crypto/rand` 包的 `io.Reader` 接口中读取 8 个字节的数据，并直接转换成 `uint64`。
+因为 `Uint64()` 函数返回值取值范围**最广(widest)**，需要 64 位的随机数，因此我们首先实现它。我们使用 `encoding/binary` 包从 `crypto/rand` 包的 `io.Reader` 接口中读取 8 个字节的数据，并直接转换成 `uint64`。
 
 ```go
 func (s *mySrc) Uint64() (value uint64) {
@@ -141,7 +141,7 @@ func BenchmarkCryptoRead(b *testing.B) {
 BenchmarkCryptoRead-4      2000000       735 ns/op
 ```
 
-我不知道如何做才能进一步提高性能。而且，或许对于你的使用场景来说，花费大约1毫秒来获取非特定随机数不是一个问题。这个需要你自己去评估了。
+我不知道如何做才能进一步提高性能。而且，或许对于你的使用场景来说，花费大约 1 毫秒来获取非特定随机数不是一个问题。这个需要你自己去评估了。
 
 ## 另外一种思路？
 

@@ -46,7 +46,7 @@ $ sed -i '' 's/^Libs: .*/& -lblas -llapack/' /usr/local/lib/pkgconfig/dlib-1.pc
 我们首先需要下载 `kagami/go-face 包`，可以使用如下 `go get` 命令：
 
 ```
-$ go get -u github.com/Kagami/go-face
+$ Go get -u github.com/Kagami/go-face
 ```
 
 在你的 GOPATH 目录中创建一个名为 `go-face-recognition` 的新目录。在此目录中创建一个名为 `main.go` 的文件，这是我们所有源码所在位置。
@@ -139,7 +139,7 @@ func main() {
 当我们运行它时，应该会看到以下输出：
 
 ```
-$ go run main.go
+$ Go run main.go
 Facial Recognition System v0.01
 Recognizer Initialized
 Number of Faces in Image:  1
@@ -259,7 +259,7 @@ fmt.Println(labels[avengerID])
 当你一起运行时，你应该会看到以下输出：
 
 ```
-$ go run main.go
+$ Go run main.go
 Facial Recognition System v0.01
 Recognizer Initialized
 Number of Faces in Image:  4

@@ -12,7 +12,7 @@
 ```
 producer --> buffer --> io.Writer
 ```
-下面具体看一下在9次写入操作中(每次写入一个字符)具有4个字符空间的缓存是如何工作的：
+下面具体看一下在 9 次写入操作中(每次写入一个字符)具有 4 个字符空间的缓存是如何工作的：
 ```
 producer        buffer       destination (io.Writer)
    a    ----->    a
@@ -63,7 +63,7 @@ Buffered I/O
 1
 ```
 
-没有被缓存的 `I/O`：意味着每一次写操作都将直接写入目的地。我们进行4次写操作，每次写操作都映射为对 `Write` 的调用，调用时传入的参数为一个长度为1的 `byte` 切片。
+没有被缓存的 `I/O`：意味着每一次写操作都将直接写入目的地。我们进行 4 次写操作，每次写操作都映射为对 `Write` 的调用，调用时传入的参数为一个长度为 1 的 `byte` 切片。
 
 使用了缓存的 `I/O`：我们使用三个字节长度的缓存来存储数据，当缓存满时进行一次 `flush` 操作(将缓存中的数据进行处理)。前三次写入写满了缓存。第四次写入时检测到缓存没有剩余空间，所以将缓存中的积累的数据写出。字母 `d` 被存储了，但在此之前 `Flush` 被调用以腾出空间。当缓存被写到末尾时，缓存中未被处理的数据需要被处理。`bufio.Writer` 仅在缓存充满或者显式调用 `Flush` 方法时处理(发送)数据。
 
@@ -132,7 +132,7 @@ func main() {
 3
 1
 ```
-`n` 从 0 开始，当有数据被添加到缓存中时，该数据的长度值将会被加和到 `n`中(操作位置向后移动)。当`bw.Write([] byte{'d'})`被调用时，flush会被触发，`n` 会被重设为0。
+`n` 从 0 开始，当有数据被添加到缓存中时，该数据的长度值将会被加和到 `n` 中(操作位置向后移动)。当 `bw.Write([] byte{'d'})` 被调用时，flush 会被触发，`n` 会被重设为 0。
 
 ## Large writes
 
@@ -180,7 +180,7 @@ writer#1: "ab"
 writer#2: "ef"
 ```
 
-这段代码中有一个 bug。在调用 `Reset` 方法之前，我们应该使用 `Flush` flush缓存。 由于 [`Reset`](https://github.com/golang/go/blob/7b8a7f8272fd1941a199af1adb334bd9996e8909/src/bufio/bufio.go#L559) 只是简单的丢弃未被处理的数据，所以已经被写入的数据 `cd` 丢失了：
+这段代码中有一个 bug。在调用 `Reset` 方法之前，我们应该使用 `Flush` flush 缓存。 由于 [`Reset`](https://github.com/golang/go/blob/7b8a7f8272fd1941a199af1adb334bd9996e8909/src/bufio/bufio.go#L559) 只是简单的丢弃未被处理的数据，所以已经被写入的数据 `cd` 丢失了：
 
 ```go
 func (b *Writer) Reset(w io.Writer) {
@@ -210,7 +210,7 @@ fmt.Println(bw.Available())
 1
 ```
 
-## 写`{Byte,Rune,String}`的方法
+## 写 `{Byte,Rune,String}` 的方法
 
 为了方便, 我们有三个用来写普通类型的实用方法：
 
@@ -239,7 +239,7 @@ type ReaderFrom interface {
     ReadFrom(r Reader) (n int64, err error)
 }
 ```
->比如 [`io.Copy`](https://golang.org/pkg/io/#Copy) 使用了 `io.ReaderFrom` 接口
+> 比如 [`io.Copy`](https://golang.org/pkg/io/#Copy) 使用了 `io.ReaderFrom` 接口
 
 `bufio.Writer` 实现了此接口：因此我们可以通过调用 `ReadFrom` 方法来处理从 `io.Reader` 获取到的所有数据：
 
@@ -264,7 +264,7 @@ func main() {
 "thr"
 "ee"
 ```
->使用 `ReadFrom` 方法的同时，调用 `Flush` 方法也很重要
+> 使用 `ReadFrom` 方法的同时，调用 `Flush` 方法也很重要
 
 ## bufio.Reader
 
@@ -272,7 +272,7 @@ func main() {
 ```
 io.Reader --> buffer --> consumer
 ```
-假设消费者想要从硬盘上读取10个字符(每次读取一个字符)。在底层实现上，这将会触发10次读取操作。如果硬盘按每个数据块四个字节来读取数据，那么 `bufio.Reader` 将会起到帮助作用。底层引擎将会缓存整个数据块，然后提供一个可以挨个读取字节的 API 给消费者：
+假设消费者想要从硬盘上读取 10 个字符(每次读取一个字符)。在底层实现上，这将会触发 10 次读取操作。如果硬盘按每个数据块四个字节来读取数据，那么 `bufio.Reader` 将会起到帮助作用。底层引擎将会缓存整个数据块，然后提供一个可以挨个读取字节的 API 给消费者：
 ```
 abcd -----> abcd -----> a
             abcd -----> b
@@ -285,8 +285,8 @@ efgh -----> efgh -----> e
 ijkl -----> ijkl -----> i
             ijkl -----> j
 ```
-`----->` 代表读取操作<br>
-这个方法仅需要从硬盘读取三次，而不是10次。
+`----->` 代表读取操作 <br>
+这个方法仅需要从硬盘读取三次，而不是 10 次。
 
 ## Peek
 
@@ -319,7 +319,7 @@ if err != nil {
 bufio: buffer full
 EOF
 ```
->被 `bufio.Reader` 使用的最小的缓存容器是 16。
+> 被 `bufio.Reader` 使用的最小的缓存容器是 16。
 
 返回的切片和被 `bufio.Reader` 使用的内部缓存底层使用相同的数组。因此引擎底层在执行任何读取操作之后内部返回的切片将会变成无效的。这是由于其将有可能被其他的缓存数据覆盖：
 
@@ -451,7 +451,7 @@ func main() {
 Read
 read = "cd", n = 2
 ```
-我们的 `io.Reader` 实例无线返回「abcd」(不会返回 `io.EOF`)。 第二次调用 `Read`并传入长度为4的切片，但是内部缓存在第一次从 `io.Reader` 中读取数据之后已经具有数据「cd」，所以 `bufio.Reader` 返回缓存中的数据数据，而不和底层 reader 进行通信。
+我们的 `io.Reader` 实例无线返回「abcd」(不会返回 `io.EOF`)。 第二次调用 `Read` 并传入长度为 4 的切片，但是内部缓存在第一次从 `io.Reader` 中读取数据之后已经具有数据「cd」，所以 `bufio.Reader` 返回缓存中的数据数据，而不和底层 reader 进行通信。
 
 2. 如果内部缓存是空的，那么将会执行一次从底层 io.Reader 的读取操作。 从前面的例子中我们可以清晰的看到如果我们开启了一个空的缓存，然后调用:
 
@@ -543,7 +543,7 @@ if err != nil {
 fmt.Printf("Token: %q\n", token)
 Token: "abcdef|"
 ```
->重要：返回的切面指向内部缓冲区, 因此它可能在下一次读取操作期间被覆盖
+> 重要：返回的切面指向内部缓冲区, 因此它可能在下一次读取操作期间被覆盖
 
 如果找不到分隔符，而且已经读到末尾(EOF)，将会返回 `io.EOF` error。 让我们将上面程序中的一行修改为如下代码:
 
@@ -702,7 +702,7 @@ Written bytes: 40
 
 ## bufio.Scanner
 
-[go语言中对bufio.Scanner的深层分析](https://medium.com/golangspec/in-depth-introduction-to-bufio-scanner-in-golang-55483bb689b4)
+[go 语言中对 bufio.Scanner 的深层分析](https://medium.com/golangspec/in-depth-introduction-to-bufio-scanner-in-golang-55483bb689b4)
 
 ## ReadBytes('\n'), ReadString('\n'), ReadLine 还是 Scanner?
 
@@ -858,18 +858,18 @@ efgh
 由于 reader 和 writer 都具有方法 *Buffered*，所以若想获取缓存数据的量，`rw.Buffered()` 将无法工作，编译器会报错：`ambiguous selector rw.Buffered`。 但是类似 `rw.Reader.Buffered()` 的方式是可以的。
 
 ## bufio + standard library
-*bufio* 包被广泛使用在 I/O出现的标准库中，例如:
+*bufio* 包被广泛使用在 I/O 出现的标准库中，例如:
 * archive/zip
 * compress/*
 * encoding/*
 * image/*
-* 类似于 net/http 的TCP连接包装。 它还结合一些类似于 sync.Pool 的缓存框架来减少垃圾回收的压力
+* 类似于 net/http 的 TCP 连接包装。 它还结合一些类似于 sync.Pool 的缓存框架来减少垃圾回收的压力
 
 ---
 
 via: https://medium.com/golangspec/introduction-to-bufio-package-in-golang-ad7d1877f762
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki?source=post_header_lockup)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki?source=post_header_lockup)
 译者：[jliu666](https://github.com/jliu666)
 校对：[rxcai](https://github.com/rxcai)
 

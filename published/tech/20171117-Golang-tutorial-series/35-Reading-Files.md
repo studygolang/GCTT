@@ -1,6 +1,6 @@
 首发于：https://studygolang.com/articles/14669
 
-# 读取文件
+# 第 35 篇：读取文件
 
 ![reading files](https://raw.githubusercontent.com/studygolang/gctt-images/master/golang-series/golang-read-files.png)
 
@@ -60,7 +60,7 @@ func main() {
 
 ```bash
 $ cd /home/naveen/go/src/filehandling/
-$ go install filehandling
+$ Go install filehandling
 $ workspacepath/bin/filehandling
 ```
 
@@ -68,7 +68,7 @@ $ workspacepath/bin/filehandling
 
 ```bash
 > cd C:\Users\naveen.r\go\src\filehandling
-> go install filehandling
+> Go install filehandling
 > workspacepath\bin\filehandling.exe
 ```
 
@@ -122,7 +122,7 @@ func main() {
 
 ```bash
 $ cd $HOME
-$ go install filehandling
+$ Go install filehandling
 $ workspacepath/bin/filehandling
 ```
 
@@ -343,7 +343,7 @@ func main() {
 如果我们使用下面命令来运行程序：
 
 ```bash
-$ go install filehandling
+$ Go install filehandling
 $ wrkspacepath/bin/filehandling -fpath=/path-of-file/test.txt
 ```
 
@@ -430,7 +430,7 @@ func main() {
 如果我使用下面命令来运行程序：
 
 ```bash
-$ go install filehandling
+$ Go install filehandling
 $ workspacepath/bin/filehandling -fpath=/path-of-file/test.txt
 ```
 
@@ -445,6 +445,8 @@ We have reached the end of the file.
 本教程到此结束。希望你能喜欢，祝你愉快。
 
 **上一教程** - [反射](https://studygolang.com/articles/13178)
+
+**下一教程** - [写入文件](https://studygolang.com/articles/19475)
 
 ---
 

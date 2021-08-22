@@ -8,7 +8,7 @@
 
 [Go blog](https://blog.golang.org/go-maps-in-action) 中专门讲解 map 的文章明确地表明：
 
-> [map 是非并发安全的](https://golang.org/doc/faq#atomic_maps)：并发读写 map 时，map 的行为是未知的。如果你需要使用并发执行的 goroutine 同时读写 map，必须使用某种同步机制来协调访问。
+> [map 是非并发安全的](https://golang.org/doc/faq#atomic_maps)：并发读写 map 时，map 的行为是未知的。如果你需要使用并发执行的 Goroutine 同时读写 map，必须使用某种同步机制来协调访问。
 
 然而，正如 [FAQ](https://golang.org/doc/faq#atomic_maps) 中解释的，Google 提供了一些帮助：
 
@@ -26,12 +26,12 @@ func main() {
    var wg sync.WaitGroup
 
    wg.Add(2)
-   go func() {
+   Go func() {
       for i := 0; i < 1000; i++  {
          m[`foo`]++
       }
    }()
-   go func() {
+   Go func() {
       for i := 0; i < 1000; i++  {
          m[`foo`]++
       }
@@ -40,25 +40,25 @@ func main() {
 }
 ```
 
-在这个例子中，我们清晰地看到，在某一时刻，两个 goroutine 尝试同时写入一个新值。下面是争用检测器的输出：
+在这个例子中，我们清晰地看到，在某一时刻，两个 Goroutine 尝试同时写入一个新值。下面是争用检测器的输出：
 
 ```
 ==================
 WARNING: DATA RACE
-Read at 0x00c00008e000 by goroutine 6:
+Read at 0x00c00008e000 by Goroutine 6:
    runtime.mapaccess1_faststr()
       /usr/local/go/src/runtime/map_faststr.go:12 +0x0
    main.main.func2()
       main.go:19 +0x69
 
-Previous write at 0x00c00008e000 by goroutine 5:
+Previous write at 0x00c00008e000 by Goroutine 5:
    runtime.mapassign_faststr()
       /usr/local/go/src/runtime/map_faststr.go:202 +0x0
    main.main.func1()
       main.go:14 +0xb8
 ```
 
-争用检测器解释道，当第二个 goroutine 正在读变量时，第一个 goroutine 正在向同一个内存地址写一个新值。如果你想要了解更多，我建议你阅读我的一篇关于[数据争用检测器](https://medium.com/@blanchon.vincent/go-race-detector-with-threadsanitizer-8e497f9e42db)的文章。
+争用检测器解释道，当第二个 Goroutine 正在读变量时，第一个 Goroutine 正在向同一个内存地址写一个新值。如果你想要了解更多，我建议你阅读我的一篇关于[数据争用检测器](https://medium.com/@blanchon.vincent/go-race-detector-with-threadsanitizer-8e497f9e42db)的文章。
 
 ## 并发写入检测
 
@@ -120,15 +120,15 @@ func mapdelete(t *maptype, h *hmap, key unsafe.Pointer) {
 让我们运行一个简单的基准测试，比较带有锁的常规 map 和 `sync` 包的 map。一个基准测试并发写入 map，另一个仅仅读取 map 中的值：
 
 ```go
-MapWithLockWithWriteOnlyInConcurrentEnc-8  68.2µs ± 2%
-SyncMapWithWriteOnlyInConcurrentEnc-8       192µs ± 2%
-MapWithLockWithReadOnlyInConcurrentEnc-8   76.8µs ± 3%
-SyncMapWithReadOnlyInConcurrentEnc-8       55.7µs ± 4%
+MapWithLockWithWriteOnlyInConcurrentEnc-8  68.2 µ s ± 2%
+SyncMapWithWriteOnlyInConcurrentEnc-8       192 µ s ± 2%
+MapWithLockWithReadOnlyInConcurrentEnc-8   76.8 µ s ± 3%
+SyncMapWithReadOnlyInConcurrentEnc-8       55.7 µ s ± 4%
 ```
 
 我们可以看到，两种 map 各有千秋。我们可以根据具体的情况选择其中之一。[文档](https://golang.org/pkg/sync/#Map)中很好地解释了这些情况：
 
-> map 类型针对两种常见使用场景做了优化：(1) 指定 key 的 entry 仅写入一次，但多次读取，比如只增长的缓存； (2) 多个 goroutine 读取、写入、覆盖不相交的 key 的集合指向的 entry。
+> map 类型针对两种常见使用场景做了优化：(1) 指定 key 的 entry 仅写入一次，但多次读取，比如只增长的缓存； (2) 多个 Goroutine 读取、写入、覆盖不相交的 key 的集合指向的 entry。
 
 ## Map vs sync.Map
 
@@ -136,7 +136,7 @@ SyncMapWithReadOnlyInConcurrentEnc-8       55.7µs ± 4%
 
 > 因此，要求所有的 map 操作都获取互斥锁，会拖慢大多数程序，但只为很少的程序增加了安全性
 
-让我们运行一个不使用并发 goroutine 的基准测试，来理解当你不需要并发但标准库默认提供并发安全的 map 时，可能带来的影响：
+让我们运行一个不使用并发 Goroutine 的基准测试，来理解当你不需要并发但标准库默认提供并发安全的 map 时，可能带来的影响：
 
 ```
 MapWithWriteOnly-8          11.1ns ± 3%

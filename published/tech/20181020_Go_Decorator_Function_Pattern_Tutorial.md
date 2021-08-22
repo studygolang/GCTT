@@ -31,7 +31,7 @@ func main() {
 在这个例子中，我们定义了一个名为 `myFunc` 的函数，它只是打印出 `Hello World`。在我们 `main()` 函数的主体中，我们已经调用了 `fmt.Printf` 并使用 `%T` 打印出作为第二个参数传递的值的类型。在示例种，我们传入参数 `myFunc`，这将打印出以下内容：
 
 ```
-$ go run test.go
+$ Go run test.go
 Type: func()
 ```
 
@@ -70,7 +70,7 @@ func main() {
 当我们运行它时，可以看到新输出具有我们期望的字符串 `Hello World`：
 
 ```
-$ go run test.go
+$ Go run test.go
 Type: func()
 Hello World
 ```
@@ -109,7 +109,7 @@ func main() {
 在调用它时，您应该看到像这样的日志：
 
 ```go
-$ go run test.go
+$ Go run test.go
 Type: func()
 Starting function execution: 2018-10-21 11:11:25.011873 +0100 BST m=+0.000443306
 Hello World

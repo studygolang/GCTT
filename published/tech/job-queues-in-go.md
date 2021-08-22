@@ -4,7 +4,7 @@
 
 在 [RapidLoop](https://www.rapidloop.com/) 中，我们几乎用 [Go](https://golang.org) 做所有事情，包括我们的服务器，应用服务和监控系统 [OpsDash](https://www.opsdash.com/)。
 
-Go 十分擅长编写异步程序 - goroutine 和 channel 使用十分简单不容易出错并且和其他语言相比异步/等待模式，语法和功能都更加强大。请继续阅读来瞧瞧围绕任务队列的一些有趣的 Go 代码。
+Go 十分擅长编写异步程序 - Goroutine 和 channel 使用十分简单不容易出错并且和其他语言相比异步/等待模式，语法和功能都更加强大。请继续阅读来瞧瞧围绕任务队列的一些有趣的 Go 代码。
 
 ## 不使用任务队列
 
@@ -108,7 +108,7 @@ for job := range jobChan {...}
 
 ## 等待 worker 处理
 
-这看起来很容易，不过 `close(jobChan)` 不会等待 goroutine 完成就会退出。因此我们还需使用 sync.WaitGroup：
+这看起来很容易，不过 `close(jobChan)` 不会等待 Goroutine 完成就会退出。因此我们还需使用 sync.WaitGroup：
 
 ```go
 // use a WaitGroup
@@ -135,11 +135,11 @@ wg.Wait()
 
 这样，我们可以通过关闭 channel 给 worker 发送关闭信号并使用 wg.Wait 会等待 worker 处理完成以后才会退出。
 
-注意：我们必须在开始 goroutine 之前递增 wait group，并且在 goroutine 结束（不管以何种方式）时递减。
+注意：我们必须在开始 Goroutine 之前递增 wait group，并且在 Goroutine 结束（不管以何种方式）时递减。
 
 ## 附带超时的等待
 
-`wg.Wait()` 会在 goroutine 退出前一直等待。但是如果我们无法无限期的等待怎么办？
+`wg.Wait()` 会在 Goroutine 退出前一直等待。但是如果我们无法无限期的等待怎么办？
 
 如下帮助函数封装了 `wg.Wait()` 增加了超时时间：
 
@@ -177,7 +177,7 @@ WaitTimeout(&wg, 5 * time.Second)
 // create a context that can be cancelled
 ctx, cancel := context.WithCancel(context.Background())
 
-// start the goroutine passing it the context
+// start the Goroutine passing it the context
 go worker(ctx, jobChan)
 
 func worker(ctx context.Context, jobChan <-chan Job) {
@@ -265,7 +265,7 @@ cancel()
 // create a cancel channel
 cancelChan := make(chan struct{})
 
-// start the goroutine passing it the cancel channel
+// start the Goroutine passing it the cancel channel
 go worker(jobChan, cancelChan)
 
 func worker(jobChan <-chan Job, cancelChan <-chan struct{}) {

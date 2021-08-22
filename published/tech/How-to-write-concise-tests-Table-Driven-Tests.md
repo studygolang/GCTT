@@ -2,7 +2,7 @@
 
 # Go 如何编写简洁测试 -- 表格驱动测试
 
-表格驱动测试是一种编写易于扩展测试用例的测试方法。表格驱动测试在 Go 语言中很常见（并非唯一），以至于很多标准库<sup>[1](#reference)</sup>都有使用。表格驱动测试使用匿名结构体。
+表格驱动测试是一种编写易于扩展测试用例的测试方法。表格驱动测试在 Go 语言中很常见（并非唯一），以至于很多标准库 <sup>[1](#reference)</sup> 都有使用。表格驱动测试使用匿名结构体。
 
 在这篇文章中我会告诉你如何编写表格驱动测试。继续使用 [errline repo](https://github.com/virup/errline) 这个项目，现在我们来为 `Wrap()` 函数添加测试。`Wrap()` 函数用于给一个 `error` 在调用位置添加文件名和行数的修饰。我们尤其需要测试其中计算文件的短名称的逻辑（以粗体表示部分）。最初的 `Wrap()` 函数如下：
 
@@ -123,7 +123,7 @@ func TestShortFilename(t *testing.T) {
 
 代码可以从 [我的 github](https://github.com/virup/errline/tree/master) 获取。
 
-## <p id="reference">引用</p>
+## <p id="reference"> 引用 </p>
 
 1. 一些 Go 语言标准库的表格驱动测试例子
     * [https://github.com/golang/go/blob/master/src/strconv/ftoa_test.go](https://github.com/golang/go/blob/master/src/strconv/ftoa_test.go)

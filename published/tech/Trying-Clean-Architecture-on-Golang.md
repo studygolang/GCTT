@@ -156,7 +156,7 @@ type ArticleUsecase interface {
 
   与用例层相同，因为该层依赖于用例层，意味着该层需要用例层来支持测试。基于之前定义的契约接口， 也需要对用例层进行模拟。
 
-对于模拟，我使用 vektra 的 golang的模拟库：
+对于模拟，我使用 vektra 的 golang 的模拟库：
 [https://github.com/vektra/mockery](https://github.com/vektra/mockery)
 
 ## 仓库层(Repository)测试
@@ -238,7 +238,7 @@ Mockery 将会为我生成一个仓库层模型，我不需要先完成仓库（
 
 ## 表现层（ Delivery ）测试
 
-表现层测试依赖于你如何传递的数据。如果使用 http REST API， 我们可以使用 golang 中的内置包 httptest。
+表现层测试依赖于你如何传递的数据。如果使用 http REST API， 我们可以使用 Golang 中的内置包 httptest。
 
 因为该层依赖于用例( Usecase )层, 所以 我们需要模拟 Usecase，与仓库层相同，我使用 Mockery 模拟我的 Usecase 来进行表现层（ Delivery ）的测试。
 
@@ -369,7 +369,7 @@ func main() {
 
 * [https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html)
 
-* [http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/](http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/)。 这是Golang种另一个版本的简洁架构。
+* [http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/](http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/)。 这是 Golang 种另一个版本的简洁架构。
 
 如果你任何问题，或者需要更多的解释，或者我在这里没有解释清楚的。你可以通过我的[LinkedIn](https://www.linkedin.com/in/imantumorang/)或者[email](iman.tumorang@gmail.com)联系我。谢谢。
 

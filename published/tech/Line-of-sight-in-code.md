@@ -2,9 +2,9 @@
 
 # 代码中的缩进线
 
-![我在2016年伦敦Golang英国会议上谈论代码缩进线](https://raw.githubusercontent.com/studygolang/gctt-images/master/line-of-sight/1_CBjBs9EzL8q1AL6XvjjpJg.png)
+![我在 2016 年伦敦 Golang 英国会议上谈论代码缩进线](https://raw.githubusercontent.com/studygolang/gctt-images/master/line-of-sight/1_CBjBs9EzL8q1AL6XvjjpJg.png)
 
-在近期伦敦举行的 [Golang 英国会议](https://www.youtube.com/watch?v=yeetIgNeIkc) 上，我在[地道的Go 语言窍门](https://www.youtube.com/watch?v=yeetIgNeIkc) 交流（[幻灯片](http://go-talks.appspot.com/github.com/matryer/present/idiomatic-go-tricks/main.slide#1)）中讲到关于代码中的缩进线， 我想在这里稍微解释一下。
+在近期伦敦举行的 [Golang 英国会议](https://www.youtube.com/watch?v=yeetIgNeIkc) 上，我在[地道的 Go 语言窍门](https://www.youtube.com/watch?v=yeetIgNeIkc) 交流（[幻灯片](http://go-talks.appspot.com/github.com/matryer/present/idiomatic-go-tricks/main.slide#1)）中讲到关于代码中的缩进线， 我想在这里稍微解释一下。
 
 > 缩进线是“观察者无障碍视线的直线”
 

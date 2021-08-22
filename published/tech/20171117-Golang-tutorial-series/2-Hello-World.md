@@ -69,7 +69,7 @@ go
     hello
       helloworld.go
 ```
-3. 第 3 种运行程序的好方法是使用 go playground。尽管它有自身的限制，但该方法对于运行简单的程序非常方便。我已经在 playground 上创建了一个 hello world 程序。[点击这里](https://play.golang.org/p/VtXafkQHYe) 在线运行程序。
+3. 第 3 种运行程序的好方法是使用 Go playground。尽管它有自身的限制，但该方法对于运行简单的程序非常方便。我已经在 playground 上创建了一个 hello world 程序。[点击这里](https://play.golang.org/p/VtXafkQHYe) 在线运行程序。
 你可以使用 [go playground](https://play.golang.org) 与其他人分享你的源代码。
 
 ### 简述 hello world 程序
@@ -87,7 +87,7 @@ func main() { //3
 ```
 现在简单介绍每一行大概都做了些什么，在以后的教程中还会深入探讨每个部分。
 
-**package main - 每一个 Go 文件都应该在开头进行 `package name` 的声明**（译注：只有可执行程序的包名应当为 main）。包（Packages）用于代码的封装与重用，这里的包名称是`main`。
+**package main - 每一个 Go 文件都应该在开头进行 `package name` 的声明**（译注：只有可执行程序的包名应当为 main）。包（Packages）用于代码的封装与重用，这里的包名称是 `main`。
 
 **import "fmt"** - 我们引入了 fmt 包，用于在 main 函数里面打印文本到标准输出。
 

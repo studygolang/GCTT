@@ -1,8 +1,8 @@
 首发于：https://studygolang.com/articles/28977
 
-# Go 中没有引用变量
+# Go 中没有引用传递
 
-先说清楚，在 go 中没有引用变量，所以更不存在什么引用传值了。
+先说清楚，在 Go 中没有引用变量，所以更不存在什么引用传值了。
 
 ## 什么是引用变量
 
@@ -98,7 +98,7 @@ m := make(map[int]int)
 func makemap(t *maptype, hint int, h *hmap)*hmap
 ```
 
-可以看到，`makemap` 函数返回 `*hmap`，一个指向[hmap](https://golang.org/src/runtime/map.go?h=hmap#L115)结构的指针，我们可以从 go 源码中看到这些，除此之外，我们还可以证明 map 值的大小和 `uintptr` 一样。
+可以看到，`makemap` 函数返回 `*hmap`，一个指向[hmap](https://golang.org/src/runtime/map.go?h=hmap#L115)结构的指针，我们可以从 Go 源码中看到这些，除此之外，我们还可以证明 map 值的大小和 `uintptr` 一样。
 
 ```go
 package main

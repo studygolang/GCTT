@@ -1,8 +1,8 @@
 已发布：https://studygolang.com/articles/12931
 
-# 如何写 go 中间件
+# 如何写 Go 中间件
 
-编写 go 中间件看起来挺简单的，但是有些情况下我们可能会遇到一些麻烦。
+编写 Go 中间件看起来挺简单的，但是有些情况下我们可能会遇到一些麻烦。
 
 让我们来看一些例子。
 
@@ -43,7 +43,7 @@ func TrailingSlashRedirect(h http.Handler) http.Handler {
 假设我们要向请求添加一个头部信息，或者修改它。
 `http.Handler` 文档说明如下:
 
- >除了读取主体之外，处理程序不应修改所提供的请求。
+ > 除了读取主体之外，处理程序不应修改所提供的请求。
 
  Go 标注库在[传递 `http.Request` 对象到响应链之前会先拷贝 `http.Request`](https://golang.org/src/net/http/server.go#L1981)，我们也应该这样做。
  假设我们要为每个请求设置一个 `Request-Id` 头部信息，用于内部跟踪。
@@ -150,8 +150,8 @@ func Server(h http.Handler, servername string) http.Handler {
 
 ## 其他 `ResponseWriter` 接口
 
-ResponseWriter接口只需要实现三个方法。
-但实际上，它也可以响应其他接口，例如 `http.Pusher`。此外，你的中间件可能会意外禁用HTTP/2支持，这是不好的。
+ResponseWriter 接口只需要实现三个方法。
+但实际上，它也可以响应其他接口，例如 `http.Pusher`。此外，你的中间件可能会意外禁用 HTTP/2 支持，这是不好的。
 
 ```go
 // Push implements the http.Pusher interface.

@@ -10,12 +10,12 @@
 
 模块是一组版本化的 Go 包，每个版本的内容都是不可变的。这种不变性为缓存和身份验证提供了新的机会。当以模块模式运行时，它必须获取包含所请求的包的模块，以及该模块引入的任何新依赖项，根据需要更新 go.mod 和 go.sum 文件。从版本控制中获取模块在系统的延迟和存储方面可能是昂贵的：go 命令可能被迫下载包含传递依赖的存储库的完整提交历史记录，即使是未构建的存储库，也只是解决它的版本。
 
-解决方法是使用模块代理，它代表一种更适合 go 命令需求的 API（参考 Go help goproxy ）。当使用代理以模块模式运行时，它只需要请求指定的模块元数据或源代码，所以它可以更快地工作，而不用担心其余部分。下面是一个示例，说明 go 命令如何通过请求版本列表来获取代理，然后使用最新标记版本的 info，mod 和 zip 文件。
+解决方法是使用模块代理，它代表一种更适合 Go 命令需求的 API（参考 Go help goproxy ）。当使用代理以模块模式运行时，它只需要请求指定的模块元数据或源代码，所以它可以更快地工作，而不用担心其余部分。下面是一个示例，说明 Go 命令如何通过请求版本列表来获取代理，然后使用最新标记版本的 info，mod 和 zip 文件。
 ![an example of how the Go command may use a proxy](https://blog.golang.org/module-mirror-launch/proxy-protocol.png)
 
 模块镜像是一种特殊的模块代理，它将元数据和源代码缓存在自己的存储系统中，允许镜像继续提供原始位置不再提供的源代码。这可以加快下载速度并防止因为代码更迭导致的依赖关系丢失。有关更多信息，请参阅 [2019 年的 Go Modules](https://blog.golang.org/modules2019) 。
 
-Go 团队维护一个模块镜像，在 [proxy.golang.org](proxy.golang.org) 上提供，模块用户从 Go 1.13 开始默认使用这个模块镜像。 如果您运行的是早期版本的 go 命令，则可以通过在本地环境中设置 `GOPROXY=https://proxy.golang.org` 来使用此服务。
+Go 团队维护一个模块镜像，在 [proxy.golang.org](proxy.golang.org) 上提供，模块用户从 Go 1.13 开始默认使用这个模块镜像。 如果您运行的是早期版本的 Go 命令，则可以通过在本地环境中设置 `GOPROXY=https://proxy.golang.org` 来使用此服务。
 
 ## 校验和数据库(Checksum Database)
 
@@ -28,13 +28,13 @@ Go 的解决方案就是将 go.sum 的每一行记录的全局源，称为校验
 [sum.golang.org](sum.golang.org) 校验和数据库提供了校验和数据库，并构建在由 [Trillian](https://github.com/google/trillian) 支持的哈希的 [透明日志](https://research.swtch.com/tlog)（或"Merkle 树"）。 Merkle 树的主要优点就是它具有防篡改功能，并且具有不允许未被发现的不良行为的属性，这使得它比简单的数据库更可靠。go 命令使用树来检查『包含』证明（日志中存在特定记录）和『一致性』证明（树未被篡改），然后将新的 go.sum 行添加到模块中。下面是这种树的样子：
 ![tree](https://blog.golang.org/module-mirror-launch/tree.png)
 
-校验和数据库支持一系列端点给 go 命令请求和校验 go.sum。 `/lookup` 端点提供 "signed tree head"（STH）和请求 go.sum 行。`/tile` 端点提供称为 tiles 的树的块，go 命令可以使用它来进行校样。下面是 Go 命令如何通过执行 `/lookup` 模块版本，然后证明所需的 tiles 来与校验和数据库交互的示例。
+校验和数据库支持一系列端点给 Go 命令请求和校验 go.sum。 `/lookup` 端点提供 "signed tree head"（STH）和请求 go.sum 行。`/tile` 端点提供称为 tiles 的树的块，go 命令可以使用它来进行校样。下面是 Go 命令如何通过执行 `/lookup` 模块版本，然后证明所需的 tiles 来与校验和数据库交互的示例。
 ![how the Go command may interact with the checksum database](https://blog.golang.org/module-mirror-launch/sumdb-protocol.png)
 
 如果你在使用 Go 1.12 或更早的版本，你可以手动敲入 gosumcheck 检查校验和数据库中的 go.sum 文件：
 
 ```
-$ go get golang.org/x/mod/gosumcheck
+$ Go get golang.org/x/mod/gosumcheck
 $ gosumcheck /path/to/go.sum
 ```
 

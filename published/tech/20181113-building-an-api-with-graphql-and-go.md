@@ -6,7 +6,7 @@
 
 > 2020/5/16 更新：大家好，我刚刚更新了该项目以使用 Go module。不幸的是，[realize](https://github.com/oxequa/realize)很长时间没有更新并且无法正常工作。如果您想使用实时重新加载器，则还有其他选择，例如 [air](https://github.com/cosmtrek/air)。否则，请随意忽略帖子中有关 realize 的任何内容，并按通常的方式运行项目。
 
-本博文中将使用 **Go**、**GraphQL**、**PostgreSQL** 创建一个 API。我已在项目结构上迭代几个版本，这是我最喜欢的一个。在大部分的时间，我创建 web APIs 都是通过 **Node.js** 和 **Ruby/Rails**。而第一次使用 **Go** 设计 Web apis 时,需要费很大的劲儿。**Ben Johnson** 的 [Structuring Applications in Go](https://medium.com/@benbjohnson/structuring-applications-in-go-3b04be4ff091) 文章对我有很大的帮助，本博文中的部分代码就得益于 **Ben Johnson** 文章的指导，推荐阅读。
+本博文中将使用 **Go**、**GraphQL**、**PostgreSQL** 创建一个 API。我已在项目结构上迭代几个版本，这是我最喜欢的一个。在大部分的时间，我创建 Web APIs 都是通过 **Node.js** 和 **Ruby/Rails**。而第一次使用 **Go** 设计 Web apis 时,需要费很大的劲儿。**Ben Johnson** 的 [Structuring Applications in Go](https://medium.com/@benbjohnson/structuring-applications-in-go-3b04be4ff091) 文章对我有很大的帮助，本博文中的部分代码就得益于 **Ben Johnson** 文章的指导，推荐阅读。
 
 ## 配置
 

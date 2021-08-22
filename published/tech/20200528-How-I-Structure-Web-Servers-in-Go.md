@@ -197,7 +197,7 @@ dd
   - ./service/ 是所有领域逻辑（domain logic）所在的地方；可以被 `service-api`，`service-tool-x`，以及任何未来直接访问这个目录可以带来收益的应用或者包所引入。
 - pkg/ 用于存放鼓励被仓库以外的项目所引入的包。
   - ./client/ 是用于访问 `service-api` 的 client 库。其他团队可以使用而不是自己写一个 client，并且我们可以借助我们在 `cmd/` 里面的 CI/CD 工具来 “[dogfood it](https://en.wikipedia.org/wiki/Eating_your_own_dog_food)” （使用自己产品的意思）。
-  - ./dtos/ 是存放项目的数据传输对象，不同包之间共享的数据且以 json 形式在线路上编码或传输的结构体定义。没有从其他仓库包导出的模块化的结构体。`/internal/service` 负责 这些 DTO （数据传输对象）和自己内部模型的相互映射，避免实现细节的遗漏（如，数据库注释）并且该模型的改变不破坏下游客户端消费这些 DTO。
+  - ./dtos/ 是存放项目的数据传输对象，不同包之间共享的数据且以 JSON 形式在线路上编码或传输的结构体定义。没有从其他仓库包导出的模块化的结构体。`/internal/service` 负责 这些 DTO （数据传输对象）和自己内部模型的相互映射，避免实现细节的遗漏（如，数据库注释）并且该模型的改变不破坏下游客户端消费这些 DTO。
 - .editorconfig，.gitattributes，.gitignore 因为[所有的仓库必须使用 .editorconfig，.gitattributes，.gitignore](https://www.dudley.codes/posts/2020.02.16-git-lost-in-translation/)！
 - go.mod 甚至可以在[有限制的且官僚的公司环境](https://www.dudley.codes/posts/2020.04.02-golang-behind-corporate-firewall/)工作。
 

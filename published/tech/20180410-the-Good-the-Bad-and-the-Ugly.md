@@ -2,11 +2,11 @@
 
 # Go 语言的优点，缺点和令人厌恶的设计
 
-这是关于 「[Go是一门设计糟糕的编程语言 （Go is not good)](https://github.com/ksimka/go-is-not-good)」 系列的另一篇文章。Go 确实有一些很棒的特性，所以我在这篇文章中展示了它的优点。但是总体而言，当超过 API 或者网络服务器（这也是它的设计所在）的范畴，用 Go 处理商业领域的逻辑时，我感觉它用起来麻烦而且痛苦。就算在网络编程方面，Go 的设计和实现也存在诸多问题，这使它看上去简单实际则暗藏危险。
+这是关于 「[Go 是一门设计糟糕的编程语言 （Go is not good)](https://github.com/ksimka/go-is-not-good)」 系列的另一篇文章。Go 确实有一些很棒的特性，所以我在这篇文章中展示了它的优点。但是总体而言，当超过 API 或者网络服务器（这也是它的设计所在）的范畴，用 Go 处理商业领域的逻辑时，我感觉它用起来麻烦而且痛苦。就算在网络编程方面，Go 的设计和实现也存在诸多问题，这使它看上去简单实际则暗藏危险。
 
 写这篇文章的动机是因为我最近重新开始用 Go 写一个业余项目。在以前的工作中我广泛的使用了 Go 为 SaaS 服务编写网络代理（包括 http 和原始的 tcp）。网络编程的部分是相当令人愉快的（我也正在探索这门语言），但随之而来的会计和账单部分则苦不堪言。因为我的业余项目只是一个简单的 API，我认为 Go 非常适合快速的完成这个任务。但是我们都知道，很多项目的增长会超过了预期的范围，所以我不得不写一些数据处理来计算统计数据，Go 的痛苦之处也随着而来。下面就是我对 Go 的困扰。
 
-一些背景情况：我喜欢静态类型的语言。我第一个标志性的项目是用 [Pascal](https://zh.wikipedia.org/wiki/Pascal_(%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80)) 写的。当90年代初我开始工作之后，开始使用 [Ada](https://zh.wikipedia.org/wiki/Ada) 和 C/C++。后来我转移到 Java 阵地，最后到了 Scala（中间夹杂着 Go），最近开始学习 [Rust](https://www.rust-lang.org/zh-CN/)。我也写了大量的 JavaScript，因为直到现在它依旧是浏览器端唯一可用的语言。我感觉动态类型的语言并不安全，并尽力将它们的使用限制在脚本级别。我习惯了命令式，函数式和面向对象的方法。
+一些背景情况：我喜欢静态类型的语言。我第一个标志性的项目是用 [Pascal](https://zh.wikipedia.org/wiki/Pascal_(%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80)) 写的。当 90 年代初我开始工作之后，开始使用 [Ada](https://zh.wikipedia.org/wiki/Ada) 和 C/C++。后来我转移到 Java 阵地，最后到了 Scala（中间夹杂着 Go），最近开始学习 [Rust](https://www.rust-lang.org/zh-CN/)。我也写了大量的 JavaScript，因为直到现在它依旧是浏览器端唯一可用的语言。我感觉动态类型的语言并不安全，并尽力将它们的使用限制在脚本级别。我习惯了命令式，函数式和面向对象的方法。
 
 这是一篇很长的文章，所以我列出了菜单来“激发你的食欲”：
 
@@ -41,9 +41,9 @@
 - [结论](#conclusion)
 - [几天后: Hacker News 第三名!](#hacker-news)
 
-## <span id="good">优点</span>
+## <span id="good"> 优点 </span>
 
-### <span id="go-easy-learn">Go 很容易学习</span>
+### <span id="go-easy-learn">Go 很容易学习 </span>
 
 这是事实：如果你了解任何一种编程语言，那么通过在「[Go 语言之旅](http://go-tour-zh.appspot.com/welcome/1)」学习几个小时就能够掌握 Go 的大部分语法，并在几天后写出你的第一个真正的程序。阅读并理解 [实效 Go 编程](http://docscn.studygolang.com/doc/effective_go.html)，浏览一下「[包文档](http://docscn.studygolang.com/pkg/)」,玩一玩 [Gorilla](http://www.gorillatoolkit.org/) 或者 [Go Kit](https://gokit.io/) 这样的网络工具包，然后你将成为一个相当不错的 Go 开发者。
 
@@ -51,15 +51,15 @@
 
 Go 语言的简单可能是错误的。引用 Rob Pike 的话，[简单既是复杂](https://talks.golang.org/2015/simplicity-is-complicated.slide#1)，我们会看到简单背后有很多的陷阱等着我们去踩，极简主义会让我们违背 DRY(Don't Repeat Yourself) 原则。
 
-### <span id="easy-concurrent">基于 goroutines 和 channels 的简单并发编程</span>
+### <span id="easy-concurrent"> 基于 goroutines 和 channels 的简单并发编程 </span>
 
 Goroutines 可能是 Go 的最佳特性了。它们是轻量级的计算线程，与操作系统线程截然不同。
 
-当 Go 程序执行看似阻塞 I/O 的操作时，实际上 Go 运行时挂起了 goroutine ,当一个事件指示某个结果可用时恢复它。与此同时，其他的 goroutines 已被安排执行。因此在同步编程模型下，我们具有了异步编程的可伸缩性优势。
+当 Go 程序执行看似阻塞 I/O 的操作时，实际上 Go 运行时挂起了 Goroutine ,当一个事件指示某个结果可用时恢复它。与此同时，其他的 goroutines 已被安排执行。因此在同步编程模型下，我们具有了异步编程的可伸缩性优势。
 
 Goroutines 也是轻量级的:它们的堆栈 [随需求增长和收缩](https://dave.cheney.net/2013/06/02/why-is-a-goroutines-stack-infinite)，这意味着有 100 个甚至 1000 个 goroutines 都不是问题。
 
-我以前的应用程序中有一个 goroutine 漏洞:这些 goroutines 结束之前正在等待一个 channel 关闭，而这个 channel 永远不会关闭(一个常见的死锁问题)。这个进程毫无任何理由吃掉了 90 % 的 CPU ，而检查 [expvars](http://docscn.studygolang.com/pkg/expvar/) 显示有 600 k 空闲的 goroutines! 我猜测 goroutine 调度程序占用了 CPU。
+我以前的应用程序中有一个 Goroutine 漏洞:这些 goroutines 结束之前正在等待一个 channel 关闭，而这个 channel 永远不会关闭(一个常见的死锁问题)。这个进程毫无任何理由吃掉了 90 % 的 CPU ，而检查 [expvars](http://docscn.studygolang.com/pkg/expvar/) 显示有 600 k 空闲的 goroutines! 我猜测 Goroutine 调度程序占用了 CPU。
 
 当然，像 Akka 这样的 Actor 系统可以轻松 [处理数百万的 Actors](https://doc.akka.io/docs/akka/2.5/general/actor-systems.html#what-you-should-not-concern-yourself-with)，部分原因是 actors 没有堆栈，但是他们远没有像 goroutines 那样简单地编写大量并发的请求/响应应用程序（即 http APIs）。
 
@@ -67,13 +67,13 @@ channel 是 goroutines 的通信方式:它们提供了一个便利的编程模�
 
 但是，channels 必须仔细考虑，因为错误大小的 channels (默认情况下没有缓冲) [会导致死锁](https://www.danmrichards.com/blog/2018/03/26/goroutines-channels-and-waitgroups/)。下面我们还将看到，使用通道并不能阻止竞争情况，因为它缺乏不可变性。
 
-### <span id="greate-standard-library">丰富的标准库</span>
+### <span id="greate-standard-library"> 丰富的标准库 </span>
 
-Go 的 [标准库](http://docscn.studygolang.com/pkg/) 非常丰富,特别是对于所有与网络协议或 API 开发相关的: http 客户端和服务器，加密，档案格式，压缩，发送电子邮件等等。甚至还有一个html解析器和相当强大的模板引擎去生成 text & html，它会自动过滤 XSS 攻击（例如在 [Hugo](https://gohugo.io/templates/introduction/) 中的使用）。
+Go 的 [标准库](http://docscn.studygolang.com/pkg/) 非常丰富,特别是对于所有与网络协议或 API 开发相关的: http 客户端和服务器，加密，档案格式，压缩，发送电子邮件等等。甚至还有一个 html 解析器和相当强大的模板引擎去生成 text & html，它会自动过滤 XSS 攻击（例如在 [Hugo](https://gohugo.io/templates/introduction/) 中的使用）。
 
-各种 APIs 一般都简单易懂。它们有时看起来过于简单:这个某种程度上是因为 goroutine 编程模型意味着我们只需要关心“看似同步”的操作。这也是因为一些通用的函数也可以替换许多专门的函数，就像 [我最近发现的关于时间计算的问题](https://bluxte.net/musings/2018/03/22/local-date-time-calculations-in-go/)。
+各种 APIs 一般都简单易懂。它们有时看起来过于简单:这个某种程度上是因为 Goroutine 编程模型意味着我们只需要关心“看似同步”的操作。这也是因为一些通用的函数也可以替换许多专门的函数，就像 [我最近发现的关于时间计算的问题](https://bluxte.net/musings/2018/03/22/local-date-time-calculations-in-go/)。
 
-### <span id="go-performant">Go 性能优越</span>
+### <span id="go-performant">Go 性能优越 </span>
 
 Go 编译为本地可执行文件。许多 Go 的用户来自 Python、Ruby 或 Node.js。对他们来说，这是一种令人兴奋的体验，因为他们看到服务器可以处理的并发请求数量大幅增加。当您使用非并发(Node.js)或全局解释器锁定的解释型语言时，这实际上是相当正常的。结合语言的简易性，这解释了 Go 令人兴奋的原因。
 
@@ -85,23 +85,23 @@ Go 的垃圾回收器的设计目的是 [优先考虑延迟](https://blog.golang
 
 Go 同样在命令行实用程序中优于 Java :作为本地可执行文件，Go 程序没有启动消耗，反之 Java 首先需要加载和编译的字节码。
 
-### <span id="defined-code-format">语言层面定义源代码的格式化</span>
+### <span id="defined-code-format"> 语言层面定义源代码的格式化 </span>
 
 我职业生涯中一些最激烈的辩论发生在团队代码格式的定义上。 Go 通过为代码定义规范格式来解决这个问题。 `gofmt` 工具会重新格式化您的代码，并且没有选项。
 
 不管你喜欢与否，`gofmt` 定义了如何对代码进行格式化，一次性解决了这个问题。
 
-### <span id="test-framework">标准化的测试框架</span>
+### <span id="test-framework"> 标准化的测试框架 </span>
 
 Go 在其标准库中提供了一个很好的 [测试框架](http://docscn.studygolang.com/pkg/testing/)。它支持并行测试、基准测试，并包含许多实用程序，可以轻松测试网络客户端和服务器。
 
-### <span id="great-operations">Go 程序方便操作</span>
+### <span id="great-operations">Go 程序方便操作 </span>
 
 与 Python，Ruby 或 Node.js 相比，必须安装单个可执行文件对于运维工程师来说是一个梦想。 随着越来越多的 Docker 的使用，这个问题越来越少，但独立的可执行文件也意味着小型的 Docker 镜像。
 
-Go还具有一些内置的观察性功能，可以使用 [`expvar`](http://docscn.studygolang.com/pkg/expvar/) 包发布内部状态和指标，并易于添加新内容。但要小心，因为它们在默认的 http 请求处理程序中 [自动公开](http://docscn.studygolang.com/pkg/expvar/#pkg-overview)，不受保护。Java 有类似的 JMX ，但它要复杂得多。
+Go 还具有一些内置的观察性功能，可以使用 [`expvar`](http://docscn.studygolang.com/pkg/expvar/) 包发布内部状态和指标，并易于添加新内容。但要小心，因为它们在默认的 http 请求处理程序中 [自动公开](http://docscn.studygolang.com/pkg/expvar/#pkg-overview)，不受保护。Java 有类似的 JMX ，但它要复杂得多。
 
-### <span id="defer">Defer 声明，防止忘记清理</span>
+### <span id="defer">Defer 声明，防止忘记清理 </span>
 
 defer 语句的目的类似于 Java 的 `finally`：在当前函数的末尾执行一些清理代码，而不管此函数如何退出。`defer` 的有趣之处在于它跟代码块没有联系，可以随时出现。这使得清理代码尽可能接近需要清理的代码:
 
@@ -114,9 +114,9 @@ defer file.Close()
 
 // 用文件资源的时候，我们再也不需要考虑何时关闭它
 ```
-当然，Java的 [试用资源](https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html) 没那么冗长，而且 Rust 在其所有者被删除时会 [自动声明资源](https://doc.rust-lang.org/rust-by-example/trait/drop.html)，但是由于 Go 要求您清楚地了解资源清理情况，因此让它接近资源分配很不错。
+当然，Java 的 [试用资源](https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html) 没那么冗长，而且 Rust 在其所有者被删除时会 [自动声明资源](https://doc.rust-lang.org/rust-by-example/trait/drop.html)，但是由于 Go 要求您清楚地了解资源清理情况，因此让它接近资源分配很不错。
 
-### <span id="new-type">新类型</span>
+### <span id="new-type"> 新类型 </span>
 
 我喜欢类型，因为有些事情让我感到恼火和害怕，举个例子，我们到处把持久对象标识符当做 `string` 或 `long` 类型传递使用。 我们通常会在参数名称中对 id 的类型进行编码，但是当函数具有多个标识符作为参数并且某些调用不匹配参数顺序时，会造成细微的错误。
 
@@ -138,17 +138,17 @@ func main() {
 	// 错误的顺序：将会编译错误
 	AddProduct(productId, userId)
 	// 编译错误：
-	// AddProduct 不能用 productId(type ProductId) 作为 type UserId的参数
-	// Addproduct 不能用 userId(type UserId) 作为type ProfuctId 的参数
+	// AddProduct 不能用 productId(type ProductId) 作为 type UserId 的参数
+	// Addproduct 不能用 userId(type UserId) 作为 type ProfuctId 的参数
 }
 ```
 不幸的是，缺乏泛型使得使用新类型变得麻烦，因为为它们编写可重用代码需要从原始类型转换值。
 
-## <span id="bad">缺点</span>
+## <span id="bad"> 缺点 </span>
 
-### <span id="ignore-advances">Go 忽略了现代语言设计的进步</span>
+### <span id="ignore-advances">Go 忽略了现代语言设计的进步 </span>
 
-在[少既是多](https://commandcenter.blogspot.tw/2012/06/less-is-exponentially-more.html)中，Rob Pike 解释说 Go 是为了在谷歌取代 C 和 C++，它的前身是 [Newsqueak](https://swtch.com/~rsc/thread/newsqueak.pdf) ，这是他在80年代写的一种语言。Go 也有很多关于 [Plan9](https://en.wikipedia.org/wiki/Plan_9_from_Bell_Labs) 的参考，Plan9 是一个分布式操作系统，在贝尔实验室的80年代开发的。
+在[少既是多](https://commandcenter.blogspot.tw/2012/06/less-is-exponentially-more.html)中，Rob Pike 解释说 Go 是为了在谷歌取代 C 和 C++，它的前身是 [Newsqueak](https://swtch.com/~rsc/thread/newsqueak.pdf) ，这是他在 80 年代写的一种语言。Go 也有很多关于 [Plan9](https://en.wikipedia.org/wiki/Plan_9_from_Bell_Labs) 的参考，Plan9 是一个分布式操作系统，在贝尔实验室的 80 年代开发的。
 
 甚至有一个直接从 Plan9 获得灵感的[Go 汇编](https://golang.org/doc/asm)。为什么不使用 [LLVM](https://llvm.org/) 来提供目标范围广泛且开箱即用的体系结构?我此处可能也遗漏了某些东西，但是为什么需要汇编?如果你需要编写汇编以充分利用 CPU ，那么不应该直接使用目标 CPU 汇编语言吗?
 
@@ -160,7 +160,7 @@ Go 的目标是替换 C 和 C++，很明显它的创建者也没有关注其他�
 
 Go 反而在操作工具的领域吸引了 Python 和 Ruby 等脚本语言的用户。他们在 Go 中找到了一种方法，可以提高性能，减少 内存/cpu/磁盘 占用。还有更多的静态类型，这对他们来说是全新的。Go 的杀手级应用是 Docker ，它在 devops 世界中引起了广泛的应用。Kubernetes 的崛起加强了这一趋势。
 
-### <span id="interfaces-types">接口是结构类型</span>
+### <span id="interfaces-types"> 接口是结构类型 </span>
 Go 接口就像 Java 接口或 Scala 和 Rust 特性（traits）:它们定义了后来由类型实现的行为（我不称之为“类”）。
 
 与 Java 接口和 Scala 和 Rust 特性不同，类型不需要显式地指定接口实现:它只需要实现接口中定义的所有函数。所以 Go 的接口实际上是结构化的。
@@ -174,7 +174,7 @@ Go 并不是唯一使用结构化类型的语言，但我发现它有几个缺�
 
 *更新* : 对于接口的一些丑陋问题，请参阅下面的 [无接口值（nil interface values）](#nil-interface-values)。
 
-### <span id="no-enum">没有枚举</span>
+### <span id="no-enum"> 没有枚举 </span>
 
 Go 没有枚举，在我看来，这是一个错失的机会。
 
@@ -182,11 +182,11 @@ Go 没有枚举，在我看来，这是一个错失的机会。
 
 这也意味着没有办法让编译器彻底检查 `switch` 语句，也无法描述类型中允许的值。
 
-### <span id="enum">`:=` / `var` 两难选择</span>
+### <span id="enum">`:=` / `var` 两难选择 </span>
 
 Go 提供两种方法来声明一个变量，并为其赋值: `var x = "foo"` 和 `x:= "foo"`。这是为什么呢?
 
-主要的区别是 var 允许未初始化的声明(然后您必须声明类型)，比如在 `var x string` 中，而 `:=` 需要赋值，并且允许混合使用现有变量和新变量。我的猜测是`:=`被发明来使错误处理减少一点麻烦:
+主要的区别是 var 允许未初始化的声明(然后您必须声明类型)，比如在 `var x string` 中，而 `:=` 需要赋值，并且允许混合使用现有变量和新变量。我的猜测是 `:=` 被发明来使错误处理减少一点麻烦:
 
 使用 `var`
 
@@ -227,7 +227,7 @@ if someCondition {
 // foo == "bar" 即使 "someCondition" 为真
 ```
 
-### <span id="zero-panic">零值 panic</span>
+### <span id="zero-panic"> 零值 panic</span>
 
 Go 没有构造函数。正因为如此，它坚持认为“零值”应该是易于使用的。这是一个有趣的方法，但在我看来，它所带来的简化主要是针对语言实现者的。
 
@@ -287,20 +287,20 @@ m0["foo"] = "bar"  // panics!
 
 ### <span id="exceptions">Go 没有异常。哦,等一下……它有!</span>
 
-这篇博客文章「[为什么 Go 获得异常的方式是对的](https://dave.cheney.net/2012/01/18/why-go-gets-exceptions-right)」详细解释了为什么异常是糟糕的，为什么Go方法要求返回 `错误` 是更好的。我可以同意这一点，确实在使用异步编程或像 Java 流这样的函数风格时，异常是很难处理的（前者可以放到一边，由于 goroutines 的原因它在 Go
+这篇博客文章「[为什么 Go 获得异常的方式是对的](https://dave.cheney.net/2012/01/18/why-go-gets-exceptions-right)」详细解释了为什么异常是糟糕的，为什么 Go 方法要求返回 ` 错误 ` 是更好的。我可以同意这一点，确实在使用异步编程或像 Java 流这样的函数风格时，异常是很难处理的（前者可以放到一边，由于 goroutines 的原因它在 Go
  中是没有必要的，而后者几乎是不可能）。这篇博文提到 `panic` 「总是对你的程序抛出致命错误，游戏结束」，这很不错。
 
-在此之前，「[Defer, panic and recover](https://blog.golang.org/defer-panic-and-recover)」 解释了如何从 `panic` 中恢复（实际上是通过捕获它们），并提到在 go 标准库中 json 包可以看到 panic 和 recover 的真实使用。
+在此之前，「[Defer, panic and recover](https://blog.golang.org/defer-panic-and-recover)」 解释了如何从 `panic` 中恢复（实际上是通过捕获它们），并提到在 Go 标准库中 JSON 包可以看到 panic 和 recover 的真实使用。
 
-事实上, json 解码器有一个 [共同的错误处理函数](https://github.com/golang/go/blob/release-branch.go1.10/src/encoding/json/decode.go#L299) 去 panics,panic 在顶层 `unmarshal`函数中恢复（recover）,[检查panic类型](https://github.com/golang/go/blob/release-branch.go1.10/src/encoding/json/decode.go#L173) 并返回一个错误如果它是一个“本地 panic ”或其它错误再次触发的 panic（ 失去最初的 panic 的追溯）。
+事实上, JSON 解码器有一个 [共同的错误处理函数](https://github.com/golang/go/blob/release-branch.go1.10/src/encoding/json/decode.go#L299) 去 panics,panic 在顶层 `unmarshal` 函数中恢复（recover）,[检查 panic 类型](https://github.com/golang/go/blob/release-branch.go1.10/src/encoding/json/decode.go#L173) 并返回一个错误如果它是一个“本地 panic ”或其它错误再次触发的 panic（ 失去最初的 panic 的追溯）。
 
-对于任何 Java 开发人员来说，这明显看上去是一个`try` / `catch (DecodingException ex)`。所以 Go 确实有异常处理，它在内部使用了却告诉你不要用。
+对于任何 Java 开发人员来说，这明显看上去是一个 `try` / `catch (DecodingException ex)`。所以 Go 确实有异常处理，它在内部使用了却告诉你不要用。
 
-有趣的事实:几个星期前，一个非谷歌的人[修复了 json 解码器](https://github.com/golang/go/commit/74a92b8e8d0eae6bf9918ef16794b0363886713d)，以使用常规的错误冒泡处理。
+有趣的事实:几个星期前，一个非谷歌的人[修复了 JSON 解码器](https://github.com/golang/go/commit/74a92b8e8d0eae6bf9918ef16794b0363886713d)，以使用常规的错误冒泡处理。
 
-## <span id="ugly">令人厌恶的点</span>
+## <span id="ugly"> 令人厌恶的点 </span>
 
-### <span id="dependency-nightmare">依赖管理噩梦</span>
+### <span id="dependency-nightmare"> 依赖管理噩梦 </span>
 
 首先引用一个在谷歌著名的 Go 语言使用者 Jaana Dogan (aka JBD) 的话，最近在推特上发泄她的不满:
 
@@ -316,9 +316,9 @@ m0["foo"] = "bar"  // panics!
 
 另外，您自己的项目必须在 `GOPATH` 下，否则编译器无法找到它。想让你的项目在单独的目录里清晰地组织起来?那你必须配置每一个项目的 `GOPATH` ，或者使用符号链接。
 
-社区已经开发了 [大量的工具](https://github.com/golang/go/wiki/PackageManagementTools) 解决此问题。包管理工具引入了 `vendoring` 和锁文件来保存您克隆的任何仓库的Git sha1，以提供可复现的构建。
+社区已经开发了 [大量的工具](https://github.com/golang/go/wiki/PackageManagementTools) 解决此问题。包管理工具引入了 `vendoring` 和锁文件来保存您克隆的任何仓库的 Git sha1，以提供可复现的构建。
 
-最后，在Go 1.6中，`vendor` 目录得到了[官方支持](https://golang.org/cmd/go/#hdr-Vendor_Directories)。但它是关于你克隆的 `vendoring`，仍然不是正确的版本管理。没有对从传递依赖中导入发生冲突的解决方案，这通常是通过 [语义化版本](https://semver.org/) 来解决的。
+最后，在 Go 1.6 中，`vendor` 目录得到了[官方支持](https://golang.org/cmd/go/#hdr-Vendor_Directories)。但它是关于你克隆的 `vendoring`，仍然不是正确的版本管理。没有对从传递依赖中导入发生冲突的解决方案，这通常是通过 [语义化版本](https://semver.org/) 来解决的。
 
 不过，情况正在好转:`dep`，[官方的依赖管理工具](https://golang.github.io/dep/) 最近被引入以支持文件控制（vendoring）。它支持版本（git tags），并有一个遵循语义版本控制约定的版本解决程序。它还不稳定，但方向是正确的。然而，它仍然需要你的项目存放在 `GOPATH` 里。
 
@@ -328,9 +328,9 @@ m0["foo"] = "bar"  // panics!
 
 现在让我们再次回到代码的问题上。
 
-### <span id="mutability-hardcode">易变性是用语言硬编码的。</span>
+### <span id="mutability-hardcode"> 易变性是用语言硬编码的。</span>
 
-在 Go 中没有定义不可变结构的方法: struct 字段是可变的，`const` 关键字不适用于它们。Go 通过简单的赋值就可以轻松地复制整个`struct`，因此，我们可能认为，通过值传递参数来保证不变性，只需要复制的代价。
+在 Go 中没有定义不可变结构的方法: struct 字段是可变的，`const` 关键字不适用于它们。Go 通过简单的赋值就可以轻松地复制整个 `struct`，因此，我们可能认为，通过值传递参数来保证不变性，只需要复制的代价。
 
 然而，不出所料的，它不复制指针引用的值。而且由于内置的集合（map、slice 和 array）是引用和可变的，复制包含其中任意一项的 `struct` 只是复制了指向底层内层的指针。
 
@@ -355,9 +355,9 @@ func main() {
 
 所以你必须非常小心，如果你通过值传递参数，不要认定它就是不变的。
 
-有一些 [深度复制库](https://github.com/jinzhu/copier) 试图使用(慢)反射来解决这个问题，但是它们有不足之处，因为私有字段不能通过反射访问。因此，为了避免竞争条件而进行防御性复制将会很困难，需要大量的重复代码。Go甚至没有一个可以标准化这个的克隆接口。
+有一些 [深度复制库](https://github.com/jinzhu/copier) 试图使用(慢)反射来解决这个问题，但是它们有不足之处，因为私有字段不能通过反射访问。因此，为了避免竞争条件而进行防御性复制将会很困难，需要大量的重复代码。Go 甚至没有一个可以标准化这个的克隆接口。
 
-### <span id="slice-gotchas">切片（slice）陷阱</span>
+### <span id="slice-gotchas"> 切片（slice）陷阱 </span>
 
 切片带来了很多问题。正如「[Go slice: usage and internals](https://blog.golang.org/go-slices-usage-and-internals)」中所解释的那样，考虑到性能原因，再次切片一个切片不会复制底层的数组。这是一个值得赞赏的目标，但也意味着切片的子切片只是遵循原始切片变化的视图。因此，如果您想要将它与初始的切片分开请不要忘记 `copy()`。
 
@@ -397,9 +397,9 @@ func main() {
 }
 ```
 
-### <span id="race-conditions">易变性和 channels: 竞争条件更容易发生。</span>
+### <span id="race-conditions"> 易变性和 channels: 竞争条件更容易发生。</span>
 
-Go 并发性是 [通过 channels 建立在CSP](https://golang.org/doc/faq#csp) 上的，它使用 channel 使得协调 goroutines 比在共享数据上同步更简单和安全。老话说的是「[不要通过共享内存来通信;而应该通过通信来共享内存](https://blog.golang.org/share-memory-by-communicating)」。这是一厢情愿的想法，在实践中是不能安全实现的。
+Go 并发性是 [通过 channels 建立在 CSP](https://golang.org/doc/faq#csp) 上的，它使用 channel 使得协调 goroutines 比在共享数据上同步更简单和安全。老话说的是「[不要通过共享内存来通信;而应该通过通信来共享内存](https://blog.golang.org/share-memory-by-communicating)」。这是一厢情愿的想法，在实践中是不能安全实现的。
 
 正如我们在上面看到的那样，Go 没办法获得不可变的数据结构。这意味着一旦我们在 channel 上发送一个指针，游戏就结束了:我们在并发进程之间共享了可变的数据。当然，一个 channel 的结构是赋值 channel 传送的值(而不是指针)，但是正如我们在上面看到的，这些没有深度复制引用，包括 slices 和 maps 本质上都是可变的。与接口类型的 struct 字段相同:它们是指针，接口定义的任何可变方法都是对竞争条件的开放。
 
@@ -407,7 +407,7 @@ Go 并发性是 [通过 channels 建立在CSP](https://golang.org/doc/faq#csp) �
 
 谈到竞争条件时，Go 包含一个 [竞争条件检测模式](https://blog.golang.org/race-detector)，该模式检测代码以找到不同步的共享访问。它只能在事件发生的时候检测到竞争问题，所以大多数情况下是在集成或负载测试期间，希望这些能够运行比赛条件。由于它的高运行时成本(除了临时的调试会话)，它不能实际应用于生产环境。
 
-### <span id="error-management">嘈杂的错误管理</span>
+### <span id="error-management"> 嘈杂的错误管理 </span>
 
 你可以很快学会 Go 的错误处理模式，重复到令人作呕:
 
@@ -422,7 +422,7 @@ if err != nil {
 
 您很快就会忽视这种模式，并将其识别为「好，错误处理了」，但是仍然很杂乱，有时很难在错误处理中找到实际的代码。
 
-这里有几个问题，因为一个错误的结果可能有名无实，例如当从无所不在的 io.Reader读取时：
+这里有几个问题，因为一个错误的结果可能有名无实，例如当从无所不在的 io.Reader 读取时：
 
 ```go
 len, err := reader.Read(bytes)
@@ -469,7 +469,7 @@ Rust 有类似的问题:没有异常(真的没有，跟 Go
 
 由于 Go 没有泛型和宏，所以很不幸地，更换为 Rust 的方法是不可能的。
 
-### <span id="nil-interface-values">Nil 接口值</span>
+### <span id="nil-interface-values">Nil 接口值 </span>
 
 这是在看到 [redditor jmickeyd](https://www.reddit.com/r/programming/comments/8bj4yc/go_the_good_the_bad_and_the_ugly/dx82cgz/) 展示了 nil 和接口的怪异表现后的更新，这绝对称得上是丑陋的。我稍微扩展了一下:
 
@@ -497,7 +497,7 @@ func main() {
 	}
 }
 ```
-上面的代码验证了 `explodes` 不是nil，但是代码在 `Boom` 中 panics，在 `Bang` 中没有。这是为什么呢?解释在 `println` 这一行:`bomb` 指针是 `0x0`，它实际上是 `nil`，但是 `explodes` 是非nil `(0x10a7060,0x0)`。
+上面的代码验证了 `explodes` 不是 nil，但是代码在 `Boom` 中 panics，在 `Bang` 中没有。这是为什么呢?解释在 `println` 这一行:`bomb` 指针是 `0x0`，它实际上是 `nil`，但是 `explodes` 是非 nil `(0x10a7060,0x0)`。
 
 这两个元素的第一个元素是通过 `Explodes` 类型来实现 `Bomb` 接口的方法分派表的指针，第二个元素是实际 `Explodes` 对象的地址，它是 `nil`。
 
@@ -517,11 +517,11 @@ if explodes != nil && !reflect.ValueOf(explodes).IsNil() {
 }
 ```
 
-这是漏洞还是特性? `Go语言之旅`  有一个 [专门的页面](https://tour.golang.org/methods/12) 来解释这种行为，并清楚地表示 *「注意，一个具有nil值的接口值本身就是非空值」*。
+这是漏洞还是特性? `Go 语言之旅`  有一个 [专门的页面](https://tour.golang.org/methods/12) 来解释这种行为，并清楚地表示 *「注意，一个具有 nil 值的接口值本身就是非空值」*。
 
 尽管如此，这仍然是丑陋的，并且会导致非常细微的错误。在我看来，这是语言设计中的一个很大的缺陷，只是为了使它的实现更加容易。
 
-### <span id="dsl">Struct 字段标记:字符串中的运行时DSL。</span>
+### <span id="dsl">Struct 字段标记:字符串中的运行时 DSL。</span>
 
 如果您在 Go 中使用了 JSON，您肯定遇到过类似的情况:
 
@@ -539,7 +539,7 @@ type User struct {
 
 为什么要决定使用一个原始字符串，任何库都可以决定使用它想要的任何 DSL ，在运行时解析？
 
-当您使用多个库时，情况会变得很糟糕:这里有一个从协议缓冲区的 [Go文档](https://godoc.org/github.com/golang/protobuf/proto) 中取出的示例:
+当您使用多个库时，情况会变得很糟糕:这里有一个从协议缓冲区的 [Go 文档](https://godoc.org/github.com/golang/protobuf/proto) 中取出的示例:
 
 ```go
 type Test struct {
@@ -551,17 +551,17 @@ type Test struct {
 ```
 附注:为什么这些标签在使用 JSON 时如此常见？因为在 Go 公共字段中，必须使用大写字母，或者至少以大写字母开头，而在 JSON 中命名字段的常见约定是小写的 camelcase 或 snake_case。因此需要进行冗长的标记。
 
-标准的 JSON 编码器 / 解码器不允许提供自动转换的命名策略，就像 [Jackson在Java中所做的](https://github.com/FasterXML/jackson-databind/blob/master/src/main/java/com/fasterxml/jackson/databind/PropertyNamingStrategy.java)。这可能解释了为什么 Docker APIs 中的所有字段都是大写的:这避免了它的开发人员为他们的大型 API 编写这些笨拙的标签。
+标准的 JSON 编码器 / 解码器不允许提供自动转换的命名策略，就像 [Jackson 在 Java 中所做的](https://github.com/FasterXML/jackson-databind/blob/master/src/main/java/com/fasterxml/jackson/databind/PropertyNamingStrategy.java)。这可能解释了为什么 Docker APIs 中的所有字段都是大写的:这避免了它的开发人员为他们的大型 API 编写这些笨拙的标签。
 
-### <span id="generic">没有泛型…至少不是为了你。</span>
+### <span id="generic"> 没有泛型…至少不是为了你。</span>
 
 很难想象一种没有泛型的现代静态类型化语言，但这就是你在 Go 中看到的:它没有泛型...或者更精确地说，几乎没有泛型，我们会看到它比没有泛型更糟糕。
 
-内置的 slice、map、array和 channel 都是泛型。声明一个 `map[string]MyStruct` 清楚地显示了具有两个参数的泛型类型的使用。这很好，因为它允许类型安全编程捕获各种错误。
+内置的 slice、map、array 和 channel 都是泛型。声明一个 `map[string]MyStruct` 清楚地显示了具有两个参数的泛型类型的使用。这很好，因为它允许类型安全编程捕获各种错误。
 
 然而，没有用户可定义的泛型数据结构。这意味着您不能定义可重用的抽象，它可以以类型安全的方式使用任何类型。您必须使用非类型 `interface{}`，并将值转换为适当的类型。任何错误只会在运行时被抓住，会导致 panic。对于 Java 开发人员来说，这就像回到 [回退 Java 5 个版本到 2004 年](https://en.wikipedia.org/wiki/Java_version_history#J2SE_5.0)。
 
-在「[少即是多](https://commandcenter.blogspot.fr/2012/06/less-is-exponentially-more.html)」中，Rob Pike 意外地将泛型和继承放在同一个「类型编程」包中，并说他喜欢组合而不是继承。不喜欢继承很好（实际上我写了很多没有继承的Scala），但是泛型回答了另一个问题：可重用性，同时保护类型安全。
+在「[少即是多](https://commandcenter.blogspot.fr/2012/06/less-is-exponentially-more.html)」中，Rob Pike 意外地将泛型和继承放在同一个「类型编程」包中，并说他喜欢组合而不是继承。不喜欢继承很好（实际上我写了很多没有继承的 Scala），但是泛型回答了另一个问题：可重用性，同时保护类型安全。
 
 正如下面我们将看到的，在用泛型做内部构建和用户无法定义泛型之间的区别会对开发人员「舒适」和编译时类型安全产生更多的影响:它会影响整个 Go 生态系统。
 
@@ -668,13 +668,13 @@ Go 1.4 介绍了 [`go generate` 命令](https://blog.golang.org/generate)，从�
 
 第一个用例是可以的，附加价值是你不需要摆弄 `makefiles`，而生成的说明可以接近生成的代码的用法。
 
-对于第二个用例，许多语言，比如 Scala 和 Rust，有宏（在 [设计文档](https://docs.google.com/document/d/1V03LUfjSADDooDMhe-_K59EgpTEm3V8uvQRuNMAEnjg/edit) 中提到的）在编译过程中都可以访问源代码的 AST。Stringer 实际上 [导入了Go编译器的解析器](https://github.com/golang/tools/blob/master/cmd/stringer/stringer.go#L69) 来遍历 AST。Java 没有宏，但注释处理器扮演同样的角色。
+对于第二个用例，许多语言，比如 Scala 和 Rust，有宏（在 [设计文档](https://docs.google.com/document/d/1V03LUfjSADDooDMhe-_K59EgpTEm3V8uvQRuNMAEnjg/edit) 中提到的）在编译过程中都可以访问源代码的 AST。Stringer 实际上 [导入了 Go 编译器的解析器](https://github.com/golang/tools/blob/master/cmd/stringer/stringer.go#L69) 来遍历 AST。Java 没有宏，但注释处理器扮演同样的角色。
 
 许多语言也不支持宏，所以在这里没有什么根本的错误，除了这个脆弱的由逗号驱动的语法，它看起来像一个快速的技巧，以某种方式完成工作，而不是作为清晰的语言设计被慎重考虑。
 
 哦，你知道 Go 编译器实际上有 [很多注释/程序](https://dave.cheney.net/2018/01/08/gos-hidden-pragmas) 和 [条件编译](https://dave.cheney.net/2013/10/12/how-to-use-conditional-compilation-with-the-go-build-tool) 使用这个脆弱的注释语法吗?
 
-## <span id="conclusion">结论</span>
+## <span id="conclusion"> 结论 </span>
 
 就像你猜到的，我对 Go 爱恨交加。Go 有点像这样的朋友，你喜欢和他一起出去玩，因为他很有趣和他喝啤酒聊天很棒，但是当你想进行更深入的交流时，你会觉得无聊和痛苦，然后你不想和他一起去度假。
 
@@ -682,23 +682,23 @@ Go 1.4 介绍了 [`go generate` 命令](https://blog.golang.org/generate)，从�
 
 直到最近，在 Go 占据的领域中并没有出现真正的替代选择，它高效地开发本地可执行文件，而不会导致 C 或 C++ 的痛苦。[Rust](https://www.rust-lang.org/zh-CN/) 在飞速进步，我用得越多，越能发现它的有趣之处和优秀设计。我有一种感觉，Rust 是那些需要时间相处的朋友，你最终会想要和他们建立长期的关系。
 
-回归技术层面，你会发现一些文章说 Rust 和 Go 不是一个领域的，Rust 是一种系统语言，因为它没有内存回收机制 等等。我认为这越来越不真实了。在 [伟大的web框架](http://www.arewewebyet.org/) 和优秀的 [ORM](http://diesel.rs/)s 中 Rust 正在爬得更高。它也给你一种温暖的感觉，“如果它编译，错误将来自我写的逻辑，而不是我忘记注意的语言怪癖”。
+回归技术层面，你会发现一些文章说 Rust 和 Go 不是一个领域的，Rust 是一种系统语言，因为它没有内存回收机制 等等。我认为这越来越不真实了。在 [伟大的 web 框架](http://www.arewewebyet.org/) 和优秀的 [ORM](http://diesel.rs/)s 中 Rust 正在爬得更高。它也给你一种温暖的感觉，“如果它编译，错误将来自我写的逻辑，而不是我忘记注意的语言怪癖”。
 
-我们还在容器/服务网格区域看到一些有趣的行动， Buoyant（[Linkerd](https://linkerd.io/)的开发商）正在开发它们的新 Kubernetes 服务网格 [Conduit](https://buoyant.io/2017/12/05/introducing-conduit/) 作为一个组合，来自控制层面（我猜可能是因为可用的 [Kubernetes库](https://bluxte.net/musings/2018/04/10/go-good-bad-ugly/#the-var-dilemma)）的 Go 和数据层面拥有良好效率和鲁棒性的 Rust ，以及 [Sozu代理](https://www.sozu.io/)。
+我们还在容器/服务网格区域看到一些有趣的行动， Buoyant（[Linkerd](https://linkerd.io/)的开发商）正在开发它们的新 Kubernetes 服务网格 [Conduit](https://buoyant.io/2017/12/05/introducing-conduit/) 作为一个组合，来自控制层面（我猜可能是因为可用的 [Kubernetes 库](https://bluxte.net/musings/2018/04/10/go-good-bad-ugly/#the-var-dilemma)）的 Go 和数据层面拥有良好效率和鲁棒性的 Rust ，以及 [Sozu 代理](https://www.sozu.io/)。
 
 Swift 也是这个家庭的一份子，或者是 C 和 C++ 的最新替代品。它的生态系统仍然过于以苹果为中心，即使它现在可以在 Linux 上使用，并且已经有了新的 [服务器端 APIs](https://swift.org/server-apis/) 和 [Netty 框架](https://github.com/apple/swift-nio)。
 
 这里当然没有万能药和通用之法。但是知道你所用工具的问题至关重要。我希望这篇博文教会了你关于 Go 你以前没有意识到的问题，这样你就可以避开陷阱!
 
-## <span id="hacker-news">几天后: Hacker News 第三名!</span>
+## <span id="hacker-news"> 几天后: Hacker News 第三名!</span>
 
-*更新，发布3天后*:这篇文章反响惊人。它已经成为了 [Hacker News](https://news.ycombinator.com/item?id=16830153) 的头版(我看到的最好排名是#3)和[/r/programming](https://www.reddit.com/r/programming/comments/8bj4yc/go_the_good_the_bad_and_the_ugly/)(我看到的最好排名是#5)，并且在 [Twitter 上得到了一些关注](https://twitter.com/search?l=&q=https%3A%2F%2Fbluxte.net%2Fmusings%2F2018%2F04%2F10%2Fgo-good-bad-ugly%2F)。
+*更新，发布 3 天后*:这篇文章反响惊人。它已经成为了 [Hacker News](https://news.ycombinator.com/item?id=16830153) 的头版(我看到的最好排名是#3)和[/r/programming](https://www.reddit.com/r/programming/comments/8bj4yc/go_the_good_the_bad_and_the_ugly/)(我看到的最好排名是#5)，并且在 [Twitter 上得到了一些关注](https://twitter.com/search?l=&q=https%3A%2F%2Fbluxte.net%2Fmusings%2F2018%2F04%2F10%2Fgo-good-bad-ugly%2F)。
 
 这些评论通常都是正面的(甚至是在[/r/golang/](https://www.reddit.com/r/golang/comments/8bj4tx/go_the_good_the_bad_and_the_ugly/))，或者至少承认这篇文章是公平的，并且力求公正。[/r/rust](https://www.reddit.com/r/rust/comments/8bjio2/xpost_from_rprogramming_go_the_good_the_bad_and/)的人们当然喜欢我对 Rust 的兴趣。我从未听说过的人甚至给我发邮件说:“*我只是想让你知道，我认为你写的文章是最好的。感谢您为此付出的所有努力*”。
 
 这是写作时最困难的部分:尽量做到客观公正。这当然不是完全可能的，因为每个人都有自己的偏好，为什么我关注意外的惊喜和语言工程学:语言对你有多大帮助，而不是妨碍你，或者至少是*我的方式*。
 
-我还在标准库或[ golang.org](https://golang.org/) 上搜索了代码样本，并引用了Go团队的人员，以我对权威材料的分析为基础，避免了“*meh，你引用了一个错误的人*”的反应。
+我还在标准库或[ golang.org](https://golang.org/) 上搜索了代码样本，并引用了 Go 团队的人员，以我对权威材料的分析为基础，避免了“*meh，你引用了一个错误的人*”的反应。
 
 写这篇文章用了我两个星期的晚上时间，但是这真的很有趣。当你做严肃而诚实的工作时，你会得到这样的结果:来自技术网络的许多好的共鸣(如果你忽略掉少数捣乱的和一直脾气暴躁的人)。极大调用了我写更多的深度内容的积极性!
 

@@ -2,7 +2,7 @@
 
 # Go 语言中的线程池（Thread Pooling in Go Programming）
 
-用过一段时间的 Go 之后，我学会了如何使用一个不带缓存的 channel 去创建一个 goroutine 池。我喜欢这个实现，这个实现甚至比这篇博文描述的更好。虽然这样说，这篇博文仍然对它所描述的部分有一定的价值。
+用过一段时间的 Go 之后，我学会了如何使用一个不带缓存的 channel 去创建一个 Goroutine 池。我喜欢这个实现，这个实现甚至比这篇博文描述的更好。虽然这样说，这篇博文仍然对它所描述的部分有一定的价值。
 
 [https://github.com/goinggo/work](https://github.com/goinggo/work)
 
@@ -22,11 +22,11 @@
 
 在 Go 语言中我不创建线程，而是创建协程。协程函数类似于多线程函数，但由 Go 来管理实际上在系统层面运行的线程。了解更多关于 Go 中的并发，查看这个文档：[http://golang.org/doc/effective_go.html#concurrency](http://golang.org/doc/effective_go.html#concurrency)。
 
-我创建了名为 workpool 和 jobpool 的包。它们通过 channel 和 go 协程来实现池的功能。
+我创建了名为 workpool 和 jobpool 的包。它们通过 channel 和 Go 协程来实现池的功能。
 
 ## 工作池（Workpool）
 
-这个包创建了一个 go 协程池，专门用来处理发布到池子中的工作。一个独立的 Go 协程负责工作的排队处理。协程提供安全的工作排队，跟踪队列中工作量，当队列满时报告错误。
+这个包创建了一个 Go 协程池，专门用来处理发布到池子中的工作。一个独立的 Go 协程负责工作的排队处理。协程提供安全的工作排队，跟踪队列中工作量，当队列满时报告错误。
 
 提交工作到队列中是一个阻塞操作。这样调用者才能知道工作是否已经进入队列。（workpool 也会一直）保持工作队列中活动程序数量的计数。
 

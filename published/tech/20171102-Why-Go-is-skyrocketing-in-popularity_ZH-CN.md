@@ -18,9 +18,9 @@
 在 2017 年 9 月的 TIOBE 的 GO 语言指数，可以清楚地看到 2016 年以来受欢迎程度令人难以置信的跳跃，更做为一年中评分上升最高的编程语言，被冠名为 TIOBE 的编程语言 2016 名人堂冠军。 目前它在月度排行榜上排名第 17 位，一年前排名第 19 位，两年前排名第 65 位。
 
 ![tiobe_index_for_go.png](https://opensource.com/sites/default/files/u128651/tiobe_index_for_go.png)
-TIOBE的 GO 语言指数 [TIOBE](https://www.tiobe.com/tiobe-index/go/)
+TIOBE 的 GO 语言指数 [TIOBE](https://www.tiobe.com/tiobe-index/go/)
 
-“2017年 Stack Overflow 调查”也显示了 Go 的受欢迎程度的提升。  Stack Overflow 对 64,000 名开发人员的综合调查试图通过询问“最受欢迎，最令人生厌，最期待的语言”来获得开发者的偏好。 这个清单是由较新的语言，例如 Mozilla 的 Rust、Smalltalk
+“2017 年 Stack Overflow 调查”也显示了 Go 的受欢迎程度的提升。  Stack Overflow 对 64,000 名开发人员的综合调查试图通过询问“最受欢迎，最令人生厌，最期待的语言”来获得开发者的偏好。 这个清单是由较新的语言，例如 Mozilla 的 Rust、Smalltalk
 Typescript、苹果的 Swift 和 Google 的 Go 等构成。 然而，连续三年以来，Rust、Swift 和 Go 都能成为排名前五的“最受喜爱”的编程语言。
 
 ![stackoverflow_most_loved.png](https://opensource.com/sites/default/files/u128651/stackoverflow_most_loved.png)

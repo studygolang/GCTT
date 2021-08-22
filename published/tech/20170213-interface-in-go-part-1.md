@@ -1,10 +1,10 @@
 首发于：https://studygolang.com/articles/14580
 
-# Go语言接口（第一部分）
+# Go 语言接口（第一部分）
 
  ![avatar](https://raw.githubusercontent.com/studygolang/gctt-images/master/interface-in-go/part1-1.jpg)
 
-接口提升了代码的弹性与拓展性，同时它也是 go 语言实现多态的一种方式。接口允许通过一些必要的行为来实现，而不再要求设置特定类型。而这个行为就是通过一些方法设置来定义的：
+接口提升了代码的弹性与拓展性，同时它也是 Go 语言实现多态的一种方式。接口允许通过一些必要的行为来实现，而不再要求设置特定类型。而这个行为就是通过一些方法设置来定义的：
 
 ```go
 type I interface {
@@ -45,13 +45,13 @@ func Hello(i I) {
     fmt.Printf("Hi, my name is %s\n", i.M())
 }
 func main() {
-    Hello(T{name: "Michał"}) // "Hi, my name is Michał"
+    Hello(T{name: "Micha ł"}) // "Hi, my name is Micha ł"
 }
 ```
 
 在 function Hello 中，方法调用了 `i.M()`。 这个过程概括一下就是，只要来自不同 type 的方法是通过 type 来实现 interface I，就可以被调用。
 
-go 语言的突出特点就是其 `interface` 是隐式实现的。程序员不需要指定 type T 实现了 interface I。这个工作由 go 的编译器完成（不需要派一个人去做机器的工作）。这种行为中的实现方式之所以很赞，是因为定义 interface 这件事情是由已经写好的 type 自动实现的（不需要为之做任何改变）。
+go 语言的突出特点就是其 `interface` 是隐式实现的。程序员不需要指定 type T 实现了 interface I。这个工作由 Go 的编译器完成（不需要派一个人去做机器的工作）。这种行为中的实现方式之所以很赞，是因为定义 interface 这件事情是由已经写好的 type 自动实现的（不需要为之做任何改变）。
 
 之所以 interface 可以提供弹性，是因为任意一个 type 可以实现多个 interface ([代码](https://play.golang.org/p/cN6KrJab-l)):
 
@@ -95,7 +95,7 @@ func main() {
 
 ---
 
-在 go 中，我们有两个与 interface 相关的概念：
+在 Go 中，我们有两个与 interface 相关的概念：
 
 1. 接口-通过[关键字](https://golang.org/ref/spec#Keywords) `interface`,实现此类接口所需要的一组方法；
 2. 接口类型-接口类型的变量，可以保存一些实现于特定接口的值。
@@ -296,9 +296,9 @@ i is not nil
 * 动态类型
 * 动态值
 
-动态类型在之前（“静态类型VS动态类型”部分）已经讨论过了。动态值是指定的实际值。
+动态类型在之前（“静态类型 VS 动态类型”部分）已经讨论过了。动态值是指定的实际值。
 
-在赋值 `var i I = t` 后的讨论段中，i 的动态值是 nil，但动态类型为\**T*在这个复制后，函数调用 `fmt.Printf("%T\n", i)`将会打印 `*main.T`。`当且仅当动态值与动态类型都为 nil 时，接口类型值为 nil。`结果就是即使接口类型值包含一个 nil 指针，这样的接口值也不是 nil。已知的错误就是返回未初始化，从函数返回接口类型为非接口类型值（[源代码](https://play.golang.org/p/4-M35Nc2JZ)）：
+在赋值 `var i I = t` 后的讨论段中，i 的动态值是 nil，但动态类型为\**T*在这个复制后，函数调用 `fmt.Printf("%T\n", i)` 将会打印 `*main.T`。`当且仅当动态值与动态类型都为 nil 时，接口类型值为 nil。` 结果就是即使接口类型值包含一个 nil 指针，这样的接口值也不是 nil。已知的错误就是返回未初始化，从函数返回接口类型为非接口类型值（[源代码](https://play.golang.org/p/4-M35Nc2JZ)）：
 
 ```go
 type I interface {}
@@ -348,7 +348,7 @@ func main() {
 
 ## 满足一个接口
 
-每个实现了接口所有方法的类型都自动满足这个接口。我们不需要在这些类型中使用任何其他关键字（如 Java中的 implements）来表示该类型实现了接口。它是由 go 语言的编译器自动实现的，而这儿正是该语言的强大之处（[源代码](https://play.golang.org/p/U4r6i2X5xb)）：
+每个实现了接口所有方法的类型都自动满足这个接口。我们不需要在这些类型中使用任何其他关键字（如 Java 中的 implements）来表示该类型实现了接口。它是由 Go 语言的编译器自动实现的，而这儿正是该语言的强大之处（[源代码](https://play.golang.org/p/U4r6i2X5xb)）：
 
 ```go
 import (
@@ -391,7 +391,7 @@ func main() {
 
 via: https://medium.com/golangspec/interfaces-in-go-part-i-4ae53a97479c
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[cureking](https://github.com/cureking)
 校对：[polaris1119](https://github.com/polaris1119)
 

@@ -2,7 +2,7 @@
 
 # Go 项目的布局
 Kyle C. Quest
-2017年9月12日 · 5 min 阅读
+2017 年 9 月 12 日 · 5 min 阅读
 
 读过了 [`Tour of Go`](https:/tour.studygolang.com)，在 [https://play.studygolang.com/](https://play.studygolang.com/) 上把玩过，然后你感觉你准备好写一些代码了。很棒！但是，你不确定该如何组织你的项目。可以将代码放在你想放的任意地方吗？有没有组织代码的标准方式？如果想有多个应用程序的二进制文件呢？“go getable” 是指什么？你可能会问自己这些问题。
 
@@ -20,7 +20,7 @@ Kyle C. Quest
 
 `pkg` 目录下的某些库并不总是为了公共使用。为什么呢？因为很多现有的 Go 项目诞生在能隐藏内部包之前。一些项目将内部库放在 `pkg` 目录下，以便保持与其它部分代码结构的一致。另外一些项目将内部库放置在 `pkg` 目录之外另外的目录里。[Go 1.4](https://golang.org/doc/go1.4) 引入了使用 `internal` 隐藏内部库的能力。什么意思呢？如果你将代码放在 ‘internal’目录，外部项目则无法导入那些代码。即使是项目内部的其它代码，如果不在 `internal` 目录的父目录里，也无法访问这些内部代码。这个功能使用还不广泛因为它相对较新；但是作为一个额外（在 Go 用大小写区分函数可见性的规则之外）的控制层它有极大价值。很多知名的项目使用了这个样式：[Dep](https://github.com/golang/dep/tree/master/internal), [Docker](https://github.com/moby/moby/tree/master/internal), [Nsq](https://github.com/nsqio/nsq/tree/master/internal), [Go Ethereal](https://github.com/ethereum/go-ethereum/tree/master/internal), [Contour](https://github.com/heptio/contour/tree/master/internal)。
 
-**`internal`** 目录是放置私有包的地方。你可以选择性地添加额外的结构来分离内部共享的库（比如，**`your_project/internal/pkg/your_private_lib`**）以及不希望别人导入的应用程序代码（比如, **`your_project/internal/app/your_app`**）。当你将全部私有代码都放在 ‘internal’ 目录，`cmd` 目录下的应用程序就可以被约束成一些小文件，其只需定义对应于应用程序二进制文件的 ‘main’ 函数。其余代码都从 `internal` 或 `pkg` 目录导入（Heptio 中的 [ark](https://github.com/heptio/ark/blob/master/cmd/ark/main.go)，以及 Grafana 中的 [loki](https://github.com/grafana/loki/blob/master/cmd/loki/main.go)，是这个 `微型 main 函数` 包样式的好例子）。
+**`internal`** 目录是放置私有包的地方。你可以选择性地添加额外的结构来分离内部共享的库（比如，**`your_project/internal/pkg/your_private_lib`**）以及不希望别人导入的应用程序代码（比如, **`your_project/internal/app/your_app`**）。当你将全部私有代码都放在 ‘internal’ 目录，`cmd` 目录下的应用程序就可以被约束成一些小文件，其只需定义对应于应用程序二进制文件的 ‘main’ 函数。其余代码都从 `internal` 或 `pkg` 目录导入（Heptio 中的 [ark](https://github.com/heptio/ark/blob/master/cmd/ark/main.go)，以及 Grafana 中的 [loki](https://github.com/grafana/loki/blob/master/cmd/loki/main.go)，是这个 ` 微型 main 函数 ` 包样式的好例子）。
 
 如果你 fork 并修改了外部项目的一块该如何？有些项目将这些代码放在 `pkg` 目录下，但更好的做法是将它放在顶层目录下的 **`third_party`** 目录，以便将你自己的代码和你从别人那里借用的代码区分开来。
 

@@ -51,7 +51,7 @@ func main() {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	// handler func的实现内容
+	// handler func 的实现内容
 }
 ```
 

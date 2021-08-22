@@ -4,9 +4,9 @@
 
 你好，今天我想分享一下，在 `Go` 语言中串联 HTTP 处理器。
 
-在使用 Go 之前, 我使用 Nodejs + [ExpressJS](http://expressjs.com/en/4x/api.html) 去编写 HTTP 服务器应用。 这个框架提供了很简单的方法去使用中间件和串联很多路由节点，因此，不必指定完整的路由路径来为其添加处理程序。
+在使用  Go 之前, 我使用 Nodejs + [ExpressJS](http://expressjs.com/en/4x/api.html) 去编写 HTTP 服务器应用。 这个框架提供了很简单的方法去使用中间件和串联很多路由节点，因此，不必指定完整的路由路径来为其添加处理程序。
 
-![图1](https://raw.githubusercontent.com/studygolang/gctt-images/master/chain-http-hanlders/1.png)
+![图 1](https://raw.githubusercontent.com/studygolang/gctt-images/master/chain-http-hanlders/1.png)
 
 这个想法是通过分割你的路由和处理每一个部分，串联到处理器，每个处理程序只负责一部分。它理解起来非常简单且非常容易使用和维护，所以首先我尝试在 Go 中做一些类似的事情。
 
@@ -40,11 +40,11 @@ mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 })
 ```
 
-我们可以看到，在这个例子中为 `/api/` 路由自定义了一个处理器并且定义了一个处理方法给根路由。因此任何以 `/api/*` 开头的路由都将使用 apiHandler 处理器方法。 但是如果我们需要串联一个 usersHandler 到 apiHandler，不通过任何的头脑风暴和编码，我们无法做到这点。
+我们可以看到，在这个例子中  为 `/api/` 路由自定义了一个处理器并且定义了一个处理方法给根路由。因此任何以 `/api/*` 开头的路由都将使用 apiHandler 处理器方法。 但是如果我们需要串联一个 usersHandler 到 apiHandler，不通过任何的头脑风暴和编码，我们无法做到这点。
 
 为此我写了一个小库 - [gosplitter](https://github.com/goncharovnikita/gosplitter)，它只提供一个公共方法 `Match(url string, mux *http.ServeMux, http.Handler|http.HandlerFunc|interface{})` - 他匹配给定的路由部分和处理器、处理方法或你给定的任何结构！
 
-让我们来看一个例子:
+让我们来看一个  例子:
 
 ```go
 /**
@@ -73,7 +73,7 @@ func (c *ColorsHandler) Start() {
 	gosplitter.Match("/black", c.mux, c.HandleBlack())
 }
 /**
- * 简单的HTTP处理器方法
+ * 简单的 HTTP 处理器方法
  */
 func (a *APIV1Handler) HandlePing() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -94,12 +94,12 @@ func main() {
 	}
 
 	/**
-	* 绑定api处理器到根目录
+	* 绑定 api 处理器到根目录
 	*/
 	gosplitter.Match("/api/v1", mux, apiV1)
 
 	/**
-	* 开始api的处理
+	* 开始 api 的处理
 	*/
 	apiV1.Start()
 }
@@ -109,7 +109,7 @@ func main() {
 
 ```go
 /**
- * 定义处理器类型
+ * 定义  处理器类型
  */
 type APIV1Handler struct {
 	mux *http.ServeMux
@@ -124,7 +124,7 @@ type ColorsHandler struct {
 
 ```go
 /**
- * Start - 绑定api处理器到根目录
+ * Start - 绑定 api 处理器到根目录
  */
 func (a *APIV1Handler) Start() {
 	var colorsHandler = ColorsHandler{
@@ -143,7 +143,7 @@ func (c *ColorsHandler) Start() {
 
 ```go
 /**
- * 简单的HTTP处理器方法
+ * 简单的 HTTP 处理器方法
  */
 func (a *APIV1Handler) HandlePing() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -158,7 +158,7 @@ func (c *ColorsHandler) HandleBlack() func(w http.ResponseWriter, r *http.Reques
 }
 ```
 
-添加 `HandlePing` 和 `HandleBlack` 到我们的 `APIV1Handler`，它响应了 `pong` 和 `#000000`
+添加 `HandlePing` 和 `HandleBlack` 到我们的 `APIV1Handler`， 它响应了 `pong` 和 `#000000`
 
 ```go
 func main() {
@@ -168,11 +168,11 @@ func main() {
 	}
 
 	/**
-	 * 绑定API处理器到根路由
+	 * 绑定 API 处理器到根路由
 	 */
 	gosplitter.Match("/api/v1", mux, apiV1)
 	/**
-	 * 启动API处理器
+	 * 启动 API 处理器
 	 */
 	apiV1.Start()
 }
@@ -182,7 +182,7 @@ func main() {
 
 所以在所有这些简单的操作之后我们拥有了两个工作中的路由: `/api/v1/ping` 和 `/api/v1/colors/black`，会响应 `pong` 和 `#000000`。
 
-使用起来不是很容易么？我认为是这样, 现在在我的项目中使用这个库来方便的进行路由分割和串联处理器 :)
+使用起来不是很容易么？我认为是这样,  现在在我的项目中使用这个库来方便的进行路由分割和  串联处理器 :)
 
 <!-- Thanks for reading! Any suggestions and critiques are welcome! -->
 

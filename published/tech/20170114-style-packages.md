@@ -1,6 +1,6 @@
 首发于：https://studygolang.com/articles/11823
 
-# Go语言中包的风格指南
+# Go 语言中包的风格指南
 
 Go 语言也有自己的命名与代码组织规则。漂亮的代码，布局清晰、易读易懂，就像是设计严谨的 API 一样。拿到代码，用户首先看到和接触的就是布局、命名还有包的结构。
 
@@ -153,7 +153,7 @@ import (
 
 例如，
 
-    $ go get cloud.google.com/go/datastore
+    $ Go get cloud.google.com/go/datastore
 
 在后台去查看来自 `https://code.googlesource.com/gocloud` 的源码，把它加到你的工作区当中去，这个工作区是定义在 $GOPATH/src/cloud.google.com/go/datastore 下面的。
 

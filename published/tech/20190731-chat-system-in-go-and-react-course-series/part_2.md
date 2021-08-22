@@ -19,7 +19,7 @@
 这需要在我们的 `backend/` 目录中运行此命令来安装它：
 
 ```shell
-$ go get github.com/gorilla/websocket
+$ Go get github.com/gorilla/websocket
 ```
 
 一旦我们成功安装了这个包，我们就可以开始构建我们的 Web 服务了。我们首先创建一个非常简单的 `net/http` 服务：

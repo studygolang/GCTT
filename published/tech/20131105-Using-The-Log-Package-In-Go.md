@@ -130,7 +130,7 @@ Info.Println("Special Information")
 
 对于 Info (译注：消息记录器)，os.Stdout 传入到 init 函数给了 infoHandle 。这意味着当您使用 Info 写消息时，消息将通过标准输出显示在终端窗口中。
 
-最后，看下 Error 的代码：
+最后， 看下 Error 的代码：
 
 ```go
 var Error *log.Logger
@@ -235,13 +235,13 @@ func main() {
 }
 ```
 
-现在终端窗口上不会显示任何内容。您可以使用任何支持io.Writer 接口的目标。
+现在终端窗口上不会显示任何内容。您可以使用任何支持 io.Writer 接口的目标。
 
 基于这个例子，我为我的所有程序编写了一个新的日志包：
 
 go get github.com/goinggo/tracelog
 
-我希望在开始编写Go程序时我就知道 log 和 loggers 。期待将来能够看到我写的更多日志包。
+我希望在开始编写 Go 程序时我就知道 log 和 loggers 。期待将来能够看到我写的更多日志包。
 
 ---
 

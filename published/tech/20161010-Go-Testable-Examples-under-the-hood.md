@@ -341,7 +341,7 @@ for _, group := range comments {
 
 via: https://medium.com/golangspec/gos-testable-examples-under-the-hood-4a4db8db447f
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[lovechuck](https://github.com/lovechuck)
 校对：[polaris1119](https://github.com/polaris1119)
 

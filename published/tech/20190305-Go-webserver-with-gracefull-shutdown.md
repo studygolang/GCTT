@@ -33,7 +33,7 @@ func main() {
 程序会读取 `-listen-addr` 的命令行选项作为我们的变量 `listenAddr` 的值。如果没有值提供则使用 `:5000` 作为默认值。文本 `server listen address` 则会被用作帮助文档的描述。所以你可以使用**flag**包来管理所有想要的命令行选项。
 
 ```shell
-$ go build .
+$ Go build .
 $ ./gracefull-webserver
 Server is ready to handle requests at :5000
 
@@ -154,7 +154,7 @@ func main() {
   signal.Notify(quit, os.Interrupt)
 
   server := newWebserver(logger)
-  go gracefullShutdown(server, logger, quit, done)
+  Go gracefullShutdown(server, logger, quit, done)
 
   logger.Println("Server is ready to handle requests at", listenAddr)
   if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {

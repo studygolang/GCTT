@@ -2,7 +2,7 @@
 
 # 以 SQL 作为 API
 
-如果你不是在石头下住着，那么你也应该听过最近兴起一种新的对“函数作为服务”的理解。在开源社区，Alex Ellis 的 [OpenFaas](https://github.com/openfaas/faas)  项目受到了很高的关注，并且 [亚马逊Lambda宣布对Go语言的支持](https://aws.amazon.com/blogs/compute/announcing-go-support-for-aws-lambda/)。这些系统允许你按需扩容，并且通过 API 调用的方式来调用你的 CLI 程序。
+如果你不是在石头下住着，那么你也应该听过最近兴起一种新的对“函数作为服务”的理解。在开源社区，Alex Ellis 的 [OpenFaas](https://github.com/openfaas/faas)  项目受到了很高的关注，并且 [亚马逊 Lambda 宣布对 Go 语言的支持](https://aws.amazon.com/blogs/compute/announcing-go-support-for-aws-lambda/)。这些系统允许你按需扩容，并且通过 API 调用的方式来调用你的 CLI 程序。
 
 ## Lambda/Faas 背后的动机
 
@@ -50,9 +50,9 @@ http.HandleFunc("/api/", phpHandler())
 
 ## CGI 的解决办法
 
-如果这几年我有学到点东西的话，那一定是大多数的服务是数据驱动的。这意味着，一定有某种数据库保存着至关重要的数据。根据一个 [Quora上的回答](https://www.quora.com/Which-database-system-s-does-Twitter-use) ， Twitter 使用了至少8种不同类型的数据库，从 MySQL,Cassandra 和 Redis，到其他更复杂的数据库。
+如果这几年我有学到点东西的话，那一定是大多数的服务是数据驱动的。这意味着，一定有某种数据库保存着至关重要的数据。根据一个 [Quora 上的回答](https://www.quora.com/Which-database-system-s-does-Twitter-use) ， Twitter 使用了至少 8 种不同类型的数据库，从 MySQL,Cassandra 和 Redis，到其他更复杂的数据库。
 
-实际上，我的大部分工作大概是这样的，从数据库中读取员工数据，然后把它变成 json 格式并且通过 REST 调用提供出去，这些查询通常不能仅仅用一条 SQL 语句来实现，当然在很多情况下也是可以的。那么，不如我们写一些不会有 `os.Exec` 调用成本的  SQL 脚本来实现一些功能，而不是用 CGI 程序来实现它们？
+实际上，我的大部分工作大概是这样的，从数据库中读取员工数据，然后把它变成 JSON 格式并且通过 REST 调用提供出去，这些查询通常不能仅仅用一条 SQL 语句来实现，当然在很多情况下也是可以的。那么，不如我们写一些不会有 `os.Exec` 调用成本的  SQL 脚本来实现一些功能，而不是用 CGI 程序来实现它们？
 
 挑战接受了。
 
@@ -63,7 +63,7 @@ http.HandleFunc("/api/", phpHandler())
 最近我为 Twitch，Slack，Yotube，Discord 写了一些聊天机器人，看起来很快我要写一个 Teleganm 的版本了。其实他们的目的是对各种通道进行相似的连接，记录消息，加总一些统计信息并且对一些命令或者问题进行反馈。对于用 Vue.js 写成的前端网站，我们需要通过 API 来向他们传递一些数据。虽然不是所有的 API 都能用 SQL 来实现，但还是有很大一部分是可以的。比如：
 
 1. 列出所有的通道
-2. 通过通道ID列出通道
+2. 通过通道 ID 列出通道
 
 这两个调用相对来说很相似并且容易实现，我特别创建了两个文件，来提供这些信息：
 
@@ -92,7 +92,7 @@ select * from channels where id=:id
 ```
 在 SQL 查询中使用 URL 参数
 
-在 go 语言中获得请求的参数，只需要在请求对象中的 `*url.URL` 结构体上调用 Query() 函数即可。这个函数返回 `url.Values` 对象，这是一个 `map[string][]string` 类型的别名。
+在 Go 语言中获得请求的参数，只需要在请求对象中的 `*url.URL` 结构体上调用 Query() 函数即可。这个函数返回 `url.Values` 对象，这是一个 `map[string][]string` 类型的别名。
 我们需要转换这个对象并传递到 sqlx 的语句中。我们需要创建一个 `map[string]interface{}` 。因为我们需要调用的 sqlx 函数在查询时接受这种格式的参数（[sqlx.NamedStmt.Queryx](https://godoc.org/github.com/jmoiron/sqlx#NamedStmt.Queryx)）。让我们转换它们并且发起查询：
 
 ```go
@@ -185,7 +185,7 @@ SQL 数据库并不是蠢笨的野兽，实际上它们非常强大，强大的�
 如果你真的有一些简单的查询，通过它们就能获得你需要的结果的话，那么你可以从这种以 SQL  作为 API 的方法中大大受益，除了节约系统开销外，你还可以提供给那些不熟悉 Go 语言但是熟悉 SQL  的程序员们一个增加系统功能的方法。
 
 随着要求一个 API 返回特定结果的需求的逐渐增加，我们需要一种脚本语言，它能达到甚至超越  [PL/SQL](https://en.wikipedia.org/wiki/PL/SQL) 的种种限制，并且在不同关系型数据库中有不同的实现。
-或者，你在你的应用中一直挂接一个 JavaScript 的虚机就如同 [dop251/goja ](https://github.com/dop251/goja)  这样，然后让你们团队的前台程序员来一次他/她可能永远不会忘记的尝试。现在也有用纯粹 go 语言实现的 LUA  虚机，如果你想要某种比整个 ES5.1 小的“运行时”。
+或者，你在你的应用中一直挂接一个 JavaScript 的虚机就如同 [dop251/goja ](https://github.com/dop251/goja)  这样，然后让你们团队的前台程序员来一次他/她可能永远不会忘记的尝试。现在也有用纯粹 Go 语言实现的 LUA  虚机，如果你想要某种比整个 ES5.1 小的“运行时”。
 
 ### 如果我能在这里遇到你...
 

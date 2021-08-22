@@ -31,8 +31,8 @@ FROM golang:1.11.1-alpine3.8
 RUN mkdir /app
 ADD . /app/
 WORKDIR /app
-RUN go mod download
-RUN go build -o main ./...
+RUN Go mod download
+RUN Go build -o main ./...
 CMD ["/app/main"]
 ```
 
@@ -45,7 +45,7 @@ $ docker build -t backend .
 Sending build context to Docker daemon  11.26kB
 Step 1/8 : FROM golang:1.11.1-alpine3.8
  ---> 95ec94706ff6
-Step 2/8 : RUN apk add bash ca-certificates git gcc g++ libc-dev
+Step 2/8 : RUN apk add bash ca-certificates Git gcc g++ libc-dev
  ---> Running in 763630b369ca
  ...
 ```

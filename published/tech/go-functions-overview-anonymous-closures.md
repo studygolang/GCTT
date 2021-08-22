@@ -20,7 +20,7 @@
 
 ![named Func](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-functions-overview/named_funcs.png)
 
-<p align="center">这是一个命名函数：Len 函数接受一个 string 类型的参数并返回一个 int 类型的值</p>
+<p align="center"> 这是一个命名函数：Len 函数接受一个 string 类型的参数并返回一个 int 类型的值 </p>
 
 ---
 
@@ -59,7 +59,7 @@ func Incr(c Count) int
 
 ![Method](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-functions-overview/methods.png)
 
-<p align="center">原理并不完全如上所示，但你可以像这样来理解</p>
+<p align="center"> 原理并不完全如上所示，但你可以像这样来理解 </p>
 
 ### 值传递
 
@@ -71,7 +71,7 @@ var c Count; c.Incr(); c.Incr()
 // output: 1 1
 ```
 
-<h3 align="center"><i></i>c 的值并不会增加，因为 c 是通过值传递的方式传递给方法</i></h3>
+<h3 align="center"><i></i>c 的值并不会增加，因为 c 是通过值传递的方式传递给方法 </i></h3>
 
 ![Value receiver](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-functions-overview/value_receiver.png)
 
@@ -94,7 +94,7 @@ c.Incr(); c.Incur()
 
 [![run the code](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-functions-overview/run_the_code.png)](https://play.golang.org/p/hGVJWPIFZG	"receiver")
 
-<p align="center">在我之前的一些文章中有更多的示例：看<a href="https://blog.learngoprogramming.com/golang-const-type-enums-iota-bc4befd096d3#c320">这里！</a>看<a href="https://blog.learngoprogramming.com/golang-funcs-params-named-result-values-types-pass-by-value-67f4374d9c0a#638f">这里！</a></p>
+<p align="center"> 在我之前的一些文章中有更多的示例：看 <a href="https://blog.learngoprogramming.com/golang-const-type-enums-iota-bc4befd096d3#c320"> 这里！</a> 看 <a href="https://blog.learngoprogramming.com/golang-funcs-params-named-result-values-types-pass-by-value-67f4374d9c0a#638f"> 这里！</a></p>
 
 ---
 
@@ -140,7 +140,7 @@ onApiHit(&dummyCounter)
 
 ![first-class funcs](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-functions-overview/first-class_funcs.png)
 
-<p align="center">函数可以作为一种值类型和其他的类型配合使用，反之亦然</p>
+<p align="center"> 函数可以作为一种值类型和其他的类型配合使用，反之亦然 </p>
 
 ### 示例
 
@@ -337,7 +337,7 @@ dog
 
 [![run the code](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-functions-overview/run_the_code.png)](https://play.golang.org/p/AI1_5BkO1d	"closure")
 
-<p align="center">再次提示，这里面有更详细的描述哦~</p>
+<p align="center"> 再次提示，这里面有更详细的描述哦 ~</p>
 
 ---
 
@@ -384,7 +384,7 @@ main: ends
 
 ![concurrent funs](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-functions-overview/concurrent_funcs.png)
 
-<p align="center"><i>如果 main 函数中没有睡眠等阻塞调用，那么，main 函数会终止，而不会等待并发函数执行完。</i></p>
+<p align="center"><i> 如果 main 函数中没有睡眠等阻塞调用，那么，main 函数会终止，而不会等待并发函数执行完。</i></p>
 
 ```
 main: continues...
@@ -418,7 +418,7 @@ Go 语言的链接器会将函数放置到可执行环境中，以便稍后在�
 
 ### 外部函数
 
-如果你省略掉函数体，仅仅进行函数声明，连接器会尝试在任何可能的地方找到这个外部函数。例如：Atan Func在[*这里只进行了声明*](https://github.com/golang/go/blob/dd8dc6f0595ffc2c4951c0ce8ff6b63228effd97/src/pkg/math/atan.go#L54)，而后在[*这里进行了实现*](https://github.com/golang/go/blob/dd8dc6f0595ffc2c4951c0ce8ff6b63228effd97/src/pkg/math/atan_386.s)。
+如果你省略掉函数体，仅仅进行函数声明，连接器会尝试在任何可能的地方找到这个外部函数。例如：Atan Func 在[*这里只进行了声明*](https://github.com/golang/go/blob/dd8dc6f0595ffc2c4951c0ce8ff6b63228effd97/src/pkg/math/atan.go#L54)，而后在[*这里进行了实现*](https://github.com/golang/go/blob/dd8dc6f0595ffc2c4951c0ce8ff6b63228effd97/src/pkg/math/atan_386.s)。
 
 ---
 

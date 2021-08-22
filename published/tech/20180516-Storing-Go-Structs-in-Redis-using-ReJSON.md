@@ -10,7 +10,7 @@
 
 官方文档是这么描述 Redis 的：
 
-> Redis 是一个开源（BSD 许可）的，内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件。 它支持的数据结构有字符串（strings），散列（hashes），列表（lists），集合（sets），有序集合（sorted sets）与范围查询， bitmaps， hyperloglogs 和 地理空间（geospatial）索引半径查询。 Redis 内置了复制（replication），LUA脚本（Lua scripting）， LRU 驱动事件（LRU eviction），事务（transactions） 和不同级别的磁盘持久化（persistence）， 并通过 Redis 哨兵（Sentinel）和自动分区（Cluster）提供高可用性（high availability）。
+> Redis 是一个开源（BSD 许可）的，内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件。 它支持的数据结构有字符串（strings），散列（hashes），列表（lists），集合（sets），有序集合（sorted sets）与范围查询， bitmaps， hyperloglogs 和 地理空间（geospatial）索引半径查询。 Redis 内置了复制（replication），LUA 脚本（Lua scripting）， LRU 驱动事件（LRU eviction），事务（transactions） 和不同级别的磁盘持久化（persistence）， 并通过 Redis 哨兵（Sentinel）和自动分区（Cluster）提供高可用性（high availability）。
 
 将 Redis 与其它（传统）数据库区分开来的是，Redis 是一个键-值 存储（并且是在内存中）。这意味着在这个数据库中所有的值都与一个 key 相关联（想想字典的情况）。不过我跑题了，这篇文章可不是讲 Redis 的，让我们言归正传。
 
@@ -18,7 +18,7 @@
 
 当 Go 开发者使用 Redis 时，有时会需要将我们的对象缓存到 Redis 中。我们看看如何通过 Redis 中的 HMSET 来实现这点。
 
-一个简单的 go 结构体可能会像这样，
+一个简单的 Go 结构体可能会像这样，
 
 ```go
 type SimpleObject struct {
@@ -49,11 +49,11 @@ fieldB
 
 好吧，现在我们知道对象是怎样序列化后存入数据库中的，让我们继续用程序的方式完成这个工作！
 
-虽然 Redis 的 Go 客户端很多，但我使用 redigo，它在 github 上有一个很不错的社区，而且也是最常用的 Redis 的 Go 客户端之一，有超过 4K 个星星。
+虽然 Redis 的 Go 客户端很多，但我使用 redigo，它在 GitHub 上有一个很不错的社区，而且也是最常用的 Redis 的 Go 客户端之一，有超过 4K 个星星。
 
 ### Redigo 助手函数 — AddFlat 和 ScanStruct
 
-Redigo自带了一系列很棒的助手函数，其中我们将用到 AddFlat ，在我们将结构体存入 Redis 之前，用它将结构体扁平化。
+Redigo 自带了一系列很棒的助手函数，其中我们将用到 AddFlat ，在我们将结构体存入 Redis 之前，用它将结构体扁平化。
 
 ```go
 // 获得链接对象
@@ -268,12 +268,12 @@ if err != nil {
 docker run -p 6379:6379 --name Redis-rejson Redislabs/rejson:latest
 ```
 
-### 从 github 上克隆这个例子
+### 从 GitHub 上克隆这个例子
 
 ```
-# git clone https://github.com/nitishm/rejson-struct.git
+# Git clone https://github.com/nitishm/rejson-struct.git
 # cd rejson-struct
-# go run main.go
+# Go run main.go
 ```
 
 想要了解更多 **Go-REJSON** 包，请访问 https://github.com/nitishm/go-rejson.

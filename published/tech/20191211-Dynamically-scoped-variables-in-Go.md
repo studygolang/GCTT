@@ -68,7 +68,7 @@ func check(err error) {
 是的，可以，但是有一些问题。
 
 ```
-% go test
+% Go test
 --- FAIL: TestOpenFile (0.00s)
 panic: open notfound: no such file or directory [recovered]
 	panic: open notfound: no such file or directory
@@ -101,7 +101,7 @@ TestOpenFile 有一个 t 的值，它由 tRunner 传递过来，所以 testing.T
 ```go
 // getT 返回由 testing.tRunner 传递过来的 testing.T 地址
 // 而调用 getT 的函数由它（tRunner）所调用. 如果在堆栈中无法找到 testing.tRunner
-// 说明 getT 在主测试 goroutine 没有被调用，
+// 说明 getT 在主测试 Goroutine 没有被调用，
 // 这时 getT 返回 nil.
 func getT() *testing.T {
 	var buf [8192]byte
@@ -119,7 +119,7 @@ func getT() *testing.T {
 }
 ```
 
-我们知道每个测试（Test)由 testing 包在自己的 goroutine 上调用（看上面的堆栈信息）。testing 包通过一个名为 tRunner 的函数来启动测试，该函数需要一个*testing.T 和一个 func(*testing.T)来调用。因此我们抓取当前 goroutine 的堆栈信息，从中扫描找到已 testing.tRunner 开头的行——由于 tRunner 是私有函数，只能是 testing 包——并解析第一个参数的地址，该地址是一个指向 testing.T 的指针。有点不安全，我们将这个原始指针转换为一个 *testing.T 我们就完成了。
+我们知道每个测试（Test)由 testing 包在自己的 Goroutine 上调用（看上面的堆栈信息）。testing 包通过一个名为 tRunner 的函数来启动测试，该函数需要一个*testing.T 和一个 func(*testing.T)来调用。因此我们抓取当前 Goroutine 的堆栈信息，从中扫描找到已 testing.tRunner 开头的行——由于 tRunner 是私有函数，只能是 testing 包——并解析第一个参数的地址，该地址是一个指向 testing.T 的指针。有点不安全，我们将这个原始指针转换为一个 *testing.T 我们就完成了。
 
 如果搜索不到则可能是 getT 并不是被 Test 所调用。这实际上是行的通的，因为我们需要*testing.T 是为了调用 t.Fatal，而 testing 包要求 t.Fatal 被[主测试 goroutine](https://golang.org/pkg/testing/#T.FailNow)所调用。
 
@@ -138,7 +138,7 @@ func TestOpenFile(t *testing.T) {
 
 ## 这样好吗？
 
-这时你应该会问，*这样好吗？*答案是，不，这不好。此时你应该会感到震惊，但是这些不好的感觉可能值得反思。除了在 goroutine 的调用堆栈乱窜的固有不足以外，同样存在一些严重的设计问题：
+这时你应该会问，*这样好吗？*答案是，不，这不好。此时你应该会感到震惊，但是这些不好的感觉可能值得反思。除了在 Goroutine 的调用堆栈乱窜的固有不足以外，同样存在一些严重的设计问题：
 1.  expect.Nil 的行为依赖于谁调用它。同样的参数，由于调用堆栈位置的原因可能导致行为的不同——这是不可预期的。
 2.  采取极端的动态作用域，将传递给单个函数之前的所有函数的所有变量纳入单个函数的作用域中。这是一个在函数申明没有明确记录的情况下将数据传入和传出的辅助手段。
 

@@ -106,9 +106,9 @@ Go 中的 Map 和其他语言类似（内部实现可能会有所不同）。Go 
 
 有关测试的细节：
 
-系统详情 | go操作系统：darwin | Go-1.9.2
+系统详情 | go 操作系统：darwin | Go-1.9.2
 ---|---|---
- MAC-OSX | go架构：amd64 |
+ MAC-OSX | go 架构：amd64 |
 
 源代码：
 
@@ -218,7 +218,7 @@ func Benchmark_TimeRangeSliceInt(b *testing.B) {
 
         b.StartTimer()
 
-        b.N = 2000000  // 只是为了避免数百万次fmt.Println（以防你在 slicemap.go 包中进行 fmt.Println）
+        b.N = 2000000  // 只是为了避免数百万次 fmt.Println（以防你在 slicemap.go 包中进行 fmt.Println）
 
         for i := 0; i < b.N; i++ {
                 RangeSliceInt(input, 100009)  // 对于最坏情况，检查最后一个元素
@@ -255,7 +255,7 @@ func Benchmark_TimeMapLookupInt(b *testing.B) {
 
         b.StartTimer()
 
-        b.N = 2000000  // 只是为了避免数百万次fmt.Println（以防你在 slicemap.go 包中进行 fmt.Println）
+        b.N = 2000000  // 只是为了避免数百万次 fmt.Println（以防你在 slicemap.go 包中进行 fmt.Println）
 
         for k := 0; k < b.N; k++ {
                 MapLookupInt(input, 100000)
@@ -263,7 +263,7 @@ func Benchmark_TimeMapLookupInt(b *testing.B) {
 
         /*
         运行命令：
-        go test -bench=Benchmark_TimeMapLookup
+        Go test -bench=Benchmark_TimeMapLookup
         */
 }
 
@@ -277,7 +277,7 @@ func Benchmark_TimeSliceRangeInt(b *testing.B) {
 
         b.StartTimer()
 
-        b.N = 2000000  // 只是为了避免数百万次fmt.Println（以防你在 slicemap.go 包中进行 fmt.Println）
+        b.N = 2000000  // 只是为了避免数百万次 fmt.Println（以防你在 slicemap.go 包中进行 fmt.Println）
 
         for k := 0; k < b.N; k++ {
                 RangeSliceIntPrint(input)
@@ -295,7 +295,7 @@ func Benchmark_TimeMapRangeInt(b *testing.B) {
 
         b.StartTimer()
 
-        b.N = 2000  // 只是为了避免数百万次fmt.Println（以防你在 slicemap.go 包中进行 fmt.Println）
+        b.N = 2000  // 只是为了避免数百万次 fmt.Println（以防你在 slicemap.go 包中进行 fmt.Println）
 
         for k := 0; k < b.N; k++ {
                 MapRangeInt(input)
@@ -315,7 +315,7 @@ func Benchmark_TimeRangeSliceString(b *testing.B) {
 
         b.StartTimer()
 
-        b.N = 2000000  // 只是为了避免数百万次fmt.Println（以防你在 slicemap.go 包中进行 fmt.Println）
+        b.N = 2000000  // 只是为了避免数百万次 fmt.Println（以防你在 slicemap.go 包中进行 fmt.Println）
 
         for i := 0; i < b.N; i++ {
                 RangeSliceString(input, "100009")  // 对于最坏情况，检查最后一个元素
@@ -332,7 +332,7 @@ func Benchmark_TimeDirectSliceString(b *testing.B) {
 
         b.StartTimer()
 
-        b.N = 2000000  // 只是为了避免数百万次fmt.Println（以防你在 slicemap.go 包中进行 fmt.Println）
+        b.N = 2000000  // 只是为了避免数百万次 fmt.Println（以防你在 slicemap.go 包中进行 fmt.Println）
         for i := 0; i < b.N; i++ {
                 DirectSliceString(input, 99999)  // 直接检查索引值。o(1)
         }
@@ -350,7 +350,7 @@ func Benchmark_TimeMapLookupString(b *testing.B) {
 
         b.StartTimer()
 
-        b.N = 2000000  // 只是为了避免数百万次fmt.Println（以防你在 slicemap.go 包中进行 fmt.Println）
+        b.N = 2000000  // 只是为了避免数百万次 fmt.Println（以防你在 slicemap.go 包中进行 fmt.Println）
 
         for k := 0; k < b.N; k++ {
                 MapLookupString(input, "100000")
@@ -360,7 +360,7 @@ func Benchmark_TimeMapLookupString(b *testing.B) {
 
         运行：
 
-        go test -bench=Benchmark_TimeMapLookupString
+        Go test -bench=Benchmark_TimeMapLookupString
 
         */
 }

@@ -1,12 +1,12 @@
 已发布：https://studygolang.com/articles/12685
 
-# 剖析与优化 Go 的 web 应用
+# 剖析与优化 Go 的 Web 应用
 
 原文发表日期: 2017/3/13
 
 关键字: `dev` `go` `golang` `pprof`
 
-Go 语言有一个很强大的内置分析器（profiler），支持CPU、内存、协程 与 阻塞/抢占（block/contention）的分析。
+Go 语言有一个很强大的内置分析器（profiler），支持 CPU、内存、协程 与 阻塞/抢占（block/contention）的分析。
 
 ## 开启分析器（profiler）
 
@@ -32,7 +32,7 @@ func main() {
 }
 ```
 
-如果你的 web 应用使用自定义的 URL 路由，你需要手动注册一些 HTTP 端点（endpoints）　。
+如果你的 Web 应用使用自定义的 URL 路由，你需要手动注册一些 HTTP 端点（endpoints）　。
 
 ```go
 package main
@@ -61,13 +61,13 @@ func main() {
 }
 ```
 
-如上代码那样，开启 web 应用，然后使用 pprof 工具：
+如上代码那样，开启 Web 应用，然后使用 pprof 工具：
 
 ```shell
 go tool pprof [binary] http://127.0.0.1:8080/debug/pprof/profile
 ```
 
-pprof 的最大的优点之一是它是的性能负载很小，可以在生产环境中使用，不会对 web 请求响应造成明显的性能消耗。
+pprof 的最大的优点之一是它是的性能负载很小，可以在生产环境中使用，不会对 Web 请求响应造成明显的性能消耗。
 
 但是在深入挖掘 pprof 之前，我们需要一个真实案例来展示如何在 GO 应用中检查并解决性能问题。
 
@@ -108,17 +108,17 @@ Requests per second:    22810.15 [#/sec] (mean)
 Time per request:       0.042 [ms] (mean, across all concurrent requests)
 ```
 
-注：上面的测试结果的执行环境：笔记本 MacBook Pro Late 2013 (2.6 GHz Intel Core i5, 8 GB 1600 MHz DDR3, macOS 10.12.3) , Go编译器版本是1.8 。
+注：上面的测试结果的执行环境：笔记本 MacBook Pro Late 2013 (2.6 GHz Intel Core i5, 8 GB 1600 MHz DDR3, macOS 10.12.3) , Go 编译器版本是 1.8 。
 
 ## CPU 分析（CPU profile）
 
-再次执行 Apache benchmark tool ，但这次使用更高的请求数量（1百万应该足够了），并同时执行 pprof ：
+再次执行 Apache benchmark tool ，但这次使用更高的请求数量（1 百万应该足够了），并同时执行 pprof ：
 
 ```shell
 go tool pprof goprofex http://127.0.0.1:8080/debug/pprof/profile
 ```
 
-这个 CPU profiler 默认执行30秒。它使用采样的方式来确定哪些函数花费了大多数的CPU时间。Go runtime 每10毫秒就停止执行过程并记录每一个运行中的协程的当前堆栈信息。
+这个 CPU profiler 默认执行 30 秒。它使用采样的方式来确定哪些函数花费了大多数的 CPU 时间。Go runtime 每 10 毫秒就停止执行过程并记录每一个运行中的协程的当前堆栈信息。
 
 当 pprof 进入交互模式，输入 `top`，这条命令会展示收集样本中最常出现的函数列表。在我们的案例中，是所有 runtime 与标准库函数，这不是很有用。
 
@@ -317,7 +317,7 @@ go tool pprof goprofex http://127.0.0.1:8080/debug/pprof/goroutine
 
 ![](https://github.com/studygolang/gctt-images/raw/master/profiling-and-optimizing-go-web-applications/web-goroutine.png)
 
-上图只有18个活跃中的协程，这是非常小的数字。拥有数千个运行中的协程的情况并不少见，但并不会显著降低性能。
+上图只有 18 个活跃中的协程，这是非常小的数字。拥有数千个运行中的协程的情况并不少见，但并不会显著降低性能。
 
 ## 阻塞分析（Block profile）
 
@@ -381,7 +381,7 @@ BenchmarkStatsD-4                1000000          1516 ns/op         560 B/op   
 
 ### Logging
 
-让应用运行更快，一个很好又不是经常管用的方法是，让它执行更少的工作。除了 debug 的目的之外，这行代码 `log.Printf("%s request took %v", name, elapsed)` 在 web service 中不需要。所有非必要的 logs 应该在生产环境中被移除代码或者关闭功能。可以使用分级日志（a leveled logger）来解决这个问题，比如这些很棒的 [日志工具库（logging libraries）](https://github.com/avelino/awesome-go#logging)
+让应用运行更快，一个很好又不是经常管用的方法是，让它执行更少的工作。除了 debug 的目的之外，这行代码 `log.Printf("%s request took %v", name, elapsed)` 在 Web service 中不需要。所有非必要的 logs 应该在生产环境中被移除代码或者关闭功能。可以使用分级日志（a leveled logger）来解决这个问题，比如这些很棒的 [日志工具库（logging libraries）](https://github.com/avelino/awesome-go#logging)
 
 关于打日志或者其他一般的 I/O 操作，另一个重要的事情是尽可能使用有缓冲的输入输出（buffered input/output），这样可以减少系统调用的次数。通常，并不是每个 logger 调用都需要立即写入文件 —— 使用 [bufio](https://golang.org/pkg/bufio/) package 来实现 buffered I/O 。我们可以使用 `bufio.NewWriter` 或者 `bufio.NewWriterSize` 来简单地封装 `io.Writer` 对象，再传递给 logger ：
 
@@ -466,7 +466,7 @@ func (s *StatsD) Send(stat string, kind string, delta float64) {
 }
 ```
 
-这样做，将分配数量（number of allocations）从14减少到1个，并且使 `Send` 运行快了4倍。
+这样做，将分配数量（number of allocations）从 14 减少到 1 个，并且使 `Send` 运行快了 4 倍。
 
 ```
 BenchmarkStatsD-4                5000000           381 ns/op         112 B/op          1 allocs/op
@@ -508,7 +508,7 @@ Requests per second:    32619.54 [#/sec] (mean)
 Time per request:       0.030 [ms] (mean, across all concurrent requests)
 ```
 
-这个 web 服务现在可以每秒多处理10000个请求！　
+这个 Web 服务现在可以每秒多处理 10000 个请求！　
 
 ## 优化技巧
 

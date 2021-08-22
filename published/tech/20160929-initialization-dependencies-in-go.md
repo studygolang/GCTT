@@ -4,7 +4,7 @@
 
 让我们直接从两个 Go 语言小程序开始：
 
-**程序1**
+**程序 1**
 
 ```go
 package main
@@ -19,7 +19,7 @@ func main() {
 }
 ```
 
-**程序2**
+**程序 2**
 
 ```go
 package main
@@ -35,14 +35,14 @@ func main() {
 ```
 如果这两段代码会输出相同的结果，那么它们就不是好的素材，很幸运的是，它们的结果是不同的：
 
-**程序1**
+**程序 1**
 
 ```
 2
 1
 ```
 
-**程序2**
+**程序 2**
 
 这个程序无法编译通过，甚至会在第 7 行报一个编译时错误 "undefined: b"。
 
@@ -71,7 +71,7 @@ h
 1 2 3
 ```
 
-前面提到的 "正常" 意味着它在自己的函数中完成初始化。当这些初始化代码像程序1中那样被放到包的顶层声明中时，会变得越来越有趣：
+前面提到的 "正常" 意味着它在自己的函数中完成初始化。当这些初始化代码像程序 1 中那样被放到包的  顶层声明  中时， 会变得越来越有趣：
 
 ```go
 package main
@@ -94,7 +94,7 @@ func main() {
 
 这些变量声明的顺序如下：
 
-* b 是第一个，因为它不依赖其他未初始化的变量
+* b 是第一个，因为它不依赖  其他未初始化的变量
 * c 是第二个，在 `f` 函数需要的变量 b 被初始化之后，紧接着被初始化
 * a 是在 c 被初始化之后的第三轮初始化循环中被处理
 
@@ -169,7 +169,7 @@ func f() int {
 
 via: https://medium.com/golangspec/initialization-dependencies-in-go-51ae7b53f24c
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[rxcai](https://github.com/rxcai)
 校对：[polaris1119](https://github.com/polaris1119)
 

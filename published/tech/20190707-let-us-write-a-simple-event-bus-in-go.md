@@ -59,7 +59,7 @@ type EventBus struct {
 
 ## 订阅主题
 
-对于订阅主题，使用 `channel`。它就像传统方法中的回调一样。当发布者向主题发布数据时，`channel`将接收数据。
+对于订阅主题，使用 `channel`。它就像传统方法中的回调一样。当发布者向主题发布数据时，`channel` 将接收数据。
 
 ```go
 func (eb *EventBus)Subscribe(topic string, ch DataChannel)  {
@@ -86,7 +86,7 @@ func (eb *EventBus) Publish(topic string, data interface{}) {
       // 这样做是因为切片引用相同的数组，即使它们是按值传递的
       // 因此我们正在使用我们的元素创建一个新切片，从而能正确地保持锁定
       channels := append(DataChannelSlice{}, chans...)
-      go func(data DataEvent, dataChannelSlices DataChannelSlice) {
+      Go func(data DataEvent, dataChannelSlices DataChannelSlice) {
          for _, ch := range dataChannelSlices {
             ch <- data
          }
@@ -134,16 +134,16 @@ func main()  {
    eb.Subscribe("topic1", ch1)
    eb.Subscribe("topic2", ch2)
    eb.Subscribe("topic2", ch3)
-   go publisTo("topic1", "Hi topic 1")
-   go publisTo("topic2", "Welcome to topic 2")
+   Go publisTo("topic1", "Hi topic 1")
+   Go publisTo("topic2", "Welcome to topic 2")
    for {
       select {
       case d := <-ch1:
-         go printDataEvent("ch1", d)
+         Go printDataEvent("ch1", d)
       case d := <-ch2:
-         go printDataEvent("ch2", d)
+         Go printDataEvent("ch2", d)
       case d := <-ch3:
-         go printDataEvent("ch3", d)
+         Go printDataEvent("ch3", d)
       }
    }
 }

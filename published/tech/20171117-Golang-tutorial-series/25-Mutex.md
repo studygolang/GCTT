@@ -30,7 +30,7 @@ x = x + 1
 
 ![one-scenario](https://raw.githubusercontent.com/studygolang/gctt-images/master/golang-series/cs5.png)
 
-我们假设 `x` 的初始值为 0。而协程 1 获取 `x` 的初始值，并计算 `x + 1`。而在协程 1 将计算值赋值给 `x` 之前，系统上下文切换到了协程 2。于是，协程 2 获取了 `x` 的初始值（依然为 0），并计算 `x + 1`。接着系统上下文又切换回了协程 1。现在，协程 1 将计算值 1 赋值给 `x`，因此 `x` 等于 1。然后，协程 2 继续开始执行，把计算值（依然是 1）复制给了 `x`，因此在所有协程执行完毕之后，`x` 都等于 1。
+我们假设 `x` 的初始值为 0。而协程 1 获取 `x` 的初始值，并计算 `x + 1`。而在协程 1 将计算值赋值给 `x` 之前，系统上下文切换到了协程 2。于是，协程 2 获取了 `x` 的初始值（依然为 0）， 并计算 `x + 1`。接着系统上下文又切换回了协程 1。现在，协程 1 将计算值 1 赋值给 `x`，因此 `x` 等于 1。然后，协程 2 继续开始执行，把计算值（依然是 1）复制给了 `x`，因此在所有协程执行完毕之后，`x` 都等于 1。
 
 现在我们考虑另外一种可能发生的情况。
 
@@ -76,7 +76,7 @@ func main() {
     var w sync.WaitGroup
     for i := 0; i < 1000; i++ {
         w.Add(1)
-        go increment(&w)
+        Go increment(&w)
     }
     w.Wait()
     fmt.Println("final value of x", x)
@@ -111,7 +111,7 @@ func main() {
     var m sync.Mutex
     for i := 0; i < 1000; i++ {
         w.Add(1)
-        go increment(&w, &m)
+        Go increment(&w, &m)
     }
     w.Wait()
     fmt.Println("final value of x", x)
@@ -120,7 +120,7 @@ func main() {
 
 [在 playground 中运行](https://play.golang.org/p/VX9dwGhR62)
 
-[Mutex](https://golang.org/pkg/sync/#Mutex) 是一个结构体类型，我们在第 15 行创建了 `Mutex` 类型的变量 `m`，其值为零值。在上述程序里，我们修改了 `increment` 函数，将增加 `x` 的代码（`x = x + 1`）放置在 `m.Lock()` 和 `m.Unlock()`之间。现在这段代码不存在竞态条件了，因为任何时刻都只允许一个协程执行这段代码。
+[Mutex](https://golang.org/pkg/sync/#Mutex) 是一个结构体类型，我们在第 15 行创建了 `Mutex` 类型的变量 `m`，其值为零值。在上述程序里，我们修改了 `increment` 函数，将增加 `x` 的代码（`x = x + 1`）放置在 `m.Lock()` 和 `m.Unlock()` 之间。现在这段代码不存在竞态条件了，因为任何时刻都只允许一个协程执行这段代码。
 
 于是如果运行该程序，会输出：
 
@@ -152,7 +152,7 @@ func main() {
     ch := make(chan bool, 1)
     for i := 0; i < 1000; i++ {
         w.Add(1)
-        go increment(&w, ch)
+        Go increment(&w, ch)
     }
     w.Wait()
     fmt.Println("final value of x", x)

@@ -6,9 +6,9 @@ Go1.9 出来后 6 个多月的时间，Go1.10 就被[发布](https://blog.golang
 
 ## Server
 
-为了验证这一改变，首先请用 golang 启动一个简单的 HTTP(S) 代理服务器。具体做法可以从下面文章了解。
+为了验证这一改变，首先请用 Golang 启动一个简单的 HTTP(S) 代理服务器。具体做法可以从下面文章了解。
 
-[HTTP(S) Proxy in Golang in less than 100 lines of code](https://medium.com/@mlowicki/http-s-proxy-in-golang-in-less-than-100-lines-of-code-6a51c2f2c38c)
+[HTTP(S) Proxy in Golang in Less than 100 lines of code](https://medium.com/@mlowicki/http-s-proxy-in-golang-in-less-than-100-lines-of-code-6a51c2f2c38c)
 
 ## Client
 ```go
@@ -68,7 +68,7 @@ panic:Get https://google.com:malformed HTTP response "\x15\x03\x01\x00\x02\x02\x
 ------------
 via: https://medium.com/@mlowicki/https-proxies-support-in-go-1-10-b956fb501d6b
 
-作者：[Michał Łowicki](https://medium.com/@mlowicki)
+作者：[Micha ł Ł owicki](https://medium.com/@mlowicki)
 译者：[zhaohj1118](https://github.com/zhaohj1118)
 校对：[rxcai](https://github.com/rxcai)
 
