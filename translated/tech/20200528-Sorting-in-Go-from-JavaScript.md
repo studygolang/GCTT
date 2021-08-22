@@ -203,3 +203,12 @@ sort 包还有一些很酷的地方，除了我们能够选择排序所依据的
 - [Free Code Camp - 解释排序算法](https://www.freecodecamp.org/news/sorting-algorithms-explained/)
 - [Toptal - 排序算法动画](https://www.toptal.com/developers/sorting-algorithms)
 - [在 JavaScript 中实现排序算法](https://medium.com/@rwillt/implementing-sorting-algorithms-in-javascript-b08504cdf4a9)
+
+---
+via: https://dev.to/andyhaskell/sorting-in-go-from-javascript-4k8o
+
+作者：[andyhaskell](https://dev.to/andyhaskell)
+译者：[译者ID](https://github.com/gogeof)
+校对：[校对者ID](https://github.com/校对者ID)
+
+本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
