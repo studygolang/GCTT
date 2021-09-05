@@ -81,8 +81,6 @@ func TestTimeConsuming(t *testing.T) {
 
 在单元测试中你应该专注于业务逻辑，并且通过集成测试，您将验证集成服务的功能，而不是标准库或第三方软件包如何实现集成。
 
-> ["Go 测试: 哪个适合你 - 单元测试还是集成测试? #golang" via @TitPetric](http://twitter.com/intent/tweet?url=https%3a%2f%2fscene-si.org%2f2019%2f04%2f15%2fnext-level-go-testing%2f&text=%22Go%20testing%3a%20which%20one%20are%20right%20for%20you%20-%20unit%20or%20integration%20tests%3f%20%23golang%22&via=TitPetric)
-
 ## 边界情况
 
 将你的应用程序与第三方服务集成是很常见的，由于 API 弃用是可能发生的，所以集成测试可能还需要验证应用程序的响应是否仍然有意义。 因此，Peter 的文章需要一点改进。
