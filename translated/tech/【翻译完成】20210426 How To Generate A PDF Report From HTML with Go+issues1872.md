@@ -1,6 +1,6 @@
 ## 如何使用 Go 从 HTML 生成 PDF 报告
 
-![](https://hackernoon.com/_next/image?url=https%3A%2F%2Fcdn.hackernoon.com%2Fimages%2FzTVLAWw5raaMXiux9MRCZpHpOtg2-6a5k33ak.jpeg&w=1920&q=75)
+![](https://raw.githubusercontent.com/lavaicer/Img/main/image)
 作为一名开发人员，我有时需要为我的应用程序创建 PDF 报告。完全通过编程来创建它们可能很麻烦，并且每个库都有些不同。最后，让事物看起来像设计师想要的那样可能具有挑战性。如果我们能在不花大量时间的情况下让它看起来像设计，那不是很好吗？设计师和前端通常会 HTML 和 CSS，所以使用 HTML 是说得通的。但网站通常在打印出来时看起来不太好，而且不是为多页设计的。我们提出了一个解决方案，我们相信它可以解决上述所有问题。
 
 ## 认识 UniHTML 与 UniPDF 的结合
@@ -9,9 +9,11 @@
 
 它是基于容器的解决方案，带有 Go 驱动程序，根据原理图：
 
-![](https://hackernoon.com/_next/image?url=https%3A%2F%2Fcdn.hackernoon.com%2Fimages%2FzTVLAWw5raaMXiux9MRCZpHpOtg2-rys33b2.jpeg&w=1920&q=75)
+![](https://raw.githubusercontent.com/lavaicer/Img/main/2.jpg)
 
-  
+
+
+
 [Docker 映像](https://hub.docker.com/repository/docker/unidoccloud/unihtml?ref=hackernoon.com)在 Docker Hub 上公开可用。
 
 UniPDF Creator 软件包可以[创建灵活的 PDF 报告](https://www.unidoc.io/post/creating-pdf-reports-in-golang?ref=hackernoon.com)和[发票](https://www.unidoc.io/post/simple-invoices?ref=hackernoon.com)。 UniHTML 基于容器的模块具有灵活的 Web 渲染引擎，并且与 UniPDF 相结合汇集了为 UniPDF 报告生成添加完整 HTML 支持的功能。
@@ -196,9 +198,14 @@ $ go run example.go
 ```
 
 创建了一个看起来这样的 sample.pdf ：
-![](https://hackernoon.com/_next/image?url=https%3A%2F%2Fcdn.hackernoon.com%2Fimages%2FzTVLAWw5raaMXiux9MRCZpHpOtg2-zk3p331o.jpeg&w=1920&q=75)
+
+![](https://raw.githubusercontent.com/lavaicer/Img/main/3.jpg)
+
+
 
 我们注意到我们还有目录，这对于高质量的 PDF 制作至关重要，以及链接到 PDF 中每一章的书签，页眉和页脚也可以轻松创建。
+
+![](https://raw.githubusercontent.com/lavaicer/Img/main/1.jpg)
 
 ## 结论
 
