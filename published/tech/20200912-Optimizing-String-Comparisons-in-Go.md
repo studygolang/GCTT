@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/35247
+
 # Go 中优化字符串的比较操作
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20200912-Optimizing-String-Comparisons-in-Go/00.jpeg)
