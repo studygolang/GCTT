@@ -75,9 +75,9 @@ func main() {
 
 cgo 程序和 Go 原生程序的追踪结果并没有太大差异。当然，我注意到有一些统计还是有点差别的。比如，cgo 程序没有包含堆的统计信息。
 
-![cgo 程序的追踪信息统计](https://github.com/studygolang/gctt-images/blob/master/go-memory-management-part-3/cgo.png?raw=true)<br>cgo 程序的追踪信息统计
+![cgo 程序的追踪信息统计](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-memory-management-part-3/cgo.png)<br>cgo 程序的追踪信息统计
 
-![Go 原生程序的追踪信息统计](https://github.com/studygolang/gctt-images/blob/master/go-memory-management-part-3/noncgo.png?raw=true)<br>Go 原生程序的追踪信息统计
+![Go 原生程序的追踪信息统计](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-memory-management-part-3/noncgo.png)<br>Go 原生程序的追踪信息统计
 
 我试图使用不同的视图去观察，但是并没有发现更多的显著差异。我猜测这可能是由于 Go 不会为已编译的 C 代码添加追踪指令。
 
