@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/35252
+
 # Go 服务中 HTTP 请求的生命周期
 
 Go 语言对于编写 HTTP 服务来说是一个常见且非常合适的工具。这篇博文通过一个 Go 服务来探讨一个典型 HTTP 请求的路由，涉及路由，中间件以及比如并发之类的相关问题。
@@ -8,27 +10,27 @@ Go 语言对于编写 HTTP 服务来说是一个常见且非常合适的工具�
 package main
 
 import (
-  "fmt"
-  "net/http"
+	"fmt"
+	"net/http"
 )
 
 func hello(w http.ResponseWriter, req *http.Request) {
-  fmt.Fprintf(w, "hello\n")
+	fmt.Fprintf(w, "hello\n")
 }
 
 func headers(w http.ResponseWriter, req *http.Request) {
-  for name, headers := range req.Header {
-    for _, h := range headers {
-      fmt.Fprintf(w, "%v: %v\n", name, h)
-    }
-  }
+	for name, headers := range req.Header {
+		for _, h := range headers {
+			fmt.Fprintf(w, "%v: %v\n", name, h)
+		}
+	}
 }
 
 func main() {
-  http.HandleFunc("/hello", hello)
-  http.HandleFunc("/headers", headers)
+	http.HandleFunc("/hello", hello)
+	http.HandleFunc("/headers", headers)
 
-  http.ListenAndServe(":8090", nil)
+	http.ListenAndServe(":8090", nil)
 }
 ```
 
@@ -53,7 +55,7 @@ handler 是一个实现 `http.Handler` 接口的任意实例：
 
 ```go
 type Handler interface {
-    ServeHTTP(ResponseWriter, *Request)
+		ServeHTTP(ResponseWriter, *Request)
 }
 ```
 
@@ -65,18 +67,18 @@ type Handler interface {
 
 ```go
 type serverHandler struct {
-  srv *Server
+	srv *Server
 }
 
 func (sh serverHandler) ServeHTTP(rw ResponseWriter, req *Request) {
-  handler := sh.srv.Handler
-  if handler == nil {
-    handler = DefaultServeMux
-  }
-  if req.RequestURI == "*" && req.Method == "OPTIONS" {
-    handler = globalOptionsHandler{}
-  }
-  handler.ServeHTTP(rw, req)
+	handler := sh.srv.Handler
+	if handler == nil {
+		handler = DefaultServeMux
+	}
+	if req.RequestURI == "*" && req.Method == "OPTIONS" {
+		handler = globalOptionsHandler{}
+	}
+	handler.ServeHTTP(rw, req)
 }
 ```
 
@@ -86,11 +88,11 @@ func (sh serverHandler) ServeHTTP(rw ResponseWriter, req *Request) {
 
 ```go
 func main() {
-  mux := http.NewServeMux()
-  mux.HandleFunc("/hello", hello)
-  mux.HandleFunc("/headers", headers)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/hello", hello)
+	mux.HandleFunc("/headers", headers)
 
-  http.ListenAndServe(":8090", mux)
+	http.ListenAndServe(":8090", mux)
 }
 ```
 ## 一个 `ServeMux` 仅仅是一个 `Handler`
@@ -101,12 +103,12 @@ type PoliteServer struct {
 }
 
 func (ms *PoliteServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-  fmt.Fprintf(w, "Welcome! Thanks for visiting!\n")
+	fmt.Fprintf(w, "Welcome! Thanks for visiting!\n")
 }
 
 func main() {
-  ps := &PoliteServer{}
-  log.Fatal(http.ListenAndServe(":8090", ps))
+	ps := &PoliteServer{}
+	log.Fatal(http.ListenAndServe(":8090", ps))
 }
 ```
 
@@ -116,11 +118,11 @@ func main() {
 
 ```go
 func politeGreeting(w http.ResponseWriter, req *http.Request) {
-  fmt.Fprintf(w, "Welcome! Thanks for visiting!\n")
+	fmt.Fprintf(w, "Welcome! Thanks for visiting!\n")
 }
 
 func main() {
-  log.Fatal(http.ListenAndServe(":8090", http.HandlerFunc(politeGreeting)))
+	log.Fatal(http.ListenAndServe(":8090", http.HandlerFunc(politeGreeting)))
 }
 ```
 
@@ -135,7 +137,7 @@ type HandlerFunc func(ResponseWriter, *Request)
 
 // ServeHTTP calls f(w, r).
 func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
-  f(w, r)
+	f(w, r)
 }
 ```
 
@@ -147,8 +149,8 @@ func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
 - `Handle` 或 `HandleFunc` 向该切片增加新的 handler。
 - `ServeHTTP`：
 
-  - （通过查找这个排序好的 handler 对的切片）为请求的 path 找到对应的 handler
-  - 调用 handler 的 `ServeHTTP` 方法
+	- （通过查找这个排序好的 handler 对的切片）为请求的 path 找到对应的 handler
+	- 调用 handler 的 `ServeHTTP` 方法
 
 因此，mux 可以被看做是一个*转发 handler*；这种模式在 HTTP 服务开发中极为常见，这就是*中间件*。
 
@@ -171,26 +173,26 @@ func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
 
 ```go
 type LoggingMiddleware struct {
-  handler http.Handler
+	handler http.Handler
 }
 
 func (lm *LoggingMiddleware) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-  start := time.Now()
-  lm.handler.ServeHTTP(w, req)
-  log.Printf("%s %s %s", req.Method, req.RequestURI, time.Since(start))
+	start := time.Now()
+	lm.handler.ServeHTTP(w, req)
+	log.Printf("%s %s %s", req.Method, req.RequestURI, time.Since(start))
 }
 
 type PoliteServer struct {
 }
 
 func (ms *PoliteServer) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-  fmt.Fprintf(w, "Welcome! Thanks for visiting!\n")
+	fmt.Fprintf(w, "Welcome! Thanks for visiting!\n")
 }
 
 func main() {
-  ps := &PoliteServer{}
-  lm := &LoggingMiddleware{handler: ps}
-  log.Fatal(http.ListenAndServe(":8090", lm))
+	ps := &PoliteServer{}
+	lm := &LoggingMiddleware{handler: ps}
+	log.Fatal(http.ListenAndServe(":8090", lm))
 }
 ```
 
@@ -204,20 +206,20 @@ func main() {
 
 ```go
 func politeGreeting(w http.ResponseWriter, req *http.Request) {
-  fmt.Fprintf(w, "Welcome! Thanks for visiting!\n")
+	fmt.Fprintf(w, "Welcome! Thanks for visiting!\n")
 }
 
 func loggingMiddleware(next http.Handler) http.Handler {
-  return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-    start := time.Now()
-    next.ServeHTTP(w, req)
-    log.Printf("%s %s %s", req.Method, req.RequestURI, time.Since(start))
-  })
+	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		start := time.Now()
+		next.ServeHTTP(w, req)
+		log.Printf("%s %s %s", req.Method, req.RequestURI, time.Since(start))
+	})
 }
 
 func main() {
-  lm := loggingMiddleware(http.HandlerFunc(politeGreeting))
-  log.Fatal(http.ListenAndServe(":8090", lm))
+	lm := loggingMiddleware(http.HandlerFunc(politeGreeting))
+	log.Fatal(http.ListenAndServe(":8090", lm))
 }
 ```
 
@@ -266,18 +268,18 @@ handler = loggingMiddleware(handler)
 
 ```go
 func hello(w http.ResponseWriter, req *http.Request) {
-  fmt.Fprintf(w, "hello\n")
+	fmt.Fprintf(w, "hello\n")
 }
 
 func doPanic(w http.ResponseWriter, req *http.Request) {
-  panic("oops")
+	panic("oops")
 }
 
 func main() {
-  http.HandleFunc("/hello", hello)
-  http.HandleFunc("/panic", doPanic)
+	http.HandleFunc("/hello", hello)
+	http.HandleFunc("/panic", doPanic)
 
-  http.ListenAndServe(":8090", nil)
+	http.ListenAndServe(":8090", nil)
 }
 ```
 
@@ -294,9 +296,9 @@ curl: (52) Empty reply from server
 2021/02/16 09:44:31 http: panic serving 127.0.0.1:52908: oops
 goroutine 8 [running]:
 net/http.(*conn).serve.func1(0xc00010cbe0)
-  /usr/local/go/src/net/http/server.go:1801 +0x147
+	/usr/local/go/src/net/http/server.go:1801 +0x147
 panic(0x654840, 0x6f0b80)
-  /usr/local/go/src/runtime/panic.go:975 +0x47a
+	/usr/local/go/src/runtime/panic.go:975 +0x47a
 main.doPanic(0x6fa060, 0xc0001401c0, 0xc000164200)
 [... rest of stack dump here ...]
 ```
@@ -311,10 +313,11 @@ main.doPanic(0x6fa060, 0xc0001401c0, 0xc000164200)
 [^2]: 注意：`http.HandleFunc` 和 `http.HandlerFunc` 是具有不同而有相互关联的角色的不同实体。
 
 ---
+
 via: https://eli.thegreenplace.net/2021/life-of-an-http-request-in-a-go-server/
 
 作者：[Eli Bendersky](https://eli.thegreenplace.net/pages/about)
 译者：[dust347](https://github.com/dust347)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris1119](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
