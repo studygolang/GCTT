@@ -10,7 +10,7 @@
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20210817-How-to-Use-Generic-in-Go-From-1.17/tweet-01.png)
 
 除了一些新特性，还有一个特定的标记参数 `-gcflags=-G=3`，在编译或运行的时候加上它就能使用范型。
-我第一次在这里看到他，但是除了这个来源，我还发现一些其他的公共消息。
+我第一次在这里看到这个消息，但是除了这个来源，我还发现一些其他的公共消息。
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20210817-How-to-Use-Generic-in-Go-From-1.17/tweet-02.png)
 
