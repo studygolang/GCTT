@@ -1,7 +1,7 @@
 # 如何在 Go 1.17 中使用范型
 
 我们知道，Go 1.18 预计将在今年末或明年初发布时为 Go 语言带来范型。
-但对于那些等不及的人， 可以从 [Go Playground](https://go2goplay.golang.org/) 的特定版本在线尝试范型，
+但对于那些等不及的人， 可以从 [Go2Go Playground](https://go2goplay.golang.org/) 的特定版本在线尝试范型，
 还有一种方法可以让你在本地环境尝试范型，不过有点麻烦，
 需要从 [源码](https://go.googlesource.com/go/+/refs/heads/dev.go2go/README.go2go.md) 编译 Go。
 
@@ -14,7 +14,7 @@
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20210817-How-to-Use-Generic-in-Go-From-1.17/tweet-02.png)
 
-总之，我很高兴确认它可以用！然后要说明的是，我是在 go2go playground 运行下面的代码：
+总之，我很高兴确认它可以用！然后要说明的是，我是在  [Go2Go Playground](https://go2goplay.golang.org/) 运行下面的代码：
 
 ```go
 package main
