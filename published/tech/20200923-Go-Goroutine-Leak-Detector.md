@@ -4,8 +4,7 @@
 
 ![Illustration created for “A Journey With Go”, made from the original Go Gopher, created by Renee French.](https://raw.githubusercontent.com/studygolang/gctt-images2/master/goroutine_leak_detector/header_img.png)
 
-具有监控存活的 goroutine 数量功能的 APM (Application Performance Monitoring)
-应用程序性能监控可以轻松查出 goroutine 泄漏。例如 NewRelic APM 中 goroutine 的监控。
+具有监控存活的 goroutine 数量功能的 APM (Application Performance Monitoring)应用程序性能监控可以轻松查出 goroutine 泄漏。例如 NewRelic APM 中 goroutine 的监控。
 
 ![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/goroutine_leak_detector/goroutinemonitor.png)
 
@@ -16,6 +15,7 @@ goroutine 泄漏会导致内存中存活的 goroutine 数量不断上升，直�
 ## 泄漏检测
 
 隶属于 Uber 公司的 Go 团队在 GitHub 开源了他们的[goroutine 泄漏检测器](https://github.com/uber-go/goleak) 出来，一个与单元测试结合使用的工具。
+
 goleak 可以监控当前测试代码中泄漏的 goroutine。下面有一个 goroutine 泄漏的例子：
 
 ```go

@@ -42,7 +42,7 @@ func ListenAndServe(addr string, handler Handler) error
 
 这张图展示了调用时所发生的简要流程：
 
-![](https://github.com/studygolang/gctt-images2/blob/master/20210220-Life-of-an-HTTP-request-in-a-Go-server/http-request-listenandserve.png?raw=true)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20210220-Life-of-an-HTTP-request-in-a-Go-server/http-request-listenandserve.png)
 
 这是函数和方法调用的实际序列的高度“内联”版本，但是[原始的代码](https://go.googlesource.com/go/+/go1.15.8/src/net/http/server.go)并不难理解。
 
@@ -84,7 +84,7 @@ func (sh serverHandler) ServeHTTP(rw ResponseWriter, req *Request) {
 
 注意高亮的部分（if handler == nil ...），如果 `handler == nil`，则 `http.DefaultServeMux` 被用作 handler。这个是*默认的 server mux*，`http` 包中所包含的一个 `http.ServeMux` 类型的全局实例。顺便一提，当我们的示例代码使用 `http.HandleFunc` 注册 handler 函数的时候，会在同一个默认的 mux 上注册这些handler。
 
-我们可以如下所示这样重写我们的示例代码，不再使用默认的 mux。只修改 `main` 函数，所以这里没有展示 `hello` 和 `headers` handler 函数，看是我们可以在这看[完整的代码](https://github.com/eliben/code-for-blog/blob/master/2021/go-life-http-request/basic-server-mux-object.go)。功能上没有任何变化[^1]：
+我们可以如下所示这样重写我们的示例代码，不再使用默认的 mux。只修改 `main` 函数，所以这里没有展示 `hello` 和 `headers` handler 函数，我们可以在这看[完整的代码](https://github.com/eliben/code-for-blog/blob/master/2021/go-life-http-request/basic-server-mux-object.go)。功能上没有任何变化[^1]：
 
 ```go
 func main() {
@@ -95,7 +95,9 @@ func main() {
 	http.ListenAndServe(":8090", mux)
 }
 ```
+
 ## 一个 `ServeMux` 仅仅是一个 `Handler`
+
 当看多了 Go 服务的例子后，很容易给人一种 `ListenAndServe` 函数“需要一个 mux” 作为参数的印象，但是这是不准确的。就像我们之前所见到的那样，`ListenAndServe` 函数需要的是一个实现了 `http.Handler` 接口的值。我们可以写下面这样的服务而没有任何 mux：
 
 ```go
@@ -148,22 +150,22 @@ func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
 - `ServeMux` 维护了一个（根据长度）排序的 `{pattern, handler}` 的切片。
 - `Handle` 或 `HandleFunc` 向该切片增加新的 handler。
 - `ServeHTTP`：
-
-	- （通过查找这个排序好的 handler 对的切片）为请求的 path 找到对应的 handler
-	- 调用 handler 的 `ServeHTTP` 方法
+  - （通过查找这个排序好的 handler 对的切片）为请求的 path 找到对应的 handler
+  - 调用 handler 的 `ServeHTTP` 方法
 
 因此，mux 可以被看做是一个*转发 handler*；这种模式在 HTTP 服务开发中极为常见，这就是*中间件*。
 
 ## `http.Handler` 中间件
+
 由于中间件在不同的上下文，不同的语言以及不同的框架中意味着不同的东西，所以它很难被准确定义。
 
 让我们回到这篇博文开头的流程图上，对它进行一点简化，隐藏 `http` 包所执行的细节：
 
-![](https://github.com/studygolang/gctt-images2/blob/master/20210220-Life-of-an-HTTP-request-in-a-Go-server/http-request-simplified.png?raw=true)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20210220-Life-of-an-HTTP-request-in-a-Go-server/http-request-simplified.png)
 
 现在，当我们加了中间件的话，流程图看起来是这样的：
 
-![](https://github.com/studygolang/gctt-images2/blob/master/20210220-Life-of-an-HTTP-request-in-a-Go-server/http-request-with-middleware.png?raw=true)
+![](https://raw.githubusercontent.com/studygolang/gctt-images2/master/20210220-Life-of-an-HTTP-request-in-a-Go-server/http-request-with-middleware.png)
 
 在 Go 语言中，中间件只是另一个 HTTP handler，它包裹了一个其他的 handler。中间件 handler 通过调用 `ListenAndServe` 被注册进来；当调用的时候，它可以执行任意的预处理，调用自身包裹的 handler 然后可以执行任意的后置处理。
 
@@ -253,6 +255,7 @@ handler = loggingMiddleware(handler)
 希望这样可以让大家明白为什么中间件是一个很吸引人的辅助设计。我们可以专注于我们的“业务逻辑” handler 上，尽管完全正交，我们利用通用的中间件，在许多方面提升我们的 handler。在其他文章中，会进行全面的探讨。
 
 ## 并发和 panic 处理
+
 为了结束我们对于 Go HTTP 服务中 HTTP 请求的探索，来介绍另外两个主题：并发和 panic 处理。
 
 首先是*并发*。之前简单提到，每个连接由 `http.Server.Serve` 在一个新的 goroutine 中处理。
@@ -309,7 +312,7 @@ main.doPanic(0x6fa060, 0xc0001401c0, 0xc000164200)
 
 阅读了这个博文后，再写实现这个功能的中间件应该是很容易的。将它作为练习！我会在之后的博文中介绍这个用例。
 
-[^1]: 与使用默认的 mux 的版本相比，这个版本有充分的理由更喜欢这一版本。默认的 mux 有着一定的安全风险；作为全局实例，它可以被你工程中引入的任何包所修改。一个恶意的包也行会出于邪恶的目的而使用它。
+[^1]: 与使用默认的 mux 的版本相比，这个版本有充分的理由更喜欢这一版本。默认的 mux 有着一定的安全风险；作为全局实例，它可以被你工程中引入的任何包所修改。一个恶意的包也许会出于邪恶的目的而使用它。
 [^2]: 注意：`http.HandleFunc` 和 `http.HandlerFunc` 是具有不同而有相互关联的角色的不同实体。
 
 ---
