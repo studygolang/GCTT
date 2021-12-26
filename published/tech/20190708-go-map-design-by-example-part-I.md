@@ -36,7 +36,7 @@ Go 将键值对存储在桶的列表中，每个桶容纳 8 个键值对，当 m
 
 ## Map 扩容
 
-在存储键值对时，桶会将它存储在 8 个可用的插槽中。如果这些插槽全部不可用，Go 会创建一个溢出桶，并于当前桶连接。
+在存储键值对时，桶会将它存储在 8 个可用的插槽中。如果这些插槽全部不可用，Go 会创建一个溢出桶，并与当前桶连接。
 
 ![overflow bucket](https://raw.githubusercontent.com/studygolang/gctt-images/master/go-map-design-by-example-part-I/1_ZfDObIafsML18crqW-MX_Q.png)
 

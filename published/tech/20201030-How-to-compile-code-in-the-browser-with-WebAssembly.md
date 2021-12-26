@@ -1,6 +1,6 @@
 首发于：https://studygolang.com/articles/35261
 
-# 如何使用 WebAsemmbly 在浏览器中编译代码
+# 如何使用 WebAssembly 在浏览器中编译代码
 
 浏览器的功能日益强大，从最早在 [CERN](https://home.cern/science/computing/birth-web) 上分享文章，到今天运行 [Google Earth](https://earth.google.com/web) ，玩 [Unity 3D](https://blogs.unity3d.com/2018/08/15/webassembly-is-here/) 游戏，甚至用 [AutoCAD](https://www.autodesk.com/products/autocad-web-app/overview) 设计建筑。
 

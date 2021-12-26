@@ -1,6 +1,6 @@
 首发于：https://studygolang.com/articles/22617
 
-# Golang <-time.After（）在计时器过期前不会被垃圾回收
+# Golang <-time.After() 在计时器过期前不会被垃圾回收
 
 最近我在调查 Go 应用程序中内存泄漏的问题，这个问题主要因为我没有正确的阅读文档。这是一段导致消耗了多个 Gbs 内存的代码：
 
