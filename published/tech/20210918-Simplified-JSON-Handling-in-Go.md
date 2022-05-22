@@ -1,3 +1,5 @@
+首发于：https://studygolang.com/articles/35661
+
 # 简化 Go 中对 JSON 的处理
 
 我的第一个 Go 工程需要处理一堆 JSON 测试固件并把 JSON 数据作为参数传给我们搭建的 API 处理。另一个团队为了给 API 提供语言无关的、可预期的输入和输出，创建了这些测试固件。
@@ -58,8 +60,6 @@ func main() {
 
 当我们处理一个多层嵌套的 JSON 对象时，这些类型断言会让处理变得非常繁琐。
 
-
-
 ## 解析/序列化为 struct
 
 第二种处理如下：
@@ -105,7 +105,7 @@ type ourData struct {
 }
 ```
 
-你可以看到 Num 成员的 json 标签 “num”、Str 成员的 json 标签 “strs”、Obj 成员的 json 标签 “obj”。这些字符串使用[反引号](https://golangbyexample.com/double-single-back-quotes-go/)把标签声明为文字串。除了反引号，你也可以使用双引号，但是使用双引号可能会需要一些额外的转义，这样看起来会很凌乱。
+你可以看到 Num 成员的 JSON 标签 “num”、Str 成员的 JSON 标签 “strs”、Obj 成员的 JSON 标签 “obj”。这些字符串使用[反引号](https://golangbyexample.com/double-single-back-quotes-go/)把标签声明为文字串。除了反引号，你也可以使用双引号，但是使用双引号可能会需要一些额外的转义，这样看起来会很凌乱。
 
 ```go
 type ourData struct {
@@ -150,7 +150,7 @@ package main
 
 import "github.com/tidwall/gjson"
 
-const json = `{"name":{"first":"Janet","last":"Prichard"},"age":47}`
+const JSON = `{"name":{"first":"Janet","last":"Prichard"},"age":47}`
 
 func main() {
     value := gjson.Get(json, "name.last")
@@ -166,7 +166,7 @@ package main
 
 import "github.com/tidwall/sjson"
 
-const json = `{"name":{"first":"Janet","last":"Prichard"},"age":47}`
+const JSON = `{"name":{"first":"Janet","last":"Prichard"},"age":47}`
 
 func main() {
     value, _ := sjson.Set(json, "name.last", "Anderson")
@@ -176,14 +176,12 @@ func main() {
 
 如果 SJSON 和 GJSON 不符合你的口味，还有[一些](https://github.com/pquerna/ffjson)[其他的](https://github.com/mailru/easyjson)[第三方库](https://github.com/Jeffail/gabs)，可以用来在 Go 程序中稍微复杂点地处理 JSON。
 
+---
 
+via: https://alanstorm.com/simplified-json-handling-in-go/
 
-----------------
-
-via: https://ewanvalentine.io/microservices-in-golang-part-3/
-
-作者：[Ewan Valentine](http://ewanvalentine.io/author/ewan)
+作者：[Alan](https://alanstorm.com/about/)
 译者：[lxbwolf](https://github.com/lxbwolf)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[polaris](https://github.com/polaris1119)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出

@@ -72,6 +72,6 @@ via: https://preslav.me/2021/08/17/how-to-use-generics-in-golang-starting-from-g
 
 作者：[Preslav Rachev](https://preslav.me/author/preslav/)
 译者：[h1z3y3](https://www.h1z3y3.me)
-校对：[校对者ID](https://github.com/校对者ID)
+校对：[校对者 ID](https://github.com/校对者 ID)
 
 本文由 [GCTT](https://github.com/studygolang/GCTT) 原创编译，[Go 中文网](https://studygolang.com/) 荣誉推出
